@@ -65,6 +65,7 @@
         {
           "group": "Connectors",
           "pages": [
+            "connectors/airtable",
             "connectors/asana",
             "connectors/bookstack",
             "connectors/clickup",
