@@ -31,6 +31,16 @@ it will be available soon!
 
     4. Set up Scopes
         - Add the scope `.../auth/gmail.readonly` for `Gmail API`
+    
+#### To enable permission syncing for this connector: 
+    - Enable the **Admin SDK API**
+        - visit this [link](https://console.cloud.google.com/flows/enableapi?apiid=admin.googleapis.com),
+        select your project and enable the **Admin SDK API**
+    - Add the scope `.../auth/admin.directory.user.readonly` for `Admin SDK API`
+    - Add the scope `.../auth/admin.directory.group.readonly` for `Admin SDK API`
+    - The account performing the OAuth flow must have an Admin role in the Google Workspace that has access to the "Groups > Read" privilege.
+        - This can be set by an admin in the admin panel of the Google Workspace under Account>Admin roles.
+    - **Note**: If you are using a Google Workspace, you can also set up a Service Account to access Gmail. This is currently in development and will be available soon.
 
 ![GmailScopes](/images/connectors/gmail/GmailScopes.png)
 
@@ -44,7 +54,13 @@ it will be available soon!
     6. Create Credentials
         - Go to the **Credentials** tab and select **+ CREATE CREDENTIALS** -> **OAuth client ID**
 
-![GmailCredential](/images/connectors/google_drive/GoogleDriveCredential.png) - Choose **Web application** and give it some name like `OnyxConnector` - Add a **Authorized JavaScript origins** for `http://localhost:3000` (or `https://<INTERNAL_DEPLOYMENT_URL>` if you have setup Onyx for production use) - Add a **Authorized redirect URIs** for `http://localhost:3000/admin/connectors/gmail/auth/callback` (or `https://<INTERNAL_DEPLOYMENT_URL>/admin/connectors/gmail/auth/callback` if you have setup Onyx for production use)
+![GmailCredential](/images/connectors/google_drive/GoogleDriveCredential.png) 
+    - Choose **Web application** and give it some name like `OnyxConnector` 
+    - Add a **Authorized JavaScript origins** for `http://localhost:3000` (or `https://<INTERNAL_DEPLOYMENT_URL>` if you have setup Onyx for production use) 
+    - Add a **Authorized redirect URIs** for `http://localhost:3000/admin/connectors/gmail/auth/callback` 
+    (or `https://<INTERNAL_DEPLOYMENT_URL>/admin/connectors/gmail/auth/callback` if you have setup Onyx for production use)
+
+
 ![GmailScopes](/images/connectors/gmail/GmailCredentials.png)
 
         - Click create and on the right hand side next to **Client secret**, there is an option to download the
