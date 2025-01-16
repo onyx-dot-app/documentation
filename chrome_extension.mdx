@@ -1,0 +1,41 @@
+---
+title: Chrome Extension
+description: "Use Onyx in Chrome from any page"
+icon: "chrome"
+---
+
+## Onyx Chrome Extension
+
+Use the Onyx extension to ask questions from anywhere. You can also replace your new-tab page with a custom Onyx page which will
+have Onyx Search as well as your favorite website bookmarks. You can also access Onyx as a sidebar to any page in Chrome.
+
+![Onyx Chrome Extension](/images/chrome_extension/onyx_chrome_extension.png)
+
+In the future, the Onyx Chrome Extension will allow you to ask questions about the page you are currently on and optionally
+index the recent pages into the Onyx knowledge base. You will be able to ask questions about recently visited pages via both
+the extension and the Onyx web app.
+
+## Setting up
+
+If you are using Onyx Cloud, you can simply install the extension from the Chrome Web Store.
+
+The following directions are for users self-hosting Onyx.
+
+<Info>
+  This feature is only available in Onyx versions v0.19.0 and above.
+</Info>
+
+1. Visit `chrome://extensions/` in your Chrome browser.
+![Chrome Extension](/images/chrome_extension/chrome_extension.png)
+2. In the upper right corner, click **Developer mode**.
+3. Click **Load unpacked**.
+4. Select the folder that is the base of the [Onyx Chrome Extension](https://github.com/onyx-dot-app/onyx-chrome-extension) repository.
+    - If you just pulled the repo, the folder you select should be `onyx-chrome-extension`.
+5. Click **Load**.
+6. You will now have the Onyx Chrome Extension installed.
+7. To configure settings, click the `...` and click `Options`.
+![Extension Settings](/images/chrome_extension/extension_settings.png)
+8. Set the `Root Domain` to your Onyx Cloud URL.
+![Root Domain](/images/chrome_extension/root_domain.png)
+
+The Onyx Chrome Extension will now be able to connect to your Onyx Cloud instance and can be used from any page in Chrome!

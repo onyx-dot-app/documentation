@@ -36,6 +36,7 @@
         "quickstart",
         "resourcing",
         "slack_bot_setup",
+        "chrome_extension",
         {
           "group": "Gen AI Configs",
           "icon": "stars",
