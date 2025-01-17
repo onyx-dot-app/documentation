@@ -1,11 +1,11 @@
 {
   "$schema": "https://mintlify.com/schema.json",
-  "name": "Danswer Documentation",
+  "name": "Onyx Documentation",
   "logo": {
-    "dark": "/logo/dark.png",
-    "light": "/logo/light.png"
+    "dark": "/logo/dark_logo.png",
+    "light": "/logo/light_logo.png"
   },
-  "favicon": "/favicon.png",
+  "favicon": "onyx.svg",
   "colors": {
     "primary": "#0069ED",
     "light": "#4D9CFF",
@@ -13,13 +13,13 @@
   },
   "topbarCtaButton": {
     "type": "github",
-    "url": "https://github.com/danswer-ai/danswer"
+    "url": "https://github.com/onyx-dot-app/onyx"
   },
   "anchors": [
     {
       "name": "Slack",
       "icon": "slack",
-      "url": "https://join.slack.com/t/danswer/shared_invite/zt-2lcmqw703-071hBuZBfNEOGUsLa5PXvQ"
+      "url": "https://join.slack.com/t/onyx-dot-app/shared_invite/zt-2sslpdbyq-iIbTaNIVPBw_i_4vrujLYQ"
     },
     {
       "name": "Discord",
@@ -27,17 +27,16 @@
       "url": "https://discord.gg/TDJ59cGV2X"
     }
   ],
-  "openapi": [
-    "/apis/openapi.json"
-  ],
+  "openapi": ["/apis/openapi.json"],
   "navigation": [
     {
-      "group": "Welcome to Danswer",
+      "group": "Welcome to Onyx",
       "pages": [
         "introduction",
         "quickstart",
         "resourcing",
         "slack_bot_setup",
+        "chrome_extension",
         {
           "group": "Gen AI Configs",
           "icon": "stars",
@@ -46,6 +45,7 @@
             "gen_ai_configs/open_ai",
             "gen_ai_configs/anthropic",
             "gen_ai_configs/azure",
+            "gen_ai_configs/vertex_ai",
             "gen_ai_configs/huggingface",
             "gen_ai_configs/ollama",
             "gen_ai_configs/fastchat",
@@ -53,40 +53,9 @@
           ]
         },
         "configuration_guide",
+        "multilingual_setup",
         "system_overview",
         "contact_us"
-      ]
-    },
-    {
-      "group": "Deploy Danswer",
-      "pages": [
-        {
-          "group": "Deploy with AWS",
-          "icon": "aws",
-          "pages": [
-            "production/aws/ec2",
-            "production/aws/eks",
-            "production/aws/ecs"
-          ]
-        },
-        "production/gcp",
-        "production/azure",
-        "production/digitalocean"
-      ]
-    },
-    {
-      "group": "Auth",
-      "pages": [
-        "basic_auth",
-        "google_oauth_setup",
-        "oidc_saml"
-      ]
-    },
-    {
-      "group": "Tools",
-      "pages": [
-        "tools/overview",
-        "tools/custom"
       ]
     },
     {
@@ -97,6 +66,7 @@
         {
           "group": "Connectors",
           "pages": [
+            "connectors/airtable",
             "connectors/asana",
             "connectors/bookstack",
             "connectors/clickup",
@@ -105,7 +75,9 @@
             "connectors/document360",
             "connectors/dropbox",
             "connectors/discord",
+            "connectors/egnyte",
             "connectors/file",
+            "connectors/fireflies",
             "connectors/freshdesk",
             "connectors/github",
             "connectors/gitlab",
@@ -114,7 +86,8 @@
               "group": "Gmail Connector",
               "pages": [
                 "connectors/gmail/overview",
-                "connectors/gmail/oauth"
+                "connectors/gmail/oauth",
+                "connectors/gmail/service_account"
               ]
             },
             {
@@ -150,22 +123,57 @@
       ]
     },
     {
-      "group": "Backend APIs",
+      "group": "Deploy Onyx",
       "pages": [
-        "backend_apis/ingestion"
+        {
+          "group": "Deploy with AWS",
+          "icon": "aws",
+          "pages": [
+            "production/aws/ec2",
+            "production/aws/eks",
+            "production/aws/ecs"
+          ]
+        },
+        "production/gcp",
+        "production/azure",
+        "production/digitalocean"
       ]
     },
     {
-      "group": "Cloud APIs",
-      "pages": [
-        "apis/answer_with_quote",
-        "apis/send_message_simple_api"
-      ]
+      "group": "Auth",
+      "pages": ["basic_auth", "google_oauth_setup", "oidc_saml"]
     },
     {
       "group": "Enterprise",
       "pages": [
-        "enterprise_edition/overview", 
+        "enterprise_edition/overview",
+        "enterprise_edition/configuration"
+      ]
+    },
+    {
+      "group": "Guides",
+      "pages": [
+        "guides/assistants",
+        "guides/providers",
+        "guides/embedding_providers"
+      ]
+    },
+    {
+      "group": "Tools",
+      "pages": ["tools/overview", "tools/custom"]
+    },
+    {
+      "group": "Backend APIs",
+      "pages": ["backend_apis/ingestion"]
+    },
+    {
+      "group": "Cloud APIs",
+      "pages": ["apis/answer_with_quote", "apis/send_message_simple_api"]
+    },
+    {
+      "group": "Enterprise",
+      "pages": [
+        "enterprise_edition/overview",
         "enterprise_edition/configuration",
         "enterprise_edition/theming",
         "enterprise_edition/custom_analytics",
@@ -201,17 +209,17 @@
     }
   ],
   "footerSocials": {
-    "github": "https://github.com/danswer-ai/danswer",
-    "twitter": "https://twitter.com/DanswerAI",
-    "linkedin": "https://linkedin.com/company/danswerai"
+    "github": "https://github.com/onyx-dot-app/onyx",
+    "twitter": "https://x.com/onyx-dot-app",
+    "linkedin": "https://linkedin.com/company/onyx-dot-app"
   },
   "analytics": {
     "posthog": {
-        "apiKey": "phc_ghlrcfXpgWq9XxZeVMfoJpfaISgFGoXhHYOEcBwdulK",
-        "apiHost": "https://us.i.posthog.com"
+      "apiKey": "phc_ghlrcfXpgWq9XxZeVMfoJpfaISgFGoXhHYOEcBwdulK",
+      "apiHost": "https://us.i.posthog.com"
     },
     "gtm": {
-        "tagId": "GTM-MFZGFSR5"
+      "tagId": "GTM-MFZGFSR5"
     }
   }
 }
