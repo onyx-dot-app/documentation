@@ -1,11 +1,124 @@
 ---
 title: "ECS"
-description: "Setup Onyx on AWS ECS"
+description: "Setup Onyx on AWS ECS Fargate"
 ---
 
-<Info>
-  ECS guide coming soon! For now, checkout our [AWS EC2
-  guide](https://docs.onyx.app/production/aws/ec2) or our [AWS EKS
-  guide](https://docs.onyx.app/production/aws/eks), which should fit most
-  company's needs.
-</Info>
+## Prerequisites
+
+- Download and install the [AWS CLI](https://aws.amazon.com/cli/). This is required for creating and accessing the cluster.
+
+### Create and Connect a User
+
+You will need to create an IAM user that will have access AWS and the cluster from the command line.
+
+Navigate to the `IAM Dashboard` found [here](https://console.aws.amazon.com/iam/). Select `Users` on the left sidebar and then `Create user`.
+
+Give the user a name like `cloudformation-onyx-ecs`. For the user permissions, click `Attach policies directly` and provide the following permissions:
+
+- `AdministratorAccess`
+
+Finishing reviewing and creating the user.
+
+Back on the user's page, click into the newly created user, and then select `Create access key`.
+
+![Create access key](/images/setup_guides/aws/eks/create_access_key.png)
+
+Follow the process for creating the access key and secret. Select the `Command Line Interferace (CLI)` option during creation. Be sure to save the `Access key` and `Secret access key` for later.
+
+Log into the AWS CLI with `aws configure` and provide the access key and secret key from the IAM you created.
+
+## Cluster Setup and Configuration
+
+### Configure AWS SecretsManager
+
+Navigate to SecretsManager Dashboard, then select create new secret. 
+
+The Postgres secret will be stored as text such as "secretpassword". It must be named in the following format `<Environment>/postgres/user/password`.
+
+The Onyx Postgres service will have the necessary permissions to access this secret value that is needed to start the server.
+
+### Configure Cloudformation Parameters
+
+Navigate to the `onyx/deployment/aws_ecs_fargate/cloudformation/` directory in the repository that you have cloned down.
+
+The cloudformation parameter are json files that define the key value pairs to be passed to each cloudformation stack. These parameters are used to define dynamic values such as environment, hostedzoneId, vpcId, subnetIds, domain.
+
+We need to update each of the following JSON files:
+
+1. onyx_acm_parameters.json
+2. onyx_efs_parameters.json
+3. onyx_cluster_parameters.json
+4. onyx_lambda_cron_restart_services_parameters.json
+5. services/onyx_nginx_parameters.json
+6. services/onyx_services_parameters.json
+
+Below will list all of the parameters and if they are required to be changed.
+
+**onyx_acm_parameters.json parameters**
+
+- *DomainName:* (Required) Domain to be associated with the TLS cert.
+- *Environment:* (Required) Environment namespace.
+- *ValidationMethod:* If using Route53 as DNS provider then validation will be done automatically using DNS validation.
+
+**onxy_efs_parameters.json**
+
+For the SubnetId parameters we can include as many or few that belong to the AWS account vpc. For example if there are 2 subnets then delete 2 of the subnets from this parameter file. 
+
+- *EFSName:* Default name of efs volumes.
+- *Environment:* (Required) Environment namespace.
+- *VpcID:* (Required) VpcId is unique per AWS account and region.
+- *SubnetId1:* (Required) SubnetIds belong to a VPC per Aws account and region.
+- *SubnetId2:* (Required) SubnetIds belong to a VPC per Aws account and region.
+- *SubnetId3:* (Required) SubnetIds belong to a VPC per Aws account and region.
+- *SubnetId4:* (Required) SubnetIds belong to a VPC per Aws account and region.
+
+**onyx_cluster_parameters.json**
+
+- *Environment:* (Required) Environment namespace.
+- *OnyxNamespace:* Default namespace used by ECS service discovery.
+- *VpcID:* (Required) VpcId is unique per AWS account and region.
+
+**onyx_lambda_cron_restart_services_parameters.json**
+
+- *CronScheduleState:* Default is ENABLED. Set to DISABLED to disable the cron job that restarts onyx apps to pull the latest. 
+- *Environment:* (Required) Environment namespace.
+
+**services/onyx_nginx_parameters.json**
+
+- *DomainName:* (Optional) The domain name to be used if using the default Route53 as DNS provider.
+- *Environment:* (Required) Environment namespace.
+- *HostedZoneId:* (Optional) The hostedzone associated with the Route53 domains unqiue to AWS account. If using another DNS provider such as GCP or GoDaddy then leave this blank. 
+- *SubnetIDs:* (Required) A comma seperated list of subnetIds unique to AWS account that belong to the vpc used for the cluster. 
+- *VpcID:* (Required) VpcId is unique per AWS account and region.
+
+**services/onyx_services_parameters.json**
+
+- *Environment:* Environment namespace.
+- *SubnetIDs:* (Required) A comma seperated list of subnetIds unique to AWS account that belong to the vpc used for the cluster. 
+- *VpcID:* (Required) VpcId is unique per AWS account and region.
+
+### Deploy Onyx Services to AWS ECS Fargate
+
+The following script will deploy the Cloudformation stacks in order starting with configuring certificate, creating the ECS cluster, creating EFS shared volumes, creating lambda cron function, configuring networking, configuring service discovery, and deploying all onyx services onto ECS Fargate Cluster. 
+
+Navigate to the `onyx/deployment/aws_ecs_fargate/cloudformation/` directory in the repository that you have cloned down.
+
+Run the following command to start deploying the cloudformations to the AWS account. Region will be the desired region such as us-west-2. The argument is the VPC ipv4 cidr value, as an example 172.0.0.0/16.
+
+```
+AWS_REGION=<region> ./deploy.sh <vpc ip cidr>
+```
+
+### Monitoring Status
+
+Naviagate to the Cloudformation Dashboard to view the status of the Stacks.
+
+This may take up to 40 minutes for all of the Cloudformation stacks to complete.
+
+### Uninstall
+
+In case of need to re-install or uninstall then run the following script to delete the Cloudformation stacks. 
+
+```
+AWS_REGION=<region> ./uninstall.sh
+```
