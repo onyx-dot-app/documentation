@@ -131,6 +131,7 @@
           "pages": [
             "production/aws/ec2",
             "production/aws/eks",
+            "production/aws/eks_helm",
             "production/aws/ecs"
           ]
         },
