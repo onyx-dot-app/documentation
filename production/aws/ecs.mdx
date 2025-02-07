@@ -31,13 +31,15 @@ Log into the AWS CLI with `aws configure` and provide the access key and secret 
 
 ### Configure AWS SecretsManager
 
-**Postgres Password**
+**Postgres Password** (Required)
 
 Navigate to SecretsManager Dashboard, then select create new secret. 
 
 The Postgres secret will be stored as text such as "secretpassword". It must be named in the following format `<Environment>/postgres/user/password`.
 
-**Auth Verification Email Password**
+**Auth Verification Email Password** (Optional)
+
+Skip this if you are not configuring Auth to use basic with email verification enabled.
 
 Navigate to SecretsManager Dashboard, then select create new secret. 
 
@@ -108,12 +110,12 @@ For the SubnetId parameters we can include as many or few that belong to the AWS
 
 **services/onyx_backend_api_server_service_parameters.json**
 
-- *Environment:* Environment namespace.
+- *Environment:* (Required) Environment namespace.
 - *SubnetIDs:* (Required) A comma seperated list of subnetIds unique to AWS account that belong to the vpc used for the cluster. 
 - *VpcID:* (Required) VpcId is unique per AWS account and region.
 - *AuthType:* Default is basic. See Auth documentation for further details.
 - *RequireEmailVerification:* Default is true since the login to Onyx is public facing.
-- *SmtpUser:* (Required) Google Email used for verification. 
+- *SmtpUser:* Default is empty so email verification is disabled, this Google Email is used for verification. 
 - *SmtpServer:* Default is empty as this is only needed if using non-Google email.
 - *SmtpPort:* Default is empty as this is only needed if using non-Google email.
 
@@ -131,9 +133,63 @@ AWS_REGION=<region> ./deploy.sh <vpc ip cidr>
 
 ### Monitoring Status
 
+**Cloudformation Stacks**
+
 Naviagate to the Cloudformation Dashboard to view the status of the Stacks.
 
+![Cloudformation Dashboard](/images/setup_guides/aws/ecs/cloudformation.png)
+
+**ECS Cluster Services**
+
+Navigate to the ECS Cluster then select on it to view all services running on that cluster.
+
+![ECS Service Dashboard](/images/setup_guides/aws/ecs/ecs_service.png)
+
+**Tasks**
+
+A Service can have many tasks, which can run multiple containers.
+
+Navigate to the Service then select the task. View the logs or monitoring from this dashboard.
+
+![ECS Tasks Dashboard](/images/setup_guides/aws/ecs/ecs_tasks.png)
+
 This may take up to 40 minutes for all of the Cloudformation stacks to complete.
+
+### URL Endpoints
+
+**Domain Name**
+
+Either the Route53 domain name  configured by the deploy script or a domain from an other DNS provider.
+
+By default the load balancer listener is configured to listen on :443 the forward the traffic to the nginx load balancer. It uses a certifcate from AWS ACM for TLS.
+
+![ACM Cert](/images/setup_guides/aws/ecs/acm.png)
+
+**ALB DNS Name**
+
+If you are having issues with the domain name or need the application load balancer DNS name.
+
+Navigate to the ECS Service dashboard for nginx then select on the load balancer link.
+
+![Nginx ECS Service](/images/setup_guides/aws/ecs/service_nginx.png)
+
+Copy the name for the load balancer dns name then paste into browser url.
+
+![ALB DNS Name](/images/setup_guides/aws/ecs/alb_dns_name.png)
+
+Note: this will bypass https as that is handled by default by load balancer listener rule listening on :443 that uses a certificate from AWS ACM.
+
+### Update Cloudformation Stacks
+
+We want to update a cloudformation stack parameter without making changes to the template itself.
+
+Currently there is not a script to do so. However, navigate to the cloudformation stack dashboard then select on the desired stack. Now we will select update then update use existing template.
+
+![Update Cloudformation](/images/setup_guides/aws/ecs/update_stack.png)
+
+Next update the parameters in the stack details screen then deploy.
+
+![Stack Parameters](/images/setup_guides/aws/ecs/stack_details.png)
 
 ### Uninstall
 
