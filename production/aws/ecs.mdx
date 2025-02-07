@@ -31,11 +31,19 @@ Log into the AWS CLI with `aws configure` and provide the access key and secret 
 
 ### Configure AWS SecretsManager
 
+**Postgres Password**
+
 Navigate to SecretsManager Dashboard, then select create new secret. 
 
 The Postgres secret will be stored as text such as "secretpassword". It must be named in the following format `<Environment>/postgres/user/password`.
 
-The Onyx Postgres service will have the necessary permissions to access this secret value that is needed to start the server.
+**Auth Verification Email Password**
+
+Navigate to SecretsManager Dashboard, then select create new secret. 
+
+The SMTP_PASS secret will be stored as text such as "secretpassword". It must be named in the following format `<Environment>/smpt/verification/password`.
+
+Please see the Auth Email documenation for further details. By default ECS Fargate Infra webserver is publicly accessible so it is necessary to require email verification by default. The SMTP_PASS is the Google email password used to authenticate users.
 
 ### Configure Cloudformation Parameters
 
@@ -51,6 +59,7 @@ We need to update each of the following JSON files:
 4. onyx_lambda_cron_restart_services_parameters.json
 5. services/onyx_nginx_parameters.json
 6. services/onyx_services_parameters.json
+7. services/onyx_backend_api_server_service_parameters.json
 
 Below will list all of the parameters and if they are required to be changed.
 
@@ -96,6 +105,17 @@ For the SubnetId parameters we can include as many or few that belong to the AWS
 - *Environment:* Environment namespace.
 - *SubnetIDs:* (Required) A comma seperated list of subnetIds unique to AWS account that belong to the vpc used for the cluster. 
 - *VpcID:* (Required) VpcId is unique per AWS account and region.
+
+**services/onyx_backend_api_server_service_parameters.json**
+
+- *Environment:* Environment namespace.
+- *SubnetIDs:* (Required) A comma seperated list of subnetIds unique to AWS account that belong to the vpc used for the cluster. 
+- *VpcID:* (Required) VpcId is unique per AWS account and region.
+- *AuthType:* Default is basic. See Auth documentation for further details.
+- *RequireEmailVerification:* Default is true since the login to Onyx is public facing.
+- *SmtpUser:* (Required) Google Email used for verification. 
+- *SmtpServer:* Default is empty as this is only needed if using non-Google email.
+- *SmtpPort:* Default is empty as this is only needed if using non-Google email.
 
 ### Deploy Onyx Services to AWS ECS Fargate
 
