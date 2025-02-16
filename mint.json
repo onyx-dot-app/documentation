@@ -82,6 +82,7 @@
             "connectors/github",
             "connectors/gitlab",
             "connectors/gong",
+            "connectors/gitbook",
             {
               "group": "Gmail Connector",
               "pages": [
