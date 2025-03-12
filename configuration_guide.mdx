@@ -312,3 +312,19 @@ Set to `true` to enable additional logging of Vespa query performance.
 #### LOG_ENDPOINT_LATENCY
 
 Set to `true` to enable logging of endpoint latency information.
+
+### Image Processing Configuration
+
+These variables control how Onyx processes and analyzes indexed images.
+
+#### IMAGE_SUMMARIZATION_SYSTEM_PROMPT
+
+Overrides the default system prompt used for summarizing images during indexing. This is what the LLM is told is its task during the summarization.
+
+#### IMAGE_SUMMARIZATION_USER_PROMPT
+
+Overrides the default user prompt template for image summarization during indexing. This is the query the LLM is given (in context during the summarization of content that is being indexed).
+
+#### IMAGE_ANALYSIS_SYSTEM_PROMPT
+
+Overrides the default system prompt used for analyzing images in search results in the context of user queries.
