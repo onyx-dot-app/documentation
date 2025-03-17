@@ -118,7 +118,8 @@
             "connectors/teams",
             "connectors/web",
             "connectors/zendesk",
-            "connectors/zulip"
+            "connectors/zulip",
+            "connectors/highspot"
           ]
         }
       ]
