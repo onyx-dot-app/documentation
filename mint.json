@@ -103,6 +103,7 @@
             "connectors/google_storage",
             "connectors/guru",
             "connectors/hubspot",
+            "connectors/highspot",
             "connectors/jira",
             "connectors/linear",
             "connectors/notion",
@@ -118,8 +119,7 @@
             "connectors/teams",
             "connectors/web",
             "connectors/zendesk",
-            "connectors/zulip",
-            "connectors/highspot"
+            "connectors/zulip"
           ]
         }
       ]
