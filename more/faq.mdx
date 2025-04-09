@@ -3,6 +3,29 @@ title: "FAQ"
 description: "Frequently asked questions about Onyx"
 ---
 
+## General Questions
+
+### My connector failed and the error message in the UI is not enough. How can I debug it?
+
+First, find the **CC Pair ID** for the connector that is failing. To do this, you can click into the 
+connector from the **Existing Connectors** page, and then find the ID in the URL in your browser. For example,
+in the below image, the CC Pair ID is `479`.
+
+![Connector ID](/images/more/FindingCCPairId.png)
+
+Next, we can fetch the relevant logs from the `background` container:
+
+```
+docker logs -f $(docker ps -q -f name=onyx-stack-background) 2>&1 | grep "CC Pair: X" &> connector_logs.txt
+```
+
+where `X` is the CC Pair ID from the previous step.
+
+This will contain the full logs for all runs of the connnector! From there, you can check the logs at the time
+of failure, or join our [Slack channel](https://join.slack.com/t/onyx-dot-app/shared_invite/zt-2twesxdr6-5iQitKZQpgq~hYIZ~dv3KA) 
+and we can help you debug!
+
+
 ## Contribution Questions
 
 ### Why did my PR Vercel build fail? or how can I see the vercel logs for my failed PR deployment?
