@@ -13,10 +13,10 @@ There is also an optional metadata line that supports links, document owners, an
 
 The metadata line should be placed at the very top of the file and can take one of two formats:
 
-- `#DANSWER_METADATA={"link": "<LINK>"}`
-- `<!-- DANSWER_METADATA={"link": "<LINK>"} -->`
+- `#ONYX_METADATA={"link": "<LINK>"}`
+- `<!-- ONYX_METADATA={"link": "<LINK>"} -->`
 
-Where DANSWER_METADATA= is followed by a json.
+Where ONYX_METADATA= is followed by a json.
 The valid json keys are:
 
 - link
@@ -31,13 +31,13 @@ a filter if you want to constrain your search / conversation to only documents w
 For example:
 
 ```
-#DANSWER_METADATA={"link": "https://github.com/onyx-dot-app/onyx/blob/main/CONTRIBUTING.md", "primary_owners": ["yuhong@onyx.app", "chris@onyx.app"], "secondary_owners": ["founders@onyx.app"], "doc_updated_at": "2023-11-30T13:06:08.589616-08:00", "file_display_name": "Desired File Name!", "tag_of_your_choice": "tag_value"}
+#ONYX_METADATA={"link": "https://github.com/onyx-dot-app/onyx/blob/main/CONTRIBUTING.md", "primary_owners": ["yuhong@onyx.app", "chris@onyx.app"], "secondary_owners": ["founders@onyx.app"], "doc_updated_at": "2023-11-30T13:06:08.589616-08:00", "file_display_name": "Desired File Name!", "tag_of_your_choice": "tag_value"}
 ```
 
 Full file example:
 
 ```
-#DANSWER_METADATA={"link": "https://www.onyx.com/captcha", "file_display_name": "Captcha Setup"}
+#ONYX_METADATA={"link": "https://www.onyx.com/captcha", "file_display_name": "Captcha Setup"}
 How to set up captcha
 Follow the example below to set up a captcha
 like you saw when you visited this page!
