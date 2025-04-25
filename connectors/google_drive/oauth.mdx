@@ -51,12 +51,7 @@ checkout the section [here](/connectors/google_drive/service_account).
         - Add the scope `.../auth/drive.metadata.readonly` for `Google Drive API`
         - Add the scope `.../auth/admin.directory.user.readonly` for `Admin SDK API`
         - Add the scope `.../auth/admin.directory.group.readonly` for `Admin SDK API`
-    
-    **Important**: If you plan on using permission syncing for this connector, the account performing the OAuth flow must have an Admin role in the Google Workspace that has access to the "Groups > Read" privilege.
-    This can be set by an admin in the admin panel of the Google Workspace under Account>Admin roles.
 
-<br />
-### You should see something like this:
 <div align="center">
   <img
     src="/images/connectors/google_drive/GoogleDriveScopes.png"
@@ -105,3 +100,27 @@ checkout the section [here](/connectors/google_drive/service_account).
     width="70%"
   />
 </div>
+
+### Indexing
+
+First, navigate to the Admin Dashboard and select the Google Drive connector.
+
+Then, create a new credential, then upload the key you downloaded in the final step.
+From there, click **Authenticate with Google Drive** and continue with the account
+you want to use to index Google Drive.
+
+![GoogleDriveOAuth](/images/connectors/google_drive/OAuthCredential.png)
+
+Once complete, select the newly created credential, and click the **Continue** button
+to configure the connector!
+
+<Note>
+  If you plan on using permission syncing for this connector, the account performing the OAuth flow must 
+  have an Admin role in the Google Workspace that has access to the following:     
+    - Admin console privileges -> Services -> Drive and Docs -> Settings
+    - Admin API privileges -> Users -> Read
+    - Admin API privileges -> Groups -> Read 
+    - Admin API privileges -> Organization Units -> Read
+
+  This can be set by an admin in the admin panel of the Google Workspace under Account > Admin roles.
+</Note>  
