@@ -13,13 +13,24 @@ in the below image, the CC Pair ID is `479`.
 
 ![Connector ID](/images/more/FindingCCPairId.png)
 
-Next, we can fetch the relevant logs from the `background` container:
+Next, we can fetch the relevant logs from the `background` container using one of the following commands. 
+For both, `X` should be replaced with the CC Pair ID from the previous step.
+
+For Docker Compose:
 
 ```
 docker logs -f $(docker ps -q -f name=onyx-stack-background) 2>&1 | grep "CC Pair: X" &> connector_logs.txt
 ```
 
-where `X` is the CC Pair ID from the previous step.
+For Kubernetes:
+
+```
+> connector_logs.txt && \
+for pod in $(kubectl get pods -n onyx -o name | grep background); do \
+  echo "=== Logs from $pod ===" >> connector_logs.txt; \
+  kubectl logs -n onyx "${pod#pod/}" -c background 2>&1 | grep "CC Pair: X" >> connector_logs.txt; \
+done
+```
 
 This will contain the full logs for all runs of the connnector! From there, you can check the logs at the time
 of failure, or join our [Slack channel](https://join.slack.com/t/onyx-dot-app/shared_invite/zt-2twesxdr6-5iQitKZQpgq~hYIZ~dv3KA) 
