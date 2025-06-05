@@ -79,8 +79,14 @@ checkout the section [here](/connectors/google_drive/service_account).
 </div>
 
         - Choose **Web application** and give it some name like `OnyxConnector`
-        - Add a **Authorized JavaScript origins** for `http://localhost:3000` (or `https://<INTERNAL_DEPLOYMENT_URL>` if you have setup Onyx for production use)
-        - Add a **Authorized redirect URIs** for `http://localhost:3000/admin/connectors/google-drive/auth/callback` (or `https://<INTERNAL_DEPLOYMENT_URL>/admin/connectors/google-drive/auth/callback` if you have setup Onyx for production use)
+        - Add a **Authorized JavaScript origins** 
+            - `http://localhost:3000` if self-hosting
+            - `https://<INTERNAL_DEPLOYMENT_URL>` if you have setup Onyx for production use
+            - `https://cloud.onyx.app` if you are using the Onyx Cloud service
+        - Add a **Authorized redirect URIs** 
+            - `http://localhost:3000/admin/connectors/google-drive/auth/callback` if self-hosting
+            - `https://<INTERNAL_DEPLOYMENT_URL>/admin/connectors/google-drive/auth/callback` if you have setup Onyx for production use
+            - `https://cloud.onyx.app/admin/connectors/google-drive/auth/callback` if you are using the Onyx Cloud service
 
 <div align="center">
   <img
