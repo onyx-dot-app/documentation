@@ -56,9 +56,14 @@ it will be available soon!
 
 ![GmailCredential](/images/connectors/google_drive/GoogleDriveCredential.png) 
     - Choose **Web application** and give it some name like `OnyxConnector` 
-    - Add a **Authorized JavaScript origins** for `http://localhost:3000` (or `https://<INTERNAL_DEPLOYMENT_URL>` if you have setup Onyx for production use) 
-    - Add a **Authorized redirect URIs** for `http://localhost:3000/admin/connectors/gmail/auth/callback` 
-    (or `https://<INTERNAL_DEPLOYMENT_URL>/admin/connectors/gmail/auth/callback` if you have setup Onyx for production use)
+    - Add an **Authorized JavaScript origins**
+            - `http://localhost:3000` if self-hosting
+            - `https://<INTERNAL_DEPLOYMENT_URL>` if you have setup Onyx for production use
+            - `https://cloud.onyx.app` if you are using the Onyx Cloud service
+    - Add an **Authorized redirect URIs** 
+        - `http://localhost:3000/admin/connectors/gmail/auth/callback` if self-hosting
+        - `https://<INTERNAL_DEPLOYMENT_URL>/admin/connectors/gmail/auth/callback` if you have setup Onyx for production use
+        - `https://cloud.onyx.app/admin/connectors/gmail/auth/callback` if you are using the Onyx Cloud service
 
 
 ![GmailScopes](/images/connectors/gmail/GmailCredentials.png)
