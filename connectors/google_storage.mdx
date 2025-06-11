@@ -13,55 +13,32 @@ Documents are updated every **1** day.
 
 ### Authorization
 
-1. Log into your Google Cloud Console.
-2. Navigate to "IAM & Admin" > "Service Accounts".
-   ![Service Account Page](/images/connectors/blob/google/serviceaccount.png)
+1. Log into your [Google Cloud Console](https://console.cloud.google.com/).
+2. Navigate to "Cloud Storage" > "Settings" > "Interoperability".
+   ![Google Cloud Storage Interoperability](/images/connectors/blob/google/interoperability.png)
 
-3. Click "Create Service Account".
-   ![New Service Account](/images/connectors/blob/google/serviceaccount.png)
+3. Click "Create a key for a service account".
+4. Click "Create new account" (or select an existing account and click Create key > skip to Step 8).
+   ![New service account](/images/connectors/blob/google/new_service_account.png)
 
-4. Set a name for the new service account (e.g., "onyx-gcs-connector") and click "Create".
+5. Set a name for the new service account (e.g., "onyx-gcs-connector") and click "Create and continue".
+   ![Service account configuration](/images/connectors/blob/google/service_account_config.png)
+6. Click "Select a role" and select Storage object viewer or another, more permissive role. 
+7. Click "Done".
+   ![Service account permissions](/images/connectors/blob/google/service_account_perms.png)
 
-5. For the role, select "Storage Object Viewer" or another appropriately permissive role and click "Continue".
-   ![Role](/images/connectors/blob/google/serviceaccountrole.png)
-
-6. Click "Done" to finish creating the service account.
-7. On the Service Accounts page, find your newly created account and click on it.
-8. In the "Keys" section, click "Add Key" > "Create new key".
-
-![New Key](/images/connectors/blob/google/newkey.png)
-
-9. Choose "JSON" as the key type and click "Create".
-
-10. A JSON file will be downloaded to your computer. This file contains your credentials.
-
-11. Open the JSON file and note down the following information:
-
-- `project_id`
-- `client_id` (this will be used as your Access Key ID)
-- `private_key` (this will be used as your Secret Access Key)
+8. You should be back on the Cloud Storage Interoperability page and see the new credentials. Record both `Access key` and `Secret`.
+   ![HMAC keys](/images/connectors/blob/google/hmac_keys.png)
 
 ### Indexing
 
-1. Navigate to the Admin Dashboard and select the **Google Cloud Storage** Connector.
-2. In **Step 1**, provide your GCS credentials:
+1. Navigate to the Admin Panel > Add Connector > **Google Storage**.
+2. Click Create New to create a new credential.
+![Onyx Google Cloud Storage credentials](/images/connectors/blob/google/onyx_1.png)
 
-![Onyx page1](/images/connectors/blob/google/onyx1.png)
-
-- Provide your GCS Project ID, Access Key ID, and Secret Access Key for authentication.
-- These credentials will be used to access your GCS buckets.
-
-**GCS Project ID:**
-**Access Key ID:**
-**Secret Access Key:**
-
-3. Click "Update" to save your credentials.
-
-4. In **Step 2**, specify which GCS bucket you want to make searchable:
-
-![Onyx page1](/images/connectors/blob/google/onyx2.png)
-
-5. Click "Connect" to begin indexing.
+3. Paste your Access key and Secret (from Step 8) in the form. Click Create and Continue.
+4. Name your connector, specify the GCS bucket you would like to index, and click Create Connector.
+![Onyx Connector creation](/images/connectors/blob/google/onyx_2.png)
 
 ## Understanding Google Cloud Storage Structure
 
