@@ -11,8 +11,7 @@ For every jira issue this connector will pull:
 
 - Title
 - Description
-- Common fields (like assignee, reporter, status etc.)
-- Custom fields
+- [Common fields](#what-metadata-is-indexed)
 - Comments
 
 ## Setting up
@@ -42,3 +41,21 @@ For every jira issue this connector will pull:
 ![JiraIndex](/images/connectors/jira/JiraIndex.png)
 
     4. Click the `Connect` button! All your Jira tickets in that space will now be pulled into Onyx every **10** minutes.
+
+### What metadata is indexed?
+```
+- Project ID
+- Issue Type
+- Issue Key
+- Summary
+- Description
+- Priority
+- Labels
+- Assignee
+- Reporter
+- Comments
+- Status
+- Resolution
+- Created
+- Updated
+```
