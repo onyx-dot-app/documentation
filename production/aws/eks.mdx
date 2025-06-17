@@ -106,12 +106,14 @@ Next, we need to make sure that the gp2 storage class is set to the default stor
 kubectl patch storageclass gp2 -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}' -n onyx
 ```
 
-Navigate to the `onyx/deployment/kubernetes` directory in the repository that you have cloned down
+Navigate to the `onyx/deployment/helm/charts/onyx` directory in the repository that you have cloned down. Make sure you have [Helm installed](https://helm.sh/docs/intro/install/).
 
-Afterwards, you can run the installation of the `yaml` files
+Before deploying, take a read through the `values.yaml` file. Adjust as necessary.
+
+Afterwards, you can run the installation of the Onyx helm chart.
 
 ```shell
-kubectl apply -f . -n onyx
+helm install onyx . --create-namespace --namespace onyx
 ```
 
 It may take a few minutes for the all the services to come online. To monitor the progress, run the following command:
@@ -130,4 +132,14 @@ You can navigate find the nginx load balancer by running the following command a
 
 ```shell
 kubectl get svc -n onyx | grep nginx-service | awk '{print $4}'
+```
+
+## Upgrading
+
+To upgrade Onyx services, we can adjust the `global.version` field in 
+`values.yaml` to the specific version (e.g. something like `nightly-latest-20250616`) 
+we want to upgrade to. Then, we can run:
+
+```shell
+helm upgrade onyx
 ```
