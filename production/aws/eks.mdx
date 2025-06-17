@@ -141,5 +141,22 @@ To upgrade Onyx services, we can adjust the `global.version` field in
 we want to upgrade to. Then, we can run:
 
 ```shell
-helm upgrade onyx .
+helm upgrade onyx . -n onyx
+```
+
+## Uninstalling
+
+Run:
+
+```shell
+helm uninstall onyx -n onyx
+```
+
+Vespa, Postgres, and MinIO leave behind a PVC. Delete it if you are completely done.
+
+```shell
+kubectl -n onyx get pvc
+kubectl -n onyx delete pvc vespa-storage-da-vespa-0
+kubectl -n onyx delete pvc onyx-minio
+kubectl -n onyx delete pvc data-onyx-postgresql-0
 ```
