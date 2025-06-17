@@ -131,7 +131,7 @@ kubectl -n onyx get pods | grep api-server | awk '{print $1}' | xargs -I {} kube
 You can navigate find the nginx load balancer by running the following command and then navigating to the url provided.
 
 ```shell
-kubectl get svc -n onyx | grep nginx-service | awk '{print $4}'
+kubectl get svc -n onyx | grep nginx | awk '{print $4}'
 ```
 
 ## Upgrading
