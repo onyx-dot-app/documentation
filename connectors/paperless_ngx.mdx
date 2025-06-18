@@ -1,0 +1,63 @@
+---
+title: Paperless-ngx Connector
+description: "Access knowledge from your digital documents"
+---
+
+## How it works
+
+The Paperless-ngx Connector imports documents from an instance of Paperless-ngx.
+
+- It will index documents from the specified instance set up in the credentials step.
+- You can limit the documents retrieved by specifying tags or usernames to filter on, in addition to the default built-in Onyx Indexing Start Date filter on the Advanced page.
+- It brings in all the standard document metadata, but not custom fields.
+
+## Setting up
+
+### Authorization
+
+#### Paperless-ngx Access Token
+
+    1. This Connector uses a Paperless-ngx Access Token.
+    2. Log in to your Paperless-ngx instance.
+    3. In the upper right corner, expand your profile and click on **My Profile**
+    4. A dialog will open where you can click on the clipboard icon in the section **API Auth Token** to copy the token.
+        - This token is used to authenticate with the Paperless-ngx API.
+        - You can create a new token by clicking on the **Regenerate auth token** button.
+
+![Paperless_ngxAccessToken](/images/connectors/paperless_ngx/access_token.png)
+
+##### Paperless-ngx Permimssions Note
+
+    - The Paperless-ngx Connector requires the following permissions for the items you want indexed:
+        - `read` access to the `documents` items
+        - `read` access to the `tags` items
+        - `read` access to the `users` items
+        - `read` access to the `document_types` items
+        - `read` access to the `correspondents` items
+    - These permissions are set up in the Django admin interface of Paperless-ngx.
+      - Go to **Settings** on the bottom left corner under the **Admin** section.
+      - Click on the **Open Django Admin** button in the top right corner.
+      - Navigate to **Users** and select the user for which you want to set up the permissions.
+    - Setting up these permissions is done in the Paperless-ngx instance and can be tedious.
+    - An alternative is to set the user for which the token is issued to have 'Superuser Status' in the Django Admin page if you want to read all documents.
+
+![Paperless_ngxDjangoAdminPage](/images/connectors/paperless_ngx/superuser.png)
+
+    - You may want to set up a new user with the required permissions and use that user's token for the connector.
+
+#### Onyx Connector Setup
+
+    1. Navigate to the Onyx Admin Dashboard, click on the **Add Connector** button on the left and select the **Paperless-ngx** Connector
+    2. Create a new credential using your Paperless-ngx instance URL and token you retrieved above.
+    3. On the connector setup page, there are these fields/settings, which are described there:
+        - **Connector Name** field: the name of the connector
+        - **Ingest Only From Tags Filter** field: tags for the documents to be indexed
+        - **Ingest Only From Users Filter** field: owners for the documents to be indexed
+        - **Ingest No Owner Documents Filter** checkbox: whether to include documents with no owner; only relevant if the **Ingest Only From Users Filter** is set
+    4. The **Advanced** section is the default used for all connectors.
+
+### Indexing
+
+    Indexing is managed the same way as standard connectors. Navigate to the Admin Dashboard, click **Existing Connectors** and select the **Paperless-ngx** connector you set up, and then the **Advanced** section to view status.
+    
+![Paperless_ngxIndexing](/images/connectors/paperless_ngx/indexing.png)

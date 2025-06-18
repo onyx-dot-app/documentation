@@ -108,6 +108,7 @@
             "connectors/linear",
             "connectors/notion",
             "connectors/oci_storage",
+            "connectors/paperless_ngx",
             "connectors/productboard",
             "connectors/r2",
             "connectors/requesttracker",
