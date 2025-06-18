@@ -111,7 +111,15 @@
             "connectors/productboard",
             "connectors/r2",
             "connectors/requesttracker",
-            "connectors/s3",
+            {
+              "group": "S3 Connector",
+              "pages": [
+                "connectors/s3/overview",
+                "connectors/s3/access-keys",
+                "connectors/s3/iam-role",
+                "connectors/s3/assume-role"
+              ]
+            },
             "connectors/salesforce",
             "connectors/sharepoint",
             "connectors/slack",
