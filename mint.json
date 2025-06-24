@@ -163,15 +163,23 @@
     {
       "group": "Guides",
       "pages": [
-        "guides/assistants",
+        {
+          "group": "Assistants",
+          "icon": "square-plus",
+          "pages": [
+            "guides/assistants/overview",
+            "guides/assistants/for_curators",
+            "guides/assistants/for_basic"
+          ]
+        },
         "guides/providers",
         "guides/embedding_providers",
         "guides/agent_search"
       ]
     },
     {
-      "group": "Tools",
-      "pages": ["tools/overview", "tools/custom"]
+      "group": "Actions",
+      "pages": ["actions/overview", "actions/custom"]
     },
     {
       "group": "Backend APIs",
