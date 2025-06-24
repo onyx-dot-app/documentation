@@ -1,27 +1,27 @@
 ---
-title: "Custom Tools"
-description: "How to create custom tools with Onyx"
+title: "Custom Actions"
+description: "How to create custom actions with Onyx"
 ---
 
-First, navigate to the Admin console, and go to the **Tools** tab. Click the **New Tool** button.
+First, navigate to the Admin console, and go to the **Actions** tab. Click the **New Action** button.
 
-Next, specify a OpenAPI 3.0 or OpenAPI 3.1 schema that defines the APIs that you want to make available as part of this tool.
+Next, specify a OpenAPI 3.0 or OpenAPI 3.1 schema that defines the APIs that you want to make available as part of this action.
 
-Onyx provides dynamic context variables that can be utilized within your OpenAPI definition, enhancing the functionality and context-awareness of your custom tools. These variables are:
+Onyx provides dynamic context variables that can be utilized within your OpenAPI definition, enhancing the functionality and context-awareness of your custom actions. These variables are:
 
-- `CHAT_SESSION_ID`: Replaced with the chat session ID in which the tool call was made.
+- `CHAT_SESSION_ID`: Replaced with the chat session ID in your action call
 
-- `CHAT_MESSAGE_ID`: Replaced with the chat message ID which triggered the tool call.
+- `CHAT_MESSAGE_ID`: Replaced with the chat message ID in your action call
 
 For example: `/persona/CHAT_SESSION_ID/messages/CHAT_MESSAGE_ID` with `CHAT_SESSION_ID` = 20 and `CHAT_MESSAGE_ID` = 10 would become `/persona/20/messages/10`
 
 To improve performance:
 
-- Add descriptive `summary`s for each operation (API).
-- Give each operation a descriptive `operationId`.
-- Add `description`s for parameter.
+- Add descriptive `summary`s for each operation (API)
+- Give each operation a descriptive `operationId`
+- Add `description`s for parameter
 
-For example, you could use the following to create a tool that allows an assistant to fetch and create assistants
+For example, you could use the following to create an action that allows an assistant to fetch and create assistants
 with Onyx:
 
 ```
