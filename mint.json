@@ -73,6 +73,7 @@
             "connectors/confluence",
             "connectors/discourse",
             "connectors/document360",
+            "connectors/drupal_wiki",
             "connectors/dropbox",
             "connectors/discord",
             "connectors/egnyte",
