@@ -122,7 +122,13 @@
             },
             "connectors/salesforce",
             "connectors/sharepoint",
-            "connectors/slack",
+            {
+              "group": "Slack Connector",
+              "pages": [
+                "connectors/slack/slack_federated",
+                "connectors/slack/slack_indexed"
+              ]
+            },
             "connectors/slab",
             "connectors/teams",
             "connectors/web",
