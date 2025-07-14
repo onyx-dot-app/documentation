@@ -1,0 +1,40 @@
+---
+title: Internet Search
+description: "How to use Internet Search"
+---
+
+
+### How it works
+
+The Internet Search action uses the [Exa](https://exa.ai) API to search the web. Assistants equipped with Internet Search will analyze web results to answer your questions.
+
+
+Currently, Exa is the only supported provider. 
+If you would like to use or contribute a new provider, please let us know in our [Slack Community](https://join.slack.com/t/onyx-dot-app/shared_invite/zt-34lu4m7xg-TsKGO6h8PDvR5W27zTdyhA).
+
+### Setup
+
+- **Onyx Cloud**: Internet Search is available by default! Skip to [Usage](#usage).
+
+- **Self-hosted**: To use Internet Search, you'll need to create an account with [Exa](https://exa.ai), generate an API key, and add a new `EXA_API_KEY` environment variable to your Onyx deployment.
+
+### Usage
+
+Once you have your Exa API key set, you can set up your assistants with Internet Search.
+
+On the assistant creation or update page, tick the "Internet Search" checkbox (see [Assistants Overview](../guides/assistants/overview) for more details).
+
+
+![Internet Search checkbox](/images/more/internet_search_assistant.png)
+
+
+Your assistant will analyze your query and determine whether or not to use Internet Search. Your results will be displayed just like internal Search results.
+
+![Internet Search results](/images/more/internet_search_results.png)
+
+
+
+
+
+
+
