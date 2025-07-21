@@ -1,0 +1,300 @@
+---
+title: Chrome Extension
+description: "Use Onyx in Chrome from any page"
+icon: "chrome"
+---
+
+## Onyx Chrome Extension
+
+Use the Onyx extension to ask questions from anywhere. You can also replace your new-tab page with a custom Onyx page:
+
+- Onyx Search on new tabs
+- Favorite website bookmarks
+- Onyx as a sidebar to any page in Chrome
+
+<Frame>
+  <img
+    src="/assets/images/chrome_extension/onyx_chrome_extension.png"
+    alt="Onyx Chrome Extension"
+  />
+</Frame>
+
+<Note>
+  In the future, the Onyx Chrome Extension will allow you to ask questions about
+  the page you are currently on and optionally index the recent pages into the
+  Onyx knowledge base. You'll be able to ask questions about recently visited
+  pages via both the extension and the Onyx web app.
+</Note>
+
+## Setting up
+
+If you are using Onyx Cloud, you can simply install the extension from the Chrome Web Store.
+
+The following steps are for users self-hosting Onyx.
+
+<Info>This feature is only available in Onyx versions v0.19.0 and above.</Info>
+
+1. Visit `chrome://extensions/` in your Chrome browser.
+   <Frame>
+     <img
+       src="/assets/images/chrome_extension/chrome_extension.png"
+       alt="Chrome Extension"
+     />
+   </Frame>
+2. In the upper right corner, click **Developer mode**.
+3. Click **Load unpacked**.
+4. Select the folder that is the base of the Onyx Chrome Extension repository
+   (for example, `onyx-chrome-extension`).
+5. Click **Load**.
+6. You will now have the Onyx Chrome Extension installed.
+7. To configure settings, click the ... (three dots) next to the extension and select **Options**.
+   <Frame>
+     <img
+       src="/assets/images/chrome_extension/extension_settings.png"
+       alt="Extension Settings"
+     />
+   </Frame>
+8. Set the Root Domain to your self-hosted Onyx instance's URL.
+   <Frame>
+     <img src="/assets/images/chrome_extension/root_domain.png" alt="Root Domain" />
+   </Frame>
+
+The Onyx Chrome Extension will now be able to connect to your self-hosted Onyx instance and can be used from any page in Chrome!
+
+## Chrome Extension Installation and Update Guide
+
+This guide provides instructions for installing, managing, and updating Chrome extensions in both enterprise and self-hosted settings.
+
+## Enterprise Installation
+
+Use these guidelines if you need to install and manage the Onyx Chrome Extension for a large group of users using Google Admin.
+
+### Step 1: Access Chrome Management
+
+1. Log in to your Google Admin console.
+2. Navigate to "Devices → Chrome → Apps and extensions".
+
+<Frame>
+  <img
+    src="https://lh7-rt.googleusercontent.com/docsz/AD_4nXeQIs0ewHI4y129CyGGH1lsVSKMAI8hDX7U_vydA0ywtofwI8UA683-lS3Bkr2V1BZHQ9zMgaNs-THEVanmd0xbDx7f9IxR6drq3hCk5J2x-HpxSx-vIUiPIjUcFYPNnf2CeRO7ZA?key=CShmy-SAudRnzD_UpFRQYUHi"
+    alt="Devices / Chrome navigation"
+  />
+</Frame>
+
+### Step 2: Install Extension
+
+1. Obtain a copy of the custom published Chrome extension from an Onyx team member. They will provide you with the Chrome extension ID.
+2. Inside the Admin console's Apps & extensions page, click the yellow plus icon to add the extension.
+3. Specify the Chrome extension ID provided by the Onyx team member.
+4. Click **Add** to confirm the installation.
+
+### Step 3: Configure Settings
+
+1. In the Google Admin console, under "Devices → Chrome → Apps and extensions", locate the Onyx Chrome Extension.
+2. Click on the extension to access its configuration settings.
+3. Here, you can manage various deployment options, such as:
+   - Force installation for all users or specific organizational units
+   - Allow or block the extension for certain users or groups
+   - Configure update settings and version pinning
+   - Set installation policies (e.g., allowed, forced, or blocked)
+
+### Step 4: Save Changes
+
+<Warning>
+  Don't forget to save your changes after configuring the extension.
+</Warning>
+
+## Self-Hosted Installation
+
+1. Clone or download the Onyx Chrome Extension repository.
+2. Follow the steps in "Setting up" above to load the unpacked extension.
+3. If you wish to serve the extension to a group of users, consider publishing it to the Chrome Web Store (see the next section on publishing) or hosting the CRX file yourself if you want a private distribution.
+
+### Publishing to Chrome Web Store (Optional)
+
+<Tip>
+  Instead of loading the extension manually, you can package your extension and
+  publish it as private or unlisted on the Chrome Web Store, making it available
+  for force-installs or distribution to managed Chrome instances.
+</Tip>
+
+## Updating Extensions
+
+Below are strategies to keep the Onyx Chrome Extension up to date.
+
+### Enterprise Updates
+
+If you have force-installed the extension through the Admin console, Google Chrome will handle automated updates. Updates typically occur when Chrome launches and then every five hours.
+
+<Check>
+  If you ever need to pin a specific Onyx Chrome Extension version (for
+  compatibility reasons), you can set "Version pinning" for force-installed
+  extensions within your Admin console.
+</Check>
+
+<Warning>
+  Avoid pinning for extended periods, because pinned extensions do not receive
+  security updates.
+</Warning>
+
+### Self-Hosted Updates
+
+1. In your local Onyx Chrome Extension project, increment your extension's version in the `manifest.json` file (e.g., from "1.0" to "1.1").
+2. Repack the extension (creating a new CRX file).
+3. Replace or update the CRX file where your users install it from (if you're self-hosting).
+4. If you're force-installing via Group Policy (GPO), update the extension version and URL in your GPO settings so that Chrome knows to download the new CRX.
+
+## Managing Extensions in Your Enterprise
+
+If you manage a large organization, here are options to oversee which extensions users can install and how they're updated. Many of these guidelines align with enterprise best practices from Google's documentation on Chrome extension management.
+
+### Overview of Enterprise Extension Management Policies
+
+Several policy-driven strategies can be enforced on managed devices:
+
+<CardGroup cols={2}>
+  <Card title="Extension Install Blocklist" icon="ban" />
+  <Card title="Extension Install Allowlist" icon="check" />
+  <Card title="Extension Install Force List" icon="list-check" />
+  <Card title="Block External Extensions" icon="shield" />
+  <Card title="Extension Allowed Types" icon="filter" />
+  <Card title="Extension Install Sources" icon="download" />
+  <Card title="Extension Settings Policy" icon="gear" subtitle="JSON-based" />
+</CardGroup>
+
+Below is a brief overview of how to enforce these via Google Admin console or Windows Group Policy (GPO).
+
+### Allow or Block Extensions from the Google Admin Console
+
+1. Go to Devices → Chrome → Apps & extensions → Users & browsers (or Managed browsers) and select your organizational unit.
+2. Under Additional Settings, set your Allow/Block mode.
+3. Allow all but block some: "Allow all apps, admin manages blocklist."
+4. Block all but allow some: "Block all apps, admin manages allowlist."
+5. To block or allow one extension, add it by Chrome Web Store URL or by Extension ID. Adjust its status to Block, Allow install, or Force install.
+
+### Force-Installing Extensions
+
+Force-installing an extension ensures users have the extension silently added and cannot remove it:
+
+1. Inside the Admin console/Apps & extensions page, add the extension (via the yellow plus).
+2. In the Installation policy dropdown, select Force install.
+3. Save changes.
+
+<Note>
+  Force-installed extensions will automatically update unless you pin them to a
+  specific version.
+</Note>
+
+### Managing Extensions by Permissions
+
+You can refine extension management by blocking or allowing certain permissions (for example, USB access, cookie access, etc.).
+
+<Steps>
+  <Step title="Access Settings">
+    In the Admin console, go to your organizational unit at Devices → Chrome →
+    Apps & extensions → Users & browsers → Additional settings (gear icon).
+  </Step>
+  <Step title="Set Permissions">
+    Under Permissions and URLs, choose which permissions to block or allow.
+  </Step>
+  <Step title="Override Global Settings">
+    You can also override global permission settings on a per-extension basis in
+    this section.
+  </Step>
+</Steps>
+
+### Protect Sensitive Websites: runtime_blocked_hosts
+
+In many enterprise scenarios, you may want to block extensions from modifying or reading data on specific domains (for instance, internal corporate portals). This is done via runtime_blocked_hosts:
+
+<Steps>
+  <Step title="Access Settings">
+    In the Admin console, go to Devices → Chrome → Apps & extensions → Users &
+    browsers → Additional settings (gear icon).
+  </Step>
+  <Step title="Add Blocked Hosts">
+    Under "Runtime blocked hosts," add patterns such as: ```
+    *://*.sensitive-domain.com ```
+  </Step>
+  <Step title="Add Allowed Hosts (Optional)">
+    Under "Runtime allowed hosts," include host patterns you want to allow if
+    they fall under a larger blocked domain.
+  </Step>
+</Steps>
+
+This effectively prevents most extension-level script injections, web requests, or cookie access on specified sites.
+
+### Group Policy (GPO) Method (Windows)
+
+If you're not using the Admin console, you can still manage Onyx (and other) Chrome extensions via Windows Group Policy:
+
+<Steps>
+  <Step title="Install Policy Templates">
+    Install the Chrome ADM/ADMX policy templates.
+  </Step>
+  <Step title="Access Group Policy Editor">
+    Open gpedit.msc → Computer Configuration → Administrative Templates → Google
+    → Google Chrome → Extensions.
+  </Step>
+  <Step title="Configure Policies">
+    Configure: - Configure extension installation blocklist
+    (ExtensionInstallBlocklist) - Configure extension installation allowlist
+    (ExtensionInstallAllowlist) - Configure the list of force-installed apps and
+    extensions (ExtensionInstallForcelist) - Extensions Management Settings
+    (ExtensionSettings)
+  </Step>
+  <Step title="Specify Details">
+    Use JSON or registry entries to specify details (e.g., blocked_permissions,
+    runtime_blocked_hosts, etc.).
+  </Step>
+</Steps>
+
+For details on each policy, refer to Google's Chrome Enterprise policy list.
+
+## Self-Hosting the Onyx Chrome Extension
+
+If you want to avoid the Chrome Web Store:
+
+<Steps>
+  <Step title="Build & Pack the Extension">
+    In Chrome, go to chrome://extensions, Enable Developer Mode, then click
+    "Pack Extension." This creates a CRX file (and a private key PEM). Keep your
+    PEM safe.
+  </Step>
+  <Step title="Host the Files">
+    Host the CRX & an Update Manifest XML on your server or intranet.
+  </Step>
+  <Step title="Configure Client Settings">
+    Use either Google Admin console or GPO settings to point clients to your CRX
+    update URL so Chrome will install/update automatically.
+  </Step>
+</Steps>
+
+<CardGroup cols={2}>
+  <Card title="Pros" icon="thumbs-up">
+    <ul>
+      <li>Control release cycle</li>
+      <li>Avoid Chrome Web Store listing</li>
+    </ul>
+  </Card>
+  <Card title="Cons" icon="thumbs-down">
+    <ul>
+      <li>Bypasses some security scans</li>
+      <li>More maintenance overhead</li>
+    </ul>
+  </Card>
+</CardGroup>
+
+## Best Practices
+
+<CheckboxList>
+  - Regularly review and audit installed extensions. - Keep a short blocklist of
+  known problematic extensions. - If possible, manage by permissions to allow
+  only what's safe. - Use force-install for business-critical extensions (like
+  Onyx). - Periodically update pinned extensions to reduce security risks.
+</CheckboxList>
+
+For more detailed information, refer to:
+
+- Official Google Chrome Enterprise documentation
+- Onyx documentation and best practices for self-hosted environments

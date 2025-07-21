@@ -1,0 +1,163 @@
+---
+title: Basic Auth
+description: "Username/password authentication setup"
+icon: "key"
+---
+
+Set up Onyx with basic username/password authentication. While this is the easiest way to get started, we recommend using Google OAuth, OIDC, or SAML for production deployments when possible.
+
+If you have questions about which authentication approach is best for your organization, don't hesitate to [contact us](https://docs.onyx.app/contact_us) - we're happy to help you choose the right solution.
+
+## Configuration
+
+### **Basic Setup**
+
+In your `.env` file, set the following variable:
+
+```bash
+AUTH_TYPE=basic
+```
+
+If you don't require email verification, you're done! After restarting Onyx, users will see the sign-up screen:
+
+![SignUp](/assets/images/basic_auth/Signup.png)
+
+### **With Email Verification**
+
+For enhanced security, enable email verification to ensure users own the email addresses they use to sign up. Users won't be able to interact with Onyx until they verify their email address through a verification link.
+
+Add the following to your `.env` file:
+
+```bash
+AUTH_TYPE=basic
+
+# Enable email verification
+REQUIRE_EMAIL_VERIFICATION=true
+
+# Email configuration
+SMTP_USER=<EMAIL_TO_SEND_VERIFICATION_EMAILS>  # e.g. noreply@yourcompany.com
+SMTP_PASS=<PASSWORD_FOR_THE_EMAIL_ABOVE>
+
+# Required for non-Google email accounts
+SMTP_SERVER=<YOUR_SMTP_SERVER>
+SMTP_PORT=<PORT_YOUR_SMTP_SERVER_LISTENS_ON>  # default: 587
+```
+
+## Email Configuration
+
+### **Gmail/Google Workspace**
+
+If using a Gmail or Google Workspace account for SMTP:
+
+1. **Enable App Passwords**: Follow [Google's official guide](https://support.google.com/accounts/answer/6010255?hl=en#zippy=%2Cif-less-secure-app-access-is-off-for-your-account%2Cif-less-secure-app-access-is-on-for-your-account) to allow third-party access
+2. **Use App Password**: Generate and use an app-specific password instead of your regular password
+3. **SMTP Configuration**: Gmail uses `smtp.gmail.com` on port 587
+
+### **Custom SMTP Servers**
+
+For other email providers, configure the appropriate SMTP settings:
+
+- **Outlook/Office 365**: `smtp-mail.outlook.com:587`
+- **Yahoo**: `smtp.mail.yahoo.com:587`
+- **Custom servers**: Contact your email provider for SMTP configuration details
+
+## Security Considerations
+
+### **Password Requirements**
+
+Onyx enforces basic password security requirements:
+- Minimum length requirements
+- Password complexity validation
+- Account lockout after failed attempts
+
+### **Email Verification Benefits**
+
+Enabling email verification provides:
+- **User Authentication**: Confirms users own their email addresses
+- **Account Recovery**: Enables password reset functionality
+- **Audit Trail**: Links actions to verified email addresses
+- **Spam Prevention**: Reduces fake account creation
+
+## Deployment-Specific Setup
+
+### **Docker Compose**
+
+Set environment variables in your `.env` file in the `deployment/docker_compose/` directory:
+
+```bash
+# Basic auth with email verification
+AUTH_TYPE=basic
+REQUIRE_EMAIL_VERIFICATION=true
+SMTP_USER=noreply@yourcompany.com
+SMTP_PASS=your_app_password
+SMTP_SERVER=smtp.gmail.com
+SMTP_PORT=587
+```
+
+### **Kubernetes**
+
+Update your secrets and configmaps:
+
+```yaml
+# In secrets.yaml
+SMTP_PASS: <base64-encoded-password>
+
+# In configmap.yaml  
+AUTH_TYPE: basic
+REQUIRE_EMAIL_VERIFICATION: "true"
+SMTP_USER: noreply@yourcompany.com
+SMTP_SERVER: smtp.gmail.com
+SMTP_PORT: "587"
+```
+
+### **Non-Containerized**
+
+Set environment variables when running Onyx processes:
+
+```bash
+export AUTH_TYPE=basic
+export REQUIRE_EMAIL_VERIFICATION=true
+export SMTP_USER=noreply@yourcompany.com
+export SMTP_PASS=your_app_password
+export SMTP_SERVER=smtp.gmail.com
+export SMTP_PORT=587
+```
+
+## Troubleshooting
+
+### **Common Issues**
+
+**SMTP Connection Errors**
+- Verify SMTP server and port settings
+- Check firewall rules for outbound SMTP traffic
+- Confirm authentication credentials are correct
+
+**Email Delivery Issues**
+- Check spam/junk folders
+- Verify sending email domain reputation
+- Test SMTP configuration with email client
+
+**User Registration Problems**
+- Ensure database is accessible and migrations are applied
+- Check logs for detailed error messages
+- Verify environment variables are properly set
+
+### **Testing Email Configuration**
+
+Before enabling email verification in production:
+
+1. **Test SMTP Settings**: Use a tool like `telnet` or email client to verify SMTP connectivity
+2. **Send Test Email**: Create a test user account to verify email delivery
+3. **Check Email Content**: Ensure verification emails contain correct links and formatting
+4. **Verify Click-through**: Test the complete verification flow
+
+## Migration from Other Auth Types
+
+If switching from another authentication method to basic auth:
+
+1. **Backup Data**: Export user data before changing authentication
+2. **Update Configuration**: Change `AUTH_TYPE` to `basic`
+3. **User Communication**: Notify users about the authentication change
+4. **Provide Support**: Help users create new accounts or recover access
+
+For production deployments, consider more robust authentication solutions like [OAuth](./oauth), [OIDC](./oidc), or [SAML](./saml) which provide better security and user experience.

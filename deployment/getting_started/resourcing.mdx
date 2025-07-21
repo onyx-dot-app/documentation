@@ -1,0 +1,43 @@
+---
+title: "Resourcing"
+description: "Resource requirements for deploying Onyx"
+icon: "server"
+---
+
+## Running Locally
+
+When running locally through Docker, we recommend making at least 4vCPU cores and 10GB of RAM available to Docker (16GB is preferred). This can be controlled in the **Resources** section of the Docker Desktop settings menu.
+
+## Single Cloud Instance
+
+For small-mid scale deployments, we generally recommend setting everything up on a single instance (e.g. an AWS EC2 instance, a Google Compute Engine instance, an Azure VM, etc.) via Docker Compose as it's the simplest way to get started.
+
+For most use cases a single reasonably sized instance should be more than enough to guarantee excellent performance. A single instance should be able to effectively serve a small-medium sized organization without issue.
+
+If you go with this approach, we recommend:
+
+- **CPU:** >= 4 vCPU cores (we recommend >=8 vCPU cores if possible, this scales with the number of documents you index)
+- **Memory:** >= 16 GB of RAM (this also scales with the number of documents you index)
+- **Disk:** >= 50 GB + ~2.5x the size of the indexed documents. Disk is generally very cheap, so we would recommend getting extra disk beyond this recommendation to be safe.
+  - Note: Vespa does not allow writes when disk usage is >75%, so make sure to always have some headroom here
+  - Note: old, unused docker images often take up a bunch of space when performing frequent upgrades of Onyx.
+  - Note: Vespa, used by Onyx for document indexing, requires Haswell (2013) or later CPUs. For older CPUs, use the `vespaengine/vespa-generic-intel-x86_64` image in your `docker-compose.yml`. This generic image is slower but ensures compatibility. For details, see [Vespa CPU Support](https://docs.vespa.ai/en/cpu-support.html).
+
+To clean up unused images, run: `docker system prune --all`.
+
+## Kubernetes / AWS ECS
+
+If you prefer to give each component its own dedicated resources for more efficient scaling, we recommend giving each container access to at least the following resources:
+
+- **api_server** - 1 CPU, 2Gi Memory
+- **background** - 2 CPU, 8Gi Memory  
+- **indexing_model_server** / **inference_model_server** - 2 CPU, 4Gi Memory
+- **postgres** - 2 CPU, 2Gi Memory
+- **vespa** - >=4 CPU, >= 8Gi Memory. This is the bare minimum for a production deployment, and we would generally recommend higher than this. The resources required here also scales linearly with the number of documents indexed.
+- **nginx** - 250m CPU, 128Mi Memory
+
+All together, this comes out to a total available node size of at least 14 vCPU and 23GB of Memory.
+
+## How Resource Requirements Scale
+
+The primary driver of resource requirements is the size of the indexed documents. This primarily affects the `index` component of Onyx (a [Vespa](https://vespa.ai/) vector database), which is responsible for storing the vectorized documents. 

@@ -1,0 +1,87 @@
+---
+title: "Chrome Extension"
+description: "Configuring the Onyx Chrome extension"
+icon: "puzzle-piece"
+---
+
+Configure and deploy the Onyx Chrome extension for your organization, enabling users to access Onyx from anywhere in their browser.
+
+## Installation Options
+
+### **Onyx Cloud Users**
+Your users can install the extension directly from the Chrome Web Store. No additional configuration is required.
+
+### **Self-Hosted Onyx**
+For self-hosted deployments, you'll need to provide users with the extension files or set up enterprise distribution.
+
+<Info>The Chrome extension feature is only available in Onyx versions v0.19.0 and above.</Info>
+
+## Manual Installation (Self-Hosted)
+
+Provide these instructions to your users for manual installation:
+
+1. **Download Extension**: Provide users with the Onyx Chrome Extension repository files
+2. **Install in Chrome**:
+   - Visit `chrome://extensions/` in Chrome browser
+   - Enable **Developer mode** in the upper right corner
+   - Click **Load unpacked**
+   - Select the Onyx Chrome Extension folder
+   - Click **Load**
+
+<Frame>
+  <img
+    src="/assets/images/chrome_extension/chrome_extension.png"
+    alt="Chrome Extension Installation"
+  />
+</Frame>
+
+## Enterprise Deployment
+
+For larger organizations, consider enterprise deployment methods:
+
+### **Google Admin Console Deployment**
+1. Upload the extension to your Google Admin Console
+2. Deploy to specific organizational units or all users
+3. Configure default settings and policies
+4. Control automatic updates
+
+### **Configuration Management**
+- **Server URL**: Pre-configure your Onyx server endpoint
+- **Default Settings**: Set up new tab behavior, bookmarks, and search preferences
+- **User Permissions**: Control which features users can access
+- **Update Policies**: Manage how the extension updates across your organization
+
+## Extension Configuration
+
+### **Server Connection**
+Configure the extension to connect to your Onyx instance:
+- Set the correct server URL in extension options
+- Ensure HTTPS is properly configured for security
+- Verify authentication methods are compatible
+
+### **User Experience Settings**
+- **New Tab Page**: Enable/disable custom Onyx new tab experience
+- **Sidebar Access**: Configure sidebar functionality
+- **Search Behavior**: Set default search preferences
+- **Bookmark Integration**: Configure favorite website bookmarks
+
+### **Security Considerations**
+- Ensure proper SSL/TLS certificates are in place
+- Configure CORS settings if needed
+- Review browser extension permissions
+- Set up proper authentication flows
+
+## Troubleshooting
+
+### **Common Issues**
+- **Connection Problems**: Verify server URL and network connectivity
+- **Authentication Errors**: Check authentication configuration and user permissions
+- **Feature Not Working**: Ensure Onyx version compatibility (v0.19.0+)
+
+### **User Support**
+- Provide clear installation documentation to users
+- Set up support channels for extension-related questions
+- Monitor extension usage and performance
+- Plan for regular updates and maintenance
+
+For additional configuration options and advanced deployment scenarios, consult the Onyx Chrome Extension documentation or contact support. 

@@ -1,0 +1,38 @@
+---
+title: Linear Connector
+description: 'Access the latest tickets from Linear'
+---
+
+## How it works
+The Linear connector pulls in all the Linear issues and the associated comments.
+
+Issues are updated every **10** minutes.
+
+## Setup
+
+### Configure your Linear Application + Onyx env variables
+
+<Info>
+  This is only necessary if self-hosting Onyx. If using [Onyx
+  Cloud](https://cloud.onyx.app), you can skip this step.
+</Info>
+
+    1. [Create a Linear Application.](https://linear.app/settings/api/applications/new) This step must be completed by an admin of the linear workspace you wish to connect to Onyx. The application callback urls should include `<your onyx host>/connector/oauth/callback/linear` For example, for a local deployment with default configurations one of the lines should be `http://localhost:3000/connector/oauth/callback/linear`
+    2. Set the following environment variables on your Onyx instance using the Client ID and Signing Secret provided by Linear for your new app:
+
+```bash
+LINEAR_CLIENT_ID=
+LINEAR_CLIENT_SECRET=
+```
+
+    3. Restart your Onyx instance as you normally would to apply the changes.
+
+### Indexing
+
+    1. In the Onyx UI, navigate to the Admin Dashboard and select the **Linear** Connector
+    2. Click the `Create New` button to go through the OAuth flow.
+    3. Once you've authorized the application, you'll be redirected back to Onyx.
+    4. Select the new credential and click Continue
+    5. Enter connector name and permissions information
+    6. Click `Create Connector` to begin indexing Linear issues and comments!
+

@@ -1,0 +1,241 @@
+---
+title: "SAML"
+description: "SAML authentication setup"
+icon: "certificate"
+---
+
+Configure Onyx with SAML (Security Assertion Markup Language) authentication to integrate with enterprise identity providers. SAML is widely used in enterprise environments and provides secure single sign-on capabilities with comprehensive identity federation features.
+
+<Info>
+**Enterprise Feature**
+
+SAML authentication is available as part of the Onyx Enterprise Edition. This provides enhanced security, compliance features, and enterprise-grade identity integration.
+
+[Contact us](https://docs.onyx.app/contact_us) to discuss Enterprise Edition features and setup assistance.
+</Info>
+
+## What is SAML?
+
+SAML is an XML-based standard for exchanging authentication and authorization data between identity providers and service providers. It offers:
+
+- **Enterprise SSO**: Single sign-on across multiple enterprise applications
+- **Identity Federation**: Secure identity sharing between organizations
+- **Attribute Sharing**: Rich user profile and role information exchange
+- **Strong Security**: Cryptographic signatures and encryption support
+- **Compliance**: Meets enterprise security and compliance requirements
+
+## Supported Identity Providers
+
+Onyx SAML integration works with major enterprise identity providers:
+
+### **Enterprise Identity Platforms**
+- **Microsoft Active Directory Federation Services (ADFS)** - Microsoft's enterprise federation solution
+- **Microsoft Entra ID (Azure AD)** - Cloud-based identity and access management
+- **Okta** - Comprehensive identity and access management platform
+- **Ping Identity** - Enterprise identity solutions for complex environments
+- **OneLogin** - Cloud identity and access management
+- **Shibboleth** - Open-source identity provider popular in education and research
+- **SimpleSAMLphp** - Open-source SAML identity provider
+
+### **Cloud and Hybrid Solutions**
+- **AWS Single Sign-On** - Amazon's managed SSO solution
+- **Google Workspace SAML** - Google's enterprise SAML capabilities
+- **Centrify** - Identity service for hybrid and multi-cloud environments
+- **JumpCloud** - Directory-as-a-service with SAML support
+
+## Enterprise Benefits
+
+### **Security and Governance**
+- **Centralized Authentication**: All user access managed through existing identity systems
+- **Advanced Security**: Support for strong authentication, encryption, and digital signatures
+- **Compliance Support**: Meet regulatory requirements like SOX, HIPAA, PCI DSS
+- **Audit and Reporting**: Comprehensive authentication logging and compliance reporting
+- **Risk Management**: Integration with identity governance and risk management systems
+
+### **Operational Efficiency**
+- **Automated Provisioning**: Users automatically provisioned based on directory attributes
+- **Role-Based Access**: Sophisticated role and attribute-based access control
+- **Lifecycle Management**: Automated user onboarding, updates, and offboarding
+- **Reduced Helpdesk**: Minimize password-related support requests
+
+### **User Experience**
+- **Seamless SSO**: Users access Onyx using existing corporate credentials
+- **Context-Aware Access**: Access decisions based on user context and risk factors
+- **Mobile Support**: Secure access from mobile devices using existing identity credentials
+- **Cross-Platform**: Consistent authentication experience across all platforms
+
+## SAML vs OIDC Comparison
+
+| Feature | SAML | OIDC |
+|---------|------|------|
+| **Protocol** | XML-based | JSON/REST-based |
+| **Enterprise Adoption** | Very High | High |
+| **Complexity** | More Complex | Simpler |
+| **Attribute Richness** | Very Rich | Moderate |
+| **Mobile Support** | Good | Excellent |
+| **Legacy Integration** | Excellent | Limited |
+
+## Configuration Overview
+
+SAML integration involves several key components:
+
+### **Identity Provider (IdP) Configuration**
+1. **Service Provider Registration**: Register Onyx as a service provider in your IdP
+2. **Attribute Mapping**: Configure which user attributes to send to Onyx  
+3. **Security Settings**: Set up encryption, signing, and certificate management
+4. **User Assignment**: Determine which users can access Onyx
+
+### **Onyx (Service Provider) Configuration**
+1. **IdP Metadata**: Import your identity provider's SAML metadata
+2. **Attribute Mapping**: Map SAML attributes to Onyx user properties
+3. **Role Assignment**: Configure role assignments based on SAML attributes
+4. **Security Configuration**: Set up certificate validation and encryption
+
+## Common Configuration Elements
+
+Typical SAML configuration parameters include:
+
+```bash
+# Authentication type
+AUTH_TYPE=saml
+
+# SAML Identity Provider Configuration
+SAML_IDP_METADATA_URL=https://your-idp.com/saml/metadata
+SAML_IDP_SSO_URL=https://your-idp.com/saml/sso
+SAML_IDP_X509_CERT=your_idp_certificate
+
+# Service Provider Configuration  
+SAML_SP_ENTITY_ID=https://your-onyx-domain.com/saml/metadata
+SAML_SP_ACS_URL=https://your-onyx-domain.com/saml/acs
+SAML_SP_X509_CERT=your_sp_certificate
+SAML_SP_PRIVATE_KEY=your_sp_private_key
+
+# Attribute Mapping
+SAML_USERNAME_ATTR=http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name
+SAML_EMAIL_ATTR=http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress
+SAML_GROUPS_ATTR=http://schemas.microsoft.com/ws/2008/06/identity/claims/groups
+
+# Security Settings
+SAML_SIGN_REQUESTS=true
+SAML_ENCRYPT_ASSERTIONS=true
+SAML_VALIDATE_SIGNATURES=true
+```
+
+## Provider-Specific Considerations
+
+### **Microsoft ADFS**
+- **On-Premises Integration**: Direct integration with Active Directory
+- **Claims Rules**: Flexible attribute mapping through claims rules
+- **Group Membership**: Rich group and role information available
+- **Certificate Management**: Enterprise certificate authority integration
+
+### **Microsoft Entra ID**
+- **Hybrid Identity**: Combine cloud and on-premises identity sources  
+- **Conditional Access**: Advanced access policies based on risk and context
+- **Application Gallery**: Pre-configured templates for common applications
+- **Multi-Factor Authentication**: Built-in MFA capabilities
+
+### **Okta**
+- **Universal Directory**: Comprehensive user profile management
+- **Adaptive MFA**: Risk-based multi-factor authentication
+- **Lifecycle Management**: Automated user provisioning and deprovisioning
+- **API Integration**: Extensive APIs for custom integrations
+
+## Security Best Practices
+
+### **Certificate Management**
+- **Strong Certificates**: Use certificates with at least 2048-bit RSA keys
+- **Certificate Rotation**: Regular certificate rotation and renewal processes
+- **Secure Storage**: Store private keys securely with proper access controls
+- **Certificate Validation**: Always validate certificate chains and expiration
+
+### **SAML Security**
+- **Sign Assertions**: Always require signed SAML assertions
+- **Encrypt Sensitive Data**: Encrypt assertions containing sensitive information  
+- **Validate Signatures**: Verify all SAML message signatures
+- **Time-based Validation**: Implement proper timestamp and replay attack protection
+
+### **Network Security**
+- **HTTPS Only**: All SAML endpoints must use HTTPS
+- **Network Segmentation**: Protect SAML endpoints with appropriate network controls
+- **Monitoring**: Implement comprehensive logging and monitoring of SAML transactions
+
+## Advanced Features
+
+### **Attribute-Based Access Control (ABAC)**
+- **Fine-Grained Permissions**: Use SAML attributes for detailed access control
+- **Dynamic Authorization**: Real-time access decisions based on user attributes
+- **Context-Aware Access**: Consider location, device, and time-based factors
+
+### **Multi-Tenant Support**
+- **Organization Mapping**: Map SAML attributes to Onyx organizations or tenants
+- **Isolation**: Ensure proper data isolation between organizations
+- **Custom Branding**: Organization-specific login experiences
+
+### **Just-In-Time Provisioning**
+- **Automatic User Creation**: Create users automatically on first login
+- **Profile Synchronization**: Keep user profiles synchronized with identity provider
+- **Group Mapping**: Automatically assign users to groups based on SAML attributes
+
+## Implementation Services
+
+Our enterprise implementation services include:
+
+### **Assessment and Planning**
+- **Identity Architecture Review**: Evaluate existing identity infrastructure
+- **Integration Planning**: Develop detailed implementation roadmap
+- **Security Assessment**: Review security requirements and compliance needs
+- **User Impact Analysis**: Plan for user experience and change management
+
+### **Configuration and Integration**
+- **IdP Configuration**: Set up Onyx integration in your identity provider
+- **Attribute Mapping**: Configure user attribute synchronization
+- **Security Implementation**: Set up encryption, signing, and certificate management
+- **Testing and Validation**: Comprehensive testing across user scenarios
+
+### **Migration and Support**
+- **User Migration**: Preserve existing user data during authentication migration
+- **Phased Rollout**: Gradual deployment across user groups
+- **Training**: User and administrator training on new authentication processes
+- **Ongoing Support**: Continued support for configuration changes and issues
+
+## Custom Identity Providers
+
+For organizations with custom or legacy identity providers:
+
+- **Custom SAML Implementations**: Support for non-standard SAML implementations
+- **Legacy System Integration**: Bridge older authentication systems with modern SAML
+- **Hybrid Deployments**: Support multiple authentication methods during transitions
+- **Custom Attribute Schemas**: Support for organization-specific user attributes
+
+## Compliance and Auditing
+
+SAML authentication supports various compliance requirements:
+
+### **Regulatory Compliance**
+- **SOX Compliance**: Proper access controls and audit trails
+- **HIPAA**: Healthcare information protection requirements
+- **PCI DSS**: Payment card industry security standards
+- **GDPR**: European data protection requirements
+
+### **Audit Capabilities**
+- **Authentication Logs**: Detailed logging of all authentication events
+- **Access Reports**: Regular reporting on user access patterns
+- **Compliance Reports**: Automated reports for compliance requirements
+- **Security Monitoring**: Real-time monitoring for security incidents
+
+## Next Steps
+
+Ready to implement SAML authentication for your enterprise Onyx deployment?
+
+1. **Enterprise Consultation**: Schedule a consultation to discuss your requirements
+2. **Technical Assessment**: Our team will evaluate your identity infrastructure
+3. **Proof of Concept**: Set up a pilot implementation to validate integration
+4. **Production Planning**: Develop a comprehensive rollout plan
+
+**Contact Information:**
+- **Email**: [founders@onyx.app](mailto:founders@onyx.app)  
+- **Slack Community**: Join our [Enterprise channel](https://join.slack.com/t/onyx-dot-app/shared_invite/zt-34lu4m7xg-TsKGO6h8PDvR5W27zTdyhA) for direct support
+- **Enterprise Sales**: Contact us for pricing and implementation timeline
+
+For organizations considering modern authentication alternatives, see our [OIDC setup guide](./oidc). 
