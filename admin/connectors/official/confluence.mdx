@@ -1,0 +1,37 @@
+---
+title: Confluence
+description: "Access knowledge from your company Wiki"
+icon: "share-nodes"
+---
+
+The Confluence connector pulls in all pages and comments from the specified spaces/pages once at the beginning and then pulls updates every 10 minutes.
+
+## Setting up
+
+### Authorization
+
+    1. Follow the guide described [here](https://docs.searchunify.com/Content/Content-Sources/Atlassian-Jira-Confluence-Authentication-Create-API-Token.htm) to get an access token.
+
+### Indexing
+
+    1. Navigate to the Admin Dashboard and select the **Confluence** Connector
+    2. For your credentials, provide the **Access Token** and the **Username** (typically an email) it belongs to:
+    3. For Confluence setup, you must provide:
+       - **Wiki Base URL**: The base URL of your Confluence instance (e.g., https://your-domain.atlassian.net/wiki)
+       - **Whether you're using Confluence Cloud or Datacenter**: Check the `Is Cloud` box if you are using a Confluence Cloud instance, uncheck for Confluence Server/Data Center
+    4. Then choose how you'd like this connector to index your Confluence instance:
+        - Everything: 
+            - If you select this option, the connector will index everything the provided credentials have access to.
+        - Space: 
+            - Input the key of the space you'd like to index (e.g., `KB`)
+        - Page: 
+            - Page ID: Specific page ID to index - leave empty to index the entire space (e.g., `131368` for a specific page)
+            - Index Recursively: Check this box to index the specified page AND all of its children.
+        - CQL Query: 
+            - If you'd like finer control over what is indexed, you can use a CQL query. The query must contain 'type=page' and any lastmodified filters will be overwritten. See the [CQL documentation](https://developer.atlassian.com/server/confluence/advanced-searching-using-cql/) for more information.
+
+    5. Click the `Connect` button! All the specified spaces/pages and related comments will now be pulled into Onyx every **10** minutes.
+
+#### Permission Syncing
+
+If you are an enterprise customer connecting to Confluence Server/Data Center and you would like to enable permission syncing, the provided credentials must be from an admin user.

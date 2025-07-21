@@ -7,246 +7,224 @@
     "light": "#4D9CFF",
     "dark": "#0050B4"
   },
-  "favicon": "onyx.svg",
+  "favicon": "assets/logo/onyx_favicon.svg",
   "navigation": {
     "tabs": [
       {
-        "tab": "Onyx Docs",
-        "groups": [
+        "tab": "General",
+        "pages": [
           {
-            "group": "Welcome to Onyx",
+            "group": "Getting Started",
             "pages": [
-              "introduction",
-              "quickstart",
-              "resourcing",
-              "slack_bot_setup",
-              "chrome_extension",
-              {
-                "group": "Gen AI Configs",
-                "icon": "stars",
-                "pages": [
-                  "gen_ai_configs/overview",
-                  "gen_ai_configs/open_ai",
-                  "gen_ai_configs/anthropic",
-                  "gen_ai_configs/azure",
-                  "gen_ai_configs/vertex_ai",
-                  "gen_ai_configs/huggingface",
-                  "gen_ai_configs/ollama",
-                  "gen_ai_configs/fastchat",
-                  "gen_ai_configs/custom_server"
-                ]
-              },
-              "configuration_guide",
-              "multilingual_setup",
-              "system_overview",
-              "contact_us"
+              "welcome",
+              "general/getting_started/quickstart",
+              "general/getting_started/use_cases",
+              "general/getting_started/configuration",
+              "general/getting_started/open_source_statement"
             ]
           },
           {
-            "group": "Connectors",
-            "icon": "plug",
+            "group": "Onyx Basics",
             "pages": [
-              "connectors/overview",
-              {
-                "group": "Connectors",
-                "pages": [
-                  "connectors/airtable",
-                  "connectors/asana",
-                  "connectors/bookstack",
-                  "connectors/clickup",
-                  "connectors/confluence",
-                  "connectors/discourse",
-                  "connectors/document360",
-                  "connectors/dropbox",
-                  "connectors/discord",
-                  "connectors/egnyte",
-                  "connectors/file",
-                  "connectors/fireflies",
-                  "connectors/freshdesk",
-                  "connectors/github",
-                  "connectors/gitlab",
-                  "connectors/gong",
-                  "connectors/gitbook",
-                  {
-                    "group": "Gmail Connector",
-                    "pages": [
-                      "connectors/gmail/overview",
-                      "connectors/gmail/oauth",
-                      "connectors/gmail/service_account"
-                    ]
-                  },
-                  {
-                    "group": "Google Drive Connector",
-                    "pages": [
-                      "connectors/google_drive/overview",
-                      "connectors/google_drive/service_account",
-                      "connectors/google_drive/oauth"
-                    ]
-                  },
-                  "connectors/google_sites",
-                  "connectors/google_storage",
-                  "connectors/guru",
-                  "connectors/hubspot",
-                  "connectors/highspot",
-                  "connectors/jira",
-                  "connectors/linear",
-                  "connectors/notion",
-                  "connectors/oci_storage",
-                  "connectors/productboard",
-                  "connectors/r2",
-                  "connectors/requesttracker",
-                  {
-                    "group": "S3 Connector",
-                    "pages": [
-                      "connectors/s3/overview",
-                      "connectors/s3/access-keys",
-                      "connectors/s3/iam-role",
-                      "connectors/s3/assume-role"
-                    ]
-                  },
-                  "connectors/salesforce",
-                  {
-                    "group": "Sharepoint Connector",
-                    "pages": [
-                      "connectors/sharepoint/overview",
-                      "connectors/sharepoint/client-secret",
-                      "connectors/sharepoint/certificate"
-                    ]
-                  },
-                  {
-                    "group": "Slack Connector",
-                    "pages": [
-                      "connectors/slack/slack_federated",
-                      "connectors/slack/slack_indexed"
-                    ]
-                  },
-                  "connectors/slab",
-                  "connectors/teams",
-                  "connectors/web",
-                  "connectors/zendesk",
-                  "connectors/zulip"
-                ]
-              }
+              "general/basics/chat",
+              "general/basics/search",
+              "general/basics/connectors",
+              "general/basics/assistants",
+              "general/basics/actions",
+              "general/basics/my_documents",
+              "general/basics/workflows",
+              "general/basics/faq"
             ]
           },
+
           {
-            "group": "Deploy Onyx",
+            "group": "Accessing Onyx",
             "pages": [
-              {
-                "group": "Deploy with AWS",
-                "icon": "aws",
-                "pages": [
-                  "production/aws/ec2",
-                  "production/aws/eks",
-                  "production/aws/ecs"
-                ]
-              },
-              "production/gcp",
-              "production/azure",
-              "production/digitalocean"
-            ]
-          },
-          {
-            "group": "Auth",
-            "pages": [
-              "basic_auth",
-              "google_oauth_setup",
-              "oidc_saml"
-            ]
-          },
-          {
-            "group": "Enterprise",
-            "pages": [
-              "enterprise_edition/overview",
-              "enterprise_edition/configuration",
-              "enterprise_edition/theming",
-              "enterprise_edition/custom_analytics",
-              "enterprise_edition/permissioning",
-              {
-                "group": "Curator",
-                "pages": [
-                  "enterprise_edition/curator/overview",
-                  "enterprise_edition/curator/admin_examples",
-                  "enterprise_edition/curator/curator_examples"
-                ]
-              }
-            ]
-          },
-          {
-            "group": "Guides",
-            "pages": [
-              {
-                "group": "Assistants",
-                "icon": "square-plus",
-                "pages": [
-                  "guides/assistants/overview",
-                  "guides/assistants/for_curators",
-                  "guides/assistants/for_basic"
-                ]
-              },
-              "guides/providers",
-              "guides/embedding_providers",
-              "guides/agent_search"
-            ]
-          },
-          {
-            "group": "Actions",
-            "pages": [
-              "actions/overview",
-              "actions/custom"
-            ]
-          },
-          {
-            "group": "More",
-            "pages": [
-              {
-                "group": "Use Cases",
-                "pages": [
-                  "more/use_cases/overview",
-                  "more/use_cases/enterprise_search",
-                  "more/use_cases/ai_platform",
-                  "more/use_cases/support",
-                  "more/use_cases/sales",
-                  "more/use_cases/operations"
-                ]
-              },
-              "more/faq",
-              "more/telemetry",
-              "more/internet_search",
-              "more/options"
+              "general/accessing_onyx/web_interface",
+              "general/accessing_onyx/slack",
+              "general/accessing_onyx/chrome_extension",
+              "general/accessing_onyx/ios_app"
             ]
           }
         ]
       },
       {
-        "tab": "(New!) Deployment",
+        "tab": "Administrators",
         "pages": [
           {
             "group": "Getting Started",
             "pages": [
-              "deployment/overview",
+              "admin/getting_started/overview",
+              "admin/getting_started/connectors",
+              "admin/getting_started/actions",
+              "admin/getting_started/agents",
+              "admin/getting_started/internet_search",
+              "admin/getting_started/enterprise_edition"
+            ]
+          },
+          {
+            "group": "LLM Configuration",
+            "pages": [
+              "admin/getting_started/llm",
+              "admin/llm_providers/openai",
+              "admin/llm_providers/anthropic",
+              "admin/llm_providers/azure_openai",
+              "admin/llm_providers/vertex_ai",
+              "admin/llm_providers/ollama",
+              "admin/llm_providers/custom"
+            ]
+          },
+          {
+            "group": "Connectors",
+            "pages": [
+              {
+                "group": "Official Connectors",
+                "pages": [
+                  {
+                    "group": "Gmail",
+                    "pages": [
+                      "admin/connectors/official/gmail/overview",
+                      "admin/connectors/official/gmail/oauth",
+                      "admin/connectors/official/gmail/service_account"
+                    ]
+                  },
+                  {
+                    "group": "Google Drive",
+                    "pages": [
+                      "admin/connectors/official/google_drive/overview",
+                      "admin/connectors/official/google_drive/oauth",
+                      "admin/connectors/official/google_drive/service_account"
+                    ]
+                  },
+                  {
+                    "group": "S3",
+                    "pages": [
+                      "admin/connectors/official/s3/overview",
+                      "admin/connectors/official/s3/access-keys",
+                      "admin/connectors/official/s3/assume-role",
+                      "admin/connectors/official/s3/iam-role"
+                    ]
+                  },
+                  {
+                    "group": "Slack",
+                    "pages": [
+                      "admin/connectors/official/slack/slack_indexed",
+                      "admin/connectors/official/slack/slack_federated"
+                    ]
+                  },
+                  "admin/connectors/official/airtable",
+                  "admin/connectors/official/asana",
+                  "admin/connectors/official/bookstack",
+                  "admin/connectors/official/clickup",
+                  "admin/connectors/official/confluence",
+                  "admin/connectors/official/discord",
+                  "admin/connectors/official/discourse",
+                  "admin/connectors/official/document360",
+                  "admin/connectors/official/dropbox",
+                  "admin/connectors/official/egnyte",
+                  "admin/connectors/official/file",
+                  "admin/connectors/official/fireflies",
+                  "admin/connectors/official/freshdesk",
+                  "admin/connectors/official/gitbook",
+                  "admin/connectors/official/github",
+                  "admin/connectors/official/gitlab",
+                  "admin/connectors/official/gong",
+                  "admin/connectors/official/google_sites",
+                  "admin/connectors/official/google_storage",
+                  "admin/connectors/official/guru",
+                  "admin/connectors/official/highspot",
+                  "admin/connectors/official/hubspot",
+                  "admin/connectors/official/jira",
+                  "admin/connectors/official/linear",
+                  "admin/connectors/official/notion",
+                  "admin/connectors/official/oci_storage",
+                  "admin/connectors/official/productboard",
+                  "admin/connectors/official/r2",
+                  "admin/connectors/official/requesttracker",
+                  "admin/connectors/official/salesforce",
+                  "admin/connectors/official/sharepoint",
+                  "admin/connectors/official/slab",
+                  "admin/connectors/official/teams",
+                  "admin/connectors/official/web",
+                  "admin/connectors/official/xenforo",
+                  "admin/connectors/official/zendesk",
+                  "admin/connectors/official/zulip"
+                ]
+              },
+              {
+                "group": "Community Connectors",
+                "pages": [
+                  "admin/connectors/community/placeholder"
+                ]
+              }
+            ]
+          },
+
+
+
+          {
+            "group": "Onyx Everywhere",
+            "pages": [
+              "admin/onyx_everywhere/slack",
+              "admin/onyx_everywhere/chrome",
+              "admin/onyx_everywhere/teams"
+            ]
+          },
+          {
+            "group": "Curators",
+            "pages": [
+              "admin/curators/overview"
+            ]
+          },
+          {
+            "group": "Analytics",
+            "pages": [
+              "admin/analytics/queries",
+              "admin/analytics/statistics"
+            ]
+          },
+          {
+            "group": "Billing",
+            "pages": [
+              "admin/billing/placeholder"
+            ]
+          },
+          {
+            "group": "Configuration",
+            "pages": [
+              "admin/configurations/workspace"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Deployment",
+        "pages": [
+          {
+            "group": "Getting Started",
+            "pages": [
               "deployment/getting_started/quickstart",
-              "deployment/getting_started/resourcing"
+              "deployment/getting_started/resourcing",
+              "deployment/getting_started/system_overview",
+              {
+                "group": "Hosting Options",
+                "pages": [
+                  "deployment/hosting_options/open_source",
+                  "deployment/hosting_options/self_hosted_ee",
+                  "deployment/hosting_options/onyx_cloud"
+                ]
+              }
             ]
           },
           {
             "group": "Deployment Guides",
             "pages": [
               {
-                "group": "Local Deployment",
-                "icon": "desktop",
-                "pages": [
-                  "deployment/deployment_guides/local_deployments/docker",
-                  "deployment/deployment_guides/local_deployments/kubernetes"
-                ]
-              },
-              {
                 "group": "AWS",
-                "icon": "aws",
                 "pages": [
                   "deployment/deployment_guides/aws/ec2",
-                  "deployment/deployment_guides/aws/eks",
-                  "deployment/deployment_guides/aws/rds"
+                  "deployment/deployment_guides/aws/ecs",
+                  "deployment/deployment_guides/aws/eks"
                 ]
               },
               "deployment/deployment_guides/gcp",
@@ -267,16 +245,18 @@
           {
             "group": "Configuration",
             "pages": [
-              "deployment/configuration/configuration",
-              "deployment/configuration/chrome_extension"
+              "deployment/configuration/env_vars",
+              "deployment/configuration/multilingual",
+              "deployment/configuration/chrome_extension",
+              "deployment/configuration/ios_app"
             ]
           },
           {
             "group": "Miscellaneous",
             "pages": [
               "deployment/miscellaneous/release_process",
-              "deployment/miscellaneous/enterprise_edition",
-              "deployment/miscellaneous/contact_us"
+              "deployment/miscellaneous/troubleshooting",
+              "deployment/miscellaneous/enterprise_edition"
             ]
           }
         ]
@@ -284,138 +264,277 @@
       {
         "tab": "Developers",
         "pages": [
+          "contributing/overview",
+          {
+            "group": "API Reference",
+            "pages": [
+              {
+                "group": "Getting Started",
+                "pages": [
+                  "api_reference/getting_started/authentication"
+                ]
+              },
+              {
+                "group": "Chat",
+                "pages": [
+                  "api_reference/endpoints/chat/get_user_chat_sessions",
+                  "api_reference/endpoints/chat/get_chat_session",
+                  "api_reference/endpoints/chat/create_chat_session",
+                  "api_reference/endpoints/chat/rename_chat_session",
+                  "api_reference/endpoints/chat/send_message",
+                  "api_reference/endpoints/chat/send_message_simple_api"
+                ]
+              },
+              {
+                "group": "Connectors",
+                "pages": [
+                  "api_reference/endpoints/connectors/deletion_attempt",
+                  "api_reference/endpoints/connectors/connector",
+                  "api_reference/endpoints/connectors/connector_by_id_patch",
+                  "api_reference/endpoints/connectors/connector_by_id_delete",
+                  "api_reference/endpoints/connectors/manage_connectors",
+                  "api_reference/endpoints/connectors/get_connector_id",
+                  "api_reference/endpoints/connectors/swap",
+                  "api_reference/endpoints/connectors/put_cc_pair",
+                  "api_reference/endpoints/connectors/delete_cc_pair"
+                ]
+              },
+              {
+                "group": "Document Sets",
+                "pages": [
+                  "api_reference/endpoints/document_sets/placeholder"
+                ]
+              },
+              {
+                "group": "Personas",
+                "pages": [
+                  "api_reference/endpoints/personas/placeholder"
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Old",
+        "pages": [
           {
             "group": "Getting Started",
             "pages": [
-              "developers/overview",
-              "developers/core_concepts"
+              "old/quickstart",
+              "old/resourcing",
+              "old/slack_bot_setup",
+              "old/chrome_extension",
+              {
+                "group": "Gen AI Configs",
+                "icon": "stars",
+                "pages": [
+                  "old/gen_ai_configs/overview",
+                  "old/gen_ai_configs/open_ai",
+                  "old/gen_ai_configs/anthropic",
+                  "old/gen_ai_configs/azure",
+                  "old/gen_ai_configs/vertex_ai",
+                  "old/gen_ai_configs/huggingface",
+                  "old/gen_ai_configs/ollama",
+                  "old/gen_ai_configs/fastchat",
+                  "old/gen_ai_configs/custom_server"
+                ]
+              },
+              "old/configuration_guide",
+              "old/multilingual_setup",
+              "old/system_overview",
+              "old/contact_us"
             ]
           },
           {
-            "group": "Guides & Examples",
-            "icon": "book-open",
+            "group": "Guides",
             "pages": [
-              "developers/guides/chat_guide",
-              "developers/guides/index_files_ingestion_api",
-              "developers/guides/create_connector"
+              "old/guides/providers",
+              "old/guides/embedding_providers",
+              "old/guides/agent_search"
             ]
           },
           {
-            "group": "API Reference",
+            "group": "Connectors",
+            "icon": "plug",
+            "pages": [
+              "old/connectors/overview",
+              {
+                "group": "Connectors",
+                "pages": [
+                  "old/connectors/airtable",
+                  "old/connectors/asana",
+                  "old/connectors/bookstack",
+                  "old/connectors/clickup",
+                  "old/connectors/confluence",
+                  "old/connectors/discourse",
+                  "old/connectors/document360",
+                  "old/connectors/dropbox",
+                  "old/connectors/discord",
+                  "old/connectors/egnyte",
+                  "old/connectors/file",
+                  "old/connectors/fireflies",
+                  "old/connectors/freshdesk",
+                  "old/connectors/github",
+                  "old/connectors/gitlab",
+                  "old/connectors/gong",
+                  "old/connectors/gitbook",
+                  {
+                    "group": "Gmail Connector",
+                    "pages": [
+                      "old/connectors/gmail/overview",
+                      "old/connectors/gmail/oauth",
+                      "old/connectors/gmail/service_account"
+                    ]
+                  },
+                  {
+                    "group": "Google Drive Connector",
+                    "pages": [
+                      "old/connectors/google_drive/overview",
+                      "old/connectors/google_drive/service_account",
+                      "old/connectors/google_drive/oauth"
+                    ]
+                  },
+                  "old/connectors/google_sites",
+                  "old/connectors/google_storage",
+                  "old/connectors/guru",
+                  "old/connectors/hubspot",
+                  "old/connectors/highspot",
+                  "old/connectors/jira",
+                  "old/connectors/linear",
+                  "old/connectors/notion",
+                  "old/connectors/oci_storage",
+                  "old/connectors/productboard",
+                  "old/connectors/r2",
+                  "old/connectors/requesttracker",
+                  {
+                    "group": "S3 Connector",
+                    "pages": [
+                      "old/connectors/s3/overview",
+                      "old/connectors/s3/access-keys",
+                      "old/connectors/s3/iam-role",
+                      "old/connectors/s3/assume-role"
+                    ]
+                  },
+                  "old/connectors/salesforce",
+                  "old/connectors/sharepoint",
+                  {
+                    "group": "Slack Connector",
+                    "pages": [
+                      "old/connectors/slack/slack_federated",
+                      "old/connectors/slack/slack_indexed"
+                    ]
+                  },
+                  "old/connectors/slab",
+                  "old/connectors/teams",
+                  "old/connectors/web",
+                  "old/connectors/zendesk",
+                  "old/connectors/zulip"
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "(New!) Deployment",
+        "pages": [
+          {
+            "group": "Auth",
+            "pages": [
+              "old/basic_auth",
+              "old/google_oauth_setup",
+              "old/oidc_saml"
+            ]
+          },
+          {
+            "group": "Deploy Onyx",
+            "pages": [
+              {
+                "group": "Deploy with AWS",
+                "icon": "aws",
+                "pages": [
+                  "old/aws/ec2",
+                  "old/aws/eks",
+                  "old/aws/ecs"
+                ]
+              },
+              "old/gcp",
+              "old/azure",
+              "old/digitalocean"
+            ]
+          },
+          {
+            "group": "Deployment Guides",
+            "pages": [
+              "old/enterprise/overview",
+              "old/enterprise/configuration",
+              "old/enterprise/theming",
+              "old/enterprise/custom_analytics",
+              "old/enterprise/permissioning",
+              {
+                "group": "Local Deployment",
+                "icon": "desktop",
+                "pages": [
+                  "old/enterprise/curator/overview",
+                  "old/enterprise/curator/admin_examples",
+                  "old/enterprise/curator/curator_examples"
+                ]
+              },
+              {
+                "group": "AWS",
+                "icon": "aws",
+                "pages": [
+                  "deployment/deployment_guides/aws/ec2",
+                  "deployment/deployment_guides/aws/eks",
+                  "deployment/deployment_guides/aws/rds"
+                ]
+              },
+              "deployment/deployment_guides/gcp",
+              "deployment/deployment_guides/azure",
+              "deployment/deployment_guides/digital_ocean"
+            ]
+          },
+
+          {
+            "group": "Actions",
+            "pages": [
+              "old/actions/overview",
+              "old/actions/custom"
+            ]
+          },
+          {
+            "group": "More",
             "pages": [
               {
                 "group": "Chat",
                 "icon": "comment",
                 "pages": [
-                  "developers/api_reference/chat/get_chat_session",
-                  "developers/api_reference/chat/create_chat_session",
-                  "developers/api_reference/chat/send_message",
-                  "developers/api_reference/chat/send_message_simple",
-                  "developers/api_reference/chat/upload_file",
-                  "developers/api_reference/chat/delete_chat",
-                  "developers/api_reference/chat/share_chat_session",
-                  "developers/api_reference/chat/search_chats",
-                  "developers/api_reference/chat/create_folder",
-                  "developers/api_reference/chat/add_chat_to_folder"
+                  "old/more/use_cases/overview",
+                  "old/more/use_cases/enterprise_search",
+                  "old/more/use_cases/ai_platform",
+                  "old/more/use_cases/support",
+                  "old/more/use_cases/sales",
+                  "old/more/use_cases/operations"
                 ]
               },
-              {
-                "group": "Search",
-                "icon": "magnifying-glass",
-                "pages": [
-                  "developers/api_reference/search/get_document_by_id",
-                  "developers/api_reference/search/document_search"
-                ]
-              },
-              {
-                "group": "Agents",
-                "icon": "robot",
-                "pages": [
-                  "developers/api_reference/agents/list_agents",
-                  "developers/api_reference/agents/get_agent_by_id",
-                  "developers/api_reference/agents/create_agent",
-                  "developers/api_reference/agents/update_agent",
-                  "developers/api_reference/agents/delete_agent"
-                ]
-              },
-              {
-                "group": "Actions",
-                "icon": "play",
-                "pages": [
-                  "developers/api_reference/actions/list_actions",
-                  "developers/api_reference/actions/get_action_by_id",
-                  "developers/api_reference/actions/create_action",
-                  "developers/api_reference/actions/update_action",
-                  "developers/api_reference/actions/delete_action"
-                ]
-              },
-              {
-                "group": "Connectors",
-                "icon": "plug",
-                "pages": [
-                  "developers/api_reference/files_connectors/create_connector",
-                  "developers/api_reference/files_connectors/list_credentials",
-                  "developers/api_reference/files_connectors/associate_connector_credential"
-                ]
-              },
-              {
-                "group": "Documents & Ingestion",
-                "icon": "page",
-                "pages": [
-                  "developers/api_reference/files_connectors/get_document_by_id",
-                  "developers/api_reference/files_connectors/list_ingestion_documents",
-                  "developers/api_reference/files_connectors/ingest_document",
-                  "developers/api_reference/files_connectors/delete_document_by_id",
-                  "developers/api_reference/miscellaneous/set_document_boost"
-                ]
-              },
-              {
-                "group": "User Management",
-                "icon": "user",
-                "pages": [
-                  "developers/api_reference/user_management/list_users",
-                  "developers/api_reference/user_management/get_user_by_id",
-                  "developers/api_reference/user_management/create_user",
-                  "developers/api_reference/user_management/update_user",
-                  "developers/api_reference/user_management/delete_user",
-                  "developers/api_reference/user_management/invite_user",
-                  "developers/api_reference/user_management/cancel_user_invite",
-                  "developers/api_reference/user_management/reset_user_password"
-                ]
-              },
-              {
-                "group": "Group Management",
-                "icon": "user-group",
-                "pages": [
-                  "developers/api_reference/group_management/list_groups",
-                  "developers/api_reference/group_management/create_group",
-                  "developers/api_reference/group_management/update_group",
-                  "developers/api_reference/group_management/add_user_to_group",
-                  "developers/api_reference/group_management/delete_user_from_group",
-                  "developers/api_reference/group_management/delete_group"
-                ]
-              },
-              {
-                "group": "Analytics",
-                "icon": "chart-line",
-                "pages": [
-                  "developers/api_reference/analytics/get_query_analytics",
-                  "developers/api_reference/analytics/get_user_analytics",
-                  "developers/api_reference/analytics/get_onyxbot_analytics",
-                  "developers/api_reference/analytics/get_assistant_stats",
-                  "developers/api_reference/analytics/read_usage_report",
-                  "developers/api_reference/analytics/start_query_history_export"
-                ]
-              },
-              {
-                "group": "Miscellaneous",
-                "icon": "list",
-                "pages": [
-                  "developers/api_reference/miscellaneous/health_check",
-                  "developers/api_reference/miscellaneous/set_rate_limit",
-                  "developers/api_reference/miscellaneous/delete_rate_limit"
-                ]
-              }
+              "old/more/faq",
+              "old/more/telemetry",
+              "old/more/internet_search",
+              "old/more/options"
+            ]
+          },
+          {
+            "group": "Backend APIs",
+            "pages": [
+              "old/backend_apis/ingestion"
+            ]
+          },
+          {
+            "group": "Cloud APIs",
+            "pages": [
+              "old/apis/answer_with_quote",
+              "old/apis/send_message_simple_api"
             ]
           }
         ]
@@ -424,9 +543,9 @@
     "global": {
       "anchors": [
         {
-          "anchor": "Blog",
-          "href": "https://onyx.app/blog",
-          "icon": "newspaper"
+          "anchor": "Try Onyx Cloud!",
+          "href": "https://cloud.onyx.app/?utm_source=docs",
+          "icon": "cloud"
         },
         {
           "anchor": "Slack",
@@ -442,12 +561,12 @@
     }
   },
   "logo": {
-    "light": "/logo/onyx_logo.svg",
-    "dark": "/logo/onyx_logo_inverted.svg"
+    "light": "/assets/logo/onyx_logo.svg",
+    "dark": "/assets/logo/onyx_logo_inverted.svg"
   },
   "api": {
     "openapi": [
-      "developers/api_reference/openapi.json"
+      "api_reference/openapi.json"
     ]
   },
   "navbar": {
@@ -463,6 +582,13 @@
         "icon": "github"
       }
     ]
+  },
+  "topbar": {
+    "cta": {
+      "type": "link",
+      "text": "Visit onyx.app",
+      "href": "https://onyx.app"
+    }
   },
   "footer": {
     "socials": {

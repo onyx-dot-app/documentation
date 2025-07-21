@@ -1,0 +1,415 @@
+---
+title: Azure OpenAI Configuration
+description: "Configure Azure OpenAI for enterprise-grade GPT models"
+icon: "microsoft"
+---
+
+Configure Onyx to use Azure OpenAI, providing enterprise-grade access to GPT models with enhanced security, compliance features, and data residency options. Azure OpenAI is ideal for organizations requiring enterprise-level guarantees and regional data processing.
+
+## Enterprise Benefits
+
+### **Security and Compliance**
+- **Data Residency**: Keep data in your preferred Azure region
+- **Enterprise SLA**: 99.9% uptime guarantee with enterprise support
+- **Security Controls**: Enhanced security with Azure Active Directory integration
+- **Compliance**: SOC 2, HIPAA, and other enterprise compliance standards
+
+### **Enhanced Features**
+- **Private Networks**: Deploy in your Azure virtual network
+- **Content Filtering**: Advanced content safety and filtering capabilities
+- **Monitoring**: Comprehensive logging and monitoring through Azure
+- **Scaling**: Dedicated throughput units for predictable performance
+
+## Available Models
+
+Azure OpenAI provides access to the same GPT models as OpenAI, with additional enterprise features:
+
+### **GPT-4 Family**
+- **GPT-4** - Most capable model with excellent reasoning
+- **GPT-4 Turbo** - Faster processing with larger context windows
+- **GPT-4o** - Optimized performance and efficiency
+
+### **GPT-3.5 Family**
+- **GPT-3.5-turbo** - Fast and cost-effective
+- **GPT-3.5-turbo-16k** - Extended context window
+
+### **Additional Models**
+- **DALL-E 3** - Image generation capabilities
+- **Text-to-Speech** - Voice synthesis
+- **Whisper** - Speech recognition
+
+## Setup Process
+
+### **1. Azure Portal Setup**
+
+#### **Access Azure Portal**
+1. Navigate to the [Azure Portal](https://portal.azure.com/)
+2. Search for **"Azure OpenAI Service"**
+3. Ensure you have the necessary permissions to create resources
+
+![Azure OpenAI Service](/assets/images/gen_ai/azure/1_azure.png)
+
+#### **Create Azure OpenAI Resource**
+1. Click **"Create a resource"** to begin setup
+2. Select **"Azure OpenAI"** from the marketplace
+
+![Create a resource](/assets/images/gen_ai/azure/2_create.png)
+
+3. **Configure Resource Settings**:
+   - **Subscription**: Select your Azure subscription
+   - **Resource Group**: Create new or select existing
+   - **Region**: Choose your preferred data region
+   - **Name**: Unique name for your OpenAI service
+   - **Pricing Tier**: Select appropriate tier
+
+![Create resource group](/assets/images/gen_ai/azure/3_createopenai.png)
+
+4. Click **"Review + Create"** and then **"Create"**
+5. Wait for deployment to complete
+
+### **2. Azure OpenAI Studio Configuration**
+
+#### **Access Azure OpenAI Studio**
+1. Navigate to [Azure OpenAI Studio](https://oai.azure.com/)
+2. Sign in with your Azure account
+3. Select your newly created Azure OpenAI resource
+
+#### **Deploy Models**
+1. Access the **Chat** section in the studio
+
+![Chat panel](/assets/images/gen_ai/azure/4_chatplayground.png)
+
+2. Create a **new deployment**:
+   - Click **"Create new deployment"**
+   - Select your desired model (e.g., GPT-4)
+   - Choose deployment settings
+
+![Create deployment](/assets/images/gen_ai/azure/5_model.png)
+![Select model](/assets/images/gen_ai/azure/6_deploy.png)
+
+3. **Configure deployment settings**:
+   - **Deployment name**: Give your deployment a name
+   - **Model version**: Select model version
+   - **Scale settings**: Configure throughput units
+
+### **3. Test Configuration**
+
+Before integrating with Onyx, test your deployment:
+
+1. Use the **Chat playground** to test your deployment
+
+![Validate configuration](/assets/images/gen_ai/azure/7_validate.png)
+
+2. Send test messages to verify functionality
+3. Check response quality and latency
+
+### **4. Retrieve Connection Details**
+
+#### **Get API Credentials**
+1. Click **"View Code"** in the playground
+
+![View Code](/assets/images/gen_ai/azure/8_secrets.png)
+
+2. **Extract the following information**:
+   - **API Base**: Your Azure endpoint URL
+   - **API Key**: Your generated access key
+   - **API Version**: The version string (found after `?api-version=`)
+   - **Deployment Name**: Name of your model deployment
+
+![Credentials](/assets/images/gen_ai/azure/9_version.png)
+
+## Onyx Configuration
+
+### **Configure in Onyx Admin Panel**
+
+1. **Navigate to LLM Configuration**:
+   - Access your Onyx admin dashboard
+   - Go to the **LLM** section
+   - Select **"Azure OpenAI"** provider
+
+2. **Enter Connection Details**:
+   ```
+   API Base: https://your-resource.openai.azure.com/
+   API Key: your-api-key-here
+   API Version: 2024-02-15-preview
+   Deployment Name: your-deployment-name
+   ```
+
+3. **Test Connection**: Verify the configuration works correctly
+
+### **Environment Variables**
+
+For programmatic configuration, use these environment variables:
+
+```bash
+# Azure OpenAI Configuration
+AZURE_OPENAI_API_BASE=https://your-resource.openai.azure.com/
+AZURE_OPENAI_API_KEY=your-api-key
+AZURE_OPENAI_API_VERSION=2024-02-15-preview
+AZURE_OPENAI_DEPLOYMENT_NAME=your-deployment-name
+```
+
+## Advanced Configuration
+
+### **Regional Deployment**
+
+Choose your Azure region based on:
+- **Data Residency**: Legal requirements for data location
+- **Latency**: Proximity to your users
+- **Compliance**: Regional compliance requirements
+- **Availability**: Model availability varies by region
+
+**Recommended Regions:**
+- **US East**: Generally first to receive new features
+- **US West**: Alternative US region
+- **Europe**: For European data residency
+- **Asia Pacific**: For Asian markets
+
+### **Scaling and Performance**
+
+#### **Throughput Units**
+- **Standard**: Shared throughput for development and testing
+- **Provisioned**: Dedicated throughput units for production
+- **Auto-scaling**: Automatic scaling based on demand
+
+#### **Performance Tuning**
+```json
+{
+  "max_tokens": 2048,
+  "temperature": 0.7,
+  "top_p": 0.95,
+  "frequency_penalty": 0.0,
+  "presence_penalty": 0.0
+}
+```
+
+### **Security Configuration**
+
+#### **Network Security**
+- **Private Endpoints**: Deploy within your Azure virtual network
+- **IP Restrictions**: Limit access to specific IP addresses
+- **Azure AD Integration**: Use managed identities for authentication
+
+#### **Content Filtering**
+Configure Azure's content filtering system:
+- **Hate Speech**: Filter hateful content
+- **Violence**: Block violent content
+- **Self-Harm**: Prevent self-harm related content
+- **Sexual Content**: Filter sexual content
+
+## Cost Management
+
+### **Pricing Model**
+
+Azure OpenAI uses a combination of:
+- **Per-Token Pricing**: Input and output tokens
+- **Throughput Units**: For provisioned throughput
+- **Data Processing**: Regional data processing fees
+
+### **Cost Optimization**
+
+1. **Monitor Usage**: Use Azure Cost Management
+2. **Right-Size Deployments**: Match throughput to actual needs
+3. **Regional Selection**: Consider regional pricing differences
+4. **Model Selection**: Use appropriate models for each task
+5. **Caching**: Implement response caching to reduce API calls
+
+### **Budgeting and Alerts**
+
+Set up Azure budget alerts:
+```bash
+# Azure CLI example
+az consumption budget create \
+  --budget-name "OpenAI-Budget" \
+  --amount 1000 \
+  --time-grain Monthly \
+  --start-date 2024-01-01 \
+  --end-date 2024-12-31
+```
+
+## Security and Compliance
+
+### **Data Protection**
+- **Encryption**: All data encrypted in transit and at rest
+- **Data Residency**: Data stays in your selected Azure region
+- **Retention**: Configure data retention policies
+- **Deletion**: Secure data deletion capabilities
+
+### **Access Control**
+- **Azure RBAC**: Role-based access control
+- **Managed Identity**: Use Azure managed identities
+- **API Keys**: Secure API key management
+- **Audit Logs**: Comprehensive audit logging
+
+### **Compliance Standards**
+Azure OpenAI supports:
+- **SOC 2 Type II**: Security controls compliance
+- **HIPAA**: Healthcare compliance
+- **ISO 27001**: Information security standards
+- **GDPR**: European data protection compliance
+
+## Troubleshooting
+
+### **Common Issues**
+
+#### **Deployment Failures**
+```
+Resource quota exceeded
+```
+- **Solution**: Request quota increase through Azure support
+- **Alternative**: Use different region or model
+- **Prevention**: Plan capacity requirements in advance
+
+#### **Authentication Errors**
+```
+401 Unauthorized
+```
+- Verify API key is correct and active
+- Check if resource is in the correct region
+- Confirm API version is supported
+
+#### **Rate Limiting**
+```
+429 Too Many Requests
+```
+- Increase throughput units for your deployment
+- Implement exponential backoff
+- Monitor usage patterns
+
+### **Performance Issues**
+
+#### **High Latency**
+- **Check Region**: Ensure deployment is in optimal region
+- **Network Path**: Verify network connectivity
+- **Throughput**: Consider provisioned throughput units
+
+#### **Inconsistent Performance**
+- **Upgrade to Provisioned**: Use dedicated throughput units
+- **Scale Settings**: Adjust auto-scaling configuration
+- **Monitor Metrics**: Use Azure Monitor for diagnostics
+
+### **Debugging Tools**
+
+Use Azure's diagnostic tools:
+- **Azure Monitor**: Performance and availability monitoring
+- **Application Insights**: Detailed application telemetry
+- **Resource Health**: Service health status
+- **Activity Logs**: Audit trail of all operations
+
+## Best Practices
+
+### **Production Deployment**
+1. **Use Provisioned Throughput**: For consistent performance
+2. **Enable Monitoring**: Set up comprehensive monitoring
+3. **Configure Alerts**: Set up proactive alerts
+4. **Implement Retry Logic**: Handle transient failures
+5. **Use Managed Identity**: Avoid storing API keys
+
+### **Security Hardening**
+1. **Network Isolation**: Use private endpoints
+2. **Access Controls**: Implement least privilege access
+3. **Content Filtering**: Enable appropriate content filters
+4. **Audit Logging**: Enable and monitor audit logs
+5. **Key Rotation**: Regularly rotate API keys
+
+### **Cost Optimization**
+1. **Monitor Usage**: Regular usage reviews
+2. **Right-Size Resources**: Match capacity to demand
+3. **Use Appropriate Models**: Don't over-engineer solutions
+4. **Implement Caching**: Reduce redundant API calls
+5. **Set Budgets**: Proactive cost management
+
+## Integration Examples
+
+### **Basic Azure OpenAI Integration**
+
+```python
+from openai import AzureOpenAI
+
+client = AzureOpenAI(
+    api_key="your-api-key",
+    api_version="2024-02-15-preview",
+    azure_endpoint="https://your-resource.openai.azure.com/"
+)
+
+response = client.chat.completions.create(
+    model="your-deployment-name",
+    messages=[
+        {"role": "user", "content": "Hello Azure OpenAI!"}
+    ]
+)
+
+print(response.choices[0].message.content)
+```
+
+### **With Managed Identity**
+
+```python
+from azure.identity import DefaultAzureCredential
+from openai import AzureOpenAI
+
+# Use managed identity instead of API key
+credential = DefaultAzureCredential()
+token = credential.get_token("https://cognitiveservices.azure.com/.default")
+
+client = AzureOpenAI(
+    api_key=token.token,
+    api_version="2024-02-15-preview",
+    azure_endpoint="https://your-resource.openai.azure.com/"
+)
+```
+
+### **Error Handling**
+
+```python
+from openai import AzureOpenAI
+from azure.core.exceptions import AzureError
+
+client = AzureOpenAI(
+    api_key="your-api-key",
+    api_version="2024-02-15-preview",
+    azure_endpoint="https://your-resource.openai.azure.com/"
+)
+
+try:
+    response = client.chat.completions.create(
+        model="your-deployment-name",
+        messages=[{"role": "user", "content": "Hello!"}]
+    )
+except AzureError as e:
+    print(f"Azure error: {e}")
+except Exception as e:
+    print(f"General error: {e}")
+```
+
+## Migration from OpenAI
+
+When migrating from OpenAI to Azure OpenAI:
+
+1. **Model Compatibility**: Same models, different endpoints
+2. **API Changes**: Minor differences in authentication
+3. **Feature Parity**: Most features available, some timing differences
+4. **Data Migration**: No data migration needed
+5. **Testing**: Thorough testing recommended before production switch
+
+### **Migration Checklist**
+- [ ] Create Azure OpenAI resource
+- [ ] Deploy required models
+- [ ] Update API endpoints and authentication
+- [ ] Test all integrations
+- [ ] Monitor performance and costs
+- [ ] Update monitoring and alerting
+
+## Getting Help
+
+For Azure OpenAI support:
+- **Azure Support**: Create support tickets through Azure portal
+- **Documentation**: [Azure OpenAI Documentation](https://docs.microsoft.com/azure/cognitive-services/openai/)
+- **Community**: Azure community forums
+
+For Onyx integration help:
+- **Onyx Slack**: Join our [community](https://join.slack.com/t/onyx-dot-app/shared_invite/zt-34lu4m7xg-TsKGO6h8PDvR5W27zTdyhA)
+- **Documentation**: Return to [LLM Overview](../getting_started/llm)
+- **Issues**: Report problems on [GitHub](https://github.com/onyx-dot-app/onyx)
+
+Azure OpenAI provides the perfect balance of OpenAI's cutting-edge models with enterprise-grade security, compliance, and support - making it ideal for production deployments in regulated industries. 

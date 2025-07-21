@@ -1,0 +1,30 @@
+---
+title: GitBook Connector
+description: 'Access documentation from GitBook'
+---
+
+## How it works
+The GitBook connector will pull in all the documentation content from your specified GitBook spaces.
+
+## Setting up
+### Authorization
+    1. Go to your GitBook account settings and navigate to 'Developers' section
+       (https://app.gitbook.com/account/developer)
+    2. Click on 'Create new token'
+    3. Give your token a name and select the appropriate scopes
+    4. Click 'Create' to generate your API token
+    5. Copy and save your token securely - you won't be able to see it again
+
+![GitBook Developer Page](/assets/images/connectors/gitbook/gitbook_1.png)
+
+### Indexing
+    1. Navigate to the Admin Dashboard and select the **GitBook** Connector
+    2. In **Step 1**, paste your **API Token** from the previous step
+
+![GitBook API Configuration](/assets/images/connectors/gitbook/gitbook_2.png)
+
+    3. Enter your **Space ID** - you can find this in the URL of your GitBook space
+       (e.g., `https://app.gitbook.com/o/<organization>/s/<space-id>`)
+    4. Click 'Connect' to begin indexing your GitBook content
+
+![GitBook Space Configuration](/assets/images/connectors/gitbook/gitbook_3.png)

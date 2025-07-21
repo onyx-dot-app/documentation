@@ -1,159 +1,241 @@
 ---
 title: "SAML"
 description: "SAML authentication setup"
-icon: "sitemap"
+icon: "certificate"
 ---
-import EnterpriseEditionInfo from "/snippets/enterprise-edition-info.mdx"
 
-Configure Onyx with SAML authentication.
+Configure Onyx with SAML (Security Assertion Markup Language) authentication to integrate with enterprise identity providers. SAML is widely used in enterprise environments and provides secure single sign-on capabilities with comprehensive identity federation features.
 
-<EnterpriseEditionInfo />
+<Info>
+**Enterprise Feature**
 
-This guide will walk you through the setup process for Okta. Other identity providers will have a similar process. 
-Please contact us if you need help with a different identity provider.
+SAML authentication is available as part of the Onyx Enterprise Edition. This provides enhanced security, compliance features, and enterprise-grade identity integration.
 
-<Warning>
-   SAML authentication requires building Onyx images from source! 
-   
-   See details in the [Docker Compose guide](/deployment/getting_started/quickstart#launch-with-docker-compose). 
-</Warning>
+[Contact us](https://docs.onyx.app/contact_us) to discuss Enterprise Edition features and setup assistance.
+</Info>
 
-## Guide
+## What is SAML?
 
+SAML is an XML-based standard for exchanging authentication and authorization data between identity providers and service providers. It offers:
 
-<Steps>
-   <Step title="Create Okta Application">
-      Navigate to the Okta **Admin Console** → **Applications** → **Create App Integration**.
+- **Enterprise SSO**: Single sign-on across multiple enterprise applications
+- **Identity Federation**: Secure identity sharing between organizations
+- **Attribute Sharing**: Rich user profile and role information exchange
+- **Strong Security**: Cryptographic signatures and encryption support
+- **Compliance**: Meets enterprise security and compliance requirements
 
-      <img className="rounded-image" src="/assets/deployment/oidc_create_integration.png" alt="Okta Create Integration Page" />
-   </Step>
+## Supported Identity Providers
 
-   <Step title="Configure Okta Application">
-      Select **SAML 2.0**.
+Onyx SAML integration works with major enterprise identity providers:
 
-      **Name** your application `Onyx` and upload the Onyx logo.
+### **Enterprise Identity Platforms**
+- **Microsoft Active Directory Federation Services (ADFS)** - Microsoft's enterprise federation solution
+- **Microsoft Entra ID (Azure AD)** - Cloud-based identity and access management
+- **Okta** - Comprehensive identity and access management platform
+- **Ping Identity** - Enterprise identity solutions for complex environments
+- **OneLogin** - Cloud identity and access management
+- **Shibboleth** - Open-source identity provider popular in education and research
+- **SimpleSAMLphp** - Open-source SAML identity provider
 
-      <Tip>
-         If you are white-labeling Onyx, you can freely name your application and upload your own logo.
-      </Tip>
+### **Cloud and Hybrid Solutions**
+- **AWS Single Sign-On** - Amazon's managed SSO solution
+- **Google Workspace SAML** - Google's enterprise SAML capabilities
+- **Centrify** - Identity service for hybrid and multi-cloud environments
+- **JumpCloud** - Directory-as-a-service with SAML support
 
-      Add a **Sign sign-on URL**
+## Enterprise Benefits
 
-      ```
-      https://YOUR_ONYX_DOMAIN.com/auth/saml/callback
-      ```
+### **Security and Governance**
+- **Centralized Authentication**: All user access managed through existing identity systems
+- **Advanced Security**: Support for strong authentication, encryption, and digital signatures
+- **Compliance Support**: Meet regulatory requirements like SOX, HIPAA, PCI DSS
+- **Audit and Reporting**: Comprehensive authentication logging and compliance reporting
+- **Risk Management**: Integration with identity governance and risk management systems
 
-      Add an **Audience URI (SP Entity ID)**
-      
-      ```
-      https://YOUR_ONYX_DOMAIN.com/metadata
-      ```
+### **Operational Efficiency**
+- **Automated Provisioning**: Users automatically provisioned based on directory attributes
+- **Role-Based Access**: Sophisticated role and attribute-based access control
+- **Lifecycle Management**: Automated user onboarding, updates, and offboarding
+- **Reduced Helpdesk**: Minimize password-related support requests
 
-      Add an **Attribute Statement** where **Name** is `email` and **Value** is `user.email`.
-      
-      <img className="rounded-image" src="/assets/deployment/saml_config.png" alt="Okta Configure SAML Application Page" />
+### **User Experience**
+- **Seamless SSO**: Users access Onyx using existing corporate credentials
+- **Context-Aware Access**: Access decisions based on user context and risk factors
+- **Mobile Support**: Secure access from mobile devices using existing identity credentials
+- **Cross-Platform**: Consistent authentication experience across all platforms
 
-   </Step>
+## SAML vs OIDC Comparison
 
-   <Step title="Assign Users to Application">
-      Create the application and navigate to the **Assignments** tab to assign users.
+| Feature | SAML | OIDC |
+|---------|------|------|
+| **Protocol** | XML-based | JSON/REST-based |
+| **Enterprise Adoption** | Very High | High |
+| **Complexity** | More Complex | Simpler |
+| **Attribute Richness** | Very Rich | Moderate |
+| **Mobile Support** | Good | Excellent |
+| **Legacy Integration** | Excellent | Limited |
 
-   </Step>
+## Configuration Overview
 
-   <Step title="Configure Onyx for SAML">
-      Navigate to `onyx/backend/ee/onyx/configs/saml_config` and copy the template settings file.
-   
-      ```bash
-      cd onyx/backend/ee/onyx/configs/saml_config
-      cp template_settings.yaml settings.yaml
-      ```
+SAML integration involves several key components:
 
-      Edit the `settings.yaml` file with the following values:
+### **Identity Provider (IdP) Configuration**
+1. **Service Provider Registration**: Register Onyx as a service provider in your IdP
+2. **Attribute Mapping**: Configure which user attributes to send to Onyx  
+3. **Security Settings**: Set up encryption, signing, and certificate management
+4. **User Assignment**: Determine which users can access Onyx
 
-      <AccordionGroup>
-         <Accordion title="idp: entityId">
-            Go to the **Sign On** tab of your application in Okta, copy the **Metadata URL**, and paste it into your browser.
-            You should see XML like:
+### **Onyx (Service Provider) Configuration**
+1. **IdP Metadata**: Import your identity provider's SAML metadata
+2. **Attribute Mapping**: Map SAML attributes to Onyx user properties
+3. **Role Assignment**: Configure role assignments based on SAML attributes
+4. **Security Configuration**: Set up certificate validation and encryption
 
-            ```XML
-            <md:EntityDescriptor 
-                xmlns:md="urn:oasis:names:tc:SAML:2.0:metadata" 
-                entityID="http://www.okta.com/exkngircrvOYQyNg35d7">
-            ...
-            </md:EntityDescriptor>
-            ```
+## Common Configuration Elements
 
-            Copy the `entityID` value and paste it into `idp: entityId` in `settings.yaml`.
-         </Accordion>
+Typical SAML configuration parameters include:
 
-         <Accordion title="idp: x509cert">
-            In the XML from the previous step, find the `ds:X509Certificate` element.
+```bash
+# Authentication type
+AUTH_TYPE=saml
 
-            ```XML
-            <md:KeyDescriptor use="signing">
-                <ds:KeyInfo xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
-                    <ds:X509Data>
-                        <ds:X509Certificate>
-                            [Some certificate value here]
-                        </ds:X509Certificate>
-                    </ds:X509Data>
-                </ds:KeyInfo>
-            </md:KeyDescriptor>
+# SAML Identity Provider Configuration
+SAML_IDP_METADATA_URL=https://your-idp.com/saml/metadata
+SAML_IDP_SSO_URL=https://your-idp.com/saml/sso
+SAML_IDP_X509_CERT=your_idp_certificate
 
-            ```
+# Service Provider Configuration  
+SAML_SP_ENTITY_ID=https://your-onyx-domain.com/saml/metadata
+SAML_SP_ACS_URL=https://your-onyx-domain.com/saml/acs
+SAML_SP_X509_CERT=your_sp_certificate
+SAML_SP_PRIVATE_KEY=your_sp_private_key
 
-            Copy the certificate value and paste it into `idp: x509cert` in `settings.yaml`.
-         </Accordion>
+# Attribute Mapping
+SAML_USERNAME_ATTR=http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name
+SAML_EMAIL_ATTR=http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress
+SAML_GROUPS_ATTR=http://schemas.microsoft.com/ws/2008/06/identity/claims/groups
 
-         <Accordion title="idp: singleSignOnService: url">
-            Go to the **General** tab of your application in Okta and copy the **Embed Link**.
-         </Accordion>
+# Security Settings
+SAML_SIGN_REQUESTS=true
+SAML_ENCRYPT_ASSERTIONS=true
+SAML_VALIDATE_SIGNATURES=true
+```
 
-         <Accordion title="sp: entityId">
-            This is the same as the **Audience URI (SP Entity ID)** you added to the Okta application.
-            
-            ```
-            https://YOUR_ONYX_DOMAIN.com/metadata
-            ```
-         </Accordion>
+## Provider-Specific Considerations
 
-         <Accordion title="sp: assertionConsumerService: url">
-            This is the same as the **Sign sign-on URL** you added to the Okta application.
+### **Microsoft ADFS**
+- **On-Premises Integration**: Direct integration with Active Directory
+- **Claims Rules**: Flexible attribute mapping through claims rules
+- **Group Membership**: Rich group and role information available
+- **Certificate Management**: Enterprise certificate authority integration
 
-            ```
-            https://YOUR_ONYX_DOMAIN.com/auth/saml/callback
-            ```
-         </Accordion>
+### **Microsoft Entra ID**
+- **Hybrid Identity**: Combine cloud and on-premises identity sources  
+- **Conditional Access**: Advanced access policies based on risk and context
+- **Application Gallery**: Pre-configured templates for common applications
+- **Multi-Factor Authentication**: Built-in MFA capabilities
 
-         <Accordion title="sp: x509cert">
-            Generate a self-signed certificate:
+### **Okta**
+- **Universal Directory**: Comprehensive user profile management
+- **Adaptive MFA**: Risk-based multi-factor authentication
+- **Lifecycle Management**: Automated user provisioning and deprovisioning
+- **API Integration**: Extensive APIs for custom integrations
 
-            ```bash
-            openssl genrsa -out sp-private-key.pem 2048
-            openssl req -new -x509 -key sp-private-key.pem -out sp-cert.pem -days 730 -subj "/CN=<YOUR_DOMAIN e.g. saml.onyx.dev>"
-            awk 'NF {sub(/\r/, ""); printf "%s\\n",$0;}' sp-cert.pem
-            ```
+## Security Best Practices
 
-            Copy the certificate value and paste it into `sp: x509cert` in `settings.yaml`.
-         </Accordion>
-      </AccordionGroup>
-   </Step>
+### **Certificate Management**
+- **Strong Certificates**: Use certificates with at least 2048-bit RSA keys
+- **Certificate Rotation**: Regular certificate rotation and renewal processes
+- **Secure Storage**: Store private keys securely with proper access controls
+- **Certificate Validation**: Always validate certificate chains and expiration
 
-   <Step title="Set Onyx Environment Variables">
-      Set the following environment variables in your `.env` or `values.yaml` file (Docker and Kubernetes, respectively).
+### **SAML Security**
+- **Sign Assertions**: Always require signed SAML assertions
+- **Encrypt Sensitive Data**: Encrypt assertions containing sensitive information  
+- **Validate Signatures**: Verify all SAML message signatures
+- **Time-based Validation**: Implement proper timestamp and replay attack protection
 
-      ```bash .env
-      AUTH_TYPE=saml
-      ```
+### **Network Security**
+- **HTTPS Only**: All SAML endpoints must use HTTPS
+- **Network Segmentation**: Protect SAML endpoints with appropriate network controls
+- **Monitoring**: Implement comprehensive logging and monitoring of SAML transactions
 
-      <Note>
-         If you're using Docker but don't have a `.env` file, copy `onyx/deployment/docker_compose/env.prod.template` to a new `.env` file in the same directory.
-      </Note>
+## Advanced Features
 
-      ```bash values.yaml
-      configMap:
-        AUTH_TYPE: saml
-      ```
-   </Step>
-</Steps>
+### **Attribute-Based Access Control (ABAC)**
+- **Fine-Grained Permissions**: Use SAML attributes for detailed access control
+- **Dynamic Authorization**: Real-time access decisions based on user attributes
+- **Context-Aware Access**: Consider location, device, and time-based factors
 
+### **Multi-Tenant Support**
+- **Organization Mapping**: Map SAML attributes to Onyx organizations or tenants
+- **Isolation**: Ensure proper data isolation between organizations
+- **Custom Branding**: Organization-specific login experiences
+
+### **Just-In-Time Provisioning**
+- **Automatic User Creation**: Create users automatically on first login
+- **Profile Synchronization**: Keep user profiles synchronized with identity provider
+- **Group Mapping**: Automatically assign users to groups based on SAML attributes
+
+## Implementation Services
+
+Our enterprise implementation services include:
+
+### **Assessment and Planning**
+- **Identity Architecture Review**: Evaluate existing identity infrastructure
+- **Integration Planning**: Develop detailed implementation roadmap
+- **Security Assessment**: Review security requirements and compliance needs
+- **User Impact Analysis**: Plan for user experience and change management
+
+### **Configuration and Integration**
+- **IdP Configuration**: Set up Onyx integration in your identity provider
+- **Attribute Mapping**: Configure user attribute synchronization
+- **Security Implementation**: Set up encryption, signing, and certificate management
+- **Testing and Validation**: Comprehensive testing across user scenarios
+
+### **Migration and Support**
+- **User Migration**: Preserve existing user data during authentication migration
+- **Phased Rollout**: Gradual deployment across user groups
+- **Training**: User and administrator training on new authentication processes
+- **Ongoing Support**: Continued support for configuration changes and issues
+
+## Custom Identity Providers
+
+For organizations with custom or legacy identity providers:
+
+- **Custom SAML Implementations**: Support for non-standard SAML implementations
+- **Legacy System Integration**: Bridge older authentication systems with modern SAML
+- **Hybrid Deployments**: Support multiple authentication methods during transitions
+- **Custom Attribute Schemas**: Support for organization-specific user attributes
+
+## Compliance and Auditing
+
+SAML authentication supports various compliance requirements:
+
+### **Regulatory Compliance**
+- **SOX Compliance**: Proper access controls and audit trails
+- **HIPAA**: Healthcare information protection requirements
+- **PCI DSS**: Payment card industry security standards
+- **GDPR**: European data protection requirements
+
+### **Audit Capabilities**
+- **Authentication Logs**: Detailed logging of all authentication events
+- **Access Reports**: Regular reporting on user access patterns
+- **Compliance Reports**: Automated reports for compliance requirements
+- **Security Monitoring**: Real-time monitoring for security incidents
+
+## Next Steps
+
+Ready to implement SAML authentication for your enterprise Onyx deployment?
+
+1. **Enterprise Consultation**: Schedule a consultation to discuss your requirements
+2. **Technical Assessment**: Our team will evaluate your identity infrastructure
+3. **Proof of Concept**: Set up a pilot implementation to validate integration
+4. **Production Planning**: Develop a comprehensive rollout plan
+
+**Contact Information:**
+- **Email**: [founders@onyx.app](mailto:founders@onyx.app)  
+- **Slack Community**: Join our [Enterprise channel](https://join.slack.com/t/onyx-dot-app/shared_invite/zt-34lu4m7xg-TsKGO6h8PDvR5W27zTdyhA) for direct support
+- **Enterprise Sales**: Contact us for pricing and implementation timeline
+
+For organizations considering modern authentication alternatives, see our [OIDC setup guide](./oidc). 

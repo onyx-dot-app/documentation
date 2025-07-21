@@ -1,0 +1,570 @@
+---
+title: Ollama Configuration
+description: "Configure self-hosted Ollama models for Onyx"
+icon: "server"
+---
+
+Configure Onyx to use Ollama for self-hosted language model deployment. Ollama enables running powerful AI models locally, providing complete data privacy, cost control, and offline capabilities while maintaining compatibility with Onyx's AI features.
+
+## What is Ollama?
+
+Ollama provides an easy way to run large language models locally on your own hardware. It offers:
+- **Local Model Hosting**: Run models entirely on your infrastructure  
+- **OpenAI-Compatible API**: Standard API interface for easy integration
+- **Model Management**: Simple installation and management of various models
+- **Hardware Flexibility**: Supports CPU and GPU acceleration
+- **Offline Operation**: No internet required after initial model download
+
+## Available Models
+
+Ollama supports a wide range of open-source models:
+
+### **Llama Family**
+- **Llama 3.1 (8B, 70B, 405B)** - Meta's latest open-source models
+- **Llama 2 (7B, 13B, 70B)** - Previous generation with strong performance
+- **Code Llama** - Specialized for code generation and analysis
+
+### **Other Popular Models**
+- **Mistral 7B** - Efficient model with excellent performance
+- **Mixtral 8x7B** - Mixture of experts model for complex tasks
+- **Gemma (2B, 7B)** - Google's lightweight models
+- **Phi-3** - Microsoft's efficient small models
+- **Qwen** - Alibaba's multilingual models
+
+### **Model Recommendations**
+- **Production Use**: Llama 3.1 70B for best quality
+- **Cost-Conscious**: Llama 3.1 8B or Mistral 7B
+- **Code Tasks**: Code Llama models
+- **Resource-Constrained**: Gemma 2B or Phi-3 Mini
+
+## Prerequisites
+
+### **Hardware Requirements**
+
+**Minimum Requirements:**
+- **CPU**: Modern multi-core processor (4+ cores recommended)
+- **RAM**: 8GB+ (depends on model size)
+- **Storage**: 10GB+ free space (varies by model)
+- **OS**: Linux, macOS, or Windows
+
+**Recommended for Production:**
+- **CPU**: High-performance CPU (16+ cores)
+- **RAM**: 32GB+ for larger models
+- **GPU**: NVIDIA GPU with 8GB+ VRAM (optional but recommended)
+- **Storage**: SSD storage for better performance
+
+### **Model Size vs RAM Requirements**
+
+| Model Size | Minimum RAM | Recommended RAM | GPU VRAM |
+|------------|-------------|-----------------|----------|
+| 7B | 8GB | 16GB | 6GB |
+| 13B | 16GB | 32GB | 8GB |
+| 34B | 32GB | 64GB | 20GB |
+| 70B | 64GB | 128GB | 40GB |
+
+## Installation
+
+### **Install Ollama**
+
+#### **Linux and macOS**
+```bash
+curl -fsSL https://ollama.ai/install.sh | sh
+```
+
+#### **Windows**
+1. Download the installer from [ollama.ai](https://ollama.ai/)
+2. Run the installer and follow the setup wizard
+3. Restart your terminal after installation
+
+#### **Docker (Alternative)**
+```bash
+docker run -d -v ollama:/root/.ollama -p 11434:11434 --name ollama ollama/ollama
+```
+
+### **Verify Installation**
+```bash
+ollama --version
+```
+
+### **Download and Run Models**
+
+#### **Start a Model**
+```bash
+# Download and start Llama 3.1 8B
+ollama run llama3.1:8b
+
+# Or download without starting
+ollama pull llama3.1:70b
+```
+
+#### **List Available Models**
+```bash
+ollama list
+```
+
+#### **Test API Connection**
+```bash
+curl http://localhost:11434/api/generate -d '{
+  "model": "llama3.1:8b",
+  "prompt": "Why is the sky blue?",
+  "stream": false
+}'
+```
+
+## Onyx Configuration
+
+### **Add Ollama Provider in Onyx**
+
+1. **Access Admin Dashboard**: Navigate to your Onyx admin panel
+2. **Select Custom LLM Provider**: Add a "Custom LLM Provider"
+3. **Configure Provider Settings**:
+
+**Basic Configuration:**
+```
+Provider Name: Ollama
+API Base: http://localhost:11434/v1
+API Key: (leave empty)
+Model: llama3.1:8b
+```
+
+![Ollama Provider Config 1](/assets/images/gen_ai/OllamaLLMProvider1.png)
+
+4. **Advanced Settings** (if available):
+   - **Temperature**: 0.7
+   - **Max Tokens**: 2048
+   - **Top P**: 0.9
+
+![Ollama Provider Config 2](/assets/images/gen_ai/OllamaLLMProvider2.png)
+
+### **Docker Configuration**
+
+If Onyx is running in Docker, use the special hostname:
+
+```
+API Base: http://host.docker.internal:11434/v1
+```
+
+This allows the Onyx container to communicate with Ollama running on the host machine.
+
+### **Environment Variables**
+
+For programmatic configuration:
+
+```bash
+OLLAMA_API_BASE=http://localhost:11434/v1
+OLLAMA_MODEL=llama3.1:8b
+OLLAMA_TEMPERATURE=0.7
+OLLAMA_MAX_TOKENS=2048
+```
+
+## Optimization for Self-Hosted Models
+
+### **Onyx Environment Variables**
+
+Ollama models typically require different settings than cloud-based models. Configure these environment variables for optimal performance:
+
+```bash
+# Extended timeout for slower local processing
+QA_TIMEOUT=120
+
+# Always run search, don't let LLM decide (not optimized for local models)
+DISABLE_LLM_CHOOSE_SEARCH=True
+
+# Disable LLM-based chunk filtering (not tuned for local models)
+DISABLE_LLM_CHUNK_FILTER=True
+
+# Disable query rephrasing (not optimized for local models)
+DISABLE_LLM_QUERY_REPHRASE=True
+
+# Disable automatic filter extraction (not tuned for local models)  
+DISABLE_LLM_FILTER_EXTRACTION=True
+
+# For weaker models, use simplified prompting (uncomment if needed)
+# QA_PROMPT_OVERRIDE=weak
+```
+
+### **Explanation of Optimizations**
+
+**QA_TIMEOUT=120**: Local models, especially those running on CPU, can be significantly slower than cloud APIs. This extends the timeout to prevent premature request failures.
+
+**DISABLE_LLM_CHOOSE_SEARCH=True**: The prompts for deciding whether to search aren't optimized for smaller local models, so we always perform search.
+
+**DISABLE_LLM_CHUNK_FILTER=True**: Chunk filtering requires additional LLM calls with prompts not tuned for local models.
+
+**DISABLE_LLM_QUERY_REPHRASE=True**: Query rephrasing uses prompts optimized for large models and may not work well with smaller local models.
+
+**DISABLE_LLM_FILTER_EXTRACTION=True**: Filter extraction requires sophisticated reasoning that may not work reliably with smaller models.
+
+**QA_PROMPT_OVERRIDE=weak**: For very small models, this uses simplified prompts that require less reasoning capability.
+
+## Advanced Configuration
+
+### **GPU Acceleration**
+
+#### **NVIDIA GPU Support**
+Ollama automatically uses GPU acceleration when available:
+
+```bash
+# Check GPU utilization
+nvidia-smi
+
+# Force GPU usage (if not detected automatically)
+CUDA_VISIBLE_DEVICES=0 ollama run llama3.1:8b
+```
+
+#### **AMD GPU Support (ROCm)**
+For AMD GPUs on Linux:
+```bash
+# Install ROCm support
+sudo apt install rocm-dev
+
+# Set environment variable
+HSA_OVERRIDE_GFX_VERSION=10.3.0 ollama run llama3.1:8b
+```
+
+#### **Apple Silicon (M1/M2/M3)**
+Ollama automatically uses Metal acceleration on Apple Silicon Macs.
+
+### **Memory Management**
+
+#### **Configure Memory Limits**
+```bash
+# Set memory limit (in GB)
+export OLLAMA_MAX_MEMORY=16
+
+# Or set in GB with suffix
+export OLLAMA_MAX_MEMORY=16g
+```
+
+#### **Offloading Configuration**
+```bash
+# Number of layers to offload to GPU
+export OLLAMA_NUM_GPU=32
+
+# Keep model in memory between requests
+export OLLAMA_KEEP_ALIVE=5m
+```
+
+### **Network Configuration**
+
+#### **Custom Port**
+```bash
+# Change default port from 11434
+export OLLAMA_HOST=0.0.0.0:8080
+ollama serve
+```
+
+#### **Remote Access**
+```bash
+# Allow external connections
+export OLLAMA_HOST=0.0.0.0:11434
+ollama serve
+```
+
+**Security Note**: Only expose Ollama externally if you understand the security implications and have proper access controls in place.
+
+## Model Management
+
+### **Installing Models**
+
+#### **Popular Model Commands**
+```bash
+# Llama models
+ollama pull llama3.1:8b
+ollama pull llama3.1:70b
+ollama pull codellama:7b
+
+# Mistral models
+ollama pull mistral:7b
+ollama pull mixtral:8x7b
+
+# Other models
+ollama pull gemma:7b
+ollama pull phi3:mini
+```
+
+#### **Custom Model Installation**
+You can create custom models from GGUF files:
+
+```bash
+# Create Modelfile
+cat > Modelfile << EOF
+FROM ./custom-model.gguf
+TEMPLATE """<|im_start|>system
+You are a helpful assistant.<|im_end|>
+<|im_start|>user
+{{ .Prompt }}<|im_end|>
+<|im_start|>assistant
+"""
+EOF
+
+# Build custom model
+ollama create my-custom-model -f Modelfile
+```
+
+### **Model Storage**
+
+Models are stored in:
+- **Linux**: `~/.ollama/models`
+- **macOS**: `~/.ollama/models`  
+- **Windows**: `%USERPROFILE%\.ollama\models`
+
+### **Managing Disk Space**
+
+```bash
+# Remove unused models
+ollama rm old-model
+
+# Show model sizes
+ollama list
+
+# Clean up unused layers
+ollama prune
+```
+
+## Performance Tuning
+
+### **Hardware Optimization**
+
+#### **CPU Performance**
+```bash
+# Use all available cores
+export OMP_NUM_THREADS=$(nproc)
+
+# Enable CPU extensions
+export OLLAMA_CPU_TARGET=auto
+```
+
+#### **Memory Optimization**
+```bash
+# Adjust memory mapping
+export OLLAMA_MMAP=true
+
+# Lock memory to prevent swapping
+export OLLAMA_MLOCK=true
+```
+
+### **Model-Specific Tuning**
+
+#### **For Smaller Models (7B-13B)**
+```json
+{
+  "temperature": 0.7,
+  "top_p": 0.9,
+  "top_k": 40,
+  "repeat_penalty": 1.1
+}
+```
+
+#### **For Larger Models (70B+)**
+```json
+{
+  "temperature": 0.8,
+  "top_p": 0.95,
+  "top_k": 50,
+  "repeat_penalty": 1.05
+}
+```
+
+## Monitoring and Troubleshooting
+
+### **Health Checks**
+
+#### **Basic Health Check**
+```bash
+curl http://localhost:11434/api/version
+```
+
+#### **Model Status**
+```bash
+curl http://localhost:11434/api/ps
+```
+
+#### **Generate Test**
+```bash
+curl http://localhost:11434/api/generate \
+  -d '{"model": "llama3.1:8b", "prompt": "Hello", "stream": false}'
+```
+
+### **Common Issues**
+
+#### **Out of Memory Errors**
+```
+Error: insufficient memory
+```
+**Solutions:**
+- Use a smaller model variant
+- Increase system RAM
+- Enable memory mapping: `export OLLAMA_MMAP=true`
+- Reduce concurrent requests
+
+#### **Slow Performance**
+```
+Request taking very long
+```
+**Solutions:**
+- Enable GPU acceleration
+- Use smaller models for faster responses
+- Increase QA_TIMEOUT in Onyx
+- Optimize hardware (SSD, more RAM)
+
+#### **Connection Refused**
+```
+Connection refused to localhost:11434
+```
+**Solutions:**
+- Ensure Ollama is running: `ollama serve`
+- Check firewall settings
+- Verify port availability
+- For Docker: use `host.docker.internal`
+
+### **Logging and Debugging**
+
+#### **Enable Debug Logging**
+```bash
+export OLLAMA_DEBUG=1
+ollama serve
+```
+
+#### **Check Ollama Logs**
+```bash
+# Linux/macOS
+journalctl -u ollama
+
+# Or check service logs
+ollama logs
+```
+
+## Production Deployment
+
+### **Systemd Service (Linux)**
+
+Create a systemd service for automatic startup:
+
+```bash
+sudo tee /etc/systemd/system/ollama.service > /dev/null << EOF
+[Unit]
+Description=Ollama Service
+After=network-online.target
+
+[Service]
+ExecStart=/usr/local/bin/ollama serve
+User=ollama
+Group=ollama
+Restart=always
+RestartSec=3
+Environment="OLLAMA_HOST=0.0.0.0:11434"
+Environment="OLLAMA_MAX_MEMORY=16g"
+
+[Install]
+WantedBy=default.target
+EOF
+
+sudo systemctl daemon-reload
+sudo systemctl enable ollama
+sudo systemctl start ollama
+```
+
+### **Docker Compose**
+
+```yaml
+version: '3.8'
+services:
+  ollama:
+    image: ollama/ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama:/root/.ollama
+    environment:
+      - OLLAMA_KEEP_ALIVE=24h
+      - OLLAMA_MAX_MEMORY=16g
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+
+volumes:
+  ollama:
+```
+
+### **Load Balancing**
+
+For high availability, run multiple Ollama instances:
+
+```bash
+# Instance 1
+OLLAMA_HOST=localhost:11434 ollama serve &
+
+# Instance 2  
+OLLAMA_HOST=localhost:11435 ollama serve &
+
+# Configure load balancer (nginx, HAProxy, etc.)
+```
+
+## Security Considerations
+
+### **Network Security**
+- **Local Only**: By default, Ollama only listens on localhost
+- **Firewall**: Configure firewall rules for external access
+- **Authentication**: Ollama doesn't have built-in auth - use reverse proxy
+- **HTTPS**: Use reverse proxy (nginx) for HTTPS termination
+
+### **Data Privacy**
+- **Complete Privacy**: All processing happens locally
+- **No External Calls**: Models run entirely offline
+- **Data Control**: Full control over model data and logs
+- **Compliance**: Easier compliance with data protection regulations
+
+## Cost Analysis
+
+### **Initial Setup Costs**
+- **Hardware**: One-time investment in suitable hardware
+- **Models**: Free - all models are open source
+- **Electricity**: Ongoing operational cost
+
+### **Operational Costs**
+- **Electricity**: Primary ongoing cost
+- **Maintenance**: System administration time
+- **Upgrades**: Periodic hardware updates
+
+### **Cost Comparison**
+
+**Local Ollama vs Cloud APIs (Monthly)**:
+- **Small deployment** (7B model, moderate usage): $50-100 electricity vs $200-500 API costs
+- **Large deployment** (70B model, high usage): $200-400 electricity vs $2000-5000 API costs
+
+**Break-even Analysis**:
+Most organizations see cost benefits within 3-6 months of moderate to high usage.
+
+## Use Cases for Ollama
+
+### **Ideal Scenarios**
+- **Data Privacy Requirements**: Sensitive data that cannot leave premises
+- **High Volume Usage**: Cost advantages at scale
+- **Offline Requirements**: Air-gapped or low-connectivity environments
+- **Custom Models**: Need for specialized or fine-tuned models
+- **Compliance**: Strict data residency requirements
+
+### **Not Ideal For**
+- **Low Usage**: Cloud APIs may be more cost-effective
+- **Latest Models**: Cloud providers typically have newest models first
+- **No Technical Expertise**: Requires system administration knowledge
+- **Limited Hardware**: Insufficient computational resources
+
+## Getting Help
+
+For Ollama-specific support:
+- **Documentation**: [Ollama Documentation](https://github.com/jmorganca/ollama/blob/main/docs/README.md)
+- **GitHub Issues**: [Ollama GitHub](https://github.com/jmorganca/ollama/issues)
+- **Community**: Discord and Reddit communities
+
+For Onyx integration help:
+- **Onyx Slack**: Join our [community](https://join.slack.com/t/onyx-dot-app/shared_invite/zt-34lu4m7xg-TsKGO6h8PDvR5W27zTdyhA)
+- **Documentation**: Return to [LLM Overview](../getting_started/llm)
+- **Issues**: Report problems on [GitHub](https://github.com/onyx-dot-app/onyx)
+
+Ollama provides an excellent solution for organizations requiring complete data privacy, cost control, or offline AI capabilities while maintaining compatibility with Onyx's full feature set. 
