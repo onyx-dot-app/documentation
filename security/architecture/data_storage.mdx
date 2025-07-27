@@ -1,0 +1,35 @@
+# Data Storage
+
+This page details Onyx's data storage architecture and security measures.
+
+## Storage Architecture
+
+### Vector Database
+- **Purpose**: Stores document embeddings and metadata
+- **Encryption**: AES-256 encryption at rest
+- **Access Control**: Role-based access with audit logging
+- **Backup**: Automated encrypted backups with point-in-time recovery
+
+### Document Storage
+- **Purpose**: Temporary storage of processed documents
+- **Encryption**: AES-256 encryption at rest
+- **Retention**: Configurable retention policies
+- **Access**: Limited to authorized processing components
+
+### User Data
+- **Purpose**: User profiles, preferences, and session data
+- **Encryption**: AES-256 encryption at rest
+- **Privacy**: GDPR-compliant data handling
+- **Deletion**: Right to be forgotten implementation
+
+## Security Features
+
+- **Encryption at Rest**: All data encrypted using industry-standard algorithms
+- **Encryption in Transit**: TLS 1.3 for all data transmission
+- **Access Logging**: Comprehensive audit trails for all data access
+- **Data Isolation**: Multi-tenant data isolation in cloud deployments
+- **Backup Security**: Encrypted backups with separate encryption keys
+
+---
+
+*This page is under development. Detailed storage specifications and security configurations will be added soon.* 
