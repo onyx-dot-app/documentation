@@ -11,39 +11,45 @@
   "navigation": {
     "tabs": [
       {
-        "tab": "General",
+        "tab": "Overview",
         "pages": [
           {
             "group": "Getting Started",
             "pages": [
               "welcome",
-              "general/getting_started/quickstart",
-              "general/getting_started/use_cases",
-              "general/getting_started/configuration",
-              "general/getting_started/open_source_statement"
+              "overview/getting_started/quickstart",
+              "overview/getting_started/use_cases",
+              "overview/getting_started/configuration",
+              "overview/getting_started/open_source_statement",
+              "overview/basics/faq"
             ]
           },
           {
             "group": "Onyx Basics",
             "pages": [
-              "general/basics/chat",
-              "general/basics/search",
-              "general/basics/connectors",
-              "general/basics/assistants",
-              "general/basics/actions",
-              "general/basics/my_documents",
-              "general/basics/workflows",
-              "general/basics/faq"
+              "overview/basics/chat",
+              "overview/basics/search",
+              "overview/basics/connectors",
+              "overview/basics/assistants",
+              "overview/basics/actions",
+              "overview/basics/my_documents",
+              "overview/basics/workflows"
             ]
           },
 
           {
             "group": "Accessing Onyx",
             "pages": [
-              "general/accessing_onyx/web_interface",
-              "general/accessing_onyx/slack",
-              "general/accessing_onyx/chrome_extension",
-              "general/accessing_onyx/ios_app"
+              "overview/accessing_onyx/web_interface",
+              "overview/accessing_onyx/slack",
+              "overview/accessing_onyx/chrome_extension",
+              "overview/accessing_onyx/ios_app"
+            ]
+          },
+          {
+            "group": "Miscellaneous",
+            "pages": [
+              "contact_us"
             ]
           }
         ]
@@ -194,6 +200,12 @@
             "pages": [
               "admin/configurations/workspace"
             ]
+          },
+          {
+            "group": "Miscellaneous",
+            "pages": [
+              "contact_us"
+            ]
           }
         ]
       },
@@ -256,7 +268,8 @@
             "pages": [
               "deployment/miscellaneous/release_process",
               "deployment/miscellaneous/troubleshooting",
-              "deployment/miscellaneous/enterprise_edition"
+              "deployment/miscellaneous/enterprise_edition",
+              "contact_us"
             ]
           }
         ]
@@ -311,6 +324,50 @@
                   "api_reference/endpoints/personas/placeholder"
                 ]
               }
+            ]
+          },
+          {
+            "group": "Miscellaneous",
+            "pages": [
+              "contact_us"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Security",
+        "pages": [
+          {
+            "group": "Architecture",
+            "pages": [
+              "security/architecture/system_description",
+              "security/architecture/data_flows",
+              "security/architecture/data_storage",
+              "security/architecture/access_controls",
+              "security/architecture/encryption",
+              "security/architecture/network_security",
+              "security/architecture/common_questions"
+            ]
+          },
+          {
+            "group": "Self-hosted",
+            "pages": [
+              "security/self_hosted/data_processing",
+              "security/self_hosted/common_questions"
+            ]
+          },
+          {
+            "group": "Onyx Cloud",
+            "pages": [
+              "security/onyx_cloud/multi_tenant",
+              "security/onyx_cloud/single_tenant",
+              "security/onyx_cloud/compliance"
+            ]
+          },
+          {
+            "group": "Miscellaneous",
+            "pages": [
+              "contact_us"
             ]
           }
         ]
@@ -535,6 +592,12 @@
             "pages": [
               "old/apis/answer_with_quote",
               "old/apis/send_message_simple_api"
+            ]
+          },
+          {
+            "group": "Miscellaneous",
+            "pages": [
+              "contact_us"
             ]
           }
         ]

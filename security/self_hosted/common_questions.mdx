@@ -1,0 +1,48 @@
+# Common Questions
+
+This page addresses frequently asked questions about self-hosted Onyx deployments and security.
+
+## Deployment Security
+
+### How secure is a self-hosted Onyx deployment?
+Self-hosted deployments provide the highest level of security as all data remains within your infrastructure. You have complete control over data processing, storage, and network access.
+
+### What infrastructure do I need for a secure deployment?
+You'll need secure infrastructure with proper network segmentation, encryption capabilities, and access controls. Onyx can be deployed on any infrastructure that supports Docker containers.
+
+### Can I run Onyx completely offline?
+Yes, Onyx can be configured to run completely offline with local LLM models and no external dependencies, except for the initial data ingestion from your connectors.
+
+## Data Control
+
+### Does any data leave my network in a self-hosted deployment?
+No, unless you explicitly configure external actions or LLM API calls. All data processing, storage, and retrieval happens within your infrastructure.
+
+### Can I use my own LLM models?
+Yes, you can bring your own LLM models and run them locally, or use your preferred LLM provider's API. You have complete control over which external services Onyx communicates with.
+
+### How do I ensure my deployment meets compliance requirements?
+With self-hosted deployments, you control all aspects of data handling, making it easier to meet strict compliance requirements. Onyx provides the tools to implement your specific compliance needs.
+
+## Security Configuration
+
+### What security measures should I implement for my deployment?
+Implement network segmentation, encryption at rest and in transit, proper access controls, regular security updates, and comprehensive monitoring and logging.
+
+### Can I integrate with my existing security tools?
+Yes, Onyx can integrate with your existing security tools, SIEM systems, and monitoring platforms. All system events and logs are available for integration.
+
+### How do I handle security updates?
+Security updates are handled through your standard patch management process. Onyx provides regular security updates that you can apply according to your security policies.
+
+## Compliance and Auditing
+
+### What audit capabilities does self-hosted Onyx provide?
+Onyx provides comprehensive audit logging for all data access, user actions, and system events. All logs are stored locally and can be integrated with your audit systems.
+
+### Can I meet specific compliance requirements with self-hosted Onyx?
+Yes, self-hosted deployments give you complete control over data handling, making it easier to meet specific compliance requirements like HIPAA, SOC 2, or industry-specific regulations.
+
+---
+
+*This page is under development. More detailed answers and additional questions will be added soon.* 

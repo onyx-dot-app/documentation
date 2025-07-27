@@ -1,0 +1,30 @@
+# Data Flows
+
+This page describes how data flows through the Onyx system and the security measures in place at each stage.
+
+## Data Ingestion Flow
+
+1. **Connector Authentication**: Secure authentication with source systems
+2. **Data Extraction**: Encrypted data retrieval from source systems
+3. **Data Processing**: Secure processing and transformation of documents
+4. **Vector Generation**: Local embedding generation for document chunks
+5. **Storage**: Encrypted storage in vector database
+
+## Query Processing Flow
+
+1. **User Authentication**: Multi-factor authentication and session management
+2. **Query Processing**: Secure query parsing and vectorization
+3. **Retrieval**: Secure document retrieval from vector database
+4. **LLM Communication**: Encrypted communication with language models
+5. **Response Generation**: Secure response formatting and delivery
+
+## Security Measures
+
+- All data flows are encrypted in transit using TLS 1.3
+- Authentication tokens are securely managed and rotated
+- Data processing occurs in isolated environments
+- Comprehensive logging of all data access and modifications
+
+---
+
+*This page is under development. Detailed data flow diagrams and security specifications will be added soon.* 
