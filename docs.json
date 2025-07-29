@@ -267,51 +267,133 @@
       {
         "tab": "Developers",
         "pages": [
-          "contributing/overview",
           {
-            "group": "API Reference",
+            "group": "Contributing",
             "pages": [
-              {
-                "group": "Getting Started",
-                "pages": [
-                  "api_reference/getting_started/authentication"
-                ]
-              },
+              "developers/contributing/overview",
+              "developers/contributing/dev_setup",
+              "developers/contributing/actions",
+              "developers/contributing/agents",
+              "developers/contributing/connectors",
+              "developers/contributing/advanced_options"
+            ]
+          },
+          {
+            "group": "APIs",
+            "pages": [
+              "developers/api_reference/overview",
+              "developers/api_reference/authentication"
+            ]
+          },
+          {
+            "group": "Endpoints",
+            "pages": [
               {
                 "group": "Chat",
                 "pages": [
-                  "api_reference/endpoints/chat/get_user_chat_sessions",
-                  "api_reference/endpoints/chat/get_chat_session",
-                  "api_reference/endpoints/chat/create_chat_session",
-                  "api_reference/endpoints/chat/rename_chat_session",
-                  "api_reference/endpoints/chat/send_message",
-                  "api_reference/endpoints/chat/send_message_simple_api"
+                  "developers/api_reference/chat/simple_example",
+                  "developers/api_reference/chat/get_chat_session",
+                  "developers/api_reference/chat/create_chat_session",
+                  "developers/api_reference/chat/send_message",
+                  "developers/api_reference/chat/send_message_simple",
+                  "developers/api_reference/chat/upload_file",
+                  "developers/api_reference/chat/delete_chat",
+                  {
+                    "group": "Advanced",
+                    "pages": [
+                      "developers/api_reference/chat/share_chat",
+                      "developers/api_reference/chat/search_chats",
+                      "developers/api_reference/chat/update_chat_branch",
+                      "developers/api_reference/chat/create_folder",
+                      "developers/api_reference/chat/add_chat_to_folder"
+                    ]
+                  }
                 ]
               },
               {
-                "group": "Connectors",
+                "group": "Search",
                 "pages": [
-                  "api_reference/endpoints/connectors/deletion_attempt",
-                  "api_reference/endpoints/connectors/connector",
-                  "api_reference/endpoints/connectors/connector_by_id_patch",
-                  "api_reference/endpoints/connectors/connector_by_id_delete",
-                  "api_reference/endpoints/connectors/manage_connectors",
-                  "api_reference/endpoints/connectors/get_connector_id",
-                  "api_reference/endpoints/connectors/swap",
-                  "api_reference/endpoints/connectors/put_cc_pair",
-                  "api_reference/endpoints/connectors/delete_cc_pair"
+                  "developers/api_reference/search/get_document_by_id",
+                  "developers/api_reference/search/document_search"
                 ]
               },
               {
-                "group": "Document Sets",
+                "group": "Agents",
                 "pages": [
-                  "api_reference/endpoints/document_sets/placeholder"
+                  "developers/api_reference/agents/simple_example",
+                  "developers/api_reference/agents/list_agents",
+                  "developers/api_reference/agents/get_agent_by_id",
+                  "developers/api_reference/agents/create_agent",
+                  "developers/api_reference/agents/update_agent",
+                  "developers/api_reference/agents/delete_agent"
                 ]
               },
               {
-                "group": "Personas",
+                "group": "Actions",
                 "pages": [
-                  "api_reference/endpoints/personas/placeholder"
+                  "developers/api_reference/actions/simple_example",
+                  "developers/api_reference/actions/list_actions",
+                  "developers/api_reference/actions/get_action_by_id",
+                  "developers/api_reference/actions/create_action",
+                  "developers/api_reference/actions/update_action",
+                  "developers/api_reference/actions/delete_action"
+                ]
+              },
+              {
+                "group": "Files and Connectors",
+                "pages": [
+                  "developers/api_reference/files_connectors/overview",
+                  "developers/api_reference/files_connectors/get_document_by_id",
+                  "developers/api_reference/files_connectors/list_ingestion_documents",
+                  "developers/api_reference/files_connectors/ingest_document",
+                  "developers/api_reference/files_connectors/delete_document_by_id"
+                ]
+              },
+              {
+                "group": "User Management",
+                "pages": [
+                  "developers/api_reference/user_management/list_users",
+                  "developers/api_reference/user_management/get_user_by_id",
+                  "developers/api_reference/user_management/create_user",
+                  "developers/api_reference/user_management/update_user",
+                  "developers/api_reference/user_management/delete_user",
+                  "developers/api_reference/user_management/invite_user",
+                  "developers/api_reference/user_management/cancel_user_invite",
+                  "developers/api_reference/user_management/reset_user_password"
+                ]
+              },
+              {
+                "group": "Group Management",
+                "pages": [
+                  "developers/api_reference/group_management/overview",
+                  "developers/api_reference/group_management/simple_example",
+                  "developers/api_reference/group_management/list_groups",
+                  "developers/api_reference/group_management/get_group_by_id",
+                  "developers/api_reference/group_management/create_group",
+                  "developers/api_reference/group_management/update_group",
+                  "developers/api_reference/group_management/add_user_to_group",
+                  "developers/api_reference/group_management/delete_user_from_group",
+                  "developers/api_reference/group_management/delete_group"
+                ]
+              },
+              {
+                "group": "Analytics",
+                "pages": [
+                  "developers/api_reference/analytics/get_query_analytics",
+                  "developers/api_reference/analytics/get_user_analytics",
+                  "developers/api_reference/analytics/get_onyxbot_analytics",
+                  "developers/api_reference/analytics/get_assistant_stats",
+                  "developers/api_reference/analytics/read_usage_report",
+                  "developers/api_reference/analytics/start_query_history_export"
+                ]
+              },
+              {
+                "group": "Miscellaneous",
+                "pages": [
+                  "developers/api_reference/miscellaneous/health_check",
+                  "developers/api_reference/miscellaneous/set_document_boost",
+                  "developers/api_reference/miscellaneous/set_rate_limit",
+                  "developers/api_reference/miscellaneous/delete_rate_limit"
                 ]
               }
             ]
@@ -619,27 +701,17 @@
   },
   "api": {
     "openapi": [
-      "api_reference/openapi.json"
+      "developers/api_reference/openapi.json"
     ]
   },
   "navbar": {
     "primary": {
-      "type": "button",
-      "label": "Try Onyx Cloud!",
-      "href": "https://cloud.onyx.app/?utm_source=docs"
+      "type": "github",
+      "href": "https://github.com/onyx-dot-app/onyx"
     },
-    "links": [
-      {
-        "label": "onyx-dot-app/onyx",
-        "href": "https://github.com/onyx-dot-app/onyx",
-        "icon": "github"
-      }
-    ]
-  },
-  "topbar": {
-    "cta": {
-      "type": "link",
-      "text": "Visit onyx.app",
+    "secondary": {
+      "type": "cta",
+      "text": "Onyx.app",
       "href": "https://onyx.app"
     }
   },

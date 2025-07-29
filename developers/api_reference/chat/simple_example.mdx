@@ -1,0 +1,97 @@
+---
+title: "Simple Example"
+description: "Quick start guide for basic Chat API usage"
+---
+
+# Simple Example: Basic Chat Usage
+
+This page demonstrates the most common Chat API workflow - creating a session and sending messages.
+
+## Basic Workflow
+
+1. **Create a chat session** to establish context
+2. **Send messages** to interact with the AI
+3. **Upload files** if needed for analysis
+4. **Delete the session** when finished
+
+## Quick Start Code
+
+<CodeGroup>
+
+```python Python
+import requests
+
+API_BASE_URL = "https://cloud.onyx.app/api"
+API_KEY = "your_api_key_here"
+
+headers = {
+    "Authorization": f"Bearer {API_KEY}",
+    "Content-Type": "application/json"
+}
+
+# 1. Create a chat session
+session_response = requests.post(
+    f"{API_BASE_URL}/chat/create-chat-session",
+    headers=headers,
+    json={
+        "persona_id": None,
+        "description": "Quick example session"
+    }
+)
+chat_session_id = session_response.json()["chat_session_id"]
+
+# 2. Send a message
+message_response = requests.post(
+    f"{API_BASE_URL}/chat/send-message",
+    headers=headers,
+    json={
+        "message": "Hello! How can you help me today?",
+        "chat_session_id": chat_session_id
+    }
+)
+
+print(message_response.json()["message"])
+```
+
+```javascript JavaScript
+const API_BASE_URL = "https://cloud.onyx.app/api";
+const API_KEY = "your_api_key_here";
+
+const headers = {
+    "Authorization": `Bearer ${API_KEY}`,
+    "Content-Type": "application/json"
+};
+
+// 1. Create a chat session
+const sessionResponse = await fetch(`${API_BASE_URL}/chat/create-chat-session`, {
+    method: 'POST',
+    headers: headers,
+    body: JSON.stringify({
+        persona_id: null,
+        description: "Quick example session"
+    })
+});
+const { chat_session_id } = await sessionResponse.json();
+
+// 2. Send a message
+const messageResponse = await fetch(`${API_BASE_URL}/chat/send-message`, {
+    method: 'POST',
+    headers: headers,
+    body: JSON.stringify({
+        message: "Hello! How can you help me today?",
+        chat_session_id: chat_session_id
+    })
+});
+
+const result = await messageResponse.json();
+console.log(result.message);
+```
+
+</CodeGroup>
+
+## Next Steps
+
+- [Get Chat Session](/api_reference/chat/get_chat_session) - Retrieve session details
+- [Create Chat Session](/api_reference/chat/create_chat_session) - Start new conversations  
+- [Send Message](/api_reference/chat/send_message) - Full message options
+- [Send Message Simple](/api_reference/chat/send_message_simple) - Simplified messaging 

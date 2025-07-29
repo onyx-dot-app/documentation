@@ -1,0 +1,600 @@
+---
+title: "Authentication"
+description: "Authentication methods and security for Onyx APIs"
+icon: "key"
+---
+
+# Authentication
+
+Learn how to authenticate your requests to Onyx APIs using API keys, OAuth 2.0, and other authentication methods.
+
+## Authentication Methods
+
+Onyx supports multiple authentication methods depending on your use case:
+
+- **API Keys** - Best for server-to-server communication
+- **OAuth 2.0** - Best for user-facing applications
+- **Session Cookies** - For web applications using the same domain
+- **OIDC/SAML** - For enterprise single sign-on
+
+## API Key Authentication
+
+### Getting an API Key
+
+1. Log into your Onyx dashboard
+2. Navigate to **Settings > API Keys**
+3. Click **Generate New API Key**
+4. Choose the permissions for your key
+5. Copy and securely store your API key
+
+<Warning>
+API keys provide full access to your account. Never share them publicly or include them in client-side code.
+</Warning>
+
+### Using API Keys
+
+Include your API key in the `Authorization` header:
+
+```http
+GET /api/me
+Authorization: Bearer onyx_key_1234567890abcdef
+Content-Type: application/json
+```
+
+### Example Requests
+
+<CodeGroup>
+
+```bash cURL
+curl -X GET "https://cloud.onyx.app/api/me" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json"
+```
+
+```python Python
+import requests
+
+headers = {
+    "Authorization": "Bearer YOUR_API_KEY",
+    "Content-Type": "application/json"
+}
+
+response = requests.get(
+    "https://cloud.onyx.app/api/me",
+    headers=headers
+)
+
+print(response.json())
+```
+
+```javascript JavaScript
+const response = await fetch('https://cloud.onyx.app/api/me', {
+  method: 'GET',
+  headers: {
+    'Authorization': 'Bearer YOUR_API_KEY',
+    'Content-Type': 'application/json'
+  }
+});
+
+const data = await response.json();
+console.log(data);
+```
+
+```go Go
+package main
+
+import (
+    "fmt"
+    "net/http"
+    "io/ioutil"
+)
+
+func main() {
+    client := &http.Client{}
+    
+    req, _ := http.NewRequest("GET", "https://cloud.onyx.app/api/me", nil)
+    req.Header.Set("Authorization", "Bearer YOUR_API_KEY")
+    req.Header.Set("Content-Type", "application/json")
+    
+    resp, err := client.Do(req)
+    if err != nil {
+        panic(err)
+    }
+    defer resp.Body.Close()
+    
+    body, _ := ioutil.ReadAll(resp.Body)
+    fmt.Println(string(body))
+}
+```
+
+</CodeGroup>
+
+## OAuth 2.0 Authentication
+
+OAuth 2.0 is recommended for applications that need to act on behalf of users.
+
+### OAuth Flow
+
+1. **Authorization Request** - Redirect users to Onyx authorization server
+2. **User Consent** - User grants permission to your application
+3. **Authorization Code** - Onyx redirects back with an authorization code
+4. **Access Token** - Exchange the code for an access token
+5. **API Requests** - Use the access token to make authenticated requests
+
+### 1. Register Your Application
+
+Register your OAuth application in the Onyx dashboard:
+
+- **Application Name**: Your app's display name
+- **Redirect URIs**: Where users are redirected after authorization
+- **Scopes**: Permissions your app needs
+
+### 2. Authorization URL
+
+Redirect users to the authorization URL:
+
+```
+https://cloud.onyx.app/oauth/authorize?
+  response_type=code&
+  client_id=YOUR_CLIENT_ID&
+  redirect_uri=YOUR_REDIRECT_URI&
+  scope=read_chat write_chat read_documents&
+  state=random_state_string
+```
+
+**Parameters:**
+- `response_type`: Always `code` for authorization code flow
+- `client_id`: Your OAuth application's client ID
+- `redirect_uri`: Must match a registered redirect URI
+- `scope`: Space-separated list of requested permissions
+- `state`: Random string to prevent CSRF attacks
+
+### 3. Handle the Callback
+
+After user consent, Onyx redirects to your `redirect_uri` with:
+
+```
+https://yourapp.com/callback?
+  code=authorization_code_here&
+  state=random_state_string
+```
+
+### 4. Exchange Code for Token
+
+Exchange the authorization code for an access token:
+
+<CodeGroup>
+
+```bash cURL
+curl -X POST "https://cloud.onyx.app/oauth/token" \
+  -H "Content-Type: application/x-www-form-urlencoded" \
+  -d "grant_type=authorization_code" \
+  -d "client_id=YOUR_CLIENT_ID" \
+  -d "client_secret=YOUR_CLIENT_SECRET" \
+  -d "code=AUTHORIZATION_CODE" \
+  -d "redirect_uri=YOUR_REDIRECT_URI"
+```
+
+```python Python
+import requests
+
+data = {
+    'grant_type': 'authorization_code',
+    'client_id': 'YOUR_CLIENT_ID',
+    'client_secret': 'YOUR_CLIENT_SECRET',
+    'code': 'AUTHORIZATION_CODE',
+    'redirect_uri': 'YOUR_REDIRECT_URI'
+}
+
+response = requests.post(
+    'https://cloud.onyx.app/oauth/token',
+    data=data,
+    headers={'Content-Type': 'application/x-www-form-urlencoded'}
+)
+
+tokens = response.json()
+access_token = tokens['access_token']
+```
+
+</CodeGroup>
+
+**Response:**
+```json
+{
+  "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "token_type": "Bearer",
+  "expires_in": 3600,
+  "refresh_token": "refresh_token_here",
+  "scope": "read_chat write_chat read_documents"
+}
+```
+
+### 5. Use Access Token
+
+Use the access token in API requests:
+
+```http
+GET /api/chat/get-user-chat-sessions
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+```
+
+### 6. Refresh Tokens
+
+When access tokens expire, use the refresh token:
+
+```bash
+curl -X POST "https://cloud.onyx.app/oauth/token" \
+  -H "Content-Type: application/x-www-form-urlencoded" \
+  -d "grant_type=refresh_token" \
+  -d "client_id=YOUR_CLIENT_ID" \
+  -d "client_secret=YOUR_CLIENT_SECRET" \
+  -d "refresh_token=REFRESH_TOKEN"
+```
+
+## Scopes and Permissions
+
+OAuth scopes control what your application can access:
+
+### Chat Scopes
+- `read_chat` - Read chat sessions and messages
+- `write_chat` - Create and send messages
+- `delete_chat` - Delete chat sessions
+
+### Document Scopes
+- `read_documents` - Search and retrieve documents
+- `write_documents` - Upload and modify documents
+- `delete_documents` - Delete documents
+
+### Agent Scopes
+- `read_agents` - View agents and their configurations
+- `write_agents` - Create and modify agents
+- `delete_agents` - Delete agents
+
+### Admin Scopes
+- `admin_users` - Manage user accounts
+- `admin_settings` - Modify workspace settings
+- `admin_connectors` - Manage data connectors
+
+### Example Scope Request
+```
+scope=read_chat write_chat read_documents write_agents
+```
+
+## Session Cookie Authentication
+
+For web applications on the same domain, you can use session cookies:
+
+### Login Flow
+
+1. **Login Request** - POST credentials to login endpoint
+2. **Session Cookie** - Server sets HTTP-only session cookie
+3. **Authenticated Requests** - Cookie automatically included in requests
+
+```javascript
+// Login request
+const response = await fetch('/api/auth/login', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({
+    email: 'user@example.com',
+    password: 'password'
+  }),
+  credentials: 'include' // Include cookies
+});
+
+// Subsequent requests automatically include session cookie
+const chatResponse = await fetch('/api/chat/get-user-chat-sessions', {
+  credentials: 'include'
+});
+```
+
+## Enterprise Authentication
+
+### OIDC (OpenID Connect)
+
+For enterprise SSO using OIDC:
+
+1. Configure OIDC provider in Onyx settings
+2. Users authenticate via your identity provider
+3. Onyx receives OIDC tokens and creates sessions
+
+### SAML
+
+For SAML-based authentication:
+
+1. Configure SAML identity provider
+2. Users authenticate via SAML IdP
+3. SAML assertions create authenticated sessions
+
+## Security Best Practices
+
+### API Key Security
+
+- **Store Securely** - Use environment variables or secure vaults
+- **Rotate Regularly** - Generate new keys periodically
+- **Scope Appropriately** - Only grant necessary permissions
+- **Monitor Usage** - Track API key usage and anomalies
+
+```bash
+# Good: Environment variable
+export ONYX_API_KEY="your_api_key_here"
+
+# Bad: Hardcoded in code
+api_key = "onyx_key_1234567890abcdef"  # Don't do this!
+```
+
+### OAuth Security
+
+- **Validate State Parameter** - Prevent CSRF attacks
+- **Use HTTPS** - Always use secure connections
+- **Store Tokens Securely** - Encrypt tokens in storage
+- **Handle Token Expiration** - Implement refresh token logic
+
+```python
+# Validate state parameter
+if request.args.get('state') != session.get('oauth_state'):
+    return 'Invalid state parameter', 400
+
+# Store tokens securely
+encrypted_token = encrypt(access_token, encryption_key)
+session['access_token'] = encrypted_token
+```
+
+### Network Security
+
+- **Use HTTPS** - All API requests must use TLS
+- **Validate Certificates** - Don't disable SSL verification
+- **IP Allowlisting** - Restrict API access by IP (enterprise)
+- **Rate Limiting** - Implement client-side rate limiting
+
+## Error Handling
+
+### Authentication Errors
+
+Common authentication error responses:
+
+```json
+// Missing authentication
+{
+  "status": "error",
+  "error": {
+    "code": "AUTHENTICATION_REQUIRED",
+    "message": "Authentication credentials are required"
+  }
+}
+
+// Invalid API key
+{
+  "status": "error",
+  "error": {
+    "code": "INVALID_CREDENTIALS",
+    "message": "The provided API key is invalid or expired"
+  }
+}
+
+// Insufficient permissions
+{
+  "status": "error",
+  "error": {
+    "code": "INSUFFICIENT_PERMISSIONS",
+    "message": "Your API key does not have the required permissions"
+  }
+}
+
+// Expired token
+{
+  "status": "error",
+  "error": {
+    "code": "TOKEN_EXPIRED",
+    "message": "The access token has expired"
+  }
+}
+```
+
+### Handling Authentication Errors
+
+<CodeGroup>
+
+```python Python
+import requests
+
+def make_authenticated_request(url, api_key):
+    headers = {
+        'Authorization': f'Bearer {api_key}',
+        'Content-Type': 'application/json'
+    }
+    
+    response = requests.get(url, headers=headers)
+    
+    if response.status_code == 401:
+        error_data = response.json()
+        if error_data['error']['code'] == 'TOKEN_EXPIRED':
+            # Refresh token logic here
+            new_token = refresh_access_token()
+            headers['Authorization'] = f'Bearer {new_token}'
+            response = requests.get(url, headers=headers)
+        else:
+            raise Exception(f"Authentication failed: {error_data['error']['message']}")
+    
+    return response.json()
+```
+
+```javascript JavaScript
+async function makeAuthenticatedRequest(url, token) {
+  let response = await fetch(url, {
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    }
+  });
+  
+  if (response.status === 401) {
+    const errorData = await response.json();
+    
+    if (errorData.error.code === 'TOKEN_EXPIRED') {
+      // Refresh token and retry
+      const newToken = await refreshAccessToken();
+      response = await fetch(url, {
+        headers: {
+          'Authorization': `Bearer ${newToken}`,
+          'Content-Type': 'application/json'
+        }
+      });
+    } else {
+      throw new Error(`Authentication failed: ${errorData.error.message}`);
+    }
+  }
+  
+  return response.json();
+}
+```
+
+</CodeGroup>
+
+## Testing Authentication
+
+### Test Your API Key
+
+Verify your API key works:
+
+```bash
+curl -X GET "https://cloud.onyx.app/api/me" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -v
+```
+
+Expected response:
+```json
+{
+  "status": "success",
+  "data": {
+    "id": "user_123",
+    "email": "user@example.com",
+    "name": "John Doe",
+    "role": "user",
+    "permissions": ["read_chat", "write_chat", "read_documents"]
+  }
+}
+```
+
+### Test OAuth Flow
+
+Use tools like Postman or Insomnia to test OAuth flows:
+
+1. Make authorization request
+2. Complete consent flow
+3. Exchange code for token
+4. Test API requests with token
+
+## SDK Authentication
+
+### Python SDK
+
+```python
+from onyx_sdk import OnyxClient
+
+# API Key authentication
+client = OnyxClient(api_key="your_api_key")
+
+# OAuth authentication
+client = OnyxClient(access_token="your_access_token")
+
+# Using client
+response = client.chat.get_user_sessions()
+```
+
+### JavaScript SDK
+
+```javascript
+import { OnyxClient } from '@onyx/sdk';
+
+// API Key authentication
+const client = new OnyxClient({
+  apiKey: 'your_api_key'
+});
+
+// OAuth authentication
+const client = new OnyxClient({
+  accessToken: 'your_access_token'
+});
+
+// Using client
+const sessions = await client.chat.getUserSessions();
+```
+
+## Troubleshooting
+
+### Common Issues
+
+**"Invalid API Key" Errors:**
+- Verify the API key is correct
+- Check if the key has been revoked
+- Ensure proper Bearer token format
+
+**OAuth Redirect Mismatches:**
+- Verify redirect URI exactly matches registration
+- Check for trailing slashes or protocol differences
+- Ensure URI encoding is correct
+
+**CORS Errors:**
+- Add your domain to allowed origins
+- Use proper authentication headers
+- Don't include credentials in preflight requests
+
+**Token Expiration:**
+- Implement refresh token logic
+- Handle 401 responses gracefully
+- Store token expiration times
+
+### Debug Mode
+
+Enable debug logging to troubleshoot authentication issues:
+
+```python
+import logging
+logging.basicConfig(level=logging.DEBUG)
+
+# SDK will now log authentication details
+client = OnyxClient(api_key="your_api_key", debug=True)
+```
+
+## Migration Guide
+
+### From Basic Auth to API Keys
+
+If you're migrating from basic authentication:
+
+```python
+# Old basic auth (deprecated)
+response = requests.get(
+    'https://cloud.onyx.app/api/me',
+    auth=('username', 'password')
+)
+
+# New API key auth
+response = requests.get(
+    'https://cloud.onyx.app/api/me',
+    headers={'Authorization': 'Bearer YOUR_API_KEY'}
+)
+```
+
+### From v1 to v2 Authentication
+
+Key changes in v2:
+- Bearer token format is now required
+- Session cookies use HTTP-only flag
+- PKCE is required for OAuth public clients
+- Scopes are more granular
+
+---
+
+## Support
+
+Need help with authentication? Here are your options:
+
+- **Documentation**: Review this guide and API reference
+- **Community**: Ask questions in our [Discord server](https://discord.gg/TDJ59cGV2X)
+- **Support**: Contact support for enterprise customers
+- **GitHub**: Report authentication bugs on [GitHub Issues](https://github.com/onyx-dot-app/onyx/issues) 

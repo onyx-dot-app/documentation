@@ -1,0 +1,486 @@
+---
+title: "Simple Example"
+description: "Simple example showing how to create a Sales Copilot agent and use it in a chat session"
+---
+
+# Simple Example: Creating a Sales Copilot
+
+The Agents API enables you to create, manage, and interact with specialized AI agents. Agents can be configured with custom knowledge bases, tools, and behavior to serve specific roles and use cases.
+
+## Overview
+
+This example demonstrates creating a **Sales Copilot** agent that:
+- Has access to your Sales Runbook connector
+- Can answer sales-related questions  
+- Provides guidance on sales processes
+- Maintains a professional, sales-focused personality
+
+## Python Example
+
+```python
+import requests
+import json
+
+# Configuration
+API_BASE_URL = "https://cloud.onyx.app/api"
+API_KEY = "your_api_key_here"
+
+headers = {
+    "Authorization": f"Bearer {API_KEY}",
+    "Content-Type": "application/json"
+}
+
+# Step 1: Create the Sales Copilot Agent
+agent_data = {
+    "name": "Sales Copilot",
+    "description": "AI agent specialized in sales processes and customer interactions",
+    "system_prompt": """You are a Sales Copilot, an expert AI agent for sales teams.
+
+Your expertise includes:
+- Sales methodology and best practices
+- Customer relationship management
+- Lead qualification and scoring
+- Objection handling techniques
+- Sales process optimization
+
+Your role is to:
+- Help sales reps with customer inquiries
+- Provide guidance on sales strategies
+- Share relevant information from the sales runbook
+- Assist with lead qualification
+- Offer objection handling advice
+
+Guidelines:
+- Always maintain a professional, results-oriented tone
+- Reference specific sales methodologies when applicable
+- Provide actionable advice and next steps
+- Use data and metrics to support recommendations
+- Escalate complex strategic decisions to sales managers
+""",
+    "num_chunks": 10,
+    "document_set_ids": [1],  # Sales Runbook connector ID
+    "tool_ids": [],
+    "llm_relevance_filter": True,
+    "llm_filter_extraction": True,
+    "recency_bias": "auto",
+    "prompt_ids": [],
+    "token_budget": None,
+    "max_chunks": None,
+    "llm_model_provider_override": None,
+    "llm_model_version_override": None,
+    "starter_messages": [
+        "How can I help you close more deals today?",
+        "What's your current sales challenge?",
+        "Need help with lead qualification or objection handling?"
+    ],
+    "is_public": False,
+    "users": [],
+    "groups": []
+}
+
+# Create the agent
+response = requests.post(
+    f"{API_BASE_URL}/admin/persona",
+    headers=headers,
+    json=agent_data
+)
+
+if response.status_code == 200:
+    agent = response.json()
+    agent_id = agent["id"]
+    print(f"✅ Sales Copilot agent created successfully!")
+    print(f"Agent ID: {agent_id}")
+    print(f"Agent Name: {agent['name']}")
+else:
+    print(f"❌ Failed to create agent: {response.status_code}")
+    print(response.text)
+    exit(1)
+
+# Step 2: Create a chat session with the agent
+chat_data = {
+    "persona_id": agent_id,
+    "description": "Sales consultation session"
+}
+
+response = requests.post(
+    f"{API_BASE_URL}/chat/create-chat-session",
+    headers=headers,
+    json=chat_data
+)
+
+if response.status_code == 200:
+    session = response.json()
+    session_id = session["chat_session_id"]
+    print(f"✅ Chat session created: {session_id}")
+else:
+    print(f"❌ Failed to create chat session: {response.status_code}")
+    print(response.text)
+    exit(1)
+
+# Step 3: Send a message to the agent
+message_data = {
+    "message": "I have a prospect who's hesitant about our pricing. They say it's too expensive compared to competitors. How should I handle this objection?",
+    "chat_session_id": session_id,
+    "parent_message_id": None,
+    "prompt_id": None,
+    "search_doc_ids": None,
+    "retrieval_options": {
+        "run_search": "always",
+        "real_time_flow": False,
+        "enable_auto_detect_filters": False
+    }
+}
+
+response = requests.post(
+    f"{API_BASE_URL}/chat/send-message",
+    headers=headers,
+    json=message_data
+)
+
+if response.status_code == 200:
+    message_response = response.json()
+    print(f"\n🤖 Sales Copilot Response:")
+    print(f"Message: {message_response['message']}")
+    
+    if message_response.get('documents'):
+        print(f"\n📚 Referenced Documents:")
+        for doc in message_response['documents']:
+            print(f"- {doc['document_name']}")
+else:
+    print(f"❌ Failed to send message: {response.status_code}")
+    print(response.text)
+```
+
+## JavaScript/Node.js Example
+
+```javascript
+const API_BASE_URL = "https://cloud.onyx.app/api";
+const API_KEY = "your_api_key_here";
+
+const headers = {
+    "Authorization": `Bearer ${API_KEY}`,
+    "Content-Type": "application/json"
+};
+
+async function createSalesCopilot() {
+    try {
+        // Step 1: Create the Sales Copilot Agent
+        const agentData = {
+            name: "Sales Copilot",
+            description: "AI agent specialized in sales processes and customer interactions",
+            system_prompt: `You are a Sales Copilot, an expert AI agent for sales teams.
+
+Your expertise includes:
+- Sales methodology and best practices
+- Customer relationship management
+- Lead qualification and scoring
+- Objection handling techniques
+- Sales process optimization
+
+Your role is to:
+- Help sales reps with customer inquiries
+- Provide guidance on sales strategies
+- Share relevant information from the sales runbook
+- Assist with lead qualification
+- Offer objection handling advice
+
+Guidelines:
+- Always maintain a professional, results-oriented tone
+- Reference specific sales methodologies when applicable
+- Provide actionable advice and next steps
+- Use data and metrics to support recommendations
+- Escalate complex strategic decisions to sales managers`,
+            num_chunks: 10,
+            document_set_ids: [1], // Sales Runbook connector ID
+            tool_ids: [],
+            llm_relevance_filter: true,
+            llm_filter_extraction: true,
+            recency_bias: "auto",
+            prompt_ids: [],
+            token_budget: null,
+            max_chunks: null,
+            llm_model_provider_override: null,
+            llm_model_version_override: null,
+            starter_messages: [
+                "How can I help you close more deals today?",
+                "What's your current sales challenge?",
+                "Need help with lead qualification or objection handling?"
+            ],
+            is_public: false,
+            users: [],
+            groups: []
+        };
+
+        const agentResponse = await fetch(`${API_BASE_URL}/admin/persona`, {
+            method: 'POST',
+            headers: headers,
+            body: JSON.stringify(agentData)
+        });
+
+        if (!agentResponse.ok) {
+            throw new Error(`Failed to create agent: ${agentResponse.status}`);
+        }
+
+        const agent = await agentResponse.json();
+        console.log(`✅ Sales Copilot agent created successfully!`);
+        console.log(`Agent ID: ${agent.id}`);
+        console.log(`Agent Name: ${agent.name}`);
+
+        // Step 2: Create a chat session with the agent
+        const chatData = {
+            persona_id: agent.id,
+            description: "Sales consultation session"
+        };
+
+        const chatResponse = await fetch(`${API_BASE_URL}/chat/create-chat-session`, {
+            method: 'POST',
+            headers: headers,
+            body: JSON.stringify(chatData)
+        });
+
+        if (!chatResponse.ok) {
+            throw new Error(`Failed to create chat session: ${chatResponse.status}`);
+        }
+
+        const session = await chatResponse.json();
+        console.log(`✅ Chat session created: ${session.chat_session_id}`);
+
+        // Step 3: Send a message to the agent
+        const messageData = {
+            message: "I have a prospect who's hesitant about our pricing. They say it's too expensive compared to competitors. How should I handle this objection?",
+            chat_session_id: session.chat_session_id,
+            parent_message_id: null,
+            prompt_id: null,
+            search_doc_ids: null,
+            retrieval_options: {
+                run_search: "always",
+                real_time_flow: false,
+                enable_auto_detect_filters: false
+            }
+        };
+
+        const messageResponse = await fetch(`${API_BASE_URL}/chat/send-message`, {
+            method: 'POST',
+            headers: headers,
+            body: JSON.stringify(messageData)
+        });
+
+        if (!messageResponse.ok) {
+            throw new Error(`Failed to send message: ${messageResponse.status}`);
+        }
+
+        const messageResult = await messageResponse.json();
+        console.log(`\n🤖 Sales Copilot Response:`);
+        console.log(`Message: ${messageResult.message}`);
+        
+        if (messageResult.documents) {
+            console.log(`\n📚 Referenced Documents:`);
+            messageResult.documents.forEach(doc => {
+                console.log(`- ${doc.document_name}`);
+            });
+        }
+
+    } catch (error) {
+        console.error(`❌ Error: ${error.message}`);
+    }
+}
+
+// Run the example
+createSalesCopilot();
+```
+
+## cURL Example
+
+```bash
+# Step 1: Create the Sales Copilot Agent
+curl -X POST "https://cloud.onyx.app/api/admin/persona" \
+  -H "Authorization: Bearer your_api_key_here" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "Sales Copilot",
+    "description": "AI agent specialized in sales processes and customer interactions",
+    "system_prompt": "You are a Sales Copilot, an expert AI agent for sales teams...",
+    "num_chunks": 10,
+    "document_set_ids": [1],
+    "tool_ids": [],
+    "starter_messages": [
+      "How can I help you close more deals today?",
+      "What is your current sales challenge?",
+      "Need help with lead qualification or objection handling?"
+    ],
+    "is_public": false
+  }'
+
+# Response: Save the agent_id from the response
+
+# Step 2: Create a chat session
+curl -X POST "https://cloud.onyx.app/api/chat/create-chat-session" \
+  -H "Authorization: Bearer your_api_key_here" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "persona_id": YOUR_AGENT_ID,
+    "description": "Sales consultation session"
+  }'
+
+# Response: Save the chat_session_id from the response
+
+# Step 3: Send a message to the Sales Copilot
+curl -X POST "https://cloud.onyx.app/api/chat/send-message" \
+  -H "Authorization: Bearer your_api_key_here" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "message": "I have a prospect who says our solution is too expensive. How should I handle this pricing objection?",
+    "chat_session_id": YOUR_CHAT_SESSION_ID,
+    "retrieval_options": {
+      "run_search": "always"
+    }
+  }'
+```
+
+## Key Features
+
+### Agent Specialization
+
+The Sales Copilot demonstrates several key agent capabilities:
+
+- **Custom Personalities**: Define specific roles and behavior through system prompts
+- **Knowledge Integration**: Access to sales runbooks and best practices
+- **Contextual Responses**: Answers tailored to sales scenarios
+- **Professional Tone**: Maintains appropriate communication style
+
+### Configuration Options
+
+```json
+{
+  "num_chunks": 10,           // Number of knowledge chunks to retrieve
+  "document_set_ids": [1],    // Connected knowledge sources
+  "tool_ids": [],             // Available tools/actions
+  "starter_messages": [...],  // Conversation starters
+  "is_public": false,         // Visibility settings
+  "builtin_persona": false,   // Custom vs. built-in agent
+  "llm_relevance_filter": true, // Filter irrelevant results
+  "recency_bias": "auto"      // Prioritize recent information
+}
+```
+
+### System Prompt Design
+
+System prompts define the agent's personality, role, and behavior:
+
+```text
+You are a [ROLE], an expert AI agent for [TARGET_AUDIENCE].
+
+Your expertise includes:
+- [SKILL_1]
+- [SKILL_2] 
+- [SKILL_3]
+
+Your role is to:
+- [RESPONSIBILITY_1]
+- [RESPONSIBILITY_2]
+- [RESPONSIBILITY_3]
+
+Guidelines:
+- [GUIDELINE_1]
+- [GUIDELINE_2]
+- [GUIDELINE_3]
+```
+
+## Common Use Cases
+
+### Customer Support Agent
+```json
+{
+  "name": "Support Agent",
+  "system_prompt": "You are a Customer Support Agent...",
+  "document_set_ids": [2, 3], // Help docs, FAQs
+  "tool_ids": [1],            // Ticket creation tool
+  "starter_messages": [
+    "How can I help you today?",
+    "What issue are you experiencing?",
+    "Need help with a product question?"
+  ]
+}
+```
+
+### Technical Documentation Agent
+
+```json
+{
+"name": "Tech Docs Agent",
+tech_assistant = {
+    "system_prompt": "You are a Technical Documentation Agent...",
+    "document_set_ids": [4, 5], // API docs, guides
+    "starter_messages": [
+        "What technical topic can I help explain?",
+        "Need help with our API or integration?"
+    ]
+}
+```
+
+### Research Agent
+
+```json
+research_assistant = {
+    "name": "Research Agent",
+    "system_prompt": "You are a Research Agent specializing in data analysis...",
+    "document_set_ids": [6, 7], // Research papers, datasets
+    "tool_ids": [2],            // Data analysis tools
+    "starter_messages": [
+        "What would you like to research today?",
+        "Need help analyzing data or finding insights?"
+    ]
+}
+```
+
+## Advanced Configuration
+
+### Multi-Source Knowledge
+```json
+{
+  "document_set_ids": [1, 2, 3], // Sales runbook, competitor analysis, product specs
+  "llm_relevance_filter": true,  // Filter out irrelevant chunks
+  "num_chunks": 15,              // Increase context for complex queries
+  "recency_bias": "favor_recent" // Prioritize recent updates
+}
+```
+
+### Performance Tuning
+```json
+{
+  "max_chunks": 20,                    // Maximum chunks per query
+  "llm_filter_extraction": true,       // Use LLM to improve chunk selection
+  "token_budget": 4000,               // Control response length
+  "llm_model_provider_override": "gpt-4", // Use specific model
+  "search_settings": {
+    "multilingual_expansion": true,     // Support multiple languages
+    "use_keyword_search": true         // Hybrid search approach
+  }
+}
+```
+
+### Enterprise Features
+```json
+{
+  "users": [123, 456],        // Specific user access
+  "groups": [789],            // Group-based permissions  
+  "is_public": false,         // Private agent
+  "access_control": {
+    "require_auth": true,     // Authentication required
+    "allowed_domains": ["company.com"], // Domain restrictions
+    "rate_limits": {
+      "requests_per_hour": 100 // Usage limits
+    }
+  }
+}
+```
+
+## Next Steps
+
+1. **Customize the system prompt** for your specific sales methodology
+2. **Connect relevant document sets** (sales playbooks, product info, case studies)
+3. **Add tools** for CRM integration, meeting scheduling, or proposal generation
+4. **Test with real sales scenarios** to refine responses
+5. **Train your sales team** on effective agent interaction
+
+For more advanced features, see the [full Agents API documentation](/api_reference/agents/list_agents). 

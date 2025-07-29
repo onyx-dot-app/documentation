@@ -1,0 +1,361 @@
+---
+title: "Agents"
+description: "Guide for developing agent functionality in Onyx"
+icon: "bot"
+---
+
+# Agents
+
+Agents in Onyx are specialized AI agents configured for specific use cases, roles, or domains. This guide covers how to develop, enhance, and contribute agent functionality.
+
+## What are Agents?
+
+Agents in Onyx are customized AI agents that combine:
+- **Knowledge bases** from connected data sources
+- **System prompts** that define personality and behavior
+- **Custom tools** for specific capabilities
+- **Access controls** for security and permissions
+
+### Examples
+- **Support Agent** - Help desk with ticket creation tools  
+- **Sales Agent** - CRM integration with lead qualification
+- **Research Agent** - Academic databases with citation tools
+- **HR Agent** - Policy documents with employee tools
+
+## Architecture
+
+### Agent Model
+```python
+# Agent/Persona Model
+class Persona:
+    id: int
+    name: str                   # Display name
+    system_prompt: str          # Core personality/instructions
+    description: Optional[str]  # User-facing description
+    num_chunks: int            # Context window for retrieval
+    document_sets: List[int]   # Connected knowledge bases
+    tools: List[int]           # Available actions/integrations
+    builtin_tools: List[str]   # System tools (search, etc.)
+    users: List[User]          # Access permissions
+    groups: List[UserGroup]    # Group permissions
+    is_visible: bool           # Visibility to users
+    is_public: bool            # Public availability
+    deleted: bool              # Soft delete flag
+```
+
+### Key Components
+
+1. **System Prompt**: Defines the agent's role, personality, and behavior
+2. **Knowledge Sources**: Document sets and connectors the agent can access  
+3. **Tools**: Custom actions and integrations available to the agent
+4. **Permissions**: User and group access controls
+
+## Development Workflow
+
+### 1. UI Development (Recommended for Testing)
+
+For development and testing, use the web interface:
+
+1. Go to **Admin Panel > Agents**
+2. Click **Create New Agent**
+3. Configure:
+   - Name and description
+   - System prompt
+   - Knowledge sources
+   - Available tools
+   - User permissions
+
+### 2. Programmatic Creation
+
+```python
+from onyx.db.persona import create_persona
+from onyx.db.models import Persona, PersonaCreate
+
+# Create agent programmatically
+persona_data = PersonaCreate(
+    name="Support Agent",
+    description="AI agent specialized in customer support",
+    system_prompt="""You are a Support Agent, an expert in customer service.
+    
+    Your role is to:
+    - Help customers resolve issues quickly
+    - Escalate complex problems to human agents  
+    - Maintain a friendly, professional tone
+    - Use available tools to create tickets when needed
+    """,
+    num_chunks=10,
+    document_set_ids=[1, 2],  # Help docs, FAQs
+    tool_ids=[3],             # Ticket creation tool
+    is_public=False
+)
+
+return await create_persona(persona_data)
+```
+
+### 3. API Integration
+
+Use the Agents API to create agents:
+
+```python
+import requests
+
+persona_data = {
+    "name": "Sales Agent",
+    "description": "AI agent for sales team",
+    "system_prompt": "You are a Sales Agent helping with customer inquiries...",
+    "num_chunks": 10,
+    "document_set_ids": [1],
+    "tool_ids": [],
+    "is_public": False
+}
+
+response = requests.post(
+    "https://your-onyx-instance/api/persona",
+    json=persona_data,
+    headers={"Authorization": f"Bearer {api_key}"}
+)
+```
+
+## Best Practices
+
+### System Prompt Design
+
+**Good prompts are specific and actionable:**
+
+✅ **Good Example:**
+```
+You are a Technical Support Agent for Acme Software.
+
+Your expertise includes:
+- Troubleshooting installation issues
+- Explaining API documentation  
+- Escalating bugs to engineering
+
+Guidelines:
+- Always ask for version numbers and error messages
+- Provide step-by-step solutions
+- Create support tickets for unresolved issues
+- Maintain a helpful, professional tone
+```
+
+❌ **Bad Example:**
+```
+You are a helpful agent
+```
+
+### Knowledge Source Selection
+
+- **Be specific**: Choose document sets relevant to the agent's role
+- **Avoid overload**: Too many sources can dilute relevance  
+- **Regular updates**: Keep knowledge bases current
+- **Test retrieval**: Verify the agent finds the right information
+
+### Tool Integration
+
+```python
+# Example: Support agent with ticket creation
+class SupportAgent:
+    def __init__(self):
+        self.ticket_tool = JiraTicketTool()
+        self.knowledge_base = get_document_sets(["support_docs", "faqs"])
+    
+    def handle_request(self, user_query: str):
+        # Search knowledge base first
+        context = self.knowledge_base.search(user_query)
+        
+        # If complex issue, create ticket
+        if self.requires_escalation(user_query, context):
+            return self.ticket_tool.create_ticket(user_query)
+            
+        return self.generate_response(user_query, context)
+```
+
+### Testing and Validation
+
+#### Functional Testing
+```python
+def test_support_agent():
+    agent = get_persona_by_id(SUPPORT_AGENT_ID)
+    
+    # Test basic functionality
+    assert agent.name == "Support Agent"
+    assert len(agent.document_sets) > 0
+    
+    return agent
+
+# Test chat integration
+session = create_chat_session(persona_id=support_agent.id)
+response = send_message(session.id, "How do I reset my password?")
+assert "password" in response.message.lower()
+```
+
+#### Integration Testing
+```python
+# Test with different user types
+session = create_chat_session(persona_id=support_agent.id)
+response = send_message(
+    session_id=session.id,
+    message="I can't access the API",
+    user_id=customer_user.id
+)
+```
+
+#### Load Testing
+```python
+# Test agent performance under load
+import asyncio
+
+async def load_test_agent():
+    tasks = []
+    for i in range(100):
+        session = create_chat_session(persona_id=SUPPORT_AGENT_ID)
+        task = send_message_async(session.id, f"Test query {i}")
+        tasks.append(task)
+    
+    results = await asyncio.gather(*tasks)
+    return results
+```
+
+## Advanced Patterns
+
+### Multi-Agent Workflows
+
+```python
+class SalesWorkflow:
+    def __init__(self):
+        self.lead_qualifier = get_persona_by_name("Lead Qualifier")
+        self.product_specialist = get_persona_by_name("Product Specialist")
+        self.pricing_agent = get_persona_by_name("Pricing Agent")
+    
+    async def handle_sales_inquiry(self, inquiry: str):
+        # Step 1: Qualify the lead
+        qualification = await self.lead_qualifier.process(inquiry)
+        
+        if qualification.score > 0.7:
+            # Step 2: Get product information
+            product_info = await self.product_specialist.process(inquiry)
+            
+            # Step 3: Generate pricing
+            pricing = await self.pricing_agent.process({
+                "inquiry": inquiry,
+                "qualification": qualification,
+                "products": product_info
+            })
+            
+            return self.compile_response(qualification, product_info, pricing)
+        
+        return qualification.response
+```
+
+### Dynamic Agent Creation
+
+```python
+def create_domain_agent(domain: str, documents: List[int], tools: List[int]):
+    """Create specialized agents for different domains"""
+    
+    prompt_template = f"""
+    You are a {domain} Expert, specialized in {domain} topics.
+    
+    Your role:
+    - Answer questions related to {domain}
+    - Provide accurate, up-to-date information
+    - Use domain-specific terminology appropriately
+    - Escalate when outside your expertise
+    """
+    
+    return create_persona(PersonaCreate(
+        name=f"{domain} Expert",
+        description=f"Expert AI agent specialized in {domain}",
+        system_prompt=prompt_template,
+        document_set_ids=documents,
+        tool_ids=tools
+    ))
+```
+
+### Context-Aware Agents
+
+```python
+class ContextAwareAgent:
+    def __init__(self, persona_id: int):
+        self.persona_id = persona_id
+        self.context_memory = {}
+    
+    def process_with_context(self, user_id: str, message: str):
+        # Retrieve user context
+        user_context = self.context_memory.get(user_id, {})
+        
+        # Enhance message with context
+        enhanced_message = self.add_context(message, user_context)
+        
+        # Process with agent
+        response = self.send_to_agent(enhanced_message)
+        
+        # Update context
+        self.update_context(user_id, message, response)
+        
+        return response
+```
+
+## Contributing
+
+### Adding New Agent Types
+
+1. **Identify the use case** and target users
+2. **Design the system prompt** with clear role definition
+3. **Select relevant knowledge sources** 
+4. **Choose appropriate tools** for the agent's capabilities
+5. **Test thoroughly** with real user scenarios
+6. **Document the agent** with examples and best practices
+
+### Code Contributions
+
+- Follow existing patterns in `onyx/db/persona.py`
+- Add comprehensive tests in `tests/unit/db/test_persona.py`
+- Update API documentation for new endpoints
+- Include migration scripts for database changes
+
+### Documentation
+
+- Update this guide with new patterns and examples
+- Add agent-specific documentation to relevant sections
+- Include troubleshooting guides for common issues
+- Provide integration examples for popular use cases
+
+## Troubleshooting
+
+### Common Issues
+
+**Agent not finding relevant information:**
+- Check document set permissions
+- Verify search query processing
+- Review chunking and embedding quality
+
+**Agent giving inconsistent responses:**
+- Refine system prompt specificity
+- Reduce conflicting knowledge sources
+- Add response format guidelines
+
+**Performance issues:**
+- Optimize document retrieval settings
+- Reduce context window size if needed
+- Cache frequently accessed information
+
+### Debugging Tools
+
+```python
+# Enable agent debugging
+import logging
+logging.getLogger('onyx.agent').setLevel(logging.DEBUG)
+
+# Test agent retrieval
+def debug_agent_search(persona_id: int, query: str):
+    agent = get_persona_by_id(persona_id)
+    results = agent.search_knowledge_base(query)
+    
+    for result in results:
+        print(f"Score: {result.score}")
+        print(f"Source: {result.document.title}")
+        print(f"Content: {result.content[:200]}...")
+```
+
+For additional support, see the [API Documentation](/api_reference/agents/overview) or reach out to the development team. 
