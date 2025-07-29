@@ -25,7 +25,7 @@
             ]
           },
           {
-            "group": "Onyx Basics",
+            "group": "Features",
             "pages": [
               "overview/basics/chat",
               "overview/basics/search",
@@ -38,12 +38,12 @@
           },
 
           {
-            "group": "Accessing Onyx",
+            "group": "Interfaces",
             "pages": [
-              "overview/accessing_onyx/web_interface",
-              "overview/accessing_onyx/slack",
-              "overview/accessing_onyx/chrome_extension",
-              "overview/accessing_onyx/ios_app"
+              "overview/interfaces/web_interface",
+              "overview/interfaces/slack",
+              "overview/interfaces/chrome_extension",
+              "overview/interfaces/ios_app"
             ]
           },
           {
@@ -54,8 +54,66 @@
           }
         ]
       },
+
       {
-        "tab": "Administrators",
+        "tab": "Deployment",
+        "pages": [
+          {
+            "group": "Getting Started",
+            "pages": [
+              "deployment/getting_started/quickstart",
+              "deployment/getting_started/resourcing",
+              "deployment/getting_started/system_overview",
+              "deployment/hosting_options/hosting_options"
+            ]
+          },
+          {
+            "group": "Deployment Guides",
+            "pages": [
+              {
+                "group": "AWS",
+                "pages": [
+                  "deployment/deployment_guides/aws/ec2",
+                  "deployment/deployment_guides/aws/ecs",
+                  "deployment/deployment_guides/aws/eks"
+                ]
+              },
+              "deployment/deployment_guides/gcp",
+              "deployment/deployment_guides/azure",
+              "deployment/deployment_guides/digital_ocean"
+            ]
+          },
+
+          {
+            "group": "Authentication",
+            "pages": [
+              "deployment/authentication/basic",
+              "deployment/authentication/oauth",
+              "deployment/authentication/oidc",
+              "deployment/authentication/saml"
+            ]
+          },
+          {
+            "group": "Configuration",
+            "pages": [
+              "deployment/configuration/env_vars",
+              "deployment/configuration/chrome_extension",
+              "deployment/configuration/ios_app"
+            ]
+          },
+          {
+            "group": "Miscellaneous",
+            "pages": [
+              "deployment/miscellaneous/release_process",
+              "deployment/miscellaneous/troubleshooting",
+              "deployment/miscellaneous/enterprise_edition",
+              "contact_us"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Admins",
         "pages": [
           {
             "group": "Getting Started",
@@ -165,9 +223,6 @@
               }
             ]
           },
-
-
-
           {
             "group": "Onyx Everywhere",
             "pages": [
@@ -204,71 +259,6 @@
           {
             "group": "Miscellaneous",
             "pages": [
-              "contact_us"
-            ]
-          }
-        ]
-      },
-      {
-        "tab": "Deployment",
-        "pages": [
-          {
-            "group": "Getting Started",
-            "pages": [
-              "deployment/getting_started/quickstart",
-              "deployment/getting_started/resourcing",
-              "deployment/getting_started/system_overview",
-              {
-                "group": "Hosting Options",
-                "pages": [
-                  "deployment/hosting_options/open_source",
-                  "deployment/hosting_options/self_hosted_ee",
-                  "deployment/hosting_options/onyx_cloud"
-                ]
-              }
-            ]
-          },
-          {
-            "group": "Deployment Guides",
-            "pages": [
-              {
-                "group": "AWS",
-                "pages": [
-                  "deployment/deployment_guides/aws/ec2",
-                  "deployment/deployment_guides/aws/ecs",
-                  "deployment/deployment_guides/aws/eks"
-                ]
-              },
-              "deployment/deployment_guides/gcp",
-              "deployment/deployment_guides/azure",
-              "deployment/deployment_guides/digital_ocean"
-            ]
-          },
-
-          {
-            "group": "Authentication",
-            "pages": [
-              "deployment/authentication/basic",
-              "deployment/authentication/oauth",
-              "deployment/authentication/oidc",
-              "deployment/authentication/saml"
-            ]
-          },
-          {
-            "group": "Configuration",
-            "pages": [
-              "deployment/configuration/env_vars",
-              "deployment/configuration/multilingual",
-              "deployment/configuration/chrome_extension",
-              "deployment/configuration/ios_app"
-            ]
-          },
-          {
-            "group": "Miscellaneous",
-            "pages": [
-              "deployment/miscellaneous/release_process",
-              "deployment/miscellaneous/troubleshooting",
-              "deployment/miscellaneous/enterprise_edition",
               "contact_us"
             ]
           }
