@@ -1,76 +1,113 @@
 ---
-title: "Configurability"
-description: "Getting started with Onyx configuration"
-icon: "gear"
+title: "Configuration"
+description: "Understanding how Onyx is configured for your organization"
 ---
 
-Onyx is designed to be highly configurable to fit your organization's specific needs. Here's an overview of the key areas you can customize and configure.
+# Configuration Overview
 
-## AI Models & Language Processing
+Onyx is highly configurable to meet your organization's specific needs. Understanding how it's set up helps you get the most out of the platform.
 
-### **Large Language Models (LLMs)**
-- Choose from multiple providers: OpenAI, Anthropic, Azure OpenAI, Google Vertex AI, and more
-- Configure different models for different use cases
-- Set up custom API endpoints and credentials
-- Adjust model parameters like temperature and token limits
+## Data Sources & Connectors
 
-### **Embedding Models**
-- Configure embedding models for document processing and search
-- Support for both cloud-based and local embedding models
-- Customizable embedding dimensions and processing settings
+Your Onyx instance connects to various data sources through connectors:
 
-## Data Sources & Integrations
+### **Common Connectors**
+- **Documentation**: Confluence, Notion, SharePoint
+- **Code Repositories**: GitHub, GitLab, Bitbucket
+- **Communication**: Slack, Microsoft Teams
+- **Files**: Google Drive, Dropbox, OneDrive
+- **Databases**: PostgreSQL, MySQL, MongoDB
 
-### **Connectors**
-- Connect to 40+ data sources including Google Drive, Slack, Confluence, GitHub, and more
-- Configure authentication methods (OAuth, API keys, service accounts)
-- Set up automated sync schedules and indexing preferences
-- Control which documents and folders to include or exclude
+### **How It Works**
+Connectors automatically sync data from your sources, making it searchable through Onyx. The sync frequency and scope are configured by your administrators.
 
-### **Document Processing**
-- Configure chunking strategies for optimal retrieval
-- Set up document filters and processing rules
-- Customize metadata extraction and indexing options
+## AI Agents
 
-## AI Agents & Assistants
+Your organization can customize AI agents for different purposes:
 
-### **Custom Agents**
-- Create specialized AI agents for different teams or use cases
+### **Specialized Agents**
+- **Department-specific**: HR, Engineering, Sales agents
+- **Role-based**: Manager, Developer, Support agents  
+- **Project-focused**: Product launch, compliance agents
+
+### **Agent Configuration**
 - Configure agent personalities, knowledge bases, and capabilities
-- Set up access controls and permissions
-- Define custom instructions and behavioral guidelines
+- Set access controls and permissions
+- Define custom tools and integrations
 
-### **Actions & Tools**
-- Enable built-in actions like web search and image generation
-- Configure custom actions for your specific workflows
-- Set up API integrations and external tool connections
+## Search Configuration
 
-## User Experience & Interface
+### **Search Capabilities**
+- **Semantic Search**: Understanding meaning and context
+- **Keyword Search**: Traditional text matching
+- **Hybrid Search**: Combining both approaches
+- **Faceted Search**: Filtering by source, date, type
 
-### **Authentication & Access**
-- Configure authentication methods: basic auth, OAuth, OIDC, SAML
-- Set up user groups and permission levels
-- Control access to specific features and data sources
+### **Ranking and Relevance**
+Search results are optimized based on:
+- Document relevance and authority
+- User permissions and access rights
+- Freshness and update frequency
+- User interaction patterns
 
-### **Workspace Settings**
-- Customize branding and appearance
-- Configure default settings and preferences
-- Set up organizational policies and usage guidelines
+## Access Control
 
-## Deployment & Infrastructure
+### **User Management**
+- **Authentication**: SSO, LDAP, or local accounts
+- **Authorization**: Role-based access control
+- **Permissions**: Document-level and source-level restrictions
 
-### **Environment Configuration**
-- Configure environment variables for different deployment scenarios
-- Set up database connections and storage options
-- Configure logging, monitoring, and telemetry settings
+### **Group-Based Access**
+- **Teams**: Department or project-based groups
+- **Roles**: Admin, user, viewer permissions
+- **Resources**: Controlled access to specific agents and data
 
-### **Scaling & Performance**
-- Adjust resource allocation and processing limits
-- Configure caching and optimization settings
-- Set up load balancing and high-availability options
+## Customization Options
 
-## Getting Started with Configuration
+### **Branding**
+- Custom logos and colors
+- Organization-specific terminology
+- Branded chat interfaces
 
-Most of these configurations can be managed through Onyx's intuitive admin interface, while more advanced settings can be customized through environment variables and configuration files.
+### **Workflow Integration**
+- **API Access**: Programmatic integration
+- **Webhooks**: Real-time notifications
+- **Custom Actions**: Automated workflows
 
-For detailed setup instructions for each area, check out the relevant sections in our [Administrator Guide](/admin/getting_started/overview) and [Deployment Guide](/deployment/getting_started/quickstart). 
+### **Analytics**
+- Usage tracking and insights
+- Performance monitoring
+- User activity reports
+
+## Security Features
+
+### **Data Protection**
+- Encryption at rest and in transit
+- Secure API endpoints
+- Audit logging and compliance
+
+### **Privacy Controls**
+- Data residency options
+- Retention policies
+- User data management
+
+## Getting Started
+
+### **What You Need to Know**
+1. **Available Data Sources**: What information Onyx can access
+2. **Agent Capabilities**: Which specialized agents are available
+3. **Your Permissions**: What data and features you can use
+4. **Support Contacts**: Who to reach for help or requests
+
+### **Best Practices**
+- Start with general questions to understand available data
+- Explore different agents to find the best fit for your tasks
+- Provide feedback to help improve responses
+- Respect data access policies and permissions
+
+### **Getting Help**
+- Contact your Onyx administrator for configuration questions
+- Refer to internal documentation for organization-specific features
+- Use the built-in help and feedback tools
+
+Your organization's specific configuration determines what features and data are available to you. When in doubt, reach out to your administrator or check your internal Onyx documentation. 

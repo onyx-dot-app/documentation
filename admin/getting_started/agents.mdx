@@ -1,48 +1,108 @@
 ---
 title: "Agents"
-description: "Managing AI agents and assistants"
-icon: "robot"
+description: "Managing AI agents"
 ---
 
-Learn how to create and configure custom AI agents to serve your organization's specific needs.
+# Agent Management
 
-## Configuration Options
+Agents in Onyx are specialized AI agents that can be configured with custom knowledge bases, system prompts, and tools to serve specific roles within your organization.
 
-When creating an agent in Onyx, you have several configuration options:
+## Creating Agents
 
-1. **Icon**: A visual icon for your agent
-2. **Name**: Your agent's display name
-3. **Description**: A brief overview of the agent's purpose and capabilities
-4. **Instructions**: Guidelines for the agent's role, behavior, and limitations
-5. **Search Tool and Actions**: Additional capabilities that the agent can perform
-6. **Default Model**: The language model powering your agent
+### Basic Agent Setup
+1. Navigate to **Admin Panel** → **Agents**
+2. Click **"Create New Agent"**
+3. Configure the basic settings:
+   - **Name**: Clear, descriptive name (e.g., "HR Policy Agent")
+   - **Description**: What the agent helps with
+   - **Visibility**: Public or private access
+
+### System Prompts
+The system prompt defines your agent's personality, expertise, and behavior:
+
+```
+You are an HR agent for Onyx Inc. You have access to the company's HR policies, benefits packages, and procedures. Maintain a professional and friendly tone in all interactions. If you're unsure about any information, direct users to contact HR directly rather than guessing.
+
+Key responsibilities:
+- Answer questions about company policies
+- Explain benefits and compensation
+- Guide employees through HR processes
+- Escalate complex issues to human HR staff
+```
 
 ![Agent Configuration Interface](/assets/images/guides/assistants/setup.png)
 
-## Advanced Configuration Options
+## Advanced Configuration
 
-In addition to the standard configuration options, you can also configure the following advanced options:
+### Knowledge Base Assignment
+Connect agents to relevant document sets:
+- Select specific connectors and document sets
+- Control which information the agent can access
+- Ensure data permissions align with agent purpose
 
-1. **Access Control**: Define who can access your agent
-2. **Starter Messages**: Initial messages to guide user interaction
-3. **Labels**: Add tags to your agent to help you organize and search for it
-4. **Knowledge Options**: Define how the agent will use the Search Tool and your knowledge base
-5. **Reminder Prompt**: An additional message to remind the agent of its purpose and limitations
+### Custom Tools & Actions
+Equip agents with specialized capabilities:
+- Integration with company systems
+- Automated workflow triggers
+- Custom business logic
 
 ![Agent Configuration Interface](/assets/images/guides/assistants/advanced_config.png)
 
-## Writing Effective Instructions
+## Agent Management Best Practices
 
-Your Instructions set the overall context and behavior of your agent. Instructions often start with:
+### Design Principles
+- **Single Purpose**: Each agent should have a clear, focused role
+- **Clear Boundaries**: Define what the agent can and cannot do
+- **Appropriate Access**: Only provide access to necessary information
+- **Regular Updates**: Keep knowledge bases and prompts current
 
-- The agent's role
-- General behavioral guidelines  
-- Any limitations or restrictions
-
-Think of this like giving your agent its job description and purpose.
-
-### Example
-
+### Example System Prompt Template
 ```
-You are an HR assistant for Onyx Inc. You have access to the company's HR policies, benefits packages, and procedures. Maintain a professional and friendly tone in all interactions. If you're unsure about any information, advise the user to contact the HR department directly. Do not make up information or policies.
+You are a [ROLE] agent for [ORGANIZATION]. 
+
+Your expertise includes:
+- [DOMAIN AREA 1]
+- [DOMAIN AREA 2]
+- [DOMAIN AREA 3]
+
+Your responsibilities:
+- [PRIMARY FUNCTION]
+- [SECONDARY FUNCTION]
+- [ESCALATION CRITERIA]
+
+Guidelines:
+- [TONE AND STYLE]
+- [LIMITATIONS]
+- [ESCALATION PROCEDURES]
 ```
+
+## Monitoring and Optimization
+
+### Usage Analytics
+Track agent performance through:
+- Conversation volume and frequency
+- User satisfaction ratings
+- Common question patterns
+- Knowledge gap identification
+
+### Continuous Improvement
+- Review conversation logs for optimization opportunities
+- Update system prompts based on user feedback
+- Expand knowledge bases as needed
+- Refine tool integrations
+
+## Access Control
+
+### User Groups
+Assign agents to specific user groups:
+- Department-based access (HR, Engineering, Sales)
+- Role-based access (Managers, Individual Contributors)
+- Project-based access (Temporary teams)
+
+### Permission Management
+Control agent capabilities:
+- Read-only vs. action-enabled agents
+- Sensitive information access
+- External system integration permissions
+
+Agents are powerful tools for scaling knowledge access and support within your organization. Proper configuration and management ensure they provide maximum value while maintaining security and accuracy.
