@@ -119,6 +119,7 @@
             "group": "Getting Started",
             "pages": [
               "admin/getting_started/overview",
+              "admin/getting_started/genai_models",
               "admin/getting_started/connectors",
               "admin/getting_started/actions",
               "admin/getting_started/agents",
@@ -127,15 +128,14 @@
             ]
           },
           {
-            "group": "LLM Configuration",
+            "group": "LLM Config",
             "pages": [
-              "admin/getting_started/llm",
               "admin/llm_providers/openai",
               "admin/llm_providers/anthropic",
+              "admin/llm_providers/google_gemini",
+              "admin/llm_providers/aws_bedrock",
               "admin/llm_providers/azure_openai",
-              "admin/llm_providers/vertex_ai",
-              "admin/llm_providers/ollama",
-              "admin/llm_providers/custom"
+              "admin/llm_providers/self_hosted"
             ]
           },
           {

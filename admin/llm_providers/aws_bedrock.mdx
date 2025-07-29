@@ -1,0 +1,336 @@
+---
+title: 'AWS Bedrock'
+description: 'Configure AWS Bedrock models for use with Onyx'
+---
+
+# AWS Bedrock Configuration
+
+AWS Bedrock is a fully managed service that offers a choice of high-performing foundation models from leading AI companies. This guide will help you configure AWS Bedrock models in Onyx.
+
+## Overview
+
+AWS Bedrock provides access to a variety of foundation models through a unified API, including models from Anthropic, AI21, Cohere, Meta, and others. This allows you to choose the best model for your specific use case while maintaining a single integration point.
+
+### Available Models
+
+- **Anthropic Claude**: Claude 3 Sonnet, Claude 3 Haiku, Claude 3 Opus
+- **AI21 Jurassic**: Jurassic-2 Ultra, Jurassic-2 Mid, Jurassic-2 Light
+- **Cohere Command**: Command, Command Light, Command Night
+- **Meta Llama**: Llama 2 70B, Llama 2 13B, Llama 2 7B
+- **Amazon Titan**: Titan Text Express, Titan Text Lite, Titan Embeddings
+- **Stability AI**: Stable Diffusion XL
+
+## Prerequisites
+
+Before configuring AWS Bedrock in Onyx, ensure you have:
+
+1. **AWS Account**: An active AWS account with billing enabled
+2. **IAM Permissions**: Proper IAM roles and policies for Bedrock access
+3. **Model Access**: Access to the specific models you want to use
+4. **AWS Credentials**: Access keys or IAM roles for authentication
+
+## Configuration Steps
+
+### Step 1: Set Up AWS Bedrock
+
+1. **Enable Bedrock Service**
+   - Log into the AWS Management Console
+   - Navigate to Amazon Bedrock
+   - Click "Get started" to enable the service
+
+2. **Request Model Access**
+   - Go to the Model access section
+   - Request access to the models you want to use
+   - Wait for approval (usually instant for most models)
+
+3. **Configure IAM Permissions**
+   - Create an IAM user or role with Bedrock permissions
+   - Attach the `AmazonBedrockFullAccess` policy or create a custom policy
+
+### Step 2: Create IAM Policy
+
+Create a custom IAM policy for Bedrock access:
+
+```json
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": [
+                "bedrock:InvokeModel",
+                "bedrock:InvokeModelWithResponseStream",
+                "bedrock:ListFoundationModels",
+                "bedrock:GetFoundationModel"
+            ],
+            "Resource": "*"
+        }
+    ]
+}
+```
+
+### Step 3: Configure in Onyx
+
+1. Navigate to the Onyx admin panel
+2. Go to **LLM Config** > **AWS Bedrock**
+3. Choose your authentication method:
+   - **Access Keys**: Enter AWS Access Key ID and Secret Access Key
+   - **IAM Role**: Use IAM role-based authentication (recommended for production)
+4. Select your preferred AWS region
+5. Choose the models you want to enable
+6. Configure model-specific parameters
+
+## Model Configuration
+
+### Model Selection
+
+Choose the appropriate Bedrock models based on your use case:
+
+#### Text Generation Models
+- **Claude 3 Opus**: Most capable model for complex reasoning
+- **Claude 3 Sonnet**: Balanced performance and cost
+- **Claude 3 Haiku**: Fast and efficient for simple tasks
+- **Jurassic-2 Ultra**: Strong performance for creative tasks
+- **Command**: Good for instruction following and chat
+
+#### Embedding Models
+- **Titan Embeddings**: Amazon's embedding model
+- **Cohere Embed**: Cohere's embedding model
+
+### Parameters
+
+Configure model parameters to optimize performance:
+
+- **Temperature**: Controls randomness (0.0-1.0)
+- **Max Tokens**: Maximum response length
+- **Top P**: Nucleus sampling parameter
+- **Top K**: Top-k sampling parameter
+- **Stop Sequences**: Custom stop sequences for the model
+
+### Model-Specific Settings
+
+Different models may have specific configuration options:
+
+#### Claude Models
+```json
+{
+    "anthropic_version": "bedrock-2023-05-31",
+    "max_tokens": 4096,
+    "temperature": 0.7,
+    "top_p": 0.9,
+    "top_k": 250
+}
+```
+
+#### Jurassic Models
+```json
+{
+    "maxTokens": 4096,
+    "temperature": 0.7,
+    "topP": 0.9,
+    "stopSequences": ["\n\n"]
+}
+```
+
+## Usage Examples
+
+### Basic Text Generation
+
+```python
+# Example API call to Claude 3 Sonnet
+{
+    "modelId": "anthropic.claude-3-sonnet-20240229-v1:0",
+    "contentType": "application/json",
+    "accept": "application/json",
+    "body": {
+        "anthropic_version": "bedrock-2023-05-31",
+        "max_tokens": 4096,
+        "messages": [
+            {
+                "role": "user",
+                "content": "Explain quantum computing in simple terms"
+            }
+        ]
+    }
+}
+```
+
+### Streaming Responses
+
+```python
+# Example with streaming
+{
+    "modelId": "anthropic.claude-3-sonnet-20240229-v1:0",
+    "contentType": "application/json",
+    "accept": "application/json",
+    "body": {
+        "anthropic_version": "bedrock-2023-05-31",
+        "max_tokens": 4096,
+        "messages": [
+            {
+                "role": "user",
+                "content": "Write a short story about AI"
+            }
+        ]
+    }
+}
+```
+
+## Best Practices
+
+### Cost Optimization
+
+- **Model Selection**: Choose the right model size for your task
+- **Token Management**: Monitor token usage and implement caching
+- **Batch Processing**: Group similar requests when possible
+- **Region Selection**: Use the closest region to minimize latency
+
+### Performance Optimization
+
+- **Connection Pooling**: Reuse connections for better performance
+- **Caching**: Cache responses for frequently asked questions
+- **Load Balancing**: Distribute requests across multiple models
+- **Monitoring**: Track response times and success rates
+
+### Security Considerations
+
+- **IAM Roles**: Use IAM roles instead of access keys when possible
+- **VPC Configuration**: Configure Bedrock to use your VPC for enhanced security
+- **Encryption**: Ensure all data is encrypted in transit and at rest
+- **Audit Logging**: Enable CloudTrail for API call logging
+
+## Troubleshooting
+
+### Common Issues
+
+**Access Denied Errors**
+- Verify IAM permissions are correctly configured
+- Check if model access has been granted
+- Ensure the AWS region supports the requested model
+
+**Model Not Available**
+- Check if the model is available in your selected region
+- Verify model access has been requested and approved
+- Check AWS service status for any outages
+
+**Authentication Errors**
+- Verify AWS credentials are correct and have proper permissions
+- Check if credentials have expired
+- Ensure the IAM user/role has Bedrock permissions
+
+### Error Handling
+
+Implement proper error handling for common scenarios:
+
+```python
+try:
+    response = bedrock_client.invoke_model(request)
+except ClientError as e:
+    error_code = e.response['Error']['Code']
+    if error_code == 'AccessDeniedException':
+        # Handle permission issues
+        check_iam_permissions()
+    elif error_code == 'ModelNotAccessibleException':
+        # Handle model access issues
+        request_model_access()
+    elif error_code == 'ThrottlingException':
+        # Handle rate limiting
+        implement_backoff_strategy()
+```
+
+## Monitoring and Analytics
+
+### CloudWatch Metrics
+
+Monitor Bedrock usage with CloudWatch:
+
+- **InvocationCount**: Number of model invocations
+- **InvocationLatency**: Time taken for model responses
+- **Invocation4XXErrors**: Client error count
+- **Invocation5XXErrors**: Server error count
+
+### Cost Monitoring
+
+Track costs using AWS Cost Explorer:
+
+- **Service**: Amazon Bedrock
+- **Usage Type**: Model-specific usage
+- **Region**: Geographic distribution of costs
+
+### Logging
+
+Enable comprehensive logging:
+
+- **CloudTrail**: API call logging for compliance
+- **CloudWatch Logs**: Application-level logging
+- **Custom Metrics**: Business-specific metrics
+
+## Integration with Onyx
+
+### Chat Interface
+
+Configure Bedrock models for use in Onyx's chat interface:
+
+1. Set as default model for general conversations
+2. Configure model-specific parameters
+3. Enable model switching for users
+4. Set up fallback options
+
+### Agent Configuration
+
+Use Bedrock models with Onyx agents:
+
+1. Assign specific Bedrock models to agents
+2. Configure custom instructions for each agent
+3. Set up model-specific prompts and templates
+4. Enable streaming responses where appropriate
+
+### Document Processing
+
+Leverage Bedrock's capabilities for document analysis:
+
+1. Configure for document summarization
+2. Enable question answering from documents
+3. Set up content extraction and analysis
+4. Use embedding models for semantic search
+
+## Advanced Configuration
+
+### VPC Configuration
+
+For enhanced security, configure Bedrock to use your VPC:
+
+1. Create a VPC endpoint for Bedrock
+2. Configure security groups and network ACLs
+3. Update IAM policies to restrict access to the VPC
+4. Test connectivity from your application
+
+### Multi-Region Setup
+
+For high availability and compliance:
+
+1. Configure Bedrock in multiple regions
+2. Implement region selection logic
+3. Set up cross-region failover
+4. Monitor costs across regions
+
+### Custom Models
+
+For enterprise deployments:
+
+1. Train custom models using SageMaker
+2. Deploy models to Bedrock
+3. Configure custom model access
+4. Implement model versioning
+
+## Next Steps
+
+After configuring AWS Bedrock in Onyx:
+
+1. **Test the Integration**: Verify that models are working correctly
+2. **Monitor Performance**: Track response times and success rates
+3. **Optimize Costs**: Monitor usage and adjust model selection
+4. **Train Users**: Educate users on Bedrock's capabilities
+5. **Scale Usage**: Gradually increase usage while monitoring performance
+
+For additional support or questions about AWS Bedrock integration, refer to the [AWS Bedrock documentation](https://docs.aws.amazon.com/bedrock/) or contact the Onyx support team. 

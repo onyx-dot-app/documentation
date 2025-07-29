@@ -1,0 +1,255 @@
+---
+title: 'Google Gemini'
+description: 'Configure Google Gemini models for use with Onyx'
+---
+
+# Google Gemini Configuration
+
+Google Gemini is Google's latest family of multimodal AI models, offering powerful capabilities for text generation, reasoning, and multimodal tasks. This guide will help you configure Gemini models in Onyx.
+
+## Overview
+
+Google Gemini models are available through Google AI Studio and Google Cloud Vertex AI. Onyx supports integration with both platforms, allowing you to leverage Gemini's advanced capabilities for your AI applications.
+
+### Available Models
+
+- **Gemini Pro**: Optimized for text generation and reasoning tasks
+- **Gemini Flash**: Fast and efficient model for real-time applications
+- **Gemini Pro Vision**: Multimodal model supporting text and image inputs
+- **Gemini Ultra**: Most capable model for complex reasoning tasks
+
+## Prerequisites
+
+Before configuring Google Gemini in Onyx, ensure you have:
+
+1. **Google Cloud Project**: A Google Cloud project with billing enabled
+2. **API Access**: Access to Google AI Studio or Vertex AI
+3. **Authentication**: Proper authentication credentials (API key or service account)
+
+## Configuration Options
+
+### Option 1: Google AI Studio (Recommended)
+
+Google AI Studio provides a simple API key-based authentication method.
+
+#### Step 1: Get API Key
+
+1. Visit [Google AI Studio](https://makersuite.google.com/app/apikey)
+2. Sign in with your Google account
+3. Click "Create API Key"
+4. Copy the generated API key
+
+#### Step 2: Configure in Onyx
+
+1. Navigate to the Onyx admin panel
+2. Go to **LLM Config** > **Google Gemini**
+3. Select **Google AI Studio** as the authentication method
+4. Enter your API key
+5. Choose your preferred model (Gemini Pro, Gemini Flash, etc.)
+6. Configure additional parameters as needed
+
+### Option 2: Google Cloud Vertex AI
+
+For enterprise deployments, use Vertex AI for enhanced security and management features.
+
+#### Step 1: Enable Vertex AI API
+
+1. Go to the [Google Cloud Console](https://console.cloud.google.com/)
+2. Select your project
+3. Navigate to **APIs & Services** > **Library**
+4. Search for "Vertex AI API"
+5. Click **Enable**
+
+#### Step 2: Create Service Account
+
+1. Go to **IAM & Admin** > **Service Accounts**
+2. Click **Create Service Account**
+3. Provide a name and description
+4. Assign the **Vertex AI User** role
+5. Create and download the JSON key file
+
+#### Step 3: Configure in Onyx
+
+1. Navigate to the Onyx admin panel
+2. Go to **LLM Config** > **Google Gemini**
+3. Select **Vertex AI** as the authentication method
+4. Upload your service account JSON key
+5. Enter your Google Cloud project ID
+6. Choose your preferred model and region
+
+## Model Configuration
+
+### Model Selection
+
+Choose the appropriate Gemini model based on your use case:
+
+- **Gemini Pro**: General-purpose text generation and reasoning
+- **Gemini Flash**: Fast responses for real-time applications
+- **Gemini Pro Vision**: Tasks requiring image and text understanding
+- **Gemini Ultra**: Complex reasoning and analysis tasks
+
+### Parameters
+
+Configure model parameters to optimize performance:
+
+- **Temperature**: Controls randomness (0.0-1.0)
+- **Max Tokens**: Maximum response length
+- **Top P**: Nucleus sampling parameter
+- **Top K**: Top-k sampling parameter
+
+### Safety Settings
+
+Gemini includes built-in safety filters that can be configured:
+
+- **Harassment**: Filter for harassing content
+- **Hate Speech**: Filter for hate speech
+- **Sexually Explicit**: Filter for explicit content
+- **Dangerous Content**: Filter for dangerous activities
+
+## Usage Examples
+
+### Basic Text Generation
+
+```python
+# Example API call to Gemini Pro
+{
+  "model": "gemini-pro",
+  "prompt": "Explain quantum computing in simple terms",
+  "temperature": 0.7,
+  "max_tokens": 500
+}
+```
+
+### Multimodal Input
+
+```python
+# Example with image and text
+{
+  "model": "gemini-pro-vision",
+  "prompt": "Describe what you see in this image",
+  "image": "base64_encoded_image",
+  "temperature": 0.3
+}
+```
+
+## Best Practices
+
+### Performance Optimization
+
+- **Model Selection**: Choose the right model for your specific task
+- **Prompt Engineering**: Craft clear, specific prompts for better results
+- **Parameter Tuning**: Adjust temperature and other parameters based on use case
+- **Caching**: Implement response caching for frequently asked questions
+
+### Cost Management
+
+- **Token Usage**: Monitor token consumption to manage costs
+- **Model Efficiency**: Use smaller models for simple tasks
+- **Batch Processing**: Group similar requests when possible
+- **Rate Limiting**: Implement appropriate rate limits
+
+### Security Considerations
+
+- **API Key Security**: Store API keys securely and rotate regularly
+- **Input Validation**: Validate all inputs before sending to the API
+- **Output Filtering**: Implement additional content filtering if needed
+- **Audit Logging**: Log all API interactions for compliance
+
+## Troubleshooting
+
+### Common Issues
+
+**Authentication Errors**
+- Verify API key is correct and has proper permissions
+- Check if the API key is enabled for the correct services
+- Ensure billing is enabled for your Google Cloud project
+
+**Rate Limiting**
+- Implement exponential backoff for retries
+- Monitor API quotas and usage limits
+- Consider using multiple API keys for load distribution
+
+**Model Availability**
+- Check if the selected model is available in your region
+- Verify model access permissions
+- Monitor Google's service status for outages
+
+### Error Handling
+
+Implement proper error handling for common scenarios:
+
+```python
+try:
+    response = gemini_api.generate_text(prompt)
+except RateLimitError:
+    # Implement exponential backoff
+    time.sleep(backoff_delay)
+except AuthenticationError:
+    # Check API key and permissions
+    verify_credentials()
+except ModelError:
+    # Handle model-specific errors
+    fallback_to_alternative_model()
+```
+
+## Monitoring and Analytics
+
+### Key Metrics
+
+Monitor these metrics to ensure optimal performance:
+
+- **Response Time**: Average time to receive responses
+- **Success Rate**: Percentage of successful API calls
+- **Token Usage**: Total tokens consumed
+- **Cost per Request**: Average cost per API call
+- **Error Rate**: Percentage of failed requests
+
+### Logging
+
+Enable comprehensive logging for debugging and compliance:
+
+- **Request Logs**: Log all API requests and responses
+- **Error Logs**: Capture detailed error information
+- **Usage Logs**: Track token usage and costs
+- **Performance Logs**: Monitor response times and throughput
+
+## Integration with Onyx
+
+### Chat Interface
+
+Configure Gemini models for use in Onyx's chat interface:
+
+1. Set as default model for general conversations
+2. Configure model-specific parameters
+3. Enable model switching for users
+4. Set up fallback options
+
+### Agent Configuration
+
+Use Gemini models with Onyx agents:
+
+1. Assign Gemini models to specific agents
+2. Configure custom instructions for each agent
+3. Set up model-specific prompts and templates
+4. Enable multimodal capabilities where needed
+
+### Document Processing
+
+Leverage Gemini's capabilities for document analysis:
+
+1. Configure for document summarization
+2. Enable question answering from documents
+3. Set up content extraction and analysis
+4. Enable multilingual document processing
+
+## Next Steps
+
+After configuring Google Gemini in Onyx:
+
+1. **Test the Integration**: Verify that the model is working correctly
+2. **Monitor Performance**: Track response times and success rates
+3. **Optimize Parameters**: Fine-tune model parameters for your use cases
+4. **Train Users**: Educate users on Gemini's capabilities and limitations
+5. **Scale Usage**: Gradually increase usage while monitoring costs and performance
+
+For additional support or questions about Google Gemini integration, refer to the [Google AI documentation](https://ai.google.dev/) or contact the Onyx support team. 
