@@ -75,7 +75,8 @@
                 "pages": [
                   "deployment/deployment_guides/aws/ec2",
                   "deployment/deployment_guides/aws/ecs",
-                  "deployment/deployment_guides/aws/eks"
+                  "deployment/deployment_guides/aws/eks",
+                  "deployment/deployment_guides/aws/rds"
                 ]
               },
               "deployment/deployment_guides/gcp",
