@@ -1,0 +1,134 @@
+---
+title: "MCP Actions"
+description: "Configure Model Context Protocol (MCP) actions in Onyx"
+---
+
+## What is MCP?
+
+Model Context Protocol (MCP) is a standardized protocol that enables AI assistants to interact with tools and services in a consistent way. MCP actions in Onyx allow you to connect your assistant to development tools, databases, and other systems that support the MCP protocol.
+
+## Key Features
+
+### **Tool Integration**
+Connect to MCP-compatible tools and services for enhanced functionality.
+
+### **Standardized Interface**
+Use a consistent protocol for interacting with different tools and services.
+
+### **Rich Interactions**
+Enable complex workflows and multi-step operations across multiple systems.
+
+### **Development Focus**
+Perfect for development teams who want to integrate AI with their existing toolchain.
+
+## Supported MCP Tools
+
+### **Development Tools**
+- Git repositories and version control
+- Code editors and IDEs
+- Build systems and CI/CD pipelines
+- Testing frameworks
+
+### **Database Systems**
+- SQL databases
+- NoSQL databases
+- Data warehouses
+- Analytics platforms
+
+### **Infrastructure**
+- Cloud platforms (AWS, Azure, GCP)
+- Container orchestration (Kubernetes, Docker)
+- Monitoring and logging systems
+- Configuration management
+
+### **Communication**
+- Chat platforms
+- Email systems
+- Video conferencing tools
+- Project management platforms
+
+## Setup Process
+
+### **1. Install MCP Server**
+Install the MCP server for your target tool or service.
+
+### **2. Configure Connection**
+Set up the connection parameters and authentication for your MCP server.
+
+### **3. Define Actions**
+Specify which MCP operations your assistant can perform.
+
+### **4. Test Integration**
+Verify that the MCP actions work correctly with your target systems.
+
+## Configuration Example
+
+```yaml
+mcp_actions:
+  - name: "git_operations"
+    server: "mcp-git-server"
+    host: "localhost"
+    port: 3000
+    actions:
+      - "commit"
+      - "push"
+      - "pull"
+      - "create_branch"
+  
+  - name: "database_operations"
+    server: "mcp-database-server"
+    host: "localhost"
+    port: 3001
+    actions:
+      - "query"
+      - "insert"
+      - "update"
+      - "delete"
+```
+
+## Security Considerations
+
+- MCP servers can have significant access to your systems
+- Implement proper authentication and authorization
+- Use secure connections (TLS/SSL) when possible
+- Regularly audit MCP server permissions and access
+
+## Troubleshooting
+
+### **Connection Issues**
+- Verify MCP server is running and accessible
+- Check network connectivity and firewall settings
+- Ensure proper authentication credentials
+
+### **Action Failures**
+- Review MCP server logs for error details
+- Check permissions and access rights
+- Verify action parameters and syntax
+
+### **Performance Issues**
+- Monitor MCP server resource usage
+- Consider connection pooling for high-volume operations
+- Implement appropriate timeouts and retry logic
+
+## Best Practices
+
+### **Access Control**
+- Limit MCP server permissions to minimum required access
+- Use service accounts with specific roles and permissions
+- Regularly review and update access controls
+
+### **Monitoring**
+- Set up logging and monitoring for MCP operations
+- Track usage patterns and performance metrics
+- Implement alerting for critical failures
+
+### **Testing**
+- Test MCP actions in a development environment first
+- Use mock data and test scenarios
+- Validate results and error handling
+
+## Next Steps
+
+- Learn about [OpenAPI Actions](/admin/connectors/actions/openapi) for web service integration
+- Explore the [Actions API documentation](/developers/api_reference/actions)
+- Check the [MCP specification](https://modelcontextprotocol.io/) for technical details 

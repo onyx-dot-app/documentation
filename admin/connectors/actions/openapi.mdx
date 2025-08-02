@@ -1,0 +1,187 @@
+---
+title: "OpenAPI Actions"
+description: "Configure OpenAPI actions to connect Onyx to web services"
+---
+
+## What are OpenAPI Actions?
+
+OpenAPI Actions allow you to connect Onyx to any web service that provides an OpenAPI (formerly Swagger) specification. This enables your AI assistant to interact with REST APIs, perform operations, and trigger workflows in external systems.
+
+## Key Benefits
+
+### **Universal Compatibility**
+Connect to any service with an OpenAPI specification, regardless of the underlying technology.
+
+### **Standardized Integration**
+Use the industry-standard OpenAPI format for consistent and reliable API integration.
+
+### **Easy Setup**
+Simply provide the OpenAPI specification URL or file, and Onyx can automatically understand the available endpoints.
+
+### **Flexible Operations**
+Support for GET, POST, PUT, DELETE, and other HTTP methods to perform various operations.
+
+## Supported Services
+
+### **Business Applications**
+- CRM systems (Salesforce, HubSpot)
+- ERP platforms (SAP, Oracle)
+- Accounting software (QuickBooks, Xero)
+- E-commerce platforms (Shopify, WooCommerce)
+
+### **Communication Tools**
+- Email services (Gmail, Outlook)
+- Messaging platforms (Slack, Teams)
+- Video conferencing (Zoom, Webex)
+- Social media platforms
+
+### **Development Tools**
+- Project management (Jira, Asana)
+- Code repositories (GitHub, GitLab)
+- CI/CD platforms (Jenkins, GitHub Actions)
+- Cloud services (AWS, Azure, GCP)
+
+### **Data and Analytics**
+- Business intelligence tools
+- Data warehouses
+- Analytics platforms
+- Reporting systems
+
+## Setup Process
+
+### **1. Obtain OpenAPI Specification**
+Get the OpenAPI specification (JSON or YAML) for your target service.
+
+### **2. Configure Authentication**
+Set up the necessary authentication method (API key, OAuth, etc.).
+
+### **3. Define Actions**
+Select which API endpoints your assistant can access and use.
+
+### **4. Test Integration**
+Verify that the OpenAPI actions work correctly with your target service.
+
+## Configuration Example
+
+```yaml
+openapi_actions:
+  - name: "customer_service"
+    spec_url: "https://api.example.com/openapi.json"
+    authentication:
+      type: "api_key"
+      header: "X-API-Key"
+      value: "${API_KEY}"
+    actions:
+      - name: "create_ticket"
+        endpoint: "/tickets"
+        method: "POST"
+        description: "Create a new support ticket"
+      
+      - name: "update_ticket"
+        endpoint: "/tickets/{id}"
+        method: "PUT"
+        description: "Update an existing ticket"
+      
+      - name: "get_tickets"
+        endpoint: "/tickets"
+        method: "GET"
+        description: "Retrieve list of tickets"
+```
+
+## Authentication Methods
+
+### **API Key**
+Simple authentication using an API key in headers or query parameters.
+
+### **OAuth 2.0**
+More secure authentication for services that support OAuth flows.
+
+### **Basic Authentication**
+Username and password authentication for legacy systems.
+
+### **Bearer Token**
+Token-based authentication for modern APIs.
+
+## Security Considerations
+
+### **API Key Management**
+- Store API keys securely using environment variables or secret management
+- Rotate keys regularly
+- Use different keys for different environments
+
+### **Access Control**
+- Limit API access to only necessary endpoints
+- Implement proper error handling and logging
+- Monitor API usage and set rate limits
+
+### **Data Privacy**
+- Ensure compliance with data protection regulations
+- Review what data is being sent to external services
+- Implement appropriate data retention policies
+
+## Troubleshooting
+
+### **Authentication Issues**
+- Verify API keys and credentials are correct
+- Check if authentication method is supported
+- Ensure proper headers and parameters are included
+
+### **API Errors**
+- Review API response codes and error messages
+- Check if required parameters are provided
+- Verify endpoint URLs and HTTP methods
+
+### **Performance Issues**
+- Monitor API response times
+- Implement caching where appropriate
+- Consider rate limiting and throttling
+
+## Best Practices
+
+### **Error Handling**
+- Implement comprehensive error handling for API failures
+- Provide meaningful error messages to users
+- Log errors for debugging and monitoring
+
+### **Rate Limiting**
+- Respect API rate limits
+- Implement retry logic with exponential backoff
+- Monitor usage to avoid hitting limits
+
+### **Testing**
+- Test OpenAPI actions in a development environment
+- Use mock APIs for testing
+- Validate all endpoints and parameters
+
+### **Documentation**
+- Document the purpose and usage of each action
+- Provide examples of common use cases
+- Keep documentation updated as APIs change
+
+## Example Use Cases
+
+### **Customer Support**
+- Create and update support tickets
+- Retrieve customer information
+- Send follow-up communications
+
+### **Project Management**
+- Create and assign tasks
+- Update project status
+- Generate reports and analytics
+
+### **E-commerce**
+- Process orders and payments
+- Update inventory
+- Handle customer inquiries
+
+### **Development**
+- Deploy applications
+- Run tests and builds
+- Update documentation
+
+## Next Steps
+
+- Learn about [MCP Actions](/admin/connectors/actions/mcp) for development tool integration
+- Explore the [Actions API documentation](/developers/api_reference/actions)
+- Check the [OpenAPI specification](https://swagger.io/specification/) for technical details 
