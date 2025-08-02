@@ -99,8 +99,7 @@
             "group": "Configuration",
             "pages": [
               "deployment/configuration/env_vars",
-              "deployment/configuration/chrome_extension",
-              "deployment/configuration/mobile_app"
+              "deployment/configuration/chrome_extension"
             ]
           },
           {
@@ -278,7 +277,8 @@
             "group": "APIs",
             "pages": [
               "developers/api_reference/overview",
-              "developers/api_reference/authentication"
+              "developers/api_reference/authentication",
+              "developers/api_reference/cloud_apis"
             ]
           },
           {
