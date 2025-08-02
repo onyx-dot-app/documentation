@@ -30,7 +30,7 @@
               "overview/basics/chat",
               "overview/basics/search",
               "overview/basics/connectors",
-              "overview/basics/assistants",
+              "overview/basics/agents",
               "overview/basics/actions",
               "overview/basics/my_documents",
               "overview/basics/workflows"
@@ -72,6 +72,7 @@
             "pages": [
               {
                 "group": "AWS",
+                "icon": "aws",
                 "pages": [
                   "deployment/deployment_guides/aws/ec2",
                   "deployment/deployment_guides/aws/ecs",
