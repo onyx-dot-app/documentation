@@ -286,6 +286,7 @@
             "pages": [
               {
                 "group": "Chat",
+                "icon": "comment",
                 "pages": [
                   "developers/api_reference/chat/simple_example",
                   "developers/api_reference/chat/get_chat_session",
@@ -308,6 +309,7 @@
               },
               {
                 "group": "Search",
+                "icon": "magnifying-glass",
                 "pages": [
                   "developers/api_reference/search/get_document_by_id",
                   "developers/api_reference/search/document_search"
@@ -315,6 +317,7 @@
               },
               {
                 "group": "Agents",
+                "icon": "robot",
                 "pages": [
                   "developers/api_reference/agents/simple_example",
                   "developers/api_reference/agents/list_agents",
@@ -326,6 +329,7 @@
               },
               {
                 "group": "Actions",
+                "icon": "play",
                 "pages": [
                   "developers/api_reference/actions/simple_example",
                   "developers/api_reference/actions/list_actions",
@@ -337,6 +341,7 @@
               },
               {
                 "group": "Files and Connectors",
+                "icon": "plug",
                 "pages": [
                   "developers/api_reference/files_connectors/overview",
                   "developers/api_reference/files_connectors/get_document_by_id",
@@ -347,6 +352,7 @@
               },
               {
                 "group": "User Management",
+                "icon": "user",
                 "pages": [
                   "developers/api_reference/user_management/list_users",
                   "developers/api_reference/user_management/get_user_by_id",
@@ -360,6 +366,7 @@
               },
               {
                 "group": "Group Management",
+                "icon": "user-group",
                 "pages": [
                   "developers/api_reference/group_management/overview",
                   "developers/api_reference/group_management/simple_example",
@@ -374,6 +381,7 @@
               },
               {
                 "group": "Analytics",
+                "icon": "chart-line",
                 "pages": [
                   "developers/api_reference/analytics/get_query_analytics",
                   "developers/api_reference/analytics/get_user_analytics",
@@ -385,6 +393,7 @@
               },
               {
                 "group": "Miscellaneous",
+                "icon": "list",
                 "pages": [
                   "developers/api_reference/miscellaneous/health_check",
                   "developers/api_reference/miscellaneous/set_document_boost",
