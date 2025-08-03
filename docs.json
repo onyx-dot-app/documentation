@@ -17,7 +17,6 @@
             "group": "Getting Started",
             "pages": [
               "welcome",
-              "overview/getting_started/quickstart",
               "overview/getting_started/use_cases",
               "overview/getting_started/configuration",
               "overview/getting_started/open_source_statement",
