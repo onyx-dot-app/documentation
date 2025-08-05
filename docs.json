@@ -26,12 +26,12 @@
           {
             "group": "Features",
             "pages": [
+              "overview/basics/unified_interface",
+              "overview/basics/connectors",
               "overview/basics/chat",
               "overview/basics/search",
-              "overview/basics/connectors",
-              "overview/basics/agents",
               "overview/basics/actions",
-              "overview/basics/my_documents",
+              "overview/basics/agents",
               "overview/basics/workflows"
             ]
           },
@@ -659,18 +659,17 @@
         ]
       }
     ],
-    "global": {
-      "anchors": [
-        {
-          "anchor": "Try Onyx Cloud!",
-          "href": "https://cloud.onyx.app/?utm_source=docs",
-          "icon": "cloud"
-        },
-        {
-          "anchor": "Slack",
-          "href": "https://join.slack.com/t/onyx-dot-app/shared_invite/zt-34lu4m7xg-TsKGO6h8PDvR5W27zTdyhA",
-          "icon": "slack"
-        },
+          "global": {
+        "anchors": [
+          {
+            "anchor": "Blog",
+            "href": "https://onyx.app/blog"
+          },
+          {
+            "anchor": "Slack",
+            "href": "https://join.slack.com/t/onyx-dot-app/shared_invite/zt-34lu4m7xg-TsKGO6h8PDvR5W27zTdyhA",
+            "icon": "slack"
+          },
         {
           "anchor": "Discord",
           "href": "https://discord.gg/TDJ59cGV2X",
@@ -688,16 +687,19 @@
       "developers/api_reference/openapi.json"
     ]
   },
-  "navbar": {
+ "navbar": {
     "primary": {
-      "type": "github",
-      "href": "https://github.com/onyx-dot-app/onyx"
+      "type": "button",
+      "label": "Try Onyx Cloud!",
+      "href": "https://cloud.onyx.app/?utm_source=docs"
     },
-    "secondary": {
-      "type": "cta",
-      "text": "Onyx.app",
-      "href": "https://onyx.app"
-    }
+    "links": [
+      {
+        "label": "onyx-dot-app/onyx",
+        "href": "https://github.com/onyx-dot-app/onyx",
+        "icon": "github"
+      }
+    ]
   },
   "footer": {
     "socials": {
