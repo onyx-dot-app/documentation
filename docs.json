@@ -106,7 +106,14 @@
                     ]
                   },
                   "connectors/salesforce",
-                  "connectors/sharepoint",
+                  {
+                    "group": "Sharepoint Connector",
+                    "pages": [
+                      "connectors/sharepoint/overview",
+                      "connectors/sharepoint/client-secret",
+                      "connectors/sharepoint/certificate"
+                    ]
+                  },
                   {
                     "group": "Slack Connector",
                     "pages": [
