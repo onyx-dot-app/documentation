@@ -1,0 +1,110 @@
+---
+title: Certificate-Based Authentication
+description: "Set up SharePoint connector using certificate-based authentication with permission sync support"
+---
+
+## Setting up
+
+### Step 1: Create Azure App Registration
+
+1. Log in to [Azure Portal](https://portal.azure.com/#home) for your organization.
+2. Navigate to "App registrations" using the search bar.
+3. Click **New Registration**.
+4. Name it something like "Onyx SharePoint Connector - Certificate", leave everything else as default, and click **Register**.
+5. Under "Essentials" in the overview tab, you will find the **Application (client) ID** and **Directory (tenant) ID**. Save those for later.
+
+### Step 2: Generate and Upload Certificate
+
+#### Option A: Generate Self-Signed Certificate
+
+```bash
+# Generate private key
+openssl genrsa -out sharepoint-cert.key 2048
+
+# Generate certificate signing request
+openssl req -new -key sharepoint-cert.key -out sharepoint-cert.csr
+
+# Generate self-signed certificate (valid for 1 year)
+openssl x509 -req -days 365 -in sharepoint-cert.csr -signkey sharepoint-cert.key -out sharepoint-cert.crt
+
+# Convert to PFX format 
+openssl pkcs12 -export -out sharepoint-cert.pfx -inkey sharepoint-cert.key -in sharepoint-cert.crt
+```
+
+#### Option B: Use Organization Certificate
+Obtain a certificate from your organization's Certificate Authority (CA) following your internal security policies.
+<Note>
+We only support PFX format for certificate uploads in Azure.
+</Note>
+
+### Step 3: Upload Certificate to Azure
+
+1. In your Azure App Registration, navigate to the "Certificates & secrets" tab.
+2. Click **Upload certificate**.
+3. Select your certificate file (.crt, .pem, or .cer format).
+4. Add a description and click **Add**.
+
+### Step 4: Configure API Permissions
+
+1. Navigate to the "API Permissions" tab in the Azure Portal.
+2. Click **Add a permission**.
+
+#### Microsoft Graph Permissions
+3. Click **Microsoft Graph**, then click on **Application permissions**.
+4. Add the following Microsoft Graph permissions:
+   - **Directory.Read.All** - Read directory data
+   - **Directory.ReadWrite.All** - Read and write directory data
+   - **Group.Read.All** - Read all groups
+   - **GroupMember.Read.All** - Read all group memberships
+   - **Member.Read.Hidden** - Read all hidden memberships
+   - **Sites.FullControl.All** - Have full control of all site collections
+   - **Sites.Read.All** - Read items in all site collections
+   - **User.Read.All** - Read all users' full profiles
+5. Click **Add permissions**.
+
+#### Microsoft Graph Delegated Permissions
+6. Still in **Microsoft Graph**, click on **Delegated permissions**.
+7. Add the following delegated permission:
+   - **User.Read** - Sign in and read user profile
+8. Click **Add permissions**.
+
+#### SharePoint Permissions
+9. Click **Add a permission** again.
+10. Click **SharePoint**, then click on **Application permissions**.
+11. Add the following SharePoint permissions:
+    - **Sites.FullControl.All** - Have full control of all site collections
+    - **Sites.Read.All** - Read items in all site collections
+    - **User.Read.All** - Read user profiles
+12. Click **Add permissions**.
+
+13. Finally, click **Grant admin consent for \<Organization name\>** and click **Confirm**.
+
+### Step 5: Configure in Onyx
+
+1. Navigate to the Onyx Admin Dashboard and select the **SharePoint** Connector.
+2. Click **Create New** credential and select the **Certificate** tab.
+3. Provide the following information:
+   - **Application (client) ID** from Step 1
+   - **Directory (tenant) ID** from Step 1
+   - **Certificate File**: Upload your certificate file (.pfx file)
+   - **Certificate Password**: Enter password which you used to export the certificate file
+   - **Tenant Domain**: Enter your tenant domain (e.g., onyx from "onyx.sharepoint.com")
+4. Click **Create** to save your credentials.
+
+### Step 6: Enable Permission Sync (Optional)
+
+When creating your SharePoint connector with certificate authentication:
+
+1. In the connector configuration, you'll see a **Permission Sync** option.
+2. Enable this option to synchronize SharePoint permissions with Onyx.
+
+## Permission Sync Details
+
+When permission sync is enabled:
+
+- **Document-level permissions**: Onyx will respect SharePoint document permissions
+- **Site-level permissions**: Users will only see documents from sites they have access to
+- **Group permissions**: SharePoint group memberships are synchronized
+- **Real-time sync**: Permissions are updated regularly to reflect SharePoint changes
+
+For basic SharePoint integration without permission sync, you can use [client secret authentication](/connectors/sharepoint/client-secret).
