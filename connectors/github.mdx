@@ -12,7 +12,6 @@ The Github Connector picks up all of the Pull Requests and Issues in a specified
 - Includes certain other metadata such as the URL, creator, etc.
 
 ## Permission Sync Feature
-
 The GitHub connector supports permission synchronization, which ensures that users can only access documents they have permissions to view in GitHub. When enabled, this feature:
 
 - Syncs user permissions from GitHub repositories and organizations
@@ -20,7 +19,7 @@ The GitHub connector supports permission synchronization, which ensures that use
 - Maintains consistent access control between GitHub and Onyx
 
 <Note>
-Permission sync requires additional token permissions beyond basic indexing.
+Permission sync is available only on Cloud and the Enterprise Edition of Onyx, and it requires additional token permissions beyond those needed for basic indexing.
 </Note>
 
 <Info>
@@ -40,7 +39,9 @@ How to Make Your Email Public on GitHub:
 8. Select your email address from the dropdown
 9. Click **Update profile** to save the changes
 
-**Why is this required?** Onyx uses the public email to match GitHub users with Onyx users for permission synchronization. Without a public email, the system cannot identify which GitHub permissions apply to which Onyx user.
+**Why is this required?** 
+
+Onyx uses the public email to match GitHub users with Onyx users for permission synchronization. Without a public email, the system cannot identify which GitHub permissions apply to which Onyx user.
 </Info>
 
 ## Setting up
