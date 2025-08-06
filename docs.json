@@ -24,14 +24,14 @@
             ]
           },
           {
-            "group": "Features",
+            "group": "Core Features",
             "pages": [
               "overview/basics/unified_interface",
               "overview/basics/connectors",
               "overview/basics/chat",
               "overview/basics/search",
-              "overview/basics/actions",
               "overview/basics/agents",
+              "overview/basics/actions",
               "overview/basics/workflows"
             ]
           },
