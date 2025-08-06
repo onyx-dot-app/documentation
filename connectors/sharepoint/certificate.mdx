@@ -53,11 +53,9 @@ We only support PFX format for certificate uploads in Azure.
 3. Click **Microsoft Graph**, then click on **Application permissions**.
 4. Add the following Microsoft Graph permissions:
    - **Directory.Read.All** - Read directory data
-   - **Directory.ReadWrite.All** - Read and write directory data
    - **Group.Read.All** - Read all groups
    - **GroupMember.Read.All** - Read all group memberships
    - **Member.Read.Hidden** - Read all hidden memberships
-   - **Sites.FullControl.All** - Have full control of all site collections
    - **Sites.Read.All** - Read items in all site collections
    - **User.Read.All** - Read all users' full profiles
 5. Click **Add permissions**.
@@ -88,7 +86,6 @@ We only support PFX format for certificate uploads in Azure.
    - **Directory (tenant) ID** from Step 1
    - **Certificate File**: Upload your certificate file (.pfx file)
    - **Certificate Password**: Enter password which you used to export the certificate file
-   - **Tenant Domain**: Enter your tenant domain (e.g., onyx from "onyx.sharepoint.com")
 4. Click **Create** to save your credentials.
 
 ### Step 6: Enable Permission Sync (Optional)
@@ -97,6 +94,10 @@ When creating your SharePoint connector with certificate authentication:
 
 1. In the connector configuration, you'll see a **Permission Sync** option.
 2. Enable this option to synchronize SharePoint permissions with Onyx.
+
+<Note>
+Permission sync is available only on Cloud and the Enterprise Edition of Onyx.
+</Note>
 
 ## Permission Sync Details
 
