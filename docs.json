@@ -142,7 +142,6 @@
           {
             "group": "Connectors",
             "pages": [
-              "admin/connectors/overview",
               {
                 "group": "Supported Connectors",
                 "pages": [
@@ -715,6 +714,11 @@
     "posthog": {
       "apiKey": "phc_ghlrcfXpgWq9XxZeVMfoJpfaISgFGoXhHYOEcBwdulK",
       "apiHost": "https://us.i.posthog.com"
+    }
+  },
+  "seo": {
+    "metatags": {
+      "keywords": "danswer"
     }
   }
 }
