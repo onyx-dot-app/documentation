@@ -16,10 +16,7 @@ This page demonstrates the most common Chat API workflow - creating a session an
 4. **Delete the session** when finished
 
 ## Quick Start Code
-
-<CodeGroup>
-
-```python Python
+```python Python expandable
 import requests
 
 API_BASE_URL = "https://cloud.onyx.app/api"
@@ -53,42 +50,6 @@ message_response = requests.post(
 
 print(message_response.json()["message"])
 ```
-
-```javascript JavaScript
-const API_BASE_URL = "https://cloud.onyx.app/api";
-const API_KEY = "your_api_key_here";
-
-const headers = {
-    "Authorization": `Bearer ${API_KEY}`,
-    "Content-Type": "application/json"
-};
-
-// 1. Create a chat session
-const sessionResponse = await fetch(`${API_BASE_URL}/chat/create-chat-session`, {
-    method: 'POST',
-    headers: headers,
-    body: JSON.stringify({
-        persona_id: null,
-        description: "Quick example session"
-    })
-});
-const { chat_session_id } = await sessionResponse.json();
-
-// 2. Send a message
-const messageResponse = await fetch(`${API_BASE_URL}/chat/send-message`, {
-    method: 'POST',
-    headers: headers,
-    body: JSON.stringify({
-        message: "Hello! How can you help me today?",
-        chat_session_id: chat_session_id
-    })
-});
-
-const result = await messageResponse.json();
-console.log(result.message);
-```
-
-</CodeGroup>
 
 ## Next Steps
 
