@@ -31,9 +31,31 @@ The Salesforce connector indexes documents from your Salesforce. These documents
 
     1. Navigate to the Admin Dashboard and select the **Salesforce** Connector Tile.
     2. Provide your **Username**, **Password** and the **Security Token** received from the above steps.
-    3. Enter the [Salesforce Object(s)](https://developer.salesforce.com/docs/atlas.en-us.object_reference.meta/object_reference/sforce_api_objects_list.htm) you wish to index and organize your Onyx documents by.
+    3a. Simple: Enter the [Salesforce Object(s)](https://developer.salesforce.com/docs/atlas.en-us.object_reference.meta/object_reference/sforce_api_objects_list.htm) you wish to index and organize your Onyx documents by.
         - make sure to use the singular version of object name (e.g. Opportunity instead of Opportunities)
         - if no objects are indicated, it will default to indexing by **Account**
+        - Each Onyx Document extracted from Salesforce contains all fields and associations of each object. For example, when indexing each Account we include the fields of the AccountFeed and AccountShare objects as well (but not the associations of those objects). This can lead to bloated queries and memory intensive indexing in larger salesforce instances; use the Advanced mode to have finer grained control over what is indexed if necessary.
+    3b. Advanced: 
+        - specify which objects, fields, and associations get indexed with a json
+        - top level keys are Salesforce Objects, each value is a json object specifying:
+            - "fields": a list of srings describing the fields of the object to index
+            - "associations": a JSON object mapping a Salesforce Object associated with the parent object to a list of fields to be indexed for the child object
+        - example:
+        ```json
+        {
+            "Account": {
+                "fields": ["Id", "Name", "Industry", "CreatedDate", MODIFIED_FIELD],
+                "associations": {
+                    "Contact": ["Id", "FirstName", "LastName", "Email"],
+                    "Opportunity": ["Id", "Name", "StageName", "Amount", "CloseDate"]
+                }
+            },
+            "Lead": {
+                "fields": ["Id", "FirstName", "LastName", "Company", "Status"],
+                "associations": {}
+            }
+        }
+        ```
     4. Information will then be indexed by the indicated object(s)
 
 
