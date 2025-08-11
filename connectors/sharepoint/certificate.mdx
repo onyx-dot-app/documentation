@@ -1,7 +1,18 @@
 ---
 title: Certificate-Based Authentication
-description: "Set up SharePoint connector using certificate-based authentication with permission sync support"
+description: "Set up SharePoint connector using certificate-based authentication with optional permission sync support"
 ---
+
+## Certificate-Based Authentication
+
+Certificate-based authentication provides a secure way to connect to SharePoint and supports both basic integration and permission sync functionality.
+
+**Use certificate authentication when:**
+- You need permission sync capabilities
+- You prefer certificate-based security over client secrets
+- Your organization requires certificate-based authentication
+
+**For basic SharePoint integration without permission sync**, you can also use [client secret authentication](/connectors/sharepoint/client-secret).
 
 ## Setting up
 
@@ -49,33 +60,43 @@ We only support PFX format for certificate uploads in Azure.
 1. Navigate to the "API Permissions" tab in the Azure Portal.
 2. Click **Add a permission**.
 
-#### Microsoft Graph Permissions
+#### Basic Permissions (No Permission Sync)
+If you are **not** planning to enable permission sync, you only need basic permissions:
+
 3. Click **Microsoft Graph**, then click on **Application permissions**.
-4. Add the following Microsoft Graph permissions:
-   - **Directory.Read.All** - Read directory data
-   - **Group.Read.All** - Read all groups
-   - **GroupMember.Read.All** - Read all group memberships
-   - **Member.Read.Hidden** - Read all hidden memberships
-   - **Sites.Read.All** - Read items in all site collections
-   - **User.Read.All** - Read all users' full profiles
-5. Click **Add permissions**.
+4. Navigate to the "Sites" permission group.
+5. Select the checkbox for **Sites.Read.All**.
+   - *Advanced:* If you want to limit the sites this app has access to, select **Sites.Selected**. However, if you do this, you will need to add the App you are currently registering to each site you want to index.
+6. Click **Add permissions**.
+7. Finally, click **Grant admin consent for \<Organization name\>** and click **Confirm**.
 
-#### Microsoft Graph Delegated Permissions
-6. Still in **Microsoft Graph**, click on **Delegated permissions**.
-7. Add the following delegated permission:
-   - **User.Read** - Sign in and read user profile
-8. Click **Add permissions**.
+#### Extended Permissions (With Permission Sync)
+If you plan to enable permission sync, you'll need additional permissions:
 
-#### SharePoint Permissions
-9. Click **Add a permission** again.
-10. Click **SharePoint**, then click on **Application permissions**.
-11. Add the following SharePoint permissions:
+8. Click **Add a permission** again.
+9. Click **Microsoft Graph**, then click on **Application permissions**.
+10. Add the following additional Microsoft Graph permissions:
+    - **Directory.Read.All** - Read directory data
+    - **Group.Read.All** - Read all groups
+    - **GroupMember.Read.All** - Read all group memberships
+    - **Member.Read.Hidden** - Read all hidden memberships
+    - **User.Read.All** - Read all users' full profiles
+11. Click **Add permissions**.
+
+12. Click **Add a permission** again in API Permissions tab.
+13. Click **Microsoft Graph**, then click on **Delegated permissions**.
+14. Add the following delegated permission:
+    - **User.Read** - Sign in and read user profile
+15. Click **Add permissions**.
+
+16. Click **Add a permission** again in API Permissions tab.
+17. Click **SharePoint**, then click on **Application permissions**.
+18. Add the following SharePoint permissions:
     - **Sites.FullControl.All** - Have full control of all site collections
-    - **Sites.Read.All** - Read items in all site collections
     - **User.Read.All** - Read user profiles
-12. Click **Add permissions**.
+19. Click **Add permissions**.
 
-13. Finally, click **Grant admin consent for \<Organization name\>** and click **Confirm**.
+20. Finally, click **Grant admin consent for \<Organization name\>** and click **Confirm**.
 
 ### Step 5: Configure in Onyx
 
