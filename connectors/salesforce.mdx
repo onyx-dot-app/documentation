@@ -44,7 +44,7 @@ The Salesforce connector indexes documents from your Salesforce. These documents
         ```json
         {
             "Account": {
-                "fields": ["Id", "Name", "Industry", "CreatedDate", MODIFIED_FIELD],
+                "fields": ["Id", "Name", "Industry", "CreatedDate", "lastModifiedDate"],
                 "associations": {
                     "Contact": ["Id", "FirstName", "LastName", "Email"],
                     "Opportunity": ["Id", "Name", "StageName", "Amount", "CloseDate"]
