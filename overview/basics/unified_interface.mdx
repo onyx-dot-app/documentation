@@ -14,13 +14,15 @@ You can talk to Onyx like you would talk to a colleague. Or, you can perform a s
 
 <img class="rounded-2xl" src="/assets/overview/core_features/start_chat.png" alt="Onyx Unified Interface Chat" />
 
-## Chat vs. Search
+## Chat vs. Search vs. Auto
 
 Sometimes you want to converse with an AI assistant to get an AI summary, revise your writing, or get help with a task. Othertimes, you just want to find a doc you know is in the system.
 
 <Tip>Onyx automatically determines your intent based on the first message you send.</Tip>
 
-You'll see the Unified Interface magically transform into the Chat or Search Interface. Don't worry! You can always switch between the two interfaces or force Onyx to only use one.
+After you submit your message, you'll see the Unified Interface magically transform into the Chat or Search Interface. 
+
+Don't worry! You can always switch between Search and Chat. Alternatively, use the dropdown in the top left corner to switch between Auto, Search, and Chat.
 
 **Find out more by clicking on the cards below:**
 <Columns cols={2}>
@@ -35,19 +37,41 @@ You'll see the Unified Interface magically transform into the Chat or Search Int
 <br />
 
 <Frame caption="Chat Interface">
-<img class="rounded-2xl" src="/assets/overview/core_features/chat_ui.png" alt="Onyx Unified Interface Chat vs. Search" />
+    <img class="rounded-2xl" src="/assets/overview/core_features/chat_ui.png" alt="Onyx Unified Interface Chat vs. Search" />
 </Frame>
 <br />
 <Frame caption="Search Interface">
-<img class="rounded-2xl" src="/assets/overview/core_features/search_ui.png" alt="Onyx Unified Interface Chat vs. Search" />
+    <img class="rounded-2xl" src="/assets/overview/core_features/search_ui.png" alt="Onyx Unified Interface Chat vs. Search" />
 </Frame>
 
 ## Side Panel
 
-### View Your History
+<img class="rounded-2xl" style={{ margin: "5px auto" }} src="/assets/overview/core_features/side_panel_rectangle.png" alt="Onyx Unified Interface Side Panel" />
 
-### My Documents
+The side panel houses key features for your Onyx experience.
 
-### Agents
+<AccordionGroup>
+    <Accordion title="New Session" icon="pen-to-square">
+        Start fresh with a new Onyx session. This is useful when you're switching tasks or looking for something new. Your previous session will be saved in the Recents list.
+    </Accordion>
+    <Accordion title="My Documents" icon="folder">
+        Upload and use your private documents with Onyx. These docs are only accessble by you. Create folders, add docs to your chat session, and customize Agents with your docs. 
+        <img class="rounded-2xl" src="/assets/overview/GENERIC_PLACEHOLDER.png" alt="Onyx Unified Interface My Documents" />
+    </Accordion>
 
-### User Preferences
+    <Accordion title="Agents" icon="lightbulb">
+        Agents are special AI assistants with different objectives and capabilities.
+        <Card title="Admins: Create a Custom Agent" icon="lightbulb" href="/admin/getting_started/agents" horizontal/>
+        <Card title="Users: Select an Agent for your " icon="lightbulb" href="/overview/basics/agents" horizontal>
+            Use an agent to help you with a task.
+        </Card>
+    </Accordion>
+
+    <Accordion title="Recents / History" icon="message">
+    View your previous conversations and search queries to easily return to past work.
+    </Accordion>
+
+    <Accordion title="User Preferences" icon="circle-user">
+    Customize your Onyx experience including interface settings, notifications, and personal configurations.
+    </Accordion>
+</AccordionGroup>

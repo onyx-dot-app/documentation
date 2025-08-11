@@ -20,7 +20,7 @@ This page demonstrates the most common Chat API workflow - creating a session an
 import requests
 
 API_BASE_URL = "https://cloud.onyx.app/api"
-API_KEY = "your_api_key_here"
+API_KEY = "YOUR_KEY_HERE"
 
 headers = {
     "Authorization": f"Bearer {API_KEY}",
@@ -33,22 +33,22 @@ session_response = requests.post(
     headers=headers,
     json={
         "persona_id": None,
-        "description": "Quick example session"
+        "description": "Example session"
     }
 )
+
 chat_session_id = session_response.json()["chat_session_id"]
 
 # 2. Send a message
 message_response = requests.post(
-    f"{API_BASE_URL}/chat/send-message",
+    f"{API_BASE_URL}/chat/send-message-simple-api",
     headers=headers,
     json={
         "message": "Hello! How can you help me today?",
         "chat_session_id": chat_session_id
     }
 )
-
-print(message_response.json()["message"])
+print(message_response.json()["answer"])
 ```
 
 ## Next Steps
