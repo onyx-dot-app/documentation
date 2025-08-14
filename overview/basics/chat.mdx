@@ -1,62 +1,48 @@
 ---
-title: "Chat"
-description: "How to use Onyx's chat interface effectively"
+title: "Chat Interface"
+description: "AI Chat in Onyx"
 icon: "comment"
 ---
 
-# Chat Interface
+<img class="rounded-2xl" src="/assets/overview/core_features/chat_ui_2.png" alt="Onyx Chat Interface" />
 
-The chat interface is your primary way to interact with Onyx's AI agents and access your organization's knowledge. It provides a conversational experience for asking questions, getting help, and completing tasks.
+The chat interface is a conversational experience with your AI agents. 
+You will see this interface if you send a natural language message to Onyx. 
 
-## Getting Started
+<Tip>
+  Tip: You can force Onyx to show the chat interface by clicking the Auto / Search / Chat toggle in the top left corner.
+</Tip>
+<Steps>
+    <Step title="Type your message in the Onyx Unified Interface input bar" icon="pen-to-square">
+        You can try asking Onyx "What data do you have access to?"
 
-### Starting a Conversation
-1. Open the Onyx chat interface
-2. Select an agent or use the default general agent
-3. Type your question or request
-4. Press Enter or click Send
+        You can finely control how Onyx responds using the input bar options. Don't worry, we'll cover this in more detail [below](#configure-your-chat-session). 
+        <img class="rounded-2xl" src="/assets/overview/core_features/start_chat.png" alt="Onyx Chat Interface" />
+    </Step>
+    <Step title="Onyx will begin processing your request" icon="gears">
+        You'll see Onyx plan, reason, or invoke any Actions available to the AI Agent you're using. If you sent an easy question, Onyx may respond instantly!
+        <img class="rounded-2xl" src="/assets/overview/core_features/chat_first_message.png" alt="Onyx Chat Interface" />
+    </Step>
+    <Step title="The AI responds conversationally" icon="pen-to-square">
+        The default Onyx AI Agent is equipped with Search. This means it can consult your organization's data sources to answer your question.
 
-### Basic Interactions
-- **Ask questions**: "What is our vacation policy?"
-- **Request help**: "Help me write a proposal for the Johnson project"
-- **Upload files**: Drag and drop documents for analysis
-- **Search knowledge**: "Find information about API rate limits"
+        If Search is invoked, you'll see a list of results in the right panel. Additionally, the AI will cite the sources it used in its response.
+        <img class="rounded-2xl" src="/assets/overview/core_features/chat_response.png" alt="Onyx Chat Interface" />
+    </Step>
+    <Step title="Continue your conversation or ask something new!" icon="pen-to-square">
+        Send a follow up question, instruct the Agent to do something with your docs, or ask something completely new.
 
-## Working with Agents
+        <img class="rounded-2xl" src="/assets/overview/core_features/follow_up.png" alt="Onyx Chat Interface" />
+    </Step>
+</Steps>
 
-### Agent Selection
-Use the agent selector to switch between different AI agents:
-- **General Agent**: For broad questions across all your data
-- **HR Agent**: Specialized for policy and benefits questions
-- **Technical Agent**: Focused on documentation and troubleshooting
+## Configure your Chat Session
 
-Each agent has different capabilities and access to specific knowledge sources.
+You have a variety of options to configure Onyx's AI response.
 
-### Understanding Agent Responses
-Agents provide responses with:
-- **Main answer**: Direct response to your question
-- **Sources**: Citations and links to relevant documents
-- **Follow-up suggestions**: Related questions you might ask
-- **Confidence indicators**: How certain the agent is about the answer
+### Use Custom Agent
 
-## Advanced Features
-
-### File Upload and Analysis
-- Upload documents, images, or data files
-- Ask questions about uploaded content
-- Get summaries and analysis
-- Extract specific information
-
-### Conversation Context
-- Agents remember your conversation history
-- Reference previous messages: "Expand on that last point"
-- Build on earlier topics: "Now apply that to our Q4 planning"
-
-### Search and Filtering
-- Search through conversation history
-- Filter by date, agent, or topic
-- Find previous answers quickly
-- Export conversation logs
+### 
 
 ## Best Practices
 
@@ -84,20 +70,6 @@ Agents provide responses with:
 - **Up Arrow**: Edit last message
 - **Ctrl/Cmd + K**: Quick agent switch
 - **Ctrl/Cmd + /**: Show all shortcuts
-
-## Privacy and Security
-
-### Data Handling
-- Conversations are encrypted in transit and at rest
-- Agent responses are generated based on your organization's data
-- Uploaded files are processed securely
-- Chat history is private to your account
-
-### Access Control
-- Agents only access data you have permission to see
-- Different agents may have different data access levels
-- Group-based agents share data within team boundaries
-- Sensitive information is handled according to your organization's policies
 
 ## Troubleshooting
 
