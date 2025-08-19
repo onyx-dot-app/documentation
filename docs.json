@@ -264,21 +264,14 @@
             "group": "APIs",
             "pages": [
               "developers/overview",
-              {
-                "group": "Concepts",
-                "icon": "lightbulb",
-                "pages": [
-                  "developers/api_reference/concepts/files_connectors",
-                  "developers/api_reference/concepts/group_management"
-                ]
-              },
+              "developers/core_concepts",
               {
                 "group": "Guides & Examples",
                 "icon": "book-open",
                 "pages": [
                   "developers/guides/chat_guide",
-                  "developers/guides/create_custom_action",
-                  "developers/guides/setup_mcp",
+                  "developers/guides/index_files_ingestion_api",
+                  "developers/guides/create_connector",
                   "developers/guides/files_connectors_example",
                   "developers/guides/group_management_example"
                 ]
