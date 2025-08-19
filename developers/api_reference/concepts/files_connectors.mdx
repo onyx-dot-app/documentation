@@ -1,0 +1,672 @@
+---
+title: "Files and Connectors"
+description: "Understanding how connectors, credentials, and document ingestion work in Onyx"
+---
+
+# Files and Connectors API Overview
+
+The Files and Connectors API enables you to manage data sources, ingest documents, and configure how Onyx connects to external systems. This API provides comprehensive control over your knowledge base content and data pipeline configuration.
+
+## Overview: How Connectors and Credentials Work in Onyx
+
+In Onyx, **Connectors** define **how** to connect to data sources (like Google Drive, Slack, or file systems), while **Credentials** contain the **authentication details** needed to access those sources. Together, they form **Connector-Credential (CC) Pairs** that actively ingest and sync data.
+
+### Key Concepts
+
+- **Connectors**: Define the connection method and configuration for a data source type
+- **Credentials**: Store authentication information (API keys, OAuth tokens, etc.)
+- **CC Pairs**: Active connections that combine a connector with credentials to sync data
+- **Document Sets**: Logical groupings of documents from one or more CC pairs
+- **Ingestion**: The process of extracting, processing, and indexing documents
+
+For **massive volume programmatic ingestion**, the APIs provide the necessary endpoints. However, for most use cases, **it is recommended to create connectors through the Admin UI** as it provides guided setup, validation, and easier management.
+
+## Code Examples
+
+For complete code examples showing how to set up connectors, credentials, and ingest documents, see:
+
+<CodeGroup>
+
+```python Python
+import requests
+import json
+
+# Configuration
+API_BASE_URL = "https://cloud.onyx.app/api"
+API_KEY = "your_api_key_here"
+
+headers = {
+    "Authorization": f"Bearer {API_KEY}",
+    "Content-Type": "application/json"
+}
+
+# Step 1: Create a simple file connector (if not already exists)
+connector_data = {
+    "name": "API Document Ingestion",
+    "source": "file",
+    "input_type": "load_state",
+    "connector_specific_config": {
+        "file_locations": ["/api/uploads"]
+    },
+    "refresh_freq": 3600,  # Refresh every hour
+    "prune_freq": 86400,   # Prune every day
+    "disabled": False
+}
+
+# Create connector
+response = requests.post(
+    f"{API_BASE_URL}/manage/admin/connector",
+    headers=headers,
+    json=connector_data
+)
+
+if response.status_code == 200:
+    connector = response.json()
+    connector_id = connector["id"]
+    print(f"Created connector with ID: {connector_id}")
+else:
+    print(f"Error creating connector: {response.text}")
+    exit(1)
+
+# Step 2: Create credentials for the connector
+credential_data = {
+    "credential_json": {},  # File connector doesn't need credentials
+    "admin_public": True,
+    "source": "file"
+}
+
+response = requests.post(
+    f"{API_BASE_URL}/manage/admin/credential",
+    headers=headers,
+    json=credential_data
+)
+
+if response.status_code == 200:
+    credential = response.json()
+    credential_id = credential["id"]
+    print(f"Created credential with ID: {credential_id}")
+else:
+    print(f"Error creating credential: {response.text}")
+    exit(1)
+
+# Step 3: Create CC Pair (link connector with credential)
+cc_pair_data = {
+    "connector_id": connector_id,
+    "credential_id": credential_id,
+    "name": "API Document Ingestion Pair",
+    "access_type": "public",
+    "auto_sync_options": {
+        "sync_enabled": True,
+        "sync_interval": 3600
+    }
+}
+
+response = requests.put(
+    f"{API_BASE_URL}/manage/connector/{connector_id}/credential/{credential_id}",
+    headers=headers,
+    json=cc_pair_data
+)
+
+if response.status_code == 200:
+    cc_pair = response.json()
+    print(f"Created CC Pair successfully")
+else:
+    print(f"Error creating CC Pair: {response.text}")
+    exit(1)
+
+# Step 4: Ingest a document directly
+document_data = {
+    "documents": [
+        {
+            "id": "doc_001",
+            "sections": [
+                {
+                    "text": "This is the main content of the document. It contains important information about our product features, including advanced search capabilities, AI-powered recommendations, and real-time collaboration tools.",
+                    "link": "https://example.com/docs/product-features"
+                },
+                {
+                    "text": "Our platform supports multiple data sources including databases, file systems, cloud storage, and third-party APIs. Users can easily configure connectors through our intuitive interface.",
+                    "link": "https://example.com/docs/data-sources"
+                }
+            ],
+            "source": "file",
+            "semantic_identifier": "Product Features Documentation",
+            "metadata": {
+                "title": "Product Features Guide",
+                "author": "Product Team",
+                "department": "Engineering",
+                "tags": ["product", "features", "documentation"],
+                "version": "1.0",
+                "created_date": "2024-01-15",
+                "document_type": "guide"
+            }
+        }
+    ]
+}
+
+# Direct document ingestion (alternative to connector-based ingestion)
+response = requests.post(
+    f"{API_BASE_URL}/ingest/documents",
+    headers=headers,
+    json=document_data
+)
+
+if response.status_code == 200:
+    result = response.json()
+    print("\nDocument ingested successfully!")
+    print(f"Processed {len(result.get('processed_documents', []))} documents")
+    
+    # Verify the document was indexed
+    for doc_result in result.get('processed_documents', []):
+        print(f"- Document ID: {doc_result.get('document_id')}")
+        print(f"- Status: {doc_result.get('status')}")
+        print(f"- Sections: {doc_result.get('num_sections', 0)}")
+        
+else:
+    print(f"Error ingesting document: {response.text}")
+
+# Step 5: Search for the ingested document to verify it's indexed
+search_data = {
+    "query": "product features",
+    "filters": {
+        "source_type": ["file"],
+        "tags": ["product"]
+    },
+    "num_hits": 5,
+    "offset": 0
+}
+
+response = requests.post(
+    f"{API_BASE_URL}/admin/search",
+    headers=headers,
+    json=search_data
+)
+
+if response.status_code == 200:
+    search_results = response.json()
+    print(f"\nFound {len(search_results.get('documents', []))} matching documents:")
+    
+    for doc in search_results.get('documents', []):
+        print(f"- {doc.get('semantic_identifier', 'Unknown')}")
+        print(f"  Relevance: {doc.get('score', 0):.2f}")
+        print(f"  Source: {doc.get('source_type', 'Unknown')}")
+        
+else:
+    print(f"Error searching documents: {response.text}")
+```
+
+```javascript JavaScript
+const API_BASE_URL = "https://cloud.onyx.app/api";
+const API_KEY = "your_api_key_here";
+
+const headers = {
+    "Authorization": `Bearer ${API_KEY}`,
+    "Content-Type": "application/json"
+};
+
+async function ingestDocumentExample() {
+    try {
+        // Step 1: Create a simple file connector
+        const connectorResponse = await fetch(`${API_BASE_URL}/manage/admin/connector`, {
+            method: 'POST',
+            headers: headers,
+            body: JSON.stringify({
+                name: "API Document Ingestion",
+                source: "file",
+                input_type: "load_state",
+                connector_specific_config: {
+                    file_locations: ["/api/uploads"]
+                },
+                refresh_freq: 3600,
+                prune_freq: 86400,
+                disabled: false
+            })
+        });
+        
+        if (!connectorResponse.ok) {
+            throw new Error(`Error creating connector: ${connectorResponse.statusText}`);
+        }
+        
+        const connector = await connectorResponse.json();
+        const connectorId = connector.id;
+        console.log(`Created connector with ID: ${connectorId}`);
+        
+        // Step 2: Create credentials
+        const credentialResponse = await fetch(`${API_BASE_URL}/manage/admin/credential`, {
+            method: 'POST',
+            headers: headers,
+            body: JSON.stringify({
+                credential_json: {},
+                admin_public: true,
+                source: "file"
+            })
+        });
+        
+        if (!credentialResponse.ok) {
+            throw new Error(`Error creating credential: ${credentialResponse.statusText}`);
+        }
+        
+        const credential = await credentialResponse.json();
+        const credentialId = credential.id;
+        console.log(`Created credential with ID: ${credentialId}`);
+        
+        // Step 3: Create CC Pair
+        const ccPairResponse = await fetch(`${API_BASE_URL}/manage/connector/${connectorId}/credential/${credentialId}`, {
+            method: 'PUT',
+            headers: headers,
+            body: JSON.stringify({
+                name: "API Document Ingestion Pair",
+                access_type: "public",
+                auto_sync_options: {
+                    sync_enabled: true,
+                    sync_interval: 3600
+                }
+            })
+        });
+        
+        if (!ccPairResponse.ok) {
+            throw new Error(`Error creating CC Pair: ${ccPairResponse.statusText}`);
+        }
+        
+        console.log("Created CC Pair successfully");
+        
+        // Step 4: Ingest document directly
+        const ingestResponse = await fetch(`${API_BASE_URL}/ingest/documents`, {
+            method: 'POST',
+            headers: headers,
+            body: JSON.stringify({
+                documents: [
+                    {
+                        id: "doc_001",
+                        sections: [
+                            {
+                                text: "This is the main content of the document. It contains important information about our product features, including advanced search capabilities, AI-powered recommendations, and real-time collaboration tools.",
+                                link: "https://example.com/docs/product-features"
+                            },
+                            {
+                                text: "Our platform supports multiple data sources including databases, file systems, cloud storage, and third-party APIs. Users can easily configure connectors through our intuitive interface.",
+                                link: "https://example.com/docs/data-sources"
+                            }
+                        ],
+                        source: "file",
+                        semantic_identifier: "Product Features Documentation",
+                        metadata: {
+                            title: "Product Features Guide",
+                            author: "Product Team",
+                            department: "Engineering",
+                            tags: ["product", "features", "documentation"],
+                            version: "1.0",
+                            created_date: "2024-01-15",
+                            document_type: "guide"
+                        }
+                    }
+                ]
+            })
+        });
+        
+        if (!ingestResponse.ok) {
+            throw new Error(`Error ingesting document: ${ingestResponse.statusText}`);
+        }
+        
+        const result = await ingestResponse.json();
+        console.log("\nDocument ingested successfully!");
+        console.log(`Processed ${result.processed_documents?.length || 0} documents`);
+        
+        // Step 5: Search to verify indexing
+        const searchResponse = await fetch(`${API_BASE_URL}/admin/search`, {
+            method: 'POST',
+            headers: headers,
+            body: JSON.stringify({
+                query: "product features",
+                filters: {
+                    source_type: ["file"],
+                    tags: ["product"]
+                },
+                num_hits: 5,
+                offset: 0
+            })
+        });
+        
+        if (!searchResponse.ok) {
+            throw new Error(`Error searching: ${searchResponse.statusText}`);
+        }
+        
+        const searchResults = await searchResponse.json();
+        console.log(`\nFound ${searchResults.documents?.length || 0} matching documents:`);
+        
+        searchResults.documents?.forEach(doc => {
+            console.log(`- ${doc.semantic_identifier || 'Unknown'}`);
+            console.log(`  Relevance: ${doc.score?.toFixed(2) || '0.00'}`);
+            console.log(`  Source: ${doc.source_type || 'Unknown'}`);
+        });
+        
+    } catch (error) {
+        console.error("Error:", error.message);
+    }
+}
+
+// Run the example
+ingestDocumentExample();
+```
+
+```bash cURL
+# Step 1: Create a file connector
+curl -X POST "https://cloud.onyx.app/api/manage/admin/connector" \
+  -H "Authorization: Bearer your_api_key_here" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "API Document Ingestion",
+    "source": "file", 
+    "input_type": "load_state",
+    "connector_specific_config": {
+      "file_locations": ["/api/uploads"]
+    },
+    "refresh_freq": 3600,
+    "disabled": false
+  }'
+
+# Step 2: Create credentials (use connector_id from previous response)
+curl -X POST "https://cloud.onyx.app/api/manage/admin/credential" \
+  -H "Authorization: Bearer your_api_key_here" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "credential_json": {},
+    "admin_public": true,
+    "source": "file"
+  }'
+
+# Step 3: Create CC Pair (use both IDs from previous responses)
+curl -X PUT "https://cloud.onyx.app/api/manage/connector/CONNECTOR_ID/credential/CREDENTIAL_ID" \
+  -H "Authorization: Bearer your_api_key_here" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "API Document Ingestion Pair",
+    "access_type": "public"
+  }'
+
+# Step 4: Ingest document directly
+curl -X POST "https://cloud.onyx.app/api/ingest/documents" \
+  -H "Authorization: Bearer your_api_key_here" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "documents": [
+      {
+        "id": "doc_001",
+        "sections": [
+          {
+            "text": "This is the main content of the document with product features information.",
+            "link": "https://example.com/docs/product-features"
+          }
+        ],
+        "source": "file",
+        "semantic_identifier": "Product Features Documentation",
+        "metadata": {
+          "title": "Product Features Guide",
+          "author": "Product Team",
+          "tags": ["product", "features", "documentation"]
+        }
+      }
+    ]
+  }'
+
+# Step 5: Search for the document to verify indexing
+curl -X POST "https://cloud.onyx.app/api/admin/search" \
+  -H "Authorization: Bearer your_api_key_here" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "query": "product features",
+    "filters": {
+      "source_type": ["file"]
+    },
+    "num_hits": 5
+  }'
+```
+
+</CodeGroup>
+
+## Key Features
+
+### Data Source Management
+- **Multiple Connector Types**: Support for 50+ data sources including cloud storage, databases, and APIs
+- **Flexible Authentication**: OAuth, API keys, service accounts, and custom auth methods
+- **Automated Sync**: Scheduled and real-time data synchronization
+- **Incremental Updates**: Efficient processing of only changed content
+
+### Document Processing
+- **Content Extraction**: Automatic text extraction from various file formats
+- **Metadata Enrichment**: Extract and preserve document metadata
+- **Chunking Strategies**: Intelligent content segmentation for optimal search
+- **Deduplication**: Automatic detection and handling of duplicate content
+
+### Access Control
+- **Permission Inheritance**: Respect source system permissions
+- **Custom Access Rules**: Define granular access controls
+- **User Group Integration**: Map source permissions to Onyx groups
+- **Public/Private Classification**: Control document visibility
+
+## Core Concepts
+
+### Connector Types
+
+**Built-in Connectors**:
+- **Cloud Storage**: Google Drive, SharePoint, Dropbox, S3, etc.
+- **Communication**: Slack, Discord, Teams, Gmail, etc.
+- **Documentation**: Confluence, Notion, GitBook, Bookstack, etc.
+- **Development**: GitHub, GitLab, Jira, Linear, etc.
+- **Databases**: PostgreSQL, MySQL, MongoDB, etc.
+
+**Custom Connectors**: Build your own using the connector framework
+
+### Document Structure
+```json
+{
+  "id": "unique_document_id",
+  "sections": [
+    {
+      "text": "Document content chunk",
+      "link": "https://source.com/document#section1"
+    }
+  ],
+  "source": "confluence",
+  "semantic_identifier": "Human-readable title",
+  "doc_updated_at": "2024-01-15T10:30:00Z",
+  "primary_owners": ["user@example.com"],
+  "secondary_owners": ["team@example.com"],
+  "metadata": {
+    "title": "Document Title",
+    "author": "Author Name",
+    "tags": ["tag1", "tag2"],
+    "custom_field": "value"
+  }
+}
+```
+
+### CC Pair Lifecycle
+1. **Creation**: Connector + Credential = CC Pair
+2. **Initial Sync**: Full data import from source
+3. **Ongoing Sync**: Incremental updates based on schedule
+4. **Monitoring**: Track sync status and errors
+5. **Maintenance**: Update configs, handle auth refresh
+
+## Common Use Cases
+
+### Enterprise Knowledge Base
+```python
+# Confluence + Google Drive + SharePoint integration
+connectors = [
+    {"source": "confluence", "space_keys": ["ENG", "PROD"]},
+    {"source": "google_drive", "folder_ids": ["shared_docs"]}, 
+    {"source": "sharepoint", "site_urls": ["intranet"]}
+]
+```
+
+### Customer Support Integration
+```python
+# Zendesk + Slack + Internal Docs
+connectors = [
+    {"source": "zendesk", "include_tickets": True},
+    {"source": "slack", "channels": ["support", "announcements"]},
+    {"source": "file", "paths": ["/support/runbooks"]}
+]
+```
+
+### Development Documentation
+```python
+# GitHub + GitBook + API Docs
+connectors = [
+    {"source": "github", "repos": ["api", "docs", "examples"]},
+    {"source": "gitbook", "spaces": ["api-reference"]},
+    {"source": "swagger", "spec_urls": ["https://api.example.com/openapi.json"]}
+]
+```
+
+## Configuration Best Practices
+
+### Connector Setup
+- **Use Admin UI First**: Start with UI-based setup for validation
+- **Test Connections**: Always verify connectivity before deployment
+- **Monitor Permissions**: Ensure proper access rights for data sources
+- **Plan Sync Frequency**: Balance freshness with resource usage
+
+### Security Considerations
+- **Credential Management**: Use secure credential storage
+- **Permission Mapping**: Properly map source permissions to Onyx
+- **Data Classification**: Identify and protect sensitive content
+- **Audit Logging**: Track data access and modifications
+
+### Performance Optimization
+- **Selective Sync**: Only sync relevant content
+- **Batch Processing**: Use appropriate batch sizes for ingestion
+- **Resource Monitoring**: Track memory and processing usage
+- **Error Handling**: Implement robust retry mechanisms
+
+## Monitoring and Troubleshooting
+
+### Sync Status Monitoring
+```python
+# Check CC Pair status
+cc_pair_status = get_cc_pair_status(cc_pair_id)
+print(f"Status: {cc_pair_status['status']}")
+print(f"Last sync: {cc_pair_status['last_sync']}")
+print(f"Documents: {cc_pair_status['num_docs_indexed']}")
+print(f"Errors: {cc_pair_status['errors']}")
+```
+
+### Common Issues
+- **Authentication Failures**: Expired tokens, invalid credentials
+- **Permission Errors**: Insufficient access rights
+- **Rate Limiting**: API limits exceeded
+- **Content Processing**: Unsupported file formats
+
+### Error Resolution
+```python
+# Get detailed error information
+errors = get_cc_pair_errors(cc_pair_id)
+for error in errors:
+    print(f"Error: {error['message']}")
+    print(f"Document: {error['document_id']}")
+    print(f"Time: {error['timestamp']}")
+    print(f"Resolution: {error['suggested_fix']}")
+```
+
+## Response Formats
+
+### Successful Document Ingestion
+```json
+{
+  "processed_documents": [
+    {
+      "document_id": "doc_001",
+      "status": "success", 
+      "num_sections": 2,
+      "processing_time": 1.5,
+      "indexed_at": "2024-01-15T10:30:00Z"
+    }
+  ],
+  "failed_documents": [],
+  "total_processed": 1
+}
+```
+
+### CC Pair Status Response
+```json
+{
+  "id": 123,
+  "name": "Confluence Integration",
+  "connector": {
+    "id": 45,
+    "name": "Company Confluence",
+    "source": "confluence"
+  },
+  "credential": {
+    "id": 67,
+    "source": "confluence"
+  },
+  "status": "active",
+  "last_sync": "2024-01-15T09:00:00Z",
+  "next_sync": "2024-01-15T10:00:00Z",
+  "num_docs_indexed": 1250,
+  "indexing_status": "completed"
+}
+```
+
+## Advanced Features
+
+### Custom Document Processing
+```python
+# Custom metadata extraction
+def extract_custom_metadata(document):
+    metadata = {}
+    
+    # Extract department from file path
+    if "/departments/" in document.path:
+        metadata["department"] = document.path.split("/departments/")[1].split("/")[0]
+    
+    # Extract document type from filename
+    if document.filename.endswith("_policy.pdf"):
+        metadata["document_type"] = "policy"
+    
+    return metadata
+```
+
+### Webhook Integration
+```python
+# Real-time updates via webhooks
+webhook_config = {
+    "url": "https://your-app.com/webhooks/onyx",
+    "events": ["document.created", "document.updated", "sync.completed"],
+    "secret": "webhook_secret_key"
+}
+```
+
+### Bulk Operations
+```python
+# Bulk document operations
+bulk_operations = [
+    {"action": "create", "document": doc1},
+    {"action": "update", "document": doc2}, 
+    {"action": "delete", "document_id": "doc3"}
+]
+
+result = bulk_process_documents(bulk_operations)
+```
+
+## Next Steps
+
+Explore the auto-generated Files and Connectors API endpoints:
+
+- **Simple Example**: Basic connector and document management
+- **Management**: Advanced connector configuration and monitoring  
+- **Credentials**: Secure credential management
+- **CC Pairs**: Connector-credential pair operations
+
+For related functionality, see:
+- [Chat API](/api_reference/chat/overview) - Search and retrieve your ingested documents
+- [Agents API](/api_reference/agents/overview) - Create agents that use your knowledge base
+- [Search API](#) - Advanced document search and retrieval
+
+---
+
+<Note>
+**Note**: While the API provides comprehensive programmatic control, we recommend using the Admin UI for initial connector setup and configuration. The API is ideal for automation, bulk operations, and integration with existing data pipelines. For a complete list of available endpoints, refer to the auto-generated API reference below or the [Swagger documentation](https://cloud.onyx.app/docs).
+</Note> 

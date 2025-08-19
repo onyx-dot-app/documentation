@@ -1,0 +1,304 @@
+---
+title: "Files and Connectors Example"
+description: "Complete example of setting up connectors, credentials, and ingesting documents"
+icon: "code"
+---
+
+# Files and Connectors Example
+
+This example demonstrates the complete workflow for setting up data ingestion in Onyx, including creating connectors, credentials, CC pairs, and ingesting documents.
+
+## Complete Workflow Example
+
+<Steps>
+  <Step title="Setup API Configuration">
+    ```python Python
+    import requests
+    import json
+
+    API_BASE_URL = "https://cloud.onyx.app/api"  # or your domain
+    API_KEY = "YOUR_KEY_HERE"
+
+    headers = {
+        "Authorization": f"Bearer {API_KEY}",
+        "Content-Type": "application/json"
+    }
+    ```
+  </Step>
+
+  <Step title="Create a Connector">
+    ```python Python
+    # Step 1: Create a connector (Google Drive example)
+    connector_data = {
+        "name": "Google Drive - Marketing",
+        "source": "google_drive",
+        "input_type": "poll",
+        "connector_specific_config": {
+            "folder_paths": ["/Marketing Documents", "/Shared Resources"],
+            "include_shared": True,
+            "follow_shortcuts": True
+        },
+        "refresh_freq": 3600,
+        "prune_freq": 86400
+    }
+
+    response = requests.post(
+        f"{API_BASE_URL}/manage/connector",
+        headers=headers,
+        json=connector_data
+    )
+
+    if response.status_code == 200:
+        connector = response.json()
+        connector_id = connector["id"]
+        print(f"Created connector with ID: {connector_id}")
+    else:
+        print(f"Error creating connector: {response.text}")
+        exit(1)
+    ```
+  </Step>
+
+  <Step title="Create Credentials">
+    ```python Python
+    # Step 2: Create credentials for the connector
+    credential_data = {
+        "credential_json": {
+            "google_drive_tokens": {
+                "access_token": "your_access_token",
+                "refresh_token": "your_refresh_token"
+            }
+        },
+        "admin_public": True
+    }
+
+    response = requests.post(
+        f"{API_BASE_URL}/manage/credential",
+        headers=headers,
+        json=credential_data
+    )
+
+    if response.status_code == 200:
+        credential = response.json()
+        credential_id = credential["id"]
+        print(f"Created credential with ID: {credential_id}")
+    else:
+        print(f"Error creating credential: {response.text}")
+        exit(1)
+    ```
+  </Step>
+
+  <Step title="Create CC Pair">
+    ```python Python
+    # Step 3: Create Connector-Credential (CC) Pair
+    cc_pair_data = {
+        "name": "Marketing Google Drive",
+        "status": "ACTIVE",
+        "access_type": "public",
+        "groups": [],
+        "connector_specific_config": {
+            "sync_interval": 3600
+        }
+    }
+
+    response = requests.put(
+        f"{API_BASE_URL}/manage/connector/{connector_id}/credential/{credential_id}",
+        headers=headers,
+        json=cc_pair_data
+    )
+
+    if response.status_code == 200:
+        cc_pair = response.json()
+        print(f"Created CC Pair successfully")
+    else:
+        print(f"Error creating CC Pair: {response.text}")
+        exit(1)
+    ```
+  </Step>
+
+  <Step title="Direct Document Ingestion">
+    ```python Python
+    # Step 4: Ingest a document directly (alternative to connector-based ingestion)
+    document_data = {
+        "documents": [
+            {
+                "id": "doc_001",
+                "sections": [
+                    {
+                        "text": "This is the main content of the document. It contains important information about our product features, including advanced search capabilities, AI-powered recommendations, and real-time collaboration tools.",
+                        "link": "https://example.com/docs/product-features"
+                    },
+                    {
+                        "text": "Our platform supports multiple data sources including databases, file systems, cloud storage, and third-party APIs. Users can easily configure connectors through our intuitive interface.",
+                        "link": "https://example.com/docs/data-sources"
+                    }
+                ],
+                "source": "file",
+                "semantic_identifier": "Product Features Documentation",
+                "metadata": {
+                    "title": "Product Features Guide",
+                    "author": "Product Team",
+                    "department": "Engineering",
+                    "tags": ["product", "features", "documentation"],
+                    "version": "1.0",
+                    "created_date": "2024-01-15",
+                    "document_type": "guide"
+                }
+            }
+        ]
+    }
+
+    response = requests.post(
+        f"{API_BASE_URL}/ingest/documents",
+        headers=headers,
+        json=document_data
+    )
+
+    if response.status_code == 200:
+        result = response.json()
+        print("\\nDocument ingested successfully!")
+        print(f"Processed {len(result.get('processed_documents', []))} documents")
+        
+        # Verify the document was indexed
+        for doc_result in result.get('processed_documents', []):
+            print(f"- Document ID: {doc_result.get('document_id')}")
+            print(f"- Status: {doc_result.get('status')}")
+            print(f"- Sections: {doc_result.get('num_sections', 0)}")
+            
+    else:
+        print(f"Error ingesting document: {response.text}")
+    ```
+  </Step>
+
+  <Step title="Verify Document Indexing">
+    ```python Python
+    # Step 5: Search for the ingested document to verify it's indexed
+    search_data = {
+        "query": "product features",
+        "filters": {
+            "source_type": ["file"],
+            "tags": ["product"]
+        },
+        "num_hits": 5,
+        "offset": 0
+    }
+
+    response = requests.post(
+        f"{API_BASE_URL}/admin/search",
+        headers=headers,
+        json=search_data
+    )
+
+    if response.status_code == 200:
+        search_results = response.json()
+        print(f"\\nFound {len(search_results.get('documents', []))} matching documents:")
+        
+        for doc in search_results.get('documents', []):
+            print(f"- {doc.get('semantic_identifier', 'Unknown')}")
+            print(f"  Relevance: {doc.get('score', 0):.2f}")
+            print(f"  Source: {doc.get('source_type', 'Unknown')}")
+            
+    else:
+        print(f"Error searching documents: {response.text}")
+    ```
+  </Step>
+</Steps>
+
+## JavaScript Example
+
+```javascript JavaScript expandable
+const API_BASE_URL = "https://cloud.onyx.app/api";
+const API_KEY = "YOUR_KEY_HERE";
+
+const headers = {
+    "Authorization": `Bearer ${API_KEY}`,
+    "Content-Type": "application/json"
+};
+
+async function setupFilesAndConnectors() {
+    try {
+        // Create connector
+        const connectorResponse = await fetch(`${API_BASE_URL}/manage/connector`, {
+            method: 'POST',
+            headers: headers,
+            body: JSON.stringify({
+                name: "Google Drive - Marketing",
+                source: "google_drive",
+                input_type: "poll",
+                connector_specific_config: {
+                    folder_paths: ["/Marketing Documents", "/Shared Resources"],
+                    include_shared: true,
+                    follow_shortcuts: true
+                },
+                refresh_freq: 3600,
+                prune_freq: 86400
+            })
+        });
+
+        const connector = await connectorResponse.json();
+        console.log(`Created connector with ID: ${connector.id}`);
+
+        // Create credentials
+        const credentialResponse = await fetch(`${API_BASE_URL}/manage/credential`, {
+            method: 'POST',
+            headers: headers,
+            body: JSON.stringify({
+                credential_json: {
+                    google_drive_tokens: {
+                        access_token: "your_access_token",
+                        refresh_token: "your_refresh_token"
+                    }
+                },
+                admin_public: true
+            })
+        });
+
+        const credential = await credentialResponse.json();
+        console.log(`Created credential with ID: ${credential.id}`);
+
+        // Create CC Pair
+        const ccPairResponse = await fetch(
+            `${API_BASE_URL}/manage/connector/${connector.id}/credential/${credential.id}`,
+            {
+                method: 'PUT',
+                headers: headers,
+                body: JSON.stringify({
+                    name: "Marketing Google Drive",
+                    status: "ACTIVE",
+                    access_type: "public",
+                    groups: [],
+                    connector_specific_config: {
+                        sync_interval: 3600
+                    }
+                })
+            }
+        );
+
+        console.log("CC Pair created successfully");
+
+    } catch (error) {
+        console.error("Error setting up files and connectors:", error);
+    }
+}
+
+setupFilesAndConnectors();
+```
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Files and Connectors API" icon="plug" href="/developers/api_reference/files_connectors/ingest_document">
+    Explore the complete Files and Connectors API reference
+  </Card>
+  
+  <Card title="Search API" icon="magnifying-glass" href="/developers/api_reference/search/document_search">
+    Learn how to search through your ingested documents
+  </Card>
+  
+  <Card title="Files and Connectors Concepts" icon="lightbulb" href="/developers/api_reference/concepts/files_connectors">
+    Understand the concepts behind connectors and document ingestion
+  </Card>
+  
+  <Card title="Chat with Documents" icon="comment" href="/developers/guides/chat_guide">
+    Use your ingested documents in chat conversations
+  </Card>
+</CardGroup>
