@@ -1,0 +1,345 @@
+---
+title: "Group Management Example"
+description: "Examples of organizing users into groups and managing resource access"
+icon: "users"
+---
+
+# Group Management Example
+
+This example demonstrates how to organize users into groups and control access to resources in Onyx using different organizational patterns.
+
+## Organizational Patterns
+
+### Department-Based Groups
+
+```python Python
+# Department-based groups
+departments = ["Engineering", "Sales", "Marketing", "Support", "HR"]
+
+# Role-based groups  
+roles = ["Managers", "Individual Contributors", "Executives", "Admins"]
+
+# Project-based groups (temporary)
+projects = ["Project Alpha", "Q1 Initiative", "Product Launch"]
+
+# Hybrid approach (department + role)
+hybrid_groups = [
+    "Engineering Managers",
+    "Sales Reps", 
+    "Marketing Leads",
+    "Support Agents"
+]
+```
+
+## Complete Group Setup Example
+
+<Steps>
+  <Step title="Setup API Configuration">
+    ```python Python
+    import requests
+
+    API_BASE_URL = "https://cloud.onyx.app/api"
+    API_KEY = "YOUR_KEY_HERE"
+
+    headers = {
+        "Authorization": f"Bearer {API_KEY}",
+        "Content-Type": "application/json"
+    }
+    ```
+  </Step>
+
+  <Step title="Create Groups">
+    ```python Python
+    # Create department groups
+    groups_to_create = [
+        {
+            "name": "Engineering",
+            "description": "Engineering team with access to technical resources"
+        },
+        {
+            "name": "Marketing", 
+            "description": "Marketing team with access to campaign materials"
+        },
+        {
+            "name": "Sales",
+            "description": "Sales team with access to customer resources"
+        }
+    ]
+
+    created_groups = {}
+
+    for group_data in groups_to_create:
+        response = requests.post(
+            f"{API_BASE_URL}/manage/admin/group",
+            headers=headers,
+            json=group_data
+        )
+        
+        if response.status_code == 200:
+            group = response.json()
+            created_groups[group_data["name"]] = group["id"]
+            print(f"Created group: {group_data['name']} (ID: {group['id']})")
+        else:
+            print(f"Error creating group {group_data['name']}: {response.text}")
+    ```
+  </Step>
+
+  <Step title="Add Users to Groups">
+    ```python Python
+    # Add users to appropriate groups
+    user_group_assignments = [
+        {"user_email": "john@company.com", "group": "Engineering"},
+        {"user_email": "sarah@company.com", "group": "Marketing"},
+        {"user_email": "mike@company.com", "group": "Sales"},
+        {"user_email": "alice@company.com", "group": "Engineering"}
+    ]
+
+    for assignment in user_group_assignments:
+        group_id = created_groups[assignment["group"]]
+        
+        # First, get user ID from email
+        user_response = requests.get(
+            f"{API_BASE_URL}/manage/admin/users",
+            headers=headers,
+            params={"email": assignment["user_email"]}
+        )
+        
+        if user_response.status_code == 200:
+            users = user_response.json()
+            if users:
+                user_id = users[0]["id"]
+                
+                # Add user to group
+                add_response = requests.put(
+                    f"{API_BASE_URL}/manage/admin/group/{group_id}/user/{user_id}",
+                    headers=headers
+                )
+                
+                if add_response.status_code == 200:
+                    print(f"Added {assignment['user_email']} to {assignment['group']}")
+                else:
+                    print(f"Error adding user to group: {add_response.text}")
+    ```
+  </Step>
+
+  <Step title="Assign Resources to Groups">
+    ```python Python
+    # Assign agents to specific groups
+    agent_assignments = [
+        {"agent_name": "Technical Assistant", "groups": ["Engineering"]},
+        {"agent_name": "Marketing Assistant", "groups": ["Marketing"]},
+        {"agent_name": "Sales Assistant", "groups": ["Sales"]}
+    ]
+
+    for assignment in agent_assignments:
+        # Get agent ID (assuming you have agents created)
+        agent_response = requests.get(
+            f"{API_BASE_URL}/agent",
+            headers=headers,
+            params={"name": assignment["agent_name"]}
+        )
+        
+        if agent_response.status_code == 200:
+            agents = agent_response.json()
+            if agents:
+                agent_id = agents[0]["id"]
+                group_ids = [created_groups[group_name] for group_name in assignment["groups"]]
+                
+                # Update agent with group access
+                update_response = requests.put(
+                    f"{API_BASE_URL}/agent/{agent_id}",
+                    headers=headers,
+                    json={"groups": group_ids}
+                )
+                
+                if update_response.status_code == 200:
+                    print(f"Assigned {assignment['agent_name']} to groups: {assignment['groups']}")
+    ```
+  </Step>
+</Steps>
+
+## Monitoring and Analytics
+
+### Group Usage Tracking
+
+```python Python
+# Track group resource usage
+def get_group_analytics(group_id):
+    response = requests.get(
+        f"{API_BASE_URL}/analytics/group/{group_id}",
+        headers=headers
+    )
+    
+    if response.status_code == 200:
+        return response.json()
+    else:
+        print(f"Error getting group analytics: {response.text}")
+        return None
+
+# Example usage
+for group_name, group_id in created_groups.items():
+    analytics = get_group_analytics(group_id)
+    if analytics:
+        print(f"\\n{group_name} Group Analytics:")
+        print(f"Active users: {analytics.get('active_users', 0)}")
+        print(f"Resource usage: {analytics.get('resource_usage', {})}")
+        print(f"Access patterns: {analytics.get('access_patterns', {})}")
+```
+
+### Access Auditing
+
+```python Python
+# Audit group access and changes
+def get_group_audit_log(group_id, days=30):
+    response = requests.get(
+        f"{API_BASE_URL}/admin/audit/group/{group_id}",
+        headers=headers,
+        params={"days": days}
+    )
+    
+    if response.status_code == 200:
+        return response.json().get("events", [])
+    else:
+        print(f"Error getting audit log: {response.text}")
+        return []
+
+# Example usage
+for group_name, group_id in created_groups.items():
+    audit_log = get_group_audit_log(group_id, days=30)
+    print(f"\\n{group_name} Group Audit Log (last 30 days):")
+    
+    for event in audit_log[:5]:  # Show last 5 events
+        print(f"{event.get('timestamp')}: {event.get('action')} by {event.get('user')}")
+        print(f"  Resource: {event.get('resource')}")
+        print(f"  Details: {event.get('details')}")
+```
+
+## Integration Patterns
+
+### LDAP/Active Directory Sync
+
+```python Python
+# Example LDAP sync configuration
+ldap_sync_config = {
+    "enabled": True,
+    "server": "ldap://your-ldap-server.com",
+    "base_dn": "DC=company,DC=com",
+    "bind_user": "CN=onyx-service,OU=Service Accounts,DC=company,DC=com",
+    "group_mapping": {
+        "CN=Engineering,OU=Groups,DC=company,DC=com": created_groups["Engineering"],
+        "CN=Marketing,OU=Groups,DC=company,DC=com": created_groups["Marketing"],
+        "CN=Sales,OU=Groups,DC=company,DC=com": created_groups["Sales"]
+    },
+    "sync_interval": 3600  # 1 hour
+}
+
+# Configure LDAP sync
+response = requests.post(
+    f"{API_BASE_URL}/admin/ldap/sync-config",
+    headers=headers,
+    json=ldap_sync_config
+)
+
+if response.status_code == 200:
+    print("LDAP sync configured successfully")
+else:
+    print(f"Error configuring LDAP sync: {response.text}")
+```
+
+### Role-Based Access Control (RBAC)
+
+```python Python
+# Define role hierarchies
+role_hierarchy = {
+    "Admin": {
+        "permissions": ["full_access"],
+        "inherits_from": []
+    },
+    "Manager": {
+        "permissions": ["manage_team", "view_analytics", "assign_resources"],
+        "inherits_from": []
+    },
+    "User": {
+        "permissions": ["use_agents", "search_documents"],
+        "inherits_from": []
+    }
+}
+
+# Apply role-based permissions to groups
+for group_name, group_id in created_groups.items():
+    # Assign manager role to group leads
+    if group_name in ["Engineering", "Marketing", "Sales"]:
+        role_assignment = {
+            "group_id": group_id,
+            "role": "Manager",
+            "permissions": role_hierarchy["Manager"]["permissions"]
+        }
+        
+        response = requests.put(
+            f"{API_BASE_URL}/admin/group/{group_id}/role",
+            headers=headers,
+            json=role_assignment
+        )
+        
+        if response.status_code == 200:
+            print(f"Assigned Manager role to {group_name} group")
+```
+
+## Best Practices
+
+### Security Considerations
+
+- **Principle of Least Privilege**: Users should have minimum necessary access
+- **Separation of Duties**: Sensitive operations should require multiple groups  
+- **Audit Trails**: Track group changes and access patterns
+- **Regular Cleanup**: Remove inactive users and unused groups
+
+### Performance Optimization
+
+```python Python
+# Batch operations for better performance
+def batch_add_users_to_group(group_id, user_ids):
+    """Add multiple users to a group in a single request"""
+    response = requests.put(
+        f"{API_BASE_URL}/admin/group/{group_id}/users/batch",
+        headers=headers,
+        json={"user_ids": user_ids}
+    )
+    
+    return response.status_code == 200
+
+# Cache group information for frequent lookups
+group_cache = {}
+
+def get_cached_group_info(group_id):
+    if group_id not in group_cache:
+        response = requests.get(
+            f"{API_BASE_URL}/admin/group/{group_id}",
+            headers=headers
+        )
+        
+        if response.status_code == 200:
+            group_cache[group_id] = response.json()
+    
+    return group_cache.get(group_id)
+```
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Group Management API" icon="user-group" href="/developers/api_reference/group_management/create_group">
+    Explore the complete Group Management API reference
+  </Card>
+  
+  <Card title="User Management API" icon="user" href="/developers/api_reference/user_management/create_user">
+    Learn how to manage individual users
+  </Card>
+  
+  <Card title="Group Management Concepts" icon="lightbulb" href="/developers/api_reference/concepts/group_management">
+    Understand the concepts behind group-based access control
+  </Card>
+  
+  <Card title="Analytics API" icon="chart-line" href="/developers/api_reference/analytics/get_user_analytics">
+    Monitor group usage and access patterns
+  </Card>
+</CardGroup>

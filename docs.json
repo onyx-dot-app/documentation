@@ -48,7 +48,7 @@
           {
             "group": "Miscellaneous",
             "pages": [
-              "contact_us"
+              "overview/contact_us"
             ]
           }
         ]
@@ -107,7 +107,7 @@
               "deployment/miscellaneous/release_process",
               "deployment/miscellaneous/troubleshooting",
               "deployment/miscellaneous/enterprise_edition",
-              "contact_us"
+              "deployment/contact_us"
             ]
           }
         ]
@@ -252,7 +252,7 @@
             "group": "Miscellaneous",
             "pages": [
               "admin/faq",
-              "contact_us"
+              "admin/contact_us"
             ]
           }
         ]
@@ -261,48 +261,47 @@
         "tab": "Developers",
         "pages": [
           {
-            "group": "Contributing",
-            "pages": [
-              "developers/contributing/overview",
-              "developers/contributing/dev_setup",
-              "developers/contributing/actions",
-              "developers/contributing/agents",
-              "developers/contributing/connectors",
-              "developers/contributing/advanced_options"
-            ]
-          },
-          {
             "group": "APIs",
             "pages": [
-              "developers/api_reference/overview",
-              "developers/api_reference/authentication",
-              "developers/api_reference/cloud_apis"
+              "developers/overview",
+              {
+                "group": "Concepts",
+                "icon": "lightbulb",
+                "pages": [
+                  "developers/api_reference/concepts/files_connectors",
+                  "developers/api_reference/concepts/group_management"
+                ]
+              },
+              {
+                "group": "Guides & Examples",
+                "icon": "book-open",
+                "pages": [
+                  "developers/guides/chat_guide",
+                  "developers/guides/create_custom_action",
+                  "developers/guides/setup_mcp",
+                  "developers/guides/files_connectors_example",
+                  "developers/guides/group_management_example"
+                ]
+              }
             ]
           },
           {
-            "group": "Endpoints",
+            "group": "API Reference",
             "pages": [
               {
                 "group": "Chat",
                 "icon": "comment",
                 "pages": [
-                  "developers/api_reference/chat/simple_example",
                   "developers/api_reference/chat/get_chat_session",
                   "developers/api_reference/chat/create_chat_session",
                   "developers/api_reference/chat/send_message",
                   "developers/api_reference/chat/send_message_simple",
                   "developers/api_reference/chat/upload_file",
                   "developers/api_reference/chat/delete_chat",
-                  {
-                    "group": "Advanced",
-                    "pages": [
-                      "developers/api_reference/chat/share_chat",
-                      "developers/api_reference/chat/search_chats",
-                      "developers/api_reference/chat/update_chat_branch",
-                      "developers/api_reference/chat/create_folder",
-                      "developers/api_reference/chat/add_chat_to_folder"
-                    ]
-                  }
+                  "developers/api_reference/chat/share_chat_session",
+                  "developers/api_reference/chat/search_chats",
+                  "developers/api_reference/chat/create_folder",
+                  "developers/api_reference/chat/add_chat_to_folder"
                 ]
               },
               {
@@ -317,7 +316,6 @@
                 "group": "Agents",
                 "icon": "robot",
                 "pages": [
-                  "developers/api_reference/agents/simple_example",
                   "developers/api_reference/agents/list_agents",
                   "developers/api_reference/agents/get_agent_by_id",
                   "developers/api_reference/agents/create_agent",
@@ -329,7 +327,6 @@
                 "group": "Actions",
                 "icon": "play",
                 "pages": [
-                  "developers/api_reference/actions/simple_example",
                   "developers/api_reference/actions/list_actions",
                   "developers/api_reference/actions/get_action_by_id",
                   "developers/api_reference/actions/create_action",
@@ -341,11 +338,11 @@
                 "group": "Files and Connectors",
                 "icon": "plug",
                 "pages": [
-                  "developers/api_reference/files_connectors/overview",
                   "developers/api_reference/files_connectors/get_document_by_id",
                   "developers/api_reference/files_connectors/list_ingestion_documents",
                   "developers/api_reference/files_connectors/ingest_document",
-                  "developers/api_reference/files_connectors/delete_document_by_id"
+                  "developers/api_reference/files_connectors/delete_document_by_id",
+                  "developers/api_reference/miscellaneous/set_document_boost"
                 ]
               },
               {
@@ -366,10 +363,7 @@
                 "group": "Group Management",
                 "icon": "user-group",
                 "pages": [
-                  "developers/api_reference/group_management/overview",
-                  "developers/api_reference/group_management/simple_example",
                   "developers/api_reference/group_management/list_groups",
-                  "developers/api_reference/group_management/get_group_by_id",
                   "developers/api_reference/group_management/create_group",
                   "developers/api_reference/group_management/update_group",
                   "developers/api_reference/group_management/add_user_to_group",
@@ -394,7 +388,6 @@
                 "icon": "list",
                 "pages": [
                   "developers/api_reference/miscellaneous/health_check",
-                  "developers/api_reference/miscellaneous/set_document_boost",
                   "developers/api_reference/miscellaneous/set_rate_limit",
                   "developers/api_reference/miscellaneous/delete_rate_limit"
                 ]
@@ -402,9 +395,20 @@
             ]
           },
           {
+            "group": "Contributing",
+            "pages": [
+              "developers/contributing/overview",
+              "developers/contributing/dev_setup",
+              "developers/contributing/actions",
+              "developers/contributing/agents",
+              "developers/contributing/connectors",
+              "developers/contributing/advanced_options"
+            ]
+          },
+          {
             "group": "Miscellaneous",
             "pages": [
-              "contact_us"
+              "developers/contact_us"
             ]
           }
         ]
@@ -442,217 +446,7 @@
           {
             "group": "Miscellaneous",
             "pages": [
-              "contact_us"
-            ]
-          }
-        ]
-      },
-      {
-        "tab": "Old",
-        "pages": [
-          {
-            "group": "Getting Started",
-            "pages": [
-              "old/quickstart",
-              "old/resourcing",
-              "old/slack_bot_setup",
-              "old/chrome_extension",
-              {
-                "group": "Gen AI Configs",
-                "icon": "stars",
-                "pages": [
-                  "old/gen_ai_configs/overview",
-                  "old/gen_ai_configs/open_ai",
-                  "old/gen_ai_configs/anthropic",
-                  "old/gen_ai_configs/azure",
-                  "old/gen_ai_configs/vertex_ai",
-                  "old/gen_ai_configs/huggingface",
-                  "old/gen_ai_configs/ollama",
-                  "old/gen_ai_configs/fastchat",
-                  "old/gen_ai_configs/custom_server"
-                ]
-              },
-              "old/configuration_guide",
-              "old/multilingual_setup",
-              "old/system_overview",
-              "old/contact_us"
-            ]
-          },
-          {
-            "group": "Guides",
-            "pages": [
-              "old/guides/providers",
-              "old/guides/embedding_providers",
-              "old/guides/agent_search"
-            ]
-          },
-          {
-            "group": "Connectors",
-            "icon": "plug",
-            "pages": [
-              "old/connectors/overview",
-              {
-                "group": "Connectors",
-                "pages": [
-                  "old/connectors/airtable",
-                  "old/connectors/asana",
-                  "old/connectors/bookstack",
-                  "old/connectors/clickup",
-                  "old/connectors/confluence",
-                  "old/connectors/discourse",
-                  "old/connectors/document360",
-                  "old/connectors/dropbox",
-                  "old/connectors/discord",
-                  "old/connectors/egnyte",
-                  "old/connectors/file",
-                  "old/connectors/fireflies",
-                  "old/connectors/freshdesk",
-                  "old/connectors/github",
-                  "old/connectors/gitlab",
-                  "old/connectors/gong",
-                  "old/connectors/gitbook",
-                  {
-                    "group": "Gmail Connector",
-                    "pages": [
-                      "old/connectors/gmail/overview",
-                      "old/connectors/gmail/oauth",
-                      "old/connectors/gmail/service_account"
-                    ]
-                  },
-                  {
-                    "group": "Google Drive Connector",
-                    "pages": [
-                      "old/connectors/google_drive/overview",
-                      "old/connectors/google_drive/service_account",
-                      "old/connectors/google_drive/oauth"
-                    ]
-                  },
-                  "old/connectors/google_sites",
-                  "old/connectors/google_storage",
-                  "old/connectors/guru",
-                  "old/connectors/hubspot",
-                  "old/connectors/highspot",
-                  "old/connectors/jira",
-                  "old/connectors/linear",
-                  "old/connectors/notion",
-                  "old/connectors/oci_storage",
-                  "old/connectors/productboard",
-                  "old/connectors/r2",
-                  "old/connectors/requesttracker",
-                  {
-                    "group": "S3 Connector",
-                    "pages": [
-                      "old/connectors/s3/overview",
-                      "old/connectors/s3/access-keys",
-                      "old/connectors/s3/iam-role",
-                      "old/connectors/s3/assume-role"
-                    ]
-                  },
-                  "old/connectors/salesforce",
-                  "old/connectors/sharepoint",
-                  {
-                    "group": "Slack Connector",
-                    "pages": [
-                      "old/connectors/slack/slack_federated",
-                      "old/connectors/slack/slack_indexed"
-                    ]
-                  },
-                  "old/connectors/slab",
-                  "old/connectors/teams",
-                  "old/connectors/web",
-                  "old/connectors/zendesk",
-                  "old/connectors/zulip"
-                ]
-              }
-            ]
-          },
-          {
-            "group": "Auth",
-            "pages": [
-              "old/basic_auth",
-              "old/google_oauth_setup",
-              "old/oidc_saml"
-            ]
-          },
-          {
-            "group": "Deploy Onyx",
-            "pages": [
-              {
-                "group": "Deploy with AWS",
-                "icon": "aws",
-                "pages": [
-                  "old/aws/ec2",
-                  "old/aws/eks",
-                  "old/aws/ecs"
-                ]
-              },
-              "old/gcp",
-              "old/azure",
-              "old/digitalocean"
-            ]
-          },
-          {
-            "group": "Enterprise",
-            "pages": [
-              "old/enterprise/overview",
-              "old/enterprise/configuration",
-              "old/enterprise/theming",
-              "old/enterprise/custom_analytics",
-              "old/enterprise/permissioning",
-              {
-                "group": "Curator",
-                "pages": [
-                  "old/enterprise/curator/overview",
-                  "old/enterprise/curator/admin_examples",
-                  "old/enterprise/curator/curator_examples"
-                ]
-              }
-            ]
-          },
-          {
-            "group": "Actions",
-            "pages": [
-              "old/actions/overview",
-              "old/actions/custom"
-            ]
-          },
-          {
-            "group": "More",
-            "pages": [
-              {
-                "group": "Use Cases",
-                "pages": [
-                  "old/more/use_cases/overview",
-                  "old/more/use_cases/enterprise_search",
-                  "old/more/use_cases/ai_platform",
-                  "old/more/use_cases/support",
-                  "old/more/use_cases/sales",
-                  "old/more/use_cases/operations"
-                ]
-              },
-              "old/more/faq",
-              "old/more/telemetry",
-              "old/more/internet_search",
-              "old/more/options"
-            ]
-          },
-          {
-            "group": "Backend APIs",
-            "pages": [
-              "old/backend_apis/ingestion"
-            ]
-          },
-          {
-            "group": "Cloud APIs",
-            "pages": [
-              "old/apis/answer_with_quote",
-              "old/apis/send_message_simple_api"
-            ]
-          },
-          {
-            "group": "Miscellaneous",
-            "pages": [
-              "contact_us"
+              "security/contact_us"
             ]
           }
         ]
@@ -720,5 +514,11 @@
     "metatags": {
       "keywords": "danswer"
     }
-  }
+  },
+  "redirects": [
+    {
+      "source": "/developers/welcome",
+      "destination": "/developers/overview"
+    }
+  ]
 }

@@ -1,0 +1,193 @@
+---
+title: "Send a Message to Onyx"
+description: "Guide to send a message to Onyx"
+icon: "bolt"
+---
+
+<Tip>
+    Start with the simple API and move to the full flow when you need more control.
+</Tip>
+
+## Simple Flow
+*Send Message Simple API* is the quickest way to interact with Onyx programmatically. 
+
+This endpoint has fewer required parameters and responds with a minimal set of information such as the AI's answer and a list of the top documents.
+
+<Note>
+    You must specify either a `chat_session_id` or a `persona_id` in your request.
+</Note>
+
+```python Python expandable
+import requests
+
+API_BASE_URL = "https://cloud.onyx.app/api" # or your own domain
+API_KEY = "YOUR_KEY_HERE"
+
+headers = {
+    "Authorization": f"Bearer {API_KEY}",
+    "Content-Type": "application/json"
+}
+
+'''
+- To create a chat session, see the Full-featured Chat Flow guide below.
+- To find your persona_id, see the List Agents endpoint in the Agents API Reference.
+'''
+
+response = requests.post(
+    f"{API_BASE_URL}/chat/send-message-simple-api",
+    headers=headers,
+    json={
+        "message": "What is Onyx?",
+        "persona_id": "0" # The default Onyx Search Agent
+    }
+)
+
+answer = response.json()["answer"]
+chat_session_id = response.json()["chat_session_id"] # Save this to continue the conversation
+top_documents = [
+    {
+        "id": doc["document_id"], 
+        "title": doc["semantic_identifier"],
+        "link": doc["link"]
+    } for doc in response.json()["top_documents"]
+] # Parse important information from the results
+
+print(f"Answer: {answer}")
+print(f"Top Documents: {top_documents[:5]}") # Print top 5 documents
+```
+
+## Full-featured Chat Flow
+
+<Steps>
+    <Step title="Prepare your request">
+        ```python Python
+        import requests
+
+        API_BASE_URL = "https://cloud.onyx.app/api" # or your own domain
+        API_KEY = "YOUR_KEY_HERE"
+
+        headers = {
+            "Authorization": f"Bearer {API_KEY}",
+            "Content-Type": "application/json"
+        }
+        ```
+    </Step>
+    <Step title="Create a chat session">
+        ```python Python
+        session_response = requests.post(
+            f"{API_BASE_URL}/chat/create-chat-session",
+            headers=headers,
+            json={
+                "persona_id": 0, # The default Onyx Search Agent
+                "description": "Onyx API Guide Chat Session"
+            }
+        )
+
+        chat_session_id = session_response.json()["chat_session_id"]
+        ```
+    </Step>
+    <Step title="Send message">
+        ```python Python
+        message_response = requests.post(
+            f"{API_BASE_URL}/chat/send-message-simple-api",
+            headers=headers,
+            json={
+                "chat_session_id": chat_session_id,
+                "parent_message_id": None,
+                "message": "What is Onyx?",
+                "file_descriptors": []
+                "prompt_id": None,
+                "search_doc_ids": [],
+                "retrieval_options": {}
+            }
+        )
+        ```
+    </Step>
+    <Step title="Parse response">
+        ```python Python
+        answer = message_response.json()["answer"]
+        top_documents = [
+            {
+                "id": doc["document_id"], 
+                "title": doc["semantic_identifier"],
+                "link": doc["link"]
+            } for doc in message_response.json()["top_documents"]
+        ]
+        print(f"Answer: {answer}")
+        print(f"Top Documents: {top_documents[:5]}")
+        ```
+    </Step>
+</Steps>
+
+### Full Code
+```python Python expandable
+import requests
+
+API_BASE_URL = "https://cloud.onyx.app/api" # or your own domain
+API_KEY = "YOUR_KEY_HERE"
+
+headers = {
+    "Authorization": f"Bearer {API_KEY}",
+    "Content-Type": "application/json"
+}
+
+# Create a chat session
+session_response = requests.post(
+    f"{API_BASE_URL}/chat/create-chat-session",
+    headers=headers,
+    json={
+        "persona_id": 0, # The default Onyx Search Agent
+        "description": "Onyx API Guide Chat Session"
+    }
+)
+
+chat_session_id = session_response.json()["chat_session_id"]
+
+# Send message
+message_response = requests.post(
+    f"{API_BASE_URL}/chat/send-message-simple-api",
+    headers=headers,
+    json={
+        "chat_session_id": chat_session_id,
+        "parent_message_id": None,
+        "message": "What is Onyx?",
+        "file_descriptors": [],
+        "prompt_id": None,
+        "search_doc_ids": [],
+        "retrieval_options": {}
+    }
+)
+
+# Parse response
+answer = message_response.json()["answer"]
+top_documents = [
+    {
+        "id": doc["document_id"], 
+        "title": doc["semantic_identifier"],
+        "link": doc["link"]
+    } for doc in message_response.json()["top_documents"]
+]
+
+print(f"Answer: {answer}")
+print(f"Top Documents: {top_documents[:5]}")
+```
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="PLACEHOLDER" icon="comments" href="/developers/api_reference/chat/get_chat_session">
+    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+  </Card>
+  
+  <Card title="PLACEHOLDER" icon="circle" href="/developers/api_reference/chat/create_chat_session">
+    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+  </Card>
+  
+  <Card title="PLACEHOLDER" icon="paper-plane" href="/developers/api_reference/chat/send_message">
+    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+  </Card>
+  
+  <Card title="PLACEHOLDER" icon="robot" href="/developers/api_reference/agents/list_agents">
+    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+  </Card>
+</CardGroup>
