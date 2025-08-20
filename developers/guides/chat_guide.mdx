@@ -5,10 +5,10 @@ icon: "bolt"
 ---
 
 <Tip>
-    Start with the simple API and move to the full flow when you need more control.
+    Start with the simple API and move to the advanced flow when you need more control.
 </Tip>
 
-## Simple Flow
+## Simple Chat Flow
 *Send Message Simple API* is the quickest way to interact with Onyx programmatically. 
 
 This endpoint has fewer required parameters and responds with a minimal set of information such as the AI's answer and a list of the top documents.
@@ -60,11 +60,9 @@ print(f"Top Documents: {top_documents[:5]}") # Print top 5 documents
 ```bash cURL expandable
 #!/bin/bash
 
-# Configuration
 API_BASE_URL="https://cloud.onyx.app/api"
 API_KEY="YOUR_KEY_HERE"
 
-# Send message using simple API
 echo "Sending message to Onyx..."
 RESPONSE=$(curl -s -X POST "${API_BASE_URL}/chat/send-message-simple-api" \
   -H "Authorization: Bearer ${API_KEY}" \
@@ -74,7 +72,6 @@ RESPONSE=$(curl -s -X POST "${API_BASE_URL}/chat/send-message-simple-api" \
     "persona_id": "0"
   }')
 
-# Display results
 echo "Answer:"
 echo $RESPONSE | jq -r '.answer'
 
@@ -86,9 +83,9 @@ echo $RESPONSE | jq '.top_documents[] | {id: .document_id, title: .semantic_iden
 ```
 </CodeGroup>
 
-## Full-featured Chat Flow
+## Advanced Chat Flow
 
-[See full code below](#full-code)
+Skip to the [Full Code](#full-code) section if you don't want the step-by-step guide.
 
 <Steps>
     <Step title="Prepare your request">
@@ -106,7 +103,6 @@ echo $RESPONSE | jq '.top_documents[] | {id: .document_id, title: .semantic_iden
         ```
 
         ```bash cURL
-        # Set your API configuration
         API_BASE_URL="https://cloud.onyx.app/api"
         API_KEY="YOUR_KEY_HERE"
         ```
@@ -128,7 +124,6 @@ echo $RESPONSE | jq '.top_documents[] | {id: .document_id, title: .semantic_iden
         ```
 
         ```bash cURL
-        # Create a chat session
         CHAT_SESSION_RESPONSE=$(curl -s -X POST "${API_BASE_URL}/chat/create-chat-session" \
           -H "Authorization: Bearer ${API_KEY}" \
           -H "Content-Type: application/json" \
@@ -161,7 +156,6 @@ echo $RESPONSE | jq '.top_documents[] | {id: .document_id, title: .semantic_iden
         ```
 
         ```bash cURL
-        # Send a message to the chat session
         MESSAGE_RESPONSE=$(curl -s -X POST "${API_BASE_URL}/chat/send-message-simple-api" \
           -H "Authorization: Bearer ${API_KEY}" \
           -H "Content-Type: application/json" \
@@ -193,15 +187,12 @@ echo $RESPONSE | jq '.top_documents[] | {id: .document_id, title: .semantic_iden
         ```
 
         ```bash cURL
-        # Parse the response (basic extraction without advanced parsing)
         echo "Response received:"
         echo $MESSAGE_RESPONSE
 
-        # Extract answer using jq
         ANSWER=$(echo $MESSAGE_RESPONSE | jq -r '.answer')
         echo "Answer: $ANSWER"
 
-        # Show top documents (basic display)
         echo "Top Documents:"
         echo $MESSAGE_RESPONSE | jq '.top_documents[] | {id: .document_id, title: .semantic_identifier, link: .link}'
         ```
@@ -267,11 +258,9 @@ print(f"Top Documents: {top_documents[:5]}")
 ```bash cURL expandable
 #!/bin/bash
 
-# Configuration
 API_BASE_URL="https://cloud.onyx.app/api"
 API_KEY="YOUR_KEY_HERE"
 
-# Create a chat session
 echo "Creating chat session..."
 CHAT_SESSION_RESPONSE=$(curl -s -X POST "${API_BASE_URL}/chat/create-chat-session" \
   -H "Authorization: Bearer ${API_KEY}" \
@@ -281,11 +270,9 @@ CHAT_SESSION_RESPONSE=$(curl -s -X POST "${API_BASE_URL}/chat/create-chat-sessio
     "description": "Onyx API Guide Chat Session"
   }')
 
-# Extract chat session ID
 CHAT_SESSION_ID=$(echo $CHAT_SESSION_RESPONSE | jq -r '.chat_session_id')
 echo "Created chat session: $CHAT_SESSION_ID"
 
-# Send message
 echo "Sending message..."
 MESSAGE_RESPONSE=$(curl -s -X POST "${API_BASE_URL}/chat/send-message-simple-api" \
   -H "Authorization: Bearer ${API_KEY}" \
@@ -300,7 +287,6 @@ MESSAGE_RESPONSE=$(curl -s -X POST "${API_BASE_URL}/chat/send-message-simple-api
     \"retrieval_options\": {}
   }")
 
-# Display results
 echo "Answer:"
 echo $MESSAGE_RESPONSE | jq -r '.answer'
 

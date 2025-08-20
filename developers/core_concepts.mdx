@@ -4,11 +4,11 @@ description: "Essential concepts and terminology for working with Onyx APIs"
 icon: "lightbulb"
 ---
 
-## Actions
+## Actions & MCP
 <AccordionGroup>
   <Accordion title="Actions" icon="wrench">
-    Actions (also called Tools in the backend) are the functions that your Assistants can perform to interact with external systems and services. 
-    They extend your Assistants' capabilities beyond just the language model.
+    Actions (also called Tools in the backend) are the functions that your Agents can perform to interact with external systems and services. 
+    They extend your agents' capabilities beyond just the language model.
     
     Built-in Actions:
     - **Internal Search**: Search through your indexed knowledge base
@@ -28,14 +28,14 @@ icon: "lightbulb"
     You can define your own Custom Actions in the Admin Dashboard using an OpenAPI specification.
   </Accordion>
 
-  {/* <Accordion title="MCP" icon="handshake">
+  <Accordion title="MCP" icon="handshake">
     Model Context Protocol (MCP) is an open standard that enables AI assistants to securely access external data sources and tools.
     Onyx can be configured as an MCP client to interact with external systems, databases, and APIs in a controlled manner.
     
     Key features of MCP:
     - **External Data Access**: Connect to databases, APIs, and file systems
     - **Authentication**: Pass through OAuth to ensure secure access to your MCP server.
-  </Accordion> */}
+  </Accordion>
   <Accordion title="(Advanced) Custom Built-in Actions" icon="wrench">
     Sometimes, you need more control over your action than what is possible with a Custom Action. Since Onyx is open-source, you can extend the built-in actions to your liking!
 
@@ -48,28 +48,28 @@ icon: "lightbulb"
   </Accordion>
 </AccordionGroup>
 
-## Assistants
+## Agents
 <AccordionGroup>
-  <Accordion title="Assistants" icon="user">
-    Assistants are equipped with custom instructions, Actions, and data access that extend the base LLM's capabilities.
+  <Accordion title="Agents" icon="user">
+    Agents are AI assistants with custom instructions, Actions, and data access that extend the base LLM's capabilities.
     
     <Note>
-      The terms *Personas* and *Assistants* are used interchangeably throughout Onyx and refer to the same concept.
+      The terms *Personas*, *Assistants*, and *Agents* are used interchangeably throughout Onyx and refer to the same concept.
     </Note>
 
-    **Built-in Assistants:**
-    - `id: 0` Search Assistant - Uses the Search Tool to answer questions from your knowledge base
-    - `id: -1` General Assistant - Basic chat with no tools (basic chat with an LLM)
-    - `id: -2` Paraphrase Assistant - Uses Search Tool and quotes exact snippets from sources
-    - `id: -3` Art Assistant - Generates images and visual content
+    **Built-in Agents:**
+    - `id: 0` Search Agent - Uses the Search Tool to answer questions from your knowledge base
+    - `id: -1` General Agent - Basic chat with no tools (basic chat with an LLM)
+    - `id: -2` Paraphrase Agent - Uses Search Tool and quotes exact snippets from sources
+    - `id: -3` Art Agent - Generates images and visual content
 
-    You can create your own Assistants in the Admin Dashboard or by API.
+    You can create your own Agents in the Admin Dashboard or by API.
 
-    **Most Chat endpoints require an Assistant ID**
+    **Most Chat endpoints require an Agent ID**
 
-    To find your Assistant ID, you can:
+    To find your Agent ID, you can:
     - Use the `GET /persona` API endpoint to list all agents
-    - In the Admin Dashboard: Click into an assistant and check the first number in the URL
+    - In the Admin Dashboard: Click into an agent and check the first number in the URL
   </Accordion>
 </AccordionGroup>
 
@@ -312,11 +312,11 @@ icon: "lightbulb"
 
 ## Next Steps
 <CardGroup cols={2}>
-  <Card title="Guide: Index files with the Ingestion API" icon="lightbulb" href="/developers/guides/index_files_ingestion_api">
-    Learn how to index files with the Ingestion API
+  <Card title="Guide: Create a Connector with the API" icon="lightbulb" href="/developers/guides/create_connector_api">
+    Learn how to create a Connector through the API
   </Card>
-
-  <Card title="Guide: Send a Chat Message" icon="comment" href="/developers/guides/chat_guide">
-    Simple example of sending a message programmatically
+  
+  <Card title="Guide: Set up an MCP (Admin Dashboard)" icon="comment" href="/developers/guides/mcp_guide">
+    Learn how to set up an MCP server in the Admin Dashboard
   </Card>
 </CardGroup>
