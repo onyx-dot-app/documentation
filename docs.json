@@ -264,16 +264,16 @@
             "group": "Getting Started",
             "pages": [
               "developers/overview",
-              "developers/core_concepts",
-              {
-                "group": "Guides & Examples",
-                "icon": "book-open",
-                "pages": [
-                  "developers/guides/chat_guide",
-                  "developers/guides/index_files_ingestion_api",
-                  "developers/guides/create_connector"
-                ]
-              }
+              "developers/core_concepts"
+            ]
+          },
+          {
+            "group": "Guides & Examples",
+            "icon": "book-open",
+            "pages": [
+              "developers/guides/chat_guide",
+              "developers/guides/index_files_ingestion_api",
+              "developers/guides/create_connector"
             ]
           },
           {
