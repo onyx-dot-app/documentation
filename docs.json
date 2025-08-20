@@ -476,6 +476,9 @@
     "light": "/assets/logo/onyx_logo.svg",
     "dark": "/assets/logo/onyx_logo_inverted.svg"
   },
+  "customization": {
+    "css": "/style.css"
+  },
   "api": {
     "openapi": [
       "developers/api_reference/openapi.json"
