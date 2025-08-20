@@ -5222,7 +5222,7 @@
         "/manage/connector/{connector_id}/credential/{credential_id}": {
             "put": {
                 "summary": "Associate Credential To Connector",
-                "description": "NOTE(rkuo): internally discussed and the consensus is this endpoint\nand create_connector_with_mock_credential should be combined.\n\nThe intent of this endpoint is to handle connectors that actually need credentials.",
+                "description": "",
                 "operationId": "associate_credential_to_connector",
                 "security": [
                     {
@@ -21050,15 +21050,6 @@
                     }
                 },
                 "type": "object",
-                "required": [
-                    "credential_json",
-                    "admin_public",
-                    "source",
-                    "id",
-                    "user_id",
-                    "time_created",
-                    "time_updated"
-                ],
                 "title": "CredentialSnapshot"
             },
             "CredentialSwapRequest": {
@@ -28814,9 +28805,6 @@
                     }
                 },
                 "type": "object",
-                "required": [
-                    "success"
-                ],
                 "title": "StatusResponse[int]"
             },
             "StatusResponse_list_int__": {
@@ -29404,12 +29392,6 @@
                     }
                 },
                 "type": "object",
-                "required": [
-                    "token_id",
-                    "enabled",
-                    "token_budget",
-                    "period_hours"
-                ],
                 "title": "TokenRateLimitDisplay"
             },
             "ToolCallFinalResult": {

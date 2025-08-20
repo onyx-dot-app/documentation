@@ -261,7 +261,7 @@
         "tab": "Developers",
         "pages": [
           {
-            "group": "APIs",
+            "group": "Getting Started",
             "pages": [
               "developers/overview",
               "developers/core_concepts",
@@ -271,9 +271,7 @@
                 "pages": [
                   "developers/guides/chat_guide",
                   "developers/guides/index_files_ingestion_api",
-                  "developers/guides/create_connector",
-                  "developers/guides/files_connectors_example",
-                  "developers/guides/group_management_example"
+                  "developers/guides/create_connector"
                 ]
               }
             ]
@@ -328,8 +326,17 @@
                 ]
               },
               {
-                "group": "Files and Connectors",
+                "group": "Connectors",
                 "icon": "plug",
+                "pages": [
+                  "developers/api_reference/files_connectors/create_connector",
+                  "developers/api_reference/files_connectors/list_credentials",
+                  "developers/api_reference/files_connectors/associate_connector_credential"
+                ]
+              },
+              {
+                "group": "Documents & Ingestion",
+                "icon": "page",
                 "pages": [
                   "developers/api_reference/files_connectors/get_document_by_id",
                   "developers/api_reference/files_connectors/list_ingestion_documents",
@@ -389,6 +396,7 @@
           },
           {
             "group": "Contributing",
+            "hidden": true,
             "pages": [
               "developers/contributing/overview",
               "developers/contributing/dev_setup",

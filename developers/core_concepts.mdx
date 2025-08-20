@@ -1,0 +1,322 @@
+---
+title: "Core Concepts"
+description: "Essential concepts and terminology for working with Onyx APIs"
+icon: "lightbulb"
+---
+
+## Actions & MCP
+<AccordionGroup>
+  <Accordion title="Actions" icon="wrench">
+    Actions (also called Tools in the backend) are the functions that your Agents can perform to interact with external systems and services. 
+    They extend your agents' capabilities beyond just the language model.
+    
+    Built-in Actions:
+    - **Internal Search**: Search through your indexed knowledge base
+    - **Internet Search**: Search the web for real-time information
+    - **Art Generation**: Create images and visual content
+    - **Okta Profile**: Get user data from Okta
+    <Info>
+      SCIM support for common IdPs is coming soon!
+    </Info>
+    
+    Custom Actions:
+    - **API Integrations**: Connect to external REST APIs
+    - **Database Operations**: Query and update databases
+    - **Workflow Automation**: Trigger business processes
+    - **File Operations**: Read, write, and manipulate files
+    
+    You can define your own Custom Actions in the Admin Dashboard using an OpenAPI specification.
+  </Accordion>
+
+  <Accordion title="MCP" icon="handshake">
+    Model Context Protocol (MCP) is an open standard that enables AI assistants to securely access external data sources and tools.
+    Onyx can be configured as an MCP client to interact with external systems, databases, and APIs in a controlled manner.
+    
+    Key features of MCP:
+    - **External Data Access**: Connect to databases, APIs, and file systems
+    - **Authentication**: Pass through OAuth to ensure secure access to your MCP server.
+  </Accordion>
+  <Accordion title="(Advanced) Custom Built-in Actions" icon="wrench">
+    Sometimes, you need more control over your action than what is possible with a Custom Action. Since Onyx is open-source, you can extend the built-in actions to your liking!
+
+    To find templates for built-in actions, see `backend/onyx/tools/tool_implementations` in the [Onyx repository](https://github.com/onyx-dot-app/onyx).
+
+    <Warning>
+       Extending the codebase is not recommended for most users. 
+       Before you start, please reach out to us on [Slack](https://join.slack.com/t/onyx-dot-app/shared_invite/zt-34lu4m7xg-TsKGO6h8PDvR5W27zTdyhA) or [Discord](https://discord.gg/TDJ59cGV2X) for support!
+     </Warning>
+  </Accordion>
+</AccordionGroup>
+
+## Agents
+<AccordionGroup>
+  <Accordion title="Agents" icon="user">
+    Agents are AI assistants with custom instructions, Actions, and data access that extend the base LLM's capabilities.
+    
+    <Note>
+      The terms *Personas*, *Assistants*, and *Agents* are used interchangeably throughout Onyx and refer to the same concept.
+    </Note>
+
+    **Built-in Agents:**
+    - `id: 0` Search Agent - Uses the Search Tool to answer questions from your knowledge base
+    - `id: -1` General Agent - Basic chat with no tools (basic chat with an LLM)
+    - `id: -2` Paraphrase Agent - Uses Search Tool and quotes exact snippets from sources
+    - `id: -3` Art Agent - Generates images and visual content
+
+    You can create your own Agents in the Admin Dashboard or by API.
+
+    **Most Chat endpoints require an Agent ID**
+
+    To find your Agent ID, you can:
+    - Use the `GET /persona` API endpoint to list all agents
+    - In the Admin Dashboard: Click into an agent and check the first number in the URL
+  </Accordion>
+</AccordionGroup>
+
+## Connectors
+
+<Tip>
+  When you see the term *Connector* in Onyx or elsewhere in this documentation, we're generally referring to *ConnectorCredentialPairs*
+</Tip>
+
+<AccordionGroup>
+  <Accordion title="Connectors" icon="plug">
+    `Connectors` in Onyx define the data you would like to index
+    - `name`: Not actually displayed in the UI if `ConnectorCredentialPairMetadata:name` is set
+    - `source`: Which system to connect to (see `DocumentSource` accordion below)
+    - `input_type`: How the `Connector` retrieves data (see `InputType` accordion below)
+    - `connector_specific_config`: Source-specific settings like folder paths or channels. You will need to see [`/backend/onyx/connectors`](https://github.com/onyx-dot-app/onyx/tree/main/backend/onyx/connectors) for the expected Connector-specific Configurations.
+    - `refresh_freq`: How often to check for new or updated content in seconds
+    - `prune_freq`: How often to remove old content from Onyx in seconds
+    - `indexing_start`: Optional datetime to specify when indexing should begin
+
+    ```python Python
+    class ConnectorBase(BaseModel):
+        name: str
+        source: DocumentSource
+        input_type: InputType
+        connector_specific_config: dict[str, Any]
+        refresh_freq: int | None = None
+        prune_freq: int | None = None
+        indexing_start: datetime | None = None
+    ```
+  </Accordion>
+
+  <Accordion title="Credentials" icon="key">
+    `Credentials` contain the authentication details needed to access data sources. These include API keys, OAuth tokens, personal access tokens (PATs), or service account credentials that allow Onyx to securely connect to your external systems.
+    
+    Types of `Credentials`:
+    - **API Keys**: Simple token-based authentication
+    - **OAuth Tokens**: Delegated authorization with refresh capabilities  
+    - **Service Accounts**: Machine-to-machine authentication
+    - **Personal Access Tokens**: User-specific access credentials
+  </Accordion>
+
+  <Accordion title="ConnectorCredentialPairs" icon="link">
+    Behind the scenes, `Connectors` and `Credentials` are combined into a `ConnectorCredentialPair` (CC-pair). 
+    A CC-pair is an active connection that can sync data from your external sources into Onyx. CC-pairs are what you see and manage on the Admin `Connectors` page.
+    
+    CC-pair functionality:
+    - **Active Connections**: Live data synchronization between source and Onyx
+    - **Status Monitoring**: Track sync health and performance
+    - **Access Control**: Manage who can see data from this connection
+    - **Configuration Management**: Update sync settings and credentials
+
+    <Warning>
+      If you're creating `Connectors` through the API, you must associate them with a `Credential` (CC-pair) to make them active!
+    </Warning>
+  </Accordion>
+
+  <Accordion title="ConnectorCredentialPairMetadata" icon="gear">
+    `ConnectorCredentialPairMetadata` defines the configuration and access settings for a CC-pair.
+
+    Configuration options:
+    - `name`: Optional display name for the CC-pair (overrides the `Connector` name)
+    - `access_type`: Who can access data from this CC-pair (see `AccessType` accordion below)
+    - `auto_sync_options`: Optional configuration for automatic synchronization settings
+    - `groups`: List of group IDs that have access to this CC-pair
+
+    ```python Python
+    class ConnectorCredentialPairMetadata(BaseModel):
+        name: str | None = None
+        access_type: AccessType
+        auto_sync_options: dict[str, Any] | None = None
+        groups: list[int] = Field(default_factory=list)
+    ```
+  </Accordion>
+</AccordionGroup>
+
+## Documents
+
+<AccordionGroup>
+  <Accordion title="DocumentBase" icon="page">
+    `DocumentBase` is a core structure used throughout Onyx for storing and managing document data. Note that the embeddings are stored in Vespa separately.
+    - `id`: Unique identifier. Generated by Onyx if not provided
+    - `sections`: List of content sections (see `TextSection` and `ImageSection`)
+    - `source`: The system this document originated from (see `DocumentSource`)
+    - `semantic_identifier`: Displayed in the UI as the name of the Document
+    - `metadata`: Arbitrary `string` or `list[string]` that will be saved as tags for this Document
+    - `doc_updated_at`: UTC timestamp when the document was last updated
+    - `chunk_count`: Number of chunks the document is split into for processing
+    - `primary_owners`: Metadata about people associated with the Document
+    - `secondary_owners`: Metadata about people associated with the Document
+    - `title`: Used for search (defaults to `semantic_identifier` if not specified)
+    - `from_ingestion_api`: Whether this document came from the Ingestion API
+    - `additional_info`: Connector-specific information that other parts of the code may need
+    - `external_access`: Permission sync data (Enterprise Edition only)
+
+    <Note>
+      The Ingestion API extends the DocumentBase definition to include `cc_pair_id` to automatically associate a document with a CC-pair.
+    </Note>
+
+    ```python Python expandable
+    class DocumentBase(BaseModel):
+        """Used for Onyx ingestion api, the ID is inferred before use if not provided"""
+
+        id: str | None = None
+        sections: list[TextSection | ImageSection]
+        source: DocumentSource | None = None
+        semantic_identifier: str
+        metadata: dict[str, str | list[str]]
+
+        doc_updated_at: datetime | None = None
+        chunk_count: int | None = None
+
+        primary_owners: list[BasicExpertInfo] | None = None
+        secondary_owners: list[BasicExpertInfo] | None = None
+        title: str | None = None
+        from_ingestion_api: bool = False
+        additional_info: Any = None
+
+        external_access: ExternalAccess | None = None
+    ```
+  </Accordion>
+
+  <Accordion title="DocumentSource" icon="file">
+    `DocumentSource` is an enum that defines the valid sources for a document. 
+    Uploading files to the Ingestion API and creating `Connectors` programmatically require specifying a `DocumentSource`.
+
+    ```python Python expandable
+    class DocumentSource(str, Enum):
+      INGESTION_API = "ingestion_api"     # Special case, document passed in via Onyx APIs without specifying a source type
+      SLACK = "slack"
+      WEB = "web"
+      GOOGLE_DRIVE = "google_drive"
+      GMAIL = "gmail"
+      REQUESTTRACKER = "requesttracker"
+      GITHUB = "github"
+      GITBOOK = "gitbook"
+      GITLAB = "gitlab"
+      GURU = "guru"
+      BOOKSTACK = "bookstack"
+      CONFLUENCE = "confluence"
+      JIRA = "jira"
+      SLAB = "slab"
+      PRODUCTBOARD = "productboard"
+      FILE = "file"
+      NOTION = "notion"
+      ZULIP = "zulip"
+      LINEAR = "linear"
+      HUBSPOT = "hubspot"
+      DOCUMENT360 = "document360"
+      GONG = "gong"
+      GOOGLE_SITES = "google_sites"
+      ZENDESK = "zendesk"
+      LOOPIO = "loopio"
+      DROPBOX = "dropbox"
+      SHAREPOINT = "sharepoint"
+      TEAMS = "teams"
+      SALESFORCE = "salesforce"
+      DISCOURSE = "discourse"
+      AXERO = "axero"
+      CLICKUP = "clickup"
+      MEDIAWIKI = "mediawiki"
+      WIKIPEDIA = "wikipedia"
+      ASANA = "asana"
+      S3 = "s3"
+      R2 = "r2"
+      GOOGLE_CLOUD_STORAGE = "google_cloud_storage"
+      OCI_STORAGE = "oci_storage"
+      XENFORO = "xenforo"
+      NOT_APPLICABLE = "not_applicable"
+      DISCORD = "discord"
+      FRESHDESK = "freshdesk"
+      FIREFLIES = "fireflies"
+      EGNYTE = "egnyte"
+      AIRTABLE = "airtable"
+      HIGHSPOT = "highspot"
+
+      IMAP = "imap"
+
+      # Special case just for integration tests
+      MOCK_CONNECTOR = "mock_connector"
+    ```
+  </Accordion>
+
+  <Accordion title="TextSection" icon="text">
+    `TextSection` is a portion of a Document in Onyx.
+    - `text`: The actual text content of the section
+    - `link`: Optional URL that this text section relates to or was sourced from
+
+    ```python Python
+    class TextSection(Section):
+        text: str
+        link: str | None = None
+    ```
+  </Accordion>
+
+  <Accordion title="ImageSection" icon="image">
+    `ImageSection` is an image extracted from a Document in Onyx.
+    - `image_file_id`: UUID of the image file stored in Onyx's file store
+    - `text`: Optional text description or caption for the image
+    - `link`: Optional URL that this image section relates to or was sourced from
+
+    ```python Python
+    class ImageSection(Section):
+        image_file_id: str
+        text: str | None = None
+        link: str | None = None
+    ```
+  </Accordion>
+
+  <Accordion title="AccessType" icon="shield">
+    `AccessType` defines who can access data from a `Connector` in Onyx.
+    - `PUBLIC`: All Onyx users may access data from this `Connector`
+    - `PRIVATE`: Only the user who created the `Connector` and specified Groups may access data from this `Connector`  
+    - `SYNC`: Only `Connectors` with permission-sync support can be set to SYNC. The `Connector` will sync access permissions with the source system.
+
+    ```python Python
+    class AccessType(str, Enum):
+      PUBLIC = "public"
+      PRIVATE = "private"
+      SYNC = "sync"
+    ```
+  </Accordion>
+
+  <Accordion title="InputType" icon="gear">
+    `InputType` defines how a `Connector` retrieves data from its source system.
+    - `LOAD_STATE`: Single load of data from the source
+    - `POLL`: Continuous polling for new data from the source (starts with a full load)
+    - `EVENT`: Not implemented for most `Connectors`
+    - `SLIM_RETRIEVAL`: For permission-syncing `Connectors`
+
+    ```python Python 
+    class InputType(str, Enum):
+      LOAD_STATE = "load_state"
+      POLL = "poll"
+      EVENT = "event"
+      SLIM_RETRIEVAL = "slim_retrieval"
+    ```
+  </Accordion>
+</AccordionGroup>
+
+## Next Steps
+<CardGroup cols={2}>
+  <Card title="Guide: Create a Connector with the API" icon="lightbulb" href="/developers/guides/create_connector_api">
+    Learn how to create a Connector through the API
+  </Card>
+  
+  <Card title="Guide: Set up an MCP (Admin Dashboard)" icon="comment" href="/developers/guides/mcp_guide">
+    Learn how to set up an MCP server in the Admin Dashboard
+  </Card>
+</CardGroup>
