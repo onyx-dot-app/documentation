@@ -41,11 +41,9 @@ In this example, we'll automate creating Jira Connectors for a selection of proj
   </Step>
 
   <Step title="Prepare your ConnectorSpecificConfig">
-    Each Connector type has a different `ConnectorSpecificConfig`.
+    Each Connector type has a different `ConnectorSpecificConfig` that is used to initialize the specific Connector class.
     To find the correct configuration, find your relevant Connector in [`backend/onyx/connectors/`](https://github.com/onyx-dot-app/onyx/tree/main/backend/onyx/connectors).
 
-    The `ConnectorSpecificConfig` initializes the specific Connector class. In this case, `batch_size` and `labels_to_skip` are read from environment variables, so we don't include them in the request.
-    
     For Jira, since we're indexing a selection of projects, rather than all projects, we'll need to specify `jira_base_url`, `project_key`, and optionally `comment_email_blacklist`.
 
     ```json JSON
