@@ -4,6 +4,8 @@ description: "Overview of Onyx's Chat interface"
 icon: "comment"
 ---
 
+import AgentsPersonasAssistantsNote from '/snippets/agents-personas-assistants-note.mdx';
+
 <img className="rounded-image" src="/assets/overview/core_features/chat_ui_2.png" alt="Onyx Chat Interface" />
 
 The Chat interface is a conversational experience with your AI agents. 
@@ -36,66 +38,32 @@ You'll see this if you send a natural language message to Onyx!
 
         <img className="rounded-image" src="/assets/overview/core_features/follow_up.png" alt="Onyx Chat Interface" />
     </Step>
-    <Step title="After sending your message, your conversation will be saved in the Recents list" icon="pen-to-square">
+    <Step title="After sending your message" icon="pen-to-square">
+        Your conversation will be saved in the History list of the Side Panel.
+        
+        <Info>
+            Your admin may set a retention policy for your History that will automatically delete old conversations.
+        </Info>
         <img className="rounded-image" src="/assets/overview/core_features/side_panel_rectangle.png" alt="Onyx Unified Interface Side Panel" />
     </Step>
 </Steps>
 
 ## Configure your Chat Session
 
-You have a variety of options to configure Onyx's AI response.
+<img className="rounded-image" src="/assets/overview/core_features/chat_options.png" alt="Onyx Chat Input Bar" />
 
-### Use Custom Agents
+### Selecting an Agent
+In the Side Panel, you will find the Agents available in your Onyx deployment. Onyx comes with 3 default Agents:
+- **Search**: This Agent is equipped with the Search Action. This means it can consult your organization's data sources to answer your question.
+- **General**: This Agent does not come equipped with any Actions. Use this to just chat with an LLM.
+- **Art**: This Agent is equipped with the Art Action, which allows you to generate images using your organization's Vision model.
 
-### Chat with your d
+<AgentsPersonasAssistantsNote />
 
-## Best Practices
+### Choose your Model
 
-### Writing Effective Prompts
-- **Be specific**: Instead of "Help with sales," ask "What are the key benefits of our Enterprise plan?"
-- **Provide context**: "I'm preparing for a client meeting about cloud security"
-- **Ask follow-ups**: "Can you give me three examples of that?"
+### Thoughtful Responses
 
-### Using Sources
-- Click on source citations to see original documents
-- Verify important information by checking sources
-- Use sources to find related information
-- Share sources with colleagues
+### Filters
 
-### Managing Conversations
-- Use descriptive titles for important conversations
-- Save useful conversations for future reference
-- Delete outdated or irrelevant chats
-- Organize conversations by project or topic
-
-## Keyboard Shortcuts
-
-- **Enter**: Send message
-- **Shift + Enter**: New line without sending
-- **Up Arrow**: Edit last message
-- **Ctrl/Cmd + K**: Quick agent switch
-- **Ctrl/Cmd + /**: Show all shortcuts
-
-## Troubleshooting
-
-### Common Issues
-- **Agent not responding**: Check your internet connection and try refreshing
-- **Inaccurate answers**: Try rephrasing your question or checking sources
-- **Missing information**: The agent might not have access to that data source
-- **Slow responses**: Large files or complex queries may take longer
-
-### Getting Better Results
-- Use specific terminology from your organization
-- Reference document names or sources when relevant
-- Break complex questions into smaller parts
-- Experiment with different agents for specialized topics
-
-## Tips for Success
-
-1. **Start simple**: Begin with straightforward questions to understand agent capabilities
-2. **Explore agents**: Try different specialized agents for various topics
-3. **Use citations**: Always check sources for important decisions
-4. **Provide feedback**: Use thumbs up/down to help improve responses
-5. **Be patient**: Complex queries may require follow-up questions for best results
-
-The Chat interface is designed to be intuitive and powerful, helping you access information and complete tasks more efficiently through natural conversation with AI agents.
+### Chat with your Docs

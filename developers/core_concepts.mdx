@@ -4,6 +4,8 @@ description: "Essential concepts and terminology for working with Onyx APIs"
 icon: "lightbulb"
 ---
 
+import AgentsPersonasAssistantsNote from '/snippets/agents-personas-assistants-note.mdx';
+
 ## Actions & MCP
 <AccordionGroup>
   <Accordion title="Actions" icon="wrench">
@@ -53,9 +55,7 @@ icon: "lightbulb"
   <Accordion title="Agents" icon="user">
     Agents are AI assistants with custom instructions, Actions, and data access that extend the base LLM's capabilities.
     
-    <Note>
-      The terms *Personas*, *Assistants*, and *Agents* are used interchangeably throughout Onyx and refer to the same concept.
-    </Note>
+    <AgentsPersonasAssistantsNote />
 
     **Built-in Agents:**
     - `id: 0` Search Agent - Uses the Search Tool to answer questions from your knowledge base
