@@ -390,7 +390,7 @@
   },
   "api": {
     "openapi": [
-      "apis/openapi.json"
+      "developers/openapi.json"
     ]
   },
   "navbar": {
