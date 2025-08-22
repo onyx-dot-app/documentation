@@ -60,9 +60,10 @@
           {
             "group": "Getting Started",
             "pages": [
+              "deployment/overview",
               "deployment/getting_started/quickstart",
               "deployment/getting_started/resourcing",
-              "deployment/getting_started/system_overview",
+              "deployment/getting_started/system_architecture",
               "deployment/hosting_options/hosting_options"
             ]
           },
