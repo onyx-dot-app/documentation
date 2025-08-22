@@ -197,12 +197,6 @@
             ]
           },
           {
-            "group": "Backend APIs",
-            "pages": [
-              "backend_apis/ingestion"
-            ]
-          },
-          {
             "group": "More",
             "pages": [
               {
