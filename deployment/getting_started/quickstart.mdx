@@ -4,6 +4,8 @@ description: "Deploy Onyx quickly with Docker"
 icon: "bolt"
 ---
 
+Make sure to checkout our [Resourcing guide](/deployment/getting_started/resourcing)
+
 ## Onyx CLI
 
 <Tip>
@@ -11,7 +13,7 @@ icon: "bolt"
 </Tip>
 
 The Onyx CLI is a lightweight tool that checks your system for requirements and then deploys Onyx. 
-By default, the tool launches images from our Docker Hub, but it can be configured to build from source.
+By default, the tool uses images from our Docker Hub, but it can be configured to build from source.
 
 **This tool should not be used for production deployments at this time.**
 
@@ -29,18 +31,18 @@ By default, the tool launches images from our Docker Hub, but it can be configur
               If you create a virtual environment, you'll need to activate it before running `onyx` CLI commands.
             </Note>
           
-            ```bash Terminal
+            ```bash
             python3.11 -m venv ~/.onyx-venv   # create virtual environment
             source ~/.onyx-venv/bin/activate  # activate virtual environment
             ```
         </Accordion>
-        ```bash Terminal
+        ```bash
         pip install onyx-dot-app
         # or pip3 install onyx-dot-app
         ```
         <Accordion title="Useful Onyx CLI Commands">
           None exhaustive:
-            ```bash Terminal
+            ```bash
             onyx help     # see all commands
             onyx doctor   # pre-flight check system requirements
             onyx up       # start Onyx Docker stack
@@ -51,23 +53,23 @@ By default, the tool launches images from our Docker Hub, but it can be configur
     </Step>
     <Step title="Check System Requirements">
         If you see any errors or warnings, please double check the system requirements and the [Resourcing guide](/deployment/getting_started/resourcing).
-        ```bash Terminal
+        ```bash
         onyx doctor
         ```
     </Step>
     <Step title="Launch Onyx">
-        ```bash Terminal
+        ```bash
         onyx up
         ```
         <Accordion title="Notes about this command">
           See [Onyx CLI README] LINK HERE for more details.
           - This command will launch `onyx-stack` using Docker Compose
           - Without any additional arguments, this command will:
-            - Create an `~/.onyx/onyx` directory
-            - Place deployment files in `~/.onyx/onyx/deployment/`
+            - Create an `~/onyx-dot-app/onyx` directory
+            - Place deployment files in `~/onyx-dot-app/onyx/deployment/`
             - Pull images from Docker Hub using:
               - `docker compose -f docker-compose.dev.yml -p onyx-stack up -d --pull always --force-recreate`
-          - You may add a .env file to the `~/.onyx/onyx/deployment/docker_compose/` directory to add or override environment variables
+          - You may add a .env file to the `~/onyx-dot-app/onyx/deployment/docker_compose/` directory to add or override environment variables
           - You may direct the command to use an existing `onyx` directory by passing the `--source` flag
         </Accordion>
     </Step>
@@ -87,23 +89,23 @@ The standard method to launch Onyx is using Docker Compose.
     - [Docker Compose](https://docs.docker.com/compose/install/)
   </Step>
   <Step title="Clone the Onyx repo">
-    ```bash Terminal
+    ```bash
     git clone https://github.com/onyx-dot-app/onyx.git
     ```
   </Step>
   <Step title="Navigate to the compose files">
-    ```bash Terminal
+    ```bash
     cd onyx/deployment/docker_compose
     ```
   </Step>
   <Step title="Launch Onyx">
     To pull images from Docker Hub:
-    ```bash Terminal
+    ```bash
     docker compose -f docker-compose.dev.yml -p onyx-stack up -d --pull always --force-recreate
     ```
 
     To build images from source:
-    ```bash Terminal
+    ```bash
     docker compose -f docker-compose.dev.yml -p onyx-stack up -d --build --force-recreate
     ```
     <Accordion title="Notes about this command">
@@ -115,6 +117,20 @@ The standard method to launch Onyx is using Docker Compose.
 
 ## Deploy with Kubernetes
 
-```bash
-git clone https://github.com/onyx-dot-app/onyx.git
-```
+<Steps>
+  <Step title="Add the Onyx Helm repository">
+    ```bash
+    helm repo add onyx https://onyx-dot-app.github.io/onyx/
+    ```
+  </Step>
+  <Step title="Update your Helm repos">
+    ```bash
+    helm repo update
+    ```
+  </Step>
+  <Step title="Verify the repository">
+    ```bash
+    helm search repo onyx   # lists Onyx charts if repo is added
+    ```
+  </Step>
+</Steps>
