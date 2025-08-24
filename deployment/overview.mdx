@@ -4,6 +4,8 @@ description: "An overview of deploying Onyx"
 icon: "server"
 ---
 
+import ResourcingOverview from "/snippets/resourcing-overview.mdx"
+
 ## Hosting Options
 <CardGroup cols={1}>
     <Card title="Self-Hosted Open Source" icon="code" href="#quickstart">
@@ -49,14 +51,7 @@ icon: "server"
     </Card>
 </CardGroup>
 
-## Resourcing Overview
-When running Onyx locally, we recommend:
-
-| Resource | Minimum | Preferred |
-| --- | --- | --- |
-| CPU | 4 vCPU | 8+ vCPU |
-| RAM | 10 GB | 16+ GB |
-| Disk | 50 GB + ~2.5x indexed data | As much as possible to stay under 75% usage |
+<ResourcingOverview />
 
 Our [Resourcing guide](/deployment/getting_started/resourcing) covers Cloud services, resourcing by container, and how to scale your Onyx deployment.
 

@@ -23,7 +23,7 @@ By default, the tool uses images from our Docker Hub, but it can be configured t
         - [Docker](https://docs.docker.com/get-docker/)
         - [Docker Compose](https://docs.docker.com/compose/install/)
     </Step>
-    <Step title="Install Onyx CLI">
+    <Step title="Install Onyx CLI and Check System Requirements">
         The Onyx CLI is installed via pip and is automatically kept up to date.
         <Accordion title="Optional: Create a virtual environment">
             A virtual Python environment is useful for isolating dependencies and avoiding conflicts with other projects.
@@ -36,10 +36,15 @@ By default, the tool uses images from our Docker Hub, but it can be configured t
             source ~/.onyx-venv/bin/activate  # activate virtual environment
             ```
         </Accordion>
+      
         ```bash
         pip install onyx-dot-app
         # or pip3 install onyx-dot-app
+        onyx doctor
         ```
+        
+        If you see any errors or warnings, please double check the system requirements and the [Resourcing guide](/deployment/getting_started/resourcing).
+
         <Accordion title="Useful Onyx CLI Commands">
           None exhaustive:
             ```bash
@@ -50,12 +55,6 @@ By default, the tool uses images from our Docker Hub, but it can be configured t
             onyx clone    # clone the Onyx repo
             ```
         </Accordion>
-    </Step>
-    <Step title="Check System Requirements">
-        If you see any errors or warnings, please double check the system requirements and the [Resourcing guide](/deployment/getting_started/resourcing).
-        ```bash
-        onyx doctor
-        ```
     </Step>
     <Step title="Launch Onyx">
         ```bash
@@ -115,22 +114,52 @@ The standard method to launch Onyx is using Docker Compose.
   </Step>
 </Steps>
 
-## Deploy with Kubernetes
+## Deploy with Kubernetes Helm Charts
 
-<Steps>
-  <Step title="Add the Onyx Helm repository">
-    ```bash
-    helm repo add onyx https://onyx-dot-app.github.io/onyx/
-    ```
-  </Step>
-  <Step title="Update your Helm repos">
-    ```bash
+<Tip> If you already run a Kubernetes cluster and want to manage Onyx alongside your other workloads.</Tip>
+
+The Onyx Helm chart packages all the required services (API, web, PostgreSQL, Vespa, etc.) into a single deployment. By default, persistent volumes will be created for stateful services (e.g. PostgreSQL, Vespa).
+
+<Steps> 
+  <Step title="Add the Onyx Helm repository"> 
+    ```bash 
+    helm repo add onyx https://onyx-dot-app.github.io/onyx/ 
     helm repo update
+    helm search repo onyx
     ```
-  </Step>
-  <Step title="Verify the repository">
-    ```bash
-    helm search repo onyx   # lists Onyx charts if repo is added
-    ```
-  </Step>
+  </Step> 
+
+  <Step title="Install Onyx"> 
+    Install into its own namespace (recommended): 
+  
+    ```bash 
+    kubectl create namespace onyx 
+    helm install onyx onyx/onyx -n onyx 
+    ``` 
+    
+    This will pull the latest Onyx chart and deploy all dependencies. 
+  </Step> 
+
+  <Step title="Verify the installation"> 
+
+    ```bash 
+    helm list -n onyx 
+    kubectl get pods -n onyx 
+    ``` 
+
+    Wait until all pods are in a `Running` state before accessing Onyx. 
+  </Step> 
+
+  <Step title="Access Onyx"> 
+    By default, the chart exposes Onyx via a Kubernetes Service. For local testing, you can port-forward: 
+  
+    ```bash 
+    kubectl -n onyx port-forward service/onyx-nginx 8080:80 
+    ``` 
+
+    Then open [http://localhost:8080](http://localhost:8080). 
+
+  </Step> 
 </Steps>
+
+See the [Helm chart README](https://github.com/onyx-dot-app/onyx/tree/main/charts/onyx) for advanced options such as running as non-root and testing with Kind.
