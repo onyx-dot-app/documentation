@@ -4,40 +4,95 @@ description: "Resource requirements for deploying Onyx"
 icon: "desktop"
 ---
 
-## Running Locally
+import ResourcingOverview from "/snippets/resourcing-overview.mdx"
 
-When running locally through Docker, we recommend making at least 4vCPU cores and 10GB of RAM available to Docker (16GB is preferred). This can be controlled in the **Resources** section of the Docker Desktop settings menu.
+<ResourcingOverview />
 
-## Single Cloud Instance
+## Local Deployment (Docker)
 
-For small-mid scale deployments, we generally recommend setting everything up on a single instance (e.g. an AWS EC2 instance, a Google Compute Engine instance, an Azure VM, etc.) via Docker Compose as it's the simplest way to get started.
+You can control the resources available to Docker in the **Resources** section of the Docker Desktop settings menu.
 
-For most use cases a single reasonably sized instance should be more than enough to guarantee excellent performance. A single instance should be able to effectively serve a small-medium sized organization without issue.
+## Cloud Providers (AWS, GCP, Azure, etc.)
 
-If you go with this approach, we recommend:
+For small to mid scale deployments, we recommend deploying Onyx to a single instance in your cloud provider of choice.
 
-- **CPU:** >= 4 vCPU cores (we recommend >=8 vCPU cores if possible, this scales with the number of documents you index)
-- **Memory:** >= 16 GB of RAM (this also scales with the number of documents you index)
-- **Disk:** >= 50 GB + ~2.5x the size of the indexed documents. Disk is generally very cheap, so we would recommend getting extra disk beyond this recommendation to be safe.
-  - Note: Vespa does not allow writes when disk usage is >75%, so make sure to always have some headroom here
-  - Note: old, unused docker images often take up a bunch of space when performing frequent upgrades of Onyx.
-  - Note: Vespa, used by Onyx for document indexing, requires Haswell (2013) or later CPUs. For older CPUs, use the `vespaengine/vespa-generic-intel-x86_64` image in your `docker-compose.yml`. This generic image is slower but ensures compatibility. For details, see [Vespa CPU Support](https://docs.vespa.ai/en/cpu-support.html).
+<Tip> 
+  For most use cases a single reasonably sized instance is enough for excellent performance!
+</Tip>
 
-To clean up unused images, run: `docker system prune --all`.
+When evaluating your instance, follow the Preferred resources in the table above. 
 
-## Kubernetes / AWS ECS
+| Provider | Recommended Instance Type |
+| --- | --- |
+| AWS | `m7g.xlarge` |
+| GCP | `e2-standard-4` or `e2-standard-8` |
+| Azure | `D4s_v3` |
+| DigitalOcean | Meet the preferred resources in the table above |
 
-If you prefer to give each component its own dedicated resources for more efficient scaling, we recommend giving each container access to at least the following resources:
+## Container-Specific Resourcing
 
-- **api_server** - 1 CPU, 2Gi Memory
-- **background** - 2 CPU, 8Gi Memory  
-- **indexing_model_server** / **inference_model_server** - 2 CPU, 4Gi Memory
-- **postgres** - 2 CPU, 2Gi Memory
-- **vespa** - >=4 CPU, >= 8Gi Memory. This is the bare minimum for a production deployment, and we would generally recommend higher than this. The resources required here also scales linearly with the number of documents indexed.
-- **nginx** - 250m CPU, 128Mi Memory
+For more efficient scaling, you can dedicate resources to each Onyx container using Kubernetes or AWS ECS.
 
-All together, this comes out to a total available node size of at least 14 vCPU and 23GB of Memory.
+See the [Onyx Helm chart](https://github.com/onyx-dot-app/onyx/blob/main/deployment/helm/charts/onyx/values.yaml) `values.yaml` for our default requests and limits.
+
+| Component | CPU | Memory |
+| --- | --- | --- |
+| `api_server` | 1 | 2 Gi |
+| `background` | 2 | 8 Gi |
+| `indexing_model_server` | 2 | 4 Gi |
+| `inference_model_server` | 2 | 4 Gi |
+| `postgres` | 2 | 2 Gi |
+| `vespa` | >= 4 | >= 8 Gi |
+| `nginx` | 250m (1/4) | 128 Mi |
+
+<Info>
+  The `vespa` recommendation is the bare minimum for a production deployment. 
+  With 50GB of documents, we recommend at least 10 CPU, 20Gi Memory.
+</Info>
+
+All together, this comes out to a total available node size of at least ~14 CPU and ~30GB of Memory.
 
 ## How Resource Requirements Scale
 
-The primary driver of resource requirements is the size of the indexed documents. This primarily affects the `index` component of Onyx (a [Vespa](https://vespa.ai/) vector database), which is responsible for storing the vectorized documents. 
+The main driver of resource requirements is the number of indexed documents. 
+This primarily affects the index component of Onyx (a [Vespa](https://vespa.ai/) vector database), which is responsible for storing the vectorized documents and handling search requests. 
+
+<Note>
+  Vespa's resource requirements scale linearly with the document count.
+</Note>
+
+Based on our experience with large scale deployments, in addition to the previously mentioned minimums, Vespa needs:
+- ~3GB of memory for each additional 1GB of documents
+- ~1 CPU for each additional 2GB of documents
+
+These are our rough estimates. Other factors that may affect resource requirements include:
+- The embedding model
+- Whether you have quantization and dimensional reduction enabled
+
+### Resourcing Example
+For a deployment with 10GB of text content, your `index` component will need:
+- CPU: 4 + 10 * 0.5 = 9 cores
+- Memory: 4 + 10 * 3 = 34GB
+
+If deploying in a single instance, this would be *in addition to* the base requirements.
+Overall, that would take us to >= 13 CPU and >= 50GB of memory. 
+
+Given these requirements, a `m7g.4xlarge` or a `c5.9xlarge` EC2 instance would be appropriate.
+
+If deploying with Kubernetes or AWS ECS, this would give a per-component resource allocation of:
+
+| Component | CPU | Memory |
+| --- | --- | --- |
+| `api_server` | 1 | 2 Gi |
+| `background` | 2 | 8 Gi |
+| `indexing_model_server` | 2 | 4 Gi |
+| `inference_model_server` | 2 | 4 Gi |
+| `postgres` | 2 | 4 Gi |
+| `vespa` | 10 | 34 Gi |
+
+This comes out to a total available node size of ~20 CPU and ~60GB of Memory.
+
+## Additional Notes
+- Old, unused Docker images take up sizeable disk space. To clean up unused images, run `docker system prune --all`.
+- Vespa requires Haswell (2013) or later CPUs. For older CPUs, use the `vespaengine/vespa-generic-intel-x86_64` image in your `docker-compose.yml`. 
+  This generic image is slower but compatible. For  more details, see [Vespa CPU Support](https://docs.vespa.ai/en/cpu-support.html).
