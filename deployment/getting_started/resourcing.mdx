@@ -12,7 +12,9 @@ import ResourcingOverview from "/snippets/resourcing-overview.mdx"
 
 You can control the resources available to Docker in the **Resources** section of the Docker Desktop settings menu.
 
-## Cloud Providers (AWS, GCP, Azure, etc.)
+Old, unused Docker images take up sizeable disk space. To clean up unused images, run `docker system prune --all`.
+
+## Cloud Providers (AWS, GCP, etc.)
 
 For small to mid scale deployments, we recommend deploying Onyx to a single instance in your cloud provider of choice.
 
@@ -28,6 +30,11 @@ When evaluating your instance, follow the Preferred resources in the table above
 | GCP | `e2-standard-4` or `e2-standard-8` |
 | Azure | `D4s_v3` |
 | DigitalOcean | Meet the preferred resources in the table above |
+
+<Accordion title="Vespa on older CPUs">
+  Vespa requires Haswell (2013) or later CPUs. For older CPUs, use the `vespaengine/vespa-generic-intel-x86_64` image in your `docker-compose.yml`. 
+  This generic image is slower but compatible. For  more details, see [Vespa CPU Support](https://docs.vespa.ai/en/cpu-support.html).
+</Accordion>
 
 ## Container-Specific Resourcing
 
@@ -92,7 +99,12 @@ If deploying with Kubernetes or AWS ECS, this would give a per-component resourc
 
 This comes out to a total available node size of ~20 CPU and ~60GB of Memory.
 
-## Additional Notes
-- Old, unused Docker images take up sizeable disk space. To clean up unused images, run `docker system prune --all`.
-- Vespa requires Haswell (2013) or later CPUs. For older CPUs, use the `vespaengine/vespa-generic-intel-x86_64` image in your `docker-compose.yml`. 
-  This generic image is slower but compatible. For  more details, see [Vespa CPU Support](https://docs.vespa.ai/en/cpu-support.html).
+## Next Steps
+<CardGroup cols={2}>
+  <Card title="Configure your Deployment" icon="microchip" href="/deployment/getting_started/configuration"> 
+    Learn about how to configure Onyx using environment variables.
+  </Card>
+  <Card title="Guide: Deploy on AWS" icon="microchip" href="/deployment/deployment_guides/aws/ec2"> 
+    Deploy Onyx on AWS using EC2.
+  </Card>
+</CardGroup>
