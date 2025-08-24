@@ -62,8 +62,7 @@
             "pages": [
               "deployment/overview",
               "deployment/getting_started/quickstart",
-              "deployment/getting_started/resourcing",
-              "deployment/getting_started/system_architecture"
+              "deployment/getting_started/resourcing"
             ]
           },
           {
@@ -420,6 +419,7 @@
           {
             "group": "Architecture",
             "pages": [
+              "deployment/getting_started/system_architecture",
               "security/architecture/system_description",
               "security/architecture/data_flows",
               "security/architecture/data_storage",

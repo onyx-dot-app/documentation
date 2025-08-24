@@ -4,7 +4,11 @@ description: "Deploy Onyx quickly with Docker"
 icon: "bolt"
 ---
 
-Make sure to checkout our [Resourcing guide](/deployment/getting_started/resourcing)
+import ResourcingOverview from "/snippets/resourcing-overview.mdx"
+
+<ResourcingOverview />
+
+For more details, our [Resourcing guide](/deployment/getting_started/resourcing) covers selecting Cloud instances, resourcing by container, and how to scale your Onyx deployment.
 
 ## Onyx CLI
 
@@ -68,9 +72,23 @@ By default, the tool uses images from our Docker Hub, but it can be configured t
             - Place deployment files in `~/onyx-dot-app/onyx/deployment/`
             - Pull images from Docker Hub using:
               - `docker compose -f docker-compose.dev.yml -p onyx-stack up -d --pull always --force-recreate`
-          - You may add a .env file to the `~/onyx-dot-app/onyx/deployment/docker_compose/` directory to add or override environment variables
+          - Copy the `.env.template` file in `~/onyx-dot-app/onyx/deployment/docker_compose/` to `.env` to configure your deployment
           - You may direct the command to use an existing `onyx` directory by passing the `--source` flag
         </Accordion>
+    </Step>
+    <Step title="Configure your Deployment">
+      Configure your deployment using a `.env` file.
+      ```bash
+      cd ~/onyx-dot-app/onyx/deployment/docker_compose
+      cp .env.template .env
+      ```
+
+      You'll need to restart Onyx after changing any `.env` variables.
+      ```bash
+      onyx down
+      onyx up
+      ```
+      Read more about [configuration](/deployment/configuration/env_vars).
     </Step>
 </Steps>
 
@@ -107,10 +125,21 @@ The standard method to launch Onyx is using Docker Compose.
     ```bash
     docker compose -f docker-compose.dev.yml -p onyx-stack up -d --build --force-recreate
     ```
-    <Accordion title="Notes about this command">
-      - These commands will launch `onyx-stack`
-      - These commands are also used to redeploy Onyx if any .env variables are changed
-    </Accordion>
+  </Step>
+  <Step title="Configure your Deployment">
+    Configure your deployment using a `.env` file.
+    ```bash
+    cd ~/onyx-dot-app/onyx/deployment/docker_compose
+    cp .env.template .env
+    ```
+
+    You'll need to restart Onyx after changing any `.env` variables.
+    ```bash
+    docker compose -f docker-compose.dev.yml -p onyx-stack down
+    docker compose -f docker-compose.dev.yml -p onyx-stack up -d --pull always --force-recreate
+    ```
+
+    Read more about [configuration](/deployment/configuration/env_vars).
   </Step>
 </Steps>
 
@@ -163,3 +192,13 @@ The Onyx Helm chart packages all the required services (API, web, PostgreSQL, Ve
 </Steps>
 
 See the [Helm chart README](https://github.com/onyx-dot-app/onyx/tree/main/charts/onyx) for advanced options such as running as non-root and testing with Kind.
+
+## Next Steps
+<CardGroup cols={2}>
+  <Card title="Learn about Resourcing" icon="microchip" href="/deployment/getting_started/resourcing"> 
+    Learn about Cloud instances, resourcing by container, and how to scale your Onyx deployment.
+  </Card>
+  <Card title="Configure your Deployment" icon="microchip" href="/deployment/getting_started/configuration"> 
+    Learn about how to configure Onyx using environment variables.
+  </Card>
+</CardGroup>
