@@ -38,7 +38,7 @@ When evaluating your instance, follow the Preferred resources in the table above
 
 ## Container-Specific Resourcing
 
-For more efficient scaling, you can dedicate resources to each Onyx container using Kubernetes or AWS ECS.
+For more efficient scaling, you can dedicate resources to each Onyx container using Kubernetes or AWS EKS.
 
 See the [Onyx Helm chart](https://github.com/onyx-dot-app/onyx/blob/main/deployment/helm/charts/onyx/values.yaml) `values.yaml` for our default requests and limits.
 
@@ -86,7 +86,7 @@ Overall, that would take us to >= 13 CPU and >= 50GB of memory.
 
 Given these requirements, a `m7g.4xlarge` or a `c5.9xlarge` EC2 instance would be appropriate.
 
-If deploying with Kubernetes or AWS ECS, this would give a per-component resource allocation of:
+If deploying with Kubernetes or AWS EKS, this would give a per-component resource allocation of:
 
 | Component | CPU | Memory |
 | --- | --- | --- |
@@ -101,10 +101,10 @@ This comes out to a total available node size of ~20 CPU and ~60GB of Memory.
 
 ## Next Steps
 <CardGroup cols={2}>
-  <Card title="Configure your Deployment" icon="microchip" href="/deployment/getting_started/configuration"> 
-    Learn about how to configure Onyx using environment variables.
+  <Card title="Guide: Deploy Onyx Locally" icon="microchip" href="/deployment/deployment_guides/local_deployments/docker"> 
+    Deploy Onyx locally with Docker.
   </Card>
-  <Card title="Guide: Deploy on AWS" icon="microchip" href="/deployment/deployment_guides/aws/ec2"> 
-    Deploy Onyx on AWS using EC2.
+  <Card title="Guide: Deploy on AWS" icon="microchip" href="/deployment/deployment_guides/aws/ec2">
+    Deploy Onyx on an EC2 instance.
   </Card>
 </CardGroup>

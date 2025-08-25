@@ -69,6 +69,14 @@
             "group": "Deployment Guides",
             "pages": [
               {
+                "group": "Local Deployments",
+                "icon": "desktop",
+                "pages": [
+                  "deployment/deployment_guides/local_deployments/docker",
+                  "deployment/deployment_guides/local_deployments/kubernetes"
+                ]
+              },
+              {
                 "group": "AWS",
                 "icon": "aws",
                 "pages": [

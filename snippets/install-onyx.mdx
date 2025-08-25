@@ -1,0 +1,48 @@
+<Step title="Install and Configure Onyx">
+    To install Onyx, we'll need to clone the repo and set the necessary environment variables.
+
+    ```bash
+    git clone https://github.com/onyx-dot-app/onyx.git
+
+    cd onyx/deployment/docker_compose
+    cp .env.prod.template .env
+    cp .env.nginx.template .env.nginx
+    ```
+
+    Fill out the `.env` and `.env.nginx` files.
+
+    ```bash .env expandable
+    WEB_DOMAIN=<YOUR_DOMAIN>  # Something like "onyx.app"
+
+    # If your email is something like "chris@onyx.app", then this should be "onyx.app"
+    # This prevents people outside your company from creating an account
+    VALID_EMAIL_DOMAINS=<YOUR_COMPANIES_EMAIL_DOMAIN>
+
+    # See our auth guides for options here
+    AUTH_TYPE=
+    ```
+
+    ```bash .env.nginx
+    DOMAIN=<YOUR_DOMAIN>  # Something like "onyx.app"
+    ```
+    
+    Running the `init-letsencrypt.sh` script will get us a SSL certificate from letsencrypt and launch the Onyx stack.
+
+    ```bash
+    ./init-letsencrypt.sh
+    ```
+    
+    If you are skipping the HTTPS setup, start Onyx manually:
+
+    ```bash
+    docker-compose -f docker-compose.dev.yml -p onyx-stack up -d --build --force-recreate
+    ```
+    
+    <Note>
+        Give Onyx a few minutes to start up. 
+        
+        You can monitor the progress with `docker logs onyx-stack-api_server-1 -f`.
+    </Note>
+
+    You can access Onyx from the instance Public IPv4 or from the domain you set up earlier!
+</Step>
