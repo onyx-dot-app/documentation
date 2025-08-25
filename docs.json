@@ -73,7 +73,6 @@
                 "icon": "aws",
                 "pages": [
                   "deployment/deployment_guides/aws/ec2",
-                  "deployment/deployment_guides/aws/ecs",
                   "deployment/deployment_guides/aws/eks",
                   "deployment/deployment_guides/aws/rds"
                 ]
@@ -104,7 +103,6 @@
             "group": "Miscellaneous",
             "pages": [
               "deployment/miscellaneous/release_process",
-              "deployment/miscellaneous/troubleshooting",
               "deployment/miscellaneous/enterprise_edition",
               "deployment/contact_us"
             ]
