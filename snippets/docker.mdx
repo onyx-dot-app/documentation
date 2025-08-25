@@ -31,7 +31,7 @@ The standard method to launch Onyx is using Docker Compose.
     Configure your deployment using a `.env` file.
     ```bash
     cd ~/onyx-dot-app/onyx/deployment/docker_compose
-    cp env.prod.template .env
+    cp .env.template .env
     ```
 
     You'll need to restart Onyx after changing any `.env` variables.
@@ -39,5 +39,7 @@ The standard method to launch Onyx is using Docker Compose.
     docker compose -f docker-compose.dev.yml -p onyx-stack down
     docker compose -f docker-compose.dev.yml -p onyx-stack up -d --pull always --force-recreate
     ```
+
+    Read more about [configuring Onyx](/deployment/configuration/env_vars).
   </Step>
 </Steps>

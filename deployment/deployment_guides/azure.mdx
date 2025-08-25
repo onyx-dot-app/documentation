@@ -1,5 +1,69 @@
 ---
 title: Azure
-description: "Azure"
+description: "Deploy Onyx on Azure Virtual Machines"
 icon: "microsoft"
 ---
+
+import CustomDomain from "/snippets/custom-domain.mdx"
+import InstallOnyx from "/snippets/install-onyx.mdx"
+import DeploymentNextSteps from "/snippets/deployment-next-steps.mdx"
+
+<Steps>
+    <Step title="Create a VM instance">
+        Create a VM instance with the appropriate resources. For this guide, we will use the recommended `Standard_D4s_v3` instance.
+        <Note>
+            Read our [Resourcing guide](/deployment/getting_started/resourcing) for more details.
+        </Note>
+
+        - Give your instance a descriptive name like `onyx-prod`
+        - Select the `Ubuntu Server 20.04 LTS` image
+        - Select the `Standard_D4s_v3` size
+        - Select `Allow selected ports` and check `HTTPS (443)` in the *Inbound port rules* section
+        - Configure storage following the Resourcing Guide
+
+        <img className="rounded-image" src="/assets/images/setup_guides/azure/create-vm.png" alt="Create VM Instance" />
+
+        <img className="rounded-image" src="/assets/images/setup_guides/azure/create-vm-2.png" alt="Instance Settings" />
+
+        <img className="rounded-image" src="/assets/images/setup_guides/azure/create-vm-3.png" alt="Network Settings" />
+    </Step>
+
+    <Step title="Create the instance">
+        Click **Create** and then view your instance details.
+        
+        <Tip>
+            Save the **Public IP address** of the instance!
+        </Tip>
+
+        <img className="rounded-image" src="/assets/images/setup_guides/azure/instance-ip.png" alt="Azure Public IP Address" />
+    </Step>
+
+    <CustomDomain />
+
+    <Step title="Install Onyx requirements">
+        Onyx requires `git`, `docker`, and `docker compose`. 
+        
+        To install these on Ubuntu Server 20.04 LTS, run the following:
+
+        ```bash
+        sudo apt-get update
+        sudo apt-get install -y ca-certificates curl
+
+        sudo install -m 0755 -d /etc/apt/keyrings
+        sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+        sudo chmod a+r /etc/apt/keyrings/docker.asc
+
+        echo \
+          "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
+          $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
+          sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+        sudo apt-get update
+        sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin git
+        ```
+    </Step>
+
+    <InstallOnyx />
+</Steps>
+
+<DeploymentNextSteps />
