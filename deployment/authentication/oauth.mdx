@@ -1,277 +1,119 @@
 ---
-title: OAuth
+title: Google OAuth
 description: "Google OAuth authentication setup"
 icon: "key"
 ---
 
-Configure Onyx to use Google OAuth for user authentication, providing a seamless login experience through existing Google accounts. This approach is ideal for organizations already using Google Workspace or when you want to simplify user management.
+Configure Onyx to use Google OAuth for user authentication, providing a seamless login experience through existing Google accounts. 
 
-## Prerequisites
-
-- Google Cloud Console access
-- Domain ownership (for production deployments)
+**Prerequisites:**
+- [Google Cloud Console](https://console.cloud.google.com/) access
 - Administrative permissions to configure OAuth applications
 
-## Google Cloud Setup
+## Guide
 
-### **1. Create Google Cloud Project**
+<Steps>
+  <Step title="Create Google Cloud Project">
+    Navigate to the Google Cloud Console [Project Creation page](https://console.cloud.google.com/projectcreate) and fill in the required fields.
 
-1. Navigate to the [Google Cloud Console](https://console.cloud.google.com/projectcreate)
-2. Click **"Create Project"**
-3. Enter a project name (e.g., "Onyx Authentication")
-4. Select your organization (if applicable)
-5. Click **"Create"**
+    <img className="rounded-image" src="/assets/deployment/gcc_project_creation.png" alt="Google Cloud Console Project Creation Page" />
+  </Step>
 
-### **2. Enable Google People API**
+  <Step title="Enable Google People API">
+    Navigate to **APIs & Services** and find [Google People API](https://console.cloud.google.com/apis/library/people.googleapis.com).
+    
+    Ensure your newly created project is selected in the top bar and click **Enable**.
 
-1. Go to the [Google People API Library](https://console.cloud.google.com/apis/library/people.googleapis.com)
-2. Ensure your newly created project is selected
-3. Click **"Enable"** to activate the API
+    <img className="rounded-image" src="/assets/deployment/gcc_people_api.png" alt="Google Cloud Console People API Enable Page" />
+  </Step>
+  <Step title="Create Google Auth Platform">
+    Open the left sidebar and navigate to **APIs & Services** → **OAuth Consent Screen**. 
+    
+    Once on the **Overview** page, click **Get Started**.
 
-### **3. Configure OAuth Consent Screen**
+    <img className="rounded-image" src="/assets/deployment/gcc_oauth_consent.png" alt="Google Cloud Console OAuth Consent Screen Page" />
+  </Step>
+  <Step title="Configure OAuth Project & Consent Screen">
+    Fill in the **App name** and **User support email** fields.
 
-Navigate to **APIs & Services** → **OAuth Consent Screen**:
+    Select your **Audience**. If you have a Google Workspace organization, select **Internal**. If not, select **External**.
 
-![Google OAuth Consent Menu](/assets/images/google_oauth_setup/GoogleOAuthConsentMenu.png)
+    <Note>
+      If you select **External**, you will need to add your users manually in the **Audience** tab under **Test users**.
+    </Note>
 
-#### **Choose User Type**
-- **Internal**: For Google Workspace organizations (recommended for companies)
-- **External**: For general use or organizations without Google Workspace
+    Fill in any othe required fields and finalize the configuration.
+  </Step>
 
-#### **Configure Application Details**
+  <Step title="Create OAuth Client">
+    Navigate to **APIs & Services** → **OAuth Consent Screen** → **Clients** page.
 
-![Google App Configuration](/assets/images/google_oauth_setup/GoogleApp.png)
+    Click **"+ Create Client"** and select **Web Application**.
 
-Complete the required fields:
+    <img className="rounded-image" src="/assets/deployment/gcc_oauth_client.png" alt="Google Cloud Console OAuth Client Creation Page" />
+  </Step>
 
-- **App name**: `Onyx` (or your preferred name)
-- **User support email**: Your email or `founders@onyx.app`
-- **App logo**: Upload Onyx logo (optional)
-- **Developer contact information**: Your email or `founders@onyx.app`
+  <Step title="Configure OAuth Client">
+    **Name:** `Onyx`
 
-#### **Additional Configuration**
-- **Scopes**: Leave blank (default scopes are sufficient)
-- **Test users**: Leave blank unless using External with restricted access
-- Click **"Save and Continue"** through all steps
+    **Authorized JavaScript origins** and **Authorized redirect URIs** depend on your deployment environment.
 
-### **4. Create OAuth Credentials**
+    If hosting Onyx locally use:
 
-Under **APIs & Services** → **Credentials**:
+    ```
+    http://localhost:3000
+    http://localhost:3000/auth/oauth/callback
+    ```
 
-1. Click **"+ CREATE CREDENTIALS"**
-2. Select **"OAuth client ID"**
-3. Choose **"Web application"**
-4. Name it `Onyx`
+    If hosting Onyx on a custom domain use:
 
-#### **Configure Authorized URLs**
+    ```
+    https://YOUR_ONYX_DOMAIN.com
+    https://YOUR_ONYX_DOMAIN.com/auth/oauth/callback
+    ```
 
-**Authorized JavaScript origins:**
-```
-# For development
-http://localhost:3000
+    <img className="rounded-image" src="/assets/deployment/gcc_oauth_client_details.png" alt="Google Cloud Console OAuth Client Creation Page" />
 
-# For production (replace with your domain)
-https://your-onyx-domain.com
-```
+    <Tip>
+      Make sure the URIs you enter here match the URI you use to access Onyx!
+    </Tip>
+  </Step>
 
-**Authorized redirect URIs:**
-```
-# For development
-http://localhost:3000/auth/oauth/callback
+  <Step title="Save OAuth Credentials">
+    Click **Create** → **Download JSON** to save the OAuth client credentials. 
+    Alternatively, save the **Client ID** and **Client Secret** to a password or secrets manager.
+  </Step>
 
-# For production (replace with your domain)
-https://your-onyx-domain.com/auth/oauth/callback
-```
+  <Step title="Configure Onyx">
+    Configure Onyx with the following environment variables in your `.env` or `values.yaml` file (Docker and Kubernetes, respectively).
 
-5. Click **"CREATE"**
-6. **Save the Client ID and Client Secret** - you'll need these for Onyx configuration
+    ```bash .env
+    AUTH_TYPE=google_oauth
+    OAUTH_CLIENT_ID=YOUR_CLIENT_ID
+    OAUTH_CLIENT_SECRET=YOUR_CLIENT_SECRET
 
-## Onyx Configuration
+    # If you are deploying to a custom domain, you will need to set the `WEB_DOMAIN` environment variable.
+    WEB_DOMAIN=https://YOUR_ONYX_DOMAIN.com
+    ```
 
-### **Environment Variables**
+    <Note>
+      If you're using Docker but don't have a `.env` file, copy `onyx/deployment/docker_compose/.env.template` to a new `.env` file in the same directory.
+    </Note>
 
-Configure Onyx with the following environment variables:
+    ```bash values.yaml
+    configMap:
+      AUTH_TYPE: google_oauth
+    secrets:
+      OAUTH_CLIENT_ID: <BASE_64_ENCODED_CLIENT_ID_FROM_GOOGLE>
+      OAUTH_CLIENT_SECRET:<BASE_64_ENCODED_CLIENT_SECRET_FROM_GOOGLE>
+    ```
 
-```bash
-# Authentication type
-AUTH_TYPE=google_oauth
+    <Tip>
+      To base64 encode your client ID and client secret, you can use the following command:
 
-# OAuth credentials from Google Cloud Console
-OAUTH_CLIENT_ID=your_client_id_from_google
-OAUTH_CLIENT_SECRET=your_client_secret_from_google
-
-# Production domain (only needed for production deployments)
-WEB_DOMAIN=https://your-onyx-domain.com
-```
-
-## Deployment-Specific Setup
-
-### **Docker Compose**
-
-Create or update your `.env` file in the `deployment/docker_compose/` directory:
-
-```bash
-# OAuth Configuration
-AUTH_TYPE=google_oauth
-OAUTH_CLIENT_ID=your_google_client_id
-OAUTH_CLIENT_SECRET=your_google_client_secret
-
-# Production domain (if deploying to production)
-WEB_DOMAIN=https://your-domain.com
-```
-
-Restart your Docker Compose deployment:
-
-```bash
-docker-compose down
-docker-compose up -d
-```
-
-### **Kubernetes**
-
-Update your Kubernetes secrets and configuration:
-
-```yaml
-# secrets.yaml
-apiVersion: v1
-kind: Secret
-metadata:
-  name: onyx-secrets
-data:
-  OAUTH_CLIENT_ID: <base64-encoded-client-id>
-  OAUTH_CLIENT_SECRET: <base64-encoded-client-secret>
-
----
-# configmap.yaml
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: onyx-config
-data:
-  AUTH_TYPE: "google_oauth"
-  WEB_DOMAIN: "https://your-domain.com"
-```
-
-Apply the configuration:
-
-```bash
-kubectl apply -f secrets.yaml
-kubectl apply -f configmap.yaml
-kubectl rollout restart deployment/onyx-web
-kubectl rollout restart deployment/onyx-api
-```
-
-### **Non-Containerized Deployment**
-
-Set environment variables when running Onyx processes:
-
-```bash
-export AUTH_TYPE=google_oauth
-export OAUTH_CLIENT_ID=your_google_client_id
-export OAUTH_CLIENT_SECRET=your_google_client_secret
-export WEB_DOMAIN=https://your-domain.com  # Production only
-
-# Start your Onyx services
-python -m onyx.main &
-npm run start
-```
-
-## Domain Configuration
-
-### **Development Setup**
-For local development, use:
-- **JavaScript Origins**: `http://localhost:3000`
-- **Redirect URI**: `http://localhost:3000/auth/oauth/callback`
-- **WEB_DOMAIN**: Not required for localhost
-
-### **Production Setup**
-For production deployments:
-- **JavaScript Origins**: `https://your-onyx-domain.com`
-- **Redirect URI**: `https://your-onyx-domain.com/auth/oauth/callback`
-- **WEB_DOMAIN**: `https://your-onyx-domain.com`
-
-## Security Considerations
-
-### **OAuth Best Practices**
-
-**Client Secret Security**
-- Store client secrets securely (environment variables, secrets management)
-- Never commit secrets to version control
-- Rotate secrets periodically
-- Use different credentials for development and production
-
-**Domain Verification**
-- Verify domain ownership in Google Cloud Console for production
-- Use HTTPS for all production redirect URIs
-- Implement proper CSRF protection
-
-**Access Controls**
-- Use Internal OAuth consent for Google Workspace organizations
-- Implement proper user role management within Onyx
-- Monitor OAuth application usage through Google Cloud Console
-
-### **User Privacy**
-
-**Data Access**
-- OAuth only requests necessary user information (email, basic profile)
-- Users can revoke access through their Google account settings
-- No sensitive data is stored beyond basic profile information
-
-## Troubleshooting
-
-### **Common OAuth Errors**
-
-**"redirect_uri_mismatch" Error**
-- Verify redirect URI in Google Cloud Console matches exactly
-- Check for trailing slashes or protocol mismatches
-- Ensure WEB_DOMAIN environment variable is correct
-
-**"invalid_client" Error**
-- Verify OAUTH_CLIENT_ID and OAUTH_CLIENT_SECRET are correct
-- Check for extra spaces or characters in credentials
-- Ensure the OAuth client is enabled in Google Cloud Console
-
-**"access_denied" Error**
-- Check OAuth consent screen configuration
-- Verify user has access (for Internal apps, must be in same organization)
-- Check if app is in testing mode with limited users
-
-### **OAuth Flow Issues**
-
-**Users Can't Sign In**
-- Verify Google People API is enabled
-- Check OAuth consent screen is properly configured
-- Ensure users are in the correct Google organization (for Internal apps)
-
-**Environment Variable Problems**
-- Verify all required environment variables are set
-- Check variable names are exactly as specified
-- Ensure variables are available to both frontend and backend processes
-
-### **Testing OAuth Configuration**
-
-1. **Test OAuth Flow**: Attempt to sign in with a test Google account
-2. **Check Browser Developer Tools**: Look for network errors or console messages
-3. **Verify Redirect**: Ensure redirect URI works and returns users to Onyx
-4. **Test Different Users**: Try with multiple Google accounts to verify access controls
-
-## Migration and User Management
-
-### **Migrating from Basic Auth**
-
-When switching from basic authentication to OAuth:
-
-1. **Plan Migration**: Coordinate with users about the change
-2. **Export User Data**: Backup existing user accounts and preferences
-3. **Update Configuration**: Change AUTH_TYPE and add OAuth credentials
-4. **User Communication**: Inform users about new login process
-5. **Provide Support**: Help users understand Google OAuth login
-
-### **User Account Linking**
-
-Onyx can link existing accounts to Google OAuth based on email addresses:
-- Users with matching email addresses will maintain their data
-- New OAuth users will be created for unmatched Google accounts
-- Admins can manually manage user associations if needed
-
-For advanced authentication needs including enterprise features, consider [OIDC](./oidc) or [SAML](./saml) authentication methods.
+      ```bash
+      echo <VALUE_TO_ENCODE> | base64
+      ```
+    </Tip>
+  </Step>
+</Steps>

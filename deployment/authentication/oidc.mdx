@@ -3,180 +3,83 @@ title: "OIDC"
 description: "OpenID Connect authentication setup"
 icon: "id-card"
 ---
+import EnterpriseEditionInfo from "/snippets/enterprise-edition-info.mdx"
 
-Configure Onyx with OpenID Connect (OIDC) authentication to integrate with enterprise identity providers. OIDC provides secure, standardized authentication that works with popular identity providers like Okta, Microsoft Entra ID (Azure AD), Auth0, and more.
+Configure Onyx with OpenID Connect (OIDC) authentication. Available with common identity providers such as Okta and Microsoft Entra ID (Azure AD).
 
-<Info>
-**Enterprise Feature**
+<EnterpriseEditionInfo />
 
-OIDC authentication is available as part of the Onyx Enterprise Edition. This provides enhanced security, compliance features, and enterprise-grade identity integration.
+This guide will walk you through the setup process for Okta. Other identity providers will have a similar process. 
+Please contact us if you need help with a different identity provider.
 
-[Contact us](https://docs.onyx.app/contact_us) to discuss Enterprise Edition features and setup assistance.
-</Info>
+## Guide
+<Steps>
+   <Step title="Create Okta Application">
+      Navigate to the Okta Admin Console and click **Applications** → **Create App Integration**.
 
-## What is OIDC?
+      [IMAGE HERE]
+   </Step>
 
-OpenID Connect is a modern authentication protocol built on OAuth 2.0 that provides:
+   <Step title="Configure Okta Application">
+      Select **OIDC** and **Web Application**.
 
-- **Standardized Authentication**: Industry-standard protocol supported by major identity providers
-- **Single Sign-On (SSO)**: Users authenticate once and access multiple applications
-- **Secure Token Exchange**: Uses JWT tokens for secure identity verification
-- **User Profile Access**: Retrieve user information from the identity provider
-- **Multi-Provider Support**: Works with various OIDC-compliant identity providers
+      **Name** your application `Onyx` and upload the Onyx logo.
 
-## Supported Identity Providers
+      <Tip>
+         If you are white-labeling Onyx, you can freely name your application and upload your own logo.
+      </Tip>
 
-Onyx OIDC integration works with any OIDC-compliant identity provider, including:
+      Add a **Sign-in redirect URI**
 
-### **Popular Enterprise Providers**
-- **Microsoft Entra ID (Azure AD)** - Full enterprise integration with Microsoft ecosystem
-- **Okta** - Comprehensive identity and access management platform
-- **Auth0** - Developer-friendly authentication service
-- **Google Workspace** - Google's enterprise identity solution
-- **Ping Identity** - Enterprise identity and access management
-- **OneLogin** - Cloud-based identity and access management
-- **Keycloak** - Open-source identity and access management solution
+      ```
+      https://YOUR_ONYX_DOMAIN.com/auth/oidc/callback
+      ```
 
-### **Cloud Provider Solutions**
-- **AWS Cognito** - Amazon's managed authentication service
-- **Firebase Auth** - Google's mobile and web authentication
-- **Azure Active Directory B2C** - Customer identity access management
+      [IMAGE HERE]
+   </Step>
 
-## Enterprise Benefits
+   <Step title="Assign Users to Application">
+      Assign users to the application or skip this step and assign users later.
 
-### **Security and Compliance**
-- **Centralized Authentication**: Manage all user access through your existing identity provider
-- **Multi-Factor Authentication (MFA)**: Leverage your IdP's MFA capabilities
-- **Compliance Standards**: Meet requirements for SOC 2, GDPR, HIPAA, and other regulations
-- **Audit Trails**: Comprehensive logging and monitoring of authentication events
-- **Risk-Based Authentication**: Advanced security features from enterprise IdPs
+      [IMAGE HERE]
+   </Step>
+   
+   <Step title="Save OIDC Credentials">
+      Create the new Application and save the **Client ID**, **Client Secret**, and **Okta Base URL**.
 
-### **User Experience**
-- **Single Sign-On**: Users access Onyx using their existing corporate credentials
-- **Automatic Provisioning**: Users are automatically created and updated based on IdP data
-- **Role Mapping**: Map IdP groups/roles to Onyx permissions automatically
-- **Session Management**: Centralized session control and timeout policies
+      [IMAGE HERE]
+   </Step>
 
-### **Administrative Efficiency**
-- **Centralized User Management**: Manage Onyx access through your existing identity system
-- **Automated Onboarding/Offboarding**: Users gain/lose access based on IdP changes
-- **Group-Based Permissions**: Leverage existing organizational structure for access control
-- **Reduced IT Overhead**: Minimize password management and user support requests
+   <Step title="Configure Onyx for OIDC">
+      Configure Onyx with the following environment variables in your `.env` or `values.yaml` file (Docker and Kubernetes, respectively).
 
-## Configuration Overview
+      ```bash .env
+      AUTH_TYPE=oidc
+      OIDC_CLIENT_ID=<CLIENT_ID_FROM_OKTA>
+      OIDC_CLIENT_SECRET=<CLIENT_SECRET_FROM_OKTA>
+      OIDC_CONFIG_URL=https://<YOUR_OKTA_BASE_URL>/.well-known/openid-configuration
+      ```
 
-Setting up OIDC with Onyx involves:
+      <Note>
+         If you're using Docker but don't have a `.env` file, copy `onyx/deployment/docker_compose/.env.template` to a new `.env` file in the same directory.
+      </Note>
 
-1. **Identity Provider Configuration**:
-   - Register Onyx as an application in your IdP
-   - Configure redirect URIs and scopes
-   - Obtain client credentials and discovery endpoints
+      ```bash values.yaml
+      configMap:
+        AUTH_TYPE: oidc
+        OPENID_CONFIG_URL: https://<YOUR_OKTA_BASE_URL>/.well-known/openid-configuration
+      secrets
+        OAUTH_CLIENT_ID: <BASE_64_ENCODED_CLIENT_ID_FROM_OKTA>
+        OAUTH_CLIENT_SECRET:<BASE_64_ENCODED_CLIENT_SECRET_FROM_OKTA>
+      ```
 
-2. **Onyx Configuration**:
-   - Set OIDC-specific environment variables
-   - Configure user attribute mapping
-   - Set up role and group mappings
+      <Tip>
+         To base64 encode your client ID and client secret, you can use the following command:
 
-3. **Testing and Validation**:
-   - Test authentication flow with various user accounts
-   - Verify user provisioning and role assignments
-   - Validate SSO experience across your organization
+         ```bash
+         echo <VALUE_TO_ENCODE> | base64
+         ```
+      </Tip>
+   </Step>
+</Steps>
 
-## Common Configuration Parameters
-
-While specific setup varies by identity provider, common OIDC configuration includes:
-
-```bash
-# Authentication type
-AUTH_TYPE=oidc
-
-# OIDC Provider Configuration
-OIDC_CLIENT_ID=your_oidc_client_id
-OIDC_CLIENT_SECRET=your_oidc_client_secret
-OIDC_DISCOVERY_URL=https://your-idp.com/.well-known/openid_configuration
-OIDC_REDIRECT_URI=https://your-onyx-domain.com/auth/oidc/callback
-
-# User Attribute Mapping
-OIDC_USERNAME_CLAIM=preferred_username
-OIDC_EMAIL_CLAIM=email
-OIDC_NAME_CLAIM=name
-
-# Optional: Group/Role Mapping
-OIDC_GROUPS_CLAIM=groups
-OIDC_ADMIN_GROUPS=onyx-admins,it-staff
-```
-
-## Provider-Specific Considerations
-
-### **Microsoft Entra ID**
-- Supports both single-tenant and multi-tenant configurations
-- Can integrate with on-premises Active Directory via Azure AD Connect
-- Provides conditional access policies and advanced security features
-- Supports application roles for fine-grained access control
-
-### **Okta**
-- Comprehensive user lifecycle management
-- Advanced MFA options including biometric authentication  
-- Extensive integration ecosystem with other business applications
-- Detailed analytics and reporting capabilities
-
-### **Auth0**
-- Developer-friendly configuration interface
-- Support for social login providers alongside enterprise authentication
-- Advanced customization options for login flows
-- Built-in anomaly detection and security features
-
-## Getting Started
-
-To implement OIDC authentication for your organization:
-
-1. **Assessment**: We'll help assess your current identity infrastructure and requirements
-2. **Planning**: Develop an implementation plan that minimizes disruption
-3. **Configuration**: Our team will configure both your IdP and Onyx for optimal integration
-4. **Testing**: Comprehensive testing with your user groups before go-live
-5. **Migration**: Smooth transition from existing authentication methods
-6. **Support**: Ongoing support for any issues or configuration changes
-
-## Security Best Practices
-
-When implementing OIDC authentication:
-
-- **Use HTTPS**: Always use encrypted connections for all OIDC endpoints
-- **Validate Tokens**: Properly validate JWT tokens and signatures
-- **Secure Storage**: Store client secrets securely using environment variables or secret management
-- **Regular Rotation**: Rotate client secrets and certificates regularly
-- **Monitor Access**: Implement logging and monitoring for authentication events
-- **Test Security**: Regular security testing and penetration testing
-
-## Custom Integrations
-
-For organizations with custom or less common identity providers:
-
-- **Custom OIDC Implementations**: We can work with your team to integrate with custom IdPs
-- **Legacy System Integration**: Bridge legacy authentication systems with modern OIDC
-- **Hybrid Authentication**: Support multiple authentication methods during migration periods
-- **Custom Claims**: Map custom user attributes and claims to Onyx user profiles
-
-## Migration Support
-
-Transitioning to OIDC authentication:
-
-- **User Data Migration**: Preserve existing user data and preferences during migration
-- **Gradual Rollout**: Phase implementation across user groups to minimize disruption
-- **Fallback Authentication**: Maintain backup authentication methods during transition
-- **User Training**: Provide training materials and support for the new authentication flow
-
-## Next Steps
-
-Ready to implement OIDC authentication for your Onyx deployment?
-
-1. **Contact Enterprise Sales**: Reach out to discuss your specific requirements
-2. **Technical Assessment**: Our team will evaluate your identity infrastructure
-3. **Proof of Concept**: Set up a test environment to validate the integration
-4. **Implementation Planning**: Develop a detailed rollout plan for your organization
-
-**Contact Information:**
-- **Email**: [founders@onyx.app](mailto:founders@onyx.app)
-- **Slack Community**: Join our [Enterprise channel](https://join.slack.com/t/onyx-dot-app/shared_invite/zt-34lu4m7xg-TsKGO6h8PDvR5W27zTdyhA) for direct support
-
-For organizations requiring SAML authentication, see our [SAML setup guide](./saml). 

@@ -68,6 +68,25 @@ SMTP_PORT=<PORT_YOUR_SMTP_SERVER_LISTENS_ON>  # default: 587
 Set the following in your `values.yaml` file:
 
 ```yaml
+secrets:
+    smpt_pass: <PASSWORD_FOR_THE_SMTP_USER>
 configMap: 
+  AUTH_TYPE: basic
+  
   REQUIRE_EMAIL_VERIFICATION: true
+  SMTP_USER: <EMAIL_TO_SEND_VERIFICATION_EMAILS_FROM>
+
+  # Required for non-Gmail accounts
+  SMTP_SERVER: <YOUR_SMTP_SERVER>
+  SMTP_PORT: <PORT_YOUR_SMTP_SERVER_LISTENS_ON>
 ```
+
+## Next Steps
+<CardGroup cols={2}>
+  <Card title="Set up Google OAuth" icon="google" href="/deployment/authentication/oauth">
+    Google OAuth is a secure and easy way to authenticate users with their Google accounts.
+  </Card>
+  <Card title="Other Onyx Configuration Options" icon="gear" href="/deployment/configuration/env_vars">
+    There are many other configuration options available for Onyx.
+  </Card>
+</CardGroup>
