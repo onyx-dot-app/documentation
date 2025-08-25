@@ -15,18 +15,18 @@ Please contact us if you need help with a different identity provider.
 ## Guide
 <Steps>
    <Step title="Create Okta Application">
-      Navigate to the Okta Admin Console and click **Applications** → **Create App Integration**.
+      Navigate to the Okta **Admin Console** → **Applications** → **Create App Integration**.
 
-      [IMAGE HERE]
+      <img className="rounded-image" src="/assets/deployment/oidc_create_integration.png" alt="Okta Create Integration Page" />
    </Step>
 
    <Step title="Configure Okta Application">
       Select **OIDC** and **Web Application**.
 
-      **Name** your application `Onyx` and upload the Onyx logo.
+      Name your application `Onyx`.
 
       <Tip>
-         If you are white-labeling Onyx, you can freely name your application and upload your own logo.
+         If you are white-labeling Onyx, you can freely name your application.
       </Tip>
 
       Add a **Sign-in redirect URI**
@@ -35,19 +35,22 @@ Please contact us if you need help with a different identity provider.
       https://YOUR_ONYX_DOMAIN.com/auth/oidc/callback
       ```
 
-      [IMAGE HERE]
-   </Step>
+      Determine whether all users or select groups may access Onyx or skip this step and assign users later.
 
-   <Step title="Assign Users to Application">
-      Assign users to the application or skip this step and assign users later.
+      <img className="rounded-image" src="/assets/deployment/oidc_config.png" alt="Okta Configure OIDC Application Page" />
 
-      [IMAGE HERE]
    </Step>
    
    <Step title="Save OIDC Credentials">
-      Create the new Application and save the **Client ID**, **Client Secret**, and **Okta Base URL**.
+      Create the new Application and save the **Client ID** and **Client Secret**.
 
-      [IMAGE HERE]
+      Also note your **Okta Base URL** in the format of `https://<YOUR_ORG_NAME>.okta.com`.
+
+      <img className="rounded-image" src="/assets/deployment/oidc_secrets.png" alt="Okta OIDC Credentials Page" />
+
+      <Note>
+         After saving your application, you can upload the Onyx logo or your white-labeled logo by clicking the gear icon next to the app title **Onyx**
+      </Note>
    </Step>
 
    <Step title="Configure Onyx for OIDC">

@@ -23,13 +23,13 @@ Please contact us if you need help with a different identity provider.
 
 <Steps>
    <Step title="Create Okta Application">
-      Navigate to the Okta Admin Console and click **Applications** → **Create App Integration**.
+      Navigate to the Okta **Admin Console** → **Applications** → **Create App Integration**.
 
-      [IMAGE HERE]
+      <img className="rounded-image" src="/assets/deployment/saml_create_integration.png" alt="Okta Create Integration Page" />
    </Step>
 
    <Step title="Configure Okta Application">
-      Select **SAML 2.0** and **Web Application**.
+      Select **SAML 2.0**.
 
       **Name** your application `Onyx` and upload the Onyx logo.
 
@@ -51,12 +51,12 @@ Please contact us if you need help with a different identity provider.
 
       Add an **Attribute Statement** where **Name** is `email` and **Value** is `user.email`.
       
-      [IMAGE HERE]
+      <img className="rounded-image" src="/assets/deployment/saml_config.png" alt="Okta Configure SAML Application Page" />
 
    </Step>
 
    <Step title="Assign Users to Application">
-      Assign users to the application or skip this step and assign users later.
+      Create the application and navigate to the **Assignments** tab to assign users.
 
    </Step>
 
@@ -72,7 +72,7 @@ Please contact us if you need help with a different identity provider.
 
       <AccordionGroup>
          <Accordion title="idp: entityId">
-            Go to the Sign On tab in Okta, copy the **Metadata URL**, and paste it into your browser.
+            Go to the **Sign On** tab of your application in Okta, copy the **Metadata URL**, and paste it into your browser.
             You should see XML like:
 
             ```XML
@@ -106,7 +106,7 @@ Please contact us if you need help with a different identity provider.
          </Accordion>
 
          <Accordion title="idp: singleSignOnService: url">
-            Go to the General tab in Okta and copy the **Embed Link**.
+            Go to the **General** tab of your application in Okta and copy the **Embed Link**.
          </Accordion>
 
          <Accordion title="sp: entityId">
