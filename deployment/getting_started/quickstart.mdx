@@ -73,7 +73,7 @@ By default, the tool uses images from our Docker Hub, but it can be configured t
             - Place deployment files in `~/onyx-dot-app/onyx/deployment/`
             - Pull images from Docker Hub using:
               - `docker compose -f docker-compose.dev.yml -p onyx-stack up -d --pull always --force-recreate`
-          - Copy the `.env.template` file in `~/onyx-dot-app/onyx/deployment/docker_compose/` to `.env` to configure your deployment
+          - Copy the `env.prod.template` file in `~/onyx-dot-app/onyx/deployment/docker_compose/` to `.env` to configure your deployment
           - You may direct the command to use an existing `onyx` directory by passing the `--source` flag
         </Accordion>
     </Step>
@@ -81,7 +81,7 @@ By default, the tool uses images from our Docker Hub, but it can be configured t
       Configure your deployment using a `.env` file.
       ```bash
       cd ~/onyx-dot-app/onyx/deployment/docker_compose
-      cp .env.template .env
+      cp env.prod.template .env
       ```
 
       You'll need to restart Onyx after changing any `.env` variables.
@@ -89,7 +89,7 @@ By default, the tool uses images from our Docker Hub, but it can be configured t
       onyx down
       onyx up
       ```
-      Read more about [configuration](/deployment/configuration/env_vars).
+      Read more about [configuration](/deployment/configuration/configuration).
     </Step>
 </Steps>
 
@@ -106,7 +106,7 @@ By default, the tool uses images from our Docker Hub, but it can be configured t
   <Card title="Learn about Resourcing" icon="microchip" href="/deployment/getting_started/resourcing"> 
     Learn about Cloud instances, resourcing by container, and how to scale your Onyx deployment.
   </Card>
-  <Card title="Configure your Deployment" icon="microchip" href="/deployment/configuration/env_vars"> 
+  <Card title="Configure your Deployment" icon="microchip" href="/deployment/configuration/configuration"> 
     Learn about how to configure Onyx using environment variables.
   </Card>
 </CardGroup>
