@@ -68,8 +68,9 @@ SMTP_PORT=<PORT_YOUR_SMTP_SERVER_LISTENS_ON>  # default: 587
 Set the following in your `values.yaml` file:
 
 ```yaml
-secrets:
-    smpt_pass: <PASSWORD_FOR_THE_SMTP_USER>
+auth:
+  secrets:
+      smpt_pass: <PASSWORD_FOR_THE_SMTP_USER>
 configMap: 
   AUTH_TYPE: basic
   

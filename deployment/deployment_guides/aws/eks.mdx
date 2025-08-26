@@ -12,6 +12,8 @@ import DeploymentNextSteps from "/snippets/deployment-next-steps.mdx"
     Updates to this guide are coming soon!
 </Warning>
 
+## Guide
+
 <Steps>
     <Step title="Install requirements">
         EKS requires the AWS CLI and kubectl CLI.
@@ -134,8 +136,6 @@ import DeploymentNextSteps from "/snippets/deployment-next-steps.mdx"
     </Step>
 
     <Step title="Verify the installation">
-        Monitor the installation progress:
-
         ```bash
         helm list -n onyx
         kubectl get pods -n onyx
@@ -151,12 +151,6 @@ import DeploymentNextSteps from "/snippets/deployment-next-steps.mdx"
     </Step>
 
     <Step title="Access Onyx">
-        To find the Nginx load balancer address:
-
-        ```bash
-        kubectl get svc -n onyx | grep nginx | awk '{print $4}'
-        ```
-
         For local testing, port-forward:
 
         ```bash
@@ -165,38 +159,36 @@ import DeploymentNextSteps from "/snippets/deployment-next-steps.mdx"
 
         Then open [http://localhost:8080](http://localhost:8080).
     </Step>
-
-    <Step title="Upgrading">
-        To upgrade Onyx services, first update the Helm repository:
-
-        ```bash
-        helm repo update
-        helm upgrade onyx onyx/onyx-stack -n onyx
-        ```
-
-        To upgrade to a specific version, use:
-
-        ```bash
-        helm upgrade onyx onyx/onyx-stack -n onyx --version <VERSION>
-        ```
-    </Step>
-
-    <Step title="Uninstalling">
-        To remove the Onyx services:
-
-        ```bash
-        helm uninstall onyx -n onyx
-        ```
-
-        Vespa, Postgres, and MinIO leave behind PVCs. To delete them:
-
-        ```bash
-        kubectl -n onyx get pvc
-        kubectl -n onyx delete pvc vespa-storage-da-vespa-0
-        kubectl -n onyx delete pvc onyx-minio
-        kubectl -n onyx delete pvc data-onyx-postgresql-0
-        ```
-    </Step>
 </Steps>
+
+## Upgrading
+To upgrade Onyx services, first update the Helm repository:
+
+```bash
+helm repo update
+helm upgrade onyx onyx/onyx-stack -n onyx
+```
+
+To upgrade to a specific version, use:
+
+```bash
+helm upgrade onyx onyx/onyx-stack -n onyx --version <VERSION>
+```
+
+## Uninstalling
+To remove the Onyx services:
+
+```bash
+helm uninstall onyx -n onyx
+```
+
+Vespa, Postgres, and MinIO leave behind PVCs. To delete them:
+
+```bash
+kubectl -n onyx get pvc
+kubectl -n onyx delete pvc vespa-storage-da-vespa-0
+kubectl -n onyx delete pvc onyx-minio
+kubectl -n onyx delete pvc data-onyx-postgresql-0
+```
 
 <DeploymentNextSteps />

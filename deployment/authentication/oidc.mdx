@@ -68,21 +68,14 @@ Please contact us if you need help with a different identity provider.
       </Note>
 
       ```bash values.yaml
+      auth: 
+         secrets:
+            OIDC_CLIENT_ID: <CLIENT_ID_FROM_OKTA>
+            OIDC_CLIENT_SECRET:<CLIENT_SECRET_FROM_OKTA>
       configMap:
-        AUTH_TYPE: oidc
-        OPENID_CONFIG_URL: https://<YOUR_OKTA_BASE_URL>/.well-known/openid-configuration
-      secrets
-        OAUTH_CLIENT_ID: <BASE_64_ENCODED_CLIENT_ID_FROM_OKTA>
-        OAUTH_CLIENT_SECRET:<BASE_64_ENCODED_CLIENT_SECRET_FROM_OKTA>
+         AUTH_TYPE: oidc
+         OPENID_CONFIG_URL: https://<YOUR_OKTA_BASE_URL>/.well-known/openid-configuration
       ```
-
-      <Tip>
-         To base64 encode your client ID and client secret, you can use the following command:
-
-         ```bash
-         echo <VALUE_TO_ENCODE> | base64
-         ```
-      </Tip>
    </Step>
 </Steps>
 

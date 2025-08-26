@@ -44,10 +44,10 @@ cp .env.example .env
 
 ```bash
 # Start the full development stack
-docker-compose -f docker-compose.dev.yml up --build
+docker compose -f docker-compose.dev.yml up --build
 
 # Or start individual services as needed
-docker-compose -f docker-compose.dev.yml up postgres redis vespa
+docker compose -f docker-compose.dev.yml up postgres redis vespa
 ```
 
 ### 4. Backend Development
@@ -155,7 +155,7 @@ See the [Agents guide](/contributing/agents) for detailed instructions.
 
 **Docker issues**: Try `docker system prune` to clean up old containers and images.
 
-**Database issues**: Run `docker-compose down -v` to reset the database volume.
+**Database issues**: Run `docker compose down -v` to reset the database volume.
 
 **Permission issues**: Make sure your user has permission to run Docker commands.
 

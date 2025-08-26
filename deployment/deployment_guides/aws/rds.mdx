@@ -1,224 +1,231 @@
 ---
-title: RDS  
+title: RDS
 description: "Setup AWS RDS for Onyx"
 icon: "aws"
 ---
 
-## Setting Up Amazon RDS for PostgreSQL with Basic Authentication
+import DeploymentNextSteps from "/snippets/deployment-next-steps.mdx"
 
-Follow these steps to set up an Amazon RDS instance for PostgreSQL with a basic configuration, using a static password. This setup allows you to run Onyx with a traditional username/password setup before optionally enabling IAM authentication.
+Using AWS RDS provides a managed PostgreSQL database for Onyx.
+This guide covers both basic and IAM authentication for enhanced security.
 
-### 1. Create an RDS PostgreSQL Instance
+## Guide
 
-1. Navigate to the **Amazon RDS** console.
-2. Click on **Create database**.
-3. Under **Engine type**, select **PostgreSQL**.
-4. For **Database creation method**, choose **Standard create**.
-5. Select a **PostgreSQL version** that suits your requirements.
-6. For **Templates**, choose **Production** or **Dev/Test** as needed.
-7. In the **Settings** section:
-   - Set **DB instance identifier**.
-   - Set **Master username**.
-   - Set **Master password** and confirm it.
-8. In the **Instance configuration** section:
-   - Choose an **Instance class** (e.g., `db.t3.micro`) based on your performance needs.
-   - Specify **Storage** options (size, autoscaling, etc.).
-9. Under **Connectivity**, configure:
-   - **Virtual Private Cloud (VPC)**.
-   - **Subnet group**.
-   - **Public access** if needed (not recommended for production).
-   - **VPC security group** and **Availability Zone** as per your requirements.
-10. Adjust additional settings (e.g., backups, maintenance windows, encryption) as needed.
-11. Review your configurations and click **Create database**.
+<Steps>
+    <Step title="Create an RDS PostgreSQL instance">
+        Navigate to the Amazon RDS console and create a new PostgreSQL database.
 
-### 2. Set Environment Variables for Basic Authentication in Onyx
+        - Click **Create database**
+        - Select **PostgreSQL** as the engine type
+        - Choose **Standard create** for the creation method
+        - Select your preferred **PostgreSQL version**
+        - Choose **Production** or **Dev/Test** template as needed
+    </Step>
 
-Once your RDS instance is available, note the following details:
+    <Step title="Configure database settings">
+        Set up your database identifier, credentials, and instance configuration.
 
-- **POSTGRES_HOST**: The endpoint of your RDS instance (found in the RDS console).
-- **POSTGRES_PORT**: Typically `5432`.
-- **POSTGRES_DB**: The database name you created during setup or `postgres` if you used the default.
-- **POSTGRES_USER**: The master username you set.
-- **POSTGRES_PASSWORD**: The password you specified for the master user.
+        **Settings:**
+        - Set a descriptive **DB instance identifier** like `onyx-prod-db`
+        - Set **Master username** (e.g., `postgres`)
+        - Set a strong **Master password** and confirm it
 
-Export these variables so Onyx can connect using basic authentication:
+        **Instance configuration:**
+        - Choose an appropriate **Instance class** (e.g., `db.t3.micro` for testing, `db.t3.medium` for production)
+        - Configure **Storage** size and enable autoscaling if needed
 
-```bash
-export USE_IAM_AUTH=false
-export POSTGRES_HOST="<rds-endpoint>"
-export POSTGRES_PORT="5432"
-export POSTGRES_DB="<db-name>"
-export POSTGRES_USER="<master-username>"
-export POSTGRES_PASSWORD="<master-password>"
-```
+        <Tip>
+            Save your database credentials securely - you'll need them to configure Onyx.
+        </Tip>
+    </Step>
 
-At this point, Onyx will use the provided username and password to connect to your RDS PostgreSQL instance.
+    <Step title="Configure connectivity and security">
+        Set up network access and security groups for your database.
 
----
+        - Select your **VPC** and **Subnet group**
+        - Configure **VPC security group** to allow access from your Onyx instance
+        - Set **Public access** to "No" for production (recommended)
+        - Choose your preferred **Availability Zone**
 
-## Enabling IAM Authentication for RDS PostgreSQL (Optional)
+        Click **Create database** to launch your RDS instance.
+    </Step>
 
-To enhance security, you can optionally enable IAM database authentication for your RDS PostgreSQL instance. This allows you to connect using short-lived IAM credentials instead of static passwords.
+    <Step title="Configure Onyx environment variables">
+        Once your RDS instance is running, configure Onyx to connect to it.
 
-### 1. Enable IAM Database Authentication
+        Get your database details from the RDS console:
+        - **Endpoint**: Found in the RDS instance details
+        - **Port**: Typically `5432`
+        - **Database name**: Your database name or `postgres` if using default
 
-1. Navigate to your RDS PostgreSQL instance in the RDS console.
-2. Click on **Modify**.
-3. Under **Database authentication**, enable **IAM database authentication**.
-4. Click **Continue**, then **Apply immediately** to save changes.
+        **For Docker deployments**, add these variables to your `.env` file:
 
-### 2. Create and Configure a Database User for IAM Auth
+        ```bash
+        USE_IAM_AUTH=false
+        POSTGRES_HOST=<your-rds-endpoint>
+        POSTGRES_PORT=5432
+        POSTGRES_DB=<your-database-name>
+        POSTGRES_USER=<your-master-username>
+        POSTGRES_PASSWORD=<your-master-password>
+        ```
 
-Connect to your database using the master user credentials. Then, execute the following SQL commands:
+        **For EKS deployments**, add these to your `values.yaml` file:
 
-```sql
-CREATE ROLE mydbuser LOGIN;
-GRANT rds_iam TO mydbuser;
-ALTER ROLE mydbuser WITH NOINHERIT;
-```
+        ```yaml
+        auth:
+          secrets:
+            POSTGRES_PASSWORD: "<your-master-password>"
+        configMap:
+          USE_IAM_AUTH: "false"
+          POSTGRES_HOST: "<your-rds-endpoint>"
+          POSTGRES_PORT: "5432"
+          POSTGRES_DB: "<your-database-name>"
+          POSTGRES_USER: "<your-master-username>"
+        ```
 
-This creates `mydbuser`, who will authenticate using IAM tokens instead of a static password.
+        Onyx will now connect to your RDS PostgreSQL instance using these credentials.
+    </Step>
+</Steps>
 
-### 3. Retrieve the DB Instance Resource ID
+## Optional: Enable IAM Authentication
 
-Run the following AWS CLI command to retrieve the `DbInstanceResourceId` (or for an RDS cluster, `DbClusterResourceId` if using a cluster setup):
+For enhanced security, you can enable IAM database authentication instead of using static passwords.
+This allows Onyx to connect using short-lived IAM credentials.
 
-```bash
-aws rds describe-db-instances \
-  --db-instance-identifier <your-db-instance-name> \
-  --region <your-region>
-```
+<Steps>
+    <Step title="Enable IAM authentication on RDS">
+      Navigate to your RDS instance in the AWS console and enable IAM authentication.
 
-From the output, note the `"DbiResourceId"` (for single-instance RDS) or `"DbClusterResourceId"` (for Aurora).
+      - Go to your RDS PostgreSQL instance
+      - Click **Modify**
+      - Under **Database authentication**, enable **IAM database authentication**
+      - Click **Continue**, then **Apply immediately**
+    </Step>
 
-### 4. Create or Update an IAM Policy for `rds-db:connect`
+    <Step title="Create IAM database user">
+      Connect to your database and create a user for IAM authentication.
 
-Attach the following IAM policy to the IAM principal (user or role) that will connect to the database:
+      Using your master credentials, run these SQL commands:
 
-```json
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Effect": "Allow",
-      "Action": "rds-db:connect",
-      "Resource": "arn:aws:rds-db:<region>:<account_id>:dbuser:<resource_id>/mydbuser"
-    }
-  ]
-}
-```
+      ```sql
+      CREATE ROLE onyxuser LOGIN;
+      GRANT rds_iam TO onyxuser;
+      ALTER ROLE onyxuser WITH NOINHERIT;
+      GRANT CREATE ON DATABASE <your-db-name> TO onyxuser;
+      GRANT USAGE ON SCHEMA public TO onyxuser;
+      GRANT CREATE ON SCHEMA public TO onyxuser;
+        ```
+    </Step>
 
-Replace the placeholders with your specific values:
+    <Step title="Configure IAM policy">
+      Create an IAM policy to allow database connections.
 
-- `<region>`: Your AWS region.
-- `<account_id>`: Your AWS account ID.
-- `<resource_id>`: The resource ID retrieved in the previous step.
-- `mydbuser`: The database user you created above.
+      Get your `DbiResourceId` or `DbClusterResourceId`:
 
-### 5. Obtain the RDS CA Certificate Bundle
+      ```bash
+      aws rds describe-db-instances \
+        --db-instance-identifier <your-db-instance-name> \
+        --region <your-region>
+      ```
 
-Download the RDS CA certificate bundle appropriate for your region. For example:
+      Create this IAM policy, fill in the `region`, `account-id`, `resource-id`, and attach it to your EC2 instance role:
+    
+      ```json
+      {
+        "Version": "2012-10-17",
+        "Statement": [
+          {
+            "Effect": "Allow",
+            "Action": "rds-db:connect",
+            "Resource": "arn:aws:rds-db:<region>:<account-id>:dbuser:<resource-id>/onyxuser"
+          }
+        ]
+      }
+      ```
+    </Step>
 
-- [rds-combined-ca-bundle.pem](https://s3.amazonaws.com/rds-downloads/rds-combined-ca-bundle.pem)
+    <Step title="Download SSL certificate">
+        Download the RDS CA certificate bundle for secure connections.
 
-Save it locally, for example:
+        ```bash
+        wget https://s3.amazonaws.com/rds-downloads/rds-combined-ca-bundle.pem
+        ```
 
-```bash
-us-east-2-bundle.pem
-```
+        <Note>
+            The SSL certificate is required for IAM authentication to work properly.
+        </Note>
+    </Step>
 
-### 6. Provide the SSL Certificate to Onyx
+    <Step title="Configure Onyx for IAM authentication">
+      Update your environment variables to use IAM authentication.
 
-To allow Onyx to verify the SSL connection to RDS, you need to pass the certificate bundle into your Docker Compose or Kubernetes setup.
+      **For Docker deployments**, add these variables to your `.env` file:
 
-#### For Docker Compose
+      ```bash
+      USE_IAM_AUTH=true
+      AWS_REGION=<your-region>
+      POSTGRES_HOST=<your-rds-endpoint>
+      POSTGRES_PORT=5432
+      POSTGRES_DB=<your-database-name>
+      POSTGRES_USER=onyxuser
+      ```
 
-In your `docker-compose.yml` file, under the `api_server` service, uncomment or add the following lines to mount the certificate:
+      Mount the SSL certificate in your `docker-compose.yml`:
+    
+      ```yaml docker-compose-prod.yml
+      services:
+        api_server:
+          volumes:
+            - ./rds-combined-ca-bundle.pem:/app/bundle.pem:ro
+      ```
 
-```yaml
-services:
-  api_server:
-    # ...
-    volumes:
-      - ./us-east-2-bundle.pem:/app/bundle.pem:ro
-```
+      **For Kubernetes deployments**, add these to your `values.yaml` file:
 
-This mounts the `us-east-2-bundle.pem` file from your local directory into the container at `/app/bundle.pem`.
+      ```yaml
+      configMap:
+        USE_IAM_AUTH: "true"
+        AWS_REGION: "<your-region>"
+        POSTGRES_HOST: "<your-rds-endpoint>"
+        POSTGRES_PORT: "5432"
+        POSTGRES_DB: "<your-database-name>"
+        POSTGRES_USER: "onyxuser"
+      ```
 
-#### For Kubernetes
+      Create a secret for the SSL certificate and mount it:
+  
+      ```bash
+      kubectl create secret generic bundle-pem-secret --from-file=rds-combined-ca-bundle.pem
+      ```
 
-In your Kubernetes deployment for the `api_server`, create a secret containing the certificate and mount it into the container.
+      Next, we'll mount the certificate in all of our containers in the `values.yaml` file. 
+      
+      **Go through each container and replace the empty `volumes` and `volumeMounts` with the following:**
 
-1. **Create a Kubernetes Secret**:
+      ```yaml
+      volumes:
+      - name: rds-ca
+          secret:
+            secretName: bundle-pem-secret
 
-   ```bash
-   kubectl create secret generic bundle-pem-secret --from-file=us-east-2-bundle.pem
-   ```
+      volumeMounts:
+        - name: rds-ca
+          mountPath: "/app/bundle.pem"
+          subPath: bundle.pem
+          readOnly: true
+      ```
+    </Step>
 
-2. **Update Your Deployment YAML**:
+    <Step title="Restart Onyx">
+      Restart your Onyx instance to apply the changes.
+  
+      ```bash Docker
+      docker compose -f docker-compose.dev.yml -p onyx-stack up -d --build --force-recreate
+      ```
 
-   In your `api_server` deployment YAML file, uncomment or add the following under the container definition:
+      ```bash kubectl
+      kubectl rollout restart deployment
+      ```
+    </Step>
+</Steps>
 
-   ```yaml
-   containers:
-     - name: api_server
-       # ...
-       volumeMounts:
-         - name: bundle-pem
-           mountPath: "/app/certs"
-           readOnly: true
-   volumes:
-     - name: bundle-pem
-       secret:
-         secretName: bundle-pem-secret
-   ```
-
-This mounts the certificate into the container at `/app/certs`.
-
-### 7. Update Environment Variables for Onyx with IAM Auth
-
-```bash
-export AWS_REGION="<your-region>"
-export POSTGRES_HOST="<rds-endpoint>"
-export POSTGRES_PORT="5432"
-export POSTGRES_DB="<db-name>"
-export POSTGRES_USER="mydbuser"
-
-# Since ware using IAM roles or AWS credentials:
-export USE_IAM_AUTH=true
-export AWS_ACCESS_KEY_ID="<your-access-key-id>"
-export AWS_SECRET_ACCESS_KEY="<your-secret-access-key>"
-```
-
-Ensure that your certificate is properly mounted inside the container (`/app/bundle.pem` for Docker Compose). You will need to comment out the relavant lines in the Docker Compose or Kubernetes yaml files.
-This will be necessary to do in the background and api services.
-
-Onyx will now use IAM authentication tokens and SSL verification.
-
-### 8. Test the Connection Using `psql` (Optional)
-
-To manually test the connection:
-
-```bash
-psql "host=<rds-endpoint> \
-      port=5432 \
-      dbname=<db-name> \
-      user=mydbuser \
-      sslmode=verify-full \
-      sslrootcert=us-east-2-bundle.pem \
-      password=$TOKEN"
-```
-
-This should establish a secure SSL connection using IAM authentication.
-
-### 9. Ensure Proper Permissions and Migrations
-
-```sql
-GRANT CREATE ON DATABASE <db-name> TO mydbuser;
-GRANT USAGE ON SCHEMA public TO mydbuser;
-GRANT CREATE ON SCHEMA public TO mydbuser;
-```
-
----
-
-For more information, refer to the [AWS Documentation on IAM Database Authentication](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/UsingWithRDS.IAMDBAuth.html).
+For more details, see the [AWS RDS IAM Authentication documentation](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/UsingWithRDS.IAMDBAuth.html).
