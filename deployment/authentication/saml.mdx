@@ -25,7 +25,7 @@ Please contact us if you need help with a different identity provider.
    <Step title="Create Okta Application">
       Navigate to the Okta **Admin Console** → **Applications** → **Create App Integration**.
 
-      <img className="rounded-image" src="/assets/deployment/saml_create_integration.png" alt="Okta Create Integration Page" />
+      <img className="rounded-image" src="/assets/deployment/oidc_create_integration.png" alt="Okta Create Integration Page" />
    </Step>
 
    <Step title="Configure Okta Application">
@@ -62,7 +62,7 @@ Please contact us if you need help with a different identity provider.
 
    <Step title="Configure Onyx for SAML">
       Navigate to `onyx/backend/ee/onyx/configs/saml_config` and copy the template settings file.
-    
+   
       ```bash
       cd onyx/backend/ee/onyx/configs/saml_config
       cp template_settings.yaml settings.yaml
@@ -111,7 +111,7 @@ Please contact us if you need help with a different identity provider.
 
          <Accordion title="sp: entityId">
             This is the same as the **Audience URI (SP Entity ID)** you added to the Okta application.
-
+            
             ```
             https://YOUR_ONYX_DOMAIN.com/metadata
             ```
@@ -127,7 +127,7 @@ Please contact us if you need help with a different identity provider.
 
          <Accordion title="sp: x509cert">
             Generate a self-signed certificate:
-        
+
             ```bash
             openssl genrsa -out sp-private-key.pem 2048
             openssl req -new -x509 -key sp-private-key.pem -out sp-cert.pem -days 730 -subj "/CN=<YOUR_DOMAIN e.g. saml.onyx.dev>"

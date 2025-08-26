@@ -58,9 +58,9 @@ Please contact us if you need help with a different identity provider.
 
       ```bash .env
       AUTH_TYPE=oidc
-      OIDC_CLIENT_ID=<CLIENT_ID_FROM_OKTA>
-      OIDC_CLIENT_SECRET=<CLIENT_SECRET_FROM_OKTA>
-      OIDC_CONFIG_URL=https://<YOUR_OKTA_BASE_URL>/.well-known/openid-configuration
+      OAUTH_CLIENT_ID=<CLIENT_ID_FROM_OKTA>
+      OAUTH_CLIENT_SECRET=<CLIENT_SECRET_FROM_OKTA>
+      OPENID_CONFIG_URL=https://<YOUR_OKTA_BASE_URL>/.well-known/openid-configuration
       ```
 
       <Note>
@@ -70,8 +70,8 @@ Please contact us if you need help with a different identity provider.
       ```bash values.yaml
       auth: 
          secrets:
-            OIDC_CLIENT_ID: <CLIENT_ID_FROM_OKTA>
-            OIDC_CLIENT_SECRET:<CLIENT_SECRET_FROM_OKTA>
+            OAUTH_CLIENT_ID: <CLIENT_ID_FROM_OKTA>
+            OAUTH_CLIENT_SECRET:<CLIENT_SECRET_FROM_OKTA>
       configMap:
          AUTH_TYPE: oidc
          OPENID_CONFIG_URL: https://<YOUR_OKTA_BASE_URL>/.well-known/openid-configuration
