@@ -69,7 +69,7 @@
             "group": "Deployment Guides",
             "pages": [
               {
-                "group": "Local Deployments",
+                "group": "Local Deployment",
                 "icon": "desktop",
                 "pages": [
                   "deployment/deployment_guides/local_deployments/docker",
@@ -103,7 +103,7 @@
           {
             "group": "Configuration",
             "pages": [
-              "deployment/configuration/env_vars",
+              "deployment/configuration/configuration",
               "deployment/configuration/chrome_extension"
             ]
           },

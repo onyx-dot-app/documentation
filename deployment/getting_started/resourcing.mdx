@@ -32,8 +32,12 @@ When evaluating your instance, follow the Preferred resources in the table above
 | DigitalOcean | Meet the preferred resources in the table above |
 
 <Accordion title="Vespa on older CPUs">
-  Vespa requires Haswell (2013) or later CPUs. For older CPUs, use the `vespaengine/vespa-generic-intel-x86_64` image in your `docker-compose.yml`. 
-  This generic image is slower but compatible. For  more details, see [Vespa CPU Support](https://docs.vespa.ai/en/cpu-support.html).
+  **Vespa requires Haswell (2013) or later CPUs.**
+  
+  For older CPUs, use the `vespaengine/vespa-generic-intel-x86_64` image in your Docker Compose file. 
+  This generic image is slower.
+  
+  For  more details, see [Vespa CPU Support](https://docs.vespa.ai/en/cpu-support.html).
 </Accordion>
 
 ## Container-Specific Resourcing
@@ -97,7 +101,7 @@ If deploying with Kubernetes or AWS EKS, this would give a per-component resourc
 | `postgres` | 2 | 4 Gi |
 | `vespa` | 10 | 34 Gi |
 
-This comes out to a total available node size of ~20 CPU and ~60GB of Memory.
+Total available node size: ~20 CPU and ~60GB of Memory.
 
 ## Next Steps
 <CardGroup cols={2}>
