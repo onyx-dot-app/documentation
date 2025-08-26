@@ -25,7 +25,9 @@
     ```bash .env.nginx
     DOMAIN=<YOUR_DOMAIN>  # Something like "onyx.app"
     ```
-    
+</Step>
+
+<Step title="Launch Onyx">
     Running the `init-letsencrypt.sh` script will get us a SSL certificate from letsencrypt and launch the Onyx stack.
 
     ```bash
@@ -35,7 +37,7 @@
     If you are skipping the HTTPS setup, start Onyx manually:
 
     ```bash
-    docker-compose -f docker-compose.dev.yml -p onyx-stack up -d --build --force-recreate
+    docker compose -f docker-compose.dev.yml -p onyx-stack up -d --build --force-recreate
     ```
     
     <Note>
