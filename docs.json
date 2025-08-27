@@ -12,6 +12,7 @@
     "tabs": [
       {
         "tab": "Overview",
+        "icon": "house",
         "pages": [
           {
             "group": "Getting Started",
@@ -53,9 +54,9 @@
           }
         ]
       },
-
       {
         "tab": "Deployment",
+        "icon": "server",
         "pages": [
           {
             "group": "Getting Started",
@@ -112,13 +113,14 @@
             "pages": [
               "deployment/miscellaneous/release_process",
               "deployment/miscellaneous/enterprise_edition",
-              "deployment/contact_us"
+              "deployment/miscellaneous/contact_us"
             ]
           }
         ]
       },
       {
         "tab": "Admins",
+        "icon": "user-shield",
         "pages": [
           {
             "group": "Getting Started",
@@ -264,6 +266,7 @@
       },
       {
         "tab": "Developers",
+        "icon": "square-terminal",
         "pages": [
           {
             "group": "Getting Started",
@@ -421,11 +424,11 @@
       },
       {
         "tab": "Security",
+        "icon": "shield",
         "pages": [
           {
             "group": "Architecture",
             "pages": [
-              "deployment/getting_started/system_architecture",
               "security/architecture/system_description",
               "security/architecture/data_flows",
               "security/architecture/data_storage",
@@ -524,11 +527,5 @@
     "metatags": {
       "keywords": "danswer"
     }
-  },
-  "redirects": [
-    {
-      "source": "/developers/welcome",
-      "destination": "/developers/overview"
-    }
-  ]
+  }
 }
