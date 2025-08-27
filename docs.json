@@ -111,8 +111,8 @@
           {
             "group": "Miscellaneous",
             "pages": [
-              "deployment/miscellaneous/release_process",
               "deployment/miscellaneous/enterprise_edition",
+              "deployment/miscellaneous/release_process",
               "deployment/miscellaneous/contact_us"
             ]
           }
