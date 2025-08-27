@@ -1,0 +1,81 @@
+---
+title: "OIDC"
+description: "OpenID Connect authentication setup"
+icon: "id-card"
+---
+import EnterpriseEditionInfo from "/snippets/enterprise-edition-info.mdx"
+
+Configure Onyx with OpenID Connect (OIDC) authentication. Available with common identity providers such as Okta and Microsoft Entra ID (Azure AD).
+
+<EnterpriseEditionInfo />
+
+This guide will walk you through the setup process for Okta. Other identity providers will have a similar process. 
+Please contact us if you need help with a different identity provider.
+
+## Guide
+<Steps>
+   <Step title="Create Okta Application">
+      Navigate to the Okta **Admin Console** → **Applications** → **Create App Integration**.
+
+      <img className="rounded-image" src="/assets/deployment/oidc_create_integration.png" alt="Okta Create Integration Page" />
+   </Step>
+
+   <Step title="Configure Okta Application">
+      Select **OIDC** and **Web Application**.
+
+      Name your application `Onyx`.
+
+      <Tip>
+         If you are white-labeling Onyx, you can freely name your application.
+      </Tip>
+
+      Add a **Sign-in redirect URI**
+
+      ```
+      https://YOUR_ONYX_DOMAIN.com/auth/oidc/callback
+      ```
+
+      Determine whether all users or select groups may access Onyx or skip this step and assign users later.
+
+      <img className="rounded-image" src="/assets/deployment/oidc_config.png" alt="Okta Configure OIDC Application Page" />
+
+   </Step>
+   
+   <Step title="Save OIDC Credentials">
+      Create the new Application and save the **Client ID** and **Client Secret**.
+
+      Also note your **Okta Base URL** in the format of `https://<YOUR_ORG_NAME>.okta.com`.
+
+      <img className="rounded-image" src="/assets/deployment/oidc_secrets.png" alt="Okta OIDC Credentials Page" />
+
+      <Note>
+         After saving your application, you can upload the Onyx logo or your white-labeled logo by clicking the gear icon next to the app title **Onyx**
+      </Note>
+   </Step>
+
+   <Step title="Configure Onyx for OIDC">
+      Configure Onyx with the following environment variables in your `.env` or `values.yaml` file (Docker and Kubernetes, respectively).
+
+      ```bash .env
+      AUTH_TYPE=oidc
+      OAUTH_CLIENT_ID=<CLIENT_ID_FROM_OKTA>
+      OAUTH_CLIENT_SECRET=<CLIENT_SECRET_FROM_OKTA>
+      OPENID_CONFIG_URL=https://<YOUR_OKTA_BASE_URL>/.well-known/openid-configuration
+      ```
+
+      <Note>
+         If you're using Docker but don't have a `.env` file, copy `onyx/deployment/docker_compose/env.prod.template` to a new `.env` file in the same directory.
+      </Note>
+
+      ```bash values.yaml
+      auth: 
+         secrets:
+            OAUTH_CLIENT_ID: <CLIENT_ID_FROM_OKTA>
+            OAUTH_CLIENT_SECRET:<CLIENT_SECRET_FROM_OKTA>
+      configMap:
+         AUTH_TYPE: oidc
+         OPENID_CONFIG_URL: https://<YOUR_OKTA_BASE_URL>/.well-known/openid-configuration
+      ```
+   </Step>
+</Steps>
+
