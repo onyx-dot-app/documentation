@@ -5,7 +5,7 @@ icon: "link"
 ---
 
 <Tip>
-  This is an advanced guide for automating connector creation. We highly recommend trying the Admin Dashboard or File Ingestion API first.
+  This is an advanced guide for automating connector creation. We highly recommend trying the Admin Panel or File Ingestion API first.
 </Tip>
 
 To see available connectors, see the [Connectors page](/admin/connectors).
@@ -54,7 +54,7 @@ In this example, we'll automate creating Jira Connectors for a selection of proj
     }
     ```
     <Note>
-      The `ConnectorSpecificConfig` are the same fields you fill out in the Admin Dashboard when creating a Connector. 
+      The `ConnectorSpecificConfig` are the same fields you fill out in the Admin Panel when creating a Connector. 
     </Note>
   </Step>
 
@@ -211,7 +211,7 @@ In this example, we'll automate creating Jira Connectors for a selection of proj
   </Step>
 
   <Step title="Find your Credentials for the Connector">
-    The easiest way to create a Credential is in the Admin Dashboard. 
+    The easiest way to create a Credential is in the Admin Panel. 
     - Click Add a Connector
     - Select your relevant Connector
     - Follow the instructions to create a Credential
@@ -244,7 +244,7 @@ In this example, we'll automate creating Jira Connectors for a selection of proj
 
   <Step title="Associate the Credential with the Connector">
     <Note>
-      If you do not do this step, your `Connector` is not fully created and you will not see it in the Admin Dashboard!
+      If you do not do this step, your `Connector` is not fully created and you will not see it in the Admin Panel!
     </Note>
 
     <CodeGroup>
@@ -352,7 +352,7 @@ In this example, we'll automate creating Jira Connectors for a selection of proj
             jira_credential_id = jira_credential['id']
             print(f"Found Jira credential with ID: {jira_credential_id}")
         else:
-            print("No Jira credential found. Please create one in the Admin Dashboard first.")
+            print("No Jira credential found. Please create one in the Admin Panel first.")
             exit(1)
     else:
         print(f"Failed to fetch credentials: {response.status_code}")
@@ -446,7 +446,7 @@ In this example, we'll automate creating Jira Connectors for a selection of proj
         if [ "$JIRA_CREDENTIAL_ID" != "null" ] && [ -n "$JIRA_CREDENTIAL_ID" ]; then
             echo "Found Jira credential with ID: $JIRA_CREDENTIAL_ID"
         else
-            echo "No Jira credential found. Please create one in the Admin Dashboard first."
+            echo "No Jira credential found. Please create one in the Admin Panel first."
             exit 1
         fi
     else
