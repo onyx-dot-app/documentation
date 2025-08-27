@@ -219,6 +219,69 @@
         ]
       },
       {
+        "tab": "(New!) Deployment",
+        "pages": [
+          {
+            "group": "Getting Started",
+            "pages": [
+              "deployment/overview",
+              "deployment/getting_started/quickstart",
+              "deployment/getting_started/resourcing"
+            ]
+          },
+          {
+            "group": "Deployment Guides",
+            "pages": [
+              {
+                "group": "Local Deployment",
+                "icon": "desktop",
+                "pages": [
+                  "deployment/deployment_guides/local_deployments/docker",
+                  "deployment/deployment_guides/local_deployments/kubernetes"
+                ]
+              },
+              {
+                "group": "AWS",
+                "icon": "aws",
+                "pages": [
+                  "deployment/deployment_guides/aws/ec2",
+                  "deployment/deployment_guides/aws/eks",
+                  "deployment/deployment_guides/aws/rds"
+                ]
+              },
+              "deployment/deployment_guides/gcp",
+              "deployment/deployment_guides/azure",
+              "deployment/deployment_guides/digital_ocean"
+            ]
+          },
+
+          {
+            "group": "Authentication",
+            "pages": [
+              "deployment/authentication/basic",
+              "deployment/authentication/oauth",
+              "deployment/authentication/oidc",
+              "deployment/authentication/saml"
+            ]
+          },
+          {
+            "group": "Configuration",
+            "pages": [
+              "deployment/configuration/configuration",
+              "deployment/configuration/chrome_extension"
+            ]
+          },
+          {
+            "group": "Miscellaneous",
+            "pages": [
+              "deployment/miscellaneous/release_process",
+              "deployment/miscellaneous/enterprise_edition",
+              "deployment/miscellaneous/contact_us"
+            ]
+          }
+        ]
+      },
+      {
         "tab": "Developers",
         "pages": [
           {

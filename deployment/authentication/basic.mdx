@@ -1,0 +1,93 @@
+---
+title: Basic Auth
+description: "Set up Onyx with basic username/password authentication"
+icon: "user-lock"
+---
+
+Basic Auth is the easiest way to get started with Onyx. However, we recommend using Google OAuth, OIDC, or SAML for production deployments.
+
+<Tip>
+  If you have questions about which authentication approach is best for your organization, don't hesitate to [contact us](https://docs.onyx.app/contact_us) - we're happy to help you choose the right solution.
+</Tip>
+
+## Basic Setup
+
+**Using Docker:**
+
+In your `.env` file, set:
+
+```bash
+AUTH_TYPE=basic
+```
+
+**Using Helm:**
+
+In your `values.yaml` file, set:
+
+```yaml
+configMap: 
+  AUTH_TYPE: basic
+```
+If you don't need email verification, you're done!
+
+Restart Onyx to apply the changes and the next time you visit the site, you'll be prompted to create an account and set a password.
+
+<Accordion title="Password Requirements">
+    - 12+ characters
+    - 1 number
+    - 1 special character
+    - 1 uppercase letter
+    - 1 lowercase letter
+</Accordion>
+
+## Basic Auth with Email Verification
+
+Enabling email verification blocks your users from signing in until they click their verification email.
+
+**Using Docker:**
+
+Set the following in your `.env` file:
+
+```bash
+AUTH_TYPE=basic
+
+# Enable email verification
+REQUIRE_EMAIL_VERIFICATION=true
+
+# Email configuration
+SMTP_USER=<EMAIL_TO_SEND_VERIFICATION_EMAILS_FROM>  # e.g. noreply@yourcompany.com
+SMTP_PASS=<PASSWORD_FOR_THE_EMAIL_ABOVE>
+
+# Required for non-Gmail accounts
+SMTP_SERVER=<YOUR_SMTP_SERVER>
+SMTP_PORT=<PORT_YOUR_SMTP_SERVER_LISTENS_ON>  # default: 587
+```
+
+**Using Helm:**
+
+Set the following in your `values.yaml` file:
+
+```yaml
+auth:
+  secrets:
+      smpt_pass: <PASSWORD_FOR_THE_SMTP_USER>
+configMap: 
+  AUTH_TYPE: basic
+  
+  REQUIRE_EMAIL_VERIFICATION: true
+  SMTP_USER: <EMAIL_TO_SEND_VERIFICATION_EMAILS_FROM>
+
+  # Required for non-Gmail accounts
+  SMTP_SERVER: <YOUR_SMTP_SERVER>
+  SMTP_PORT: <PORT_YOUR_SMTP_SERVER_LISTENS_ON>
+```
+
+## Next Steps
+<CardGroup cols={2}>
+  <Card title="Set up Google OAuth" icon="google" href="/deployment/authentication/oauth">
+    Google OAuth is a secure and easy way to authenticate users with their Google accounts.
+  </Card>
+  <Card title="Other Onyx Configuration Options" icon="gear" href="/deployment/configuration/configuration">
+    There are many other configuration options available for Onyx.
+  </Card>
+</CardGroup>

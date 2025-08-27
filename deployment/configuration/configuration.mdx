@@ -1,0 +1,580 @@
+---
+title: Configure Onyx
+description: "How to configure Onyx using environment variables and deployment files"
+icon: "sliders"
+---
+
+## Configuring Onyx Deployments
+
+Onyx offers a wide range of deployment-level configuration options. 
+These are controlled via environment variables or through your deployment files.
+
+<AccordionGroup>
+  <Accordion title="Configuring Docker Deployments">
+    If you don't have a `.env` file:
+
+    ```bash
+    cd onyx/deployment/docker_compose
+    cp env.prod.template .env
+
+    # If applicable
+    cp env.nginx.template .env.nginx
+    ```
+
+    The template files have a subset of common environment variables provided for you.
+    You can add more environment variables (listed below) to these `.env` files.
+
+    Some configuration options must be set in your Docker Compose file.
+    <Note>
+      The Docker Compose file you use to launch Onyx is the one you will need to modify. Likely either `docker-compose.dev.yml` or `docker-compose.prod.yml`.
+    </Note>
+  </Accordion>
+  <Accordion title="Configuring Kubernetes Deployments">
+    Kubernetes deployments are configured using Helm charts. We have provided a `values.yaml` file where you can set all environment variables.
+
+    ```bash
+    cd onyx/deployment/helm/charts/onyx
+    vim values.yaml
+    ```
+
+    Add environment variables and secrets to the `configMap` and `auth.secrets` sections. A subset of common configuration options are provided for you.
+    You can add more environment variables (listed below) to these sections.
+  </Accordion>
+</AccordionGroup>
+
+<Tip>
+  Many configuration options are available in the Admin Dashboard! This page only covers deployment-level configuration.
+</Tip>
+
+## Commonly Configured Options
+
+### Authentication
+
+<CardGroup>
+  <Card title="Basic Authentication" icon="shield-check" href="/deployment/authentication/basic">
+    Set up email and password authentication.
+  </Card>
+  <Card title="Google OAuth" icon="google" href="/deployment/authentication/oauth">
+    Authenticate with Google accounts.
+  </Card>
+  <Card title="OIDC" icon="shield-check" href="/deployment/authentication/oidc">
+    Enterprise Edition SSO
+  </Card>
+  <Card title="SAML" icon="shield-check" href="/deployment/authentication/saml">
+    Enterprise Edition SSO
+  </Card>
+</CardGroup>
+
+### Custom Domain
+
+To host Onyx on a custom domain, set the `WEB_DOMAIN` environment variable and update your DNS records to point to your public Onyx deployment IP.
+
+For additional instructions, read the [EC2 Deployment Guide](/deployment/deployment_guides/aws/ec2)!
+
+### SSL
+
+If using Docker, the `init-letsencrypt.sh` script in `onyx/deployment/docker_compose` will automatically generate a Let's Encrypt certificate and launch Onyx with SSL enabled.
+
+### Internet Search
+
+To enable the Internet Search Tool, set the `EXA_API_KEY` environment variable.
+
+<Note>
+  Internet Search in Onyx is continually developing and these instructions will be updated as we make improvements.
+</Note>
+
+### Logging
+
+When self-hosting Onyx, you can configure the level of detail in the logs. This is helpful when troubleshooting issues.
+
+If using Docker, set `LOG_LEVEL` to `debug` in each container of your Docker Compose file.
+
+If using Kubernetes, set `LOG_LEVEL` to `debug` in your `values.yaml` file.
+
+### Multilingual Configuration
+
+Although Onyx assumes English by default, the system can be configured to support multiple languages in the Admin Dashboard and through environment variables.
+
+1. Select a multi-lingual embedding model in the **Search Settings** of the Admin Dashboard
+
+2. Set the following environment variables:
+```bash
+MULTILINGUAL_QUERY_EXPANSION="English, French, YOUR_LANGUAGE_HERE"
+
+LANGUAGE_HINT="IMPORTANT: ALWAYS RESPOND IN FRENCH! Even if the documents and the user query are in English, your response must be in French."
+LANGUAGE_CHAT_NAMING_HINT="The name of the conversation must be in the same language as the user query."
+```
+
+<Tip>
+  Feel free to change the `LANGUAGE_HINT` and `LANGUAGE_CHAT_NAMING_HINT` prompts to your liking!
+</Tip>
+
+## Onyx Environment Variables
+
+<Info>
+    This is not an exhaustive list of all Onyx environment variables. 
+</Info>
+
+<AccordionGroup>
+  <Accordion title="App Configuration">
+    `SKIP_WARM_UP`: Skip application warm-up process for hot-reloading the `API server`.
+    Only set this for development purposes.
+
+    `WEB_DOMAIN`: Set this if you are deploying Onyx on a custom domain.
+
+    `DISABLE_GENERATIVE_AI`: Disable generative AI features.
+
+    `DISABLE_USER_KNOWLEDGE`: Controls whether users can use the My Documents feature with assistants.
+
+    `ONYX_QUERY_HISTORY_TYPE`: Controls query history reports (show user emails, anonymous, no queries)
+  </Accordion>
+
+  <Accordion title="Authentication & Security">
+    `AUTH_TYPE`: Authentication type (disabled, basic, oauth, etc.)
+
+    `PASSWORD_MIN_LENGTH`: For basic auth. The minimum password length requirement
+
+    `PASSWORD_MAX_LENGTH`: For basic auth. The maximum password length requirement
+
+    `PASSWORD_REQUIRE_UPPERCASE`: For basic auth. Require uppercase letters in passwords
+
+    `PASSWORD_REQUIRE_LOWERCASE`: For basic auth. Require lowercase letters in passwords
+
+    `PASSWORD_REQUIRE_DIGIT`: For basic auth. Require digits in passwords
+
+    `PASSWORD_REQUIRE_SPECIAL_CHAR`: For basic auth. Require special characters in passwords
+
+    `ENCRYPTION_KEY_SECRET`: Enterprise Edition only. Key for encrypting connector credentials, API keys, etc.
+
+    `MASK_CREDENTIAL_PREFIX`: Mask connector credentials in the admin UI. 
+    Turn off if admins should see the credentials in the admin panel.
+
+    `SESSION_EXPIRE_TIME_SECONDS`: Session expiration time in seconds.
+    
+    `AUTH_COOKIE_EXPIRE_TIME_SECONDS`: JWT token validity duration in seconds.
+
+    `VALID_EMAIL_DOMAINS`: Comma-separated list of allowed email domains.
+
+    `REQUIRE_EMAIL_VERIFICATION`: Require email verification for registration
+
+    `TRACK_EXTERNAL_IDP_EXPIRY`: Honor the `expires_at` field returned by the external identity provider.
+    Disabled be default because many auth providers have very short expiry times.
+
+  </Accordion>
+
+  <Accordion title="OAuth & OIDCConfiguration">
+    `OAUTH_CLIENT_ID`: For both Google OAuth and OIDC.
+
+    `OAUTH_CLIENT_SECRET`: For both Google OAuth and OIDC.
+
+    `OPENID_CONFIG_URL`: For OIDC.
+  </Accordion>
+
+  <Accordion title="Email Configuration">
+    <Info>
+        Set the following for basic auth email verification and invites.
+    </Info>
+
+    `SMTP_SERVER`: SMTP server hostname
+
+    `SMTP_PORT`: SMTP server port
+
+    `SMTP_USER`: SMTP username
+
+    `SMTP_PASS`: SMTP password
+
+    `EMAIL_FROM`: From email address
+
+    `SENDGRID_API_KEY`: Alternative to SMTP for email delivery.
+
+    `ENABLE_EMAIL_INVITES`: Enable email invitations
+  </Accordion>
+
+  <Accordion title="Slack Configuration">
+    `OAUTH_SLACK_CLIENT_ID`: Slack OAuth client ID for Slack bot.
+
+    `OAUTH_SLACK_CLIENT_SECRET`: Slack OAuth client secret for Slack bot.
+
+  </Accordion>
+
+  <Accordion title="Postgres Configuration">
+    `POSTGRES_USER`: PostgreSQL username
+
+    `POSTGRES_PASSWORD`: PostgreSQL password
+
+    `POSTGRES_HOST`: PostgreSQL host
+
+    `POSTGRES_PORT`: PostgreSQL port
+
+    `POSTGRES_DB`: PostgreSQL database name
+
+    `POSTGRES_API_SERVER_POOL_SIZE`: API server connection pool size
+
+    `POSTGRES_API_SERVER_POOL_OVERFLOW`: API server pool overflow
+
+    `POSTGRES_API_SERVER_READ_ONLY_POOL_SIZE`: Read-only pool size
+
+    `POSTGRES_API_SERVER_READ_ONLY_POOL_OVERFLOW`: Read-only pool overflow
+
+    `POSTGRES_USE_NULL_POOL`: Use null connection pool
+
+    `POSTGRES_POOL_PRE_PING`: Enable connection pre-ping
+
+    `POSTGRES_POOL_RECYCLE`: Pool recycle timeout in seconds
+
+    `USE_IAM_AUTH`: Use IAM authentication for database
+
+    `DB_READONLY_USER`: Read-only database user
+
+    `DB_READONLY_PASSWORD`: Read-only database password
+  </Accordion>
+
+  <Accordion title="Redis Configuration">
+    `REDIS_SSL`: Enable SSL for Redis connections
+
+    `REDIS_HOST`: Redis host
+
+    `REDIS_PORT`: Redis port
+
+    `REDIS_PASSWORD`: Redis password
+
+    `REDIS_REPLICA_HOST`: Redis replica host
+
+    `REDIS_DB_NUMBER`: Redis database number
+
+    `REDIS_DB_NUMBER_CELERY_RESULT_BACKEND`: Celery result backend database number
+
+    `REDIS_DB_NUMBER_CELERY`: Celery broker database number
+
+    `REDIS_HEALTH_CHECK_INTERVAL`: Health check interval
+
+    `REDIS_POOL_MAX_CONNECTIONS`: Maximum pool connections
+
+    `REDIS_SSL_CERT_REQS`: SSL certificate requirements
+
+    `REDIS_SSL_CA_CERTS`: SSL CA certificates
+  </Accordion>
+
+  <Accordion title="Vespa Configuration">
+    `VESPA_HOST`: Vespa host
+
+    `VESPA_CONFIG_SERVER_HOST`: Vespa config server host
+
+    `VESPA_PORT`: Vespa port
+
+    `VESPA_TENANT_PORT`: Vespa tenant port
+
+    `VESPA_NUM_ATTEMPTS_ON_STARTUP`: Startup connection attempts
+
+    `VESPA_CLOUD_URL`: Vespa Cloud URL
+
+    `VESPA_DEPLOYMENT_ZIP`: Vespa deployment zip path
+
+    `VESPA_CLOUD_CERT_PATH`: Vespa Cloud certificate path
+
+    `VESPA_CLOUD_KEY_PATH`: Vespa Cloud key path
+
+    `MANAGED_VESPA`: Use managed Vespa (Vespa Cloud)
+
+    `VESPA_REQUEST_TIMEOUT`: Request timeout in seconds
+
+    `VESPA_SYNC_MAX_TASKS`: Maximum sync tasks
+
+    `VESPA_LANGUAGE_OVERRIDE`: Force Vespa language (en, de, etc.)
+  </Accordion>
+
+  <Accordion title="Celery Configuration">
+    `CELERY_RESULT_EXPIRES`: Result expiration time in seconds
+
+    `CELERY_BROKER_POOL_LIMIT`: Broker connection pool limit
+
+    `CELERY_WORKER_LIGHT_CONCURRENCY`: Light worker concurrency
+
+    `CELERY_WORKER_LIGHT_PREFETCH_MULTIPLIER`: Light worker prefetch multiplier
+
+    `CELERY_WORKER_DOCPROCESSING_CONCURRENCY`: Document processing worker concurrency
+
+    `CELERY_WORKER_DOCFETCHING_CONCURRENCY`: Document fetching worker concurrency
+
+    `CELERY_WORKER_KG_PROCESSING_CONCURRENCY`: Knowledge graph processing worker concurrency
+
+    `EXPERIMENTAL_CHECKPOINTING_ENABLED`: Enable experimental checkpointing
+  </Accordion>
+
+  <Accordion title="Rate Limiting">
+    <Info>
+        These rate limits apply to auth endpoints
+    </Info>
+
+    `RATE_LIMIT_WINDOW_SECONDS`: Rate limiting window in seconds
+
+    `RATE_LIMIT_MAX_REQUESTS`: Maximum requests per window
+
+    `REQUEST_TIMEOUT_SECONDS`: Default request timeout
+  </Accordion>
+
+  <Accordion title="Indexing Configuration">
+    `INDEX_BATCH_SIZE`: Batch size during indexing
+
+    `DISABLE_INDEX_UPDATE_ON_SWAP`: Disable primary index updates during embedding model swaps
+
+    `ENABLE_MULTIPASS_INDEXING`: Enable multipass indexing for better accuracy
+
+    `ENABLE_CONTEXTUAL_RAG`: Enable contextual retrieval
+
+    `DEFAULT_CONTEXTUAL_RAG_LLM_NAME`: Default LLM for contextual RAG
+
+    `DEFAULT_CONTEXTUAL_RAG_LLM_PROVIDER`: Default LLM provider for contextual RAG
+
+    `MINI_CHUNK_SIZE`: Size of mini-chunks in tokens
+
+    `LARGE_CHUNK_RATIO`: Ratio of regular chunks per large chunk
+
+    `SKIP_METADATA_IN_CHUNK`: Skip metadata in chunks
+
+    `CLEANUP_INDEXING_JOBS_TIMEOUT`: Cleanup timeout in hours
+
+    `INDEXING_SIZE_WARNING_THRESHOLD`: Size warning threshold in bytes
+
+    `INDEXING_EMBEDDING_MODEL_NUM_THREADS`: Embedding model threads
+
+    `INDEXING_EXCEPTION_LIMIT`: Exception limit during indexing
+
+    `CONTINUE_ON_CONNECTOR_FAILURE`: Continue indexing on connector failures
+
+    `MAX_DOCUMENT_CHARS`: Maximum document characters
+
+    `MAX_FILE_SIZE_BYTES`: Maximum file size in bytes
+
+    `USE_DOCUMENT_SUMMARY`: Use document summary for contextual RAG
+
+    `USE_CHUNK_SUMMARY`: Use chunk summary for contextual RAG
+
+    `MAX_TOKENS_FOR_FULL_INCLUSION`: Maximum tokens for full inclusion
+  </Accordion>
+
+  <Accordion title="Connector Configuration">
+    <Note>
+        Most of the settings below can be configured in the admin UI.
+    </Note>
+
+    **General Connector Settings**
+    
+    `ENABLED_CONNECTOR_TYPES`: Comma-separated list of enabled connector types
+
+    `POLL_CONNECTOR_OFFSET`: Minutes overlap between poll windows
+
+    `LEAVE_CONNECTOR_ACTIVE_ON_INITIALIZATION_FAILURE`: Keep connector active on init failure
+
+    `CURATORS_CANNOT_VIEW_OR_EDIT_NON_OWNED_ASSISTANTS`: Restrict curator access
+
+    `ENABLE_EXPENSIVE_EXPERT_CALLS`: Enable expensive expert user calls
+
+    **Web Connector**
+
+    `WEB_CONNECTOR_VALIDATE_URLS`: Validate URLs in web connector
+
+    `HTML_BASED_CONNECTOR_TRANSFORM_LINKS_STRATEGY`: Link transformation strategy
+
+    `PARSE_WITH_TRAFILATURA`: Use Trafilatura for HTML parsing
+
+    **Confluence Connector**
+    
+    `OAUTH_CONFLUENCE_CLOUD_CLIENT_ID`: Confluence Cloud OAuth client ID
+
+    `OAUTH_CONFLUENCE_CLOUD_CLIENT_SECRET`: Confluence Cloud OAuth client secret
+
+    `CONFLUENCE_CONNECTOR_LABELS_TO_SKIP`: Labels to skip during indexing
+
+    `CONFLUENCE_CONNECTOR_INDEX_ARCHIVED_PAGES`: Index archived pages
+
+    `CONFLUENCE_CONNECTOR_ATTACHMENT_SIZE_THRESHOLD`: Attachment size threshold
+
+    `CONFLUENCE_CONNECTOR_ATTACHMENT_CHAR_COUNT_THRESHOLD`: Attachment character threshold
+
+    `CONFLUENCE_CONNECTOR_USER_PROFILES_OVERRIDE`: User profiles override JSON
+
+    `CONFLUENCE_TIMEZONE_OFFSET`: Timezone offset for CQL queries
+
+    **Google Drive Connector**
+    
+    `OAUTH_GOOGLE_DRIVE_CLIENT_ID`: Google Drive OAuth client ID
+
+    `OAUTH_GOOGLE_DRIVE_CLIENT_SECRET`: Google Drive OAuth client secret
+
+    `MAX_DRIVE_WORKERS`: Maximum Google Drive workers
+
+    `GOOGLE_DRIVE_CONNECTOR_SIZE_THRESHOLD`: File size threshold for Google Drive
+
+    **SharePoint Connector**
+    
+    `SHAREPOINT_CONNECTOR_SIZE_THRESHOLD`: File size threshold for SharePoint
+
+    **Jira Connector**
+    
+    `OAUTH_JIRA_CLOUD_CLIENT_ID`: Jira Cloud OAuth client ID
+
+    `OAUTH_JIRA_CLOUD_CLIENT_SECRET`: Jira Cloud OAuth client secret
+
+    `JIRA_CONNECTOR_LABELS_TO_SKIP`: Labels to skip during indexing
+
+    `JIRA_CONNECTOR_MAX_TICKET_SIZE`: Maximum ticket size in bytes
+
+    **GitHub Connector**
+    
+    `GITHUB_CONNECTOR_BASE_URL`: GitHub base URL (for enterprise)
+
+    **GitLab Connector**
+    
+    `GITLAB_CONNECTOR_INCLUDE_CODE_FILES`: Include code files in indexing
+
+    **Gong Connector**
+    
+    `GONG_CONNECTOR_START_TIME`: Start time for Gong connector
+
+    **Notion Connector**
+    
+    `NOTION_CONNECTOR_DISABLE_RECURSIVE_PAGE_LOOKUP`: Disable recursive page lookup
+
+    **Zendesk Connector**
+    
+    `ZENDESK_CONNECTOR_SKIP_ARTICLE_LABELS`: Article labels to skip
+
+    **Egnyte Integration**
+    
+    `EGNYTE_CLIENT_ID`: Egnyte OAuth client ID
+
+    `EGNYTE_CLIENT_SECRET`: Egnyte OAuth client secret
+
+    **Linear Integration**
+    
+    `LINEAR_CLIENT_ID`: Linear OAuth client ID
+
+    `LINEAR_CLIENT_SECRET`: Linear OAuth client secret
+  </Accordion>
+
+
+  <Accordion title="Pruning Configuration">
+    `ALLOW_SIMULTANEOUS_PRUNING`: Allow simultaneous pruning operations
+
+    `MAX_PRUNING_DOCUMENT_RETRIEVAL_PER_MINUTE`: Maximum document retrieval rate during pruning
+  </Accordion>
+
+  <Accordion title="Tool Configuration">
+    `OKTA_PROFILE_TOOL_ENABLED`: Enable Okta profile tool
+
+    `OKTA_API_TOKEN`: Okta API token for SSWS auth
+  </Accordion>
+
+  <Accordion title="Logging Configuration">
+    `LOG_ALL_MODEL_INTERACTIONS`: Log all LiteLLM model interactions
+
+    `LOG_DANSWER_MODEL_INTERACTIONS`: Log Onyx model interactions
+
+    `LOG_INDIVIDUAL_MODEL_TOKENS`: Log individual model tokens
+
+    `LOG_VESPA_TIMING_INFORMATION`: Log Vespa query performance
+
+    `LOG_ENDPOINT_LATENCY`: Log endpoint latency
+
+    `LOG_POSTGRES_LATENCY`: Log PostgreSQL latency
+
+    `LOG_POSTGRES_CONN_COUNTS`: Log PostgreSQL connection counts
+  </Accordion>
+
+  <Accordion title="Image Processing Configuration">
+    `IMAGE_MODEL_NAME`: Image model name
+
+    `AZURE_DALLE_API_VERSION`: Azure DALL-E API version
+
+    `AZURE_DALLE_API_KEY`: Azure DALL-E API key
+
+    `AZURE_DALLE_API_BASE`: Azure DALL-E API base URL
+
+    `AZURE_DALLE_DEPLOYMENT_NAME`: Azure DALL-E deployment name
+
+    `IMAGE_SUMMARIZATION_SYSTEM_PROMPT`: System prompt for image summarization
+
+    `IMAGE_SUMMARIZATION_USER_PROMPT`: User prompt for image summarization
+
+    `IMAGE_ANALYSIS_SYSTEM_PROMPT`: System prompt for image analysis
+  </Accordion>
+
+  <Accordion title="File Storage Configuration">
+    `S3_FILE_STORE_BUCKET_NAME`: S3 bucket name for file storage
+
+    `S3_FILE_STORE_PREFIX`: S3 prefix for file storage
+
+    `S3_ENDPOINT_URL`: S3 endpoint URL (for MinIO and other S3-compatible storage)
+
+    `S3_VERIFY_SSL`: Verify SSL for S3 connections
+
+    `S3_AWS_ACCESS_KEY_ID`: AWS access key ID for S3
+
+    `S3_AWS_SECRET_ACCESS_KEY`: AWS secret access key for S3
+  </Accordion>
+
+  <Accordion title="Telemetry & Analytics">
+    `DISABLE_TELEMETRY`: Disable anonymous usage telemetry
+
+    `TOKEN_BUDGET_GLOBALLY_ENABLED`: Enable global token budget
+
+    `CUSTOM_ANSWER_VALIDITY_CONDITIONS`: Custom answer validity conditions
+  </Accordion>
+
+  <Accordion title="API Configuration">
+    `API_PREFIX`: Used to prepend a base path for all API routes. 
+        Set this to `/api` if you are running Onyx behind a reverse proxy that doesn't support stripping the `/api` prefix
+        from requests to the `API server`. 
+    
+    `API_KEY_HASH_ROUNDS`: Hash rounds for API keys
+
+    `LLM_MODEL_UPDATE_API_URL`: LLM model update API endpoint
+
+    `LITELLM_CUSTOM_ERROR_MESSAGE_MAPPINGS`: Custom error message mappings (JSON)
+  </Accordion>
+
+  <Accordion title="Federated Search Configuration">
+    `MAX_FEDERATED_SECTIONS`: Maximum federated sections to keep
+
+    `MAX_FEDERATED_CHUNKS`: Maximum chunks per federated connector
+  </Accordion>
+
+  <Accordion title="Enterprise Configuration">
+    <Tip>
+        [Contact us](/deployment/miscellaneous/contact_us) to enable Enterprise Edition features!
+    </Tip>
+
+    `DATA_PLANE_SECRET`: Secret for secure control/data plane communication
+
+    `EXPECTED_API_KEY`: Additional security check for control plane API
+
+    `CONTROL_PLANE_API_BASE_URL`: Control plane API base URL
+  </Accordion>
+
+  <Accordion title="Development & Testing">
+    `DEV_MODE`: Enable development mode
+
+    `INTEGRATION_TESTS_MODE`: Enable integration tests mode
+
+    `TEST_ENV`: Test environment flag
+
+    `MOCK_LLM_RESPONSE`: Boolean to create mock LLM responses for testing
+  </Accordion>
+
+  <Accordion title="Deployment Configuration">
+    `POD_NAME`: Kubernetes pod name
+
+    `POD_NAMESPACE`: Kubernetes pod namespace
+
+    `AWS_REGION_NAME`: AWS region name
+
+    `TARGET_AVAILABLE_TENANTS`: Number of pre-provisioned tenants to maintain
+
+    `JOB_TIMEOUT`: Job timeout in seconds
+
+    `SYSTEM_RECURSION_LIMIT`: System recursion limit
+
+    `DISABLE_AUTO_AUTH_REFRESH`: Disable automatic auth refresh
+  </Accordion>
+</AccordionGroup>
