@@ -1,9 +1,14 @@
 ---
-title: "Chat Interface"
+title: "Chat"
 description: "Overview of Onyx's Chat interface"
 icon: "comment"
 ---
 
+import Chat from '/snippets/old/chat.mdx';
+
+<Chat />
+
+{/* For future release
 import AgentsPersonasAssistantsNote from '/snippets/agents-personas-assistants-note.mdx';
 
 <img className="rounded-image" src="/assets/overview/core_features/chat_ui_2.png" alt="Onyx Chat Interface" />
@@ -16,6 +21,7 @@ You'll see this if you send a natural language message to Onyx!
 </Tip>
 
 ## How to use the Chat Interface
+
 <Steps>
     <Step title="Type your message in the Onyx Unified Interface input bar" icon="pen-to-square">
         You can try asking Onyx "What data do you have access to?"
@@ -53,6 +59,7 @@ You'll see this if you send a natural language message to Onyx!
 <img className="rounded-image" src="/assets/overview/core_features/chat_options.png" alt="Onyx Chat Input Bar" />
 
 ### Selecting an Agent
+
 In the Side Panel, you will find the Agents available in your Onyx deployment. Onyx comes with 3 default Agents:
 - **Search**: This Agent is equipped with the Search Action. This means it can consult your organization's data sources to answer your question.
 - **General**: This Agent does not come equipped with any Actions. Use this to just chat with an LLM.
@@ -60,10 +67,44 @@ In the Side Panel, you will find the Agents available in your Onyx deployment. O
 
 <AgentsPersonasAssistantsNote />
 
+Below your most recently-used Agents, you will find the **More Assistants** button. Clicking this will display all of your organization's custom Agents published by your Admins and Curators.
+
+<img className="rounded-image" src="/assets/overview/GENERIC_PLACEHOLDER.png" alt="Onyx More Assistants Button" />
+
 ### Choose your Model
 
-### Thoughtful Responses
+Each Agent has a default language model. At any time, you can change the model for your session by clicking the **Model** dropdown in the input bar.
+
+<Tip>
+  Can't find the model you want? Ask your Admin to add it to your Onyx deployment!
+</Tip>
+
+<img className="rounded-image" src="/assets/overview/GENERIC_PLACEHOLDER.png" alt="Onyx Model Dropdown" />
+
+### Thoughtful vs. Fast Responses
+
+Clicking the hourglass icon in the input bar will let you choose between a thoughtful response or a fast response.
+
+**Thoughtful** mode causes the AI to evaluate your question, execute multiple Actions, and reflect on the results before generating a comprehensive response.
+
+**Fast** mode causes the AI to generate a response as quickly as possible. Agents cannot invoke Actions in Fast mode.
+
+<Note>
+  Prefer one over the other? Set you preferred mode in your User Settings!
+</Note>
+
+<img className="rounded-image" src="/assets/overview/GENERIC_PLACEHOLDER.png" alt="Onyx Thoughtful vs. Fast Responses" />
 
 ### Filters
 
-### Chat with your Docs
+If you are chatting with an Agent that has the Search Action, you can use the filters button to refine the documents available to your Agent.
+
+Click the slider icon in the input bar to open the filters. You can filter by last updated date, Connector source, Document Sets, and metadata Tags.
+
+<img className="rounded-image" src="/assets/overview/GENERIC_PLACEHOLDER.png" alt="Onyx Filters" />
+
+### Attach Files
+
+Clicking the plus icon in the input bar will let you upload files to your chat session. These files are saved in My Documents and are private to you.
+
+<img className="rounded-image" src="/assets/overview/GENERIC_PLACEHOLDER.png" alt="Onyx Attach Files" /> */}
