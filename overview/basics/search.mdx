@@ -1,94 +1,89 @@
 ---
-title: Search Interface (Coming Soon)
+title: "Search Interface (Coming Soon)"
 description: "Overview of Onyx's Search interface"
 icon: "magnifying-glass"
 ---
 
-Onyx's search goes far beyond simple keyword matching. It understands the meaning behind your queries and finds relevant information even when the exact words don't match.
+<img className="rounded-image" src="/assets/overview/core_features/search_ui_2.png" alt="Onyx Search Interface" />
 
-## How Search Works
+The Search interface provides direct access to your organization's knowledge without AI conversation. 
 
-### **Semantic Understanding**
-Onyx doesn't just look for exact word matches. It understands concepts and context, so searching for "time off" will find information about "vacation policy" and "PTO guidelines."
+<Tip>
+  You can force Onyx to show the Search interface by clicking the Auto / Search / Chat toggle in the top left corner.
+</Tip>
 
-### **Intelligent Ranking**
-Results are ranked not just by keyword relevance, but by how well they actually answer your question. More recent, authoritative, and contextually relevant information appears first.
+Onyx's Search Action uses **hybrid search** that combines both keyword matching and semantic understanding. 
+This means you'll find relevant documents even when they don't contain your exact search terms.
 
-### **Multi-Source Integration**
-Search looks across all your connected data sources simultaneously - documents, Chat messages, tickets, wikis, and more - giving you a comprehensive view.
+## How to use the Search Interface
 
-## Search Methods
+<Steps>
+    <Step title="Type your query in the input bar" icon="pen-to-square">
+        You can try searching for "pto policy" or any keyword-like query.
 
-### **Direct Search**
-Use the search bar to find specific information:
-- Enter keywords, phrases, or questions
-- Results appear with snippets and source information
-- Click through to see full documents
+        <img className="rounded-image" src="/assets/overview/core_features/search_ui.png" alt="Onyx Search Interface" />
+    </Step>
+    <Step title="No AI answer, just results" icon="bolt">
+        If the system thinks you're looking for search/internal documents, you'll see results nearly instantly.
 
-### **Conversational Search**
-Ask questions in the Chat interface:
-- Onyx searches automatically when you ask questions
-- Get summarized answers with citations
-- Perfect for when you need interpreted results, not just raw documents
+         <img className="rounded-image" src="/assets/overview/GENERIC_PLACEHOLDER.png" alt="Onyx Search Results" />
+         
+         <Note>
+            AI-powered features like **Deep Research** and **Thoughtful Mode** are not available in the Search interface. These advanced capabilities require the Chat interface where the AI can reason through complex queries and provide comprehensive responses.
+        </Note>
+       
+    </Step>
+    <Step title="Apply post-filters to refine results" icon="sliders">
+        Use the filter selections under the input bar to narrow down your results by source, date range, document sets, or tags.
 
-## Search Tips
+        <img className="rounded-image" src="/assets/overview/GENERIC_PLACEHOLDER.png" alt="Onyx Search Post-filters" />
+    </Step>
+    <Step title="Convert to Chat for AI discussion" icon="comment">
+        Want to use the Search results with AI? Convert your search session to Chat by pressing the Convert icon. 
+        This lets you seamlessly transition to having a conversation about the content you've found.
 
-### **Use Natural Language**
-- Instead of: "vacation policy PTO days"
-- Try: "How many vacation days do I get per year?"
+        <img className="rounded-image" src="/assets/overview/GENERIC_PLACEHOLDER.png" alt="Onyx Search to Chat Conversion" />
+    </Step>
+    <Step title="After sending your query" icon="clock">
+        Your search will be saved in the History list of the Side Panel, just like chat conversations.
+        
+        <Info>
+            Your admin may set a retention policy for your History that will automatically delete old searches.
+        </Info>
+        <img className="rounded-image" src="/assets/overview/core_features/side_panel_rectangle.png" alt="Onyx Unified Interface Side Panel" />
+    </Step>
+</Steps>
 
-### **Be Specific When Needed**
-- Add context: "vacation policy for remote employees"
-- Include timeframes: "recent updates to the expense policy"
-- Specify departments: "engineering team meeting notes"
+## Configure your Search Session
 
-### **Try Different Approaches**
-If you don't find what you need:
-- Rephrase your query with different words
-- Break complex questions into simpler parts
-- Try broader or more specific terms
+<Frame caption="REPLACE BEFORE RELEASE">
+    <img className="rounded-image" src="/assets/overview/core_features/chat_options.png" alt="Onyx Search Input Bar" />
+</Frame>
 
-## Understanding Results
+### Selecting an Agent with Search
 
-### **Source Information**
-Each result shows:
-- Which system it came from (Slack, Google Drive, etc.)
-- When it was created or last updated
-- Who created it (if available)
+The default Onyx Agent comes equipped with Search, allowing it to access your organization's data sources.
 
-### **Access Permissions**
-You'll only see results for information you have permission to access in the original systems. This maintains your organization's security while giving you comprehensive search.
+<Note>
+  Don't see search results? Make sure you have an Agent equipped with the Search Action.
+</Note>
 
-### **Result Types**
-Different types of content are clearly indicated:
-- **Documents**: PDFs, Word docs, Google Docs
-- **Messages**: Slack posts, Teams chats, emails
-- **Issues**: Jira tickets, GitHub issues
-- **Pages**: Wiki pages, Confluence articles
+### Choose your Model
 
-## Advanced Features
+Each Agent has a default language model that powers the search understanding. You can change the model for your session by clicking the **Model** dropdown in the input bar.
 
-### **Filters**
-Narrow down results by:
-- Date ranges
-- Source systems
-- Content types
-- Authors or teams
+<Tip>
+  Can't find the model you want? Ask your Admin to add it to your Onyx deployment!
+</Tip>
 
-### **Saved Searches**
-Save frequently used searches for quick access to regularly needed information.
+<img className="rounded-image" src="/assets/overview/GENERIC_PLACEHOLDER.png" alt="Onyx Model Dropdown" />
 
-### **Search History**
-Revisit previous searches to find information you've looked for before.
+### Pre-filters
 
-## Search vs. Chat
+Set up filters before searching to narrow down the scope of your results. Click the slider icon in the input bar to open pre-filters. You can filter by:
+- Last updated date
+- Connector source  
+- Document Sets
+- Metadata Tags
 
-**Use Search when:**
-- You want to browse multiple documents
-- You need to see exact source information
-- You're exploring a topic broadly
-
-**Use Chat when:**
-- You want a specific answer to a question
-- You need information synthesized from multiple sources
-- You want to have a conversation about a topic
+<img className="rounded-image" src="/assets/overview/GENERIC_PLACEHOLDER.png" alt="Onyx Pre-filters" />
