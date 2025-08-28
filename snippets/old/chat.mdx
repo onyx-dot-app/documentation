@@ -1,0 +1,133 @@
+
+import AgentsPersonasAssistantsNote from '/snippets/agents-personas-assistants-note.mdx';
+
+<img className="rounded-image" src="/assets/overview/core_features/chat_ui_2.png" alt="Onyx Chat Interface" />
+
+The Chat interface is a conversational experience with your AI agents. 
+
+<Tip>
+  Talk to Onyx in the same way you would talk to a co-worker!
+</Tip>
+
+## How to use the Chat Interface
+
+<Steps>
+    <Step title="Type your message in the Chat input bar" icon="pen-to-square">
+        You can try asking Onyx "What data do you have access to?"
+
+        You can finely control how Onyx responds using the input bar options. Don't worry, we'll cover this in more detail [below](#configure-your-chat-session). 
+        <img className="rounded-image" src="/assets/overview/core_features/start_chat.png" alt="Onyx Chat Interface" />
+    </Step>
+    <Step title="Onyx will begin processing your request" icon="gears">
+        You'll see Onyx plan, reason, or invoke any Actions available to the AI Agent you're using. If you sent an easy question, Onyx may respond instantly!
+        <img className="rounded-image" src="/assets/overview/core_features/chat_first_message.png" alt="Onyx Chat Interface" />
+    </Step>
+    <Step title="The AI responds conversationally" icon="pen-to-square">
+        The default Onyx AI Agent is equipped with Search. This means it can consult your organization's data sources to answer your question.
+
+        If Search is invoked, you'll see a list of results in the right panel. Additionally, the AI will cite the sources it used in its response.
+        <img className="rounded-image" src="/assets/overview/core_features/chat_response.png" alt="Onyx Chat Interface" />
+    </Step>
+    <Step title="Continue your conversation or ask something new!" icon="pen-to-square">
+        Send a follow up question, instruct the Agent to do something with your docs, or ask something completely new.
+
+        <img className="rounded-image" src="/assets/overview/core_features/follow_up.png" alt="Onyx Chat Interface" />
+    </Step>
+    <Step title="After sending your message" icon="pen-to-square">
+        Your conversation will be saved in the History list of the Side Panel.
+        
+        <Info>
+            Your admin may set a retention policy for your History that will automatically delete old conversations.
+        </Info>
+    </Step>
+</Steps>
+
+
+## Side Panel
+
+<img className="rounded-image" src="/assets/overview/core_features/side_panel_rectangle.png" alt="Onyx Unified Interface Side Panel" />
+
+The side panel houses key features for your Onyx experience.
+
+<AccordionGroup>
+    <Accordion title="New Session" icon="pen-to-square">
+        Start fresh with a new Onyx session. This is useful when you're switching tasks or looking for something new. Your previous session will be saved in the History list.
+    </Accordion>
+    <Accordion title="My Documents" icon="folder">
+        Upload your private documents to Onyx. These docs are only accessble by you. 
+        
+        Organize your docs into folders, add them to your Chat sessions, or customize your Agents with the knowledge in your docs. 
+    </Accordion>
+
+    <Accordion title="Agents" icon="lightbulb">
+        Agents are AI assistants with custom objectives and distinct capabilities.
+        <CardGroup columns={2}>
+            <Card title="Admins: Create a Custom Agent" icon="lightbulb" href="/admin/getting_started/agents" horizontal/>
+            <Card title="Users: Try the Onyx Search Agent " icon="lightbulb" href="#selecting-an-agent" horizontal/>
+        </CardGroup>
+    </Accordion>
+
+    <Accordion title="History" icon="message">
+        View your previous conversations and search queries to easily return to past work.
+    </Accordion>
+
+    <Accordion title="User Preferences" icon="circle-user">
+        Click the profile icon in the bottom left corner of the side panel to access your user preferences.
+        <img className="rounded-image" src="/assets/overview/GENERIC_PLACEHOLDER.png" alt="Onyx Unified Interface User Preferences" />
+    </Accordion>
+</AccordionGroup>
+
+## Configure your Chat Session
+
+<img className="rounded-image" src="/assets/overview/core_features/chat_options.png" alt="Onyx Chat Input Bar" />
+
+### Selecting an Agent
+
+In the Side Panel, you will find the Agents available in your Onyx deployment. Onyx comes with 3 default Agents:
+- **Search**: This Agent is equipped with the Search Action. This means it can consult your organization's data sources to answer your question.
+- **General**: This Agent does not come equipped with any Actions. Use this to just chat with an LLM.
+- **Art**: This Agent is equipped with the Art Action, which allows you to generate images using your organization's Vision model.
+
+<AgentsPersonasAssistantsNote />
+
+Below your most recently-used Agents, you will find the **More Assistants** button. Clicking this will display all of your organization's custom Agents published by your Admins and Curators.
+
+<img className="rounded-image" src="/assets/overview/GENERIC_PLACEHOLDER.png" alt="Onyx More Assistants Button" />
+
+### Choose your Model
+
+Each Agent has a default language model. At any time, you can change the model for your session by clicking the **Model** dropdown in the input bar.
+
+<Tip>
+  Can't find the model you want? Ask your Admin to add it to your Onyx deployment!
+</Tip>
+
+<img className="rounded-image" src="/assets/overview/GENERIC_PLACEHOLDER.png" alt="Onyx Model Dropdown" />
+
+### Thoughtful vs. Fast Responses
+
+Clicking the hourglass icon in the input bar will let you choose between a thoughtful response or a fast response.
+
+**Thoughtful** mode causes the AI to evaluate your question, execute multiple Actions, and reflect on the results before generating a comprehensive response.
+
+**Fast** mode causes the AI to generate a response as quickly as possible. Agents cannot invoke Actions in Fast mode.
+
+<Note>
+  Prefer one over the other? Set you preferred mode in your User Settings!
+</Note>
+
+<img className="rounded-image" src="/assets/overview/GENERIC_PLACEHOLDER.png" alt="Onyx Thoughtful vs. Fast Responses" />
+
+### Filters
+
+If you are chatting with an Agent that has the Search Action, you can use the filters button to refine the documents available to your Agent.
+
+Click the slider icon in the input bar to open the filters. You can filter by last updated date, Connector source, Document Sets, and metadata Tags.
+
+<img className="rounded-image" src="/assets/overview/GENERIC_PLACEHOLDER.png" alt="Onyx Filters" />
+
+### Attach Files
+
+Clicking the plus icon in the input bar will let you upload files to your chat session. These files are saved in My Documents and are private to you.
+
+<img className="rounded-image" src="/assets/overview/GENERIC_PLACEHOLDER.png" alt="Onyx Attach Files" />

@@ -27,12 +27,12 @@
           {
             "group": "Core Features",
             "pages": [
-              "overview/basics/unified_interface",
-              "overview/basics/connectors",
               "overview/basics/chat",
-              "overview/basics/search",
+              "overview/basics/connectors",
               "overview/basics/agents",
               "overview/basics/actions",
+              "overview/basics/search",
+              "overview/basics/unified_interface",
               "overview/basics/workflows"
             ]
           },
