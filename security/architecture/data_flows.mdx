@@ -1,30 +1,46 @@
 ---
 title: "Data Flows"
+description: "How data and queries are handled and stored"
 ---
 
-## Data Ingestion Flow
+## Indexing Flow
+Documents from connectors and user uploads are processed by the Onyx indexing pipeline. With default configurations no data ever leaves the deployment.
 
-1. **Connector Authentication**: Secure authentication with source systems
-2. **Data Extraction**: Encrypted data retrieval from source systems
-3. **Data Processing**: Secure processing and transformation of documents
-4. **Vector Generation**: Local embedding generation for document chunks
-5. **Storage**: Encrypted storage in vector database
+The general processing outline goes as follows:
+1. Documents, metadata, and access permissions are pulled in from connectors
+2. Documents are processed into text through document parsing utilities
+3. The texts are chunked and passed through deep learning (embedding) models
+4. These representations are stored in the vector database
+5. Optionally (default off), an LLM can be used to extract entities and relations from the documents and represent them as a graph within Postgres
 
-## Query Processing Flow
+![Onyx Indexing Flow](/assets/images/security/OnyxIndexingFlow.png)
 
-1. **User Authentication**: Multi-factor authentication and session management
-2. **Query Processing**: Secure query parsing and vectorization
-3. **Retrieval**: Secure document retrieval from vector database
-4. **LLM Communication**: Encrypted communication with language models
-5. **Response Generation**: Secure response formatting and delivery
+Onyx does also allow configuring the following options:
+<Info>
+Note that overriding the default configurations may means that documents will be sent to your selected third party services for processing
+</Info>
+- API based embedding model. Teams may choose to do this instead of choosing between running their own GPUs, using a less capable embedding model, or accepting a slower initial indexing.
+- Third party document-to-text service. Some third party services provide better processing using large vision models and other approaches. This can yield better extraction of text from your documents.
+- Connecting an LLM for the generation of the knowledge graph. The knowledge graph provides an additional representation of the connected knowledge and can be used to answer more abstract type questions.
 
-## Security Measures
 
-- All data flows are encrypted in transit using TLS 1.3
-- Authentication tokens are securely managed and rotated
-- Data processing occurs in isolated environments
-- Comprehensive logging of all data access and modifications
+## Query Flow
+![Onyx Query Flow](/assets/images/security/OnyxQueryFlow.png)
 
----
+When users query Onyx, the LLM determines if the system should fetch additional context or respond to the user directly.
 
-*This page is under development. Detailed data flow diagrams and security specifications will be added soon.* 
+If additional context is needed, the system can choose between available options including: ingested knowledge, internet search (if configured), build in actions (like code interpreter), or additional user configured actions.
+
+By default, the system does not communicate data to any external systems outside of the admin configured LLM.
+
+### Configurable External Services
+Admins of the system can configure support for external services to enrich the user experience.
+<Tip>
+It is recommended to enable these functionalities to let your users get the most of out Onyx.
+</Tip>
+**Web Search**: Sends search queries to a configured search provider. Supported providers include Google PSE, Serper, and Exa AI to get links and snippets. A crawler is used to fetch the full contents of the page, Onyx has a built in one and also supports Firecrawl.
+
+**Image Generation**: Sends prompts to a third party image generation endpoint like OpenAI's Dalle model.
+
+**Custom Actions**: API calls available to the LLM, configured by the Admin users of your Onyx deployment.
+

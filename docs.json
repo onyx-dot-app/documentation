@@ -433,8 +433,6 @@
               "security/architecture/data_flows",
               "security/architecture/data_storage",
               "security/architecture/access_controls",
-              "security/architecture/encryption",
-              "security/architecture/network_security",
               "security/architecture/faq"
             ]
           },
