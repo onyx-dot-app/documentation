@@ -1,27 +1,43 @@
 ---
 title: "System Description"
+description: "High level view of Onyx components"
 ---
 
 ## Overview
 
-Onyx is designed with security as a foundational principle. Our system architecture ensures that data protection, access control, and privacy are built into every layer of the platform.
+The Onyx application is a set of Docker Containers which can be deployed on any infra and for any scale.
+
+<Tip>
+As an open source project, Onyx is designed with security and data privacy as a foundational principle so that teams can trust the software even without needing partnership guarantees.
+</Tip>
+
+## System Architecture
+![Onyx Architecture](/assets/images/security/OnyxArchitecture.png)
 
 ## Core Components
+### Application Layer
+- **Frontend web client**: Next.js-based web application providing the user interface for the Onyx platform
+- **API Server**: Python FastAPI web server to handle business logic and requests
+- **Background Workers**: Python workers to handle async jobs like fetching document updates, etc.
 
-- **Frontend Interface**: Secure web application with role-based access controls
-- **Backend API**: RESTful API with comprehensive authentication and authorization
-- **Vector Database**: Secure storage for document embeddings and metadata
-- **LLM Integration**: Secure communication with external language models
-- **Connector Framework**: Secure data ingestion from various sources
+### Data Layer
+- **Relational Database**: Postgres database to store application data, user sessions, and system state
+- **Vector Database**: Vespa keyword search engine + vector store for retrieving context for queries
+- **In Memory Cache**: Redis, used to optimize performance
+- **File Store**: MinIO blob store for user uploaded files and documents pulled from connectors
 
-## Security Principles
+### Infrastructure Layer
+- **Request Router**: Nginx reverse proxy for load balancing and request routing 
 
-- Defense in depth
-- Principle of least privilege
-- Data encryption at rest and in transit
-- Comprehensive audit logging
-- Regular security assessments
+## Component Replacements
+Some components of the Onyx stack are easily replaceable while others are not.
 
----
+**MinIO** can be replaced with S3 or any similar object storage service. The file store interface is abstracted to make this straightforward.
 
-*This page is under development. More detailed information about Onyx's system architecture and security design will be added soon.* 
+**Redis** can be replaced with a managed Redis service like AWS ElastiCache. Other in-memory caches could work but would require code changes.
+
+**Postgres** can be replaced with a managed Postgres service such as AWS RDS. It is much more challenging and not advised to switch to a different relational DB due to language specific features and optimizations.
+
+**Vespa** can be replaced with multi-node Vespa deployment (typically not necessary) or Vespa Cloud. Vespa is tightly integrated with the context retrieval functionalities and replacing it would require significant development effort to maintain the same functionality.
+
+**Nginx** can be removed and replaced with your own routing proxy.

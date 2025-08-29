@@ -1,35 +1,51 @@
 ---
 title: "Data Storage"
+description: "How data is persisted in the Onyx system"
 ---
 
-## Storage Architecture
+<Info>
+For Onyx cloud, all data is encrypted at rest with AES-256 encryption and TLS 1.3 for data in transition
+</Info>
 
-### Vector Database
-- **Purpose**: Stores document embeddings and metadata
-- **Encryption**: AES-256 encryption at rest
-- **Access Control**: Role-based access with audit logging
-- **Backup**: Automated encrypted backups with point-in-time recovery
+As a set of containers, Onyx's data persistence relies on data volumes. There are also data retention rules which can be configured in the admin panel expire data based on time.
 
-### Document Storage
-- **Purpose**: Temporary storage of processed documents
-- **Encryption**: AES-256 encryption at rest
-- **Retention**: Configurable retention policies
-- **Access**: Limited to authorized processing components
+<Warning>
+If self-hosting, you are responsible for the encryption and locking down of the containers. Most cloud providers have these settings on by default, but you should confirm these security settings are enabled in your environment.
+</Warning>
 
-### User Data
-- **Purpose**: User profiles, preferences, and session data
-- **Encryption**: AES-256 encryption at rest
-- **Privacy**: GDPR-compliant data handling
-- **Deletion**: Right to be forgotten implementation
+## Relational Database - Postgres
+Stores:
+- User information, preferences, settings, etc.
+- Query History
+- Credentials to LLMs, connectors, actions (these are encrypted in Enterprise Edition)
+- Document access control information
+- Entities/Relationships extracted from documents (only if knowledge graph is turned on)
 
-## Security Features
+**Encryption**: Relies on the disk encryption of the deployment
 
-- **Encryption at Rest**: All data encrypted using industry-standard algorithms
-- **Encryption in Transit**: TLS 1.3 for all data transmission
-- **Access Logging**: Comprehensive audit trails for all data access
-- **Data Isolation**: Multi-tenant data isolation in cloud deployments
-- **Backup Security**: Encrypted backups with separate encryption keys
+**Access**: Protected by database user authentication with configurable credentials and optional IAM authentication
 
----
 
-*This page is under development. Detailed storage specifications and security configurations will be added soon.* 
+## Vector Database + Search Engine - Vespa
+Stores:
+- Documents and metadata
+- Vector representations of documents
+- Doccument access control information
+
+
+**Encryption**: Relies on the disk encryption of the deployment
+
+**Access**: Protected by Vespa authentication and access controls
+
+
+## Object Storage - MinIO
+Stores:
+- Original documents from connectors and user uploads (PDFs, Word docs, etc.)
+- Document attachments and media files
+- Temporary files during document processing
+
+**Encryption**: Relies on the disk encryption of the deployment
+
+**Access**: Protected by MinIO access keys, bucket policies, and S3-compatible authentication
+
+

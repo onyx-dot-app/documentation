@@ -1,45 +1,36 @@
 ---
 title: "FAQ"
+description: "General questions about Onyx security"
 ---
 
-## General Security
+### Are documents and queries sent to third-party LLMs?
+Yes, however you can configure only the LLM providers of your choice or connect Onyx to a self-hosted LLM.
 
-### How does Onyx protect my data?
-Onyx implements multiple layers of security including encryption at rest and in transit, role-based access controls, comprehensive audit logging, and secure data processing pipelines.
-
-### What encryption standards does Onyx use?
-Onyx uses AES-256-GCM for data at rest and TLS 1.3 for data in transit. All encryption keys are managed through secure key management systems.
-
-### How does Onyx handle authentication?
-Onyx supports multiple authentication methods including SAML 2.0, OIDC, OAuth 2.0, and LDAP/Active Directory integration for enterprise deployments.
-
-## Data Privacy
-
-### Where is my data stored?
-Data storage location depends on your deployment choice. Self-hosted deployments keep all data on your infrastructure, while cloud deployments use secure cloud storage in your chosen region.
-
-### Does Onyx access my data?
-Onyx personnel do not have access to your data. All access is logged and audited, and data processing occurs in isolated environments.
-
-### How long is my data retained?
-Data retention policies are configurable. You can set custom retention periods and implement automatic data deletion policies.
-
-## Compliance
+### Is any data used for model training (explicitly opt-in/opt-out)?
+There is no training or fine tuning of any models.
 
 ### What compliance standards does Onyx meet?
-Onyx is designed to meet various compliance standards including SOC 2, GDPR, HIPAA, and others depending on deployment configuration.
+Onyx is SOC2 Type II and GDPR complient.
 
-### Can Onyx support my specific compliance requirements?
-Yes, Onyx can be configured to meet specific compliance requirements. Contact our team to discuss your specific needs.
+### Where is my data stored?
+Data storage location depends on your deployment choice. See the [Data Storage page](/security/architecture/data_storage) for more information.
 
-## Security Incidents
+### Does Onyx have access to my data?
+For self-hosted deployments, the Onyx team does not receive **any** of your team's data. There is aggregated telemetry but this can also be turned off.
 
-### How does Onyx handle security incidents?
-Onyx has comprehensive incident response procedures including immediate threat detection, automated response, and customer notification protocols.
+### Does the app support SSO (SAML, OIDC, SCIM)?
+SAML and OIDC are supported as part of the Enterprise Edition of Onyx. SCIM is on the roadmap, please check with the team on the latest status.
+
+### What encryption standards does Onyx use?
+Onyx Cloud uses AES-256-GCM for data at rest and TLS 1.3 for data in transit. For Self-hosted, the admin deploying the system is responsible for configuring these.
 
 ### What is Onyx's security incident notification process?
 Security incidents are communicated to customers according to severity and impact, with detailed incident reports and remediation steps provided.
+For Community Edition users, incidents are shared via our standard community channels (Slack, Discord, Mailing-list)
 
----
+### Does the vendor cache, index, or replicate internal documents?
+Yes, this indexing is required to provide the reliable context retrieval that is key to many core user flows.
 
-*This page is under development. More detailed answers and additional questions will be added soon.* 
+### How often are penetration tests performed? Are results available?
+Penetration tests are done yearly and results are sharable upon execution of an NDA.
+Similarly, container scans are run regularly and results are available.
