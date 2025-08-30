@@ -2,45 +2,31 @@
 title: "Data Processing"
 ---
 
-## Local Data Processing
+*This page covers information that is more relevant to self-hosting. For a more comprehensive overview of how data is processed in Onyx, check out [Data Flows](/security/architecture/data_flows) and [Data Storage](/security/architecture/data_storage)*
 
 ### Complete Data Isolation
-All data processing occurs within your infrastructure, ensuring complete control over your data. No data leaves your network except for the specific communications you configure.
+All data processing occurs within your infrastructure, ensuring complete control over your data. No sensitive data leaves your network except for the specific communications you configure.
+
+Note, anonymous telemetry is enabled by default but can be turned off at deployment time.
 
 ### Local Model Execution
-- **Embedding Models**: All document embedding generation happens locally
-- **LLM Integration**: Bring your own LLM - no data sent to external services unless explicitly configured
-- **Vector Operations**: All similarity searches and vector operations performed locally
 - **Data Processing**: Document parsing, chunking, and metadata extraction done on-premises
+- **Embedding/Reranking Models**: All document embeddings happens locally
+- **LLM Integration**: Bring your own LLM - no data sent to external services unless explicitly configured
+- **Custom Models**: Other models used by Onyx are trained to be runnable on both CPU or GPU.
 
 ## Data Flow Security
 
 ### Inbound Data
-- **Connector Authentication**: Secure authentication with your source systems
-- **Encrypted Transfer**: TLS 1.3 encryption for all data transfers
-- **Local Processing**: All data processing occurs within your deployment
-- **Secure Storage**: Encrypted storage in your controlled environment
+- **Connector Data**: Document content and metadata updates get pulled in from configured external applications
+- **Model Downloads**: If you configure a non-default embedding or reranking model, it will need to be downloaded over the network (it still runs locally).
+- **User Interactions**: Chat messages and actions taken in the UI.
+- **User Uploads**: Documents uploaded in the Chat interface by the user get processed and stored locally.
 
-### Outbound Communications
-- **Actions Only**: Data leaves your network only through configured actions
-- **LLM API Calls**: Optional external LLM calls with your chosen provider
-- **Audit Logging**: Complete logging of all outbound communications
-- **Configurable Controls**: Granular control over what data can leave your network
 
-## Security Benefits
+### Outbound Data
+- **LLM Inference**: Queries, chat history, and documents sent to the LLM for processing.
+- **Actions**: Calls to external APIs configured by the admin users in your Onyx deployment.
+- **Web Search**: Queries passed to a search provider and scraper of choice.
 
-### Complete Control
-- **Data Sovereignty**: Your data never leaves your infrastructure
-- **Network Isolation**: Complete control over network access and security
-- **Compliance**: Meet strict compliance requirements with full data control
-- **Audit Capability**: Complete visibility into all data processing
-
-### Bring Your Own Everything
-- **LLM Provider**: Choose your preferred LLM provider or run models locally
-- **Infrastructure**: Deploy on your preferred cloud or on-premises infrastructure
-- **Security Tools**: Integrate with your existing security and monitoring tools
-- **Compliance Frameworks**: Implement your specific compliance requirements
-
----
-
-*This page is under development. Detailed deployment guides and security configurations will be added soon.* 
+You can also configure external document processing services, embedding/reranking APIs, image captioning models, etc. but these are purely optional and have built-in equivalents.

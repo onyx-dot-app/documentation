@@ -1,48 +1,25 @@
 ---
 title: "FAQ"
+description: "Common questions specifically for self-hosting"
 ---
+
+<Tip>
+Additional FAQ questions are found in the [Architecture section](/security/architecture/faq)
+</Tip>
 
 ## Deployment Security
 
-### How secure is a self-hosted Onyx deployment?
-Self-hosted deployments provide the highest level of security as all data remains within your infrastructure. You have complete control over data processing, storage, and network access.
+### In what cases should a team self-host?
+Self-hosting Onyx offers maximum security by keeping all data within your own infrastructure, giving you full control over data processing, storage, and network access configurations.
+For teams with the highest security requirements, self-hosting is often the preferred choice. However, it requires more operational overhead compared to the Cloud offering, so we generally recommend Cloud unless self-hosting is specifically needed.
 
-### What infrastructure do I need for a secure deployment?
-You'll need secure infrastructure with proper network segmentation, encryption capabilities, and access controls. Onyx can be deployed on any infrastructure that supports Docker containers.
+Teams may also choose to self-host if they don't require Enterprise Edition capabilities. While this can reduce costs, it does mean foregoing certain advanced security features available in the Enterprise Edition.
 
-### Can I run Onyx completely offline?
-Yes, Onyx can be configured to run completely offline with local LLM models and no external dependencies, except for the initial data ingestion from your connectors.
+### Can I run Onyx completely offline in an air-gapped fashion?
+Yes, but you would need to also host your own LLM for Onyx to connect to. It is always recommended to use a large LLM over quantized or light versions of major models.
 
-## Data Control
+### How do I keep my Onyx deployment up to date or get security patches?
+Every Onyx deployment is backwards compatible and very rarely require any manual intervention outside of running a redeployment command. Visit the [Deployment section](/deployment/overview) for more details.
 
-### Does any data leave my network in a self-hosted deployment?
-No, unless you explicitly configure external actions or LLM API calls. All data processing, storage, and retrieval happens within your infrastructure.
-
-### Can I use my own LLM models?
-Yes, you can bring your own LLM models and run them locally, or use your preferred LLM provider's API. You have complete control over which external services Onyx communicates with.
-
-### How do I ensure my deployment meets compliance requirements?
-With self-hosted deployments, you control all aspects of data handling, making it easier to meet strict compliance requirements. Onyx provides the tools to implement your specific compliance needs.
-
-## Security Configuration
-
-### What security measures should I implement for my deployment?
-Implement network segmentation, encryption at rest and in transit, proper access controls, regular security updates, and comprehensive monitoring and logging.
-
-### Can I integrate with my existing security tools?
-Yes, Onyx can integrate with your existing security tools, SIEM systems, and monitoring platforms. All system events and logs are available for integration.
-
-### How do I handle security updates?
-Security updates are handled through your standard patch management process. Onyx provides regular security updates that you can apply according to your security policies.
-
-## Compliance and Auditing
-
-### What audit capabilities does self-hosted Onyx provide?
-Onyx provides comprehensive audit logging for all data access, user actions, and system events. All logs are stored locally and can be integrated with your audit systems.
-
-### Can I meet specific compliance requirements with self-hosted Onyx?
-Yes, self-hosted deployments give you complete control over data handling, making it easier to meet specific compliance requirements like HIPAA, SOC 2, or industry-specific regulations.
-
----
-
-*This page is under development. More detailed answers and additional questions will be added soon.* 
+### Is it possible to configure monitoring for Self-Hosted Onyx
+Yes, Onyx supports Prometheus and can easily be hooked up to monitoring applications like Grafana. For monitoring LLM usage, Onyx uses LangGraph so it can also integrate with LangSmith
