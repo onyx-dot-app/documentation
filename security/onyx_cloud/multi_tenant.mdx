@@ -1,49 +1,29 @@
 ---
 title: "Multi Tenant"
+description: "Self-serve cloud"
 ---
 
-## Multi-Tenant Architecture
+<Tip>
+The Onyx multi-tenant cloud is accessible via the [self-serve sign-up](https://cloud.onyx.app/signup).
 
-### Data Isolation
-- **Logical Separation**: Complete logical separation of tenant data
-- **Encryption**: Tenant-specific encryption keys for all data
-- **Access Controls**: Strict access controls preventing cross-tenant data access
-- **Network Isolation**: Network-level isolation between tenants
+It's the easiest way to get started with Onyx and comes with a free trial (no credit card required).
+</Tip>
 
-### Shared Infrastructure
-- **Compute Resources**: Shared compute resources with tenant isolation
-- **Storage**: Multi-tenant storage with logical separation
-- **Network**: Shared network infrastructure with security controls
-- **Monitoring**: Tenant-aware monitoring and alerting
+## Hosting
+Onyx Cloud is hosted on AWS with a couple managed services replacing the default deployment.
 
-## Security Measures
+# Deployment Details
+The default region is US-east.
 
-### Data Protection
-- **Encryption at Rest**: AES-256 encryption with tenant-specific keys
-- **Encryption in Transit**: TLS 1.3 for all data transmission
-- **Access Logging**: Comprehensive audit trails for all data access
-- **Data Backup**: Encrypted backups with tenant isolation
+Postgres, Redis, Vespa, and MinIO are replaced by managed services.
 
-### Access Controls
-- **Authentication**: Multi-factor authentication for all users
-- **Authorization**: Role-based access controls with tenant boundaries
-- **Session Management**: Secure session handling with tenant isolation
-- **API Security**: Tenant-aware API access controls
+#### Subprocessors
+- **AWS**: Cloud hosting.
 
-## Compliance and Certifications
+- **Vespa**: Vector and full text search.
 
-### Security Certifications
-- **SOC 2 Type II**: Annual security audits and certifications
-- **ISO 27001**: Information security management system certification
-- **GDPR Compliance**: Full GDPR compliance for EU data processing
-- **Regular Audits**: Third-party security audits and penetration testing
+- **Grafana**: Monitoring for resources, latencies, and outages.
 
-### Data Residency
-- **Regional Deployment**: Data stored in your chosen region
-- **Compliance Support**: Support for various compliance frameworks
-- **Data Sovereignty**: Respect for local data sovereignty requirements
-- **Audit Support**: Support for customer security audits
+- **OpenAI**: Provided as a default LLM option. Admins can disable this or bring their own key.
 
----
-
-*This page is under development. Detailed security specifications and compliance information will be added soon.* 
+- **Anthropic**: Provided as a default LLM option. Admins can disable this or bring their own key.
