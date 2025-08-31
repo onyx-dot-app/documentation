@@ -130,8 +130,6 @@
               "admin/getting_started/connectors",
               "admin/getting_started/actions",
               "admin/getting_started/agents",
-              "admin/getting_started/web_search",
-              "admin/getting_started/slack_bot_setup",
               "admin/getting_started/enterprise_edition"
             ]
           },
@@ -226,11 +224,18 @@
             ]
           },
           {
+            "group": "Slack Bot",
+            "pages": [
+              "admin/slackbot/slack_bot_setup"
+            ]
+          },
+          {
             "group": "Actions",
             "pages": [
-              "admin/connectors/actions/overview",
-              "admin/connectors/actions/mcp",
-              "admin/connectors/actions/openapi"
+              "admin/actions/overview",
+              "admin/actions/web_search",
+              "admin/actions/mcp",
+              "admin/actions/openapi"
             ]
           },
 
