@@ -1,15 +1,19 @@
 ---
 title: "AWS Bedrock"
 description: "Configure AWS Bedrock models for use with Onyx"
+icon: "aws"
 ---
 
 # AWS Bedrock Configuration
 
-AWS Bedrock is a fully managed service that offers a choice of high-performing foundation models from leading AI companies. This guide will help you configure AWS Bedrock models in Onyx.
+AWS Bedrock is a fully managed service that offers a choice of high-performing foundation models from leading AI
+companies. This guide will help you configure AWS Bedrock models in Onyx.
 
 ## Overview
 
-AWS Bedrock provides access to a variety of foundation models through a unified API, including models from Anthropic, AI21, Cohere, Meta, and others. This allows you to choose the best model for your specific use case while maintaining a single integration point.
+AWS Bedrock provides access to a variety of foundation models through a unified API, including models from Anthropic,
+AI21, Cohere, Meta, and others.
+This allows you to choose the best model for your specific use case while maintaining a single integration point.
 
 ### Available Models
 
@@ -24,28 +28,33 @@ AWS Bedrock provides access to a variety of foundation models through a unified 
 
 Before configuring AWS Bedrock in Onyx, ensure you have:
 
-1. **AWS Account**: An active AWS account with billing enabled
-2. **IAM Permissions**: Proper IAM roles and policies for Bedrock access
-3. **Model Access**: Access to the specific models you want to use
-4. **AWS Credentials**: Access keys or IAM roles for authentication
+- **AWS Account**: An active AWS account with billing enabled
+- **IAM Permissions**: Proper IAM roles and policies for Bedrock access
+- **Model Access**: Access to the specific models you want to use
+- **AWS Credentials**: Access keys or IAM roles for authentication
 
 ## Configuration Steps
 
 ### Step 1: Set Up AWS Bedrock
 
-1. **Enable Bedrock Service**
-   - Log into the AWS Management Console
-   - Navigate to Amazon Bedrock
-   - Click "Get started" to enable the service
+<Steps>
+  <Step title="Enable Bedrock Service">
+    - Log into the AWS Management Console
+    - Navigate to Amazon Bedrock
+    - Click "Get started" to enable the service
+  </Step>
 
-2. **Request Model Access**
-   - Go to the Model access section
-   - Request access to the models you want to use
-   - Wait for approval (usually instant for most models)
+  <Step title="Request model access">
+    - Go to the Model access section
+    - Request access to the models you want to use
+    - Wait for approval (usually instant for most models)
+  </Step>
 
-3. **Configure IAM Permissions**
-   - Create an IAM user or role with Bedrock permissions
-   - Attach the `AmazonBedrockFullAccess` policy or create a custom policy
+  <Step title="Configure IAM permissions">
+    - Create an IAM user or role with Bedrock permissions
+    - Attach the `AmazonBedrockFullAccess` policy or create a custom policy
+  </Step>
+</Steps>
 
 ### Step 2: Create IAM Policy
 
@@ -71,14 +80,32 @@ Create a custom IAM policy for Bedrock access:
 
 ### Step 3: Configure in Onyx
 
-1. Navigate to the Onyx admin panel
-2. Go to **LLM Config** > **AWS Bedrock**
-3. Choose your authentication method:
-   - **Access Keys**: Enter AWS Access Key ID and Secret Access Key
-   - **IAM Role**: Use IAM role-based authentication (recommended for production)
-4. Select your preferred AWS region
-5. Choose the models you want to enable
-6. Configure model-specific parameters
+<Steps>
+  <Step title="Open LLM config">
+    Navigate to the Onyx admin panel
+  </Step>
+
+  <Step title="Select AWS Bedrock">
+    Go to **LLM Config** > **AWS Bedrock**
+  </Step>
+
+  <Step title="Choose authentication method">
+    - **Access Keys**: Enter AWS Access Key ID and Secret Access Key
+    - **IAM Role**: Use IAM role-based authentication (recommended for production)
+  </Step>
+
+  <Step title="Select region">
+    Select your preferred AWS region
+  </Step>
+
+  <Step title="Choose models">
+    Choose the models you want to enable
+  </Step>
+
+  <Step title="Configure parameters">
+    Configure model-specific parameters
+  </Step>
+</Steps>
 
 ## Model Configuration
 
@@ -87,6 +114,7 @@ Create a custom IAM policy for Bedrock access:
 Choose the appropriate Bedrock models based on your use case:
 
 #### Text Generation Models
+
 - **Claude 3 Opus**: Most capable model for complex reasoning
 - **Claude 3 Sonnet**: Balanced performance and cost
 - **Claude 3 Haiku**: Fast and efficient for simple tasks
@@ -94,6 +122,7 @@ Choose the appropriate Bedrock models based on your use case:
 - **Command**: Good for instruction following and chat
 
 #### Embedding Models
+
 - **Titan Embeddings**: Amazon's embedding model
 - **Cohere Embed**: Cohere's embedding model
 
@@ -112,6 +141,7 @@ Configure model parameters to optimize performance:
 Different models may have specific configuration options:
 
 #### Claude Models
+
 ```json
 {
     "anthropic_version": "bedrock-2023-05-31",
@@ -123,6 +153,7 @@ Different models may have specific configuration options:
 ```
 
 #### Jurassic Models
+
 ```json
 {
     "maxTokens": 4096,
@@ -271,28 +302,28 @@ Enable comprehensive logging:
 
 Configure Bedrock models for use in Onyx's chat interface:
 
-1. Set as default model for general conversations
-2. Configure model-specific parameters
-3. Enable model switching for users
-4. Set up fallback options
+- Set as default model for general conversations
+- Configure model-specific parameters
+- Enable model switching for users
+- Set up fallback options
 
 ### Agent Configuration
 
 Use Bedrock models with Onyx agents:
 
-1. Assign specific Bedrock models to agents
-2. Configure custom instructions for each agent
-3. Set up model-specific prompts and templates
-4. Enable streaming responses where appropriate
+- Assign specific Bedrock models to agents
+- Configure custom instructions for each agent
+- Set up model-specific prompts and templates
+- Enable streaming responses where appropriate
 
 ### Document Processing
 
 Leverage Bedrock's capabilities for document analysis:
 
-1. Configure for document summarization
-2. Enable question answering from documents
-3. Set up content extraction and analysis
-4. Use embedding models for semantic search
+- Configure for document summarization
+- Enable question answering from documents
+- Set up content extraction and analysis
+- Use embedding models for semantic search
 
 ## Advanced Configuration
 
@@ -300,37 +331,38 @@ Leverage Bedrock's capabilities for document analysis:
 
 For enhanced security, configure Bedrock to use your VPC:
 
-1. Create a VPC endpoint for Bedrock
-2. Configure security groups and network ACLs
-3. Update IAM policies to restrict access to the VPC
-4. Test connectivity from your application
+- Create a VPC endpoint for Bedrock
+- Configure security groups and network ACLs
+- Update IAM policies to restrict access to the VPC
+- Test connectivity from your application
 
 ### Multi-Region Setup
 
 For high availability and compliance:
 
-1. Configure Bedrock in multiple regions
-2. Implement region selection logic
-3. Set up cross-region failover
-4. Monitor costs across regions
+- Configure Bedrock in multiple regions
+- Implement region selection logic
+- Set up cross-region failover
+- Monitor costs across regions
 
 ### Custom Models
 
 For enterprise deployments:
 
-1. Train custom models using SageMaker
-2. Deploy models to Bedrock
-3. Configure custom model access
-4. Implement model versioning
+- Train custom models using SageMaker
+- Deploy models to Bedrock
+- Configure custom model access
+- Implement model versioning
 
 ## Next Steps
 
 After configuring AWS Bedrock in Onyx:
 
-1. **Test the Integration**: Verify that models are working correctly
-2. **Monitor Performance**: Track response times and success rates
-3. **Optimize Costs**: Monitor usage and adjust model selection
-4. **Train Users**: Educate users on Bedrock's capabilities
-5. **Scale Usage**: Gradually increase usage while monitoring performance
+- **Test the Integration**: Verify that models are working correctly
+- **Monitor Performance**: Track response times and success rates
+- **Optimize Costs**: Monitor usage and adjust model selection
+- **Train Users**: Educate users on Bedrock's capabilities
+- **Scale Usage**: Gradually increase usage while monitoring performance
 
-For additional support or questions about AWS Bedrock integration, refer to the [AWS Bedrock documentation](https://docs.aws.amazon.com/bedrock/) or contact the Onyx support team. 
+For additional support or questions about AWS Bedrock integration,
+refer to the [AWS Bedrock documentation](https://docs.aws.amazon.com/bedrock/) or contact the Onyx support team.

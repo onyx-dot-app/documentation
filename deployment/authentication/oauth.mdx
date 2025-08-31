@@ -1,10 +1,11 @@
 ---
-title: Google OAuth
+title: "Google OAuth"
 description: "Google OAuth authentication setup"
 icon: "key"
 ---
 
-Configure Onyx to use Google OAuth for user authentication, providing a seamless login experience through existing Google accounts. 
+Configure Onyx to use Google OAuth for user authentication,
+providing a seamless login experience through existing Google accounts.
 
 **Prerequisites:**
 - [Google Cloud Console](https://console.cloud.google.com/) access
@@ -14,29 +15,34 @@ Configure Onyx to use Google OAuth for user authentication, providing a seamless
 
 <Steps>
   <Step title="Create Google Cloud Project">
-    Navigate to the Google Cloud Console [Project Creation page](https://console.cloud.google.com/projectcreate) and fill in the required fields.
+    Navigate to the Google Cloud Console [Project Creation page](https://console.cloud.google.com/projectcreate)
+    and fill in the required fields.
 
     <img className="rounded-image" src="/assets/deployment/gcc_project_creation.png" alt="Google Cloud Console Project Creation Page" />
   </Step>
 
   <Step title="Enable Google People API">
-    Navigate to **APIs & Services** and find [Google People API](https://console.cloud.google.com/apis/library/people.googleapis.com).
-    
+    Navigate to **APIs & Services** and find [Google People
+    API](https://console.cloud.google.com/apis/library/people.googleapis.com).
+
     Ensure your newly created project is selected in the top bar and click **Enable**.
 
     <img className="rounded-image" src="/assets/deployment/gcc_people_api.png" alt="Google Cloud Console People API Enable Page" />
   </Step>
+
   <Step title="Create Google Auth Platform">
-    Open the left sidebar and navigate to **APIs & Services** → **OAuth Consent Screen**. 
-    
+    Open the left sidebar and navigate to **APIs & Services** → **OAuth Consent Screen**.
+
     Once on the **Overview** page, click **Get Started**.
 
     <img className="rounded-image" src="/assets/deployment/gcc_oauth_consent.png" alt="Google Cloud Console OAuth Consent Screen Page" />
   </Step>
+
   <Step title="Configure OAuth Project & Consent Screen">
     Fill in the **App name** and **User support email** fields.
 
-    Select your **Audience**. If you have a Google Workspace organization, select **Internal**. If not, select **External**.
+    Select your **Audience**. If you have a Google Workspace organization, select **Internal**. If not,
+    select **External**.
 
     <Note>
       If you select **External**, you will need to add your users manually in the **Audience** tab under **Test users**.
@@ -80,12 +86,13 @@ Configure Onyx to use Google OAuth for user authentication, providing a seamless
   </Step>
 
   <Step title="Save OAuth Credentials">
-    Click **Create** → **Download JSON** to save the OAuth client credentials. 
-    Alternatively, save the **Client ID** and **Client Secret** to a password or secrets manager.
+    Click **Create** → **Download JSON** to save the OAuth client credentials. Alternatively,
+    save the **Client ID** and **Client Secret** to a password or secrets manager.
   </Step>
 
   <Step title="Configure Onyx">
-    Configure Onyx with the following environment variables in your `.env` or `values.yaml` file (Docker and Kubernetes, respectively).
+    Configure Onyx with the following environment variables in your `.env` or `values.yaml` file (Docker and Kubernetes,
+    respectively).
 
     ```bash .env
     AUTH_TYPE=google_oauth
@@ -97,7 +104,8 @@ Configure Onyx to use Google OAuth for user authentication, providing a seamless
     ```
 
     <Note>
-      If you're using Docker but don't have a `.env` file, copy `onyx/deployment/docker_compose/env.prod.template` to a new `.env` file in the same directory.
+      If you're using Docker but don't have a `.env` file,
+      copy `onyx/deployment/docker_compose/env.prod.template` to a new `.env` file in the same directory.
     </Note>
 
     ```bash values.yaml

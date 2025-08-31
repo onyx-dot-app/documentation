@@ -6,19 +6,31 @@ icon: "robot"
 
 # Agent Management
 
-Agents in Onyx are specialized AI agents that can be configured with custom knowledge bases, system prompts, and tools to serve specific roles within your organization.
+Agents in Onyx are specialized AI agents that can be configured with custom knowledge bases, system prompts,
+and tools to serve specific roles within your organization.
 
 ## Creating Agents
 
 ### Basic Agent Setup
-1. Navigate to **Admin Panel** → **Agents**
-2. Click **"Create New Agent"**
-3. Configure the basic settings:
-   - **Name**: Clear, descriptive name (e.g., "HR Policy Agent")
-   - **Description**: What the agent helps with
-   - **Visibility**: Public or private access
+
+<Steps>
+  <Step title="Open Agents in Admin Panel">
+    Navigate to **Admin Panel** → **Agents**
+  </Step>
+
+  <Step title="Create new agent">
+    Click **"Create New Agent"**
+  </Step>
+
+  <Step title="Configure basic settings">
+    - **Name**: Clear, descriptive name (e.g., "HR Policy Agent")
+    - **Description**: What the agent helps with
+    - **Visibility**: Public or private access
+  </Step>
+</Steps>
 
 ### System Prompts
+
 The system prompt defines your agent's personality, expertise, and behavior:
 
 ```
@@ -36,12 +48,14 @@ Key responsibilities:
 ## Advanced Configuration
 
 ### Knowledge Base Assignment
+
 Connect agents to relevant document sets:
 - Select specific connectors and document sets
 - Control which information the agent can access
 - Ensure data permissions align with agent purpose
 
 ### Custom Tools & Actions
+
 Equip agents with specialized capabilities:
 - Integration with company systems
 - Automated workflow triggers
@@ -52,14 +66,16 @@ Equip agents with specialized capabilities:
 ## Agent Management Best Practices
 
 ### Design Principles
+
 - **Single Purpose**: Each agent should have a clear, focused role
 - **Clear Boundaries**: Define what the agent can and cannot do
 - **Appropriate Access**: Only provide access to necessary information
 - **Regular Updates**: Keep knowledge bases and prompts current
 
 ### Example System Prompt Template
+
 ```
-You are a [ROLE] agent for [ORGANIZATION]. 
+You are a [ROLE] agent for [ORGANIZATION].
 
 Your expertise includes:
 - [DOMAIN AREA 1]
@@ -80,6 +96,7 @@ Guidelines:
 ## Monitoring and Optimization
 
 ### Usage Analytics
+
 Track agent performance through:
 - Conversation volume and frequency
 - User satisfaction ratings
@@ -87,6 +104,7 @@ Track agent performance through:
 - Knowledge gap identification
 
 ### Continuous Improvement
+
 - Review conversation logs for optimization opportunities
 - Update system prompts based on user feedback
 - Expand knowledge bases as needed
@@ -95,15 +113,18 @@ Track agent performance through:
 ## Access Control
 
 ### User Groups
+
 Assign agents to specific user groups:
 - Department-based access (HR, Engineering, Sales)
 - Role-based access (Managers, Individual Contributors)
 - Project-based access (Temporary teams)
 
 ### Permission Management
+
 Control agent capabilities:
 - Read-only vs. action-enabled agents
 - Sensitive information access
 - External system integration permissions
 
-Agents are powerful tools for scaling knowledge access and support within your organization. Proper configuration and management ensure they provide maximum value while maintaining security and accuracy.
+Agents are powerful tools for scaling knowledge access and support within your organization.
+Proper configuration and management ensure they provide maximum value while maintaining security and accuracy.

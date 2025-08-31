@@ -4,31 +4,42 @@ description: "How sensitive data is processed"
 icon: "microchip"
 ---
 
-*This page covers information that is more relevant to self-hosting. For a more comprehensive overview of how data is processed in Onyx, check out [Data Flows](/security/architecture/data_flows) and [Data Storage](/security/architecture/data_storage)*
+*This page covers information that is more relevant to self-hosting.
+For a more comprehensive overview of how data is processed in Onyx,
+check out [Data Flows](/security/architecture/data_flows) and [Data Storage](/security/architecture/data_storage)*
 
 ### Complete Data Isolation
-All data processing occurs within your infrastructure, ensuring complete control over your data. No sensitive data leaves your network except for the specific communications you configure.
+
+All data processing occurs within your infrastructure, ensuring complete control over your data.
+No sensitive data leaves your network except for the specific communications you configure.
 
 Note, anonymous telemetry is enabled by default but can be turned off at deployment time.
 
 ### Local Model Execution
+
 - **Data Processing**: Document parsing, chunking, and metadata extraction done on-premises
 - **Embedding/Reranking Models**: All document embeddings happens locally
-- **LLM Integration**: Bring your own LLM - no data sent to external services unless explicitly configured
+- **LLM Integration**: Bring your own LLM - no data sent to external services unless explicitly
+  configured
 - **Custom Models**: Other models used by Onyx are trained to be runnable on both CPU or GPU.
 
 ## Data Flow Security
 
 ### Inbound Data
-- **Connector Data**: Document content and metadata updates get pulled in from configured external applications
-- **Model Downloads**: If you configure a non-default embedding or reranking model, it will need to be downloaded over the network (it still runs locally).
-- **User Interactions**: Chat messages and actions taken in the UI.
-- **User Uploads**: Documents uploaded in the Chat interface by the user get processed and stored locally.
 
+- **Connector Data**: Document content and metadata updates get pulled in from configured external
+  applications
+- **Model Downloads**: If you configure a non-default embedding or reranking model, it will need to
+  be downloaded over the network (it still runs locally).
+- **User Interactions**: Chat messages and actions taken in the UI.
+- **User Uploads**: Documents uploaded in the Chat interface by the user get processed and stored
+  locally.
 
 ### Outbound Data
+
 - **LLM Inference**: Queries, chat history, and documents sent to the LLM for processing.
 - **Actions**: Calls to external APIs configured by the admin users in your Onyx deployment.
 - **Web Search**: Queries passed to a search provider and scraper of choice.
 
-You can also configure external document processing services, embedding/reranking APIs, image captioning models, etc. but these are purely optional and have built-in equivalents.
+You can also configure external document processing services, embedding/reranking APIs, image captioning models, etc.
+but these are purely optional and have built-in equivalents.

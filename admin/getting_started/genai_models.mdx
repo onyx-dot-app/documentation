@@ -6,19 +6,24 @@ icon: "microchip"
 
 # GenAI Models in Onyx
 
-Onyx leverages Large Language Models (LLMs) to power its conversational AI capabilities, enabling intelligent responses, document analysis, and automated workflows. This guide explains how Onyx uses LLMs and how administrators can configure multiple providers to offer users flexibility in choosing models for different use cases.
+Onyx leverages Large Language Models (LLMs) to power its conversational AI capabilities, enabling intelligent responses,
+document analysis, and automated workflows.
+This guide explains how Onyx uses LLMs and how administrators can configure multiple providers to offer users
+flexibility in choosing models for different use cases.
 
 ## How Onyx Uses LLMs
 
 Onyx integrates LLMs throughout its platform for various AI-powered features:
 
 ### Core Functionality
+
 - **Conversational AI**: Generating human-like responses in chat interfaces
 - **Document Understanding**: Analyzing and extracting insights from connected documents
 - **Query Processing**: Understanding user intent and formulating search strategies
 - **Content Generation**: Creating summaries, explanations, and responses based on context
 
 ### Advanced Features
+
 - **Multi-turn Conversations**: Maintaining context across conversation threads
 - **Code Generation**: Creating and explaining code snippets
 - **Translation**: Supporting multilingual interactions
@@ -29,6 +34,7 @@ Onyx integrates LLMs throughout its platform for various AI-powered features:
 Onyx supports a flexible multi-provider architecture that allows administrators to:
 
 ### Configure Multiple Providers
+
 - **OpenAI**: GPT-4, GPT-3.5-turbo, and other OpenAI models
 - **Anthropic**: Claude 3, Claude 2, and Claude Instant models
 - **Google Gemini**: Gemini Pro, Gemini Flash, and other Google AI models
@@ -37,6 +43,7 @@ Onyx supports a flexible multi-provider architecture that allows administrators 
 - **Self-Hosted**: Custom models running on your infrastructure
 
 ### Provider Selection Strategies
+
 - **Model-Specific**: Choose the best model for specific tasks
 - **Cost Optimization**: Balance performance with cost considerations
 - **Geographic Distribution**: Use providers in different regions for compliance
@@ -47,16 +54,19 @@ Onyx supports a flexible multi-provider architecture that allows administrators 
 Once configured, users can select their preferred models for different use cases:
 
 ### Chat Interface
+
 - **Default Model**: Set a preferred model for general conversations
 - **Model Switching**: Change models during active conversations
 - **Performance Comparison**: Test different models side-by-side
 
 ### Agent Configuration
+
 - **Task-Specific Models**: Assign specialized models to different agents
 - **Custom Instructions**: Tailor model behavior for specific workflows
 - **Context Optimization**: Choose models based on document types and complexity
 
 ### Use Case Optimization
+
 - **Creative Tasks**: Models optimized for content generation
 - **Analytical Tasks**: Models with strong reasoning capabilities
 - **Code Tasks**: Models with programming expertise
@@ -65,6 +75,7 @@ Once configured, users can select their preferred models for different use cases
 ## Configuration Workflow
 
 ### 1. Provider Setup
+
 Configure each LLM provider with appropriate credentials and settings:
 - API keys and authentication
 - Model selection and parameters
@@ -72,6 +83,7 @@ Configure each LLM provider with appropriate credentials and settings:
 - Geographic preferences
 
 ### 2. Model Configuration
+
 Define available models and their characteristics:
 - Model names and capabilities
 - Performance characteristics
@@ -79,6 +91,7 @@ Define available models and their characteristics:
 - Usage guidelines
 
 ### 3. User Experience
+
 Enable users to:
 - View available models and their capabilities
 - Select preferred models for different contexts
@@ -88,18 +101,21 @@ Enable users to:
 ## Best Practices
 
 ### Provider Management
+
 - **Monitor Usage**: Track API calls and costs across providers
 - **Load Balancing**: Distribute requests across multiple providers
 - **Failover Planning**: Ensure service continuity with backup providers
 - **Security**: Implement proper credential management and access controls
 
 ### Model Selection
+
 - **Performance Testing**: Evaluate models for your specific use cases
 - **Cost Analysis**: Balance performance with operational costs
 - **User Training**: Educate users on model capabilities and limitations
 - **Regular Updates**: Keep up with new model releases and improvements
 
 ### Compliance and Security
+
 - **Data Privacy**: Ensure models comply with your data handling requirements
 - **Audit Trails**: Maintain logs of model usage and decisions
 - **Access Controls**: Implement appropriate user permissions for model access
@@ -109,10 +125,26 @@ Enable users to:
 
 To get started with configuring LLM providers in Onyx:
 
-1. **Review Provider Options**: Explore the available LLM providers in the [LLM Config](/admin/llm_providers) section
-2. **Set Up Credentials**: Configure API keys and authentication for your chosen providers
-3. **Test Models**: Experiment with different models to find the best fit for your use cases
-4. **Configure User Access**: Set up appropriate permissions and default models for users
-5. **Monitor and Optimize**: Track usage patterns and adjust configurations as needed
+<Steps>
+  <Step title="Review Provider Options">
+    Explore the available LLM providers in the [LLM Config](/admin/llm_providers) section
+  </Step>
 
-For detailed configuration instructions for each provider, see the individual provider guides in the LLM Config section. 
+  <Step title="Set Up Credentials">
+    Configure API keys and authentication for your chosen providers
+  </Step>
+
+  <Step title="Test Models">
+    Experiment with different models to find the best fit for your use cases
+  </Step>
+
+  <Step title="Configure User Access">
+    Set up appropriate permissions and default models for users
+  </Step>
+
+  <Step title="Monitor and Optimize">
+    Track usage patterns and adjust configurations as needed
+  </Step>
+</Steps>
+
+For detailed configuration instructions for each provider, see the individual provider guides in the LLM Config section.

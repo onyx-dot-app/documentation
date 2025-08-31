@@ -1,123 +1,128 @@
 ---
-title: EKS
+title: "EKS"
 description: "Deploy Onyx on AWS EKS"
 icon: "aws"
 ---
 
 import DeploymentNextSteps from "/snippets/deployment-next-steps.mdx"
 
-<Warning> 
-    EKS has recently updated their cluster and node group creation process. The contents of this guide are still relevant, but the flow has changed slightly.
+<Warning>
+  EKS has recently updated their cluster and node group creation process. The contents of this guide are still relevant,
+  but the flow has changed slightly.
 
-    Updates to this guide are coming soon!
+  Updates to this guide are coming soon!
 </Warning>
 
 ## Guide
 
 <Steps>
-    <Step title="Install requirements">
-        EKS requires the AWS CLI and kubectl CLI.
-        
-        - Download and install the [AWS CLI](https://aws.amazon.com/cli/)
-        - Download and install [kubectl CLI](https://kubernetes.io/docs/tasks/tools/install-kubectl-macos/)
-    </Step>
+  <Step title="Install requirements">
+    EKS requires the AWS CLI and kubectl CLI.
 
-    <Step title="Create the cluster">
-        For this guide, we will use standard settings with the EBS CSI driver.
-        
-        - Navigate to Elastic Kubernetes Service (EKS) and create a new cluster
-        - For **Cluster service role**, create a new IAM role with a descriptive name like `onyx-eks-cluster-role`
+    - Download and install the [AWS CLI](https://aws.amazon.com/cli/)
+    - Download and install [kubectl CLI](https://kubernetes.io/docs/tasks/tools/install-kubectl-macos/)
+  </Step>
 
-        <Note>
-            If you do not see the newly created role in the dropdown, click the refresh button in the UI.
-        </Note>
+  <Step title="Create the cluster">
+    For this guide, we will use standard settings with the EBS CSI driver.
 
-        - For **Kubernetes version**, select a version with standard support
-        - Choose **Standard** upgrade policy
-        - Add the **Amazon EBS CSI Driver** add-on for Onyx's `Persistent Volume Claims`
-        - Keep the other default add-ons enabled
-        - Review and click **Create**
-        
-        The cluster may take several minutes to become ready
+    - Navigate to Elastic Kubernetes Service (EKS) and create a new cluster
+    - For **Cluster service role**, create a new IAM role with a descriptive name like `onyx-eks-cluster-role`
 
-        <img className="rounded-image" src="/assets/deployment/eks_cluster_create.png" alt="EKS Cluster Creation" />
-    </Step>
+    <Note>
+      If you do not see the newly created role in the dropdown, click the refresh button in the UI.
+    </Note>
 
-    <Step title="Add nodes">
-        Once the cluster is active, add worker nodes where Onyx services will run.
+    - For **Kubernetes version**, select a version with standard support
+    - Choose **Standard** upgrade policy
+    - Add the **Amazon EBS CSI Driver** add-on for Onyx's `Persistent Volume Claims`
+    - Keep the other default add-ons enabled
+    - Review and click **Create**
 
-        - On the **Cluster** page, select the **Compute** tab and click **Add node group**
-        - Provide a **Name** for the group (e.g., `onyx-node-group`)
-        - For **Node IAM role**, either select an existing role used by your organization or create a new one.
-        
-        <Note>
-            Ensure the role has the `AmazonEBSCSIDriverPolicy` attached so that PVCs can be fulfilled. If creating a role, add this policy in addition to the default policies.
-        </Note>
+    The cluster may take several minutes to become ready
 
-        - Replace the **Instance types** with `c5.2xlarge` machines (or `c5.4xlarge` if you plan to scale beyond 100k documents)
-        - Set **Volume size** in the 200GB - 800GB range depending on your document count
+    <img className="rounded-image" src="/assets/deployment/eks_cluster_create.png" alt="EKS Cluster Creation" />
+  </Step>
 
-        <Tip>
-            See the [Resourcing Guide](/deployment/getting_started/resourcing) for more details on storage requirements.
-        </Tip>
+  <Step title="Add nodes">
+    Once the cluster is active, add worker nodes where Onyx services will run.
 
-        - For most setups, set the **Desired size** and **Minimum size** to 1. You can increase these later to scale up. 
-            - **Maximum unavailable** can remain at the default
-        - Keep the default networking configuration and click **Create**
+    - On the **Cluster** page, select the **Compute** tab and click **Add node group**
+    - Provide a **Name** for the group (e.g., `onyx-node-group`)
+    - For **Node IAM role**, either select an existing role used by your organization or create
+    a new one.
 
-        It may take up to 15 minutes for the compute nodes to come online.
-    </Step>
+    <Note>
+      Ensure the role has the `AmazonEBSCSIDriverPolicy` attached so that PVCs can be fulfilled. If creating a role,
+      add this policy in addition to the default policies.
+    </Note>
 
-    <Step title="Create and connect a user">
-        We will need an IAM user with CLI access to manage AWS and the cluster.
+    - Replace the **Instance types** with `c5.2xlarge` machines (or `c5.4xlarge` if you plan to scale beyond 100k documents)
+    - Set **Volume size** in the 200GB - 800GB range depending on your document count
 
-        - Navigate to the [IAM Dashboard](https://console.aws.amazon.com/iam/), select **Users** in the left sidebar, and click **Create user**
-        - Give the user a descriptive name (e.g., `onyx-eks-user`)
-        - Under permissions, click **Attach policies directly** and attach:
-            - `AmazonEKSClusterPolicy`
-            - `AmazonEKSServicePolicy`
-        - Click **Create user**
+    <Tip>
+      See the [Resourcing Guide](/deployment/getting_started/resourcing) for more details on storage requirements.
+    </Tip>
 
-        - On the user's page, click **Create access key** and follow the prompts. 
-        - Select the **Command Line Interface (CLI)** option during creation. 
-        
-        <Tip>
-            Save the **Access key** and **Secret access key** for later!
-        </Tip>
+    - For most setups, set the **Desired size** and **Minimum size** to 1. You can increase
+    these later to scale up.
+    - **Maximum unavailable** can remain at the default
+    - Keep the default networking configuration and click **Create**
 
-        - Navigate back to the EKS cluster and select **Access** and then **Create access entry**
-        - In **IAM principal**, select the IAM ARN we just created, then click **Next**
-        - For Access policies, set **Policy name** to `AmazonEKSClusterAdminPolicy`, then click **Next** and **Create**
-    </Step>
+    It may take up to 15 minutes for the compute nodes to come online.
+  </Step>
 
-    <Step title="Fetch kubeconfig">
-        Log in to the AWS CLI and provide the access key and secret key from the IAM user we just created:
+  <Step title="Create and connect a user">
+    We will need an IAM user with CLI access to manage AWS and the cluster.
+
+    - Navigate to the [IAM Dashboard](https://console.aws.amazon.com/iam/), select **Users** in the left sidebar, and click **Create user**
+    - Give the user a descriptive name (e.g., `onyx-eks-user`)
+    - Under permissions, click **Attach policies directly** and attach:
+    - `AmazonEKSClusterPolicy`
+    - `AmazonEKSServicePolicy`
+    - Click **Create user**
+
+    - On the user's page, click **Create access key** and follow the prompts.
+    - Select the **Command Line Interface (CLI)** option during creation.
+
+    <Tip>
+      Save the **Access key** and **Secret access key** for later!
+    </Tip>
+
+    - Navigate back to the EKS cluster and select **Access** and then **Create access entry**
+    - In **IAM principal**, select the IAM ARN we just created, then click **Next**
+    - For Access policies, set **Policy name** to `AmazonEKSClusterAdminPolicy`, then click **Next** and **Create**
+  </Step>
+
+  <Step title="Fetch kubeconfig">
+    Log in to the AWS CLI and provide the access key and secret key from the IAM user we just created:
 
         ```bash
         aws configure
         ```
 
-        Configure your kubeconfig to connect to the cluster by filling in the `region-code` and `cluster-name`:
+    Configure your kubeconfig to connect to the cluster by filling in the `region-code` and `cluster-name`:
 
         ```bash
         aws eks update-kubeconfig --region region-code --name cluster-name
         ```
 
-        <Info>
-            Reference [AWS EKS kubeconfig docs](https://docs.aws.amazon.com/eks/latest/userguide/create-kubeconfig.html).
-        </Info>
-    </Step>
+    <Info>
+      Reference [AWS EKS kubeconfig docs](https://docs.aws.amazon.com/eks/latest/userguide/create-kubeconfig.html).
+    </Info>
+  </Step>
 
-    <Step title="Install Onyx services">
-        The Onyx Helm chart packages all the required services (API, web, PostgreSQL, Vespa, etc.) into a single deployment. By default, persistent volumes will be created for stateful services.
+  <Step title="Install Onyx services">
+    The Onyx Helm chart packages all the required services (API, web, PostgreSQL, Vespa, etc.) into a single deployment.
+    By default, persistent volumes will be created for stateful services.
 
-        First, ensure the `gp2` storage class is set as the default storage class (required for PVCs):
+    First, ensure the `gp2` storage class is set as the default storage class (required for PVCs):
 
         ```bash
         kubectl patch storageclass gp2 -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
         ```
 
-        Add the Onyx Helm repository:
+    Add the Onyx Helm repository:
 
         ```bash
         helm repo add onyx https://onyx-dot-app.github.io/onyx/
@@ -125,43 +130,44 @@ import DeploymentNextSteps from "/snippets/deployment-next-steps.mdx"
         helm search repo onyx
         ```
 
-        Create a dedicated namespace and install Onyx:
+    Create a dedicated namespace and install Onyx:
 
         ```bash
         kubectl create namespace onyx
         helm install onyx onyx/onyx-stack -n onyx
         ```
 
-        This will pull the latest Onyx chart and deploy all dependencies.
-    </Step>
+    This will pull the latest Onyx chart and deploy all dependencies.
+  </Step>
 
-    <Step title="Verify the installation">
+  <Step title="Verify the installation">
         ```bash
         helm list -n onyx
         kubectl get pods -n onyx
         ```
 
-        Wait until all pods are in a `Running` state before accessing Onyx.
+    Wait until all pods are in a `Running` state before accessing Onyx.
 
-        To check the API server logs (often the last to become ready):
+    To check the API server logs (often the last to become ready):
 
         ```bash
         kubectl -n onyx get pods | grep api-server | awk '{print $1}' | xargs -I {} kubectl -n onyx logs {} -f
         ```
-    </Step>
+  </Step>
 
-    <Step title="Access Onyx">
-        For local testing, port-forward:
+  <Step title="Access Onyx">
+    For local testing, port-forward:
 
         ```bash
         kubectl -n onyx port-forward service/onyx-nginx 8080:80
         ```
 
-        Then open [http://localhost:8080](http://localhost:8080).
-    </Step>
+    Then open [http://localhost:8080](http://localhost:8080).
+  </Step>
 </Steps>
 
 ## Upgrading
+
 To upgrade Onyx services, first update the Helm repository:
 
 ```bash
@@ -176,6 +182,7 @@ helm upgrade onyx onyx/onyx-stack -n onyx --version <VERSION>
 ```
 
 ## Uninstalling
+
 To remove the Onyx services:
 
 ```bash

@@ -1,13 +1,15 @@
 ---
-title: File
+title: "File"
 description: "Index files from a local or network drive"
 ---
 
 ## How it works
 
-The File Connector indexes user uploaded files. Currently supports `.txt`, `.pdf`, `.docx`, `.pptx`, `.xlsx`, `.csv`, `.md`, `.mdx`, `.conf`, `.log`, `.json`, `.tsv`, `.xml`, `.yml`, `.yaml`, `.eml`, and `.epub` files.
-You can also upload a `.zip` containing these files - If there are other file types in the zip, the other file types are ignored.
-There is also an optional metadata line that supports links, document owners, and time updated as metadata for Onyx's retrieval and AI Answer.
+The File Connector indexes user uploaded files. Currently supports `.txt`, `.pdf`, `.docx`, `.pptx`, `.xlsx`, `.csv`,
+`.md`, `.mdx`, `.conf`, `.log`, `.json`, `.tsv`, `.xml`, `.yml`, `.yaml`, `.eml`, and `.epub` files.
+You can also upload a `.zip` containing these files - If there are other file types in the zip,
+the other file types are ignored. There is also an optional metadata line that supports links, document owners,
+and time updated as metadata for Onyx's retrieval and AI Answer.
 
 ## Adding Metadata
 
@@ -16,8 +18,7 @@ The metadata line should be placed at the very top of the file and can take one 
 - `#ONYX_METADATA={"link": "<LINK>"}`
 - `<!-- ONYX_METADATA={"link": "<LINK>"} -->`
 
-Where ONYX_METADATA= is followed by a json.
-The valid json keys are:
+Where ONYX_METADATA= is followed by a json. The valid json keys are:
 
 - link
 - primary_owners
@@ -25,8 +26,9 @@ The valid json keys are:
 - doc_updated_at
 - file_display_name
 
-You can also include arbitrary key/value pairs which will be understood as "tags". These tags can then be used in the UI as
-a filter if you want to constrain your search / conversation to only documents with certain tag(s) attached
+You can also include arbitrary key/value pairs which will be understood as "tags".
+These tags can then be used in the UI as a filter if you want to constrain your search / conversation to only documents
+with certain tag(s) attached
 
 For example:
 
@@ -46,9 +48,11 @@ prevent web scrapers from reading it.
 ```
 
 As we can see, there are many web pages or internal tools that aren't directly scrape-able.
-In addition to handling local file uploads, the file connector is offered as an option for these tools which may have APIs for accessing the contents.
+In addition to handling local file uploads,
+the file connector is offered as an option for these tools which may have APIs for accessing the contents.
 
-Alternatively, if you are uploading a `.zip` filled with files, you can define a `.onyx_metadata.json` file and include that in the root of the zip file.
+Alternatively, if you are uploading a `.zip` filled with files,
+you can define a `.onyx_metadata.json` file and include that in the root of the zip file.
 If your zip file structure looks like:
 
 ```
@@ -90,11 +94,19 @@ then your `.onyx_metadata.json` file might look like:
 
     - No external auth flows required.
     - Admins can upload files and make them available to everyone
-    - [WIP] Admins or normal users will be able to upload files via personal connectors and make them accessible for just themselves.
+    - [WIP] Admins or normal users will be able to upload files via personal connectors and make
+      them accessible for just themselves.
 
 ### Indexing
 
-    1. Navigate to the Admin Panel and select the **File** Connector.
-    2. Select a `.txt` file or a `.zip` file and click
+<Steps>
+  <Step title="Open File connector">
+    Navigate to the Admin Panel and select the **File** Connector.
+  </Step>
 
-![FileConnector](/assets/images/connectors/file/FileConnector.png)
+  <Step title="Upload file">
+    Select a `.txt` file or a `.zip` file and click
+
+    ![FileConnector](/assets/images/connectors/file/FileConnector.png)
+  </Step>
+</Steps>

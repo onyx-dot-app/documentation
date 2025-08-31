@@ -1,30 +1,50 @@
 ---
-title: GitBook
+title: "GitBook"
 description: "Access documentation from GitBook"
 ---
 
 ## How it works
+
 The GitBook connector will pull in all the documentation content from your specified GitBook spaces.
 
 ## Setting up
+
 ### Authorization
-    1. Go to your GitBook account settings and navigate to 'Developers' section
-       (https://app.gitbook.com/account/developer)
-    2. Click on 'Create new token'
-    3. Give your token a name and select the appropriate scopes
-    4. Click 'Create' to generate your API token
-    5. Copy and save your token securely - you won't be able to see it again
+
+<Steps>
+  <Step title="Open Developer settings">
+    Go to your GitBook account settings and navigate to 'Developers' section (https://app.gitbook.com/account/developer)
+  </Step>
+
+  <Step title="Create API token">
+    Click on 'Create new token'. Give your token a name and select the appropriate scopes.
+    Click 'Create' to generate your API token.
+  </Step>
+
+  <Step title="Copy and store token">
+    Copy and save your token securely — you won't be able to see it again.
+  </Step>
+</Steps>
 
 ![GitBook Developer Page](/assets/images/connectors/gitbook/gitbook_1.png)
 
 ### Indexing
-    1. Navigate to the Admin Panel and select the **GitBook** Connector
-    2. In **Step 1**, paste your **API Token** from the previous step
 
-![GitBook API Configuration](/assets/images/connectors/gitbook/gitbook_2.png)
+<Steps>
+  <Step title="Open GitBook connector">
+    Navigate to the Admin Panel and select the **GitBook** Connector
+  </Step>
 
-    3. Enter your **Space ID** - you can find this in the URL of your GitBook space
-       (e.g., `https://app.gitbook.com/o/<organization>/s/<space-id>`)
-    4. Click 'Connect' to begin indexing your GitBook content
+  <Step title="Enter API token">
+    In **Step 1**, paste your **API Token** from the previous step
 
-![GitBook Space Configuration](/assets/images/connectors/gitbook/gitbook_3.png)
+    ![GitBook API Configuration](/assets/images/connectors/gitbook/gitbook_2.png)
+  </Step>
+
+  <Step title="Enter Space ID and connect">
+    Enter your **Space ID** - you can find this in the URL of your GitBook space (e.g.,
+    `https://app.gitbook.com/o/<organization>/s/<space-id>`). Click 'Connect' to begin indexing your GitBook content.
+
+    ![GitBook Space Configuration](/assets/images/connectors/gitbook/gitbook_3.png)
+  </Step>
+</Steps>

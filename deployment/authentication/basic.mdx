@@ -1,13 +1,16 @@
 ---
-title: Basic Auth
+title: "Basic Auth"
 description: "Set up Onyx with basic username/password authentication"
 icon: "user-lock"
 ---
 
-Basic Auth is the easiest way to get started with Onyx. However, we recommend using Google OAuth, OIDC, or SAML for production deployments.
+Basic Auth is the easiest way to get started with Onyx. However, we recommend using Google OAuth, OIDC,
+or SAML for production deployments.
 
 <Tip>
-  If you have questions about which authentication approach is best for your organization, don't hesitate to [contact us](https://docs.onyx.app/contact_us) - we're happy to help you choose the right solution.
+  If you have questions about which authentication approach is best for your organization,
+  don't hesitate to [contact us](https://docs.onyx.app/contact_us)
+  - we're happy to help you choose the right solution.
 </Tip>
 
 ## Basic Setup
@@ -25,19 +28,21 @@ AUTH_TYPE=basic
 In your `values.yaml` file, set:
 
 ```yaml
-configMap: 
+configMap:
   AUTH_TYPE: basic
 ```
+
 If you don't need email verification, you're done!
 
-Restart Onyx to apply the changes and the next time you visit the site, you'll be prompted to create an account and set a password.
+Restart Onyx to apply the changes and the next time you visit the site,
+you'll be prompted to create an account and set a password.
 
 <Accordion title="Password Requirements">
-    - 12+ characters
-    - 1 number
-    - 1 special character
-    - 1 uppercase letter
-    - 1 lowercase letter
+  - 12+ characters
+  - 1 number
+  - 1 special character
+  - 1 uppercase letter
+  - 1 lowercase letter
 </Accordion>
 
 ## Basic Auth with Email Verification
@@ -71,9 +76,9 @@ Set the following in your `values.yaml` file:
 auth:
   secrets:
       smpt_pass: <PASSWORD_FOR_THE_SMTP_USER>
-configMap: 
+configMap:
   AUTH_TYPE: basic
-  
+
   REQUIRE_EMAIL_VERIFICATION: true
   SMTP_USER: <EMAIL_TO_SEND_VERIFICATION_EMAILS_FROM>
 
@@ -83,10 +88,12 @@ configMap:
 ```
 
 ## Next Steps
+
 <CardGroup cols={2}>
   <Card title="Set up Google OAuth" icon="google" href="/deployment/authentication/oauth">
     Google OAuth is a secure and easy way to authenticate users with their Google accounts.
   </Card>
+
   <Card title="Other Onyx Configuration Options" icon="gear" href="/deployment/configuration/configuration">
     There are many other configuration options available for Onyx.
   </Card>

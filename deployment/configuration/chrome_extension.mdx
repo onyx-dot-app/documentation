@@ -1,10 +1,10 @@
 ---
-title: Chrome Extension
+title: "Chrome Extension"
 description: "Use Onyx in Chrome from any page"
 icon: "chrome"
 ---
 
-The Onyx Chrome Extension allows users to access Onyx from anywhere in their browser. 
+The Onyx Chrome Extension allows users to access Onyx from anywhere in their browser.
 
 Features include:
 - An Onyx browser home page
@@ -29,27 +29,27 @@ Features include:
   <Step title="Get the extension files">
     Clone the [Onyx Chrome Extension](https://github.com/onyx-dot-app/onyx-chrome-extension) repo from GitHub.
   </Step>
-  
+
   <Step title="Enable Developer Mode">
     - Visit `chrome://extensions/` in your Chrome browser
     - In the upper right corner, click **Developer mode** to enable it
-    
+
     <img className="rounded-image" src="/assets/deployment/chrome_extension.png" alt="Chrome Extension Developer Mode"/>
   </Step>
-  
+
   <Step title="Load the extension">
     - Click **Load unpacked**
     - Select the folder containing the Onyx Chrome Extension files
     - Click **Load**
-    
+
     The extension is now installed and ready to configure.
   </Step>
-  
+
   <Step title="Configure connection settings">
     - Click the three dots (...) next to the extension
     - Select **Options**
     - Set the **Root Domain** to your self-hosted Onyx instance's URL
-    
+
     <img className="rounded-image" src="/assets/deployment/extension_settings.png" alt="Extension Settings Menu"/>
 
     <img className="rounded-image" src="/assets/deployment/root_domain.png" alt="Root Domain Configuration" />
@@ -69,13 +69,13 @@ For organizations deploying the extension at scale, use Google Admin Console for
     - Log in to your Google Admin console
     - Navigate to **Devices → Chrome → Apps and extensions**
   </Step>
-  
+
   <Step title="Add the extension">
     - Obtain the Chrome extension ID from an Onyx team member
     - Click the yellow plus icon to add the extension
     - Enter the Chrome extension ID and click **Add**
   </Step>
-  
+
   <Step title="Configure deployment">
     Configure deployment options such as:
     - Force installation for specific organizational units
@@ -83,7 +83,7 @@ For organizations deploying the extension at scale, use Google Admin Console for
     - Update policies and version management
     - Installation policies (allowed, forced, or blocked)
   </Step>
-  
+
   <Step title="Save configuration">
     <Warning>
       Remember to save your changes after configuring the extension settings.
@@ -95,14 +95,25 @@ For organizations deploying the extension at scale, use Google Admin Console for
 
 For private distribution without the Chrome Web Store:
 
-1. **Package the extension**: Use Chrome's developer tools to create a CRX file
-2. **Host the files**: Place the CRX and update manifest on your server  
-3. **Configure clients**: Use Admin console or Group Policy to point to your hosted files
+<Steps>
+  <Step title="Package the extension">
+    Use Chrome's developer tools to create a CRX file
+  </Step>
+
+  <Step title="Host the files">
+    Place the CRX and update manifest on your server
+  </Step>
+
+  <Step title="Configure clients">
+    Use Admin console or Group Policy to point to your hosted files
+  </Step>
+</Steps>
 
 ## Extension Management
 
 ### Update Policies
 
 - **Enterprise deployments**: Chrome handles automatic updates every 5 hours
-- **Version pinning**: Available for force-installed extensions, but avoid extended use due to security updates
+- **Version pinning**: Available for force-installed extensions, but avoid extended use due to
+  security updates
 - **Self-hosted updates**: Increment version in manifest.json and replace hosted files

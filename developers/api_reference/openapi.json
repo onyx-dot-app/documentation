@@ -27122,7 +27122,7 @@
                     },
                     "is_internet": {
                         "type": "boolean",
-                        "title": "Is Internet",
+                        "title": "Is Web",
                         "default": false
                     },
                     "db_doc_id": {
@@ -27278,7 +27278,7 @@
                     },
                     "is_internet": {
                         "type": "boolean",
-                        "title": "Is Internet",
+                        "title": "Is Web",
                         "default": false
                     },
                     "db_doc_id": {
@@ -27664,7 +27664,7 @@
                     },
                     "is_internet": {
                         "type": "boolean",
-                        "title": "Is Internet",
+                        "title": "Is Web",
                         "default": false
                     }
                 },

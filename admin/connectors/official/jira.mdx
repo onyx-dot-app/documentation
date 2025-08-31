@@ -1,5 +1,5 @@
 ---
-title: Jira
+title: "Jira"
 description: "Access issues and projects from Jira"
 ---
 
@@ -18,31 +18,53 @@ For every jira issue this connector will pull:
 
 ### Authorization
 
-    1. **Jira Cloud**: follow the guide described [here](https://docs.searchunify.com/Content/Content-Sources/Atlassian-Jira-Confluence-Authentication-Create-API-Token.htm) to get an access token.
-    2. **Jira Server**: follow the guide described [here](https://confluence.atlassian.com/enterprise/using-personal-access-tokens-1026032365.html) to get a personal access token.
+<Steps>
+  <Step title="Jira Cloud token">
+    **Jira Cloud**:
+    follow the guide described
+    [here](https://docs.searchunify.com/Content/Content-Sources/Atlassian-Jira-Confluence-Authentication-Create-API-Token.htm)
+    to get an access token.
+  </Step>
+
+  <Step title="Jira Server token">
+    **Jira Server**:
+    follow the guide described
+    [here](https://confluence.atlassian.com/enterprise/using-personal-access-tokens-1026032365.html)
+    to get a personal access token.
+  </Step>
+</Steps>
 
 ### Indexing
 
-    1. Navigate to the Admin Panel and select the **Jira** Connector
-    2. Provide credentials
+<Steps>
+  <Step title="Open Jira connector">
+    Navigate to the Admin Panel and select the **Jira** Connector
+  </Step>
 
-    >#### Cloud
-    >Provide the **Access Token** and the **Username** it belongs to:
-    >![JiraConnectorAuth](/assets/images/connectors/jira/JiraCloudAuth.png)
+  <Step title="Provide credentials">
+    For Cloud, provide the **Access Token** and the **Username** it belongs to:
 
-    >#### Server
-    >Provide the **Personal Access Token**:
-    >![JiraConnectorAuth](/assets/images/connectors/jira/JiraServerAuth.png)
+    ![JiraConnectorAuth](/assets/images/connectors/jira/JiraCloudAuth.png)
 
+    For Server, provide the **Personal Access Token**:
 
-    3. For each project you want to index, provide a single URL to any page in the project. Also you can specify
-    which users comments not to index (this is generally useful to ignore certain bots). For example, it might look like the following:
+    ![JiraConnectorAuth](/assets/images/connectors/jira/JiraServerAuth.png)
+  </Step>
 
-![JiraIndex](/assets/images/connectors/jira/JiraIndex.png)
+  <Step title="Choose projects and filters">
+    For each project you want to index, provide a single URL to any page in the project.
+    Optionally specify users whose comments should not be indexed (useful to ignore certain bots). For example:
 
-    4. Click the `Connect` button! All your Jira tickets in that space will now be pulled into Onyx every **10** minutes.
+    ![JiraIndex](/assets/images/connectors/jira/JiraIndex.png)
+  </Step>
+
+  <Step title="Start indexing">
+    Click the `Connect` button! All your Jira tickets in that space will now be pulled into Onyx every **10** minutes.
+  </Step>
+</Steps>
 
 ### Indexed metadata
+
 ```
 - Project ID
 - Issue Type

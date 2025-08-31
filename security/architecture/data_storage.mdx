@@ -5,16 +5,20 @@ icon: "hard-drive"
 ---
 
 <Info>
-For Onyx cloud, all data is encrypted at rest with AES-256 encryption and TLS 1.3 for data in transition
+  For Onyx cloud, all data is encrypted at rest with AES-256 encryption and TLS 1.3 for data in transition
 </Info>
 
-As a set of containers, Onyx's data persistence relies on data volumes. There are also data retention rules which can be configured in the admin panel expire data based on time.
+As a set of containers, Onyx's data persistence relies on data volumes.
+There are also data retention rules which can be configured in the admin panel expire data based on time.
 
 <Warning>
-If self-hosting, you are responsible for the encryption and locking down of the containers. Most cloud providers have these settings on by default, but you should confirm these security settings are enabled in your environment.
+  If self-hosting, you are responsible for the encryption and locking down of the containers.
+  Most cloud providers have these settings on by default,
+  but you should confirm these security settings are enabled in your environment.
 </Warning>
 
 ## Relational Database - Postgres
+
 Stores:
 - User information, preferences, settings, etc.
 - Query History
@@ -26,20 +30,19 @@ Stores:
 
 **Access**: Protected by database user authentication with configurable credentials and optional IAM authentication
 
-
 ## Vector Database + Search Engine - Vespa
+
 Stores:
 - Documents and metadata
 - Vector representations of documents
 - Doccument access control information
 
-
 **Encryption**: Relies on the disk encryption of the deployment
 
 **Access**: Protected by Vespa authentication and access controls
 
-
 ## Object Storage - MinIO
+
 Stores:
 - Original documents from connectors and user uploads (PDFs, Word docs, etc.)
 - Document attachments and media files
@@ -48,5 +51,3 @@ Stores:
 **Encryption**: Relies on the disk encryption of the deployment
 
 **Access**: Protected by MinIO access keys, bucket policies, and S3-compatible authentication
-
-

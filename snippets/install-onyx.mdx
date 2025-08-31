@@ -33,17 +33,17 @@
     ```bash
     ./init-letsencrypt.sh
     ```
-    
+
     If you are skipping the HTTPS setup, start Onyx manually:
 
     ```bash
     docker compose -f docker-compose.dev.yml -p onyx-stack up -d --build --force-recreate
     ```
-    
+
     <Note>
-        Give Onyx a few minutes to start up. 
-        
-        You can monitor the progress with `docker logs onyx-stack-api_server-1 -f`.
+      Give Onyx a few minutes to start up.
+
+      You can monitor the progress with `docker logs onyx-stack-api_server-1 -f`.
     </Note>
 
     You can access Onyx from the instance Public IPv4 or from the domain you set up earlier!

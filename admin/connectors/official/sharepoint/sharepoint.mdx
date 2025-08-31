@@ -1,0 +1,74 @@
+---
+title: "Overview"
+description: "Access files and notes from your SharePoint Sites"
+---
+
+## How it works
+
+The SharePoint connector will go through all configured sites belonging to an organization and index all the documents
+attached to that site. Note, it currently does not parse the site page contents, only the attached files.
+
+This includes:
+
+- Word Doc, Excel, PDF, PowerPoints, and all plaintext files like .txt, .mdx, etc.
+
+## Setting up
+
+### Authorization
+
+We support two authorization methods—pick one that fits your environment:
+
+- [Client Secret Authentication](/admin/connectors/official/sharepoint/client-secret) - Uses traditional client
+  secret credentials
+- [Certificate-Based Authentication](/admin/connectors/official/sharepoint/certificate) - Uses certificate-based
+  authentication (required for permission sync)
+
+**Note:** Permission sync is only available with certificate-based authentication.
+
+### Indexing
+
+Once you've set up your authorization method, follow these steps to index your SharePoint sites:
+
+<Steps>
+  <Step title="Open SharePoint connector">
+    Navigate to the Onyx Admin Dashboard and select the **SharePoint** Connector.
+  </Step>
+
+  <Step title="Configure authorization">
+    In **Step 1**, configure your authorization:
+    - If you have existing credentials, select them from the list
+    - If you don't have existing credentials, click **Create New** to add new authorization:
+    - **Client Secret**: Enter your Application ID, Directory ID, and Client Secret
+    - **Certificate**: Upload your certificate file and enter Application/Directory IDs
+  </Step>
+
+  <Step title="Save configuration">
+    Click **Create** to save your configuration.
+  </Step>
+
+  <Step title="Continue with selected credential">
+    Ensure your chosen credential is selected, then click **Continue**
+  </Step>
+
+  <Step title="Specify SharePoint configuration">
+    In **Step 2**, specify your SharePoint configuration:
+    - **Connector Name**: Enter a name for the connector (e.g., "MySharePointConnector")
+    - **Sites**: Select a list of sites to pull from or leave blank to pull everything
+    - **Permission Sync** (Certificate auth only): Enable to sync SharePoint permissions with Onyx
+  </Step>
+
+  <Step title="Create connector">
+    Click **Create Connector** to begin indexing.
+  </Step>
+</Steps>
+
+The connector will start indexing your SharePoint sites and you can add more sites or modify settings as needed.
+
+## Understanding SharePoint Structure
+
+SharePoint organizes content into sites, which can contain document libraries, lists, and pages.
+Each site can contain an unlimited number of documents.
+The connector focuses on indexing documents stored in document libraries across your selected sites.
+
+For more information on SharePoint structure,
+visit the [Microsoft SharePoint documentation](https://docs.microsoft.com/en-us/sharepoint/).

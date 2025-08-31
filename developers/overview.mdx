@@ -6,7 +6,8 @@ icon: "code"
 
 **Nearly every Onyx feature is accessible through the Onyx API.**
 
-Onyx APIs are built on REST principles with JSON request/response formats. All endpoints require authentication and follow relatively consistent patterns.
+Onyx APIs are built on REST principles with JSON request/response formats.
+All endpoints require authentication and follow relatively consistent patterns.
 
 Make API requests to:
 
@@ -17,6 +18,7 @@ Make API requests to:
 </Note>
 
 ## Authentication
+
 To authenticate your requests, generate an API key from the Onyx Admin Console.
 
 There are three types of API keys:
@@ -24,31 +26,31 @@ There are three types of API keys:
 <AccordionGroup>
   <Accordion title="Admin API Keys" icon="shield-check">
     Can access all endpoints, including those pre-fixed with `admin/`.
-    
+
     **Use cases:**
     - Full system administration
     - User management operations
     - Data management and analytics
     - Complete access to all Onyx features
-    
+
     **⚠️ Use with caution:** Admin keys have unrestricted access to your Onyx instance.
   </Accordion>
 
   <Accordion title="Basic API Keys" icon="key">
     Can access the non-admin endpoints like Search, Chat, Agents, and Actions.
-    
+
     **Use cases:**
     - Building chat applications
     - Implementing search functionality
     - Creating and managing agents
     - Running actions and workflows
-    
+
     **✅ Recommended:** Most users should use Basic API Keys for application development.
   </Accordion>
 
   <Accordion title="Limited API Keys" icon="lock">
     Read-only Agent access. Can post messages to Chat endpoints, but cannot read chat history.
-    
+
     **Use cases:**
     - Highly restricted environments
     - Specific use cases requiring minimal permissions
@@ -67,7 +69,8 @@ API Keys exist as distinct users in Onyx. This means:
 
 ## API Reference and Playground
 
-In the [API Reference](/developers/api_reference/chat/get_chat_session), we have curated a subset of useful Onyx API endpoints. 
+In the [API Reference](/developers/api_reference/chat/get_chat_session),
+we have curated a subset of useful Onyx API endpoints.
 You can experiment with the endpoints on each page or follow one of our [Guides](/developers/guides/chat_guide).
 
 You can find all Onyx API endpoints in the built-in OpenAPI explorer:
@@ -75,7 +78,7 @@ You can find all Onyx API endpoints in the built-in OpenAPI explorer:
 `https://cloud.onyx.app/api/docs` or `https://your-onyx-domain.com/api/docs`
 
 <Warning>
-  The explorer is purely for reference. It is not a fully-featured API client. 
+  The explorer is purely for reference. It is not a fully-featured API client.
   Ignore the tenant_id parameter and use your API key as a Bearer token.
 </Warning>
 
@@ -85,7 +88,7 @@ You can find all Onyx API endpoints in the built-in OpenAPI explorer:
   <Card title="Core Concepts" icon="lightbulb" href="/developers/core_concepts">
     Learn the fundamental concepts and terminology for working with Onyx APIs
   </Card>
-  
+
   <Card title="Guide: Send a Chat Message" icon="comment" href="/developers/guides/chat_guide">
     Simple example of sending a message programmatically
   </Card>

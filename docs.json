@@ -212,7 +212,14 @@
                       "admin/connectors/official/s3/iam-role"
                     ]
                   },
-                  "admin/connectors/official/sharepoint",
+                  {
+                    "group": "SharePoint",
+                    "pages": [
+                      "admin/connectors/official/sharepoint/sharepoint",
+                      "admin/connectors/official/sharepoint/client-secret",
+                      "admin/connectors/official/sharepoint/certificate"
+                    ]
+                  },
                   {
                     "group": "Slack",
                     "pages": [
