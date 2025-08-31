@@ -19,7 +19,7 @@
             "pages": [
               "welcome",
               "overview/getting_started/use_cases",
-              "overview/getting_started/configuration",
+              "overview/getting_started/first_look",
               "overview/getting_started/open_source_statement",
               "overview/getting_started/faq"
             ]
@@ -27,13 +27,13 @@
           {
             "group": "Core Features",
             "pages": [
-              "overview/basics/unified_interface",
-              "overview/basics/chat",
-              "overview/basics/search",
-              "overview/basics/connectors",
-              "overview/basics/agents",
-              "overview/basics/actions",
-              "overview/basics/workflows"
+              "overview/core_features/chat",
+              "overview/core_features/agents",
+              "overview/core_features/app_search",
+              "overview/core_features/web_search",
+              "overview/core_features/actions",
+              "overview/core_features/connectors",
+              "overview/core_features/workflows"
             ]
           },
 
@@ -271,6 +271,14 @@
           {
             "group": "Getting Started",
             "pages": [
+              "developers/contributing/docs_overview",
+              "developers/contributing/contribution_guide",
+              "developers/contributing/dev_environment_setup"
+            ]
+          },
+          {
+            "group": "API Basics",
+            "pages": [
               "developers/overview",
               "developers/core_concepts"
             ]
@@ -402,18 +410,7 @@
               }
             ]
           },
-          {
-            "group": "Contributing",
-            "hidden": true,
-            "pages": [
-              "developers/contributing/overview",
-              "developers/contributing/dev_setup",
-              "developers/contributing/actions",
-              "developers/contributing/agents",
-              "developers/contributing/connectors",
-              "developers/contributing/advanced_options"
-            ]
-          },
+
           {
             "group": "Miscellaneous",
             "pages": [
