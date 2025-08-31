@@ -70,7 +70,7 @@
             "group": "Deployment Guides",
             "pages": [
               {
-                "group": "Local Deployment",
+                "group": "Local",
                 "icon": "desktop",
                 "pages": [
                   "deployment/deployment_guides/local_deployments/docker",
