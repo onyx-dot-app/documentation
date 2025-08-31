@@ -126,7 +126,7 @@
             "group": "Getting Started",
             "pages": [
               "admin/getting_started/overview",
-              "admin/getting_started/genai_models",
+              "admin/getting_started/AI Models",
               "admin/getting_started/connectors",
               "admin/getting_started/actions",
               "admin/getting_started/agents",
@@ -136,7 +136,7 @@
             ]
           },
           {
-            "group": "LLM Config",
+            "group": "AI Configuration",
             "pages": [
               "admin/llm_providers/openai",
               "admin/llm_providers/anthropic",
