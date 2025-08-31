@@ -1,11 +1,12 @@
 ---
-title: Oracle Cloud Storage
+title: "Oracle Cloud Storage"
 description: "Access files from Oracle Cloud Storage buckets"
 ---
 
 ## How it works
 
-The Oracle Cloud Infrastructure (OCI) Storage connector pulls in all documents from the specified OCI bucket. It supports various file formats including PDF, DOC, DOCX, TXT, and more.
+The Oracle Cloud Infrastructure (OCI) Storage connector pulls in all documents from the specified OCI bucket.
+It supports various file formats including PDF, DOC, DOCX, TXT, and more.
 
 Documents are updated every **1** day.
 
@@ -13,52 +14,88 @@ Documents are updated every **1** day.
 
 ### Authorization
 
-1. Log into your Oracle Cloud Console.
-2. Click on the user icon in the top-right corner and select "User Settings".
+<Steps>
+  <Step title="Open Oracle Cloud Console">
+    Log into your Oracle Cloud Console.
+  </Step>
 
-![API Keys](/assets/images/connectors/blob/oci/topbar.png)
+  <Step title="Open User Settings">
+    Click on the user icon in the top-right corner and select "User Settings".
 
-3. Under "Resources", click on "Customer Secret Keys".
-   ![API Keys](/assets/images/connectors/blob/oci/apikeys.png)
+    ![API Keys](/assets/images/connectors/blob/oci/topbar.png)
+  </Step>
 
-4. Click "Generate Secret Key".
-5. Enter a friendly name for your key (e.g., "OnyxOCIConnector").
-6. Click "Generate Secret Key".
-7. You will see your Secret Key. Make sure to copy the key immediately, as you won't be able to retrieve the Secret Key later.
+  <Step title="Open Customer Secret Keys">
+    Under "Resources", click on "Customer Secret Keys".
 
-8. You should now be taken to the "Customer Secret Keys" page and see a list of keys (including the name of the key you just generated). The corresponding access key should be present.
+    ![API Keys](/assets/images/connectors/blob/oci/apikeys.png)
+  </Step>
 
-![API Keys](/assets/images/connectors/blob/oci/secretkeys.png)
-![Hover Key](/assets/images/connectors/blob/oci/hoverkey.png)
+  <Step title="Generate Secret Key">
+    Click "Generate Secret Key".
+  </Step>
 
-9. To find your tenancy's Object Storage namespace, click on the user icon in the top-right corner and select "Tenancy: [your tenancy name]".
-10. In the tenancy details, you'll find the Object Storage namespace.
+  <Step title="Name the key">
+    Enter a friendly name for your key (e.g., "OnyxOCIConnector").
+  </Step>
+
+  <Step title="Generate and copy key">
+    Click "Generate Secret Key". You will see your Secret Key. Make sure to copy the key immediately,
+    as you won't be able to retrieve it later.
+  </Step>
+
+  <Step title="Verify keys list">
+    You should now be taken to the "Customer Secret Keys" page and see a list of keys (including the name of the key you
+    just generated). The corresponding access key should be present.
+
+    ![API Keys](/assets/images/connectors/blob/oci/secretkeys.png)
+
+    ![Hover Key](/assets/images/connectors/blob/oci/hoverkey.png)
+  </Step>
+
+  <Step title="Find Object Storage namespace">
+    To find your tenancy's Object Storage namespace, click on the user icon in the top-right corner and select "Tenancy:
+    [your tenancy name]". In the tenancy details, you'll find the Object Storage namespace.
+  </Step>
+</Steps>
 
 ### Indexing
 
-1. Navigate to the Admin Panel and select the **Oracle Cloud Infrastructure Storage** Connector.
-2. In **Step 1**, provide your OCI credentials:
+<Steps>
+  <Step title="Open OCI Storage connector">
+    Navigate to the Admin Panel and select the **Oracle Cloud Infrastructure Storage** Connector.
+  </Step>
 
-![API Keys](/assets/images/connectors/blob/oci/Onyx1.png)
+  <Step title="Enter OCI credentials">
+    In **Step 1**, provide your OCI credentials:
 
-- Provide your OCI Access Key, Secret Key, Namespace, and Region for authentication.
-- These credentials will be used to access your OCI buckets.
+    ![API Keys](/assets/images/connectors/blob/oci/Onyx1.png)
 
-**OCI Access Key:**
-**OCI Secret Key:**
-**Namespace:**
-**Region:**
+    - Provide your OCI Access Key, Secret Key, Namespace, and Region for authentication.
+    - These credentials will be used to access your OCI buckets.
+  </Step>
 
-3. Click "Update" to save your credentials.
+  <Step title="Save credentials">
+    Click "Update" to save your credentials.
+  </Step>
 
-4. In **Step 2**, specify which OCI bucket you want to make searchable:
+  <Step title="Select bucket">
+    In **Step 2**, specify which OCI bucket you want to make searchable:
 
-![API Keys](/assets/images/connectors/blob/oci/Onyx2.png)
+    ![API Keys](/assets/images/connectors/blob/oci/Onyx2.png)
+  </Step>
 
-5. Click "Connect" to begin indexing.
+  <Step title="Start indexing">
+    Click "Connect" to begin indexing.
+  </Step>
+</Steps>
 
 ## Understanding Oracle Cloud Infrastructure Object Storage Structure
 
-Oracle Cloud Infrastructure Object Storage organizes data into buckets. Each bucket can contain an unlimited number of objects (files). You can think of a bucket as a root directory, and the objects as files within that directory.
+Oracle Cloud Infrastructure Object Storage organizes data into buckets.
+Each bucket can contain an unlimited number of objects (files). You can think of a bucket as a root directory,
+and the objects as files within that directory.
 
-For more information on OCI Object Storage structure, visit the [Oracle Cloud Infrastructure Object Storage documentation](https://docs.oracle.com/en-us/iaas/Content/Object/Concepts/objectstorageoverview.htm).
+For more information on OCI Object Storage structure,
+visit the [Oracle Cloud Infrastructure Object Storage
+documentation](https://docs.oracle.com/en-us/iaas/Content/Object/Concepts/objectstorageoverview.htm).

@@ -1,5 +1,5 @@
 ---
-title: GCP
+title: "GCP"
 description: "Deploy Onyx on GCP Compute Engine"
 icon: "google"
 ---
@@ -11,39 +11,41 @@ import DeploymentNextSteps from "/snippets/deployment-next-steps.mdx"
 **Make sure your Google Cloud Platform account has the necessary permissions to create a VM instance.**
 
 <Steps>
-    <Step title="Create a VM instance">
-        Create a VM instance with the appropriate resources. For this guide, we will use the recommended `e2-standard-4` instance.
-        <Note>
-            Read our [Resourcing guide](/deployment/getting_started/resourcing) for more details.
-        </Note>
+  <Step title="Create a VM instance">
+    Create a VM instance with the appropriate resources. For this guide,
+    we will use the recommended `e2-standard-4` instance.
 
-        - Give your instance a descriptive name like `onyx-prod`
-        - Select the `Debian GNU/Linux 12` boot disk
-        - Select the `e2-standard-4` machine type
-        - Select `Allow HTTPS traffic` in the **Firewall** section
-        - Configure storage following the Resourcing Guide
+    <Note>
+      Read our [Resourcing guide](/deployment/getting_started/resourcing) for more details.
+    </Note>
 
-        <img className="rounded-image" src="/assets/images/setup_guides/gcp/CreateVmInstance.png" alt="Create VM Instance" />
+    - Give your instance a descriptive name like `onyx-prod`
+    - Select the `Debian GNU/Linux 12` boot disk
+    - Select the `e2-standard-4` machine type
+    - Select `Allow HTTPS traffic` in the **Firewall** section
+    - Configure storage following the Resourcing Guide
 
-        <img className="rounded-image" src="/assets/images/setup_guides/gcp/Instance.png" alt="Instance Settings" />
+    <img className="rounded-image" src="/assets/images/setup_guides/gcp/CreateVmInstance.png" alt="Create VM Instance" />
 
-        <img className="rounded-image" src="/assets/images/setup_guides/gcp/Firewall.png" alt="Firewall Settings" />
-    </Step>
+    <img className="rounded-image" src="/assets/images/setup_guides/gcp/Instance.png" alt="Instance Settings" />
 
-    <Step title="Create the instance">
-        Click **Create** and then view your instance details.
-        
-        <Tip>
-            Save the **External IP** of the instance!
-        </Tip>
-    </Step>
+    <img className="rounded-image" src="/assets/images/setup_guides/gcp/Firewall.png" alt="Firewall Settings" />
+  </Step>
 
-    <CustomDomain />
+  <Step title="Create the instance">
+    Click **Create** and then view your instance details.
 
-    <Step title="Install Onyx requirements">
-        Onyx requires `git`, `docker`, and `docker compose`.
-        
-        To install these on Debian GNU/Linux 12, run the following:
+    <Tip>
+      Save the **External IP** of the instance!
+    </Tip>
+  </Step>
+
+  <CustomDomain />
+
+  <Step title="Install Onyx requirements">
+    Onyx requires `git`, `docker`, and `docker compose`.
+
+    To install these on Debian GNU/Linux 12, run the following:
 
         ```bash
         sudo apt update
@@ -58,7 +60,7 @@ import DeploymentNextSteps from "/snippets/deployment-next-steps.mdx"
         sudo apt install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
         ```
 
-        If using CentOS, Red Hat Linux, or similar, run the following:
+    If using CentOS, Red Hat Linux, or similar, run the following:
 
         ```bash
         sudo yum update -y
@@ -71,9 +73,9 @@ import DeploymentNextSteps from "/snippets/deployment-next-steps.mdx"
 
         sudo yum install git
         ```
-    </Step>
+  </Step>
 
-    <InstallOnyx />
+  <InstallOnyx />
 </Steps>
 
 <DeploymentNextSteps />

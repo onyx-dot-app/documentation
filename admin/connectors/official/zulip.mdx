@@ -1,5 +1,5 @@
 ---
-title: Zulip
+title: "Zulip"
 description: "Access messages from Zulip streams"
 ---
 
@@ -11,28 +11,49 @@ The Zulip connector pulls in all streams and topics according to the permissions
 
 ### Authorization
 
-    1. Onyx interfaces with Zulip as a Zulip Bot which is authenticated using the `zuliprc` config format.
+<Steps>
+  <Step title="Understand Zulip bot auth">
+    Onyx interfaces with Zulip as a Zulip Bot which is authenticated using the `zuliprc` config format.
     For more context directly from Zulip, refer to the following docs:
-        - https://zulip.com/api/running-bots
-        - https://zulip.com/api/configuring-python-bindings
-    2. Start by creating a Zulip Bot
+    - https://zulip.com/api/running-bots
+    - https://zulip.com/api/configuring-python-bindings
+  </Step>
 
-![ZulipBot](/assets/images/connectors/zulip/ZulipBot.png)
+  <Step title="Create a Zulip Bot">
+    Start by creating a Zulip Bot.
 
-    3. Copy the Bot authentication info (`zuliprc` contents), see red arrow below:
+    ![ZulipBot](/assets/images/connectors/zulip/ZulipBot.png)
+  </Step>
 
-![ZulipRC](/assets/images/connectors/zulip/ZulipRC.png)
+  <Step title="Copy zuliprc contents">
+    Copy the Bot authentication info (`zuliprc` contents), see red arrow below:
+
+    ![ZulipRC](/assets/images/connectors/zulip/ZulipRC.png)
 
     Keep this copied text to provide to Onyx in the next step
+  </Step>
+</Steps>
 
 ### Indexing
 
-    1. Navigate to the Admin Panel and select the **Zulip** Connector
-    2. In **Step 1**, paste in the copied `zuliprc` value
-    3. Grab your Zulip Realm/URL info, see below:
+<Steps>
+  <Step title="Open Zulip connector">
+    Navigate to the Admin Panel and select the **Zulip** Connector
+  </Step>
 
-![ZulipRealmURL](/assets/images/connectors/zulip/ZulipRealmURL.png)
+  <Step title="Paste zuliprc">
+    In **Step 1**, paste in the copied `zuliprc` value
+  </Step>
 
-    4. In **Step 2**, provide the values for the Realm and URL
+  <Step title="Get Realm/URL">
+    Grab your Zulip Realm/URL info, see below:
 
-![OnyxZulipConfig](/assets/images/connectors/zulip/OnyxZulipConfig.png)
+    ![ZulipRealmURL](/assets/images/connectors/zulip/ZulipRealmURL.png)
+  </Step>
+
+  <Step title="Enter Realm and URL">
+    In **Step 2**, provide the values for the Realm and URL
+
+    ![OnyxZulipConfig](/assets/images/connectors/zulip/OnyxZulipConfig.png)
+  </Step>
+</Steps>

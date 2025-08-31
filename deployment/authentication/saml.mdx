@@ -9,85 +9,82 @@ Configure Onyx with SAML authentication.
 
 <EnterpriseEditionInfo />
 
-This guide will walk you through the setup process for Okta. Other identity providers will have a similar process. 
+This guide will walk you through the setup process for Okta. Other identity providers will have a similar process.
 Please contact us if you need help with a different identity provider.
 
 <Warning>
-   SAML authentication requires building Onyx images from source! 
-   
-   See details in the [Docker Compose guide](/deployment/getting_started/quickstart#launch-with-docker-compose). 
+  SAML authentication requires building Onyx images from source!
+
+  See details in the [Docker Compose guide](/deployment/getting_started/quickstart#launch-with-docker-compose).
 </Warning>
 
 ## Guide
 
-
 <Steps>
-   <Step title="Create Okta Application">
-      Navigate to the Okta **Admin Console** → **Applications** → **Create App Integration**.
+  <Step title="Create Okta Application">
+    Navigate to the Okta **Admin Console** → **Applications** → **Create App Integration**.
 
-      <img className="rounded-image" src="/assets/deployment/oidc_create_integration.png" alt="Okta Create Integration Page" />
-   </Step>
+    <img className="rounded-image" src="/assets/deployment/oidc_create_integration.png" alt="Okta Create Integration Page" />
+  </Step>
 
-   <Step title="Configure Okta Application">
-      Select **SAML 2.0**.
+  <Step title="Configure Okta Application">
+    Select **SAML 2.0**.
 
-      **Name** your application `Onyx` and upload the Onyx logo.
+    **Name** your application `Onyx` and upload the Onyx logo.
 
-      <Tip>
-         If you are white-labeling Onyx, you can freely name your application and upload your own logo.
-      </Tip>
+    <Tip>
+      If you are white-labeling Onyx, you can freely name your application and upload your own logo.
+    </Tip>
 
-      Add a **Sign sign-on URL**
+    Add a **Sign sign-on URL**
 
       ```
       https://YOUR_ONYX_DOMAIN.com/auth/saml/callback
       ```
 
-      Add an **Audience URI (SP Entity ID)**
-      
+    Add an **Audience URI (SP Entity ID)**
+
       ```
       https://YOUR_ONYX_DOMAIN.com/metadata
       ```
 
-      Add an **Attribute Statement** where **Name** is `email` and **Value** is `user.email`.
-      
-      <img className="rounded-image" src="/assets/deployment/saml_config.png" alt="Okta Configure SAML Application Page" />
+    Add an **Attribute Statement** where **Name** is `email` and **Value** is `user.email`.
 
-   </Step>
+    <img className="rounded-image" src="/assets/deployment/saml_config.png" alt="Okta Configure SAML Application Page" />
+  </Step>
 
-   <Step title="Assign Users to Application">
-      Create the application and navigate to the **Assignments** tab to assign users.
+  <Step title="Assign Users to Application">
+    Create the application and navigate to the **Assignments** tab to assign users.
+  </Step>
 
-   </Step>
+  <Step title="Configure Onyx for SAML">
+    Navigate to `onyx/backend/ee/onyx/configs/saml_config` and copy the template settings file.
 
-   <Step title="Configure Onyx for SAML">
-      Navigate to `onyx/backend/ee/onyx/configs/saml_config` and copy the template settings file.
-   
       ```bash
       cd onyx/backend/ee/onyx/configs/saml_config
       cp template_settings.yaml settings.yaml
       ```
 
-      Edit the `settings.yaml` file with the following values:
+    Edit the `settings.yaml` file with the following values:
 
-      <AccordionGroup>
-         <Accordion title="idp: entityId">
-            Go to the **Sign On** tab of your application in Okta, copy the **Metadata URL**, and paste it into your browser.
-            You should see XML like:
+    <AccordionGroup>
+    <Accordion title="idp: entityId">
+    Go to the **Sign On** tab of your application in Okta, copy the **Metadata URL**, and paste it into your browser.
+    You should see XML like:
 
             ```XML
-            <md:EntityDescriptor 
-                xmlns:md="urn:oasis:names:tc:SAML:2.0:metadata" 
+            <md:EntityDescriptor
+                xmlns:md="urn:oasis:names:tc:SAML:2.0:metadata"
                 entityID="http://www.okta.com/exkngircrvOYQyNg35d7">
             ...
             </md:EntityDescriptor>
             ```
 
-            Copy the `entityID` value and paste it into `idp: entityId` in `settings.yaml`.
-         </Accordion>
+    Copy the `entityID` value and paste it into `idp: entityId` in `settings.yaml`.
+    </Accordion>
 
-         <Accordion title="idp: x509cert">
-            In the XML from the previous step, find the `ds:X509Certificate` element.
+    <Accordion title="idp: x509cert">
+    In the XML from the previous step, find the `ds:X509Certificate` element.
 
             ```XML
             <md:KeyDescriptor use="signing">
@@ -99,34 +96,33 @@ Please contact us if you need help with a different identity provider.
                     </ds:X509Data>
                 </ds:KeyInfo>
             </md:KeyDescriptor>
-
             ```
 
-            Copy the certificate value and paste it into `idp: x509cert` in `settings.yaml`.
-         </Accordion>
+    Copy the certificate value and paste it into `idp: x509cert` in `settings.yaml`.
+    </Accordion>
 
-         <Accordion title="idp: singleSignOnService: url">
-            Go to the **General** tab of your application in Okta and copy the **Embed Link**.
-         </Accordion>
+    <Accordion title="idp: singleSignOnService: url">
+    Go to the **General** tab of your application in Okta and copy the **Embed Link**.
+    </Accordion>
 
-         <Accordion title="sp: entityId">
-            This is the same as the **Audience URI (SP Entity ID)** you added to the Okta application.
-            
+    <Accordion title="sp: entityId">
+    This is the same as the **Audience URI (SP Entity ID)** you added to the Okta application.
+
             ```
             https://YOUR_ONYX_DOMAIN.com/metadata
             ```
-         </Accordion>
+    </Accordion>
 
-         <Accordion title="sp: assertionConsumerService: url">
-            This is the same as the **Sign sign-on URL** you added to the Okta application.
+    <Accordion title="sp: assertionConsumerService: url">
+    This is the same as the **Sign sign-on URL** you added to the Okta application.
 
             ```
             https://YOUR_ONYX_DOMAIN.com/auth/saml/callback
             ```
-         </Accordion>
+    </Accordion>
 
-         <Accordion title="sp: x509cert">
-            Generate a self-signed certificate:
+    <Accordion title="sp: x509cert">
+    Generate a self-signed certificate:
 
             ```bash
             openssl genrsa -out sp-private-key.pem 2048
@@ -134,26 +130,26 @@ Please contact us if you need help with a different identity provider.
             awk 'NF {sub(/\r/, ""); printf "%s\\n",$0;}' sp-cert.pem
             ```
 
-            Copy the certificate value and paste it into `sp: x509cert` in `settings.yaml`.
-         </Accordion>
-      </AccordionGroup>
-   </Step>
+    Copy the certificate value and paste it into `sp: x509cert` in `settings.yaml`.
+    </Accordion>
+    </AccordionGroup>
+  </Step>
 
-   <Step title="Set Onyx Environment Variables">
-      Set the following environment variables in your `.env` or `values.yaml` file (Docker and Kubernetes, respectively).
+  <Step title="Set Onyx Environment Variables">
+    Set the following environment variables in your `.env` or `values.yaml` file (Docker and Kubernetes, respectively).
 
       ```bash .env
       AUTH_TYPE=saml
       ```
 
-      <Note>
-         If you're using Docker but don't have a `.env` file, copy `onyx/deployment/docker_compose/env.prod.template` to a new `.env` file in the same directory.
-      </Note>
+    <Note>
+      If you're using Docker but don't have a `.env` file,
+      copy `onyx/deployment/docker_compose/env.prod.template` to a new `.env` file in the same directory.
+    </Note>
 
       ```bash values.yaml
       configMap:
         AUTH_TYPE: saml
       ```
-   </Step>
+  </Step>
 </Steps>
-

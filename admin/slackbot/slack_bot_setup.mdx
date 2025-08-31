@@ -1,5 +1,5 @@
 ---
-title: Slack Bot Setup Guide
+title: "Slack Bot Setup Guide"
 description: "How to set up a Slack bot to automatically answer questions"
 icon: "slack"
 ---
@@ -8,7 +8,9 @@ icon: "slack"
 
 Onyx will connect to your Slack and listen for messages to answer.
 
-You can easily configure rules for what channels Onyx should respond in, what knowledge sets should back each configured channel, and set filters to respond or not respond to different types of messages.
+You can easily configure rules for what channels Onyx should respond in,
+what knowledge sets should back each configured channel,
+and set filters to respond or not respond to different types of messages.
 
 When Onyx identifies valid questions, it will respond in the message thread with:
 
@@ -18,11 +20,13 @@ When Onyx identifies valid questions, it will respond in the message thread with
 
 ![SlackBot](/assets/images/slack_bot/SlackBot.png)
 
-Onyx also provides a configuration page so you can create custom settings for each slack channel (or you can just use the default settings for all your channels).
+Onyx also provides a configuration page so you can create custom settings for each slack channel (or you can just use
+the default settings for all your channels).
 
 ![SlackBotConfig](/assets/images/slack_bot/SlackBotConfig.png)
 
-Since we are using Web Sockets, Onyx is able to initiate the connection. This means that this is able to work even if you are running Onyx inside a firewall protected VPC.
+Since we are using Web Sockets, Onyx is able to initiate the connection.
+This means that this is able to work even if you are running Onyx inside a firewall protected VPC.
 
 ## Setting up
 
@@ -30,15 +34,24 @@ Since we are using Web Sockets, Onyx is able to initiate the connection. This me
 
 **Note:** You must be an admin of the Slack workspace to set up the Slack bot.
 
-1. Navigate and sign in to [https://api.slack.com/apps](https://api.slack.com/apps).
-2. Create a new Slack app:
-   - Click the **Create New App** button in the top right.
-   - Select **From an app manifest** option.
-   - Select the relevant workspace from the dropdown and click **Next**.
+<Steps>
+  <Step title="Navigate to Slack Apps">
+    Navigate and sign in to [https://api.slack.com/apps](https://api.slack.com/apps).
+  </Step>
 
-![SlackApp](/assets/images/connectors/slack/SlackApp.png)
+  <Step title="Create new Slack app">
+    Create a new Slack app:
+    - Click the **Create New App** button in the top right.
+    - Select **From an app manifest** option.
+    - Select the relevant workspace from the dropdown and click **Next**.
 
-3. Select the "YAML" tab, paste the following manifest into the text box, and click **Next**:
+    ![SlackApp](/assets/images/connectors/slack/SlackApp.png)
+  </Step>
+
+  <Step title="Configure app manifest">
+    Select the "YAML" tab, paste the following manifest into the text box, and click **Next**:
+  </Step>
+</Steps>
 
 ```yaml
 display_information:
@@ -91,69 +104,98 @@ settings:
   token_rotation_enabled: false
 ```
 
-4. Click the **Create** button.
-5. Generate an `App-level Token`; Under **Basic Information**, scroll to the **App-level tokens** section and click the button to generate an **App-level token**. ([learn more](https://api.slack.com/apis/connections/socket#token))
-   
-   Add the `connections:write` scope to the app-level token and click **Generate**.
-   Copy this somewhere safe for now, as you will need this later to initiate the Web Socket-based connection to Slack.
+<Steps>
+  <Step title="Create app">
+    Click the **Create** button.
+  </Step>
 
-6. In the app page, navigate to the **OAuth & Permissions** tab under the **Features** header.
-7. Under **OAuth Tokens for Your Workspace**, select `Install to Workspace` and Allow the app.
-   ![OnyxBotInstall](/assets/images/slack_bot/OnyxBotInstall.png)
-8. Copy the **Bot User OAuth Token**, this will be needed later to enable us to respond to messages as OnyxBot.
+  <Step title="Generate app-level token">
+    Generate an `App-level Token`; Under **Basic Information**,
+    scroll to the **App-level tokens** section and click the button to generate an **App-level token**.
+    ([learn more](https://api.slack.com/apis/connections/socket#token))
+
+    Add the `connections:write` scope to the app-level token and click **Generate**. Copy this somewhere safe for now,
+    as you will need this later to initiate the Web Socket-based connection to Slack.
+  </Step>
+
+  <Step title="Open OAuth & Permissions">
+    In the app page, navigate to the **OAuth & Permissions** tab under the **Features** header.
+  </Step>
+
+  <Step title="Install app to workspace">
+    Under **OAuth Tokens for Your Workspace**, select `Install to Workspace` and Allow the app.
+
+    ![OnyxBotInstall](/assets/images/slack_bot/OnyxBotInstall.png)
+  </Step>
+
+  <Step title="Copy Bot User OAuth Token">
+    Copy the **Bot User OAuth Token**, this will be needed later to enable us to respond to messages as OnyxBot.
+  </Step>
+</Steps>
 
 ### Setting Onyx to use it
 
 Start by finding the admin page in the top right of the Onyx web UI.
+
 ![OnyxAdminButton](/assets/images/slack_bot/OnyxAdminButton.png)
 
 On the left hand menu of the admin page, navigate to the bottom to **Bots**.
 
 Provide your Slack Tokens and Onyx will start to respond to your slack channels after a short startup delay.
+
 ![SlackBotTokens](/assets/images/slack_bot/SlackBotTokens.png)
 
 ## Advanced Configuration
 
-There are also a set of less often used / more advanced configuration options available via environment variables that can set things like how many "Reference Documents" to show per answer, etc.
+There are also a set of less often used / more advanced configuration options available via environment variables that
+can set things like how many "Reference Documents" to show per answer, etc.
 
-Refer to the available configs [here](https://github.com/onyx-dot-app/onyx/blob/main/backend/onyx/configs/onyxbot_configs.py)
+Refer to the available configs
+[here](https://github.com/onyx-dot-app/onyx/blob/main/backend/onyx/configs/onyxbot_configs.py)
 
 ## Bot Permissions and Scopes
 
 The bot requires the following key permissions to function properly:
 
 ### **Message Permissions**
+
 - `app_mentions:read`: To detect when the bot is mentioned
 - `channels:history`, `groups:history`, `im:history`, `mpim:history`: To read message history and context
 - `chat:write`: To send responses
 
 ### **Channel Permissions**
+
 - `channels:read`, `groups:read`: To access channel information
 - `channels:join`: To automatically join channels when invited
 
 ### **User Permissions**
+
 - `users:read`, `users:read.email`: To identify users and respect permissions
 - `usergroups:read`: To understand team structures
 
 ### **Interactive Features**
+
 - `commands`: To support slash commands like `/onyx`
 - `reactions:write`, `reactions:read`: To add reactions and understand user feedback
 
 ## Troubleshooting
 
 ### **Bot Not Responding**
+
 - Verify both tokens are correctly entered in the Onyx admin panel
 - Check that the bot has been added to the channel where you're testing
 - Ensure the app manifest was applied correctly during Slack app creation
 
 ### **Permission Issues**
+
 - Confirm you have admin rights in both Slack and Onyx
 - Verify all required scopes are granted to the bot
 - Check that the app is properly installed to your workspace
 
 ### **Connection Issues**
+
 - The bot uses WebSocket connections, so ensure your network allows these
 - Check the Onyx logs for any connection errors
 - Restart the bot configuration if needed
 
-For additional support, contact your Onyx administrator or refer to the [Onyx documentation](/). 
+For additional support, contact your Onyx administrator or refer to the [Onyx documentation](/).

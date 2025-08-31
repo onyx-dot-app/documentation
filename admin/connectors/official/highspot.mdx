@@ -1,11 +1,12 @@
 ---
-title: Highspot
+title: "Highspot"
 description: "Access sales content from Highspot"
 ---
 
 ## How it works
 
-The Highspot connector indexes documents from your Highspot instance. It can index either specific spots you add or all spots where you have view access and download permissions.
+The Highspot connector indexes documents from your Highspot instance.
+It can index either specific spots you add or all spots where you have view access and download permissions.
 
 ## Setting up
 
@@ -15,30 +16,59 @@ The Highspot connector indexes documents from your Highspot instance. It can ind
 
 #### Enabling Developer Options
 
-    1. Log into your Highspot account as an administrator
-    2. Click on your profile icon in the top right corner and select "Settings" from the list
-    3. On the new page that opens, select "your company" under company settings
-    4. Navigate to "Access and Privacy" and click on "API Access"
-    5. Add the user(s) who will need to generate API keys and secrets
-    6. And also confirm you enabled the "API Access for Users"
-    
+<Steps>
+  <Step title="Open company settings">
+    Log into your Highspot account as an administrator.
+    Click on your profile icon in the top right corner and select "Settings".
+    Select "your company" under company settings.
+  </Step>
+
+  <Step title="Enable API access">
+    Navigate to "Access and Privacy" and click on "API Access". Add the user(s)
+    who will need to generate API keys and secrets. Confirm "API Access for Users" is enabled.
+  </Step>
+</Steps>
+
 ![HighspotEnableDeveloper](/assets/images/connectors/highspot/highspot_enable_developer.png)
 
 #### Generating API Credentials
 
-    1. Log in as the user who has been granted API access
-    2. Click on the profile icon in the top right corner and select "Settings" from the list
-    3. On the new page that opens, look for the "Developer" tab under user settings
-    4. Navigate to the developer section and generate a new API key
-    5. After generation, you'll receive a key and secret
+<Steps>
+  <Step title="Open Developer settings">
+    Log in as the user who has been granted API access.
+    Click on the profile icon in the top right corner and select "Settings".
+    Look for the "Developer" tab under user settings.
+  </Step>
+
+  <Step title="Generate API key">
+    Navigate to the developer section and generate a new API key. After generation, you'll receive a key and secret.
+
     ![HighspotGenerateAPI](/assets/images/connectors/highspot/highspot_generate_api.png)
-    6. Make a note of your API key, secret and base URL as you will need them for indexing
+  </Step>
+
+  <Step title="Record credentials">
+    Make a note of your API key, secret and base URL as you will need them for indexing.
+  </Step>
+</Steps>
 
 ### Indexing
 
-    1. Navigate to the Admin Panel and select the **Highspot** Connector Tile
-    2. Provide your **API Key**, **Secret**, and **Base URL** from the steps above
-    3. Choose one of the following indexing options:
-       - Enter specific spots you want to index
-       - Select the option to index all spots where your user has view access and download permissions
-    4. Click "Connect" to begin indexing your Highspot content
+<Steps>
+  <Step title="Open Highspot connector">
+    Navigate to the Admin Panel and select the **Highspot** Connector Tile
+  </Step>
+
+  <Step title="Enter credentials">
+    Provide your **API Key**, **Secret**, and **Base URL** from the steps above
+  </Step>
+
+  <Step title="Choose indexing options">
+    Choose one of the following:
+    - Enter specific spots you want to index
+    - Index all spots where your user has view access and download permissions
+  </Step>
+
+  <Step title="Start indexing">
+    Click "Connect" to begin indexing your Highspot content
+  </Step>
+</Steps>

@@ -4,27 +4,33 @@ description: "Resource protection from users"
 icon: "lock"
 ---
 
-
 ## Single Sign On (SSO)
+
 In the Community Edition of Onyx, basic auth using email + password and SSO using Google OAuth are supported.
 
-In the Enterprise Edition of Onyx, SSO to all standard Identity Providers (like Okta, Azure Entra ID, etc.) is supported via OIDC (recommended) and SAML.
-
+In the Enterprise Edition of Onyx, SSO to all standard Identity Providers (like Okta, Azure Entra ID, etc.)
+is supported via OIDC (recommended) and SAML.
 
 ## Role-Based Access Control (RBAC)
-RBAC protection to documents and resources are only available in the Enterprise Edition of Onyx. The following resources can be gated by users and groups.
+
+RBAC protection to documents and resources are only available in the Enterprise Edition of Onyx.
+The following resources can be gated by users and groups.
 - Agents
 - Actions
 - Document access
 - Usage rate limits
 
 ## Document Access
-Different access to documents is only available in the Enterprise Edition of Onyx. The two ways of gating access to documents are:
 
-1. Automatically mirroring them from external sources (such as Google Drive, Salesforce, etc.).
-2. Directly assigning access to users or groups of users. Often less convenient but requires less calls to external APIs which may be preferred in certain deployments.
+Different access to documents is only available in the Enterprise Edition of Onyx.
+The two ways of gating access to documents are:
+
+- Automatically mirroring them from external sources (such as Google Drive, Salesforce, etc.).
+- Directly assigning access to users or groups of users. Often less convenient but requires less
+  calls to external APIs which may be preferred in certain deployments.
 
 ## User Roles
+
 - **Admin**: Full system access, audit, and configuration capabilities
 - **Curator**: Document management and content curation (only available on Enterprise Edition)
 - **User**: Standard access to chat and search functionality

@@ -7,54 +7,67 @@ icon: "lightbulb"
 import AgentsPersonasAssistantsNote from '/snippets/agents-personas-assistants-note.mdx';
 
 ## Actions & MCP
+
 <AccordionGroup>
   <Accordion title="Actions" icon="wrench">
-    Actions (also called Tools in the backend) are the functions that your Agents can perform to interact with external systems and services. 
+    Actions (also called Tools in the backend)
+    are the functions that your Agents can perform to interact with external systems and services.
     They extend your agents' capabilities beyond just the language model.
-    
+
     Built-in Actions:
     - **Internal Search**: Search through your indexed knowledge base
     - **Web Search**: Search the web for real-time information
     - **Art Generation**: Create images and visual content
     - **Okta Profile**: Get user data from Okta
+
     <Info>
+
       SCIM support for common IdPs is coming soon!
     </Info>
-    
+
     Custom Actions:
     - **API Integrations**: Connect to external REST APIs
     - **Database Operations**: Query and update databases
     - **Workflow Automation**: Trigger business processes
     - **File Operations**: Read, write, and manipulate files
-    
+
     You can define your own Custom Actions in the Admin Panel using an OpenAPI specification.
   </Accordion>
 
   <Accordion title="MCP" icon="handshake">
-    Model Context Protocol (MCP) is an open standard that enables AI assistants to securely access external data sources and tools.
-    Onyx can be configured as an MCP client to interact with external systems, databases, and APIs in a controlled manner.
-    
+    Model Context Protocol (MCP)
+    is an open standard that enables AI assistants to securely access external data sources and tools.
+    Onyx can be configured as an MCP client to interact with external systems, databases,
+    and APIs in a controlled manner.
+
     Key features of MCP:
     - **External Data Access**: Connect to databases, APIs, and file systems
     - **Authentication**: Pass through OAuth to ensure secure access to your MCP server.
   </Accordion>
-  <Accordion title="(Advanced) Custom Built-in Actions" icon="wrench">
-    Sometimes, you need more control over your action than what is possible with a Custom Action. Since Onyx is open-source, you can extend the built-in actions to your liking!
 
-    To find templates for built-in actions, see `backend/onyx/tools/tool_implementations` in the [Onyx repository](https://github.com/onyx-dot-app/onyx).
+  <Accordion title="(Advanced) Custom Built-in Actions" icon="wrench">
+    Sometimes, you need more control over your action than what is possible with a Custom Action.
+    Since Onyx is open-source, you can extend the built-in actions to your liking!
+
+    To find templates for built-in actions,
+    see `backend/onyx/tools/tool_implementations` in the [Onyx repository](https://github.com/onyx-dot-app/onyx).
 
     <Warning>
-       Extending the codebase is not recommended for most users. 
-       Before you start, please reach out to us on [Slack](https://join.slack.com/t/onyx-dot-app/shared_invite/zt-34lu4m7xg-TsKGO6h8PDvR5W27zTdyhA) or [Discord](https://discord.gg/TDJ59cGV2X) for support!
-     </Warning>
+
+      Extending the codebase is not recommended for most users. Before you start,
+      please reach out to us on
+      [Slack](https://join.slack.com/t/onyx-dot-app/shared_invite/zt-34lu4m7xg-TsKGO6h8PDvR5W27zTdyhA)
+      or [Discord](https://discord.gg/TDJ59cGV2X) for support!
+    </Warning>
   </Accordion>
 </AccordionGroup>
 
 ## Agents
+
 <AccordionGroup>
   <Accordion title="Agents" icon="user">
     Agents are AI assistants with custom instructions, Actions, and data access that extend the base LLM's capabilities.
-    
+
     <AgentsPersonasAssistantsNote />
 
     **Built-in Agents:**
@@ -76,7 +89,8 @@ import AgentsPersonasAssistantsNote from '/snippets/agents-personas-assistants-n
 ## Connectors
 
 <Tip>
-  When you see the term *Connector* in Onyx or elsewhere in this documentation, we're generally referring to *ConnectorCredentialPairs*
+  When you see the term *Connector* in Onyx or elsewhere in this documentation,
+  we're generally referring to *ConnectorCredentialPairs*
 </Tip>
 
 <AccordionGroup>
@@ -103,19 +117,22 @@ import AgentsPersonasAssistantsNote from '/snippets/agents-personas-assistants-n
   </Accordion>
 
   <Accordion title="Credentials" icon="key">
-    `Credentials` contain the authentication details needed to access data sources. These include API keys, OAuth tokens, personal access tokens (PATs), or service account credentials that allow Onyx to securely connect to your external systems.
-    
+    `Credentials` contain the authentication details needed to access data sources. These include API keys,
+    OAuth tokens, personal access tokens (PATs),
+    or service account credentials that allow Onyx to securely connect to your external systems.
+
     Types of `Credentials`:
     - **API Keys**: Simple token-based authentication
-    - **OAuth Tokens**: Delegated authorization with refresh capabilities  
+    - **OAuth Tokens**: Delegated authorization with refresh capabilities
     - **Service Accounts**: Machine-to-machine authentication
     - **Personal Access Tokens**: User-specific access credentials
   </Accordion>
 
   <Accordion title="ConnectorCredentialPairs" icon="link">
-    Behind the scenes, `Connectors` and `Credentials` are combined into a `ConnectorCredentialPair` (CC-pair). 
-    A CC-pair is an active connection that can sync data from your external sources into Onyx. CC-pairs are what you see and manage on the Admin `Connectors` page.
-    
+    Behind the scenes, `Connectors` and `Credentials` are combined into a `ConnectorCredentialPair` (CC-pair).
+    A CC-pair is an active connection that can sync data from your external sources into Onyx.
+    CC-pairs are what you see and manage on the Admin `Connectors` page.
+
     CC-pair functionality:
     - **Active Connections**: Live data synchronization between source and Onyx
     - **Status Monitoring**: Track sync health and performance
@@ -123,7 +140,9 @@ import AgentsPersonasAssistantsNote from '/snippets/agents-personas-assistants-n
     - **Configuration Management**: Update sync settings and credentials
 
     <Warning>
-      If you're creating `Connectors` through the API, you must associate them with a `Credential` (CC-pair) to make them active!
+
+      If you're creating `Connectors` through the API, you must associate them with a `Credential` (CC-pair)
+      to make them active!
     </Warning>
   </Accordion>
 
@@ -150,7 +169,8 @@ import AgentsPersonasAssistantsNote from '/snippets/agents-personas-assistants-n
 
 <AccordionGroup>
   <Accordion title="DocumentBase" icon="page">
-    `DocumentBase` is a core structure used throughout Onyx for storing and managing document data. Note that the embeddings are stored in Vespa separately.
+    `DocumentBase` is a core structure used throughout Onyx for storing and managing document data.
+    Note that the embeddings are stored in Vespa separately.
     - `id`: Unique identifier. Generated by Onyx if not provided
     - `sections`: List of content sections (see `TextSection` and `ImageSection`)
     - `source`: The system this document originated from (see `DocumentSource`)
@@ -166,7 +186,9 @@ import AgentsPersonasAssistantsNote from '/snippets/agents-personas-assistants-n
     - `external_access`: Permission sync data (Enterprise Edition only)
 
     <Note>
-      The Ingestion API extends the DocumentBase definition to include `cc_pair_id` to automatically associate a document with a CC-pair.
+
+      The Ingestion API extends the DocumentBase definition to include `cc_pair_id` to automatically associate a
+      document with a CC-pair.
     </Note>
 
     ```python Python expandable
@@ -193,8 +215,9 @@ import AgentsPersonasAssistantsNote from '/snippets/agents-personas-assistants-n
   </Accordion>
 
   <Accordion title="DocumentSource" icon="file">
-    `DocumentSource` is an enum that defines the valid sources for a document. 
-    Uploading files to the Ingestion API and creating `Connectors` programmatically require specifying a `DocumentSource`.
+    `DocumentSource` is an enum that defines the valid sources for a document.
+    Uploading files to the Ingestion API and creating `Connectors` programmatically require specifying a
+    `DocumentSource`.
 
     ```python Python expandable
     class DocumentSource(str, Enum):
@@ -282,7 +305,7 @@ import AgentsPersonasAssistantsNote from '/snippets/agents-personas-assistants-n
   <Accordion title="AccessType" icon="shield">
     `AccessType` defines who can access data from a `Connector` in Onyx.
     - `PUBLIC`: All Onyx users may access data from this `Connector`
-    - `PRIVATE`: Only the user who created the `Connector` and specified Groups may access data from this `Connector`  
+    - `PRIVATE`: Only the user who created the `Connector` and specified Groups may access data from this `Connector`
     - `SYNC`: Only `Connectors` with permission-sync support can be set to SYNC. The `Connector` will sync access permissions with the source system.
 
     ```python Python
@@ -300,7 +323,7 @@ import AgentsPersonasAssistantsNote from '/snippets/agents-personas-assistants-n
     - `EVENT`: Not implemented for most `Connectors`
     - `SLIM_RETRIEVAL`: For permission-syncing `Connectors`
 
-    ```python Python 
+    ```python Python
     class InputType(str, Enum):
       LOAD_STATE = "load_state"
       POLL = "poll"
@@ -311,9 +334,11 @@ import AgentsPersonasAssistantsNote from '/snippets/agents-personas-assistants-n
 </AccordionGroup>
 
 ## Next Steps
+
 <CardGroup cols={2}>
-  {/* <Card title="Guide: Create a Connector with the API" icon="lightbulb" href="/developers/guides/create_connector">
-    Learn how to create a Connector through the API
+  {/* <Card title="Guide:
+  Create a Connector with the API" icon="lightbulb" href="/developers/guides/create_connector"> Learn how to create a
+  Connector through the API
   </Card> */}
 
   <Card title="Guide: Index files with the Ingestion API" icon="lightbulb" href="/developers/guides/index_files_ingestion_api">
@@ -324,7 +349,8 @@ import AgentsPersonasAssistantsNote from '/snippets/agents-personas-assistants-n
     Simple example of sending a message programmatically
   </Card>
 
-  {/* <Card title="Guide: Set up an MCP (Admin Panel)" icon="comment" href="/developers/guides/mcp_guide">
-    Learn how to set up an MCP server in the Admin Panel
+  {/* <Card title="Guide:
+  Set up an MCP (Admin Panel)" icon="comment" href="/developers/guides/mcp_guide"> Learn how to set up an MCP server in
+  the Admin Panel
   </Card> */}
 </CardGroup>

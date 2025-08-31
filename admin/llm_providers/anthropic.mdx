@@ -1,33 +1,40 @@
 ---
-title: Anthropic
+title: "Anthropic"
 description: "Configure Anthropic Claude models for Onyx"
+icon: "brain"
 ---
 
-Configure Onyx to use Anthropic's Claude models, known for their excellent reasoning capabilities, ethical alignment, and long context windows. Claude models excel at complex analysis, creative tasks, and maintaining helpful, harmless, and honest interactions.
+Configure Onyx to use Anthropic's Claude models, known for their excellent reasoning capabilities, ethical alignment,
+and long context windows. Claude models excel at complex analysis, creative tasks, and maintaining helpful, harmless,
+and honest interactions.
 
 ## Available Models
 
 Anthropic offers several Claude model variants:
 
 ### **Claude 3.5 Sonnet**
+
 - **Performance**: Highest quality reasoning and analysis
 - **Context Window**: 200K tokens
 - **Best For**: Complex reasoning, analysis, creative writing
 - **Speed**: Balanced performance
 
 ### **Claude 3 Opus**
+
 - **Performance**: Most capable model for complex tasks
-- **Context Window**: 200K tokens  
+- **Context Window**: 200K tokens
 - **Best For**: Advanced reasoning, research, complex problem-solving
 - **Speed**: Slower but highest quality
 
 ### **Claude 3 Haiku**
+
 - **Performance**: Fast and efficient for simpler tasks
 - **Context Window**: 200K tokens
 - **Best For**: Quick responses, content moderation, simple analysis
 - **Speed**: Fastest response times
 
 ### **Model Recommendations**
+
 - **Production Use**: Claude 3.5 Sonnet for best overall performance
 - **Complex Analysis**: Claude 3 Opus for highest quality reasoning
 - **High Volume**: Claude 3 Haiku for speed and cost efficiency
@@ -36,26 +43,62 @@ Anthropic offers several Claude model variants:
 
 ### **1. Get Anthropic API Key**
 
-1. Visit the [Anthropic Developer Console](https://console.anthropic.com/)
-2. Sign up for an Anthropic account or sign in
-3. Navigate to the **API Keys** section
-4. Click **"Create Key"**
-5. **Copy and securely store** the generated API key
+<Steps>
+  <Step title="Visit Anthropic Console">
+    Visit the [Anthropic Developer Console](https://console.anthropic.com/)
+  </Step>
+
+  <Step title="Sign up or sign in">
+    Sign up for an Anthropic account or sign in
+  </Step>
+
+  <Step title="Navigate to API Keys">
+    Navigate to the **API Keys** section
+  </Step>
+
+  <Step title="Create key">
+    Click **"Create Key"**
+  </Step>
+
+  <Step title="Store API key">
+    **Copy and securely store** the generated API key
+  </Step>
+</Steps>
 
 <Warning>
-**Security Note**
+  **Security Note**
 
-Keep your API key secure and never expose it in client-side code or public repositories. The key provides access to your Anthropic account and billing.
+  Keep your API key secure and never expose it in client-side code or public repositories.
+  The key provides access to your Anthropic account and billing.
 </Warning>
 
 ### **2. Configure in Onyx**
 
-1. **Access Admin Panel**: Navigate to your Onyx admin panel
-2. **Open LLM Configuration**: Click on the **"LLM"** tab in the sidebar
-3. **Add Anthropic Provider**: Select **"Anthropic"** from the available providers
-4. **Enter API Key**: Paste your API key in the designated field
-5. **Select Model**: Choose from Claude 3.5 Sonnet, Claude 3 Opus, or Claude 3 Haiku
-6. **Test Connection**: Verify the connection works correctly
+<Steps>
+  <Step title="Access Admin Panel">
+    Navigate to your Onyx admin panel
+  </Step>
+
+  <Step title="Open LLM Configuration">
+    Click on the **"LLM"** tab in the sidebar
+  </Step>
+
+  <Step title="Add Anthropic Provider">
+    Select **"Anthropic"** from the available providers
+  </Step>
+
+  <Step title="Enter API Key">
+    Paste your API key in the designated field
+  </Step>
+
+  <Step title="Select Model">
+    Choose from Claude 3.5 Sonnet, Claude 3 Opus, or Claude 3 Haiku
+  </Step>
+
+  <Step title="Test Connection">
+    Verify the connection works correctly
+  </Step>
+</Steps>
 
 ![Anthropic Configuration](/assets/images/gen_ai/AnthropicLLMProvider.png)
 
@@ -70,18 +113,21 @@ Keep your API key secure and never expose it in client-side code or public repos
 ## Key Features
 
 ### **Long Context Windows**
+
 All Claude models support 200K token context windows, allowing for:
 - **Large Document Analysis**: Process entire reports, papers, or codebases
 - **Extended Conversations**: Maintain context across long discussions
 - **Comprehensive Research**: Analyze multiple sources simultaneously
 
 ### **Ethical Alignment**
+
 Claude models are trained with Constitutional AI principles:
 - **Helpful**: Designed to be maximally helpful for legitimate tasks
 - **Harmless**: Avoids generating harmful or dangerous content
 - **Honest**: Acknowledges uncertainty and avoids hallucination
 
 ### **Advanced Reasoning**
+
 Excellent performance on:
 - **Analytical Tasks**: Data analysis, research synthesis
 - **Creative Writing**: Stories, poetry, content creation
@@ -141,11 +187,27 @@ Anthropic charges based on input and output tokens:
 
 ### **Cost Optimization Strategies**
 
-1. **Choose Appropriate Models**: Use Haiku for simpler tasks
-2. **Optimize Prompts**: Clear, concise prompts reduce token usage
-3. **Set Token Limits**: Control maximum response length
-4. **Monitor Usage**: Track consumption through Anthropic Console
-5. **Batch Requests**: Group similar requests when possible
+<Steps>
+  <Step title="Choose Appropriate Models">
+    Use Haiku for simpler tasks
+  </Step>
+
+  <Step title="Optimize Prompts">
+    Clear, concise prompts reduce token usage
+  </Step>
+
+  <Step title="Set Token Limits">
+    Control maximum response length
+  </Step>
+
+  <Step title="Monitor Usage">
+    Track consumption through Anthropic Console
+  </Step>
+
+  <Step title="Batch Requests">
+    Group similar requests when possible
+  </Step>
+</Steps>
 
 ### **Usage Monitoring**
 
@@ -157,16 +219,19 @@ Track your usage through:
 ## Security and Privacy
 
 ### **Data Handling**
+
 - **No Training**: Your data is not used to train Anthropic models
 - **Temporary Storage**: Conversations may be stored briefly for safety
 - **Enterprise Options**: Enhanced privacy controls available
 
 ### **API Security**
+
 - **HTTPS**: All API communication uses TLS encryption
 - **Key Management**: Rotate API keys regularly
 - **Access Control**: Limit key access to necessary personnel
 
 ### **Content Safety**
+
 - **Built-in Filtering**: Automatic harmful content detection
 - **Constitutional AI**: Ethical guidelines built into model behavior
 - **Monitoring**: Abuse detection and prevention systems
@@ -176,25 +241,31 @@ Track your usage through:
 ### **Common Issues**
 
 **Authentication Errors**
+
 ```
 401 Unauthorized
 ```
+
 - Verify API key is correct and active
 - Check if key has been revoked or expired
 - Ensure proper authentication header format
 
 **Rate Limit Exceeded**
+
 ```
 429 Too Many Requests
 ```
+
 - Implement exponential backoff
 - Consider upgrading your Anthropic plan
 - Optimize request frequency
 
 **Model Access Issues**
+
 ```
 403 Forbidden
 ```
+
 - Verify your plan includes access to the requested model
 - Check if model name is spelled correctly
 - Confirm account is in good standing
@@ -229,6 +300,7 @@ If responses are being filtered:
 - **Use Examples**: Show desired format with concrete examples
 
 **Example Structure:**
+
 ```
 <task>
 Analyze the following document for key themes
@@ -294,7 +366,7 @@ response = client.messages.create(
     system="You are a helpful research assistant specializing in technical analysis.",
     messages=[
         {
-            "role": "user", 
+            "role": "user",
             "content": "Analyze the pros and cons of microservices architecture"
         }
     ]
@@ -328,12 +400,14 @@ except Exception as e:
 ## Comparison with Other Providers
 
 ### **Claude vs GPT-4**
+
 - **Context Window**: Claude (200K) vs GPT-4 (8K-128K)
 - **Reasoning**: Both excellent, Claude often more thorough
 - **Safety**: Claude has more built-in safety features
 - **Speed**: GPT-4o generally faster than Claude 3.5 Sonnet
 
 ### **When to Choose Claude**
+
 - **Long Documents**: Superior handling of large context
 - **Ethical Considerations**: Built-in constitutional AI principles
 - **Detailed Analysis**: Excels at thorough, nuanced analysis
@@ -350,4 +424,6 @@ For Onyx integration help:
 - **Onyx Slack**: Join our [community](https://join.slack.com/t/onyx-dot-app/shared_invite/zt-34lu4m7xg-TsKGO6h8PDvR5W27zTdyhA)
 - **Issues**: Report problems on [GitHub](https://github.com/onyx-dot-app/onyx)
 
-Claude's combination of high-quality reasoning, ethical alignment, and long context windows makes it an excellent choice for applications requiring thoughtful analysis and comprehensive understanding. 
+Claude's combination of high-quality reasoning, ethical alignment,
+and long context windows makes it an excellent choice for applications requiring thoughtful analysis and comprehensive
+understanding.

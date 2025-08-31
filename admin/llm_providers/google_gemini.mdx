@@ -1,15 +1,19 @@
 ---
 title: "Google Gemini"
 description: "Configure Google Gemini models for use with Onyx"
+icon: "google"
 ---
 
 # Google Gemini Configuration
 
-Google Gemini is Google's latest family of multimodal AI models, offering powerful capabilities for text generation, reasoning, and multimodal tasks. This guide will help you configure Gemini models in Onyx.
+Google Gemini is Google's latest family of multimodal AI models, offering powerful capabilities for text generation,
+reasoning, and multimodal tasks. This guide will help you configure Gemini models in Onyx.
 
 ## Overview
 
-Google Gemini models are available through Google AI Studio and Google Cloud Vertex AI. Onyx supports integration with both platforms, allowing you to leverage Gemini's advanced capabilities for your AI applications.
+Google Gemini models are available through Google AI Studio and Google Cloud Vertex AI.
+Onyx supports integration with both platforms,
+allowing you to leverage Gemini's advanced capabilities for your AI applications.
 
 ### Available Models
 
@@ -22,9 +26,9 @@ Google Gemini models are available through Google AI Studio and Google Cloud Ver
 
 Before configuring Google Gemini in Onyx, ensure you have:
 
-1. **Google Cloud Project**: A Google Cloud project with billing enabled
-2. **API Access**: Access to Google AI Studio or Vertex AI
-3. **Authentication**: Proper authentication credentials (API key or service account)
+- **Google Cloud Project**: A Google Cloud project with billing enabled
+- **API Access**: Access to Google AI Studio or Vertex AI
+- **Authentication**: Proper authentication credentials (API key or service account)
 
 ## Configuration Options
 
@@ -34,19 +38,51 @@ Google AI Studio provides a simple API key-based authentication method.
 
 #### Step 1: Get API Key
 
-1. Visit [Google AI Studio](https://makersuite.google.com/app/apikey)
-2. Sign in with your Google account
-3. Click "Create API Key"
-4. Copy the generated API key
+<Steps>
+  <Step title="Open Google AI Studio">
+    Visit [Google AI Studio](https://makersuite.google.com/app/apikey)
+  </Step>
+
+  <Step title="Sign in">
+    Sign in with your Google account
+  </Step>
+
+  <Step title="Create API key">
+    Click "Create API Key"
+  </Step>
+
+  <Step title="Copy API key">
+    Copy the generated API key
+  </Step>
+</Steps>
 
 #### Step 2: Configure in Onyx
 
-1. Navigate to the Onyx admin panel
-2. Go to **LLM Config** > **Google Gemini**
-3. Select **Google AI Studio** as the authentication method
-4. Enter your API key
-5. Choose your preferred model (Gemini Pro, Gemini Flash, etc.)
-6. Configure additional parameters as needed
+<Steps>
+  <Step title="Open LLM config">
+    Navigate to the Onyx admin panel
+  </Step>
+
+  <Step title="Select Google Gemini">
+    Go to **LLM Config** > **Google Gemini**
+  </Step>
+
+  <Step title="Choose AI Studio auth">
+    Select **Google AI Studio** as the authentication method
+  </Step>
+
+  <Step title="Enter API key">
+    Enter your API key
+  </Step>
+
+  <Step title="Choose model">
+    Choose your preferred model (Gemini Pro, Gemini Flash, etc.)
+  </Step>
+
+  <Step title="Adjust parameters">
+    Configure additional parameters as needed
+  </Step>
+</Steps>
 
 ### Option 2: Google Cloud Vertex AI
 
@@ -54,28 +90,79 @@ For enterprise deployments, use Vertex AI for enhanced security and management f
 
 #### Step 1: Enable Vertex AI API
 
-1. Go to the [Google Cloud Console](https://console.cloud.google.com/)
-2. Select your project
-3. Navigate to **APIs & Services** > **Library**
-4. Search for "Vertex AI API"
-5. Click **Enable**
+<Steps>
+  <Step title="Open Cloud Console">
+    Go to the [Google Cloud Console](https://console.cloud.google.com/)
+  </Step>
+
+  <Step title="Select project">
+    Select your project
+  </Step>
+
+  <Step title="Open API Library">
+    Navigate to **APIs & Services** > **Library**
+  </Step>
+
+  <Step title="Find Vertex AI API">
+    Search for "Vertex AI API"
+  </Step>
+
+  <Step title="Enable API">
+    Click **Enable**
+  </Step>
+</Steps>
 
 #### Step 2: Create Service Account
 
-1. Go to **IAM & Admin** > **Service Accounts**
-2. Click **Create Service Account**
-3. Provide a name and description
-4. Assign the **Vertex AI User** role
-5. Create and download the JSON key file
+<Steps>
+  <Step title="Open Service Accounts">
+    Go to **IAM & Admin** > **Service Accounts**
+  </Step>
+
+  <Step title="Create account">
+    Click **Create Service Account**
+  </Step>
+
+  <Step title="Name account">
+    Provide a name and description
+  </Step>
+
+  <Step title="Assign role">
+    Assign the **Vertex AI User** role
+  </Step>
+
+  <Step title="Download key">
+    Create and download the JSON key file
+  </Step>
+</Steps>
 
 #### Step 3: Configure in Onyx
 
-1. Navigate to the Onyx admin panel
-2. Go to **LLM Config** > **Google Gemini**
-3. Select **Vertex AI** as the authentication method
-4. Upload your service account JSON key
-5. Enter your Google Cloud project ID
-6. Choose your preferred model and region
+<Steps>
+  <Step title="Open LLM config">
+    Navigate to the Onyx admin panel
+  </Step>
+
+  <Step title="Select Google Gemini">
+    Go to **LLM Config** > **Google Gemini**
+  </Step>
+
+  <Step title="Choose Vertex AI auth">
+    Select **Vertex AI** as the authentication method
+  </Step>
+
+  <Step title="Upload key">
+    Upload your service account JSON key
+  </Step>
+
+  <Step title="Enter project ID">
+    Enter your Google Cloud project ID
+  </Step>
+
+  <Step title="Choose model and region">
+    Choose your preferred model and region
+  </Step>
+</Steps>
 
 ## Model Configuration
 
@@ -219,37 +306,38 @@ Enable comprehensive logging for debugging and compliance:
 
 Configure Gemini models for use in Onyx's chat interface:
 
-1. Set as default model for general conversations
-2. Configure model-specific parameters
-3. Enable model switching for users
-4. Set up fallback options
+- Set as default model for general conversations
+- Configure model-specific parameters
+- Enable model switching for users
+- Set up fallback options
 
 ### Agent Configuration
 
 Use Gemini models with Onyx agents:
 
-1. Assign Gemini models to specific agents
-2. Configure custom instructions for each agent
-3. Set up model-specific prompts and templates
-4. Enable multimodal capabilities where needed
+- Assign Gemini models to specific agents
+- Configure custom instructions for each agent
+- Set up model-specific prompts and templates
+- Enable multimodal capabilities where needed
 
 ### Document Processing
 
 Leverage Gemini's capabilities for document analysis:
 
-1. Configure for document summarization
-2. Enable question answering from documents
-3. Set up content extraction and analysis
-4. Enable multilingual document processing
+- Configure for document summarization
+- Enable question answering from documents
+- Set up content extraction and analysis
+- Enable multilingual document processing
 
 ## Next Steps
 
 After configuring Google Gemini in Onyx:
 
-1. **Test the Integration**: Verify that the model is working correctly
-2. **Monitor Performance**: Track response times and success rates
-3. **Optimize Parameters**: Fine-tune model parameters for your use cases
-4. **Train Users**: Educate users on Gemini's capabilities and limitations
-5. **Scale Usage**: Gradually increase usage while monitoring costs and performance
+- **Test the Integration**: Verify that the model is working correctly
+- **Monitor Performance**: Track response times and success rates
+- **Optimize Parameters**: Fine-tune model parameters for your use cases
+- **Train Users**: Educate users on Gemini's capabilities and limitations
+- **Scale Usage**: Gradually increase usage while monitoring costs and performance
 
-For additional support or questions about Google Gemini integration, refer to the [Google AI documentation](https://ai.google.dev/) or contact the Onyx support team. 
+For additional support or questions about Google Gemini integration,
+refer to the [Google AI documentation](https://ai.google.dev/) or contact the Onyx support team.

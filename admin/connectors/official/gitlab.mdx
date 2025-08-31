@@ -1,34 +1,59 @@
 ---
-title: GitLab
+title: "GitLab"
 description: "Index repositories and issues from GitLab"
 ---
 
 ## How it works
+
 The GitLab Connector picks up all of the Merge Requests and Issues in a specified repository.
 - It will index both Open and Closed MRs. This includes the Title and Summary.
 - It will index Issues (and Incidents) including comments both Open and Closed.
 - Includes certain other metadata such as the URL, creator, etc.
 
 ## Setting up
+
 ### Authorization
-    1. This Connector uses a GitLab Access Token.
-    2. Log in to GitLab.
-    3. On the left sidebar, select your avatar.
-    4. Select Edit **profile**.
-    5. Select **Add new token**.
 
-![GitlabConnectorAuth](/assets/images/connectors/gitlab/GitlabConnectorAuth.gif)
+<Steps>
+  <Step title="Use GitLab Access Token">
+    This Connector uses a GitLab Access Token.
+  </Step>
 
-    6. Enter a name and expiry date for the token.
-        - The token expires on that date at midnight UTC.
-        - If you do not enter an expiry date, the expiry date is automatically set to 365 days later than the current date.
-        - By default, this date can be a maximum of 365 days later than the current date.
-    7. Select the desired scopes, further details [here](https://docs.gitlab.com/ee/user/profile/personal_access_tokens.html#personal-access-token-scopes).
-    8. Select **Create personal access token**.
+  <Step title="Create personal access token">
+    Log in to GitLab. On the left sidebar, select your avatar. Select Edit **profile**. Select **Add new token**.
+
+    ![GitlabConnectorAuth](/assets/images/connectors/gitlab/GitlabConnectorAuth.gif)
+  </Step>
+
+  <Step title="Set token details">
+    Enter a name and expiry date for the token.
+    - The token expires on that date at midnight UTC.
+    - If you do not enter an expiry date, the expiry date is automatically set to 365 days later than the current date.
+    - By default, this date can be a maximum of 365 days later than the current date.
+  </Step>
+
+  <Step title="Select scopes and create">
+    Select the desired scopes,
+    further details
+    [here](https://docs.gitlab.com/ee/user/profile/personal_access_tokens.html#personal-access-token-scopes).
+    Then select **Create personal access token**.
+  </Step>
+</Steps>
 
 ### Indexing
-    1. Navigate to the Admin Panel and select the **GitLab** Connector
-    2. If you're using GitLab Cloud and not self-hosting, keep the GitLab URL as the default
-    3. For a project with a url such as "https://gitlab.com/onyx-ai/onyx", configure it as below:
+
+<Steps>
+  <Step title="Open GitLab connector">
+    Navigate to the Admin Panel and select the **GitLab** Connector
+  </Step>
+
+  <Step title="Confirm GitLab URL">
+    If you're using GitLab Cloud and not self-hosting, keep the GitLab URL as the default
+  </Step>
+
+  <Step title="Configure project">
+    For a project with a url such as "https://gitlab.com/onyx-ai/onyx", configure it as below:
+  </Step>
+</Steps>
 
 ![GitLabConnector](/assets/images/connectors/gitlab/GitlabConnector.png)

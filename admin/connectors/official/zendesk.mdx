@@ -1,25 +1,28 @@
 ---
-title: Zendesk
+title: "Zendesk"
 description: "Access tickets and conversations from Zendesk"
 ---
 
 ## How it works
+
 The Zendesk Connector can sync content from your Zendesk instance, supporting two content types:
 
-1. **Articles**: Syncs all published Articles from your company's Help Center
-2. **Tickets**: Syncs Support Tickets with their comments and metadata
+- **Articles**: Syncs all published Articles from your company's Help Center
+- **Tickets**: Syncs Support Tickets with their comments and metadata
 
 The connector supports incremental updates and maintains author information, content tags, and other metadata.
 
 ## Content Types
 
 ### Articles
+
 - Syncs all published articles from Zendesk Help Center
 - Includes article content, labels, and content tags
 - Tracks author information and update timestamps
 - Skips draft articles and articles with specific skip labels (configurable)
 
 ### Tickets
+
 - Syncs support tickets with full comment threads
 - Includes ticket metadata (status, priority, tags, type)
 - Tracks submitter and commenter information
@@ -27,11 +30,14 @@ The connector supports incremental updates and maintains author information, con
 - **Note**: Requires active Zendesk Support Product
 
 ## Current Limitations
+
 - Articles: Does not allow filtering by specific categories or sections
 - Tickets: Requires Zendesk Support Product to be active
 
 ## Setting up
+
 ### Authorization
+
 The Zendesk Connector requires 3 things to connect:
 - **Subdomain**: Your Zendesk subdomain (e.g., `your-company` from `your-company.zendesk.com`)
 - **Email**: Email address of the API token owner
@@ -42,23 +48,41 @@ See below for instructions on getting the API token:
 ![ZendeskAPI](/assets/images/connectors/zendesk/ZendeskAPI.gif)
 
 ### Indexing
-1. Navigate to the **Admin Panel** and select `Add Connector` followed by the Zendesk tile
-2. Choose your content type (Articles or Tickets)
-3. Provide the authentication information from the section above
-4. Click connect to start syncing content from Zendesk
 
-The connector will perform incremental syncs to keep content up to date, using cursor-based pagination for articles and timestamp-based retrieval for tickets.
+<Steps>
+  <Step title="Add Zendesk connector">
+    Navigate to the **Admin Panel** and select `Add Connector` followed by the Zendesk tile
+  </Step>
+
+  <Step title="Choose content type">
+    Choose your content type (Articles or Tickets)
+  </Step>
+
+  <Step title="Provide authentication">
+    Provide the authentication information from the section above
+  </Step>
+
+  <Step title="Start syncing">
+    Click connect to start syncing content from Zendesk
+  </Step>
+</Steps>
+
+The connector will perform incremental syncs to keep content up to date,
+using cursor-based pagination for articles and timestamp-based retrieval for tickets.
 
 ## Metadata
+
 The connector extracts and indexes the following metadata:
 
 ### Articles
+
 - Labels (article labels)
 - Content tags
 - Author information
 - Update timestamps
 
-### Tickets  
+### Tickets
+
 - Status (open, pending, solved, etc.)
 - Priority level
 - Tags

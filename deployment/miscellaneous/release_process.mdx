@@ -4,7 +4,8 @@ description: "Onyx release process and versioning"
 icon: "rocket"
 ---
 
-This page explains Onyx's release process, versioning scheme, and how updates are delivered to different deployment channels.
+This page explains Onyx's release process, versioning scheme,
+and how updates are delivered to different deployment channels.
 
 ## Release Channels
 
@@ -14,19 +15,21 @@ This page explains Onyx's release process, versioning scheme, and how updates ar
 
 ### GitHub
 
-Our [GitHub Releases](https://github.com/onyx-dot-app/onyx/releases) publish images to Docker Hub. Onyx has two types of releases:
+Our [GitHub Releases](https://github.com/onyx-dot-app/onyx/releases) publish images to Docker Hub.
+Onyx has two types of releases:
 - **Latest stable version** - Production-ready releases
 - **Pre-release version** - Beta releases for testing
 
-The `main` branch of the [Onyx repository](https://github.com/onyx-dot-app/onyx) is our development branch. 
+The `main` branch of the [Onyx repository](https://github.com/onyx-dot-app/onyx) is our development branch.
 
 <Warning>
-  Although we try to keep `main` stable through CI/CD tests and code reviews, we do not recommend using `main` in production environments.
+  Although we try to keep `main` stable through CI/CD tests and code reviews,
+  we do not recommend using `main` in production environments.
 </Warning>
 
 ### Docker Hub
 
-[Docker Hub](https://hub.docker.com/r/onyxdotapp/onyx) hosts the actual container images. 
+[Docker Hub](https://hub.docker.com/r/onyxdotapp/onyx) hosts the actual container images.
 New images are published every night from the `main` branch and when a new release is cut.
 
 To identify the latest images programmatically, use our API endpoint:
@@ -41,17 +44,18 @@ This endpoint returns the current latest stable and beta versions available on D
   If you don't specify a version when deploying Onyx, you will get the latest nightly builds.
 </Tip>
 
-
 ## Versioning Scheme
 
 Onyx follows [Semantic Versioning (SemVer)](https://semver.org/) with a clear, predictable format.
 
 **Standard Version Format:**
+
 ```
 major.minor.hotfix
 ```
 
 **Pre-release Version Format:**
+
 ```
 major.minor.hotfix-beta.betahotfix
 ```
@@ -63,7 +67,7 @@ major.minor.hotfix-beta.betahotfix
 
 <Note>
   - **Major version** - Incremented on breaking changes
-  - **Minor version** - Incremented on new features, bugfixes, and backwards-compatible changes  
+  - **Minor version** - Incremented on new features, bugfixes, and backwards-compatible changes
   - **Hotfix version** - Incremented only when backporting bugfixes to releases
 </Note>
 
@@ -76,8 +80,8 @@ Changes to Docker files and Helm charts increment the version numbers in their r
 Onyx follows a predictable weekly release cycle.
 
 **Every Monday:**
-1. The last pre-release version is promoted to stable
-2. `main` is frozen as the new pre-release
+- The last pre-release version is promoted to stable
+- `main` is frozen as the new pre-release
 
 ### Hotfix Process
 
@@ -85,16 +89,17 @@ Onyx follows a predictable weekly release cycle.
 - Hotfixes bypass the normal weekly cycle for urgent production issues
 - Both stable and pre-release branches receive hotfixes when applicable
 
-
 ## Deployment Best Practices
 
-Monitor the `/api/versions` endpoint to automate deployment workflows. 
+Monitor the `/api/versions` endpoint to automate deployment workflows.
 
-Stay tuned to our Github and join our [Slack](/deployment/miscellaneous/contact_us) to stay informed about new releases and breaking changes. 
+Stay tuned to our Github and join our [Slack](/deployment/miscellaneous/contact_us)
+to stay informed about new releases and breaking changes.
 
 Choose the right version for your deployment environment:
+
 <Info>
   - **Production environments** - Use stable releases only
   - **Staging/testing environments** - Use pre-release versions to validate upcoming changes
-  - **Development environments** - Contributors should fork from `main` 
+  - **Development environments** - Contributors should fork from `main`
 </Info>

@@ -1,7 +1,6 @@
 <h2 align="center">
 <a href="https://www.onyx.app/">
 
-  
 ![logotype](https://github.com/onyx-dot-app/onyx/blob/logo/OnyxLogoCropped.jpg?raw=true)
 
 </a>
@@ -10,13 +9,14 @@
 
 # Onyx Docs
 
-This repo generates the docs and setup guide for [Onyx](https://github.com/onyx-dot-app/onyx) found at [https://docs.onyx.app/](https://docs.onyx.app/).
+This repo generates the docs and setup guide for [Onyx](https://github.com/onyx-dot-app/onyx)
+found at [https://docs.onyx.app/](https://docs.onyx.app/).
 
 It uses Mintlify which is a low-code documentation generation tool.
 
 More info on Mintlify found [here](https://mintlify.com/).
 
-To make changes, check out `docs.json`. 
+To make changes, check out `docs.json`.
 
 ### Set up Mintlify
 

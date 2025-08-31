@@ -1,12 +1,12 @@
 ---
-title: Egnyte
+title: "Egnyte"
 description: "Access files stored in Egnyte"
 ---
 
 ## How it works
 
-The Egnyte connector pulls in files stored in Egnyte. The Egnyte connector indexes the
-file name, file type, and contents of the file.
+The Egnyte connector pulls in files stored in Egnyte. The Egnyte connector indexes the file name, file type,
+and contents of the file.
 
 New files are pulled every **10** minutes.
 
@@ -15,26 +15,50 @@ New files are pulled every **10** minutes.
 ### Configure your Egnyte Application + Onyx env variables
 
 <Info>
-  This is only necessary if self-hosting Onyx. If using [Onyx
-  Cloud](https://cloud.onyx.app), you can skip this step.
+  This is only necessary if self-hosting Onyx. If using [Onyx Cloud](https://cloud.onyx.app), you can skip this step.
 </Info>
 
-    1. Create an Egnyte Application. Check out the
-    [Egnyte API documentation](https://developers.egnyte.com/docs/read/introduction) for more information.
-    2. Set the following environment variables on your Onyx instance:
+<Steps>
+  <Step title="Create Egnyte Application">
+    Create an Egnyte Application.
+    Check out the [Egnyte API documentation](https://developers.egnyte.com/docs/read/introduction) for more information.
+  </Step>
+
+  <Step title="Set environment variables">
+    Set the following environment variables on your Onyx instance:
 
 ```bash
 EGNYTE_DOMAIN=something like "app4onyx"
 EGNYTE_CLIENT_ID=
 EGNYTE_CLIENT_SECRET=
 ```
+  </Step>
 
-    3. Restart your Onyx instance as you normally would to apply the changes.
+  <Step title="Restart Onyx">
+    Restart your Onyx instance as you normally would to apply the changes.
+  </Step>
+</Steps>
 
 ### Indexing
 
-    1. In the Onyx UI, navigate to the Admin Panel and select the **Egnyte** Connector
-    2. Click the `Create New` button to go through the OAuth flow.
-    3. Once you've authorized the application, you'll be redirected back to Onyx.
-    4. Finish the setup, optionally specifying a folder path to index.
-    5. Click `Connect` to begin indexing Egnyte files!
+<Steps>
+  <Step title="Open Egnyte connector">
+    In the Onyx UI, navigate to the Admin Panel and select the **Egnyte** Connector
+  </Step>
+
+  <Step title="Authorize via OAuth">
+    Click the `Create New` button to go through the OAuth flow.
+  </Step>
+
+  <Step title="Return to Onyx">
+    Once you've authorized the application, you'll be redirected back to Onyx.
+  </Step>
+
+  <Step title="Complete configuration">
+    Finish the setup, optionally specifying a folder path to index.
+  </Step>
+
+  <Step title="Start indexing">
+    Click `Connect` to begin indexing Egnyte files!
+  </Step>
+</Steps>

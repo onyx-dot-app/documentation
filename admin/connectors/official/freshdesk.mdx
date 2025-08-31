@@ -1,5 +1,5 @@
 ---
-title: Freshdesk
+title: "Freshdesk"
 description: "Access tickets and conversations from Freshdesk"
 ---
 
@@ -11,23 +11,56 @@ The Freshdesk connector indexes tickets from your Freshdesk account.
 
 ### Authorization
 
-1. Login to Freshdesk
+<Steps>
+  <Step title="Log in to Freshdesk">
+    Login to Freshdesk
     - The Freshdesk user must be a verified agent, admin, or owner.
-2. Click the profile avatar and choose profile settings.
+  </Step>
 
-![FreshdeskConnectorAuth](/assets/images/connectors/freshdesk/freshdesk_1.png)
+  <Step title="Open profile settings">
+    Click the profile avatar and choose profile settings.
 
-3. Select **View API Key**.
+    ![FreshdeskConnectorAuth](/assets/images/connectors/freshdesk/freshdesk_1.png)
+  </Step>
 
-![FreshdeskConnectorAuth](/assets/images/connectors/freshdesk/freshdesk_2.png)
+  <Step title="View API Key">
+    Select **View API Key**.
 
-4. Once you have the API key, you can use it (as well as your domain) to authorize your Onyx connector. The [password field is unused when the API key is provided](https://developers.freshdesk.com/api/#authentication) and will be removed in a future version of Onyx. For now, please enter abc into the password field.
+    ![FreshdeskConnectorAuth](/assets/images/connectors/freshdesk/freshdesk_2.png)
+  </Step>
+
+  <Step title="Authorize Onyx">
+    Once you have the API key, you can use it (as well as your domain) to authorize your Onyx connector.
+    The [password field is unused when the API key is provided](https://developers.freshdesk.com/api/#authentication)
+    and will be removed in a future version of Onyx. For now, please enter abc into the password field.
+  </Step>
+</Steps>
 
 ### Indexing
 
-    1. Navigate to the Admin Panel.
-    2. In the sidebar select **Add Connector** and click on the **Freshdesk** tile.
-    3. Select **Create New** and then provide your **Domain**, **Password** and **API Key**, along with an optional name for your credentials.
-    4. Click **Create** and your credentials will be saved and automatically selected.
-    5. After selecting **Continue** you can choose a name for your connector and then click **Create Connector**.
-    6. Once you have created your connector Onyx will automatically begin indexing your tickets.
+<Steps>
+  <Step title="Open Freshdesk connector">
+    Navigate to the Admin Panel.
+  </Step>
+
+  <Step title="Add connector">
+    In the sidebar select **Add Connector** and click on the **Freshdesk** tile.
+  </Step>
+
+  <Step title="Create credentials">
+    Select **Create New** and then provide your **Domain**, **Password** and **API Key**,
+    along with an optional name for your credentials.
+  </Step>
+
+  <Step title="Save credentials">
+    Click **Create** and your credentials will be saved and automatically selected.
+  </Step>
+
+  <Step title="Create connector">
+    After selecting **Continue** you can choose a name for your connector and then click **Create Connector**.
+  </Step>
+
+  <Step title="Start indexing">
+    Once you have created your connector Onyx will automatically begin indexing your tickets.
+  </Step>
+</Steps>

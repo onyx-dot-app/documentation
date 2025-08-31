@@ -1,5 +1,5 @@
 ---
-title: RequestTracker
+title: "RequestTracker"
 description: "Access tickets from RequestTracker"
 ---
 
@@ -16,15 +16,24 @@ Request Tracker 5.x is not supported currently.
 
 ### Create or use a Request Tracker user who has the appropriate permissions
 
-    1. Create a Request Tracker user that has read access to all queues Onyx should read.
+- Create a Request Tracker user that has read access to all queues Onyx should read.
 
-### Configure DAnswer Request Tracker connector and begin indexing
+### Configure Request Tracker connector and begin indexing
 
-    1. Navigate to the Admin Panel and select the **Request Tracker** Connector
-    2. In **Step 1**, provide your Request Tracker **username**, **password**, and **RT installation base url**.
+<Steps>
+  <Step title="Open Request Tracker connector">
+    Navigate to the Admin Panel and select the **Request Tracker** Connector
+  </Step>
 
-![RequestTrackerAuth](/assets/images/connectors/requesttracker/RequestTrackerAuth.png)
+  <Step title="Enter credentials">
+    In **Step 1**, provide your Request Tracker **username**, **password**, and **RT installation base url**.
 
-    3. In **Step 2**, click `Connect` to begin indexing
+    ![RequestTrackerAuth](/assets/images/connectors/requesttracker/RequestTrackerAuth.png)
+  </Step>
 
-![RequestTrackerConnect](/assets/images/connectors/requesttracker/RequestTrackerConnect.png)
+  <Step title="Start indexing">
+    In **Step 2**, click `Connect` to begin indexing
+
+    ![RequestTrackerConnect](/assets/images/connectors/requesttracker/RequestTrackerConnect.png)
+  </Step>
+</Steps>

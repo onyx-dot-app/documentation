@@ -1,11 +1,13 @@
 ---
 title: "Self-Hosted"
 description: "Configure self-hosted LLM models for use with Onyx"
+icon: "server"
 ---
 
 # Self-Hosted LLM Configuration
 
-Self-hosted LLMs allow you to run AI models on your own infrastructure, providing complete control over data, security, and costs. This guide will help you configure self-hosted models in Onyx.
+Self-hosted LLMs allow you to run AI models on your own infrastructure, providing complete control over data, security,
+and costs. This guide will help you configure self-hosted models in Onyx.
 
 ## Overview
 
@@ -28,11 +30,11 @@ Self-hosted LLMs offer several advantages for enterprise deployments:
 
 Before configuring self-hosted LLMs in Onyx, ensure you have:
 
-1. **Infrastructure**: Sufficient compute resources (GPU/CPU)
-2. **Model Files**: Downloaded model weights and configuration
-3. **Inference Server**: Ollama, vLLM, or similar inference engine
-4. **Network Access**: Proper network configuration for Onyx to reach the model
-5. **Monitoring**: Tools to monitor model performance and resource usage
+- **Infrastructure**: Sufficient compute resources (GPU/CPU)
+- **Model Files**: Downloaded model weights and configuration
+- **Inference Server**: Ollama, vLLM, or similar inference engine
+- **Network Access**: Proper network configuration for Onyx to reach the model
+- **Monitoring**: Tools to monitor model performance and resource usage
 
 ## Deployment Options
 
@@ -65,12 +67,31 @@ ollama run llama2:7b
 
 #### Step 3: Configure in Onyx
 
-1. Navigate to the Onyx admin panel
-2. Go to **LLM Config** > **Self-Hosted**
-3. Select **Ollama** as the inference server
-4. Enter the Ollama server URL (default: `http://localhost:11434`)
-5. Choose the model name (e.g., `llama2:7b`)
-6. Configure additional parameters
+<Steps>
+  <Step title="Open LLM config">
+    Navigate to the Onyx admin panel
+  </Step>
+
+  <Step title="Select Self-Hosted">
+    Go to **LLM Config** > **Self-Hosted**
+  </Step>
+
+  <Step title="Choose Ollama">
+    Select **Ollama** as the inference server
+  </Step>
+
+  <Step title="Enter server URL">
+    Enter the Ollama server URL (default: `http://localhost:11434`)
+  </Step>
+
+  <Step title="Choose model">
+    Choose the model name (e.g., `llama2:7b`)
+  </Step>
+
+  <Step title="Configure parameters">
+    Configure additional parameters
+  </Step>
+</Steps>
 
 ### Option 2: vLLM (Recommended for Production)
 
@@ -93,12 +114,31 @@ python -m vllm.entrypoints.openai.api_server \
 
 #### Step 3: Configure in Onyx
 
-1. Navigate to the Onyx admin panel
-2. Go to **LLM Config** > **Self-Hosted**
-3. Select **vLLM** as the inference server
-4. Enter the vLLM server URL (e.g., `http://localhost:8000`)
-5. Choose the model name
-6. Configure additional parameters
+<Steps>
+  <Step title="Open LLM config">
+    Navigate to the Onyx admin panel
+  </Step>
+
+  <Step title="Select Self-Hosted">
+    Go to **LLM Config** > **Self-Hosted**
+  </Step>
+
+  <Step title="Choose vLLM">
+    Select **vLLM** as the inference server
+  </Step>
+
+  <Step title="Enter server URL">
+    Enter the vLLM server URL (e.g., `http://localhost:8000`)
+  </Step>
+
+  <Step title="Choose model">
+    Choose the model name
+  </Step>
+
+  <Step title="Configure parameters">
+    Configure additional parameters
+  </Step>
+</Steps>
 
 ### Option 3: Custom Inference Server
 
@@ -129,11 +169,27 @@ async def chat_completions(request: ChatRequest):
 
 #### Step 2: Configure in Onyx
 
-1. Navigate to the Onyx admin panel
-2. Go to **LLM Config** > **Self-Hosted**
-3. Select **Custom** as the inference server
-4. Enter your custom server URL
-5. Configure the API format and parameters
+<Steps>
+  <Step title="Open LLM config">
+    Navigate to the Onyx admin panel
+  </Step>
+
+  <Step title="Select Self-Hosted">
+    Go to **LLM Config** > **Self-Hosted**
+  </Step>
+
+  <Step title="Choose Custom">
+    Select **Custom** as the inference server
+  </Step>
+
+  <Step title="Enter server URL">
+    Enter your custom server URL
+  </Step>
+
+  <Step title="Configure API format">
+    Configure the API format and parameters
+  </Step>
+</Steps>
 
 ## Model Configuration
 
@@ -142,12 +198,14 @@ async def chat_completions(request: ChatRequest):
 Choose the appropriate model based on your requirements:
 
 #### General Purpose Models
+
 - **Llama 2 7B**: Good balance of performance and resource usage
 - **Llama 2 13B**: Better performance with higher resource requirements
 - **Mistral 7B**: Strong performance for reasoning tasks
 - **CodeLlama**: Specialized for code generation and analysis
 
 #### Specialized Models
+
 - **Llama 2 Chat**: Optimized for conversational AI
 - **Mistral Instruct**: Fine-tuned for instruction following
 - **Phi-2**: Small but capable model for edge deployment
@@ -157,11 +215,13 @@ Choose the appropriate model based on your requirements:
 Ensure your infrastructure meets the model requirements:
 
 #### GPU Requirements
+
 - **7B Models**: 8-16GB VRAM
 - **13B Models**: 16-32GB VRAM
 - **70B Models**: 80GB+ VRAM (multi-GPU)
 
 #### CPU Requirements
+
 - **7B Models**: 16+ CPU cores, 32GB RAM
 - **13B Models**: 32+ CPU cores, 64GB RAM
 - **70B Models**: 64+ CPU cores, 128GB+ RAM
@@ -252,19 +312,19 @@ spec:
 
 Implement proper network security:
 
-1. **Firewall Rules**: Restrict access to inference servers
-2. **VPN Access**: Use VPN for secure remote access
-3. **SSL/TLS**: Enable HTTPS for all communications
-4. **Authentication**: Implement API key or token-based authentication
+- **Firewall Rules**: Restrict access to inference servers
+- **VPN Access**: Use VPN for secure remote access
+- **SSL/TLS**: Enable HTTPS for all communications
+- **Authentication**: Implement API key or token-based authentication
 
 ### Data Security
 
 Ensure data security and privacy:
 
-1. **Encryption**: Encrypt data in transit and at rest
-2. **Access Controls**: Implement role-based access controls
-3. **Audit Logging**: Log all model interactions
-4. **Data Retention**: Define data retention policies
+- **Encryption**: Encrypt data in transit and at rest
+- **Access Controls**: Implement role-based access controls
+- **Audit Logging**: Log all model interactions
+- **Data Retention**: Define data retention policies
 
 ## Performance Optimization
 
@@ -272,19 +332,19 @@ Ensure data security and privacy:
 
 Optimize models for better performance:
 
-1. **Quantization**: Use quantized models to reduce memory usage
-2. **Model Pruning**: Remove unnecessary parameters
-3. **Batch Processing**: Process multiple requests together
-4. **Caching**: Cache frequently requested responses
+- **Quantization**: Use quantized models to reduce memory usage
+- **Model Pruning**: Remove unnecessary parameters
+- **Batch Processing**: Process multiple requests together
+- **Caching**: Cache frequently requested responses
 
 ### Infrastructure Optimization
 
 Optimize your infrastructure:
 
-1. **GPU Optimization**: Use appropriate GPU drivers and CUDA versions
-2. **Memory Management**: Optimize memory allocation and usage
-3. **Network Optimization**: Use high-speed network connections
-4. **Storage Optimization**: Use fast storage for model files
+- **GPU Optimization**: Use appropriate GPU drivers and CUDA versions
+- **Memory Management**: Optimize memory allocation and usage
+- **Network Optimization**: Use high-speed network connections
+- **Storage Optimization**: Use fast storage for model files
 
 ## Monitoring and Maintenance
 
@@ -385,28 +445,28 @@ tail -f /var/log/ollama.log
 
 Configure self-hosted models for use in Onyx's chat interface:
 
-1. Set as default model for general conversations
-2. Configure model-specific parameters
-3. Enable model switching for users
-4. Set up fallback options
+- Set as default model for general conversations
+- Configure model-specific parameters
+- Enable model switching for users
+- Set up fallback options
 
 ### Agent Configuration
 
 Use self-hosted models with Onyx agents:
 
-1. Assign specific models to agents
-2. Configure custom instructions for each agent
-3. Set up model-specific prompts and templates
-4. Enable streaming responses where supported
+- Assign specific models to agents
+- Configure custom instructions for each agent
+- Set up model-specific prompts and templates
+- Enable streaming responses where supported
 
 ### Document Processing
 
 Leverage self-hosted models for document analysis:
 
-1. Configure for document summarization
-2. Enable question answering from documents
-3. Set up content extraction and analysis
-4. Use embedding models for semantic search
+- Configure for document summarization
+- Enable question answering from documents
+- Set up content extraction and analysis
+- Use embedding models for semantic search
 
 ## Best Practices
 
@@ -435,10 +495,11 @@ Leverage self-hosted models for document analysis:
 
 After configuring self-hosted LLMs in Onyx:
 
-1. **Test the Integration**: Verify that models are working correctly
-2. **Monitor Performance**: Track response times and resource usage
-3. **Optimize Configuration**: Fine-tune parameters for your use cases
-4. **Train Users**: Educate users on model capabilities and limitations
-5. **Scale Deployment**: Gradually increase usage while monitoring performance
+- **Test the Integration**: Verify that models are working correctly
+- **Monitor Performance**: Track response times and resource usage
+- **Optimize Configuration**: Fine-tune parameters for your use cases
+- **Train Users**: Educate users on model capabilities and limitations
+- **Scale Deployment**: Gradually increase usage while monitoring performance
 
-For additional support or questions about self-hosted LLM integration, refer to the documentation for your chosen inference server or contact the Onyx support team. 
+For additional support or questions about self-hosted LLM integration,
+refer to the documentation for your chosen inference server or contact the Onyx support team.

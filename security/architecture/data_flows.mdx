@@ -5,41 +5,56 @@ icon: "arrows-split-up-and-left"
 ---
 
 ## Indexing Flow
-Documents from connectors and user uploads are processed by the Onyx indexing pipeline. With default configurations no data ever leaves the deployment.
+
+Documents from connectors and user uploads are processed by the Onyx indexing pipeline.
+With default configurations no data ever leaves the deployment.
 
 The general processing outline goes as follows:
-1. Documents, metadata, and access permissions are pulled in from connectors
-2. Documents are processed into text through document parsing utilities
-3. The texts are chunked and passed through deep learning (embedding) models
-4. These representations are stored in the vector database
-5. Optionally (default off), an LLM can be used to extract entities and relations from the documents and represent them as a graph within Postgres
+- Documents, metadata, and access permissions are pulled in from connectors
+- Documents are processed into text through document parsing utilities
+- The texts are chunked and passed through deep learning (embedding) models
+- These representations are stored in the vector database
+- Optionally (default off), an LLM can be used to extract entities and relations from the documents
+  and represent them as a graph within Postgres
 
 ![Onyx Indexing Flow](/assets/images/security/OnyxIndexingFlow.png)
 
 Onyx does also allow configuring the following options:
-<Info>
-Note that overriding the default configurations may means that documents will be sent to your selected third party services for processing
-</Info>
-- API based embedding model. Teams may choose to do this instead of choosing between running their own GPUs, using a less capable embedding model, or accepting a slower initial indexing.
-- Third party document-to-text service. Some third party services provide better processing using large vision models and other approaches. This can yield better extraction of text from your documents.
-- Connecting an LLM for the generation of the knowledge graph. The knowledge graph provides an additional representation of the connected knowledge and can be used to answer more abstract type questions.
 
+<Info>
+  Note that overriding the default configurations may means that documents will be sent to your selected third party
+  services for processing
+</Info>
+
+- API based embedding model. Teams may choose to do this instead of choosing between running their
+  own GPUs, using a less capable embedding model, or accepting a slower initial indexing.
+- Third party document-to-text service. Some third party services provide better processing using
+  large vision models and other approaches. This can yield better extraction of text from your documents.
+- Connecting an LLM for the generation of the knowledge graph. The knowledge graph provides an
+  additional representation of the connected knowledge and can be used to answer more abstract type questions.
 
 ## Query Flow
+
 ![Onyx Query Flow](/assets/images/security/OnyxQueryFlow.png)
 
 When users query Onyx, the LLM determines if the system should fetch additional context or respond to the user directly.
 
-If additional context is needed, the system can choose between available options including: ingested knowledge, web search (if configured), build in actions (like code interpreter), or additional user configured actions.
+If additional context is needed, the system can choose between available options including: ingested knowledge,
+web search (if configured), build in actions (like code interpreter), or additional user configured actions.
 
 By default, the system does not communicate data to any external systems outside of the admin configured LLM.
 
 ### Configurable External Services
+
 Admins of the system can configure support for external services to enrich the user experience.
+
 <Tip>
-It is recommended to enable these functionalities to let your users get the most of out Onyx.
+  It is recommended to enable these functionalities to let your users get the most of out Onyx.
 </Tip>
-**Web Search**: Sends search queries to a configured search provider. Supported providers include Google PSE, Serper, and Exa AI to get links and snippets. A crawler is used to fetch the full contents of the page, Onyx has a built in one and also supports Firecrawl.
+
+**Web Search**: Sends search queries to a configured search provider. Supported providers include Google PSE, Serper,
+and Exa AI to get links and snippets. A crawler is used to fetch the full contents of the page,
+Onyx has a built in one and also supports Firecrawl.
 
 **Image Generation**: Sends prompts to a third party image generation endpoint like OpenAI's Dalle model.
 

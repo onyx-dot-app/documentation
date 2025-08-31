@@ -1,14 +1,17 @@
 ---
-title: "Internet Search"
-description: "Configuring internet search capabilities"
+title: "Web Search"
+description: "Configuring web search capabilities"
 icon: "globe"
 ---
 
-Enable your AI agents to search the web for real-time information by configuring the Internet Search action in Onyx. This extends your agents' capabilities beyond internal knowledge to include current web content.
+Enable your AI agents to search the web for real-time information by configuring the Web Search action in Onyx.
+This extends your agents' capabilities beyond internal knowledge to include current web content.
 
 ## How It Works
 
-The Internet Search action uses the [Exa](https://exa.ai) API to search the web. When enabled, AI agents equipped with Internet Search will automatically analyze user queries and determine when to search the web for additional context or real-time information.
+The Web Search action uses the [Exa](https://exa.ai) API to search the web. When enabled,
+AI agents equipped with Web Search will automatically analyze user queries and determine when to search the web for
+additional context or real-time information.
 
 Key features:
 - **Intelligent Query Analysis**: Agents automatically decide when web search is needed
@@ -16,52 +19,88 @@ Key features:
 - **Real-time Information**: Access to current web content and recent developments
 - **Source Attribution**: Clear citations showing web sources used in responses
 
-Currently, Exa is the only supported provider. If you would like to use or contribute a new provider, please let us know in our [Slack Community](https://join.slack.com/t/onyx-dot-app/shared_invite/zt-34lu4m7xg-TsKGO6h8PDvR5W27zTdyhA).
+Currently, Exa is the only supported provider. If you would like to use or contribute a new provider,
+please let us know in our [Slack
+Community](https://join.slack.com/t/onyx-dot-app/shared_invite/zt-34lu4m7xg-TsKGO6h8PDvR5W27zTdyhA).
 
 ## Configuration
 
 ### **Onyx Cloud**
-Internet Search is available by default for Onyx Cloud deployments! No additional configuration is required - you can skip directly to [Agent Setup](#agent-setup).
+
+Web Search is available by default for Onyx Cloud deployments!
+No additional configuration is required - you can skip directly to [Agent Setup](#agent-setup).
 
 ### **Self-Hosted Deployments**
-To enable Internet Search for self-hosted Onyx, follow these steps:
 
-1. **Create Exa Account**: Sign up for an account at [Exa](https://exa.ai)
-2. **Generate API Key**: Create an API key in your Exa dashboard
-3. **Configure Environment Variable**: Add the following environment variable to your Onyx deployment:
-   ```bash
-   EXA_API_KEY=your_exa_api_key_here
-   ```
-4. **Restart Services**: Restart your Onyx deployment to apply the new configuration
+To enable Web Search for self-hosted Onyx, follow these steps:
+
+<Steps>
+  <Step title="Create Exa account">
+    Sign up for an account at [Exa](https://exa.ai)
+  </Step>
+
+  <Step title="Generate API key">
+    Create an API key in your Exa dashboard
+  </Step>
+
+  <Step title="Configure environment variable">
+    Add the following environment variable to your Onyx deployment:
+
+    ```bash
+    EXA_API_KEY=your_exa_api_key_here
+    ```
+  </Step>
+
+  <Step title="Restart services">
+    Restart your Onyx deployment to apply the new configuration
+  </Step>
+</Steps>
 
 ## Agent Setup
 
-Once Internet Search is configured at the deployment level, you can enable it for specific AI agents:
+Once Web Search is configured at the deployment level, you can enable it for specific AI agents:
 
-1. **Navigate to Agents**: Go to the Admin Panel and select **Agents**
-2. **Create or Edit Agent**: Choose an existing agent or create a new one
-3. **Enable Internet Search**: On the agent creation/update page, check the "Internet Search" checkbox
-4. **Save Configuration**: Save your agent settings
+<Steps>
+  <Step title="Open Agents">
+    Go to the Admin Panel and select **Agents**
+  </Step>
 
-![Internet Search checkbox](/assets/images/more/internet_search_assistant.png)
+  <Step title="Create or edit agent">
+    Choose an existing agent or create a new one
+  </Step>
+
+  <Step title="Enable Web Search">
+    On the agent creation/update page, check the "Web Search" checkbox
+  </Step>
+
+  <Step title="Save configuration">
+    Save your agent settings
+  </Step>
+</Steps>
+
+![Web Search checkbox](/assets/overview/GENERIC_PLACEHOLDER.png)
 
 ## Usage and Behavior
 
 ### **Automatic Decision Making**
-Agents with Internet Search enabled will automatically analyze user queries and determine when web search is appropriate. They consider factors like:
+
+Agents with Web Search enabled will automatically analyze user queries and determine when web search is appropriate.
+They consider factors like:
 - Whether the query requires current/real-time information
 - If the internal knowledge base lacks relevant information
 - The nature of the question (news, current events, recent developments)
 
 ### **Search Results Integration**
-When Internet Search is triggered:
+
+When Web Search is triggered:
 - Web results are seamlessly integrated with internal search results
 - Source citations clearly indicate web sources vs. internal documents
 - Results maintain the same format and presentation as internal content
 
-![Internet Search results](/assets/images/more/internet_search_results.png)
+![Web Search results](/assets/overview/GENERIC_PLACEHOLDER.png)
 
 ### **User Experience**
+
 From the user perspective:
 - No additional steps or commands are required
 - Agents transparently decide when to use web search
@@ -71,38 +110,44 @@ From the user perspective:
 ## Best Practices
 
 ### **Agent Configuration**
-- **Enable selectively**: Not all agents need Internet Search - enable it based on use case
+
+- **Enable selectively**: Not all agents need Web Search - enable it based on use case
 - **Specialized agents**: Consider creating dedicated agents for research or current events
 - **Clear instructions**: Provide agents with clear guidelines about when to use web search
 
 ### **Use Cases**
-Internet Search is particularly valuable for:
+
+Web Search is particularly valuable for:
 - **Research agents**: Market research, competitive analysis, industry trends
 - **News and current events**: Latest developments, breaking news, recent updates
 - **Technical support**: Latest software updates, recent bug fixes, new solutions
 - **Sales intelligence**: Recent company news, market conditions, industry developments
 
 ### **Monitoring and Management**
-- **Review usage**: Monitor which agents are using Internet Search most frequently
+
+- **Review usage**: Monitor which agents are using Web Search most frequently
 - **Cost considerations**: Be aware that web searches consume API credits with Exa
 - **Quality control**: Review web search results to ensure relevance and accuracy
 
 ## Troubleshooting
 
-### **Internet Search Not Working**
+### **Web Search Not Working**
+
 - Verify the `EXA_API_KEY` environment variable is correctly set
 - Check that your Exa account has sufficient API credits
 - Ensure the Onyx deployment has been restarted after adding the API key
-- Confirm the agent has Internet Search enabled in its configuration
+- Confirm the agent has Web Search enabled in its configuration
 
 ### **Poor Search Results**
+
 - Review agent instructions to provide better context for when to use web search
 - Consider refining user queries to be more specific
 - Check if the internal knowledge base needs updating to reduce reliance on web search
 
 ### **API Limits and Costs**
+
 - Monitor your Exa API usage through their dashboard
 - Set up usage alerts to track consumption
 - Consider usage policies for different agent types
 
-For additional support with Internet Search configuration, contact the Onyx team or join our community channels. 
+For additional support with Web Search configuration, contact the Onyx team or join our community channels.
