@@ -126,7 +126,7 @@
             "group": "Getting Started",
             "pages": [
               "admin/getting_started/overview",
-              "admin/getting_started/AI Models",
+              "admin/getting_started/genai_models",
               "admin/getting_started/connectors",
               "admin/getting_started/actions",
               "admin/getting_started/agents",
@@ -136,12 +136,19 @@
           {
             "group": "AI Configuration",
             "pages": [
+              {
+                "group": "Self-Hosted",
+                "icon": "server",
+                "pages": [
+                  "admin/llm_providers/ollama",
+                  "admin/llm_providers/self_hosted"
+                ]
+              },
               "admin/llm_providers/openai",
-              "admin/llm_providers/anthropic",
-              "admin/llm_providers/google_gemini",
-              "admin/llm_providers/aws_bedrock",
               "admin/llm_providers/azure_openai",
-              "admin/llm_providers/self_hosted"
+              "admin/llm_providers/anthropic",
+              "admin/llm_providers/aws_bedrock",
+              "admin/llm_providers/google_gemini"
             ]
           },
           {
@@ -232,7 +239,6 @@
           {
             "group": "Actions",
             "pages": [
-              "admin/actions/overview",
               "admin/actions/web_search",
               "admin/actions/mcp",
               "admin/actions/openapi"
@@ -263,8 +269,8 @@
           {
             "group": "Miscellaneous",
             "pages": [
-              "admin/faq",
-              "admin/contact_us"
+              "admin/miscellaneous/faq",
+              "admin/miscellaneous/contact_us"
             ]
           }
         ]
