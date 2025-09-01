@@ -156,6 +156,7 @@
             "pages": [
               {
                 "group": "Supported Connectors",
+                "icon": "plug",
                 "pages": [
                   "admin/connectors/official/airtable",
                   "admin/connectors/official/asana",
