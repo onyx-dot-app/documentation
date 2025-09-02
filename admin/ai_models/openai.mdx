@@ -4,10 +4,23 @@ description: "Configure OpenAI models for Onyx"
 icon: "bolt"
 ---
 
+import NavigateToAiModels from "/snippets/navigate-to-ai-models.mdx";
+import StandardAiModelConfigs from "/snippets/standard-ai-model-configs.mdx";
+
 ## Guide
 
 <Steps>
-  <Step title="Select Set up OpenAI">
-    Navigate to the Onyx Admin Panel → LLM
+  <NavigateToAiModels />
+
+  <Step title="Configure OpenAI">
+    Select **OpenAI** from the available providers.
+
+    Give this configuration a display name.
+
+    Create an [API key](https://platform.openai.com/api-keys) from the OpenAI API dashboard and paste it in the API Key field.
+
+    <img className="rounded-image" src="/assets/admin/openai_config.png" alt="OpenAI Provider Configuration" />
   </Step>
+
+  <StandardAiModelConfigs />
 </Steps>

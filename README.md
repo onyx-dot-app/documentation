@@ -1,10 +1,5 @@
 <h2 align="center">
-<a href="https://www.onyx.app/">
-
-![logotype](https://github.com/onyx-dot-app/onyx/blob/logo/OnyxLogoCropped.jpg?raw=true)
-
-</a>
-
+  <a href="https://www.onyx.app/"> <img width="50%" src="assets/logo/onyx_logo.svg" /></a>
 </h2>
 
 # Onyx Docs
@@ -43,3 +38,65 @@ Changes are automatically deployed to production after merging to main.
 - Mintlify dev isn't running - Run `mintlify install` to re-install dependencies.
 - Page loads as a 404 - Make sure you are running in a folder with `docs.json`
 - Mintlify Docs - https://mintlify.com/docs/introduction
+
+### Docs Formatter (scripts/format_docs.py)
+
+A comprehensive Markdown/MDX formatter with intelligent formatting rules for documentation sites.
+
+**Usage:**
+```bash
+# Check which files would be reformatted (exits with code 1 if changes needed)
+python scripts/format_docs.py --check
+
+# Apply formatting changes to files
+python scripts/format_docs.py --write
+
+# Set custom line width (default: 120)
+python scripts/format_docs.py --write --width 100
+```
+
+**What it does:**
+
+- **File scope:** Processes all `*.md`, `*.mdx`, `*.markdown` files recursively
+- **Indentation:** Converts tabs to 2-space indentation; normalizes list indents to multiples of 2
+- **Container normalization:** Properly formats nested structures like:
+  - `<Steps>` with `<Step>` children
+  - `<Accordion>` with `<AccordionItem>` children  
+  - `<Columns>` with `<Card>` children
+  - `<CardGroup>` with `<Card>` children
+  - Content inside containers gets indented one level deeper
+- **Spacing control:** Ensures single blank lines around:
+  - Headings and horizontal rules
+  - Images (Markdown `![...]` and MDX `<Image>`)
+  - Block-level components (`<Steps>`, `<Accordion>`, etc.)
+  - Code fences (removes blanks after opening, adds after closing)
+- **Advisory blocks:** Expands single-line tags to multi-line format:
+  ```mdx
+  <Warning>This is a warning</Warning>
+  
+  # Becomes:
+  <Warning>
+    This is a warning
+  </Warning>
+  ```
+- **Text wrapping:** Reflows paragraphs to target width while preserving:
+  - Code blocks and fenced code
+  - Tables and complex formatting
+  - Lines with backticks, URLs, or HTML/MDX tags
+  - List item continuation indentation
+- **Import cleanup:** Splits merged imports and fixes missing `import` keywords
+- **YAML frontmatter:** Repairs malformed frontmatter and normalizes quoted values
+- **Quality checks:**
+  - Reports numbered lists (suggests using `<Steps>/<Step>` instead)
+  - Warns about missing spaces after list markers (`1.item` → `1. item`)
+  - Warns if `icon:` field missing from frontmatter (except in excluded directories)
+- **Link validation:** Runs `mintlify broken-links` if available (install: `npm i -g mintlify`)
+
+### Pre-commit Hook
+
+- Config: `.pre-commit-config.yaml` includes a local hook that runs `python scripts/format_docs.py --check --width 120` on Markdown/MDX changes.
+- Setup:
+  - Install pre-commit: `pip install pre-commit`
+  - Enable hooks: `pre-commit install`
+  - Run on all files: `pre-commit run --all-files`
+- Behavior: blocks commits if docs would be reformatted. Run `python scripts/format_docs.py --write` to apply fixes, then re-stage and commit.
