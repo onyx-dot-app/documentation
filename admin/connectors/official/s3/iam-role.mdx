@@ -18,7 +18,8 @@ description: "Authorize the S3 connector using an AWS IAM Role with assume role 
   <Step title="Create the S3 Access Role">
     - In AWS Console, go to **IAM › Roles** and click **Create role**
     - For **Trusted entity type**, select **Custom trust policy**
-    - In the Custom trust policy JSON editor, configure who can assume this role. You can choose from:
+    - In the Custom trust policy JSON editor, configure who can assume this role.
+    You can choose from:
     - **IAM Role**: `"AWS": "arn:aws:iam::YOUR_AWS_ACCOUNT_ID:role/YourExistingEC2Role"`
     - **AWS Service**: `"Service": "ec2.amazonaws.com"` (for EC2 instances)
 

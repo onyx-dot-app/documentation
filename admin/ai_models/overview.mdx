@@ -1,0 +1,96 @@
+---
+title: "Overview"
+description: "Learn how Onyx uses Large Language Models and how to configure multiple providers for different use cases"
+icon: "microchip"
+---
+
+## How Onyx Uses LLMs
+
+Large Language Models power AI Answers in Onyx. After Search retrieves the most relevant documents,
+the LLM interprets that context and generates a grounded, helpful response.
+You can use whichever provider you prefer — Onyx lets you mix and match providers per Agent or workflow.
+
+<Note>
+  You can configure multiple providers at the same time and choose models per Agent.
+  This makes it easy to compare quality, latency, and cost across providers.
+</Note>
+
+## Recommended Providers and Models
+
+- OpenAI:
+  Our default recommendation for orgs that can use it — their latest models are strongest at reasoning.
+  - Recommended models: GPT-4o, GPT-4.1, o3, GPT-5.
+- Anthropic: We've consistently found Claude models excel at writing natural,
+  human-sounding language. Consider Claude for content-forward agents (drafting, editing, summarization).
+- Cloud-native options: If you're hosting on a major cloud, use the provider-native LLM services:
+  - AWS Bedrock (Anthropic, Amazon, Meta, Cohere, and more)
+  - Google Gemini
+  - Azure OpenAI
+
+## Self-Hosted and OpenAI-Compatible Endpoints
+
+Onyx supports any OpenAI-compatible inference endpoint. For local or air-gapped deployments,
+we recommend Ollama for its simplicity and broad model support.
+You can also point Onyx at custom gateways and self-hosted stacks that expose the OpenAI Chat Completions API.
+
+## Choosing the Right Model
+
+- Reasoning or tool use: Prefer OpenAI's latest reasoning-capable models (GPT-4.1, o3, GPT-5)
+  for complex planning, multi-step workflows, and function/tool calls.
+- Natural language generation: Prefer Anthropic Claude for more fluent drafting and editing tasks.
+- Cost/latency sensitive: Consider lighter variants (e.g., GPT‑4o)
+  or distilled/open models via Ollama.
+
+## Configure Your Providers
+
+Head to the LLM Providers section to add API keys, set defaults, and enable multiple backends:
+
+<Columns cols={2}>
+  <Card title="OpenAI" icon="openai" href="/admin/llm_providers/openai">
+    Configure OpenAI models like GPT-4o, GPT-4.1, o3, and GPT-5.
+  </Card>
+
+  <Card title="Azure OpenAI" icon="azure" href="/admin/llm_providers/azure_openai">
+    Use Microsoft-hosted OpenAI models with Azure resource/deployment settings.
+  </Card>
+
+  <Card title="Anthropic" icon="anthropic" href="/admin/llm_providers/anthropic">
+    Set up Claude models for natural, human-like writing.
+  </Card>
+
+  <Card title="AWS Bedrock" icon="aws" href="/admin/llm_providers/aws_bedrock">
+    Access Anthropic, Cohere, Amazon, and more through Bedrock.
+  </Card>
+
+  <Card title="Google Gemini" icon="google" href="/admin/llm_providers/google_gemini">
+    Configure Gemini models for reasoning and multimodal tasks.
+  </Card>
+
+  <Card title="Ollama (Self-hosted)" icon="wrench" href="/admin/llm_providers/ollama">
+    Run models locally and connect via an OpenAI-compatible endpoint.
+  </Card>
+
+  <Card title="Other Self-hosted" icon="server" href="/admin/llm_providers/self_hosted">
+    Use any OpenAI-compatible gateway or inference server.
+  </Card>
+</Columns>
+
+## Tips
+
+- Start with OpenAI for best-in-class reasoning; add Claude where writing tone matters most.
+- Enable multiple providers and route Agents to the model that best fits the task.
+- Keep an eye on cost and latency — mixing models often yields the best balance.
+
+## Navigate Here
+
+Admin Panel → Configuration → LLM tab.
+
+## Configuration Flow
+
+- API key: Most providers require an API key or similar credential to connect.
+- Defaults: After connecting, set a Default Model and a Fast Model.
+  - Fast Model is used for quick operations like query expansion, chat title generation,
+    and other lightweight evaluations.
+- Advanced Options: Choose which models from a provider are visible to end users in model pickers.
+- Access scoping: You can make entire providers available only to specific users or groups.
+  Model-level privacy isn't supported; visibility is controlled at the provider level.
