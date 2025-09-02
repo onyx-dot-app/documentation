@@ -125,35 +125,34 @@
           {
             "group": "Getting Started",
             "pages": [
-              "admin/getting_started/overview",
-              "admin/getting_started/genai_models",
-              "admin/getting_started/connectors",
-              "admin/getting_started/actions",
-              "admin/getting_started/agents",
+              "admin/overview",
+              "admin/getting_started/slack_bot_setup",
               "admin/getting_started/enterprise_edition"
             ]
           },
           {
-            "group": "AI Configuration",
+            "group": "AI Models",
             "pages": [
+              "admin/ai_models/overview",
               {
                 "group": "Self-Hosted",
                 "icon": "server",
                 "pages": [
-                  "admin/llm_providers/ollama",
-                  "admin/llm_providers/self_hosted"
+                  "admin/ai_models/ollama",
+                  "admin/ai_models/custom_inference_provider"
                 ]
               },
-              "admin/llm_providers/openai",
-              "admin/llm_providers/azure_openai",
-              "admin/llm_providers/anthropic",
-              "admin/llm_providers/aws_bedrock",
-              "admin/llm_providers/google_gemini"
+              "admin/ai_models/openai",
+              "admin/ai_models/azure_openai",
+              "admin/ai_models/anthropic",
+              "admin/ai_models/aws_bedrock",
+              "admin/ai_models/google_gemini"
             ]
           },
           {
             "group": "Connectors",
             "pages": [
+              "admin/connectors/overview",
               {
                 "group": "Supported Connectors",
                 "icon": "plug",
@@ -238,15 +237,11 @@
               }
             ]
           },
-          {
-            "group": "Slack Bot",
-            "pages": [
-              "admin/slackbot/slack_bot_setup"
-            ]
-          },
+
           {
             "group": "Actions",
             "pages": [
+              "admin/actions/overview",
               "admin/actions/web_search",
               "admin/actions/mcp",
               "admin/actions/openapi"
@@ -254,24 +249,54 @@
           },
 
           {
+            "group": "Agents",
+            "pages": [
+              "admin/agents/overview"
+            ]
+          },
+
+          {
+            "group": "User Management",
+            "pages": [
+              "admin/user_management/users",
+              "admin/user_management/groups",
+              "admin/user_management/api_keys"
+            ]
+          },
+
+          {
             "group": "Analytics",
             "pages": [
               "admin/analytics/queries",
-              "admin/analytics/statistics"
+              "admin/analytics/statistics",
+              "admin/analytics/custom_analytics"
             ]
           },
           {
             "group": "Advanced Configs",
             "pages": [
-              "admin/advanced_configs/white_labeling",
-              "admin/advanced_configs/knowledge_graph",
+              "admin/advanced_configs/search_configs",
               "admin/advanced_configs/doc_processing",
               "admin/advanced_configs/image_ingestion",
-              "admin/advanced_configs/curator",
+              "admin/advanced_configs/multilingual_setup",
               "admin/advanced_configs/rate_limits",
-              "admin/advanced_configs/standard_answers",
-              "admin/advanced_configs/search_configs",
-              "admin/advanced_configs/multilingual_setup"
+              "admin/advanced_configs/white_labeling",
+              "admin/advanced_configs/workspace_settings"
+            ]
+          },
+          {
+            "group": "Curators",
+            "pages": [
+              "admin/curators/overview",
+              "admin/curators/curator_responsibilities",
+              {
+                "group": "Guides",
+                "icon": "book-open",
+                "pages": [
+                  "admin/curators/guides/managing_connectors",
+                  "admin/curators/guides/publishing_agents"
+                ]
+              }
             ]
           },
           {
