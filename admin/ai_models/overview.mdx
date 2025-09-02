@@ -1,96 +1,75 @@
 ---
 title: "Overview"
-description: "Learn how Onyx uses Large Language Models and how to configure multiple providers for different use cases"
+description: "Configuring AI Providers and Models in Onyx"
 icon: "microchip"
 ---
 
-## How Onyx Uses LLMs
+<Tip>
+  You can configure Onyx to work with any AI provider and model!
+</Tip>
 
-Large Language Models power AI Answers in Onyx. After Search retrieves the most relevant documents,
-the LLM interprets that context and generates a grounded, helpful response.
-You can use whichever provider you prefer — Onyx lets you mix and match providers per Agent or workflow.
+## AI Configuration
+
+Navigate to: **Admin Panel → Configuration → LLM** to access the AI configuration page. 
+From here, you can select which provider and models you want to use in Onyx.
+
+<img className="rounded-image" src="/assets/admin/ai_config_overview.png" alt="AI Configuration Overview" />
+
+### AI Providers
+
+<AccordionGroup>
+  <Accordion title="Cloud Providers" icon="cloud">
+    Cloud providers are either foundation model developers (e.g. OpenAI, Anthropic) or cloud platforms (e.g. AWS, Google, Azure) that make AI models accessible via hosted API endpoints.
+
+    Some AI models are only available directly from the model creator (e.g. OpenAI's GPT models). 
+    Others are distributed through managed cloud services such as AWS Bedrock, Google Gemini, or Azure OpenAI. 
+    These platforms provide enterprise-grade access with integration into their broader cloud ecosystem.
+
+    Onyx natively supports both types.
+
+    <Tip> 
+      Oftentimes, managed cloud services maintain the same Terms of Service and Data Processing Agreements for AI inference as their other services.
+    </Tip>
+  </Accordion>
+
+  <Accordion title="Self-Hosted Providers" icon="server">
+    Self-hosted providers are tools and frameworks that let you run AI models on your own infrastructure, rather than relying on an external cloud service. 
+    Self-hosted models are open-weight and avialable for free download, such as Meta's Llama models, DeepSeek, and Qwen.
+
+    Onyx supports any OpenAI-compatible gateway or inference server, like [Ollama](/admin/ai_models/ollama).
+  </Accordion>
+</AccordionGroup>
+
+### Recommended Models
 
 <Note>
-  You can configure multiple providers at the same time and choose models per Agent.
-  This makes it easy to compare quality, latency, and cost across providers.
+  If cloud AI models are approved for your organization, we recommend using them because of capability, speed, and cost.
 </Note>
 
-## Recommended Providers and Models
+#### Cloud Models
 
-- OpenAI:
-  Our default recommendation for orgs that can use it — their latest models are strongest at reasoning.
-  - Recommended models: GPT-4o, GPT-4.1, o3, GPT-5.
-- Anthropic: We've consistently found Claude models excel at writing natural,
-  human-sounding language. Consider Claude for content-forward agents (drafting, editing, summarization).
-- Cloud-native options: If you're hosting on a major cloud, use the provider-native LLM services:
-  - AWS Bedrock (Anthropic, Amazon, Meta, Cohere, and more)
-  - Google Gemini
-  - Azure OpenAI
+- **OpenAI**: State of the art models for reasoning, coding, image generation, and general tasks. Use models like `GPT-4o`, `GPT-4.1`, `o3`, `GPT-5`.
+- **Anthropic**: Excels at natural, human-sounding language and coding. Use models like `Claude 4 Sonnet` and `Claude 4 Opus`
 
-## Self-Hosted and OpenAI-Compatible Endpoints
+#### Self-Hosted Models
 
-Onyx supports any OpenAI-compatible inference endpoint. For local or air-gapped deployments,
-we recommend Ollama for its simplicity and broad model support.
-You can also point Onyx at custom gateways and self-hosted stacks that expose the OpenAI Chat Completions API.
-
-## Choosing the Right Model
-
-- Reasoning or tool use: Prefer OpenAI's latest reasoning-capable models (GPT-4.1, o3, GPT-5)
-  for complex planning, multi-step workflows, and function/tool calls.
-- Natural language generation: Prefer Anthropic Claude for more fluent drafting and editing tasks.
-- Cost/latency sensitive: Consider lighter variants (e.g., GPT‑4o)
-  or distilled/open models via Ollama.
+<Warning>
+  Come up with 3 recommended self-host models
+</Warning>
 
 ## Configure Your Providers
 
-Head to the LLM Providers section to add API keys, set defaults, and enable multiple backends:
-
-<Columns cols={2}>
-  <Card title="OpenAI" icon="openai" href="/admin/llm_providers/openai">
-    Configure OpenAI models like GPT-4o, GPT-4.1, o3, and GPT-5.
-  </Card>
-
-  <Card title="Azure OpenAI" icon="azure" href="/admin/llm_providers/azure_openai">
-    Use Microsoft-hosted OpenAI models with Azure resource/deployment settings.
-  </Card>
-
-  <Card title="Anthropic" icon="anthropic" href="/admin/llm_providers/anthropic">
-    Set up Claude models for natural, human-like writing.
-  </Card>
-
-  <Card title="AWS Bedrock" icon="aws" href="/admin/llm_providers/aws_bedrock">
-    Access Anthropic, Cohere, Amazon, and more through Bedrock.
-  </Card>
-
-  <Card title="Google Gemini" icon="google" href="/admin/llm_providers/google_gemini">
-    Configure Gemini models for reasoning and multimodal tasks.
-  </Card>
-
-  <Card title="Ollama (Self-hosted)" icon="wrench" href="/admin/llm_providers/ollama">
-    Run models locally and connect via an OpenAI-compatible endpoint.
-  </Card>
-
-  <Card title="Other Self-hosted" icon="server" href="/admin/llm_providers/self_hosted">
-    Use any OpenAI-compatible gateway or inference server.
-  </Card>
+<Columns cols={3}>
+  <Card title="OpenAI" icon="bolt" href="/admin/llm_providers/openai"/>
+  <Card title="Azure OpenAI" icon="microsoft" href="/admin/llm_providers/azure_openai"/>
+  <Card title="Anthropic" icon="brain" href="/admin/llm_providers/anthropic"/>
+  <Card title="AWS Bedrock" icon="aws" href="/admin/llm_providers/aws_bedrock"/>
+  <Card title="Google Gemini" icon="google" href="/admin/llm_providers/google_gemini"/>
+  <Card title="OpenAI-Compatible Providers" icon="server" href="/admin/llm_providers/self_hosted"/>
 </Columns>
 
-## Tips
+## Best Practices
 
-- Start with OpenAI for best-in-class reasoning; add Claude where writing tone matters most.
-- Enable multiple providers and route Agents to the model that best fits the task.
-- Keep an eye on cost and latency — mixing models often yields the best balance.
-
-## Navigate Here
-
-Admin Panel → Configuration → LLM tab.
-
-## Configuration Flow
-
-- API key: Most providers require an API key or similar credential to connect.
-- Defaults: After connecting, set a Default Model and a Fast Model.
-  - Fast Model is used for quick operations like query expansion, chat title generation,
-    and other lightweight evaluations.
-- Advanced Options: Choose which models from a provider are visible to end users in model pickers.
-- Access scoping: You can make entire providers available only to specific users or groups.
-  Model-level privacy isn't supported; visibility is controlled at the provider level.
+- Review the Terms of Service and Data Processing Agreements for the providers you want to use
+- Review the data you choose to index in Onyx
+- Clearly instruct your users on appropriate data to use with Onyx
