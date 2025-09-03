@@ -59,7 +59,7 @@ list of the top documents.
   print(f"Top Documents: {top_documents[:5]}") # Print top 5 documents
   ```
 
-  ```bash cURL expandable
+  ```bash Shell expandable
   #!/bin/bash
 
   API_BASE_URL="https://cloud.onyx.app/api"
@@ -104,7 +104,7 @@ Skip to the [Full Code](#full-code) section if you don't want the step-by-step g
       }
       ```
 
-      ```bash cURL
+      ```bash Shell
       API_BASE_URL="https://cloud.onyx.app/api"
       API_KEY="YOUR_KEY_HERE"
       ```
@@ -126,7 +126,7 @@ Skip to the [Full Code](#full-code) section if you don't want the step-by-step g
       chat_session_id = session_response.json()["chat_session_id"]
       ```
 
-      ```bash cURL
+      ```bash Shell
       CHAT_SESSION_RESPONSE=$(curl -s -X POST "${API_BASE_URL}/chat/create-chat-session" \
       -H "Authorization: Bearer ${API_KEY}" \
       -H "Content-Type: application/json" \
@@ -159,7 +159,7 @@ Skip to the [Full Code](#full-code) section if you don't want the step-by-step g
       )
       ```
 
-      ```bash cURL
+      ```bash Shell
       MESSAGE_RESPONSE=$(curl -s -X POST "${API_BASE_URL}/chat/send-message-simple-api" \
       -H "Authorization: Bearer ${API_KEY}" \
       -H "Content-Type: application/json" \
@@ -191,7 +191,7 @@ Skip to the [Full Code](#full-code) section if you don't want the step-by-step g
       print(f"Top Documents: {top_documents[:5]}")
       ```
 
-      ```bash cURL
+      ```bash Shell
       echo "Response received:"
       echo $MESSAGE_RESPONSE
 
@@ -260,7 +260,7 @@ Skip to the [Full Code](#full-code) section if you don't want the step-by-step g
   print(f"Top Documents: {top_documents[:5]}")
   ```
 
-  ```bash cURL expandable
+  ```bash Shell expandable
   #!/bin/bash
 
   API_BASE_URL="https://cloud.onyx.app/api"

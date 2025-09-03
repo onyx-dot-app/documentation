@@ -55,7 +55,7 @@ In this example, we'll index local files with the Ingestion API.
       }
       ```
 
-      ```bash cURL
+      ```bash Shell
       # Set your API configuration
       API_BASE_URL="https://cloud.onyx.app/onyx-api/ingestion"
       API_KEY="YOUR_KEY_HERE"
@@ -225,7 +225,7 @@ In this example, we'll index local files with the Ingestion API.
       print(f"\nFound {len(documents_to_ingest)} documents ready for ingestion")
       ```
 
-      ```bash cURL
+      ```bash Shell
       # Create the JSON payload
       cat > document_payload.json << 'EOF'
       {
@@ -282,7 +282,7 @@ In this example, we'll index local files with the Ingestion API.
       print(f"\nIngestion complete: {successful_ingestions} successful, {failed_ingestions} failed")
       ```
 
-      ```bash cURL
+      ```bash Shell
       curl --location "${API_BASE_URL}/ingestion" \
       --header 'Content-Type: application/json' \
       --header "Authorization: Bearer ${API_KEY}" \
