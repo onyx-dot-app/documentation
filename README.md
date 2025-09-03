@@ -44,6 +44,7 @@ Changes are automatically deployed to production after merging to main.
 A comprehensive Markdown/MDX formatter with intelligent formatting rules for documentation sites.
 
 **Usage:**
+
 ```bash
 # Check which files would be reformatted (exits with code 1 if changes needed)
 python scripts/format_docs.py --check
@@ -61,7 +62,7 @@ python scripts/format_docs.py --write --width 100
 - **Indentation:** Converts tabs to 2-space indentation; normalizes list indents to multiples of 2
 - **Container normalization:** Properly formats nested structures like:
   - `<Steps>` with `<Step>` children
-  - `<Accordion>` with `<AccordionItem>` children  
+  - `<Accordion>` with `<AccordionItem>` children
   - `<Columns>` with `<Card>` children
   - `<CardGroup>` with `<Card>` children
   - Content inside containers gets indented one level deeper
@@ -71,14 +72,16 @@ python scripts/format_docs.py --write --width 100
   - Block-level components (`<Steps>`, `<Accordion>`, etc.)
   - Code fences (removes blanks after opening, adds after closing)
 - **Advisory blocks:** Expands single-line tags to multi-line format:
+
   ```mdx
   <Warning>This is a warning</Warning>
-  
+
   # Becomes:
   <Warning>
     This is a warning
   </Warning>
   ```
+
 - **Text wrapping:** Reflows paragraphs to target width while preserving:
   - Code blocks and fenced code
   - Tables and complex formatting

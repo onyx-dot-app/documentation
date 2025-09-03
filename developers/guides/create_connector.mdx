@@ -34,7 +34,7 @@ In this example, we'll automate creating Jira Connectors for a selection of proj
       }
       ```
 
-      ```bash cURL
+      ```bash Shell
       API_BASE_URL="https://cloud.onyx.app/api"
       API_KEY="YOUR_KEY_HERE"
       ```
@@ -156,7 +156,7 @@ In this example, we'll automate creating Jira Connectors for a selection of proj
       print(f"Error: {response.text}")
       ```
 
-      ```bash cURL expandable
+      ```bash Shell expandable
       # Create connector for TECH project
       curl -X POST "${API_BASE_URL}/manage/admin/connector" \
       -H "Authorization: Bearer ${API_KEY}" \
@@ -238,7 +238,7 @@ In this example, we'll automate creating Jira Connectors for a selection of proj
       jira_credential_id = next(cred for cred in credentials if cred['source'] == 'jira')['id']
       ```
 
-      ```bash cURL
+      ```bash Shell
       curl -X GET "${API_BASE_URL}/manage/admin/credential" \
       -H "Authorization: Bearer ${API_KEY}" \
       -H "Content-Type: application/json"
@@ -269,7 +269,7 @@ In this example, we'll automate creating Jira Connectors for a selection of proj
       print(f"Failed to associate credential with connector {connector_id}: {e}")
       ```
 
-      ```bash cURL
+      ```bash Shell
       # Replace CONNECTOR_ID and CREDENTIAL_ID with actual values
       curl -X PUT "${API_BASE_URL}/manage/admin/connector/CONNECTOR_ID/credential/CREDENTIAL_ID" \
       -H "Authorization: Bearer ${API_KEY}" \
@@ -383,7 +383,7 @@ In this example, we'll automate creating Jira Connectors for a selection of proj
   print(f"\nCompleted! Created {len(connector_ids)} connectors with IDs: {connector_ids}")
   ```
 
-  ```bash cURL expandable
+  ```bash Shell expandable
   #!/bin/bash
 
   # Configuration

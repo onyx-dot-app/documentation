@@ -8,9 +8,6 @@
     "dark": "#0050B4"
   },
   "favicon": "assets/logo/onyx_favicon.svg",
-  "icons": {
-    "openai": "/assets/icons/openai.svg"
-  },
   "navigation": {
     "tabs": [
       {
