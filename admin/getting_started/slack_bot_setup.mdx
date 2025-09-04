@@ -139,102 +139,105 @@ behavior.
 You can find the full list of configuration options [in the Onyx
 GitHub](https://github.com/onyx-dot-app/onyx/blob/main/backend/onyx/configs/onyxbot_configs.py).
 
+<Warning>
+  These configuration options are rarely needed and should be used with caution.
+</Warning>
+
 <AccordionGroup>
   <Accordion title="DANSWER_BOT_NUM_RETRIES">
     Number of retry attempts for generating an answer before failing.
 
-    Default: `5` (integer)
+    Default: `5 (int)`
   </Accordion>
 
   <Accordion title="MAX_THREAD_CONTEXT_PERCENTAGE">
     How much of the available input context can be used for thread context.
-    This is an internal constant derived from model context limits (not configurable via env).
 
-    Current value: `512 * 2 / 3072` ≈ `0.333`
+    Current value: `512 * 2 / 3072 ≈ 0.333 (float)`
   </Accordion>
 
   <Accordion title="DANSWER_BOT_NUM_DOCS_TO_DISPLAY">
     Number of documents shown under "Reference Documents".
 
-    Default: `5` (integer)
+    Default: `5 (int)`
   </Accordion>
 
   <Accordion title="DANSWER_BOT_DISABLE_DOCS_ONLY_ANSWER">
     Disable responses that only show "Reference Documents" when the LLM cannot answer.
 
-    Default: `false` (boolean)
+    Default: `false (bool)`
   </Accordion>
 
   <Accordion title="DANSWER_REACT_EMOJI">
     Emoji reaction shown while Onyx considers a message.
 
-    Default: `eyes` (string)
+    Default: `eyes (str)`
   </Accordion>
 
   <Accordion title="DANSWER_FOLLOWUP_EMOJI">
     Emoji used to suggest that the user may need more help.
 
-    Default: `sos` (string)
+    Default: `sos (str)`
   </Accordion>
 
   <Accordion title="DANSWER_BOT_FEEDBACK_VISIBILITY">
     Visibility for AI answer feedback submitted to OnyxBot. Options: `private` (only the clicking user),
     `anonymous` (public but anonymous), `public` (public with username).
 
-    Default: `private` (string)
+    Default: `private (str)`
   </Accordion>
 
   <Accordion title="NOTIFY_SLACKBOT_NO_ANSWER">
     If enabled, OnyxBot sends a brief apology message when it cannot find an answer, so users aren’t left wondering.
 
-    Default: `false` (boolean)
+    Default: `false (bool)`
   </Accordion>
 
   <Accordion title="DANSWER_BOT_DISPLAY_ERROR_MSGS">
     Show brief error explanations when something goes wrong answering a question (useful for debugging).
 
-    Default: `false` (boolean)
+    Default: `false (bool)`
   </Accordion>
 
   <Accordion title="DANSWER_BOT_RESPOND_EVERY_CHANNEL">
     Respond in all channels by default, instead of only those configured in the UI.
 
-    Default: `false` (boolean)
+    Default: `false (bool)`
   </Accordion>
 
   <Accordion title="DANSWER_BOT_MAX_QPM">
     Maximum questions per minute the bot can answer. Set to `0` or leave unset for uncapped.
 
-    Default: uncapped (`None`)
+    Default: `uncapped (int)`
   </Accordion>
 
   <Accordion title="DANSWER_BOT_MAX_WAIT_TIME">
     Maximum time in seconds a question will wait in the queue before timing out.
 
-    Default: `180` (seconds)
+    Default: `180 (seconds; 3 minutes)`
   </Accordion>
 
   <Accordion title="DANSWER_BOT_FEEDBACK_REMINDER">
     Minutes after which a reminder DM is sent to request feedback on an answer. Set to `0` to disable.
 
-    Default: `0` (disabled)
+    Default: `0 (disabled; 0 minutes)`
   </Accordion>
 
   <Accordion title="DANSWER_BOT_REPHRASE_MESSAGE">
     Rephrase Slack user messages before sending to the LLM (may improve clarity for the model).
 
-    Default: `false` (boolean)
+    Default: `false (bool)`
   </Accordion>
 
   <Accordion title="DANSWER_BOT_RESPONSE_LIMIT_PER_TIME_PERIOD">
     Number of responses OnyxBot can send within a time window. Set to `0` to disable the limit.
 
-    Default: `5000` (integer)
+    Default: `5000 (int)`
   </Accordion>
 
   <Accordion title="DANSWER_BOT_RESPONSE_LIMIT_TIME_PERIOD_SECONDS">
     Length of the response limit window in seconds.
 
-    Default: `86400` (seconds; 24 hours)
+    Default: `86400 (seconds; 24 hours)`
   </Accordion>
 </AccordionGroup>
