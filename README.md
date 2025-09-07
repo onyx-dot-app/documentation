@@ -94,3 +94,8 @@ python scripts/format_docs.py --write --width 100
   - Warns about missing spaces after list markers (`1.item` → `1. item`)
   - Warns if `icon:` field missing from frontmatter (except in excluded directories)
 - **Link validation:** Runs `mintlify broken-links` if available (install: `npm i -g mintlify`)
+
+
+### TODOs and Enhancements
+- Reintroduce the First Look page when bandwidth allows
+- Add visuals for the Use Cases page
