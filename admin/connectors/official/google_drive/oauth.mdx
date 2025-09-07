@@ -45,7 +45,7 @@ checkout the section [here](./service_account).
     - Alternatively visit this [link](https://console.cloud.google.com/flows/enableapi?apiid=docs.googleapis.com),
     select your project and enable the **Google Docs API**
 
-    ![GoogleDriveEnableAPI](/assets/images/connectors/google_drive/GoogleDriveEnableAPI.png)
+    <img className="rounded-image" src="/assets/images/connectors/google_drive/GoogleDriveEnableAPI.png" alt="GoogleDriveEnableAPI" />
   </Step>
 
   <Step title="Set up OAuth consent screen">
@@ -63,12 +63,7 @@ checkout the section [here](./service_account).
     - Add the scope `.../auth/admin.directory.user.readonly` for `Admin SDK API`
     - Add the scope `.../auth/admin.directory.group.readonly` for `Admin SDK API`
 
-    <div align="center">
-
-    <img
-
-    src="/assets/images/connectors/google_drive/GoogleDriveScopes.png" alt="GoogleDriveScopes" width="60%" />
-    </div>
+    <img className="rounded-image" src="/assets/images/connectors/google_drive/GoogleDriveScopes.png" alt="GoogleDriveScopes" width="60%" />
   </Step>
 
   <Step title="Set up test users">
@@ -83,12 +78,7 @@ checkout the section [here](./service_account).
   <Step title="Create credentials">
     - Go to the **Credentials** tab and select **+ CREATE CREDENTIALS** -> **OAuth client ID**
 
-    <div align="center">
-
-    <img
-
-    src="/assets/images/connectors/google_drive/GoogleDriveCredential.png" alt="GoogleDriveScopes" width="90%" />
-    </div>
+    <img className="rounded-image" src="/assets/images/connectors/google_drive/GoogleDriveCredential.png" alt="GoogleDriveScopes" width="90%" />
 
     - Choose **Web application** and give it some name like `OnyxConnector`
     - Add a **Authorized JavaScript origins**
@@ -100,22 +90,12 @@ checkout the section [here](./service_account).
     - `https://<INTERNAL_DEPLOYMENT_URL>/admin/connectors/google-drive/auth/callback` if you have setup Onyx for production use
     - `https://cloud.onyx.app/admin/connectors/google-drive/auth/callback` if you are using the Onyx Cloud service
 
-    <div align="center">
-
-    <img
-
-    src="/assets/images/connectors/google_drive/DriveCredentials.png" alt="GoogleDriveScopes" width="70%" />
-    </div>
+    <img className="rounded-image" src="/assets/images/connectors/google_drive/DriveCredentials.png" alt="GoogleDriveScopes" width="70%" />
 
     - Click create and on the right hand side next to **Client secret**, there is an option to
     download the credentials as a JSON. Download the JSON for use in the next step.
 
-    <div align="center">
-
-    <img
-
-    src="/assets/images/connectors/google_drive/DriveDownloadCredentials.png" alt="GoogleDriveScopes" width="70%" />
-    </div>
+    <img className="rounded-image" src="/assets/images/connectors/google_drive/DriveDownloadCredentials.png" alt="GoogleDriveScopes" width="70%" />
   </Step>
 </Steps>
 
@@ -126,7 +106,7 @@ First, navigate to the Admin Panel and select the Google Drive connector.
 Then, create a new credential, then upload the key you downloaded in the final step. From there,
 click **Authenticate with Google Drive** and continue with the account you want to use to index Google Drive.
 
-![GoogleDriveOAuth](/assets/images/connectors/google_drive/OAuthCredential.png)
+<img className="rounded-image" src="/assets/images/connectors/google_drive/OAuthCredential.png" alt="GoogleDriveOAuth" />
 
 Once complete, select the newly created credential, and click the **Continue** button to configure the connector!
 

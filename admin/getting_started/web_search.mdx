@@ -34,26 +34,51 @@ No additional configuration is required - you can skip directly to [Agent Setup]
 
 To enable Web Search for self-hosted Onyx, follow these steps:
 
-1. **Create Exa Account**: Sign up for an account at [Exa](https://exa.ai)
-2. **Generate API Key**: Create an API key in your Exa dashboard
-3. **Configure Environment Variable**: Add the following environment variable to your Onyx deployment:
+<Steps>
+  <Step title="Create Exa Account and Generate an API Key">
+    Sign up for an account at [Exa](https://exa.ai)
+    
+    Create an API key in your Exa dashboard
+  </Step>
 
-   ```bash
-   EXA_API_KEY=your_exa_api_key_here
-   ```
+  <Step title="Configure Environment Variable">
+    Add the following environment variable to your Onyx deployment:
 
-4. **Restart Services**: Restart your Onyx deployment to apply the new configuration
+    ```bash
+    EXA_API_KEY=your_exa_api_key_here
+    ```
+  </Step>
+
+  <Step title="Restart Services">
+    Restart your Onyx deployment to apply the new configuration
+  </Step>
+</Steps>
 
 ## Agent Setup
 
 Once Web Search is configured at the deployment level, you can enable it for specific AI agents:
 
-1. **Navigate to Agents**: Go to the Admin Panel and select **Agents**
-2. **Create or Edit Agent**: Choose an existing agent or create a new one
-3. **Enable Web Search**: On the agent creation/update page, check the "Web Search" checkbox
-4. **Save Configuration**: Save your agent settings
+<Steps>
+  <Step title="Navigate to Agents">
+    Go to the Admin Panel and select **Agents**
+  </Step>
 
-![Web Search checkbox](/assets/images/more/web_search_assistant.png)
+  <Step title="Create or Edit Agent">
+    Choose an existing agent or create a new one
+  </Step>
+
+  <Step title="Enable Web Search">
+    On the agent creation/update page, check the "Web Search" checkbox
+
+    <img className="rounded-image" src="/assets/images/more/web_search_assistant.png" alt="Web Search checkbox" />
+  </Step>
+
+  <Step title="Save Configuration">
+    Save your agent settings
+  </Step>
+</Steps>
+
+
 
 ## Usage and Behavior
 
@@ -72,7 +97,7 @@ When Web Search is triggered:
 - Source citations clearly indicate web sources vs. internal documents
 - Results maintain the same format and presentation as internal content
 
-![Web Search results](/assets/images/more/web_search_results.png)
+<img className="rounded-image" src="/assets/images/more/web_search_results.png" alt="Web Search results" />
 
 ### **User Experience**
 
