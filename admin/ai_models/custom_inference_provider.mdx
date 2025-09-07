@@ -9,7 +9,7 @@ import StandardAiModelConfigs from "/snippets/standard-ai-model-configs.mdx";
 
 ## Guide
 
-If you want to use an AI provider that is not supported by Onyx, you can create a custom inference provider.
+If you want to use an AI provider that is not supported by Onyx, you can configure a custom inference provider.
 
 <Tip>
   Your custom provider must provide OpenAI-compatible API endpoints.
@@ -17,7 +17,10 @@ If you want to use an AI provider that is not supported by Onyx, you can create 
 
 <Steps>
   <Step title="Setup your Custom Inference Provider">
-    Determine your provider's API base URL. It should look something like `https://yourprovider.com/v1`.
+    Determine your provider's API base URL. It should look something like `https://yourprovider.com/v1` or `http://localhost:12345/v1`.
+
+    In this example, the provider name is `vertex_ai`.
+    <img className="rounded-image" src="/assets/admin/ai_models/litellm_provider_name.png" alt="Custom inference provider name" />
   </Step>
 
   <NavigateToAiModels />
