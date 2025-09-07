@@ -1,6 +1,6 @@
 ---
 title: "Google AI"
-description: "Configure Google AI models for use with Onyx"
+description: "Configure Google Vertex AI models for use with Onyx"
 icon: "google"
 ---
 import NavigateToAiModels from "/snippets/navigate-to-ai-models.mdx";
@@ -8,19 +8,43 @@ import StandardAiModelConfigs from "/snippets/standard-ai-model-configs.mdx";
 
 ## Guide
 
+This guide walks through setting up Google Vertex AI for use with Onyx.
+
+<Note>
+  Google Vertex AI and Google AI Studio serve the same models. However, Vertex AI has enterprise-grade features that may be useful for your organization.
+</Note>
+
 <Steps>
   <Step title="Create a Service Account for Onyx">
     Go to the [Google Cloud Console Service Accounts Page](https://console.cloud.google.com/iam-admin/serviceaccounts)
 
     Select your project and click **Create Service Account**.
 
+    Give your Service Account a name and a description.
+
+    On the **Permissions** tab, grant the service account the **Vertex AI Administrator** role.
+
     <img className="rounded-image" src="/assets/admin/ai_models/gcs_service_accs.png" alt="Google Cloud Console Service Accounts Page" />
+
+    <img className="rounded-image" src="/assets/admin/ai_models/gcs_service_acc_config.png" alt="Google Cloud Console Service Account Configuration" />
+  </Step>
+
+  <Step title="Create a New Key for the Service Account">
+    Click your newly created Service Account → **Keys** → **Add Key** → **Create new key**.
+
+    Select **JSON** as the key type and click **Create**. The key will be automatically downloaded to your computer.
   </Step>
 
   <NavigateToAiModels />
 
-  <Step title="Configure Google AI">
-    pass
+  <Step title="Configure Google Vertex AI">
+    Select **GCP Vertex AI** from the available providers.
+
+    Give this configuration a **Display Name**.
+
+    Upload your JSON key to the **Credentials File** field.
+
+    If relevant, specify a **Location**. 
   </Step>
 
   <StandardAiModelConfigs />

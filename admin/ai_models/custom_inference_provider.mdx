@@ -9,10 +9,23 @@ import StandardAiModelConfigs from "/snippets/standard-ai-model-configs.mdx";
 
 ## Guide
 
+If you want to use an AI provider that is not supported by Onyx, you can create a custom inference provider.
+
+<Tip>
+  Your custom provider must provide OpenAI-compatible API endpoints.
+</Tip>
+
 <Steps>
+  <Step title="Setup your Custom Inference Provider">
+    Determine your provider's API base URL. 
+    
+    It should look something like `https://yourprovider.com/v1`.
+    
+  </Step>
   <NavigateToAiModels />
 
   <Step title="Configure Custom Inference Provider">
+    pass
   </Step>
 
   <StandardAiModelConfigs />

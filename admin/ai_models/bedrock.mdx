@@ -8,91 +8,99 @@ import NavigateToAiModels from "/snippets/navigate-to-ai-models.mdx";
 import StandardAiModelConfigs from "/snippets/standard-ai-model-configs.mdx";
 
 
-<Note>
-  Before configuring Amazon Bedrock with Onyx, ensure you have an AWS accountwith access to Amazon Bedrock, 
-  the ability to create IAM roles or Access Keys, and the ability to enable model access for the models you want to use.
-</Note>
-
 ## Authentication Methods
 
 Onyx supports 3 authentication methods for Amazon Bedrock:
 
-**IAM Roles (Recommended for AWS environments)**
-- Automatically provides temporary credentials
-- More secure as no keys are stored
-- Use when running on AWS infrastructure (EC2, ECS, Lambda)
-- Leave Access Key fields blank in Onyx configuration
+<AccordionGroup>
+  <Accordion title="IAM (Recommended for AWS environments)">
+    - Automatically authorizes Onyx through an IAM Role attached to the environment  
+    - Use when running on AWS infrastructure (EC2, EKS)
 
-**Access Keys (Required for external environments)**
-- Manual credential management using Access Key ID and Secret
-- Required when running outside AWS infrastructure
-- Generated from IAM users with programmatic access
-- Enter credentials in Onyx configuration fields
+    To connect Onyx to Bedrock using IAM, create an IAM Role with the 
+    `AmazonBedrockLimitedAccess` policy.  
+    Optionally, you can attach the `AmazonBedrockFullAccess` and 
+    `AmazonBedrockMarketplaceAccess` policies.
+
+    Once created, attach the IAM Role to the environment that Onyx is running in.  
+    For example, attach the IAM Role to your Onyx EC2 instance or EKS service account.
+  </Accordion>
+
+  <Accordion title="Access Key (for non-AWS environments)">
+    - Manual credential management using an Access Key ID and Secret Access Key  
+    - Recommended for accessing Bedrock from non-AWS environments
+
+    To connect Onyx to Bedrock using Access Keys, create an IAM User with the 
+    `AmazonBedrockLimitedAccess` policy.  
+    Optionally, you can attach the `AmazonBedrockFullAccess` and 
+    `AmazonBedrockMarketplaceAccess` policies.
+
+    Once created, go to your IAM User's **Security Credentials** tab.  
+    Create a new **Access Key** and copy the **Access Key ID** and **Secret Access Key**.
+
+    Provide these credentials to Onyx using one of the following methods:
+    - Add them to your Onyx `.env` file as `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`  
+    - Add them to your AWS CLI config in `~/.aws/credentials`  
+    - Enter them directly in the Onyx Bedrock configuration UI
+  </Accordion>
+
+  <Accordion title="Bedrock API Key (for non-AWS environments)">
+    - New method to access Bedrock generated from the AWS Bedrock Console
+    - Recommended for accessing Bedrock from non-AWS environments
+
+    To connect Onyx to Bedrock using an API Key, navigate to the Bedrock console, select **API keys** and create a **Long-term API key**.
+    AWS will automatically create a new IAM User with the `AmazonBedrockLimitedAccess` policy.
+
+    Submit your API key to Onyx through the Onyx Bedrock configuration UI.
+  </Accordion>
+</AccordionGroup>
+
+<Note>
+  When using an IAM role, the role credentials must be attached to the Onyx environment.
+  When using Access Keys or a Bedrock API Key, you must provide the credentials in the Onyx LLM configuration UI.
+</Note>
 
 ## Guide
 
 <Steps>
-  <Step title="Set Up IAM Permissions">
-    Go to the [AWS IAM Console](https://console.aws.amazon.com/iam/) and set up the required permissions.
-
-    For **AWS-hosted environments** (EC2, ECS, Lambda), assign an IAM role with Bedrock permissions to your instance.
-
-    For **external environments** (local/on-premises), create an IAM user with programmatic access:
-    - Navigate to **IAM** → **Users**
-    - Create a user or select an existing one
-    - Attach the **AmazonBedrockFullAccess** policy
-    - Generate an **Access Key ID** and **Secret Access Key**
-
-    <Tip>
-      Keep your access keys secure and never hard-code them. Use environment variables or secure configuration management.
-    </Tip>
+  <Step title="Set up your Authentication Method">
+    Determine if IAM, Access Keys, or a Bedrock API Key is the best authentication method for your environment.
+    
+    Click the above accordions to learn more about each method and how to set them up.
   </Step>
 
-  <Step title="Enable Claude Models in Bedrock">
-    Navigate to the [Amazon Bedrock Console](https://console.aws.amazon.com/bedrock/) in your chosen region (e.g., us-east-1).
+  <Step title="Enable Desired Models">
+    Navigate to the **Model Catalog** and decide the models you want to use with Onyx.
 
-    Click **Model access** in the navigation pane.
+    If you don't already have access to your desired models, you can request access through the Bedrock Console.
 
-    Find **Anthropic Claude** models in the list and click **Enable access** for your desired models:
-    - Claude 2 (anthropic.claude-v2)
-    - Claude 3 Haiku (anthropic.claude-3-haiku)
-    - Claude 3.5 Sonnet (anthropic.claude-3-5-sonnet)
-
-    Accept the terms and complete the subscription process.
-
-    <Warning>
-      You must enable model access before using Claude via the API. Without this step, your API calls will be denied.
-    </Warning>
-  </Step>
-
-  <Step title="Choose Your AWS Region">
-    Bedrock models are only available in specific regions. Common options include:
-    - **us-east-1** (N. Virginia) - Most comprehensive model availability
-    - **us-west-2** (Oregon)
-    - **eu-west-1** (Ireland)
-
-    Verify that your chosen Claude model is available in your selected region by checking the [AWS Bedrock documentation](https://docs.aws.amazon.com/bedrock/latest/userguide/models-supported.html).
-
-    Use the region closest to your users that supports your required models.
+    <Note>
+      If your models are not enabled, you will not be able to see them in Onyx! Ensure your models are available before continuing.
+    </Note>
   </Step>
 
   <NavigateToAiModels />
 
-  <Step title="Configure Amazon Bedrock Provider">
-    Select **Amazon Bedrock** from the available providers.
+  <Step title="Configure Bedrock Provider">
+    Select **AWS Bedrock** from the available providers.
 
-    Give this configuration a **Display Name** (e.g., "AWS Bedrock - Claude").
+    Give your provider a **Display Name**.
 
-    **AWS Region Name**: Enter your chosen region code (e.g., `us-east-1`).
+    Determine your AWS region and enter it in **AWS Region Name**.
 
-    **AWS Access Key ID**: Enter your Access Key ID, or leave blank if using IAM roles.
+    <Tip>
+      Certain models are only available in specific regions or through cross-region inference profiles. Onyx will automatically determine what is available in your region.
+    </Tip>
 
-    **AWS Secret Access Key**: Enter your Secret Access Key, or leave blank if using IAM roles.
+    Depending on your authentication method, fill out `AWS Access Key ID` and `AWS Secret Access Key` or `AWS Bedrock API Key`.
 
-    **Default Model**: Select your Claude model ID:
-    - `anthropic.claude-v2` for Claude 2
-    - `anthropic.claude-3-haiku-20240307-v1:0` for Claude 3 Haiku
-    - `anthropic.claude-3-5-sonnet-20241022-v2:0` for Claude 3.5 Sonnet
+    Once your region and credentials are set, click the **Fetch Available Model for Region** button.
+
+    <Warning>
+      If you do not click the **Fetch Available Model for Region** button, you will see all Bedrock models listed even if you cannot use them.
+    </Warning>
+
+    <img className="rounded-image" src="/assets/admin/ai_models/bedrock_config.png" alt="Bedrock Provider Configuration" />
   </Step>
 
   <StandardAiModelConfigs />
