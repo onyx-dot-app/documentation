@@ -1,0 +1,27 @@
+---
+title: "Google AI"
+description: "Configure Google AI models for use with Onyx"
+icon: "google"
+---
+import NavigateToAiModels from "/snippets/navigate-to-ai-models.mdx";
+import StandardAiModelConfigs from "/snippets/standard-ai-model-configs.mdx";
+
+## Guide
+
+<Steps>
+  <Step title="Create a Service Account for Onyx">
+    Go to the [Google Cloud Console Service Accounts Page](https://console.cloud.google.com/iam-admin/serviceaccounts)
+
+    Select your project and click **Create Service Account**.
+
+    <img className="rounded-image" src="/assets/admin/ai_models/gcs_service_accs.png" alt="Google Cloud Console Service Accounts Page" />
+  </Step>
+
+  <NavigateToAiModels />
+
+  <Step title="Configure Google AI">
+    pass
+  </Step>
+
+  <StandardAiModelConfigs />
+</Steps>
