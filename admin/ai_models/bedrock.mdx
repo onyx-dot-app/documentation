@@ -1,5 +1,5 @@
 ---
-title: "Bedrock"
+title: "Amazon Bedrock"
 description: "Configure Amazon Bedrock models for use with Onyx"
 icon: "aws"
 ---
@@ -7,13 +7,92 @@ icon: "aws"
 import NavigateToAiModels from "/snippets/navigate-to-ai-models.mdx";
 import StandardAiModelConfigs from "/snippets/standard-ai-model-configs.mdx";
 
+
+<Note>
+  Before configuring Amazon Bedrock with Onyx, ensure you have an AWS accountwith access to Amazon Bedrock, 
+  the ability to create IAM roles or Access Keys, and the ability to enable model access for the models you want to use.
+</Note>
+
+## Authentication Methods
+
+Onyx supports 3 authentication methods for Amazon Bedrock:
+
+**IAM Roles (Recommended for AWS environments)**
+- Automatically provides temporary credentials
+- More secure as no keys are stored
+- Use when running on AWS infrastructure (EC2, ECS, Lambda)
+- Leave Access Key fields blank in Onyx configuration
+
+**Access Keys (Required for external environments)**
+- Manual credential management using Access Key ID and Secret
+- Required when running outside AWS infrastructure
+- Generated from IAM users with programmatic access
+- Enter credentials in Onyx configuration fields
+
 ## Guide
 
 <Steps>
+  <Step title="Set Up IAM Permissions">
+    Go to the [AWS IAM Console](https://console.aws.amazon.com/iam/) and set up the required permissions.
+
+    For **AWS-hosted environments** (EC2, ECS, Lambda), assign an IAM role with Bedrock permissions to your instance.
+
+    For **external environments** (local/on-premises), create an IAM user with programmatic access:
+    - Navigate to **IAM** → **Users**
+    - Create a user or select an existing one
+    - Attach the **AmazonBedrockFullAccess** policy
+    - Generate an **Access Key ID** and **Secret Access Key**
+
+    <Tip>
+      Keep your access keys secure and never hard-code them. Use environment variables or secure configuration management.
+    </Tip>
+  </Step>
+
+  <Step title="Enable Claude Models in Bedrock">
+    Navigate to the [Amazon Bedrock Console](https://console.aws.amazon.com/bedrock/) in your chosen region (e.g., us-east-1).
+
+    Click **Model access** in the navigation pane.
+
+    Find **Anthropic Claude** models in the list and click **Enable access** for your desired models:
+    - Claude 2 (anthropic.claude-v2)
+    - Claude 3 Haiku (anthropic.claude-3-haiku)
+    - Claude 3.5 Sonnet (anthropic.claude-3-5-sonnet)
+
+    Accept the terms and complete the subscription process.
+
+    <Warning>
+      You must enable model access before using Claude via the API. Without this step, your API calls will be denied.
+    </Warning>
+  </Step>
+
+  <Step title="Choose Your AWS Region">
+    Bedrock models are only available in specific regions. Common options include:
+    - **us-east-1** (N. Virginia) - Most comprehensive model availability
+    - **us-west-2** (Oregon)
+    - **eu-west-1** (Ireland)
+
+    Verify that your chosen Claude model is available in your selected region by checking the [AWS Bedrock documentation](https://docs.aws.amazon.com/bedrock/latest/userguide/models-supported.html).
+
+    Use the region closest to your users that supports your required models.
+  </Step>
+
   <NavigateToAiModels />
 
-  <Step title="Configure Amazon Bedrock">
-    pass
+  <Step title="Configure Amazon Bedrock Provider">
+    Select **Amazon Bedrock** from the available providers.
+
+    Give this configuration a **Display Name** (e.g., "AWS Bedrock - Claude").
+
+    **AWS Region Name**: Enter your chosen region code (e.g., `us-east-1`).
+
+    **AWS Access Key ID**: Enter your Access Key ID, or leave blank if using IAM roles.
+
+    **AWS Secret Access Key**: Enter your Secret Access Key, or leave blank if using IAM roles.
+
+    **Default Model**: Select your Claude model ID:
+    - `anthropic.claude-v2` for Claude 2
+    - `anthropic.claude-3-haiku-20240307-v1:0` for Claude 3 Haiku
+    - `anthropic.claude-3-5-sonnet-20241022-v2:0` for Claude 3.5 Sonnet
   </Step>
 
   <StandardAiModelConfigs />
