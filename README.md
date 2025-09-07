@@ -1,5 +1,5 @@
 <h2 align="center">
-  <a href="https://www.onyx.app/"> <img width="60%" src="assets/logo/onyx_logo.svg" /></a>
+  <a href="https://www.onyx.app/"> <img width="60%" src="assets/logo/onyx_logo.svg" alt="Onyx logo" /></a>
 </h2>
 
 # Onyx Docs
