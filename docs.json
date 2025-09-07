@@ -19,7 +19,6 @@
             "pages": [
               "welcome",
               "overview/getting_started/use_cases",
-              "overview/getting_started/first_look",
               "overview/getting_started/open_source_statement",
               "overview/getting_started/faq"
             ]
@@ -29,9 +28,11 @@
             "pages": [
               "overview/core_features/chat",
               "overview/core_features/agents",
-              "overview/core_features/app_search",
+              "overview/core_features/internal_search",
               "overview/core_features/web_search",
               "overview/core_features/actions",
+              "overview/core_features/code_interpreter",
+              "overview/core_features/image_generation",
               "overview/core_features/connectors",
               "overview/core_features/workflows"
             ]

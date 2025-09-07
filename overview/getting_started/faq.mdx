@@ -3,134 +3,59 @@ title: "FAQ"
 description: "Frequently asked questions about using Onyx"
 icon: "comments-question"
 ---
-
-<Warning>
-  This page is a work in progress. YUHONG SUN NEEDS REVIEW
-</Warning>
-
-# Frequently Asked Questions
-
-## Getting Started
+## General Questions
 
 <AccordionGroup>
-  <Accordion title="How do I ask Onyx a question?">
-    Simply type your question in the Chat interface and press Enter. Onyx understands natural language,
-    so ask questions the same way you would ask a colleague.
+  <Accordion title="What kind of questions can I ask Onyx?">
+    You can ask Onyx about general world knowledge known to the LLM, knowledge from [connected applications](/overview/core_features/internal_search), or things searchable on the web (if [Web Search](/overview/core_features/web_search) is configured)
   </Accordion>
 
-  <Accordion title="What kind of questions can I ask?">
-    You can ask about anything in your organization's connected knowledge base - policies, procedures, project details,
-    technical documentation, and more.
+  <Accordion title="How is my private data being processed?">
+    Please check the [Security](/security/architecture/system_description) tab to learn more. Onyx is built with security and data privacy as a core commitment.
   </Accordion>
 
-  <Accordion title="How do I know if Onyx has the right information?">
-    Onyx shows source citations for all answers.
-    Click on these to see the original documents and verify the information.
+  <Accordion title="How do I know if Onyx is right for me?">
+    Onyx is built for teams of all sizes whether it's a single user looking for a local Chat UI or a global enterprise needing a unified GenAI solution for the entire workforce.
+    Onyx emphasizes data privacy and security as well as reliable responses by connecting to knowledge whether private or from the web.
+  </Accordion>
+
+  <Accordion title="Can I run Onyx offline?">
+   Yes, however Onyx needs an LLM to function properly. You can airgap the entire system but you would need to run a local LLM.
+   Note that we strongly recommend using a recent and non-quantized LLM for the best experience.
   </Accordion>
 </AccordionGroup>
 
-## Using Agents
+
+## Knowledge and Search
 
 <AccordionGroup>
-  <Accordion title="How do I choose the right agent?">
-    Use the agent selector to switch between different AI agents.
-    Each agent may specialize in different topics or have access to specific knowledge bases.
+  <Accordion title="Why can't Onyx find information that I know exists?">
+    If it's an internal document, it may be because the indexing of the application has not completed or because the access controls are incorrectly set.
+    In cases of failure, the system always defaults to least permissive. The most common failure is that the [connector](/admin/connectors/overview) is incorrectly configured.
   </Accordion>
 
-  <Accordion title="Can I create my own agents?">
-    Custom agent creation is typically handled by administrators.
-    Contact your IT team or Onyx administrator to request new specialized agents.
+  <Accordion title="Does Onyx keep its knowledge up to date?">
+    Onyx connectors will fetch updates on a set schedule (typically 30 minutes), this polling frequency can be configured by the admin for each connector.
+    The documents, metadata, and access permissions all receive updates.
   </Accordion>
 
-  <Accordion title="Why do different agents give different answers?">
-    Agents may have access to different knowledge sources or be configured with different expertise areas,
-    leading to varying responses based on their specialized knowledge.
+  <Accordion title="Onyx is refusing to search the internet.">
+    Web Search must be configured by an admin to be useable. It requires setting up one of the supported Search providers and also a scraper (though this is optional as Onyx provides one built in).
   </Accordion>
 </AccordionGroup>
 
-## Search and Knowledge
-
-<AccordionGroup>
-  <Accordion title="Why can't Onyx find information I know exists?">
-    The document might not be connected to Onyx yet,
-    or it might be in a data source that your selected agent doesn't have access to.
-    Try different agents or contact your administrator.
-  </Accordion>
-
-  <Accordion title="How recent is the information Onyx provides?">
-    This depends on how frequently your data sources are synced. Most sources update regularly,
-    but check with your administrator for specific sync schedules.
-  </Accordion>
-
-  <Accordion title="Can I upload my own files?">
-    Yes! You can upload files directly in the Chat interface for analysis and questions.
-  </Accordion>
-</AccordionGroup>
-
-## Privacy and Security
-
-<AccordionGroup>
-  <Accordion title="Is my conversation history private?">
-    Yes, your conversations are private to your account and encrypted.
-    Only you can see your Chat history unless you explicitly share it.
-  </Accordion>
-
-  <Accordion title="What data can Onyx access?">
-    Onyx only accesses data sources that have been connected by your organization's administrators.
-    It respects all existing access controls and permissions.
-  </Accordion>
-
-  <Accordion title="Can I delete my conversations?">
-    Yes, you can delete individual conversations or clear your entire Chat history at any time.
-  </Accordion>
-</AccordionGroup>
 
 ## Technical Issues
 
 <AccordionGroup>
-  <Accordion title="What should I do if Onyx isn't responding?">
-    Try refreshing the page, checking your internet connection, or logging out and back in. If issues persist,
-    contact your IT support team.
+  <Accordion title="My Onyx deployment doesn't seem to be coming up.">
+    The most common culprit is under-resourcing the deployment. Please refer to the [Resourcing](/deployment/getting_started/resourcing) page to double check.
   </Accordion>
 
-  <Accordion title="Why are responses sometimes slow?">
-    Complex questions, large file uploads, or high system usage can slow response times.
-    Onyx processes information thoroughly to provide accurate answers.
+  <Accordion title="Responses are really slow, is this expected?">
+    No! Onyx is intended to provide a fast and snappy experience. If the responses are slow, it may be due to a couple issues.
+    - The LLM attached to the system is slow, has low throughput, or does not support streaming.
+    - You've configured locally running models that are not the default but you do not have a GPU available to the system. Typically this is from setting a local reranking or embedding model.
   </Accordion>
 
-  <Accordion title="Can I use Onyx offline?">
-    No, Onyx requires an internet connection to access your organization's knowledge base and generate responses.
-  </Accordion>
-</AccordionGroup>
-
-## Advanced Features
-
-<AccordionGroup>
-  <Accordion title="Can Onyx help with tasks beyond answering questions?">
-    Yes! Depending on your organization's setup, Onyx may be able to create tickets, send emails, generate reports,
-    or perform other automated tasks.
-  </Accordion>
-
-  <Accordion title="How do I give feedback on answers?">
-    Use the thumbs up/down buttons on each response to help improve Onyx's performance over time.
-  </Accordion>
-
-  <Accordion title="Can I share Onyx responses with others?">
-    Yes, you can copy responses or share source links with colleagues.
-    Some organizations also have sharing features built into their Onyx setup.
-  </Accordion>
-</AccordionGroup>
-
-## Getting Help
-
-<AccordionGroup>
-  <Accordion title="Who do I contact if I need help?">
-    Contact your organization's Onyx administrator or IT support team for assistance with access, permissions,
-    or technical issues.
-  </Accordion>
-
-  <Accordion title="Are there training resources available?">
-    Many organizations provide internal training on using Onyx effectively.
-    Check with your administrator about available resources and best practices for your specific setup.
-  </Accordion>
 </AccordionGroup>
