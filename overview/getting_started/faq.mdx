@@ -32,6 +32,25 @@ icon: "comments-question"
   </Accordion>
 </AccordionGroup>
 
+
+## Technical Issues
+
+<AccordionGroup>
+  <Accordion title="Why is my Onyx deployment not coming up?">
+    The most common culprit is under-resourcing the deployment.
+    Please refer to the [Resourcing](/deployment/getting_started/resourcing) page to double check.
+  </Accordion>
+
+  <Accordion title="Responses are really slow, is this expected?">
+    No! Onyx is intended to provide a fast and snappy experience. If the responses are slow,
+    it may be due to a couple issues.
+    - The LLM attached to the system is slow, has low throughput, or does not support streaming.
+    - You've configured locally running models that are not the default but you do not have a GPU available to the
+      system. Typically this is from setting a local reranking or embedding model.
+  </Accordion>
+</AccordionGroup>
+
+
 ## Knowledge and Search
 
 <AccordionGroup>
@@ -52,22 +71,5 @@ icon: "comments-question"
     Web Search must be configured by an admin to be usable.
     It requires setting up one of the supported Search providers and also a scraper (though this is optional as Onyx
     provides one built in).
-  </Accordion>
-</AccordionGroup>
-
-## Technical Issues
-
-<AccordionGroup>
-  <Accordion title="Why is my Onyx deployment not coming up?">
-    The most common culprit is under-resourcing the deployment.
-    Please refer to the [Resourcing](/deployment/getting_started/resourcing) page to double check.
-  </Accordion>
-
-  <Accordion title="Responses are really slow, is this expected?">
-    No! Onyx is intended to provide a fast and snappy experience. If the responses are slow,
-    it may be due to a couple issues.
-    - The LLM attached to the system is slow, has low throughput, or does not support streaming.
-    - You've configured locally running models that are not the default but you do not have a GPU available to the
-      system. Typically this is from setting a local reranking or embedding model.
   </Accordion>
 </AccordionGroup>
