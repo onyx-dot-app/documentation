@@ -18,9 +18,6 @@ If you want to use an AI provider that is not supported by Onyx, you can configu
 <Steps>
   <Step title="Setup your Custom Inference Provider">
     Determine your provider's API base URL. It should look something like `https://yourprovider.com/v1` or `http://localhost:12345/v1`.
-
-    In this example, the provider name is `vertex_ai`.
-    <img className="rounded-image" src="/assets/admin/ai_models/litellm_provider_name.png" alt="Custom inference provider name" />
   </Step>
 
   <NavigateToAiModels />
@@ -36,10 +33,29 @@ If you want to use an AI provider that is not supported by Onyx, you can configu
       The **Provider Name** must match Litellm's [list of supported providers](https://docs.litellm.ai/docs/providers).
     </Note>
 
+    In this example, the provider name is `vertex_ai`.
+    <img className="rounded-image" src="/assets/admin/ai_models/litellm_provider_name.png" alt="Custom inference provider name" />
+
     Enter the rest of the optional fields if relevant.
 
     Enter each of the models you want to use with your provider.
   </Step>
 
-  <StandardAiModelConfigs />
+  <Step title="Configure Default and Fast Models">
+    The **Default Model** is selected automatically for new custom Agents and Chat sessions.
+
+    Designating a **Fast Model** is optional. This **Fast Model** is used behind the scenes for quick operations such as evaluating the type of message, 
+    generating different queries (query expansion), and naming the chat session.
+
+    <Tip>
+      If you select a Fast Model,
+      make sure it is a relatively quick and cost-effective model like GPT-4.1-mini or Claude 3.7 Sonnet.
+    </Tip>
+  </Step>
+  
+  <Step title="Designate Provider Access">
+    Lastly, you may select whether or not the provider is public to all users in Onyx.
+
+    If set to private, the provider's models will be available to Admins and User Groups you explicitly assign the provider to.
+  </Step>
 </Steps>
