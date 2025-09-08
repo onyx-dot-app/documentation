@@ -19,32 +19,32 @@ Documents are updated every **1** day.
     Log into your [Google Cloud Console](https://console.cloud.google.com/).
     Navigate to "Cloud Storage" > "Settings" > "Interoperability".
 
-    <img className="rounded-image" src="/assets/images/connectors/blob/google/interoperability.png" alt="Google Cloud Storage Interoperability" />
+    <img className="rounded-image" src="/assets/admin/connectors/blob/google/interoperability.png" alt="Google Cloud Storage Interoperability" />
   </Step>
 
   <Step title="Create service account key">
     Click "Create a key for a service account".
     Click "Create new account" (or select an existing account and click Create key).
 
-    <img className="rounded-image" src="/assets/images/connectors/blob/google/new_service_account.png" alt="New service account" />
+    <img className="rounded-image" src="/assets/admin/connectors/blob/google/new_service_account.png" alt="New service account" />
   </Step>
 
   <Step title="Set service account details">
     Set a name for the new service account (e.g., "onyx-gcs-connector") and click "Create and continue".
 
-    <img className="rounded-image" src="/assets/images/connectors/blob/google/service_account_config.png" alt="Service account configuration" />
+    <img className="rounded-image" src="/assets/admin/connectors/blob/google/service_account_config.png" alt="Service account configuration" />
   </Step>
 
   <Step title="Assign role and finish">
     Click "Select a role" and select Storage Object Viewer or another, more permissive role. Click "Done".
 
-    <img className="rounded-image" src="/assets/images/connectors/blob/google/service_account_perms.png" alt="Service account permissions" />
+    <img className="rounded-image" src="/assets/admin/connectors/blob/google/service_account_perms.png" alt="Service account permissions" />
   </Step>
 
   <Step title="Record HMAC keys">
     Back on the Interoperability page you should see the new credentials. Record both `Access key` and `Secret`.
 
-    <img className="rounded-image" src="/assets/images/connectors/blob/google/hmac_keys.png" alt="HMAC keys" />
+    <img className="rounded-image" src="/assets/admin/connectors/blob/google/hmac_keys.png" alt="HMAC keys" />
   </Step>
 </Steps>
 
@@ -58,14 +58,14 @@ Documents are updated every **1** day.
   <Step title="Create credentials">
     Click Create New to create a new credential.
 
-    <img className="rounded-image" src="/assets/images/connectors/blob/google/onyx_1.png" alt="Onyx Google Cloud Storage credentials" />
+    <img className="rounded-image" src="/assets/admin/connectors/blob/google/onyx_1.png" alt="Onyx Google Cloud Storage credentials" />
   </Step>
 
   <Step title="Enter keys and connect">
     Paste your Access key and Secret in the form. Click Create and Continue. Name your connector,
     specify the GCS bucket you would like to index, and click Create Connector.
 
-    <img className="rounded-image" src="/assets/images/connectors/blob/google/onyx_2.png" alt="Onyx Connector creation" />
+    <img className="rounded-image" src="/assets/admin/connectors/blob/google/onyx_2.png" alt="Onyx Connector creation" />
   </Step>
 </Steps>
 

@@ -259,8 +259,7 @@
           {
             "group": "User Management",
             "pages": [
-              "admin/user_management/users",
-              "admin/user_management/groups",
+              "admin/user_management/users_and_groups",
               "admin/user_management/api_keys"
             ]
           },
@@ -305,14 +304,6 @@
         "pages": [
           {
             "group": "Getting Started",
-            "pages": [
-              "developers/contributing/docs_overview",
-              "developers/contributing/contribution_guide",
-              "developers/contributing/dev_environment_setup"
-            ]
-          },
-          {
-            "group": "API Basics",
             "pages": [
               "developers/overview",
               "developers/core_concepts"

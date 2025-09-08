@@ -4,17 +4,74 @@ description: "Create and manage API keys for programmatic access"
 icon: "key"
 ---
 
-## Overview
+API Keys provide programmatic access to Onyx APIs, enabling you to build custom applications,
+integrate with external systems, and automate workflows.
 
-API keys allow secure programmatic access to Onyx services. Treat keys like passwords.
+<Note>
+  API Keys exist as distinct users in Onyx, allowing you to trace activity and manage permissions at the key level.
+</Note>
 
-## Common Tasks
+## API Key Types
 
-- Create a key: Click New API Key, add a label, and copy the value.
-- Revoke a key: Open a key's menu → Revoke. This action is immediate.
-- Rotate a key: Create a new key, update clients, then revoke the old key.
+There are three types of API keys:
 
-## Security Tips
+<AccordionGroup>
+  <Accordion title="Admin API Keys" icon="shield-check">
+    Can access all endpoints, including those pre-fixed with `admin/`.
 
-- Store keys in a secrets manager, not in source control.
-- Scope keys to the minimal permissions needed and rotate regularly.
+    **Use cases:**
+    - Full system administration
+    - User management operations
+    - Data management and analytics
+    - Complete access to all Onyx features
+
+    **⚠️ Use with caution:** Admin keys have unrestricted access to your Onyx instance.
+  </Accordion>
+
+  <Accordion title="Basic API Keys" icon="key">
+    Can access the non-admin endpoints like Search, Chat, Agents, and Actions.
+
+    **Use cases:**
+    - Building chat applications
+    - Implementing search functionality
+    - Creating and managing agents
+    - Running actions and workflows
+
+    **✅ Recommended:** Most users should use Basic API Keys for application development.
+  </Accordion>
+
+  <Accordion title="Limited API Keys" icon="lock">
+    Read-only Agent access. Can post messages to Chat endpoints, but cannot read chat history.
+
+    **Use cases:**
+    - Highly restricted environments
+    - Specific use cases requiring minimal permissions
+    - Testing with limited scope
+  </Accordion>
+</AccordionGroup>
+
+<Info>
+  **Coming soon:** User-Scoped Token tied to a specific user's permissions and data access.
+</Info>
+
+## Creating API Keys
+
+<Steps>
+  <Step title="Navigate to API Keys">
+    In the Admin Panel, go to **API Keys**.
+  </Step>
+
+  <Step title="Create New API Key">
+    Click **Create New API Key** and select the appropriate key type for your use case.
+
+    <img className="rounded-image" src="/assets/admin/user_management/create_api_key.png" alt="Create API Key interface" />
+  </Step>
+
+  <Step title="Save and Copy Key">
+    After creation, immediately copy and securely store the API key.
+  </Step>
+</Steps>
+
+You will see your new API key along with all of your existing keys on the API Keys page.
+
+From this page, you can regenerate, rename, or delete your API keys.

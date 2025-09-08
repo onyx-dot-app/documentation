@@ -84,8 +84,6 @@ see the [Agents Overview](/admin/agents/overview).
 <Steps>
   <Step title="Start Agent Creation">
     Navigate to the **Agents** section in your Curator Panel and click **Create New Agent**.
-
-    <img className="rounded-image" src="/assets/admin/curators/create_agent.png" alt="Create New Agent Interface" />
   </Step>
 
   <Step title="Basic Agent Configuration">
@@ -104,7 +102,7 @@ see the [Agents Overview](/admin/agents/overview).
     - **Individual Connectors**: Specific data sources
     - **User Knowledge**: Personal documents (for private Agents)
 
-    <img className="rounded-image" src="/assets/admin/curators/agent_knowledge_config.png" alt="Agent Knowledge Configuration" />
+    <img className="rounded-image" src="/assets/admin/agents/agent_actions.png" alt="Onyx Agent Configuration page" />
   </Step>
 
   <Step title="Actions and Capabilities">
@@ -112,8 +110,6 @@ see the [Agents Overview](/admin/agents/overview).
     - **Web Search**: Enable internet search capabilities
     - **File Upload**: Allow users to upload documents
     - **Custom Actions**: MCP or OpenAPI-based custom tools
-
-    <img className="rounded-image" src="/assets/admin/agents/agent_actions.png" alt="Onyx Agent Configuration page" />
 
     For more information about available Actions and creating custom Actions,
     see the [Actions Overview](/admin/actions/overview).
@@ -129,7 +125,8 @@ see the [Agents Overview](/admin/agents/overview).
 
     <img className="rounded-image" src="/assets/admin/agents/agent_configs_misc.png" alt="Onyx Agent Configuration page" />
 
-    For more information about User Groups and access management, see [User Management](/admin/user_management/groups).
+    For more information about User Groups and access management,
+    see [User Management](/admin/user_management/users_and_groups).
   </Step>
 
   <Step title="Advanced Options">
@@ -143,94 +140,6 @@ see the [Agents Overview](/admin/agents/overview).
   </Step>
 </Steps>
 
-### Agent Management
+Once published, your Agent will be available to your users in the Chat interface.
 
-Once created, manage your Agents through the Curator Panel:
-
-<img className="rounded-image" src="/assets/admin/curators/agent_management.png" alt="Agent Management Dashboard" />
-
-#### Agent Status
-
-Monitor your Agent's performance:
-- **Active**: Agent is available and functioning
-- **Featured**: Highlighted for organization-wide visibility
-- **Draft**: Agent is being configured but not yet published
-- **Archived**: Agent is disabled but preserved
-
-#### Usage Analytics
-
-Track how your Agents are being used:
-- Conversation count and frequency
-- User engagement metrics
-- Knowledge source utilization
-- Feedback and ratings
-
-<img className="rounded-image" src="/assets/admin/curators/agent_analytics.png" alt="Agent Usage Analytics" />
-
-## Publishing and Promotion
-
-### Making Agents Discoverable
-
-Help users find and use your Agents effectively:
-
-<Steps>
-  <Step title="Agent Discovery">
-    Your published Agents appear in the **Explore Agents** tab for authorized users.
-
-    <img className="rounded-image" src="/assets/admin/agents/explore_agents.png" alt="Onyx Explore Agents page" />
-  </Step>
-
-  <Step title="Featured Placement">
-    Request Featured status to promote your Agent organization-wide.
-    Featured Agents appear at the top of the Agents explorer.
-
-    <Warning>
-      Featured Agents become visible to all users in your organization, regardless of Group membership.
-    </Warning>
-  </Step>
-
-  <Step title="User Training">
-    Provide clear starter messages and comprehensive descriptions to guide users in effectively interacting with your
-    Agents.
-  </Step>
-</Steps>
-
-## Best Practices for Curators
-
-<CardGroup cols={2}>
-  <Card title="Clear Documentation" icon="file-text">
-    Document your Agents' capabilities, limitations, and intended use cases
-  </Card>
-
-  <Card title="Regular Maintenance" icon="wrench">
-    Keep your Connectors and Document Sets updated with fresh content
-  </Card>
-
-  <Card title="User Feedback" icon="comment">
-    Monitor Agent performance and gather user feedback for improvements
-  </Card>
-
-  <Card title="Access Control" icon="shield">
-    Carefully manage permissions to ensure appropriate access to sensitive information
-  </Card>
-</CardGroup>
-
-## Next Steps
-
-<CardGroup cols={2}>
-  <Card title="Curator Responsibilities" icon="clipboard-check" href="/admin/curators/curator_responsibilities">
-    Learn about your ongoing responsibilities as a Curator
-  </Card>
-
-  <Card title="Connectors Overview" icon="plug" href="/admin/connectors/overview">
-    Explore all available Connectors and their configurations
-  </Card>
-
-  <Card title="Agents Overview" icon="robot" href="/admin/agents/overview">
-    Dive deeper into Agent creation and management
-  </Card>
-
-  <Card title="User Management" icon="users" href="/admin/user_management/groups">
-    Understand User Groups and permission management
-  </Card>
-</CardGroup>
+<img className="rounded-image" src="/assets/admin/agents/explore_agents.png" alt="Onyx Explore Agents page" />
