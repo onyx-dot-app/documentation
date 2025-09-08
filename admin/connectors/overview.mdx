@@ -1,133 +1,251 @@
 ---
 title: "Overview"
-description: "Managing connectors and data sources"
+description: "Managing connectors and data sources in Onyx"
 icon: "plug"
 ---
 
-<img class="rounded-2xl" src="/assets/overview/GENERIC_PLACEHOLDER.png" alt="Onyx Connectors Overview" />
+Onyx's Connectors create a bridge between your organization's data sources and generative AI features in Onyx.
+Nearly all connectors are persistent and regularly sync changes from your source.
 
-## Find the Connector Configurations Page
+<Note>
+  Both the data that is retrieved from the source and the data that your users can access through Onyx can be customized to your needs!
+</Note>
 
-<Steps>
-  <Step title="1. Click on your Profile Picture"/>
-    <Step title="2. Click on 'Admin Console'"/>
-    <Step title="3. Click on 'Connectors'"/>
-</Steps>
+To find specific instructions for each Connector, see the [Supported Connectors](#supported-connectors) section.
 
-    ## Supported Connectors
 
-    <Warning>
-      Can't find the connector you're looking for?
-      Let us know via [GitHub Discussions](https://github.com/onyx-dot-app/onyx/discussions)!
-    </Warning>
+<img className="rounded-image" src="/assets/admin/connectors/add_connector.png" alt="Onyx Add Connector page" />
 
-    ### Knowledge Base & Wikis
+## Adding a Connector
 
-    <Columns cols={3}>
-      <Card title="Confluence" icon="confluence" href="/admin/connectors/official/confluence" horizontal/>
-        <Card title="SharePoint" icon="microsoft" href="/admin/connectors/official/sharepoint" horizontal/>
+To add a new connector, navigate to the **Admin Panel** and click **Add Connector** in the sidebar. 
+This page shows all officially supported connectors.
 
-        <Card title="Notion" icon="notion" href="/admin/connectors/official/notion" horizontal/>
+<Info>
+  You can see unofficial, community-supported connectors by setting `SHOW_EXTRA_CONNECTORS=true` in your environment.
+</Info>
 
-        <Card title="BookStack" icon="book" href="/admin/connectors/official/bookstack" horizontal/>
+Click on any of the tiles to begin creating a new Connector.
 
-        <Card title="Document360" icon="file-text" href="/admin/connectors/official/document360" horizontal/>
+### Credentials
 
-        <Card title="Discourse" icon="comments" href="/admin/connectors/official/discourse" horizontal/>
+Most Connectors require some form of authentication for Onyx to access your source. 
+This authentication is called a Credential and differs by Connector.
 
-        <Card title="GitBook" icon="book-open" href="/admin/connectors/official/gitbook" horizontal/>
+<img className="rounded-image" src="/assets/admin/connectors/generic_credentials.png" alt="Onyx Connector Credentials page" />
 
-        <Card title="Slab" icon="book" href="/admin/connectors/official/slab" horizontal/>
+### Configuration
 
-        <Card title="Google Sites" icon="google" href="/admin/connectors/official/google_sites" horizontal/>
+Each connector must be given a Name. Additionally, each Connector has its own configuration options to specify the data that should be indexed.
 
-        <Card title="Guru" icon="lightbulb" href="/admin/connectors/official/guru" horizontal/>
+<img className="rounded-image" src="/assets/admin/connectors/generic_config.png" alt="Onyx Connector Configuration page" />
 
-        <Card title="MediaWiki" icon="wikipedia" href="/admin/connectors/official/mediawiki" horizontal/>
+### Document Access Controls
 
-        <Card title="Axero" icon="users" href="/admin/connectors/official/axero" horizontal/>
+Connectors can be configured to be **Private**, **Public**, or **Auto Sync Permissions**.
 
-        <Card title="Wikipedia" icon="wikipedia" href="/admin/connectors/official/wikipedia" horizontal/>
-    </Columns>
+**Private**: Only the user who created the Connector may see data from this Connector in Onyx. 
+You may also assign specific Users and User Groups access to this Connector's data.
 
-        ### Cloud Storage
+**Public**: All Onyx users may see data from this Connector. 
 
-    <Columns cols={3}>
-      <Card title="Google Drive" icon="google-drive" href="/admin/connectors/official/google_drive/overview" horizontal/>
-        <Card title="Dropbox" icon="dropbox" href="/admin/connectors/official/dropbox" horizontal/>
+<Warning>
+  If you configure the Connector to access private data in the source, all Onyx users will be able to see this data.
+</Warning>
 
-        <Card title="AWS S3" icon="aws" href="/admin/connectors/official/s3/overview" horizontal/>
+#### Permission-Syncing Connectors
 
-        <Card title="Google Storage" icon="google" href="/admin/connectors/official/google_storage" horizontal/>
+If you set your Connector's access type to **Auto Sync Permissions**, 
+Onyx will maintain an access control list from the source and restrict users to only see data they have access to.
 
-        <Card title="Egnyte" icon="cloud" href="/admin/connectors/official/egnyte" horizontal/>
+Permission-syncing is only available for the following Connectors:
+- Confluence
+- Jira
+- Google Drive (must use service account or Google Workspace Admin OAuth credentials)
+- Gmail (must use service account or Google Workspace Admin OAuth credentials)
+- Slack (see Federated Slack documentation)
+- Salesforce 
+- GitHub
+- SharePoint (must use certificate-based authentication)
 
-        <Card title="Oracle Storage" icon="cloud" href="/admin/connectors/official/oci_storage" horizontal/>
+<Note>
+  Permission-syncing connectors are an Enterprise Edition feature.
+</Note>
 
-        <Card title="Cloudflare R2" icon="cloud" href="/admin/connectors/official/r2" horizontal/>
-    </Columns>
+### Advanced Configuration
 
-        ### Ticketing & Task Management
+Clicking **Advanced Configuration** on the bottom left of the Connector configuration page will reveal additional, optional settings for indexing.
 
-    <Columns cols={3}>
-      <Card title="Jira" icon="jira" href="/admin/connectors/official/jira" horizontal/>
-        <Card title="Zendesk" icon="headset" href="/admin/connectors/official/zendesk" horizontal/>
+**Prune Frequency**: The frequency at which old data (that no longer exists in the source) should be removed from Onyx. 
+This is set to 30 days by default.
 
-        <Card title="Airtable" icon="table" href="/admin/connectors/official/airtable" horizontal/>
+**Refresh Frequency**: The frequency at which new data should be retrieved from the source. This is set to 30 minutes by default.
 
-        <Card title="Linear" icon="linear" href="/admin/connectors/official/linear" horizontal/>
+**Indexing Start Date**: The date and time from which data should be indexed (data created or updated before this date will not be indexed). 
+This is set to the earliest possible date in the source by default.
 
-        <Card title="Freshdesk" icon="headset" href="/admin/connectors/official/freshdesk" horizontal/>
+<img className="rounded-image" src="/assets/admin/connectors/generic_advanced_config.png" alt="Onyx Connector Advanced Configuration page" />
 
-        <Card title="Asana" icon="check" href="/admin/connectors/official/asana" horizontal/>
+## Managing Existing Connectors
 
-        <Card title="ClickUp" icon="mouse-pointer" href="/admin/connectors/official/clickup" horizontal/>
+To see your existing Connectors, navigate to the **Admin Panel** and click **Existing Connectors** in the sidebar.
+This page will show an overview of your Connectors, their status, and the amount of data they have indexed.
 
-        <Card title="ProductBoard" icon="trello" href="/admin/connectors/official/productboard" horizontal/>
-    </Columns>
+<img className="rounded-image" src="/assets/admin/connectors/indexing_status.png" alt="Onyx Existing Connectors page showing connector statuses" />
 
-        ### Messaging
+### Connector Status
 
-    <Columns cols={3}>
-      <Card title="Slack" icon="slack" href="/admin/connectors/official/slack/slack_indexed" horizontal/>
-        <Card title="Microsoft Teams" icon="microsoft" href="/admin/connectors/official/teams" horizontal/>
+The status of a Connector can be:
 
-        <Card title="Gmail" icon="envelope" href="/admin/connectors/official/gmail/overview" horizontal/>
+#### Active
 
-        <Card title="Discord" icon="discord" href="/admin/connectors/official/discord" horizontal/>
+| Status | Description |
+| --- | --- |
+| **Indexed** | The Connector is fully functional and all data is synced as of the last indexing attempt. |
+| **Scheduled** | Newly created Connectors or Connectors that have reached their refresh frequency but have not begun a new indexing attempt. |
+| **Indexing / Initial Indexing** | The Connector is currently retrieving data from the source. |
 
-        <Card title="XenForo" icon="comments" href="/admin/connectors/official/xenforo" horizontal/>
+#### Inactive or Semi-Active
 
-        <Card title="Zulip" icon="zulip" href="/admin/connectors/official/zulip" horizontal/>
+| Status | Description |
+| --- | --- |
+| **Paused** | The Connector has been paused and will not retrieve new data until un-paused. Users can still access the indexed data. |
+| **Error** | The Connector has encountered an error during indexing. Any data indexed prior to the error will remain available. Onyx will attempt to index again. If too many errors occur, the Connector will be paused. |
 
-        <Card title="Email" icon="envelope" href="/admin/connectors/official/imap" horizontal/>
-    </Columns>
+<Note>
+  Most Error statuses are temporary and will resolve themselves naturally within a few hours. If you see an Error status that persists, please reach out.
+</Note>
 
-        ### Sales
+### Connector Details
 
-    <Columns cols={3}>
-      <Card title="Salesforce" icon="salesforce" href="/admin/connectors/official/salesforce" horizontal/>
-        <Card title="HubSpot" icon="hubspot" href="/admin/connectors/official/hubspot" horizontal/>
+Clicking on an existing Connector will show you details about its configuration, status, and indexing attempts. 
 
-        <Card title="Gong" icon="phone" href="/admin/connectors/official/gong" horizontal/>
+In the **Manage** menu, you can pause, resume, delete, or initiate a complete re-indexing of the Connector.
 
-        <Card title="Fireflies" icon="microphone" href="/admin/connectors/official/fireflies" horizontal/>
+Under the **Advanced** section, you can see the prune and refresh settings, as well as the history of indexing attempts. 
 
-        <Card title="Highspot" icon="chart-line" href="/admin/connectors/official/highspot" horizontal/>
+<img className="rounded-image" src="/assets/admin/connectors/connector_details.png" alt="Onyx Connector details page showing connector details" />
 
-        <Card title="Loopio" icon="loop" href="/admin/connectors/official/loopio" horizontal/>
-    </Columns>
+<img className="rounded-image" src="/assets/admin/connectors/indexing_attempts.png" alt="Onyx Connector details page showing indexing attempts and failures" />
 
-        ### Code Repository
+### Indexing Failures
 
-    <Columns cols={3}>
-      <Card title="GitHub" icon="github" href="/admin/connectors/official/github" horizontal/>
-        <Card title="GitLab" icon="gitlab" href="/admin/connectors/official/gitlab" horizontal/>
-    </Columns>
+Rarely, you will see a **Completed with errors** indexing attempt. If this happens, you can click the **Resolve all errors** button to kickoff a complete re-indexing of the Connector.
 
-        ### Other
+## Supported Connectors
 
-    <Columns cols={3}>
-      <Card title="Web Scraper" icon="globe" href="/admin/connectors/official/web" horizontal/>
-        <Card title="File Upload" icon="upload" href="/admin/connectors/official/file" horizontal/>
-    </Columns>
+<Warning>
+  Can't find the connector you're looking for?
+  Let us know via [GitHub Discussions](https://github.com/onyx-dot-app/onyx/discussions)!
+</Warning>
+
+### Knowledge Base & Wikis
+
+<Columns cols={3}>
+  <Card title="Confluence" icon="confluence" href="/admin/connectors/official/confluence" horizontal/>
+
+  <Card title="SharePoint" icon="microsoft" href="/admin/connectors/official/sharepoint" horizontal/>
+
+  <Card title="Notion" icon="notion" href="/admin/connectors/official/notion" horizontal/>
+
+  <Card title="BookStack" icon="book" href="/admin/connectors/official/bookstack" horizontal/>
+
+  <Card title="Document360" icon="file-text" href="/admin/connectors/official/document360" horizontal/>
+
+  <Card title="Discourse" icon="comments" href="/admin/connectors/official/discourse" horizontal/>
+
+  <Card title="GitBook" icon="book-open" href="/admin/connectors/official/gitbook" horizontal/>
+
+  <Card title="Slab" icon="book" href="/admin/connectors/official/slab" horizontal/>
+  
+  <Card title="Outline" icon="book" href="/admin/connectors/official/outline" horizontal/>
+
+  <Card title="Google Sites" icon="google" href="/admin/connectors/official/google_sites" horizontal/>
+
+  <Card title="Guru" icon="lightbulb" href="/admin/connectors/official/guru" horizontal/>
+</Columns>
+
+### Cloud Storage
+
+<Columns cols={3}>
+  <Card title="Google Drive" icon="google-drive" href="/admin/connectors/official/google_drive/overview" horizontal/>
+
+  <Card title="Dropbox" icon="dropbox" href="/admin/connectors/official/dropbox" horizontal/>
+
+  <Card title="AWS S3" icon="aws" href="/admin/connectors/official/s3/overview" horizontal/>
+
+  <Card title="Google Storage" icon="google" href="/admin/connectors/official/google_storage" horizontal/>
+
+  <Card title="Egnyte" icon="cloud" href="/admin/connectors/official/egnyte" horizontal/>
+
+  <Card title="Oracle Storage" icon="cloud" href="/admin/connectors/official/oci_storage" horizontal/>
+
+  <Card title="Cloudflare R2" icon="cloud" href="/admin/connectors/official/r2" horizontal/>
+</Columns>
+
+### Ticketing & Task Management
+
+<Columns cols={3}>
+  <Card title="Jira" icon="jira" href="/admin/connectors/official/jira" horizontal/>
+  
+  <Card title="Zendesk" icon="headset" href="/admin/connectors/official/zendesk" horizontal/>
+
+  <Card title="Airtable" icon="table" href="/admin/connectors/official/airtable" horizontal/>
+
+  <Card title="Linear" icon="linear" href="/admin/connectors/official/linear" horizontal/>
+
+  <Card title="Freshdesk" icon="headset" href="/admin/connectors/official/freshdesk" horizontal/>
+
+  <Card title="Asana" icon="check" href="/admin/connectors/official/asana" horizontal/>
+
+  <Card title="ClickUp" icon="mouse-pointer" href="/admin/connectors/official/clickup" horizontal/>
+
+  <Card title="ProductBoard" icon="trello" href="/admin/connectors/official/productboard" horizontal/>
+</Columns>
+
+### Messaging
+
+<Columns cols={3}>
+  <Card title="Slack" icon="slack" href="/admin/connectors/official/slack/slack_federated" horizontal/>
+
+  <Card title="Microsoft Teams" icon="microsoft" href="/admin/connectors/official/teams" horizontal/>
+
+  <Card title="Gmail" icon="envelope" href="/admin/connectors/official/gmail/overview" horizontal/>
+
+  <Card title="Discord" icon="discord" href="/admin/connectors/official/discord" horizontal/>
+
+  <Card title="XenForo" icon="comments" href="/admin/connectors/official/xenforo" horizontal/>
+
+  <Card title="Zulip" icon="zulip" href="/admin/connectors/official/zulip" horizontal/>
+</Columns>
+
+### Sales
+
+<Columns cols={3}>
+<Card title="Salesforce" icon="salesforce" href="/admin/connectors/official/salesforce" horizontal/>
+
+<Card title="HubSpot" icon="hubspot" href="/admin/connectors/official/hubspot" horizontal/>
+
+<Card title="Gong" icon="phone" href="/admin/connectors/official/gong" horizontal/>
+
+<Card title="Fireflies" icon="microphone" href="/admin/connectors/official/fireflies" horizontal/>
+
+<Card title="Highspot" icon="chart-line" href="/admin/connectors/official/highspot" horizontal/>
+
+</Columns>
+
+### Code Repository
+
+<Columns cols={3}>
+  <Card title="GitHub" icon="github" href="/admin/connectors/official/github" horizontal/>
+
+  <Card title="GitLab" icon="gitlab" href="/admin/connectors/official/gitlab" horizontal/>
+</Columns>
+
+### Other
+
+<Columns cols={3}>
+  <Card title="Web Scraper" icon="globe" href="/admin/connectors/official/web" horizontal/>
+  
+  <Card title="File Upload" icon="upload" href="/admin/connectors/official/file" horizontal/>
+</Columns>
