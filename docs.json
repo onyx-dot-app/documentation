@@ -263,11 +263,9 @@
             "pages": [
               "admin/advanced_configs/search_configs",
               "admin/advanced_configs/doc_processing",
-              "admin/advanced_configs/image_ingestion",
-              "admin/advanced_configs/multilingual_setup",
               "admin/advanced_configs/rate_limits",
-              "admin/advanced_configs/white_labeling",
-              "admin/advanced_configs/workspace_settings"
+              "admin/advanced_configs/workspace_settings",
+              "admin/advanced_configs/white_labeling"
             ]
           },
           {
