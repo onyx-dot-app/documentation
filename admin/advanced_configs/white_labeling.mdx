@@ -10,60 +10,35 @@ White labeling allows you to customize Onyx's appearance to match your organizat
   White labeling is an Enterprise Edition feature.
 </Note>
 
-## Customization Options
+{/* The screenshots here should really be of the white-labeled content and not the admin page. */}
 
-White labeling in Onyx provides two main types of customization:
+## White Labeling Options
 
-1. **Application Branding**: Custom name, logo, and visual identity
-2. **Color Theming**: Complete control over the UI color palette
+<img className="rounded-image" src="/assets/admin/advanced_configs/whitelabeling_overview.png" alt="White Labeling Overview" />
 
-## Application Branding
+### Name and Logo
 
-### Basic Branding
+Adjust the name and logo of your Onyx instance by specifying **Application Name** and uploading a **Custom Logo**.
 
-Navigate to the **White Labeling** tab in the Admin Panel to configure your basic branding options:
+These elements change what is shown in the top left corner of the Onyx interface as well as on the login page.
 
-- **Application Name**: Replace "Onyx" with your organization's name throughout the interface
-- **Logo**: Upload your custom logo to appear in the header and other key locations
+### Headers and Popups
 
-### Advanced Content Customization
+In the **Advanced Options** section, you can add content in the header as well as a custom popup window.
 
-Onyx provides several advanced options for customizing user-facing content:
+Additionally, you can enable a Consent Screen that will be shown to users before they can access the Onyx interface.
 
-#### Chat Header Content
+<img className="rounded-image" src="/assets/admin/advanced_configs/whitelabeling_advanced.png" alt="White Labeling Headers and Popups" />
 
-Add custom Markdown content that displays as a banner at the top of the Chat page. This is useful for announcements,
-usage guidelines, or organizational messaging.
+### Footer
 
-![Chat Header](/images/customization/chat_header.png)
+Below the Consent Screen toggle, you can add content to the footer of the Onyx interface.
 
-#### Welcome Popup
-
-Configure a custom welcome experience for new users:
-
-- **Popup Header**: Custom title for the initial visit popup. If left blank with custom content specified,
-  defaults to "Welcome to [Application Name]!"
-- **Popup Content**: Custom Markdown content displayed in the welcome popup
-
-![Popup Header](/images/customization/popup_header.png)
-
-![Popup Content](/images/customization/welcome_popup.png)
-
-#### Chat Footer Elements
-
-Customize the footer area of the chat interface:
-
-- **Chat Footer Text**: Custom Markdown content displayed at the bottom of the Chat page
-- **Chat Footer Logotype**: Upload a custom text-based logo image for the bottom right of the chat screen
-
-![Chat Footer](/images/customization/chat_footer.png)
-
-![Chat Footer Logotype](/images/customization/chat_logotype.png)
+<img className="rounded-image" src="/assets/admin/advanced_configs/whitelabeling_footer.png" alt="White Labeling Footer" />
 
 ## Color Theming
 
-Onyx uses [Tailwind CSS](https://tailwindcss.com/) for its theming system,
-providing flexible color customization options.
+Onyx uses [Tailwind CSS](https://tailwindcss.com/).
 
 ### Theme Architecture
 
@@ -74,25 +49,57 @@ The color system is built on two main files:
 
 ### Customization Methods
 
-#### Method 1: Direct CSS Variable Modification
+<AccordionGroup>
+<Accordion title="Method 1: Direct CSS Variable Modification">
+<Steps>
+  <Step title="Navigate to globals.css">
+    Navigate to `web/src/app/globals.css`
+  </Step>
 
-1. Navigate to `web/src/app/globals.css`
-2. Modify the CSS variables to customize base colors (accent colors, backgrounds, etc.)
+  <Step title="Modify CSS variables">
+    Modify the CSS variables to customize base colors (accent colors, backgrounds, etc.)
+  </Step>
+</Steps>
+</Accordion>
 
-#### Method 2: Tailwind Config Override
+<Accordion title="Method 2: Tailwind Config Override">
+<Steps>
+  <Step title="Navigate to Tailwind config">
+    Navigate to `web/tailwind-themes/tailwind.config.js`
+  </Step>
 
-1. Navigate to `web/tailwind-themes/tailwind.config.js`
-2. Override specific values from the base configuration
+  <Step title="Override configuration values">
+    Override specific values from the base configuration
+  </Step>
+</Steps>
+</Accordion>
 
-#### Method 3: Organization-Specific Theme (Recommended)
-
+<Accordion title="Method 3: Organization-Specific Theme (Recommended)">
 For comprehensive theming:
 
-1. Navigate to `web/tailwind-themes/`
-2. Create a new folder with your organization's name
-3. Create a `tailwind.config.js` file in this folder
-4. Override any values from the base configuration
-5. Set the `NEXT_PUBLIC_THEME` environment variable to your organization's folder name
+<Steps>
+  <Step title="Navigate to themes directory">
+    Navigate to `web/tailwind-themes/`
+  </Step>
+
+  <Step title="Create organization folder">
+    Create a new folder with your organization's name
+  </Step>
+
+  <Step title="Create Tailwind config">
+    Create a `tailwind.config.js` file in this folder
+  </Step>
+
+  <Step title="Override base configuration">
+    Override any values from the base configuration
+  </Step>
+
+  <Step title="Set environment variable">
+    Set the `NEXT_PUBLIC_THEME` environment variable to your organization's folder name
+  </Step>
+</Steps>
+</Accordion>
+</AccordionGroup>
 
 ### Example Configuration
 
@@ -116,27 +123,3 @@ module.exports = {
   Color customizations require building Onyx from source. For local testing,
   restart the NextJS application to apply changes.
 </Warning>
-
-## Implementation Notes
-
-<Note>
-  White labeling features are exclusive to the Enterprise Edition of Onyx.
-</Note>
-
-To apply theme changes:
-
-1. **Source Build Required**: Custom themes require building Onyx from source
-2. **Development**: Restart the NextJS application locally to see changes
-3. **Production**: Rebuild and redeploy your Onyx instance
-
-## Next Steps
-
-<CardGroup cols={2}>
-  <Card title="Enterprise Edition" icon="building" href="/deployment/miscellaneous/enterprise_edition">
-    Learn more about Enterprise Edition features and setup
-  </Card>
-
-  <Card title="Contact Sales" icon="phone" href="/admin/miscellaneous/contact_us">
-    Get in touch to discuss Enterprise Edition options
-  </Card>
-</CardGroup>
