@@ -1,38 +1,37 @@
 ---
 title: "Connectors"
-description: "Connecting Onyx to your data sources"
+description: "Ingest knowledge from connected applications"
 icon: "plug"
 ---
 
+<img src="/assets/overview/core_features/connectors.png" alt="Connectors"/>
+
 ## What are Connectors?
 
-Connectors bring your organization's data into Onyx. With over 40 connectors for your CRM, shared workspaces,
-and messaging platforms, Onyx becomes your expert AI teammate and your single source of truth.
+Connectors let Onyx build an understanding of your documents, team, and higher level concepts so that answers are grounded and specific to your organization’s knowledge.
 
-<Card title="Reliable and Consistent Results" icon="handshake">
-  Onyx will always provide you with the most up-to-date information from your connected data sources.
+Connectors:
+- Keep all updates sync-ed between external systems and Onyx.
+- Pull in metadata and additional signals to ensure answer relevance.
+- Respect all user permissions (Enterprise Edition only).
+
+## Common Connector Questions
+<Card title="What are the supported connectors?" icon="list">
+  You can see the full list of built-in connectors [here](/admin/connectors/overview#supported-connectors).
+
+  You can also push documents directly into Onyx via [API](/developers/guides/index_files_ingestion_api) or via File Upload.
 </Card>
 
-<Card title="Permission-Aware" icon="shield-check">
-  With Permission Sync Connectors and Onyx User Groups,
-  Onyx respects your organization's existing access controls and permissions.
+<Card title="How do I ensure my data is secure?" icon="lock">
+  All processing and storage of documents and metadata happen within Onyx.
+
+  There are options to use LLMs or third party providers during the indexing flow but by default everything is processing entirely locally.
+
+  See the [Security](/security/architecture/data_flows) tab for more.
 </Card>
 
-<Tip>
-  Tip: Ask Onyx what data sources are available!
-</Tip>
-
-<img className="rounded-image" src="/assets/overview/GENERIC_PLACEHOLDER.png" alt="Available connectors carousel" />
-
-## What Data can you Acccess through Connectors?
-
-Your Onyx administrators configure what sources are connected to Onyx. Additionally,
-your admins can selectively index data from a source such as indexing a single Jira project.
-
-Some connectors may be set to private or assigned to a specific User Group.
-If you are not the connector owner or a member of the User Group, you will not see any of this data.
-
-<CardGroup columns={2}>
-  <Card title="Admins: Configure Your First Connector" icon="wrench" href="/admin/connectors/overview" horizontal/>
-    <Card title="Users: Ask Onyx What Data is Available" icon="comment-dots" href="/overview/core_features/chat" horizontal/>
-</CardGroup>
+<Card title="Why are connectors/indexing important?" icon="circle-nodes">
+  In the same way LLMs are pre-trained on massive amounts of internet data, Onyx builds an understanding of all of the documents, concepts, and people within your organization.
+  
+  This allows Onyx to provide more accurate answer to questions that relate to internal knowledge compared to using the applications' provided search APIs at query time.
+</Card>
