@@ -1,105 +1,30 @@
 ---
 title: "Code Interpreter"
-description: "Execute code snippets, perform data analysis, and automate tasks directly within your chat interface"
+description: "Safe and sandboxed Python runtime available to the LLM"
 icon: "code"
 ---
+## Overview
+<Accordion title="Code Interpreter example">
+    Example run where the LLM generates code to run data analysis on a business report.
+    <img className="rounded-image" src="/assets/overview/core_features/code_interpreter.png" alt="Code Interpreter"/>
+</Accordion>
 
-<img className="rounded-image" src="/assets/overview/GENERIC_PLACEHOLDER.png" alt="Onyx Code Interpreter Interface" />
+The ability to execute code unlocks the ability for the LLMs to do things such as:
+- Performing larger calculations accurately
+- Running data analysis on provided files
+- Generating or modifying data/files
 
-Code Interpreter enables Onyx to execute code snippets, perform data analysis,
-and automate tasks directly within your chat interface.
-This feature makes it easy to work with data and create custom solutions.
+**Note**: The code interpreter is built-in functionality available to all deployments without any configuration needed.
 
 ## Features
+- **Python Runtime**: A secure Python runtime with all dangerous functionality removed (such as accessing the network, directories outside of the specified, etc.)
+- **Libraries**: Comes with a set of libraries such as numpy, pandas, scipy, matplotlib, and more.
+- **File Input**: Ability to pass arbitrary file types along with the code to run against it.
+- **File Output**: Files can be created and provided back to the user.
+- **STDIN/STDOUT Capture**: Ability to show the user any outputs of the programs executed.
+- **Graph Rendering**: The Onyx [Chat UI](/overview/core_features/chat) is able to render returned graphs and other visualization for the user.
 
-- **Code Execution**: Run Python code snippets in a secure environment
-- **Data Analysis**: Perform statistical analysis and data visualization
-- **File Processing**: Read, write, and manipulate files and data
-- **Automation**: Create scripts and workflows for repetitive tasks
-- **Interactive Development**: Iterate on code with immediate feedback
+## Usage
+The Code Interpreter does not need to be invoked explicitly, the LLM will determine when to use it depending on the user query.
 
-## Use Cases
-
-- Data analysis and visualization
-- File processing and manipulation
-- Statistical calculations
-- API integration and testing
-- Custom automation workflows
-
-## Supported Languages
-
-- Python (primary)
-- Additional languages coming soon
-
-<Tip>
-  Code Interpreter is available in the Chat interface when enabled by your administrator.
-</Tip>
-
-## How to Use Code Interpreter
-
-<Steps>
-  <Step title="Enable Code Interpreter" icon="gear">
-    Code Interpreter must be enabled by your administrator before you can use it.
-    Contact your admin if you don't see this feature available.
-  </Step>
-
-  <Step title="Start a Chat Session" icon="comment">
-    Code Interpreter is available within the Chat interface.
-    Start a new chat session or continue an existing conversation.
-  </Step>
-
-  <Step title="Request Code Execution" icon="code">
-    Ask Onyx to write and execute code for your specific task. For example:
-    "Create a Python script to analyze this data" or "Generate a visualization of these numbers."
-  </Step>
-
-  <Step title="Review Results" icon="eye">
-    Onyx will execute the code and show you the results, including any output, visualizations, or files generated.
-  </Step>
-
-  <Step title="Iterate and Refine" icon="arrows-spin">
-    You can ask Onyx to modify the code, fix errors, or add new functionality based on the results you see.
-  </Step>
-</Steps>
-
-## Security and Privacy
-
-<Card title="Secure Environment" icon="shield-check">
-  Code execution happens in a secure,
-  sandboxed environment that protects your system and data from potentially harmful code.
-</Card>
-
-<Card title="Data Privacy" icon="lock">
-  Your data remains private and is not shared with external services during code execution.
-</Card>
-
-## Examples
-
-### Data Analysis
-
-```
-"Analyze the sales data in this CSV file and create a summary report with visualizations"
-```
-
-### File Processing
-
-```
-"Process all the images in this folder and resize them to 800x600 pixels"
-```
-
-### API Integration
-
-```
-"Create a script to fetch data from our API and format it for our dashboard"
-```
-
-### Statistical Calculations
-
-```
-"Calculate the correlation between these two datasets and show me the results"
-```
-
-<CardGroup columns={2}>
-  <Card title="Admins: Enable Code Interpreter" icon="wrench" href="/admin/advanced_configs/workspace_settings" horizontal/>
-    <Card title="Users: Try Code Interpreter" icon="code" href="/overview/core_features/chat" horizontal/>
-</CardGroup>
+It can also be attached to custom Agents, giving the LLM the option to use it as needed.
