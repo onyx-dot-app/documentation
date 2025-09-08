@@ -4,40 +4,46 @@ description: "Ingest knowledge from connected applications"
 icon: "plug"
 ---
 
-<img src="/assets/overview/core_features/connectors.png" alt="Connectors"/>
+<a href="https://docs.onyx.app/admin/connectors/overview">
+
+  <img src="/assets/overview/core_features/connectors.png" alt="Connectors" noZoom/>
+
+</a>
 
 ## What are Connectors?
 
-Connectors let Onyx build an understanding of your documents, team,
+Onyx uses Connectors to build an understanding of your documents, team,
 and higher level concepts so that answers are grounded and specific to your organization's knowledge.
 
 Connectors:
-- Keep all updates sync-ed between external systems and Onyx.
+- Keep all updates synced between external systems and Onyx.
 - Pull in metadata and additional signals to ensure answer relevance.
 - Respect all user permissions (Enterprise Edition only).
 
 ## Common Connector Questions
 
-<Card title="What are the supported connectors?" icon="list">
-  You can see the full list of built-in connectors [here](/admin/connectors/overview#supported-connectors).
+<Card title="What are the supported connectors?" icon="list" href="/admin/connectors/overview#supported-connectors">
+  Click this card to see the full list of supported connectors.
 
   You can also push documents directly into Onyx via [API](/developers/guides/index_files_ingestion_api)
   or via File Upload.
 </Card>
 
-<Card title="How do I ensure my data is secure?" icon="lock">
+<Card title="How do I ensure my data is secure?" icon="lock" href="/admin/connectors/overview#security">
   All processing and storage of documents and metadata happen within Onyx.
 
   There are options to use LLMs or third party providers during the indexing flow but by default everything is
   processing entirely locally.
 
-  See the [Security](/security/architecture/data_flows) tab for more.
+  Click this card to see more about security.
 </Card>
 
-<Card title="Why are connectors/indexing important?" icon="circle-nodes">
+<Card title="Why are connectors/indexing important?" icon="circle-nodes" href="/overview/core_features/internal_search">
   In the same way LLMs are pre-trained on massive amounts of internet data,
   Onyx builds an understanding of all of the documents, concepts, and people within your organization.
 
   This allows Onyx to provide more accurate answer to questions that relate to internal knowledge compared to using the
   applications' provided search APIs at query time.
+
+  Click this card to learn more about Internal Search in Onyx.
 </Card>
