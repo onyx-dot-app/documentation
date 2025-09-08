@@ -60,7 +60,7 @@ description: "Authorize the S3 connector using an AWS IAM Role with assume role 
     - Name it (e.g., `OnyxS3AccessRole`) and click **Create role**
     - Copy the **Role ARN** from the role summary page (e.g., `arn:aws:iam::YOUR_AWS_ACCOUNT_ID:role/YOUR_CREATED_ROLE_NAME`)
 
-   ![Diagram of page where role arn can be copied](/archive/images/connectors/blob/s3/role-arn.png)
+   ![Diagram of page where role arn can be copied](/assets/admin/connectors/blob/s3/role-arn.png)
 
 2. **Grant Assume Role Permission to your EC2 Instance's Role:**
     - Go back to **IAM › Roles** and find your EC2 instance's existing role
@@ -83,7 +83,7 @@ description: "Authorize the S3 connector using an AWS IAM Role with assume role 
 
     - Name the policy (e.g., `AllowAssumeOnyxS3Role`) and click **Create policy**
 
-![Diagram of IAM role assignment](/archive/images/connectors/blob/s3/iam-role.png)
+![Diagram of IAM role assignment](/assets/admin/connectors/blob/s3/iam-role.png)
 
 Your EC2 instance now uses its existing instance profile to obtain temporary credentials for the OnyxS3AccessRole,
 which can then securely interact with your designated S3 buckets.
@@ -94,7 +94,7 @@ When configuring the S3 connector in Onyx, you'll need to:
 1. Click on the **IAM Role** tab
 2. Enter the **Role ARN** you copied earlier (e.g., `arn:aws:iam::YOUR_AWS_ACCOUNT_ID:role/YOUR_CREATED_ROLE_NAME`)
 
-![Screenshot of Onyx S3 IAM role configuration with tabs](/archive/images/connectors/blob/s3/onyx-iam-role.png)
+![Screenshot of Onyx S3 IAM role configuration with tabs](/assets/admin/connectors/blob/s3/onyx-iam-role.png)
 
 Once you have your IAM Role ARN,
 proceed to the [indexing steps in the overview](/archive/connectors/s3/overview#indexing)

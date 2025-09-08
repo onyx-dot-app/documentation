@@ -17,37 +17,37 @@ Documents are updated every **1** day.
 1. Log into your [Google Cloud Console](https://console.cloud.google.com/).
 2. Navigate to "Cloud Storage" > "Settings" > "Interoperability".
 
-   ![Google Cloud Storage Interoperability](/archive/images/connectors/blob/google/interoperability.png)
+   ![Google Cloud Storage Interoperability](/assets/admin/connectors/blob/google/interoperability.png)
 
 3. Click "Create a key for a service account".
 4. Click "Create new account" (or select an existing account and click Create key > skip to Step 8).
 
-   ![New service account](/archive/images/connectors/blob/google/new_service_account.png)
+   ![New service account](/assets/admin/connectors/blob/google/new_service_account.png)
 
 5. Set a name for the new service account (e.g., "onyx-gcs-connector") and click "Create and continue".
 
-   ![Service account configuration](/archive/images/connectors/blob/google/service_account_config.png)
+   ![Service account configuration](/assets/admin/connectors/blob/google/service_account_config.png)
 
 6. Click "Select a role" and select Storage object viewer or another, more permissive role.
 7. Click "Done".
 
-   ![Service account permissions](/archive/images/connectors/blob/google/service_account_perms.png)
+   ![Service account permissions](/assets/admin/connectors/blob/google/service_account_perms.png)
 
 8. You should be back on the Cloud Storage Interoperability page and see the new credentials. Record both `Access key` and `Secret`.
 
-   ![HMAC keys](/archive/images/connectors/blob/google/hmac_keys.png)
+   ![HMAC keys](/assets/admin/connectors/blob/google/hmac_keys.png)
 
 ### Indexing
 
 1. Navigate to the Admin Panel > Add Connector > **Google Storage**.
 2. Click Create New to create a new credential.
 
-![Onyx Google Cloud Storage credentials](/archive/images/connectors/blob/google/onyx_1.png)
+![Onyx Google Cloud Storage credentials](/assets/admin/connectors/blob/google/onyx_1.png)
 
 3. Paste your Access key and Secret (from Step 8) in the form. Click Create and Continue.
 4. Name your connector, specify the GCS bucket you would like to index, and click Create Connector.
 
-![Onyx Connector creation](/archive/images/connectors/blob/google/onyx_2.png)
+![Onyx Connector creation](/assets/admin/connectors/blob/google/onyx_2.png)
 
 ## Understanding Google Cloud Storage Structure
 
