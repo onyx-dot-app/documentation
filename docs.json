@@ -39,12 +39,12 @@
           },
 
           {
-            "group": "Use Onyx Where you Work",
+            "group": "Onyx Anywhere",
             "pages": [
-              "overview/use_onyx_where_you_work/web_interface",
-              "overview/use_onyx_where_you_work/slack",
-              "overview/use_onyx_where_you_work/chrome_extension",
-              "overview/use_onyx_where_you_work/mobile_app"
+              "overview/onyx_anywhere/web_interface",
+              "overview/onyx_anywhere/slack",
+              "overview/onyx_anywhere/chrome_extension",
+              "overview/onyx_anywhere/mobile_app"
             ]
           },
           {
