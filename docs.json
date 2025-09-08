@@ -19,7 +19,6 @@
             "pages": [
               "welcome",
               "overview/getting_started/use_cases",
-              "overview/getting_started/open_source_statement",
               "overview/getting_started/faq"
             ]
           },
@@ -49,7 +48,8 @@
           {
             "group": "Miscellaneous",
             "pages": [
-              "overview/contact_us"
+              "overview/miscellaneous/open_source_statement",
+              "overview/miscellaneous/contact_us"
             ]
           }
         ]
@@ -745,8 +745,10 @@
     }
   },
   "seo": {
+    "title": "Onyx AI – Open Source AI Platform for Work",
+    "description": "Research, create, and automate with LLMs - powered by your team's unique knowledge.",
     "metatags": {
-      "keywords": "danswer"
+      "keywords": "danswer, enterprise search, onyx ai, onyx, ai platform, chat UI"
     }
   }
 }
