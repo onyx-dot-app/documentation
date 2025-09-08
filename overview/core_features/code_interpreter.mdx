@@ -3,10 +3,13 @@ title: "Code Interpreter"
 description: "Safe and sandboxed Python runtime available to the LLM"
 icon: "code"
 ---
+
 ## Overview
+
 <Accordion title="Code Interpreter example">
     Example run where the LLM generates code to run data analysis on a business report.
-    <img className="rounded-image" src="/assets/overview/core_features/code_interpreter.png" alt="Code Interpreter"/>
+
+  <img className="rounded-image" src="/assets/overview/core_features/code_interpreter.png" alt="Code Interpreter"/>
 </Accordion>
 
 The ability to execute code unlocks the ability for the LLMs to do things such as:
@@ -17,14 +20,19 @@ The ability to execute code unlocks the ability for the LLMs to do things such a
 **Note**: The code interpreter is built-in functionality available to all deployments without any configuration needed.
 
 ## Features
-- **Python Runtime**: A secure Python runtime with all dangerous functionality removed (such as accessing the network, directories outside of the specified, etc.)
+
+- **Python Runtime**: A secure Python runtime with all dangerous functionality removed (such as accessing the network,
+  directories outside of the specified, etc.)
 - **Libraries**: Comes with a set of libraries such as numpy, pandas, scipy, matplotlib, and more.
 - **File Input**: Ability to pass arbitrary file types along with the code to run against it.
 - **File Output**: Files can be created and provided back to the user.
 - **STDIN/STDOUT Capture**: Ability to show the user any outputs of the programs executed.
-- **Graph Rendering**: The Onyx [Chat UI](/overview/core_features/chat) is able to render returned graphs and other visualization for the user.
+- **Graph Rendering**: The Onyx [Chat UI](/overview/core_features/chat)
+  is able to render returned graphs and other visualization for the user.
 
 ## Usage
-The Code Interpreter does not need to be invoked explicitly, the LLM will determine when to use it depending on the user query.
+
+The Code Interpreter does not need to be invoked explicitly,
+the LLM will determine when to use it depending on the user query.
 
 It can also be attached to custom Agents, giving the LLM the option to use it as needed.
