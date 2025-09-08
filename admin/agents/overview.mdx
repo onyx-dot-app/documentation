@@ -4,127 +4,59 @@ description: "Managing AI agents"
 icon: "robot"
 ---
 
-# Agent Management
+import BuiltInAgentsTable from '/snippets/built-in-agents-table.mdx';
 
-Agents in Onyx are specialized AI agents that can be configured with custom knowledge bases, system prompts,
-and tools to serve specific roles within your organization.
+Onyx Agents are customized AI assistants with unique instructions, knowledge sources, and Actions.
+
+<img className="rounded-image" src="/assets/admin/agents/agents_overview.png" alt="Onyx Agents Overview page showing available agents" />
+
+## Managing Agents
+
+On the Agents page in the Admin Panel, you can see all of the Agents in your organization.
+
+From this page, you can create new Agents, edit existing configs, designate featured Agents, hide or show certain Agents, and delete them.
 
 ## Creating Agents
 
-### Basic Agent Setup
-
 <Steps>
-  <Step title="Open Agents in Admin Panel">
-    Navigate to **Admin Panel** → **Agents**
+  <Step title="Create a New Agent">
+    Navigate to the **Admin Panel** and click **Agents** in the sidebar.
+    Click **New Agent** to create a new agent.
+  </Step>
+  <Step title="Name and Prompt your Agent">
+    Give your Assistant a name, description, instructions, and maybe even an icon.
+
+    <img className="rounded-image" src="/assets/admin/agents/agent_instructions.png" alt="Onyx Agent Configuration page" />
   </Step>
 
-  <Step title="Create new agent">
-    Click **"Create New Agent"**
+  <Step title="Configure your Agent">
+    Add Actions to your Agent to enable it to perform specific tasks. 
+    See [Actions Overview](/admin/actions/overview) for more information.
+
+    You can also configure the default language model for your Agent.
+
+    If you set your Agent as **Featured**, your users will see it at the top of the Agents explorer.
+
+    <img className="rounded-image" src="/assets/admin/agents/agent_actions.png" alt="Onyx Agent Configuration page" />
   </Step>
 
-  <Step title="Configure basic settings">
-    - **Name**: Clear, descriptive name (e.g., "HR Policy Agent")
-    - **Description**: What the agent helps with
-    - **Visibility**: Public or private access
+  <Step title="Configure your Agent cont.">
+    You can publish your Agent to your entire organization or share it with specific users or groups.
+
+    To help users understand how to use your Agent, you can add **Starter Messages**.
+
+    **Labels** help users find and categorize your Agent.
+
+    <img className="rounded-image" src="/assets/admin/agents/agent_configs_misc.png" alt="Onyx Agent Configuration page" />
+  </Step>
+
+  <Step title="Configure Knowledge Options">
+    Finally, you can configure certain knowledge options for your Agent.
+
+    <img className="rounded-image" src="/assets/admin/agents/agent_knowledge_options.png" alt="Onyx Agent Configuration page" />
   </Step>
 </Steps>
 
-### System Prompts
+Once you've published your Agent, you can find it in the **Explore Agents** page from the Chat sidebar.
 
-The system prompt defines your agent's personality, expertise, and behavior:
-
-```
-You are an HR agent for Onyx Inc. You have access to the company's HR policies, benefits packages, and procedures. Maintain a professional and friendly tone in all interactions. If you're unsure about any information, direct users to contact HR directly rather than guessing.
-
-Key responsibilities:
-- Answer questions about company policies
-- Explain benefits and compensation
-- Guide employees through HR processes
-- Escalate complex issues to human HR staff
-```
-
-<img className="rounded-image" src="/assets/images/guides/assistants/setup.png" alt="Agent Configuration Interface" />
-
-## Advanced Configuration
-
-### Knowledge Base Assignment
-
-Connect agents to relevant document sets:
-- Select specific connectors and document sets
-- Control which information the agent can access
-- Ensure data permissions align with agent purpose
-
-### Custom Tools & Actions
-
-Equip agents with specialized capabilities:
-- Integration with company systems
-- Automated workflow triggers
-- Custom business logic
-
-<img className="rounded-image" src="/assets/images/guides/assistants/advanced_config.png" alt="Agent Configuration Interface" />
-
-## Agent Management Best Practices
-
-### Design Principles
-
-- **Single Purpose**: Each agent should have a clear, focused role
-- **Clear Boundaries**: Define what the agent can and cannot do
-- **Appropriate Access**: Only provide access to necessary information
-- **Regular Updates**: Keep knowledge bases and prompts current
-
-### Example System Prompt Template
-
-```
-You are a [ROLE] agent for [ORGANIZATION].
-
-Your expertise includes:
-- [DOMAIN AREA 1]
-- [DOMAIN AREA 2]
-- [DOMAIN AREA 3]
-
-Your responsibilities:
-- [PRIMARY FUNCTION]
-- [SECONDARY FUNCTION]
-- [ESCALATION CRITERIA]
-
-Guidelines:
-- [TONE AND STYLE]
-- [LIMITATIONS]
-- [ESCALATION PROCEDURES]
-```
-
-## Monitoring and Optimization
-
-### Usage Analytics
-
-Track agent performance through:
-- Conversation volume and frequency
-- User satisfaction ratings
-- Common question patterns
-- Knowledge gap identification
-
-### Continuous Improvement
-
-- Review conversation logs for optimization opportunities
-- Update system prompts based on user feedback
-- Expand knowledge bases as needed
-- Refine tool integrations
-
-## Access Control
-
-### User Groups
-
-Assign agents to specific user groups:
-- Department-based access (HR, Engineering, Sales)
-- Role-based access (Managers, Individual Contributors)
-- Project-based access (Temporary teams)
-
-### Permission Management
-
-Control agent capabilities:
-- Read-only vs. action-enabled agents
-- Sensitive information access
-- External system integration permissions
-
-Agents are powerful tools for scaling knowledge access and support within your organization.
-Proper configuration and management ensure they provide maximum value while maintaining security and accuracy.
+<img className="rounded-image" src="/assets/admin/agents/explore_agents.png" alt="Onyx Explore Agents page" />
