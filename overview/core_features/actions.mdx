@@ -4,6 +4,8 @@ description: "Extend the capabilities of Onyx Agents"
 icon: "play"
 ---
 
+import BuiltInActionsTable from '/snippets/built-in-actions-table.mdx';
+
 ## Overview
 
 **Actions** give Agents the ability to interact with external systems.
@@ -12,13 +14,9 @@ Onyx comes with 4 built-in Actions and allows users to configure additional ones
 [OpenAPI](https://en.wikipedia.org/wiki/OpenAPI_Specification)
 and [Model Context Protocol](https://modelcontextprotocol.io/) (MCP).
 
-The built-in Actions including:
-| Name | Description | Requires Config | Provider Choices |
-|------|-------------|-----------------|-----------|
-| Internal Search | Search through your organization's indexed documents and knowledge base | Yes | Built-in with swappable components |
-| Web Search | Search the internet for real-time information and current events | Yes | Google, Serper, Exa, Firecrawl (optional) |
-| Code Interpreter | Execute Python code, analyze data, and generate visualizations | No | Built-in |
-| Image Generation | Create images from text descriptions using AI models | Yes | OpenAI |
+The built-in Actions include:
+
+<BuiltInActionsTable />
 
 ## Custom Actions
 
