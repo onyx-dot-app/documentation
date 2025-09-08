@@ -4,7 +4,7 @@ description: "Customize Onyx's branding and appearance"
 icon: "palette"
 ---
 
-White labeling allows you to customize Onyx's branding and appearance to match your organization's identity. 
+White labeling allows you to customize Onyx's branding and appearance to match your organization's identity.
 Available as part of the Enterprise Edition, these features help create a seamless, branded experience for your users.
 
 ## Customization Options
@@ -28,32 +28,39 @@ Navigate to the **White Labeling** tab in the Admin Panel to configure your basi
 Onyx provides several advanced options for customizing user-facing content:
 
 #### Chat Header Content
-Add custom Markdown content that displays as a banner at the top of the Chat page. 
-This is useful for announcements, usage guidelines, or organizational messaging.
+
+Add custom Markdown content that displays as a banner at the top of the Chat page. This is useful for announcements,
+usage guidelines, or organizational messaging.
 
 ![Chat Header](/images/customization/chat_header.png)
 
 #### Welcome Popup
+
 Configure a custom welcome experience for new users:
 
-- **Popup Header**: Custom title for the initial visit popup. If left blank with custom content specified, defaults to "Welcome to [Application Name]!"
+- **Popup Header**: Custom title for the initial visit popup. If left blank with custom content specified,
+  defaults to "Welcome to [Application Name]!"
 - **Popup Content**: Custom Markdown content displayed in the welcome popup
 
 ![Popup Header](/images/customization/popup_header.png)
+
 ![Popup Content](/images/customization/welcome_popup.png)
 
 #### Chat Footer Elements
+
 Customize the footer area of the chat interface:
 
 - **Chat Footer Text**: Custom Markdown content displayed at the bottom of the Chat page
 - **Chat Footer Logotype**: Upload a custom text-based logo image for the bottom right of the chat screen
 
 ![Chat Footer](/images/customization/chat_footer.png)
+
 ![Chat Footer Logotype](/images/customization/chat_logotype.png)
 
 ## Color Theming
 
-Onyx uses [Tailwind CSS](https://tailwindcss.com/) for its theming system, providing flexible color customization options.
+Onyx uses [Tailwind CSS](https://tailwindcss.com/) for its theming system,
+providing flexible color customization options.
 
 ### Theme Architecture
 
@@ -103,7 +110,8 @@ module.exports = {
 ```
 
 <Warning>
-  Color customizations require building Onyx from source. For local testing, restart the NextJS application to apply changes.
+  Color customizations require building Onyx from source. For local testing,
+  restart the NextJS application to apply changes.
 </Warning>
 
 ## Implementation Notes
@@ -124,6 +132,7 @@ To apply theme changes:
   <Card title="Enterprise Edition" icon="building" href="/deployment/miscellaneous/enterprise_edition">
     Learn more about Enterprise Edition features and setup
   </Card>
+
   <Card title="Contact Sales" icon="phone" href="/admin/miscellaneous/contact_us">
     Get in touch to discuss Enterprise Edition options
   </Card>
