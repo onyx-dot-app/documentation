@@ -266,14 +266,6 @@
           },
 
           {
-            "group": "Analytics",
-            "pages": [
-              "admin/analytics/queries",
-              "admin/analytics/statistics",
-              "admin/analytics/custom_analytics"
-            ]
-          },
-          {
             "group": "Advanced Configs",
             "pages": [
               "admin/advanced_configs/search_configs",
@@ -286,18 +278,17 @@
             ]
           },
           {
+            "group": "Analytics",
+            "pages": [
+              "admin/analytics/overview"
+            ]
+          },
+          {
             "group": "Curators",
             "pages": [
               "admin/curators/overview",
               "admin/curators/curator_responsibilities",
-              {
-                "group": "Guides",
-                "icon": "book-open",
-                "pages": [
-                  "admin/curators/guides/managing_connectors",
-                  "admin/curators/guides/publishing_agents"
-                ]
-              }
+              "admin/curators/curator_guide"
             ]
           },
           {
