@@ -3,3 +3,35 @@ title: "Curator Responsibilities"
 description: "Curator Responsibilities"
 icon: "clipboard-list"
 ---
+
+Curators are group-level administrators who manage objects that belong to their assigned group(s).
+They can configure group-scoped content and settings without workspace-wide Admin privileges.
+
+## Capabilities
+
+Curators can perform the following actions for the group(s) they curate:
+
+- **Add/remove Basic users** to/from a group
+- **Create and manage credentials** for connectors (group-scoped)
+- **Create and manage connectors** that belong exclusively to their group(s)
+- **Create and manage personas (agents)** that belong exclusively to their group(s)
+- **Attach connectors directly to agents** for group-specific knowledge access
+
+## Restrictions
+
+- **Edit scope**: Curators can only edit objects that belong exclusively to their curated group(s)
+- **Cross-group items**: If an object belongs to a different group a Curator doesn't curate, they can view it
+  but cannot edit it
+- **Public objects**: Curators cannot create or edit public connectors or credentials
+- **Group attachment required**: Curators must attach objects they create to a group they curate; otherwise they will
+  not be able to see, edit, or delete the object
+
+## Scope Rules and Examples
+
+- **Group-only edit**: A Connector created for Group A can be edited by Curators of Group A
+- **Public usage**: A Curator can attach a Public Connector to their group's agents, but cannot edit the Public Connector
+- **Cross-Group visibility**: A Curator can view a Connector from Group B but cannot edit that Connector
+
+## Global Curators
+
+Global Curators have identical permissions to Curators, but automatically curate all groups they are members of.

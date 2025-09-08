@@ -303,7 +303,6 @@
           {
             "group": "Miscellaneous",
             "pages": [
-              "admin/miscellaneous/faq",
               "admin/miscellaneous/contact_us"
             ]
           }

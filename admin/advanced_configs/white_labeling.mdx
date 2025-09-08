@@ -1,9 +1,130 @@
 ---
 title: "White Labeling"
-description: "Configure white labeling options for your Onyx instance"
+description: "Customize Onyx's branding and appearance"
 icon: "palette"
 ---
 
-## White Labeling
+White labeling allows you to customize Onyx's branding and appearance to match your organization's identity. 
+Available as part of the Enterprise Edition, these features help create a seamless, branded experience for your users.
 
-Configure custom branding and white labeling options for your Onyx instance.
+## Customization Options
+
+White labeling in Onyx provides two main types of customization:
+
+1. **Application Branding**: Custom name, logo, and visual identity
+2. **Color Theming**: Complete control over the UI color palette
+
+## Application Branding
+
+### Basic Branding
+
+Navigate to the **White Labeling** tab in the Admin Panel to configure your basic branding options:
+
+- **Application Name**: Replace "Onyx" with your organization's name throughout the interface
+- **Logo**: Upload your custom logo to appear in the header and other key locations
+
+### Advanced Content Customization
+
+Onyx provides several advanced options for customizing user-facing content:
+
+#### Chat Header Content
+Add custom Markdown content that displays as a banner at the top of the Chat page. 
+This is useful for announcements, usage guidelines, or organizational messaging.
+
+![Chat Header](/images/customization/chat_header.png)
+
+#### Welcome Popup
+Configure a custom welcome experience for new users:
+
+- **Popup Header**: Custom title for the initial visit popup. If left blank with custom content specified, defaults to "Welcome to [Application Name]!"
+- **Popup Content**: Custom Markdown content displayed in the welcome popup
+
+![Popup Header](/images/customization/popup_header.png)
+![Popup Content](/images/customization/welcome_popup.png)
+
+#### Chat Footer Elements
+Customize the footer area of the chat interface:
+
+- **Chat Footer Text**: Custom Markdown content displayed at the bottom of the Chat page
+- **Chat Footer Logotype**: Upload a custom text-based logo image for the bottom right of the chat screen
+
+![Chat Footer](/images/customization/chat_footer.png)
+![Chat Footer Logotype](/images/customization/chat_logotype.png)
+
+## Color Theming
+
+Onyx uses [Tailwind CSS](https://tailwindcss.com/) for its theming system, providing flexible color customization options.
+
+### Theme Architecture
+
+The color system is built on two main files:
+
+- `web/tailwind-themes/tailwind.config.js`: Base Tailwind configuration and color definitions
+- `web/src/app/globals.css`: CSS variables for colors used in the Tailwind config
+
+### Customization Methods
+
+#### Method 1: Direct CSS Variable Modification
+
+1. Navigate to `web/src/app/globals.css`
+2. Modify the CSS variables to customize base colors (accent colors, backgrounds, etc.)
+
+#### Method 2: Tailwind Config Override
+
+1. Navigate to `web/tailwind-themes/tailwind.config.js`
+2. Override specific values from the base configuration
+
+#### Method 3: Organization-Specific Theme (Recommended)
+
+For comprehensive theming:
+
+1. Navigate to `web/tailwind-themes/`
+2. Create a new folder with your organization's name
+3. Create a `tailwind.config.js` file in this folder
+4. Override any values from the base configuration
+5. Set the `NEXT_PUBLIC_THEME` environment variable to your organization's folder name
+
+### Example Configuration
+
+To change the background to black, create or modify your theme file:
+
+```javascript
+/** @type {import('tailwindcss').Config} */
+
+module.exports = {
+  theme: {
+    extend: {
+      colors: {
+        "background": "#000000",
+      },
+    },
+  },
+};
+```
+
+<Warning>
+  Color customizations require building Onyx from source. For local testing, restart the NextJS application to apply changes.
+</Warning>
+
+## Implementation Notes
+
+<Note>
+  White labeling features are exclusive to the Enterprise Edition of Onyx.
+</Note>
+
+To apply theme changes:
+
+1. **Source Build Required**: Custom themes require building Onyx from source
+2. **Development**: Restart the NextJS application locally to see changes
+3. **Production**: Rebuild and redeploy your Onyx instance
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Enterprise Edition" icon="building" href="/deployment/miscellaneous/enterprise_edition">
+    Learn more about Enterprise Edition features and setup
+  </Card>
+  <Card title="Contact Sales" icon="phone" href="/admin/miscellaneous/contact_us">
+    Get in touch to discuss Enterprise Edition options
+  </Card>
+</CardGroup>
