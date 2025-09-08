@@ -4,17 +4,20 @@ description: "Create custom AI Agents for unique use cases"
 icon: "robot"
 ---
 
-## Overview
-Agents are a combination of user specified instructions, knowledge, and [Actions](/overview/core_features/actions). Think of them as AI team members that are optimized for a specific task.
+Agents are a combination of user specified instructions, knowledge, and [Actions](/overview/core_features/actions).
+Think of them as AI team members that are optimized for a specific task.
 
-Onyx Agents can be for individual use or shared with other users or [user-groups](/admin/user_management/groups) within Onyx.
+Onyx Agents can be for individual use or shared with other users or [user-groups](/admin/user_management/groups)
+within Onyx.
 
 {/* TODO Better to have a screenshot of the agent in action, coming soon */}
 
 <img className="rounded-image" src="/assets/overview/core_features/agent.png" alt="Agent Example" />
 
 ## When to use an Agent
-Use agents to build the best experience for repeat use cases, especially those that can be shared with other members of the team.
+
+Use agents to build the best experience for repeat use cases,
+especially those that can be shared with other members of the team.
 
 Some common examples include:
 - Onboarding Assistant
@@ -22,14 +25,20 @@ Some common examples include:
 - Engineer Copilot
 - Legal Reviewer
 
-These are typically scoped down to a particular task such as reviewing documents to ensure they comply with security policies, filling out RFPs based on previously completed ones, etc.
+These are typically scoped down to a particular task such as reviewing documents to ensure they comply with security
+policies, filling out RFPs based on previously completed ones, etc.
 
 ## Creating an Agent
+
 ### Instructions (Prompting)
+
 <Tip>
-The Instruction field is infinitely flexible so it is recommended to test different variations and verify the behavior before sharing the Agent broadly with your team.
+  The Instruction field is infinitely flexible so it is recommended to test different variations and verify the behavior
+  before sharing the Agent broadly with your team.
 </Tip>
+
 Provided below for inspiration is the **Instruction** for the default Onyx experience.
+
 <Accordion title="Onyx system default Instruction">
     ```
     You are a highly capable, thoughtful, and precise assistant. Your goal is to deeply understand the user's intent, ask clarifying questions when needed, think step-by-step through complex problems, provide clear and accurate answers, and proactively anticipate helpful follow-up information. Always prioritize being truthful, nuanced, insightful, and efficient.
@@ -40,25 +49,39 @@ Provided below for inspiration is the **Instruction** for the default Onyx exper
     You can use Markdown horizontal rules (---) to separate sections of your responses.
     You can use Markdown tables to format your responses for data, lists, and other structured information.
     ```
-    Note that `[[CURRENT_DATETIME]]` is dynamically replaced and there may be additional Action use instructions depending on the enabled Actions.
+
+    Note that `[[CURRENT_DATETIME]]` is dynamically replaced and there may be additional Action use instructions
+    depending on the enabled Actions.
 </Accordion>
-One of the best parts of creating an Agent is the ability to control the goal/behavior of the Agent. The instructions are purely in natural language and can include things like:
+
+One of the best parts of creating an Agent is the ability to control the goal/behavior of the Agent.
+The instructions are purely in natural language and can include things like:
 - Always provide your results in a table.
 - Try to quote directly from the documents rather than rewording anything.
 - Flag information from documents that are older than 3 months.
 
 ### Knowledge
+
 <Tip>
-It is typically best to include only the necessary knowledge for the Agent to complete its task. The more scoped down the documents, the more reliable the performance.
+  It is typically best to include only the necessary knowledge for the Agent to complete its task.
+  The more scoped down the documents, the more reliable the performance.
 </Tip>
-When creating an Agent, you can include both knowledge from [connectors](/overview/core_features/connectors) or file upload. The knowledge from connectors will be kept up to date as documents change in the external sources.
+
+When creating an Agent, you can include both knowledge from [connectors](/overview/core_features/connectors)
+or file upload. The knowledge from connectors will be kept up to date as documents change in the external sources.
 
 ### Actions
+
 <Note>
-If any of the build-in actions (Web Search, Internal Search, Image Generation, Code Interpreter) are missing, contact your Onyx admin.
-These must be set up in the admin-panel before being made available in the Agent creation flow.
+  If any of the build-in actions (Web Search, Internal Search, Image Generation, Code Interpreter) are missing,
+  contact your Onyx admin.
+  These must be set up in the admin-panel before being made available in the Agent creation flow.
 </Note>
-[Actions](/overview/core_features/actions) (sometimes known as Tools) allow the Agents to do things in external applications via APIs. Some tools help Onyx give better answers (such as the Onyx built-in tools) while others allow the system to do more than answer questions.
+
+[Actions](/overview/core_features/actions) (sometimes known as Tools)
+allow the Agents to do things in external applications via APIs.
+Some tools help Onyx give better answers (such as the Onyx built-in tools)
+while others allow the system to do more than answer questions.
 
 Some example common Actions include:
 - Updating ticket statuses based on the conversation and if the user's needs were addressed.

@@ -4,50 +4,76 @@ description: "Overview of Onyx's primary user interface"
 icon: "comment"
 ---
 
-<Tip>On the top left of the page, you can select the mode of the UI. Replace "Auto" with "Chat" to always go into this view.</Tip>
+<Tip>
+  On the top left of the page (just right of the sidebar), you can select the mode of the UI.
+  Replace "Auto" with "Chat" to always go into this Chat UI.
+</Tip>
+
 <img className="rounded-image" src="/assets/overview/core_features/chat_ui.png" alt="Onyx Chat Interface"/>
-Onyx provides a natural language chat interface as the main way of interacting with the features. The page below contains an overview of the main components and features.
+
+Onyx provides a natural language chat interface as the main way of interacting with the features.
+The page below contains an overview of the main components and features.
 
 ## Input Bar
 
 ### Chat with Files / URLs
+
 <img className="rounded-image" src="/assets/overview/core_features/files.png" alt="Files Input"/>
-The leftmost button of the input bar lets users add context into the Chat session. Users can choose between uploading files or selecting URLs as well as reusing previous files or URLs.
+
+The leftmost button of the input bar lets users add context into the Chat session.
+Users can choose between uploading files or selecting URLs as well as reusing previous files or URLs.
 <Note>
-  URLs behind Logins, Captcha, or Paywalls that are not scrapeable are not accessible. Consider using a [Connector](/overview/core_features/connectors) instead.
+  URLs behind Logins, Captcha, or Paywalls that are not scrapeable are not accessible.
+  Consider using a [Connector](/overview/core_features/connectors) instead.
 </Note>
 
 ### Actions Selector
-<img className="rounded-image" src="/assets/overview/core_features/actions.png" alt="Actions Input"/>
-The second button lets users disable or force the use of Actions. There are 4 built-in Actions:
-- **[Internal Search](/overview/core_features/internal_search)**: Enables the LLM to search the indexed knowledge from [Connectors](/overview/core_features/connectors).
-- **[Web Search](/overview/core_features/web_search)**: Enables the LLM to search the internet. Requires an admin to set up an API key for a search provider.
-- **[Code Interpreter](/overview/core_features/code_interpreter)**: Enables the LLM to use a sandboxed Python runtime to execute code and run data analysis.
-- **[Image Generation](/overview/core_features/image_generation)**: Allows the LLM to generate images. Requires setting up an image generation API.
 
-The Actions below the separator represent custom admin configured Actions. See [Actions & MCP](/overview/core_features/actions) to learn about custom Actions.
+<img className="rounded-image" src="/assets/overview/core_features/actions.png" alt="Actions Input"/>
+
+The second button lets users disable or force the use of Actions. There are 4 built-in Actions:
+- **[Internal Search](/overview/core_features/internal_search)**:
+  Enables the LLM to search the indexed knowledge from [Connectors](/overview/core_features/connectors).
+- **[Web Search](/overview/core_features/web_search)**: Enables the LLM to search the internet.
+  Requires an admin to set up an API key for a search provider.
+- **[Code Interpreter](/overview/core_features/code_interpreter)**:
+  Enables the LLM to use a sandboxed Python runtime to execute code and run data analysis.
+- **[Image Generation](/overview/core_features/image_generation)**: Allows the LLM to generate images.
+  Requires setting up an image generation API.
+
+The Actions below the separator represent custom admin configured Actions.
+See [Actions & MCP](/overview/core_features/actions) to learn about custom Actions.
 
 ### Deep Research
+
 <img className="rounded-image" src="/assets/overview/core_features/deep_research.png" alt="Deep Research"/>
-Toggle **Deep Research** using the hourglass icon. When turned on, the LLM will be able to run many cycles of thinking, research, and actions to give the best possible
-result for the user. This mode is intended for complicated questions that may need to pull together many sources together or requires significant reasoning.
+
+Toggle **Deep Research** using the hourglass icon. When turned on, the LLM will be able to run many cycles of thinking,
+research, and actions to give the best possible result for the user.
+This mode is intended for complicated questions that may need to pull together many sources together or requires
+significant reasoning.
 
 <Note>
   Deep Research may take up to several minutes and could cost many times (>10x) the token cost of a normal inference.
 </Note>
 
 ### Model Selector
+
 <img className="rounded-image" src="/assets/overview/core_features/model_selector.png" alt="Model Selector"/>
-Onyx supports all major LLM providers as well as self-hosting options like Ollama, VLLM, etc. For select models, users can also configure the creativity and reasoning level.
+
+Onyx supports all major LLM providers as well as self-hosting options like Ollama, VLLM, etc. For select models,
+users can also configure the creativity and reasoning level.
 
 ## Sidebar Contents
+
 The left sidebar contains:
 - `New Session` button to clear the history and start a new Chat or [Search](/overview/core_features/internal_search) session.
 - `Projects` to help users organize chats and reuse different sets of documents. See section below for more info.
 - `Agents` section to start a new session with yours or your team's custom [Agents](/overview/core_features/agents).
 - `Sessions` section containing a list of the most recent conversations.
 
-The right sidebar contains sources and citations that were used in generating the answer. These can come from either `Internal Search` or `Web Search` or both.
+The right sidebar contains sources and citations that were used in generating the answer.
+These can come from either `Internal Search` or `Web Search` or both.
 Documents in the right sidebar can also be selected to be included in full for the next message in the Chat session.
 
 <Tip>
@@ -55,11 +81,18 @@ Documents in the right sidebar can also be selected to be included in full for t
 </Tip>
 
 ## Projects
+
 <img className="rounded-image" src="/assets/overview/core_features/projects.png" alt="Projects"/>
-**Projects** are a collection of instructions (prompts) and files as well as a grouping for chats. Use projects to organize ongoing work, or as a handy way to reuse instructions and files without going through the Agent creation flow.
+
+**Projects** are a collection of instructions (prompts) and files as well as a grouping for chats.
+Use projects to organize ongoing work,
+or as a handy way to reuse instructions and files without going through the Agent creation flow.
 
 ## Miscellaneous Chat Features
-1. **Chat Sharing** - share chats with other team members by using the share-chat button in the top right (left of the Sources sidebar).
-2. **Feedback** - give feedback viewable to the admins using the thumbs-up/thumbs-down buttons when hovering an LLM response
+
+1. **Chat Sharing** - share chats with other team members by using the share-chat button in the top right (left of the
+   Sources sidebar).
+2. **Feedback** - give feedback viewable to the admins using the thumbs-up/thumbs-down buttons when hovering an LLM
+   response
 3. **Regenerate** - modify your inputs by clicking the user messages or regenerate the LLM response with another model.
 4. **Copying** - copy the LLM output or markdown/code blocks by clicking on the copy button which shows on hover.
