@@ -1,150 +1,31 @@
 ---
 title: "Image Generation"
-description: "Generate images using AI-powered image generation models like DALL-E 3"
+description: "Create visuals according to user prompts"
 icon: "image"
 ---
 
-<img className="rounded-image" src="/assets/overview/GENERIC_PLACEHOLDER.png" alt="Onyx Image Generation Interface" />
+## Overview
+The image generation feature allows users to create PNG images according to their prompts which can be rendered in the chat and easily downloaded.
+<img className="rounded-image" src="/assets/overview/core_features/image_generation.png" alt="Image Generation"/>
 
-Image Generation allows you to create high-quality images using AI-powered models like DALL-E 3.
-This feature is available through the Art Action,
-which can be equipped to AI Agents to enable image creation capabilities.
+## Configuration
+Currently, Onyx supports two APIs for image generation, both through OpenAI. In the future, there likely will be support for other options such as Google Imagen or Stability AI.
+1. GPT-Image-1: Newer model, better prompt adherence. Likely a better default for most use cases.
+2. DALL-E 3: Older model, slightly better for more imaginative and rich styles.
 
-## Features
+## Usage
+To use **Image Generation**, be explicit in the prompting since the system is tuned to not generate images unless directly instructed.
 
-- **AI-Powered Generation**: Create images using state-of-the-art models like DALL-E 3
-- **Natural Language Prompts**: Describe what you want to see in plain English
-- **High-Quality Output**: Generate professional-quality images suitable for various use cases
-- **Multiple Styles**: Create images in different artistic styles and formats
-- **Agent Integration**: Use image generation through AI Agents for contextual image creation
+See below for the instructions provided to the system for when to create images.
+<Accordion title="Image Generation Instruction">
+    Tool Description:
+    ```
+    Generate an image from a prompt.
+    ```
 
-## How to Use Image Generation
-
-<Steps>
-  <Step title="Select an Agent with Art Action" icon="robot">
-    Choose an AI Agent that has the Art Action equipped. The default "Art" Agent comes with this capability,
-    or your administrator may have created custom Agents with image generation enabled.
-  </Step>
-
-  <Step title="Start a Chat Session" icon="comment">
-    Begin a conversation with the Agent that has image generation capabilities.
-  </Step>
-
-  <Step title="Request Image Creation" icon="image">
-    Ask the Agent to generate an image by describing what you want to see. For example:
-    "Create an image of a modern office workspace" or "Generate a logo for a tech startup."
-  </Step>
-
-  <Step title="Review and Refine" icon="eye">
-    The Agent will generate the image and show you the result. You can ask for modifications, different styles,
-    or variations of the generated image.
-  </Step>
-
-  <Step title="Download or Use" icon="download">
-    Once you're satisfied with the generated image, you can download it or use it in your projects.
-  </Step>
-</Steps>
-
-## Use Cases
-
-### Marketing and Design
-
-- Create promotional graphics and banners
-- Generate product mockups and visualizations
-- Design social media content and thumbnails
-- Create illustrations for presentations
-
-### Content Creation
-
-- Generate blog post featured images
-- Create book covers and artwork
-- Design infographics and diagrams
-- Produce visual content for websites
-
-### Creative Projects
-
-- Artistic exploration and experimentation
-- Concept art and ideation
-- Visual storytelling and narratives
-- Personal creative expression
-
-### Business Applications
-
-- Logo and branding design
-- Presentation visuals
-- Training material illustrations
-- Prototype and wireframe mockups
-
-## Best Practices
-
-<Card title="Clear Descriptions" icon="pen-to-square">
-  Provide detailed, specific descriptions of what you want to see. Include style, colors, composition, and mood.
-</Card>
-
-<Card title="Iterative Refinement" icon="arrows-spin">
-  Start with a basic prompt and then ask for specific modifications to get closer to your vision.
-</Card>
-
-<Card title="Style References" icon="palette">
-  Reference specific artistic styles, photographers, or design aesthetics to guide the generation.
-</Card>
-
-## Example Prompts
-
-### Business and Professional
-
-```
-"Create a modern, minimalist logo for a sustainable energy company using green and blue colors"
-```
-
-### Creative and Artistic
-
-```
-"Generate a surreal landscape with floating islands and a purple sky, in the style of digital art"
-```
-
-### Product and Marketing
-
-```
-"Design a product mockup of a sleek smartphone with a gradient background for a tech advertisement"
-```
-
-### Illustrative and Educational
-
-```
-"Create an infographic-style illustration explaining the water cycle with clear, educational visuals"
-```
-
-## Technical Details
-
-<Info>
-  Image generation uses external AI models like DALL-E 3.
-  The specific model and capabilities depend on your organization's configuration and the models available to your
-  deployment.
-</Info>
-
-### Supported Models
-
-- **DALL-E 3**: OpenAI's latest image generation model
-- **Additional models**: May be available depending on your configuration
-
-### Output Formats
-
-- High-resolution images suitable for various applications
-- Multiple aspect ratios and sizes
-- Professional quality suitable for commercial use
-
-## Security and Privacy
-
-<Card title="Secure Processing" icon="shield-check">
-  Image generation requests are processed securely through your configured AI models.
-</Card>
-
-<Card title="Usage Tracking" icon="chart-line">
-  Your organization may track image generation usage for billing and monitoring purposes.
-</Card>
-
-<CardGroup columns={2}>
-  <Card title="Admins: Configure Image Generation" icon="wrench" href="/admin/actions/overview" horizontal/>
-    <Card title="Users: Try Image Generation" icon="image" href="/overview/core_features/chat" horizontal/>
-</CardGroup>
+    Instruction (System Prompt) Modification:
+    ```
+    NEVER use image_gen unless the user specifically requests an image.
+    ```
+    This phrase is injected into the default **Instruction** for Onyx if the **Image Generation** (image_gen) tool is available.
+</Accordion>
