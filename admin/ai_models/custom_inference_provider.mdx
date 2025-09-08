@@ -5,7 +5,6 @@ icon: "server"
 ---
 
 import NavigateToAiModels from "/snippets/navigate-to-ai-models.mdx";
-import StandardAiModelConfigs from "/snippets/standard-ai-model-configs.mdx";
 
 ## Guide
 
@@ -36,9 +35,14 @@ If you want to use an AI provider that is not supported by Onyx, you can configu
     In this example, the provider name is `vertex_ai`.
     <img className="rounded-image" src="/assets/admin/ai_models/litellm_provider_name.png" alt="Custom inference provider name" />
 
-    Enter the rest of the optional fields if relevant.
+  </Step>
 
-    Enter each of the models you want to use with your provider.
+  <Step title="Configure Optional Fields and Models">
+    Enter the provider's **Base URL**.
+    
+    Fill out the other optional fields if applicable.
+
+    In the **Model Configurations** section, enter each of the models you want to use with your provider.
   </Step>
 
   <Step title="Configure Default and Fast Models">
