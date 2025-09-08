@@ -1,0 +1,43 @@
+---
+title: "Connectors"
+description: "Ingest knowledge from connected applications"
+icon: "plug"
+---
+
+<img src="/assets/overview/core_features/connectors.png" alt="Connectors"/>
+
+## What are Connectors?
+
+Connectors let Onyx build an understanding of your documents, team,
+and higher level concepts so that answers are grounded and specific to your organization's knowledge.
+
+Connectors:
+- Keep all updates sync-ed between external systems and Onyx.
+- Pull in metadata and additional signals to ensure answer relevance.
+- Respect all user permissions (Enterprise Edition only).
+
+## Common Connector Questions
+
+<Card title="What are the supported connectors?" icon="list">
+  You can see the full list of built-in connectors [here](/admin/connectors/overview#supported-connectors).
+
+  You can also push documents directly into Onyx via [API](/developers/guides/index_files_ingestion_api)
+  or via File Upload.
+</Card>
+
+<Card title="How do I ensure my data is secure?" icon="lock">
+  All processing and storage of documents and metadata happen within Onyx.
+
+  There are options to use LLMs or third party providers during the indexing flow but by default everything is
+  processing entirely locally.
+
+  See the [Security](/security/architecture/data_flows) tab for more.
+</Card>
+
+<Card title="Why are connectors/indexing important?" icon="circle-nodes">
+  In the same way LLMs are pre-trained on massive amounts of internet data,
+  Onyx builds an understanding of all of the documents, concepts, and people within your organization.
+
+  This allows Onyx to provide more accurate answer to questions that relate to internal knowledge compared to using the
+  applications' provided search APIs at query time.
+</Card>

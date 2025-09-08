@@ -5,7 +5,9 @@ icon: "upload"
 ---
 
 <Tip>
-  The ingestion API is a lightweight way to index documents. If you need more control, consider creating a Connector in the Admin Dashboard or following the [Create a Connector](developers/guides/create_connector) API guide.
+  The ingestion API is a lightweight way to index documents. If you need more control,
+  consider creating a Connector in the Admin Panel or following the [Create a
+  Connector](/developers/guides/create_connector) API guide.
 </Tip>
 
 ## When to use the Ingestion API?
@@ -14,14 +16,15 @@ Use the Ingestion API for:
 
 - **Unsupported sources**: Add content from systems that don't have built-in Connectors
 - **Supplemental data**: Add extra context to existing Connector data (like README files for GitLab)
-- **Editing documents**: Modify documents in Onyx when the Admin cannot update the original document in the source
+- **Editing documents**: Modify documents in Onyx when the Admin cannot update the original document
+  in the source
 - **Programmatic workflows**: Integrate document indexing into your existing data pipelines
 
 ## Guide
 
 Skip to the [Full Code](#full-code) section if you don't want the step-by-step guide.
 
-In this example, we'll index local files with the Ingestion API. 
+In this example, we'll index local files with the Ingestion API.
 
 <Note>
   The Ingestion API base URL is `https://cloud.onyx.app/onyx-api/ingestion` or your own domain.
@@ -32,7 +35,7 @@ In this example, we'll index local files with the Ingestion API.
     Since we want these files to appear in the Connectors page, we'll need to first create a Connector.
     For this example, we'll create a File Connector with a dummy text file.
 
-    If you already have a Connector you would like to associate your Ingestion files with, 
+    If you already have a Connector you would like to associate your Ingestion files with,
     click on the Connector and copy the `cc_pair_id` from the URL.
 
     `https://cloud.onyx.app/admin/connector/308` -> `cc_pair_id` is `243`
@@ -40,23 +43,23 @@ In this example, we'll index local files with the Ingestion API.
 
   <Step title="Prepare your request">
     <CodeGroup>
-        ```python Python
-        import requests
+      ```python Python
+      import requests
 
-        API_BASE_URL = "https://cloud.onyx.app/onyx-api/ingestion" # or your own domain
-        API_KEY = "YOUR_KEY_HERE"
+      API_BASE_URL = "https://cloud.onyx.app/onyx-api/ingestion" # or your own domain
+      API_KEY = "YOUR_KEY_HERE"
 
-        headers = {
-            "Authorization": f"Bearer {API_KEY}",
-            "Content-Type": "application/json"
-        }
-        ```
+      headers = {
+      "Authorization": f"Bearer {API_KEY}",
+      "Content-Type": "application/json"
+      }
+      ```
 
-        ```bash cURL
-        # Set your API configuration
-        API_BASE_URL="https://cloud.onyx.app/onyx-api/ingestion"
-        API_KEY="YOUR_KEY_HERE"
-        ```
+      ```bash Shell
+      # Set your API configuration
+      API_BASE_URL="https://cloud.onyx.app/onyx-api/ingestion"
+      API_KEY="YOUR_KEY_HERE"
+      ```
     </CodeGroup>
   </Step>
 
@@ -68,7 +71,7 @@ In this example, we'll index local files with the Ingestion API.
     See [Core Concepts: Documents](/developers/core_concepts#documents) for details on the `IngestionDocument` object.
 
     <AccordionGroup>
-      <Accordion title="Minimum valid payload">
+    <Accordion title="Minimum valid payload">
         ```json JSON
         {
           "document": {
@@ -85,211 +88,213 @@ In this example, we'll index local files with the Ingestion API.
           "cc_pair_id": 243
         }
         ```
-      </Accordion>
-      <Accordion title="Full payload with all optional fields">
-        <CodeGroup>
-          ```json JSON
-          {
-            "document": {
-              "id": "my_unique_id_1",
-              "semantic_identifier": "Onyx FAQ - Title shown in UI",
-              "title": "Onyx FAQ v1 - Title for Search",
-              "sections": [
-                {
-                  "text": "What is Onyx?\nOnyx is...",
-                  "link": "https://docs.onyx.app/faq#what-is-onyx"
-                },
-                {
-                  "text": "How do I get started?\nTo get started...",
-                  "link": "https://docs.onyx.app/faq#getting-started"
-                },
-                {
-                  "image_file_id": "uuid_generated_by_onyx_file_store",
-                  "text": "Advanced - Must upload image first! POST /user/file/upload",
-                  "link": "https://docs.onyx.app/faq#about"
-                }
-              ],
-              "source": "file",
-              "metadata": {
-                "category": "faq",
-                "tags": ["frequently-asked", "help"]
-              },
-              "doc_updated_at": "2025-09-19T08:20:00Z",
-              "chunk_count": 15,
-              "primary_owners": [
-                {
-                  "display_name": "Alex Chen",
-                  "first_name": "Alex",
-                  "middle_initial": null,
-                  "last_name": "Chen",
-                  "email": "alex@onyx.app"
-                }
-              ],
-              "secondary_owners": [
-                {
-                  "display_name": "Sarah Johnson", 
-                  "first_name": "Sarah",
-                  "middle_initial": "M",
-                  "last_name": "Johnson",
-                  "email": "sarah@onyx.app"
-                }
-              ],
-              "from_ingestion_api": true
-            },
-            "cc_pair_id": 243
-          }
-          ```
-        </CodeGroup>
-      </Accordion>
+    </Accordion>
+
+    <Accordion title="Full payload with all optional fields">
+    <CodeGroup>
+      ```json JSON
+      {
+      "document": {
+      "id": "my_unique_id_1",
+      "semantic_identifier": "Onyx FAQ - Title shown in UI",
+      "title": "Onyx FAQ v1 - Title for Search",
+      "sections": [
+      {
+      "text": "What is Onyx?\nOnyx is...",
+      "link": "https://docs.onyx.app/faq#what-is-onyx"
+      },
+      {
+      "text": "How do I get started?\nTo get started...",
+      "link": "https://docs.onyx.app/faq#getting-started"
+      },
+      {
+      "image_file_id": "uuid_generated_by_onyx_file_store",
+      "text": "Advanced - Must upload image first! POST /user/file/upload",
+      "link": "https://docs.onyx.app/faq#about"
+      }
+      ],
+      "source": "file",
+      "metadata": {
+      "category": "faq",
+      "tags": ["frequently-asked", "help"]
+      },
+      "doc_updated_at": "2025-09-19T08:20:00Z",
+      "chunk_count": 15,
+      "primary_owners": [
+      {
+      "display_name": "Alex Chen",
+      "first_name": "Alex",
+      "middle_initial": null,
+      "last_name": "Chen",
+      "email": "alex@onyx.app"
+      }
+      ],
+      "secondary_owners": [
+      {
+      "display_name": "Sarah Johnson",
+      "first_name": "Sarah",
+      "middle_initial": "M",
+      "last_name": "Johnson",
+      "email": "sarah@onyx.app"
+      }
+      ],
+      "from_ingestion_api": true
+      },
+      "cc_pair_id": 243
+      }
+      ```
+    </CodeGroup>
+    </Accordion>
     </AccordionGroup>
 
     <CodeGroup>
-        ```python Python expandable
-        import os
-        from pathlib import Path
-        import PyPDF2
-        import pandas as pd
-        from docx import Document as DocxDocument
+      ```python Python expandable
+      import os
+      from pathlib import Path
+      import PyPDF2
+      import pandas as pd
+      from docx import Document as DocxDocument
 
-        def read_files_from_folder(folder_path, cc_pair_id=243):
-            """
-            Read PDF, TXT, DOCX, CSV, and XLSX files and create minimal ingestion payloads
-            """
-            documents = []
-            folder = Path(folder_path)
-            
-            # Supported file extensions
-            supported_extensions = {'.pdf', '.txt', '.docx', '.csv', '.xlsx'}
-            
-            for file_path in folder.rglob('*'):
-                if file_path.is_file() and file_path.suffix.lower() in supported_extensions:
-                    try:
-                        # Extract text based on file type
-                        if file_path.suffix.lower() == '.txt':
-                            with open(file_path, 'r', encoding='utf-8') as f:
-                                content = f.read()
-                        
-                        elif file_path.suffix.lower() == '.pdf':
-                            with open(file_path, 'rb') as f:
-                                reader = PyPDF2.PdfReader(f)
-                                content = ""
-                                for page in reader.pages:
-                                    content += page.extract_text() + "\n"
-                        
-                        elif file_path.suffix.lower() == '.docx':
-                            doc = DocxDocument(file_path)
-                            content = "\n".join([paragraph.text for paragraph in doc.paragraphs])
-                        
-                        elif file_path.suffix.lower() in ['.csv', '.xlsx']:
-                            df = pd.read_csv(file_path) if file_path.suffix.lower() == '.csv' else pd.read_excel(file_path)
-                            content = df.to_string(index=False)
-                        
-                        # Skip empty files
-                        if not content.strip():
-                            continue
-                        
-                        # Create minimal viable payload
-                        document_payload = {
-                            "document": {
-                                "semantic_identifier": file_path.name,
-                                "sections": [
-                                    {"text": content}
-                                ],
-                                "source": "file",
-                                "metadata": {
-                                    "file_type": file_path.suffix.lower()
-                                }
-                            },
-                            "cc_pair_id": cc_pair_id
-                        }
-                        
-                        documents.append(document_payload)
-                        print(f"Processed: {file_path.name}")
-                        
-                    except Exception as e:
-                        print(f"Error reading {file_path.name}: {e}")
-                        continue
-            
-            return documents
+      def read_files_from_folder(folder_path, cc_pair_id=243):
+      """
+      Read PDF, TXT, DOCX, CSV, and XLSX files and create minimal ingestion payloads
+      """
+      documents = []
+      folder = Path(folder_path)
 
-        # Example usage
-        LOCAL_FOLDER = "./documents"  # Change to your folder path
-        CC_PAIR_ID = 243  # Use your actual cc_pair_id
+      # Supported file extensions
+      supported_extensions = {'.pdf', '.txt', '.docx', '.csv', '.xlsx'}
 
-        # Read and process files
-        documents_to_ingest = read_files_from_folder(LOCAL_FOLDER, CC_PAIR_ID)
-        print(f"\nFound {len(documents_to_ingest)} documents ready for ingestion")
-        ```
+      for file_path in folder.rglob('*'):
+      if file_path.is_file() and file_path.suffix.lower() in supported_extensions:
+      try:
+      # Extract text based on file type
+      if file_path.suffix.lower() == '.txt':
+      with open(file_path, 'r', encoding='utf-8') as f:
+      content = f.read()
 
-        ```bash cURL
-        # Create the JSON payload
-        cat > document_payload.json << 'EOF'
-        {
-          "document": {
-            "id": "ingestion_document_1",
-            "sections": [
-              {
-                "text": "This is the contents of the document that will be processed and saved into the Onyx filestore and Vespa index.",
-                "link": "https://docs.onyx.app/introduction#what-is-onyx"
-              },
-              {
-                "text": "You can include multiple content sections each with their own link or combine them.",
-                "link": "https://docs.onyx.app/introduction#main-features"
-              }
-            ],
-            "source": "file",
-            "semantic_identifier": "Onyx Ingestion Example",
-            "metadata": {
-                "tag": "informational",
-                "topics": ["onyx", "api"]
-            },
-            "doc_updated_at": "2025-09-19T08:20:00Z"
-          },
-          "cc_pair_id": 243
-        }
-        EOF
-        ```
+      elif file_path.suffix.lower() == '.pdf':
+      with open(file_path, 'rb') as f:
+      reader = PyPDF2.PdfReader(f)
+      content = ""
+      for page in reader.pages:
+      content += page.extract_text() + "\n"
+
+      elif file_path.suffix.lower() == '.docx':
+      doc = DocxDocument(file_path)
+      content = "\n".join([paragraph.text for paragraph in doc.paragraphs])
+
+      elif file_path.suffix.lower() in ['.csv', '.xlsx']:
+      df = pd.read_csv(file_path) if file_path.suffix.lower() == '.csv' else pd.read_excel(file_path)
+      content = df.to_string(index=False)
+
+      # Skip empty files
+      if not content.strip():
+      continue
+
+      # Create minimal viable payload
+      document_payload = {
+      "document": {
+      "semantic_identifier": file_path.name,
+      "sections": [
+      {"text": content}
+      ],
+      "source": "file",
+      "metadata": {
+      "file_type": file_path.suffix.lower()
+      }
+      },
+      "cc_pair_id": cc_pair_id
+      }
+
+      documents.append(document_payload)
+      print(f"Processed: {file_path.name}")
+
+      except Exception as e:
+      print(f"Error reading {file_path.name}: {e}")
+      continue
+
+      return documents
+
+      # Example usage
+      LOCAL_FOLDER = "./documents"  # Change to your folder path
+      CC_PAIR_ID = 243  # Use your actual cc_pair_id
+
+      # Read and process files
+      documents_to_ingest = read_files_from_folder(LOCAL_FOLDER, CC_PAIR_ID)
+      print(f"\nFound {len(documents_to_ingest)} documents ready for ingestion")
+      ```
+
+      ```bash Shell
+      # Create the JSON payload
+      cat > document_payload.json << 'EOF'
+      {
+      "document": {
+      "id": "ingestion_document_1",
+      "sections": [
+      {
+      "text": "This is the contents of the document that will be processed and saved into the Onyx filestore and Vespa index.",
+      "link": "https://docs.onyx.app/introduction#what-is-onyx"
+      },
+      {
+      "text": "You can include multiple content sections each with their own link or combine them.",
+      "link": "https://docs.onyx.app/introduction#main-features"
+      }
+      ],
+      "source": "file",
+      "semantic_identifier": "Onyx Ingestion Example",
+      "metadata": {
+      "tag": "informational",
+      "topics": ["onyx", "api"]
+      },
+      "doc_updated_at": "2025-09-19T08:20:00Z"
+      },
+      "cc_pair_id": 243
+      }
+      EOF
+      ```
     </CodeGroup>
   </Step>
 
   <Step title="Make the request to the /ingestion endpoint">
     <CodeGroup>
-        ```python Python
-        successful_ingestions = 0
-        failed_ingestions = 0
+      ```python Python
+      successful_ingestions = 0
+      failed_ingestions = 0
 
-        for i, document_data in enumerate(documents_to_ingest):
-            print(f"Ingesting document {i+1}/{len(documents_to_ingest)}: {document_data['document']['semantic_identifier']}")
-            
-            response = requests.post(
-                f"{API_BASE_URL}/ingestion",
-                headers=headers,
-                json=document_data
-            )
+      for i, document_data in enumerate(documents_to_ingest):
+      print(f"Ingesting document {i+1}/{len(documents_to_ingest)}: {document_data['document']['semantic_identifier']}")
 
-            if response.status_code == 200:
-                print(f"Successfully ingested: {document_data['document']['semantic_identifier']}")
-                successful_ingestions += 1
-            else:
-                print(f"Failed to ingest {document_data['document']['semantic_identifier']}: {response.status_code}")
-                print(f"   Error: {response.text}")
-                failed_ingestions += 1
+      response = requests.post(
+      f"{API_BASE_URL}/ingestion",
+      headers=headers,
+      json=document_data
+      )
 
-        print(f"\nIngestion complete: {successful_ingestions} successful, {failed_ingestions} failed")
-        ```
+      if response.status_code == 200:
+      print(f"Successfully ingested: {document_data['document']['semantic_identifier']}")
+      successful_ingestions += 1
+      else:
+      print(f"Failed to ingest {document_data['document']['semantic_identifier']}: {response.status_code}")
+      print(f"   Error: {response.text}")
+      failed_ingestions += 1
 
-        ```bash cURL
-        curl --location "${API_BASE_URL}/ingestion" \
-          --header 'Content-Type: application/json' \
-          --header "Authorization: Bearer ${API_KEY}" \
-          --data @document_payload.json
-        ```
+      print(f"\nIngestion complete: {successful_ingestions} successful, {failed_ingestions} failed")
+      ```
+
+      ```bash Shell
+      curl --location "${API_BASE_URL}/ingestion" \
+      --header 'Content-Type: application/json' \
+      --header "Authorization: Bearer ${API_KEY}" \
+      --data @document_payload.json
+      ```
     </CodeGroup>
   </Step>
 </Steps>
 
 <Tip>
-  The API will return a success response if the document is accepted for processing. The actual indexing happens asynchronously.
+  The API will return a success response if the document is accepted for processing.
+  The actual indexing happens asynchronously.
 </Tip>
 
 ### Full Code
@@ -319,15 +324,15 @@ def read_files_from_folder(folder_path, cc_pair_id=243):
     """
     documents = []
     folder = Path(folder_path)
-    
+
     if not folder.exists():
         print(f"Folder does not exist: {folder_path}")
         return documents
-    
+
     supported_extensions = {'.pdf', '.txt', '.docx', '.csv', '.xlsx'}
-    
+
     print(f"Reading files from: {folder.absolute()}")
-    
+
     for file_path in folder.rglob('*'):
         if file_path.is_file() and file_path.suffix.lower() in supported_extensions:
             try:
@@ -335,27 +340,27 @@ def read_files_from_folder(folder_path, cc_pair_id=243):
                 if file_path.suffix.lower() == '.txt':
                     with open(file_path, 'r', encoding='utf-8') as f:
                         content = f.read()
-                
+
                 elif file_path.suffix.lower() == '.pdf':
                     with open(file_path, 'rb') as f:
                         reader = PyPDF2.PdfReader(f)
                         content = ""
                         for page in reader.pages:
                             content += page.extract_text() + "\n"
-                
+
                 elif file_path.suffix.lower() == '.docx':
                     doc = DocxDocument(file_path)
                     content = "\n".join([paragraph.text for paragraph in doc.paragraphs])
-                
+
                 elif file_path.suffix.lower() in ['.csv', '.xlsx']:
                     df = pd.read_csv(file_path) if file_path.suffix.lower() == '.csv' else pd.read_excel(file_path)
                     content = df.to_string(index=False)
-                
+
                 # Skip empty files
                 if not content.strip():
                     print(f"Skipping empty file: {file_path.name}")
                     continue
-                
+
                 # Create minimal viable payload
                 document_payload = {
                     "document": {
@@ -370,10 +375,10 @@ def read_files_from_folder(folder_path, cc_pair_id=243):
                     },
                     "cc_pair_id": cc_pair_id
                 }
-                
+
                 documents.append(document_payload)
                 print(f"Processed: {file_path.name}")
-                
+
             except Exception as e:
                 print(f"Error reading {file_path.name}: {e}")
                 continue
@@ -396,7 +401,7 @@ failed_ingestions = 0
 print("\nStarting ingestion...")
 for i, document_data in enumerate(documents_to_ingest):
     print(f"[{i+1}/{len(documents_to_ingest)}] Ingesting: {document_data['document']['semantic_identifier']}")
-    
+
     response = requests.post(
         f"{API_BASE_URL}/ingestion",
         headers=headers,
@@ -424,6 +429,7 @@ print(f"   Total: {len(documents_to_ingest)}")
 ```
 
 ### Extra Example
+
 This script crawls a specified directory for JSON files and sends the contents to the Ingestion API.
 
 ```python Python expandable
@@ -443,7 +449,6 @@ import requests
 from requests.exceptions import RequestException
 from tqdm import tqdm  # type: ignore
 
-
 def setup_logging() -> None:
     """Configure logging for the application."""
     logging.basicConfig(
@@ -451,7 +456,6 @@ def setup_logging() -> None:
         format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
         handlers=[logging.StreamHandler()],
     )
-
 
 def parse_arguments() -> argparse.Namespace:
     """Parse command line arguments."""
@@ -497,46 +501,44 @@ def parse_arguments() -> argparse.Namespace:
         type=int,
         help="Connector credential pair ID to associate the documents with"
     )
-    
-    return parser.parse_args()
 
+    return parser.parse_args()
 
 def find_json_files(directory: str) -> List[Path]:
     """
     Find all JSON files in the specified directory and its subdirectories.
-    
+
     Args:
         directory: The directory to search in
-        
+
     Returns:
         A list of Path objects for all JSON files found
     """
     directory_path = Path(directory)
     if not directory_path.exists() or not directory_path.is_dir():
         raise ValueError(f"The specified path '{directory}' is not a valid directory")
-    
+
     json_files = list(directory_path.glob("**/*.json"))
     return json_files
-
 
 def load_processed_ids(tracking_file: str) -> set:
     """
     Load already processed document IDs from the tracking file.
-    
+
     Args:
         tracking_file: Path to the tracking file
-        
+
     Returns:
         A set of document IDs that have already been processed
     """
     tracking_path = Path(tracking_file)
-    
+
     if not tracking_path.exists():
         print(f"Tracking file '{tracking_file}' not found. Creating new file.")
         tracking_path.parent.mkdir(parents=True, exist_ok=True)
         tracking_path.touch()
         return set()
-    
+
     try:
         with open(tracking_path, "r", encoding="utf-8") as f:
             processed_ids = {line.strip() for line in f if line.strip()}
@@ -545,11 +547,10 @@ def load_processed_ids(tracking_file: str) -> set:
         logging.getLogger(__name__).warning(f"Error reading tracking file: {e}. Starting with empty set.")
         return set()
 
-
 def save_processed_id(tracking_file: str, document_id: str) -> None:
     """
     Save a processed document ID to the tracking file.
-    
+
     Args:
         tracking_file: Path to the tracking file
         document_id: The document ID to save
@@ -560,24 +561,23 @@ def save_processed_id(tracking_file: str, document_id: str) -> None:
     except Exception as e:
         logging.getLogger(__name__).error(f"Error saving document ID to tracking file: {e}")
 
-
 def transform_json_to_document_format(file_path: Path, cc_pair_id: int | None = None) -> dict:
     """
     Transform a JSON file into the document format required by the API.
-    
+
     Args:
         file_path: Path to the JSON file
         cc_pair_id: Optional connector credential pair ID
-        
+
     Returns:
         A dictionary in the required document format
     """
     logger = logging.getLogger(__name__)
-    
+
     try:
         with open(file_path, "r", encoding="utf-8") as f:
             data = json.load(f)
-        
+
         # Create the document structure
         document: dict[str, Any] = {
             "document": {
@@ -595,32 +595,31 @@ def transform_json_to_document_format(file_path: Path, cc_pair_id: int | None = 
                 "source": "web"
             }
         }
-        
+
         # Add cc_pair_id if provided
         if cc_pair_id is not None:
             document["cc_pair_id"] = cc_pair_id
             logger.debug(f"Added cc_pair_id {cc_pair_id} to document from {file_path}")
-        
+
         return document
-        
+
     except Exception as e:
         logger.error(f"Error transforming {file_path}: {str(e)}")
         return {}
 
-
 def send_json_to_api(
-    file_path: Path, 
-    api_url: str, 
+    file_path: Path,
+    api_url: str,
     tracking_file: str,
     document_id: str,
-    headers: Optional[dict] = None, 
+    headers: Optional[dict] = None,
     timeout: int = 30,
     dry_run: bool = False,
     cc_pair_id: Optional[int] = None
 ) -> bool:
     """
     Read a JSON file, transform it to the required format, and send to the API.
-    
+
     Args:
         file_path: Path to the JSON file
         api_url: URL of the API endpoint
@@ -630,57 +629,56 @@ def send_json_to_api(
         timeout: Request timeout in seconds
         dry_run: If True, don't actually send the request
         cc_pair_id: Optional connector credential pair ID
-        
+
     Returns:
         True if successful, False otherwise
     """
     logger = logging.getLogger(__name__)
-    
+
     try:
         # Transform the JSON to the required format
         transformed_data = transform_json_to_document_format(file_path, cc_pair_id)
-        
+
         if not transformed_data:
             logger.error(f"Failed to transform data from {file_path}")
             return False
-        
+
         if dry_run:
             logger.info(f"DRY RUN: Would send transformed data from {file_path} to {api_url}")
             save_processed_id(tracking_file, document_id)
             return True
-            
+
         response = requests.post(
             api_url,
             json=transformed_data,
             headers=headers or {},
             timeout=timeout
         )
-        
+
         response.raise_for_status()
         logger.info(f"Successfully sent transformed data from {file_path} to API")
-        
+
         # Save the document ID to tracking file on successful processing
         save_processed_id(tracking_file, document_id)
         return True
-        
+
     except json.JSONDecodeError:
         logger.error(f"Failed to parse JSON from {file_path}")
     except RequestException as e:
         logger.error(f"API request failed for {file_path}: {str(e)}")
     except Exception as e:
         logger.error(f"Unexpected error processing {file_path}: {str(e)}")
-    
-    return False
 
+    return False
 
 def main() -> int:
     """Main function to run the script."""
     setup_logging()
     logger = logging.getLogger(__name__)
-    
+
     try:
         args = parse_arguments()
-        
+
         # Parse headers if provided
         headers = None
         if args.headers:
@@ -689,24 +687,24 @@ def main() -> int:
             except json.JSONDecodeError:
                 logger.error("Failed to parse headers JSON string")
                 return 1
-        
+
         # Log cc_pair_id if provided
         if args.cc_pair_id is not None:
             logger.info(f"Using connector credential pair ID: {args.cc_pair_id}")
-        
+
         # Load already processed document IDs
         processed_ids = load_processed_ids(args.tracking_file)
         logger.info(f"Loaded {len(processed_ids)} already processed document IDs")
-        
+
         # Find all JSON files
         logger.info(f"Searching for JSON files in {args.directory}")
         json_files = find_json_files(args.directory)
         logger.info(f"Found {len(json_files)} JSON files")
-        
+
         if not json_files:
             logger.warning("No JSON files found. Exiting.")
             return 0
-        
+
         # Filter out already processed files
         unprocessed_files = []
         for file_path in json_files:
@@ -715,11 +713,11 @@ def main() -> int:
                 with open(file_path, "r", encoding="utf-8") as f:
                     data = json.load(f)
                 document_id = data.get("id")
-                
+
                 if not document_id:
                     logger.warning(f"No 'id' field found in {file_path}, skipping")
                     continue
-                    
+
                 if document_id not in processed_ids:
                     unprocessed_files.append((file_path, document_id))
                 else:
@@ -727,17 +725,17 @@ def main() -> int:
             except Exception as e:
                 logger.warning(f"Error reading document ID from {file_path}: {e}, skipping")
                 continue
-        
+
         logger.info(f"Found {len(unprocessed_files)} unprocessed files out of {len(json_files)} total files")
-        
+
         if not unprocessed_files:
             logger.info("All files have already been processed. Exiting.")
             return 0
-        
+
         # Process each unprocessed JSON file
         success_count = 0
         failure_count = 0
-        
+
         for file_path, document_id in tqdm(unprocessed_files, desc="Processing files"):
             success = send_json_to_api(
                 file_path=file_path,
@@ -749,24 +747,23 @@ def main() -> int:
                 dry_run=args.dry_run,
                 cc_pair_id=args.cc_pair_id
             )
-            
+
             if success:
                 success_count += 1
             else:
                 failure_count += 1
-        
+
         # Report results
         logger.info(f"Processing complete. Success: {success_count}, Failures: {failure_count}")
-        
+
         return 0 if failure_count == 0 else 1
-        
+
     except KeyboardInterrupt:
         logger.info("Process interrupted by user")
         return 130
     except Exception as e:
         logger.exception(f"Unhandled exception: {str(e)}")
         return 1
-
 
 if __name__ == "__main__":
     main()

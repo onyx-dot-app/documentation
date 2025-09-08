@@ -1,5 +1,5 @@
 ---
-title: Quickstart
+title: "Quickstart"
 description: "Deploy Onyx quickly with Docker"
 icon: "bolt"
 ---
@@ -9,50 +9,56 @@ import Docker from "/snippets/docker.mdx"
 
 <ResourcingOverview />
 
-For more details, our [Resourcing guide](/deployment/getting_started/resourcing) covers selecting Cloud instances, resourcing by container, and how to scale your Onyx deployment.
+For more details, our [Resourcing guide](/deployment/getting_started/resourcing) covers selecting Cloud instances,
+resourcing by container, and how to scale your Onyx deployment.
 
 ## Onyx CLI
 
 <Tip>
   Onyx CLI is coming soon! Preview the CLI below.
 </Tip>
-  <Accordion title="Onyx CLI preview">
 
-  The Onyx CLI is a lightweight tool that checks your system for requirements and then deploys Onyx. 
-  By default, the tool uses images from our Docker Hub, but it can be configured to build from source.
+<Accordion title="Onyx CLI Preview">
+  The Onyx CLI is a lightweight tool that checks your system for requirements and then deploys Onyx. By default,
+  the tool uses images from our Docker Hub, but it can be configured to build from source.
 
   **This tool should not be used for production deployments at this time.**
 
   <Steps>
-      <Step title="Install Requirements">
-          - [Python 3.11+](https://www.python.org/downloads/)
-          - [Docker](https://docs.docker.com/get-docker/)
-          - [Docker Compose](https://docs.docker.com/compose/install/)
-      </Step>
-      <Step title="Install Onyx CLI and Check System Requirements">
-          The Onyx CLI is installed via pip and is automatically kept up to date.
-          <Accordion title="Optional: Create a virtual environment">
-              A virtual Python environment is useful for isolating dependencies and avoiding conflicts with other projects.
-              <Note>
-                If you create a virtual environment, you'll need to activate it before running `onyx` CLI commands.
-              </Note>
-            
+    <Step title="Install Requirements">
+      - [Python 3.11+](https://www.python.org/downloads/)
+      - [Docker](https://docs.docker.com/get-docker/)
+      - [Docker Compose](https://docs.docker.com/compose/install/)
+    </Step>
+
+    <Step title="Install Onyx CLI and Check System Requirements">
+      The Onyx CLI is installed via pip and is automatically kept up to date.
+
+      <Accordion title="Optional: Create a virtual environment">
+      A virtual Python environment is useful for isolating dependencies and avoiding conflicts with other projects.
+
+      <Note>
+        If you create a virtual environment, you'll need to activate it before running `onyx` CLI commands.
+      </Note>
+
               ```bash
               python3.11 -m venv ~/.onyx-venv   # create virtual environment
               source ~/.onyx-venv/bin/activate  # activate virtual environment
               ```
-          </Accordion>
-        
+      </Accordion>
+
           ```bash
           pip install onyx-dot-app
           # or pip3 install onyx-dot-app
           onyx doctor
           ```
-          
-          If you see any errors or warnings, please double check the system requirements and the [Resourcing guide](/deployment/getting_started/resourcing).
 
-          <Accordion title="Useful Onyx CLI Commands">
-            None exhaustive:
+      If you see any errors or warnings,
+      please double check the system requirements and the [Resourcing guide](/deployment/getting_started/resourcing).
+
+      <Accordion title="Useful Onyx CLI Commands">
+      None exhaustive:
+
               ```bash
               onyx help     # see all commands
               onyx doctor   # pre-flight check system requirements
@@ -60,38 +66,44 @@ For more details, our [Resourcing guide](/deployment/getting_started/resourcing)
               onyx down     # stop Onyx Docker stack
               onyx clone    # clone the Onyx repo
               ```
-          </Accordion>
-      </Step>
-      <Step title="Launch Onyx">
+      </Accordion>
+    </Step>
+
+    <Step title="Launch Onyx">
           ```bash
           onyx up
           ```
-          <Accordion title="Notes about this command">
-            See [Onyx CLI README] LINK HERE for more details.
-            - This command will launch `onyx-stack` using Docker Compose
-            - Without any additional arguments, this command will:
-              - Create an `~/onyx-dot-app/onyx` directory
-              - Place deployment files in `~/onyx-dot-app/onyx/deployment/`
-              - Pull images from Docker Hub using:
-                - `docker compose -f docker-compose.dev.yml -p onyx-stack up -d --pull always --force-recreate`
-            - Copy the `env.prod.template` file in `~/onyx-dot-app/onyx/deployment/docker_compose/` to `.env` to configure your deployment
-            - You may direct the command to use an existing `onyx` directory by passing the `--source` flag
-          </Accordion>
-      </Step>
-      <Step title="Configure your Deployment">
-        Configure your deployment using a `.env` file.
+
+      <Accordion title="Notes about this command">
+      See [Onyx CLI README] LINK HERE for more details.
+      - This command will launch `onyx-stack` using Docker Compose
+      - Without any additional arguments, this command will:
+      - Create an `~/onyx-dot-app/onyx` directory
+      - Place deployment files in `~/onyx-dot-app/onyx/deployment/`
+      - Pull images from Docker Hub using:
+      - `docker compose -f docker-compose.dev.yml -p onyx-stack up -d --pull always --force-recreate`
+      - Copy the `env.prod.template` file in `~/onyx-dot-app/onyx/deployment/docker_compose/` to `.env` to configure your deployment
+      - You may direct the command to use an existing `onyx` directory by passing the `--source` flag
+      </Accordion>
+    </Step>
+
+    <Step title="Configure your Deployment">
+      Configure your deployment using a `.env` file.
+
         ```bash
         cd ~/onyx-dot-app/onyx/deployment/docker_compose
         cp env.prod.template .env
         ```
 
-        You'll need to restart Onyx after changing any `.env` variables.
+      You'll need to restart Onyx after changing any `.env` variables.
+
         ```bash
         onyx down
         onyx up
         ```
-        Read more about [configuration](/deployment/configuration/configuration).
-      </Step>
+
+      Read more about [configuration](/deployment/configuration/configuration).
+    </Step>
   </Steps>
 </Accordion>
 
@@ -104,11 +116,13 @@ For more details, our [Resourcing guide](/deployment/getting_started/resourcing)
 <Docker />
 
 ## Next Steps
+
 <CardGroup cols={2}>
-  <Card title="Learn about Resourcing" icon="microchip" href="/deployment/getting_started/resourcing"> 
+  <Card title="Learn about Resourcing" icon="microchip" href="/deployment/getting_started/resourcing">
     Learn about Cloud instances, resourcing by container, and how to scale your Onyx deployment.
   </Card>
-  <Card title="Configure your Deployment" icon="microchip" href="/deployment/configuration/configuration"> 
+
+  <Card title="Configure your Deployment" icon="microchip" href="/deployment/configuration/configuration">
     Learn about how to configure Onyx using environment variables.
   </Card>
 </CardGroup>

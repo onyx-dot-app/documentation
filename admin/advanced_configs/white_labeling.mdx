@@ -1,0 +1,125 @@
+---
+title: "White Labeling"
+description: "Customize Onyx's branding and appearance"
+icon: "palette"
+---
+
+White labeling allows you to customize Onyx's appearance to match your organization's identity.
+
+<Note>
+  White labeling is an Enterprise Edition feature.
+</Note>
+
+{/* The screenshots here should really be of the white-labeled content and not the admin page. */}
+
+## White Labeling Options
+
+<img className="rounded-image" src="/assets/admin/advanced_configs/whitelabeling_overview.png" alt="White Labeling Overview" />
+
+### Name and Logo
+
+Adjust the name and logo of your Onyx instance by specifying **Application Name** and uploading a **Custom Logo**.
+
+These elements change what is shown in the top left corner of the Onyx interface as well as on the login page.
+
+### Headers and Popups
+
+In the **Advanced Options** section, you can add content in the header as well as a custom popup window.
+
+Additionally, you can enable a Consent Screen that will be shown to users before they can access the Onyx interface.
+
+<img className="rounded-image" src="/assets/admin/advanced_configs/whitelabeling_advanced.png" alt="White Labeling Headers and Popups" />
+
+### Footer
+
+Below the Consent Screen toggle, you can add content to the footer of the Onyx interface.
+
+<img className="rounded-image" src="/assets/admin/advanced_configs/whitelabeling_footer.png" alt="White Labeling Footer" />
+
+## Color Theming
+
+Onyx uses [Tailwind CSS](https://tailwindcss.com/).
+
+### Theme Architecture
+
+The color system is built on two main files:
+
+- `web/tailwind-themes/tailwind.config.js`: Base Tailwind configuration and color definitions
+- `web/src/app/globals.css`: CSS variables for colors used in the Tailwind config
+
+### Customization Methods
+
+<AccordionGroup>
+<Accordion title="Method 1: Direct CSS Variable Modification">
+<Steps>
+  <Step title="Navigate to globals.css">
+    Navigate to `web/src/app/globals.css`
+  </Step>
+
+  <Step title="Modify CSS variables">
+    Modify the CSS variables to customize base colors (accent colors, backgrounds, etc.)
+  </Step>
+</Steps>
+</Accordion>
+
+<Accordion title="Method 2: Tailwind Config Override">
+<Steps>
+  <Step title="Navigate to Tailwind config">
+    Navigate to `web/tailwind-themes/tailwind.config.js`
+  </Step>
+
+  <Step title="Override configuration values">
+    Override specific values from the base configuration
+  </Step>
+</Steps>
+</Accordion>
+
+<Accordion title="Method 3: Organization-Specific Theme (Recommended)">
+For comprehensive theming:
+
+<Steps>
+  <Step title="Navigate to themes directory">
+    Navigate to `web/tailwind-themes/`
+  </Step>
+
+  <Step title="Create organization folder">
+    Create a new folder with your organization's name
+  </Step>
+
+  <Step title="Create Tailwind config">
+    Create a `tailwind.config.js` file in this folder
+  </Step>
+
+  <Step title="Override base configuration">
+    Override any values from the base configuration
+  </Step>
+
+  <Step title="Set environment variable">
+    Set the `NEXT_PUBLIC_THEME` environment variable to your organization's folder name
+  </Step>
+</Steps>
+</Accordion>
+</AccordionGroup>
+
+### Example Configuration
+
+To change the background to black, create or modify your theme file:
+
+```javascript
+/** @type {import('tailwindcss').Config} */
+
+module.exports = {
+  theme: {
+    extend: {
+      colors: {
+        "background": "#000000",
+      },
+    },
+  },
+};
+```
+
+<Warning>
+  Color customizations require building Onyx from source. For local testing,
+  restart the NextJS application to apply changes.
+</Warning>

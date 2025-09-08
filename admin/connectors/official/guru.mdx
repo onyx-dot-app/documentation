@@ -1,0 +1,41 @@
+---
+title: "Guru"
+description: "Access cards and collections from Guru"
+---
+
+## How it works
+
+The Guru connector pulls in all the Cards your user has access to based on a User Access Token.
+
+Cards are updated every **10** minutes.
+
+## Setting up
+
+### Authorization
+
+<Steps>
+  <Step title="Obtain access token">
+    Obtain a User Access Token.
+    Follow the Guru API guide described [here](https://developer.getguru.com/docs/getting-started) for more details.
+  </Step>
+</Steps>
+
+<img className="rounded-image" src="/assets/admin/connectors/guru/GuruConnectorAuth.gif" alt="Guru API dashboard steps to create a User Access Token" />
+
+### Indexing
+
+<Steps>
+  <Step title="Open Guru connector">
+    Navigate to the Admin Panel and select the **Guru** Connector
+  </Step>
+
+  <Step title="Enter credentials">
+    In **Step 1**, provide your **Username** (most likely your email) and the **Access Token** from above.
+
+    <img className="rounded-image" src="/assets/admin/connectors/guru/GuruConnector.png" alt="Onyx Guru connector credentials form with username and access token" />
+  </Step>
+
+  <Step title="Start indexing">
+    Click `Connect` to begin indexing
+  </Step>
+</Steps>

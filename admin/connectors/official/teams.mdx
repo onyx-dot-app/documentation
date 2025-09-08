@@ -1,0 +1,62 @@
+---
+title: "Microsoft Teams"
+description: "Access messages and files from Microsoft Teams"
+---
+
+## How it works
+
+The Teams connector will go through all requested sites belonging to an organization and index all the files available
+to that site.
+
+## Setting up
+
+### Authorization
+
+<Steps>
+  <Step title="Open Azure Portal">
+    Log in to azure portal for your organization: https://portal.azure.com/#home
+  </Step>
+
+  <Step title="Create app registration">
+    Navigate to “app registrations” using the search bar. Click **New Registration**.
+    Name it something like “Onyx Teams Connector”, leave everything else as default, and click **Register**.
+  </Step>
+
+  <Step title="Copy IDs">
+    Under “Essentials” in the overview tab, copy the client ID and Directory ID and paste into the Onyx connector later.
+  </Step>
+
+  <Step title="Create client secret">
+    Navigate to the “Certificates & secrets” tab in Azure Portal and click **New client secret**.
+    Fill out the description, set the expiration to 24 months, and click **Add**.
+    Copy the secret value in the **Value** column.
+  </Step>
+
+  <Step title="Add API permissions">
+    Navigate to the "API Permissions" tab and click **Add a permission**.
+    Click **Microsoft Graph** > **Application permissions**. Add:
+    - **Team.ReadBasic.All** (Team)
+    - **TeamSettings.ReadWrite.All** (TeamsSettings)
+    - **Channel.ReadBasic.All** (Channel)
+    - **ChannelSettings.ReadWrite.All** (ChannelSettings)
+    - **ChannelMessage.Read.All** (ChannelMessage)
+    - **ChannelMember.Read.All** (ChannelMember)
+    Click **Add permissions**, then click **Grant admin consent for \<Organization name\>** and **Confirm**.
+  </Step>
+</Steps>
+
+### Indexing
+
+<Steps>
+  <Step title="Open Teams connector">
+    Navigate to the Admin Panel and select the **Teams** Connector Tile.
+  </Step>
+
+  <Step title="Enter credentials">
+    Provide the **Application (client) ID**, **Directory (tenant) ID** and **Client Secret Value** from steps above.
+  </Step>
+
+  <Step title="Select teams and connect">
+    Select a list of teams to pull from or leave blank and click **Connect** to pull everything.
+  </Step>
+</Steps>

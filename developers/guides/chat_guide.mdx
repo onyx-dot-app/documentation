@@ -5,82 +5,84 @@ icon: "bolt"
 ---
 
 <Tip>
-    Start with the simple API and move to the advanced flow when you need more control.
+  Start with the simple API and move to the advanced flow when you need more control.
 </Tip>
 
 ## Simple Chat Flow
-*Send Message Simple API* is the quickest way to interact with Onyx programmatically. 
 
-This endpoint has fewer required parameters and responds with a minimal set of information such as the AI's answer and a list of the top documents.
+*Send Message Simple API* is the quickest way to interact with Onyx programmatically.
+
+This endpoint has fewer required parameters and responds with a minimal set of information such as the AI's answer and a
+list of the top documents.
 
 <Note>
-    You must specify either a `chat_session_id` or a `persona_id` in your request.
+  You must specify either a `chat_session_id` or a `persona_id` in your request.
 </Note>
 
 <CodeGroup>
-```python Python expandable
-import requests
+  ```python Python expandable
+  import requests
 
-API_BASE_URL = "https://cloud.onyx.app/api" # or your own domain
-API_KEY = "YOUR_KEY_HERE"
+  API_BASE_URL = "https://cloud.onyx.app/api" # or your own domain
+  API_KEY = "YOUR_KEY_HERE"
 
-headers = {
-    "Authorization": f"Bearer {API_KEY}",
-    "Content-Type": "application/json"
-}
+  headers = {
+  "Authorization": f"Bearer {API_KEY}",
+  "Content-Type": "application/json"
+  }
 
-'''
-- To create a chat session, see the Full-featured Chat Flow guide below.
-- To find your persona_id, see the List Agents endpoint in the Agents API Reference.
-'''
+  '''
+  - To create a chat session, see the Full-featured Chat Flow guide below.
+  - To find your persona_id, see the List Agents endpoint in the Agents API Reference.
+  '''
 
-response = requests.post(
-    f"{API_BASE_URL}/chat/send-message-simple-api",
-    headers=headers,
-    json={
-        "message": "What is Onyx?",
-        "persona_id": "0" # The default Onyx Search Assistant
-    }
-)
+  response = requests.post(
+  f"{API_BASE_URL}/chat/send-message-simple-api",
+  headers=headers,
+  json={
+  "message": "What is Onyx?",
+  "persona_id": "0" # The default Onyx Search Agent
+  }
+  )
 
-answer = response.json()["answer"]
-chat_session_id = response.json()["chat_session_id"] # Save this to continue the conversation
-top_documents = [
-    {
-        "id": doc["document_id"], 
-        "title": doc["semantic_identifier"],
-        "link": doc["link"]
-    } for doc in response.json()["top_documents"]
-] # Parse important information from the results
+  answer = response.json()["answer"]
+  chat_session_id = response.json()["chat_session_id"] # Save this to continue the conversation
+  top_documents = [
+  {
+  "id": doc["document_id"],
+  "title": doc["semantic_identifier"],
+  "link": doc["link"]
+  } for doc in response.json()["top_documents"]
+  ] # Parse important information from the results
 
-print(f"Answer: {answer}")
-print(f"Top Documents: {top_documents[:5]}") # Print top 5 documents
-```
+  print(f"Answer: {answer}")
+  print(f"Top Documents: {top_documents[:5]}") # Print top 5 documents
+  ```
 
-```bash cURL expandable
-#!/bin/bash
+  ```bash Shell expandable
+  #!/bin/bash
 
-API_BASE_URL="https://cloud.onyx.app/api"
-API_KEY="YOUR_KEY_HERE"
+  API_BASE_URL="https://cloud.onyx.app/api"
+  API_KEY="YOUR_KEY_HERE"
 
-echo "Sending message to Onyx..."
-RESPONSE=$(curl -s -X POST "${API_BASE_URL}/chat/send-message-simple-api" \
+  echo "Sending message to Onyx..."
+  RESPONSE=$(curl -s -X POST "${API_BASE_URL}/chat/send-message-simple-api" \
   -H "Authorization: Bearer ${API_KEY}" \
   -H "Content-Type: application/json" \
   -d '{
-    "message": "What is Onyx?",
-    "persona_id": "0"
+  "message": "What is Onyx?",
+  "persona_id": "0"
   }')
 
-echo "Answer:"
-echo $RESPONSE | jq -r '.answer'
+  echo "Answer:"
+  echo $RESPONSE | jq -r '.answer'
 
-echo -e "\nChat Session ID (save for continuing conversation):"
-echo $RESPONSE | jq -r '.chat_session_id'
+  echo -e "\nChat Session ID (save for continuing conversation):"
+  echo $RESPONSE | jq -r '.chat_session_id'
 
-echo -e "\nTop Documents:"
-echo $RESPONSE | jq '.top_documents[] | {id: .document_id, title: .semantic_identifier, link: .link}'
-```
+  echo -e "\nTop Documents:"
+  echo $RESPONSE | jq '.top_documents[] | {id: .document_id, title: .semantic_identifier, link: .link}'
+  ```
 </CodeGroup>
 
 ## Advanced Chat Flow
@@ -88,211 +90,214 @@ echo $RESPONSE | jq '.top_documents[] | {id: .document_id, title: .semantic_iden
 Skip to the [Full Code](#full-code) section if you don't want the step-by-step guide.
 
 <Steps>
-    <Step title="Prepare your request">
-        <CodeGroup>
-        ```python Python
-        import requests
+  <Step title="Prepare your request">
+    <CodeGroup>
+      ```python Python
+      import requests
 
-        API_BASE_URL = "https://cloud.onyx.app/api" # or your own domain
-        API_KEY = "YOUR_KEY_HERE"
+      API_BASE_URL = "https://cloud.onyx.app/api" # or your own domain
+      API_KEY = "YOUR_KEY_HERE"
 
-        headers = {
-            "Authorization": f"Bearer {API_KEY}",
-            "Content-Type": "application/json"
-        }
-        ```
+      headers = {
+      "Authorization": f"Bearer {API_KEY}",
+      "Content-Type": "application/json"
+      }
+      ```
 
-        ```bash cURL
-        API_BASE_URL="https://cloud.onyx.app/api"
-        API_KEY="YOUR_KEY_HERE"
-        ```
-        </CodeGroup>
-    </Step>
-    <Step title="Create a chat session">
-        <CodeGroup>
-        ```python Python
-        session_response = requests.post(
-            f"{API_BASE_URL}/chat/create-chat-session",
-            headers=headers,
-            json={
-                "persona_id": 0, # The default Onyx Search Assistant
-                "description": "Onyx API Guide Chat Session"
-            }
-        )
+      ```bash Shell
+      API_BASE_URL="https://cloud.onyx.app/api"
+      API_KEY="YOUR_KEY_HERE"
+      ```
+    </CodeGroup>
+  </Step>
 
-        chat_session_id = session_response.json()["chat_session_id"]
-        ```
+  <Step title="Create a chat session">
+    <CodeGroup>
+      ```python Python
+      session_response = requests.post(
+      f"{API_BASE_URL}/chat/create-chat-session",
+      headers=headers,
+      json={
+      "persona_id": 0, # The default Onyx Search Agent
+      "description": "Onyx API Guide Chat Session"
+      }
+      )
 
-        ```bash cURL
-        CHAT_SESSION_RESPONSE=$(curl -s -X POST "${API_BASE_URL}/chat/create-chat-session" \
-          -H "Authorization: Bearer ${API_KEY}" \
-          -H "Content-Type: application/json" \
-          -d '{
-            "persona_id": 0,
-            "description": "Onyx API Guide Chat Session"
-          }')
+      chat_session_id = session_response.json()["chat_session_id"]
+      ```
 
-        # Extract chat session ID (requires jq for JSON parsing)
-        CHAT_SESSION_ID=$(echo $CHAT_SESSION_RESPONSE | jq -r '.chat_session_id')
-        ```
-        </CodeGroup>
-    </Step>
-    <Step title="Send message">
-        <CodeGroup>
-        ```python Python
-        message_response = requests.post(
-            f"{API_BASE_URL}/chat/send-message-simple-api",
-            headers=headers,
-            json={
-                "chat_session_id": chat_session_id,
-                "parent_message_id": None,
-                "message": "What is Onyx?",
-                "file_descriptors": [],
-                "prompt_id": None,
-                "search_doc_ids": [],
-                "retrieval_options": {}
-            }
-        )
-        ```
+      ```bash Shell
+      CHAT_SESSION_RESPONSE=$(curl -s -X POST "${API_BASE_URL}/chat/create-chat-session" \
+      -H "Authorization: Bearer ${API_KEY}" \
+      -H "Content-Type: application/json" \
+      -d '{
+      "persona_id": 0,
+      "description": "Onyx API Guide Chat Session"
+      }')
 
-        ```bash cURL
-        MESSAGE_RESPONSE=$(curl -s -X POST "${API_BASE_URL}/chat/send-message-simple-api" \
-          -H "Authorization: Bearer ${API_KEY}" \
-          -H "Content-Type: application/json" \
-          -d "{
-            \"chat_session_id\": \"${CHAT_SESSION_ID}\",
-            \"parent_message_id\": null,
-            \"message\": \"What is Onyx?\",
-            \"file_descriptors\": [],
-            \"prompt_id\": null,
-            \"search_doc_ids\": [],
-            \"retrieval_options\": {}
-          }")
-        ```
-        </CodeGroup>
-    </Step>
-    <Step title="Parse response">
-        <CodeGroup>
-        ```python Python
-        answer = message_response.json()["answer"]
-        top_documents = [
-            {
-                "id": doc["document_id"], 
-                "title": doc["semantic_identifier"],
-                "link": doc["link"]
-            } for doc in message_response.json()["top_documents"]
-        ]
-        print(f"Answer: {answer}")
-        print(f"Top Documents: {top_documents[:5]}")
-        ```
+      # Extract chat session ID (requires jq for JSON parsing)
+      CHAT_SESSION_ID=$(echo $CHAT_SESSION_RESPONSE | jq -r '.chat_session_id')
+      ```
+    </CodeGroup>
+  </Step>
 
-        ```bash cURL
-        echo "Response received:"
-        echo $MESSAGE_RESPONSE
+  <Step title="Send message">
+    <CodeGroup>
+      ```python Python
+      message_response = requests.post(
+      f"{API_BASE_URL}/chat/send-message-simple-api",
+      headers=headers,
+      json={
+      "chat_session_id": chat_session_id,
+      "parent_message_id": None,
+      "message": "What is Onyx?",
+      "file_descriptors": [],
+      "prompt_id": None,
+      "search_doc_ids": [],
+      "retrieval_options": {}
+      }
+      )
+      ```
 
-        ANSWER=$(echo $MESSAGE_RESPONSE | jq -r '.answer')
-        echo "Answer: $ANSWER"
+      ```bash Shell
+      MESSAGE_RESPONSE=$(curl -s -X POST "${API_BASE_URL}/chat/send-message-simple-api" \
+      -H "Authorization: Bearer ${API_KEY}" \
+      -H "Content-Type: application/json" \
+      -d "{
+      \"chat_session_id\": \"${CHAT_SESSION_ID}\",
+      \"parent_message_id\": null,
+      \"message\": \"What is Onyx?\",
+      \"file_descriptors\": [],
+      \"prompt_id\": null,
+      \"search_doc_ids\": [],
+      \"retrieval_options\": {}
+      }")
+      ```
+    </CodeGroup>
+  </Step>
 
-        echo "Top Documents:"
-        echo $MESSAGE_RESPONSE | jq '.top_documents[] | {id: .document_id, title: .semantic_identifier, link: .link}'
-        ```
-        </CodeGroup>
-    </Step>
+  <Step title="Parse response">
+    <CodeGroup>
+      ```python Python
+      answer = message_response.json()["answer"]
+      top_documents = [
+      {
+      "id": doc["document_id"],
+      "title": doc["semantic_identifier"],
+      "link": doc["link"]
+      } for doc in message_response.json()["top_documents"]
+      ]
+      print(f"Answer: {answer}")
+      print(f"Top Documents: {top_documents[:5]}")
+      ```
+
+      ```bash Shell
+      echo "Response received:"
+      echo $MESSAGE_RESPONSE
+
+      ANSWER=$(echo $MESSAGE_RESPONSE | jq -r '.answer')
+      echo "Answer: $ANSWER"
+
+      echo "Top Documents:"
+      echo $MESSAGE_RESPONSE | jq '.top_documents[] | {id: .document_id, title: .semantic_identifier, link: .link}'
+      ```
+    </CodeGroup>
+  </Step>
 </Steps>
 
 #### Full Code
 
 <CodeGroup>
-```python Python expandable
-import requests
+  ```python Python expandable
+  import requests
 
-API_BASE_URL = "https://cloud.onyx.app/api" # or your own domain
-API_KEY = "YOUR_KEY_HERE"
+  API_BASE_URL = "https://cloud.onyx.app/api" # or your own domain
+  API_KEY = "YOUR_KEY_HERE"
 
-headers = {
-    "Authorization": f"Bearer {API_KEY}",
-    "Content-Type": "application/json"
-}
+  headers = {
+  "Authorization": f"Bearer {API_KEY}",
+  "Content-Type": "application/json"
+  }
 
-# Create a chat session
-session_response = requests.post(
-    f"{API_BASE_URL}/chat/create-chat-session",
-    headers=headers,
-    json={
-        "persona_id": 0, # The default Onyx Search Assistant
-        "description": "Onyx API Guide Chat Session"
-    }
-)
+  # Create a chat session
+  session_response = requests.post(
+  f"{API_BASE_URL}/chat/create-chat-session",
+  headers=headers,
+  json={
+  "persona_id": 0, # The default Onyx Search Agent
+  "description": "Onyx API Guide Chat Session"
+  }
+  )
 
-chat_session_id = session_response.json()["chat_session_id"]
+  chat_session_id = session_response.json()["chat_session_id"]
 
-# Send message
-message_response = requests.post(
-    f"{API_BASE_URL}/chat/send-message-simple-api",
-    headers=headers,
-    json={
-        "chat_session_id": chat_session_id,
-        "parent_message_id": None,
-        "message": "What is Onyx?",
-        "file_descriptors": [],
-        "prompt_id": None,
-        "search_doc_ids": [],
-        "retrieval_options": {}
-    }
-)
+  # Send message
+  message_response = requests.post(
+  f"{API_BASE_URL}/chat/send-message-simple-api",
+  headers=headers,
+  json={
+  "chat_session_id": chat_session_id,
+  "parent_message_id": None,
+  "message": "What is Onyx?",
+  "file_descriptors": [],
+  "prompt_id": None,
+  "search_doc_ids": [],
+  "retrieval_options": {}
+  }
+  )
 
-# Parse response
-answer = message_response.json()["answer"]
-top_documents = [
-    {
-        "id": doc["document_id"], 
-        "title": doc["semantic_identifier"],
-        "link": doc["link"]
-    } for doc in message_response.json()["top_documents"]
-]
+  # Parse response
+  answer = message_response.json()["answer"]
+  top_documents = [
+  {
+  "id": doc["document_id"],
+  "title": doc["semantic_identifier"],
+  "link": doc["link"]
+  } for doc in message_response.json()["top_documents"]
+  ]
 
-print(f"Answer: {answer}")
-print(f"Top Documents: {top_documents[:5]}")
-```
+  print(f"Answer: {answer}")
+  print(f"Top Documents: {top_documents[:5]}")
+  ```
 
-```bash cURL expandable
-#!/bin/bash
+  ```bash Shell expandable
+  #!/bin/bash
 
-API_BASE_URL="https://cloud.onyx.app/api"
-API_KEY="YOUR_KEY_HERE"
+  API_BASE_URL="https://cloud.onyx.app/api"
+  API_KEY="YOUR_KEY_HERE"
 
-echo "Creating chat session..."
-CHAT_SESSION_RESPONSE=$(curl -s -X POST "${API_BASE_URL}/chat/create-chat-session" \
+  echo "Creating chat session..."
+  CHAT_SESSION_RESPONSE=$(curl -s -X POST "${API_BASE_URL}/chat/create-chat-session" \
   -H "Authorization: Bearer ${API_KEY}" \
   -H "Content-Type: application/json" \
   -d '{
-    "persona_id": 0,
-    "description": "Onyx API Guide Chat Session"
+  "persona_id": 0,
+  "description": "Onyx API Guide Chat Session"
   }')
 
-CHAT_SESSION_ID=$(echo $CHAT_SESSION_RESPONSE | jq -r '.chat_session_id')
-echo "Created chat session: $CHAT_SESSION_ID"
+  CHAT_SESSION_ID=$(echo $CHAT_SESSION_RESPONSE | jq -r '.chat_session_id')
+  echo "Created chat session: $CHAT_SESSION_ID"
 
-echo "Sending message..."
-MESSAGE_RESPONSE=$(curl -s -X POST "${API_BASE_URL}/chat/send-message-simple-api" \
+  echo "Sending message..."
+  MESSAGE_RESPONSE=$(curl -s -X POST "${API_BASE_URL}/chat/send-message-simple-api" \
   -H "Authorization: Bearer ${API_KEY}" \
   -H "Content-Type: application/json" \
   -d "{
-    \"chat_session_id\": \"${CHAT_SESSION_ID}\",
-    \"parent_message_id\": null,
-    \"message\": \"What is Onyx?\",
-    \"file_descriptors\": [],
-    \"prompt_id\": null,
-    \"search_doc_ids\": [],
-    \"retrieval_options\": {}
+  \"chat_session_id\": \"${CHAT_SESSION_ID}\",
+  \"parent_message_id\": null,
+  \"message\": \"What is Onyx?\",
+  \"file_descriptors\": [],
+  \"prompt_id\": null,
+  \"search_doc_ids\": [],
+  \"retrieval_options\": {}
   }")
 
-echo "Answer:"
-echo $MESSAGE_RESPONSE | jq -r '.answer'
+  echo "Answer:"
+  echo $MESSAGE_RESPONSE | jq -r '.answer'
 
-echo -e "\nTop Documents:"
-echo $MESSAGE_RESPONSE | jq '.top_documents[] | {id: .document_id, title: .semantic_identifier, link: .link}'
-```
+  echo -e "\nTop Documents:"
+  echo $MESSAGE_RESPONSE | jq '.top_documents[] | {id: .document_id, title: .semantic_identifier, link: .link}'
+  ```
 </CodeGroup>
 
 ## Next Steps
@@ -301,7 +306,7 @@ echo $MESSAGE_RESPONSE | jq '.top_documents[] | {id: .document_id, title: .seman
   <Card title="Guide: Use the Ingestion API" icon="upload" href="/developers/guides/index_files_ingestion_api">
     Use the lightweight ingestion API to index documents
   </Card>
-  
+
   <Card title="Guide: Create a Connector" icon="link" href="/developers/guides/create_connector">
     Learn how to create and configure Connectors programmatically
   </Card>

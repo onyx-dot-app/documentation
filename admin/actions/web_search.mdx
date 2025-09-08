@@ -1,0 +1,45 @@
+---
+title: "Web Search"
+description: "Enable web search capabilities for your AI Agents in Onyx"
+icon: "globe"
+---
+
+<Warning>
+  This page is still a work in progress. A guide for all Web Search providers is coming soon!
+</Warning>
+
+The web search action allows your Agents to query the internet and retrieve real-time information from web sources.
+
+## Web Search in Onyx
+
+### On Onyx Cloud
+
+Web search is already active and ready to use on Onyx Cloud - no additional configuration required!
+
+### Exa AI
+
+<Steps>
+  <Step title="Create an Exa AI API key">
+    Navigate to the [Exa AI dashboard](https://exa.ai/dashboard) and create a new API key.
+  </Step>
+
+  <Step title="Set the EXA_API_KEY environment variable">
+    In your `.env` or `values.yaml` file, provide your Exa AI API key.
+
+    ```bash .env
+    EXA_API_KEY=your_exa_api_key_here
+    ```
+
+    ```bash values.yaml
+    configMap:
+      EXA_API_KEY: your_exa_api_key_here
+    ```
+
+    Once the EXA_API_KEY is set,
+    the web search action will automatically appear in your Actions dashboard and can be attached to your Agents.
+
+    <Note>
+      Make sure your Agent has the Web Search Action enabled!
+    </Note>
+  </Step>
+</Steps>

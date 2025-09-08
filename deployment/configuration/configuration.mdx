@@ -1,12 +1,12 @@
 ---
-title: Configure Onyx
+title: "Configure Onyx"
 description: "How to configure Onyx using environment variables and deployment files"
 icon: "sliders"
 ---
 
 ## Configuring Onyx Deployments
 
-Onyx offers a wide range of deployment-level configuration options. 
+Onyx offers a wide range of deployment-level configuration options.
 These are controlled via environment variables or through your deployment files.
 
 <AccordionGroup>
@@ -25,25 +25,31 @@ These are controlled via environment variables or through your deployment files.
     You can add more environment variables (listed below) to these `.env` files.
 
     Some configuration options must be set in your Docker Compose file.
+
     <Note>
-      The Docker Compose file you use to launch Onyx is the one you will need to modify. Likely either `docker-compose.dev.yml` or `docker-compose.prod.yml`.
+
+      The Docker Compose file you use to launch Onyx is the one you will need to modify.
+      Likely either `docker-compose.dev.yml` or `docker-compose.prod.yml`.
     </Note>
   </Accordion>
+
   <Accordion title="Configuring Kubernetes Deployments">
-    Kubernetes deployments are configured using Helm charts. We have provided a `values.yaml` file where you can set all environment variables.
+    Kubernetes deployments are configured using Helm charts.
+    We have provided a `values.yaml` file where you can set all environment variables.
 
     ```bash
     cd onyx/deployment/helm/charts/onyx
     vim values.yaml
     ```
 
-    Add environment variables and secrets to the `configMap` and `auth.secrets` sections. A subset of common configuration options are provided for you.
-    You can add more environment variables (listed below) to these sections.
+    Add environment variables and secrets to the `configMap` and `auth.secrets` sections.
+    A subset of common configuration options are provided for you. You can add more environment variables (listed below)
+    to these sections.
   </Accordion>
 </AccordionGroup>
 
 <Tip>
-  Many configuration options are available in the Admin Dashboard! This page only covers deployment-level configuration.
+  Many configuration options are available in the Admin Panel! This page only covers deployment-level configuration.
 </Tip>
 
 ## Commonly Configured Options
@@ -54,12 +60,15 @@ These are controlled via environment variables or through your deployment files.
   <Card title="Basic Authentication" icon="shield-check" href="/deployment/authentication/basic">
     Set up email and password authentication.
   </Card>
+
   <Card title="Google OAuth" icon="google" href="/deployment/authentication/oauth">
     Authenticate with Google accounts.
   </Card>
+
   <Card title="OIDC" icon="shield-check" href="/deployment/authentication/oidc">
     Enterprise Edition SSO
   </Card>
+
   <Card title="SAML" icon="shield-check" href="/deployment/authentication/saml">
     Enterprise Edition SSO
   </Card>
@@ -67,20 +76,23 @@ These are controlled via environment variables or through your deployment files.
 
 ### Custom Domain
 
-To host Onyx on a custom domain, set the `WEB_DOMAIN` environment variable and update your DNS records to point to your public Onyx deployment IP.
+To host Onyx on a custom domain,
+set the `WEB_DOMAIN` environment variable and update your DNS records to point to your public Onyx deployment IP.
 
 For additional instructions, read the [EC2 Deployment Guide](/deployment/deployment_guides/aws/ec2)!
 
 ### SSL
 
-If using Docker, the `init-letsencrypt.sh` script in `onyx/deployment/docker_compose` will automatically generate a Let's Encrypt certificate and launch Onyx with SSL enabled.
+If using Docker,
+the `init-letsencrypt.sh` script in `onyx/deployment/docker_compose` will automatically generate a Let's Encrypt
+certificate and launch Onyx with SSL enabled.
 
-### Internet Search
+### Web Search
 
-To enable the Internet Search Tool, set the `EXA_API_KEY` environment variable.
+To enable the Web Search Tool, set the `EXA_API_KEY` environment variable.
 
 <Note>
-  Internet Search in Onyx is continually developing and these instructions will be updated as we make improvements.
+  Web Search in Onyx is continually developing and these instructions will be updated as we make improvements.
 </Note>
 
 ### Logging
@@ -93,11 +105,13 @@ If using Kubernetes, set `LOG_LEVEL` to `debug` in your `values.yaml` file.
 
 ### Multilingual Configuration
 
-Although Onyx assumes English by default, the system can be configured to support multiple languages in the Admin Dashboard and through environment variables.
+Although Onyx assumes English by default,
+the system can be configured to support multiple languages in the Admin Panel and through environment variables.
 
-1. Select a multi-lingual embedding model in the **Search Settings** of the Admin Dashboard
+- Select a multi-lingual embedding model in the **Search Settings** of the Admin Panel
 
-2. Set the following environment variables:
+- Set the following environment variables:
+
 ```bash
 MULTILINGUAL_QUERY_EXPANSION="English, French, YOUR_LANGUAGE_HERE"
 
@@ -112,7 +126,7 @@ LANGUAGE_CHAT_NAMING_HINT="The name of the conversation must be in the same lang
 ## Onyx Environment Variables
 
 <Info>
-    This is not an exhaustive list of all Onyx environment variables. 
+  This is not an exhaustive list of all Onyx environment variables.
 </Info>
 
 <AccordionGroup>
@@ -146,11 +160,11 @@ LANGUAGE_CHAT_NAMING_HINT="The name of the conversation must be in the same lang
 
     `ENCRYPTION_KEY_SECRET`: Enterprise Edition only. Key for encrypting connector credentials, API keys, etc.
 
-    `MASK_CREDENTIAL_PREFIX`: Mask connector credentials in the admin UI. 
+    `MASK_CREDENTIAL_PREFIX`: Mask connector credentials in the admin UI.
     Turn off if admins should see the credentials in the admin panel.
 
     `SESSION_EXPIRE_TIME_SECONDS`: Session expiration time in seconds.
-    
+
     `AUTH_COOKIE_EXPIRE_TIME_SECONDS`: JWT token validity duration in seconds.
 
     `VALID_EMAIL_DOMAINS`: Comma-separated list of allowed email domains.
@@ -159,7 +173,6 @@ LANGUAGE_CHAT_NAMING_HINT="The name of the conversation must be in the same lang
 
     `TRACK_EXTERNAL_IDP_EXPIRY`: Honor the `expires_at` field returned by the external identity provider.
     Disabled be default because many auth providers have very short expiry times.
-
   </Accordion>
 
   <Accordion title="OAuth & OIDCConfiguration">
@@ -172,7 +185,8 @@ LANGUAGE_CHAT_NAMING_HINT="The name of the conversation must be in the same lang
 
   <Accordion title="Email Configuration">
     <Info>
-        Set the following for basic auth email verification and invites.
+
+      Set the following for basic auth email verification and invites.
     </Info>
 
     `SMTP_SERVER`: SMTP server hostname
@@ -194,7 +208,6 @@ LANGUAGE_CHAT_NAMING_HINT="The name of the conversation must be in the same lang
     `OAUTH_SLACK_CLIENT_ID`: Slack OAuth client ID for Slack bot.
 
     `OAUTH_SLACK_CLIENT_SECRET`: Slack OAuth client secret for Slack bot.
-
   </Accordion>
 
   <Accordion title="Postgres Configuration">
@@ -303,7 +316,8 @@ LANGUAGE_CHAT_NAMING_HINT="The name of the conversation must be in the same lang
 
   <Accordion title="Rate Limiting">
     <Info>
-        These rate limits apply to auth endpoints
+
+      These rate limits apply to auth endpoints
     </Info>
 
     `RATE_LIMIT_WINDOW_SECONDS`: Rate limiting window in seconds
@@ -355,11 +369,12 @@ LANGUAGE_CHAT_NAMING_HINT="The name of the conversation must be in the same lang
 
   <Accordion title="Connector Configuration">
     <Note>
-        Most of the settings below can be configured in the admin UI.
+
+      Most of the settings below can be configured in the admin UI.
     </Note>
 
     **General Connector Settings**
-    
+
     `ENABLED_CONNECTOR_TYPES`: Comma-separated list of enabled connector types
 
     `POLL_CONNECTOR_OFFSET`: Minutes overlap between poll windows
@@ -379,7 +394,7 @@ LANGUAGE_CHAT_NAMING_HINT="The name of the conversation must be in the same lang
     `PARSE_WITH_TRAFILATURA`: Use Trafilatura for HTML parsing
 
     **Confluence Connector**
-    
+
     `OAUTH_CONFLUENCE_CLOUD_CLIENT_ID`: Confluence Cloud OAuth client ID
 
     `OAUTH_CONFLUENCE_CLOUD_CLIENT_SECRET`: Confluence Cloud OAuth client secret
@@ -397,7 +412,7 @@ LANGUAGE_CHAT_NAMING_HINT="The name of the conversation must be in the same lang
     `CONFLUENCE_TIMEZONE_OFFSET`: Timezone offset for CQL queries
 
     **Google Drive Connector**
-    
+
     `OAUTH_GOOGLE_DRIVE_CLIENT_ID`: Google Drive OAuth client ID
 
     `OAUTH_GOOGLE_DRIVE_CLIENT_SECRET`: Google Drive OAuth client secret
@@ -407,11 +422,11 @@ LANGUAGE_CHAT_NAMING_HINT="The name of the conversation must be in the same lang
     `GOOGLE_DRIVE_CONNECTOR_SIZE_THRESHOLD`: File size threshold for Google Drive
 
     **SharePoint Connector**
-    
+
     `SHAREPOINT_CONNECTOR_SIZE_THRESHOLD`: File size threshold for SharePoint
 
     **Jira Connector**
-    
+
     `OAUTH_JIRA_CLOUD_CLIENT_ID`: Jira Cloud OAuth client ID
 
     `OAUTH_JIRA_CLOUD_CLIENT_SECRET`: Jira Cloud OAuth client secret
@@ -421,38 +436,37 @@ LANGUAGE_CHAT_NAMING_HINT="The name of the conversation must be in the same lang
     `JIRA_CONNECTOR_MAX_TICKET_SIZE`: Maximum ticket size in bytes
 
     **GitHub Connector**
-    
+
     `GITHUB_CONNECTOR_BASE_URL`: GitHub base URL (for enterprise)
 
     **GitLab Connector**
-    
+
     `GITLAB_CONNECTOR_INCLUDE_CODE_FILES`: Include code files in indexing
 
     **Gong Connector**
-    
+
     `GONG_CONNECTOR_START_TIME`: Start time for Gong connector
 
     **Notion Connector**
-    
+
     `NOTION_CONNECTOR_DISABLE_RECURSIVE_PAGE_LOOKUP`: Disable recursive page lookup
 
     **Zendesk Connector**
-    
+
     `ZENDESK_CONNECTOR_SKIP_ARTICLE_LABELS`: Article labels to skip
 
     **Egnyte Integration**
-    
+
     `EGNYTE_CLIENT_ID`: Egnyte OAuth client ID
 
     `EGNYTE_CLIENT_SECRET`: Egnyte OAuth client secret
 
     **Linear Integration**
-    
+
     `LINEAR_CLIENT_ID`: Linear OAuth client ID
 
     `LINEAR_CLIENT_SECRET`: Linear OAuth client secret
   </Accordion>
-
 
   <Accordion title="Pruning Configuration">
     `ALLOW_SIMULTANEOUS_PRUNING`: Allow simultaneous pruning operations
@@ -523,10 +537,10 @@ LANGUAGE_CHAT_NAMING_HINT="The name of the conversation must be in the same lang
   </Accordion>
 
   <Accordion title="API Configuration">
-    `API_PREFIX`: Used to prepend a base path for all API routes. 
-        Set this to `/api` if you are running Onyx behind a reverse proxy that doesn't support stripping the `/api` prefix
-        from requests to the `API server`. 
-    
+    `API_PREFIX`: Used to prepend a base path for all API routes.
+    Set this to `/api` if you are running Onyx behind a reverse proxy that doesn't support stripping the `/api` prefix
+    from requests to the `API server`.
+
     `API_KEY_HASH_ROUNDS`: Hash rounds for API keys
 
     `LLM_MODEL_UPDATE_API_URL`: LLM model update API endpoint
@@ -542,7 +556,8 @@ LANGUAGE_CHAT_NAMING_HINT="The name of the conversation must be in the same lang
 
   <Accordion title="Enterprise Configuration">
     <Tip>
-        [Contact us](/deployment/miscellaneous/contact_us) to enable Enterprise Edition features!
+
+      [Contact us](/deployment/miscellaneous/contact_us) to enable Enterprise Edition features!
     </Tip>
 
     `DATA_PLANE_SECRET`: Secret for secure control/data plane communication
@@ -576,5 +591,34 @@ LANGUAGE_CHAT_NAMING_HINT="The name of the conversation must be in the same lang
     `SYSTEM_RECURSION_LIMIT`: System recursion limit
 
     `DISABLE_AUTO_AUTH_REFRESH`: Disable automatic auth refresh
+  </Accordion>
+</AccordionGroup>
+
+## Enterprise Edition Environment Variables
+
+Enterprise Edition adds additional environment variables to Onyx.
+
+<AccordionGroup>
+  <Accordion title="ENV_SEED_CONFIGURATION">
+    Setting this variable allows you to start your Onyx instance with pre-configured options that persist across
+    restarts.
+
+    `ENV_SEED_CONFIGURATION` accepts a JSON string with the following options:
+    - `llms`: List of LLM configurations (name, provider, api_key, api_base, api_version, custom_config, default_model_name, fast_default_model_name)
+    - `admin_user_emails`: List of email addresses for automatic admin role assignment
+    - `seeded_name`: Pre-set name for your Onyx instance
+    - `seeded_logo_path`: Path to your logo within the assets folder
+  </Accordion>
+
+  <Accordion title="API_KEY_HASH_ROUNDS">
+    This variable allows you to configure the number of rounds used in the SHA-256 Crypt hashing algorithm for API keys.
+    - Default value: `535000`
+    - Allowed range: `1000` to `999999999`
+
+    <Info>
+
+      Increasing this value enhances security but may impact performance.
+      The default value provides a good balance for most use cases.
+    </Info>
   </Accordion>
 </AccordionGroup>

@@ -1,5 +1,5 @@
 ---
-title: Digital Ocean
+title: "Digital Ocean"
 description: "Deploy Onyx on Digital Ocean Droplets"
 icon: "digital-ocean"
 ---
@@ -9,44 +9,46 @@ import InstallOnyx from "/snippets/install-onyx.mdx"
 import DeploymentNextSteps from "/snippets/deployment-next-steps.mdx"
 
 <Steps>
-    <Step title="Create a Droplet">
-        Create a Droplet with the appropriate resources. For this guide, we will use a recommended configuration with Docker pre-installed.
-        <Note>
-            Read our [Resourcing guide](/deployment/getting_started/resourcing) for more details.
-        </Note>
+  <Step title="Create a Droplet">
+    Create a Droplet with the appropriate resources. For this guide,
+    we will use a recommended configuration with Docker pre-installed.
 
-        - Give your Droplet a descriptive name like `onyx-prod`
-        - Select a region close to your users
-        - Select the `Docker` image from the *Marketplace* tab
-        - Choose a Droplet size with at least 4 vCPUs and 16GB RAM
-        - Configure storage following the Resourcing Guide
-        - Add your SSH key for secure access
-    </Step>
+    <Note>
+      Read our [Resourcing guide](/deployment/getting_started/resourcing) for more details.
+    </Note>
 
-    <Step title="Create the Droplet">
-        Click **Create Droplet** and then view your Droplet details.
-        
-        <Tip>
-            Save the **Public IP address** of the Droplet!
-        </Tip>
+    - Give your Droplet a descriptive name like `onyx-prod`
+    - Select a region close to your users
+    - Select the `Docker` image from the *Marketplace* tab
+    - Choose a Droplet size with at least 4 vCPUs and 16GB RAM
+    - Configure storage following the Resourcing Guide
+    - Add your SSH key for secure access
+  </Step>
 
-        <img className="rounded-image" src="/images/setup_guides/do/InstanceIp.png" alt="Digital Ocean Public IP Address" />
-    </Step>
+  <Step title="Create the Droplet">
+    Click **Create Droplet** and then view your Droplet details.
 
-    <CustomDomain />
+    <Tip>
+      Save the **Public IP address** of the Droplet!
+    </Tip>
 
-    <Step title="Install Onyx requirements">
-        Since we selected the Docker Marketplace image, Docker and Docker Compose are already installed.
-        
-        We just need to install `git`:
+    <img className="rounded-image" src="/assets/deployment/setup_guides/do/InstanceIp.png" alt="Digital Ocean Public IP Address" />
+  </Step>
+
+  <CustomDomain />
+
+  <Step title="Install Onyx requirements">
+    Since we selected the Docker Marketplace image, Docker and Docker Compose are already installed.
+
+    We just need to install `git`:
 
         ```bash
         sudo apt update
         sudo apt install -y git
         ```
-    </Step>
+  </Step>
 
-    <InstallOnyx />
+  <InstallOnyx />
 </Steps>
 
 <DeploymentNextSteps />

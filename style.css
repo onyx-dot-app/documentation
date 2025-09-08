@@ -12,9 +12,7 @@ table {
   table-layout: auto;
 }
 
-/* Table body cells (content) */
-.prose table td {
-  text-align: center !important;     /* horizontal center */
-  vertical-align: middle !important; /* vertical center */
-  padding: 0.5rem 0.75rem;
+/* Table header cells */
+.prose table th {
+  text-align: left !important;       /* horizontal left */
 }

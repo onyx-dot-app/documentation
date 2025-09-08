@@ -1,0 +1,71 @@
+---
+title: "Ollama"
+description: "Using Ollama with Onyx"
+icon: "robot"
+---
+
+import NavigateToAiModels from "/snippets/navigate-to-ai-models.mdx";
+import StandardAiModelConfigs from "/snippets/standard-ai-model-configs.mdx";
+
+## Guide
+
+You can configure Onyx to use models served by [Ollama](https://ollama.com/).
+
+<Steps>
+  <Step title="Setup Ollama and Deploy your Models">
+    The [Ollama GitHub repository](https://github.com/ollama/ollama?tab=readme-ov-file#ollama)
+    details how to download and deploy models on Ollama.
+
+    By default, Ollama is configured to run on port `11434`.
+  </Step>
+
+  <NavigateToAiModels />
+
+  <Step title="Configure Ollama">
+    Select **Add Custom LLM Provider** from the available providers.
+
+    Give your provider a **Display Name**.
+
+    Enter your model's **Provider Name**.
+
+    <Note>
+      The **Provider Name** must match Litellm's [list of supported providers](https://docs.litellm.ai/docs/providers).
+    </Note>
+
+    In this example, the provider name is `vertex_ai`.
+
+    <img className="rounded-image" src="/assets/admin/ai_models/litellm_provider_name.png" alt="Custom inference provider name" />
+  </Step>
+
+  <Step title="Configure Optional Fields and Models">
+    Enter the Ollama **Base URL**. It should look something like `http://localhost:11434/v1`.
+
+    <Tip>
+      Do not forget the `/v1` suffix in the URL!
+    </Tip>
+
+    Fill out the other optional fields if applicable.
+
+    In the **Model Configurations** section, enter each of the models you want to use with Ollama.
+  </Step>
+
+  <Step title="Configure Default and Fast Models">
+    The **Default Model** is selected automatically for new custom Agents and Chat sessions.
+
+    Designating a **Fast Model** is optional.
+    This **Fast Model** is used behind the scenes for quick operations such as evaluating the type of message,
+    generating different queries (query expansion), and naming the chat session.
+
+    <Tip>
+      If you select a Fast Model,
+      make sure it is a relatively quick and cost-effective model like GPT-4.1-mini or Claude 3.7 Sonnet.
+    </Tip>
+  </Step>
+
+  <Step title="Designate Provider Access">
+    Lastly, you may select whether or not the provider is public to all users in Onyx.
+
+    If set to private,
+    the provider's models will be available to Admins and User Groups you explicitly assign the provider to.
+  </Step>
+</Steps>

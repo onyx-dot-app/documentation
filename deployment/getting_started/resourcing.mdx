@@ -1,7 +1,7 @@
 ---
 title: "Resourcing"
 description: "Resource requirements for deploying Onyx"
-icon: "desktop"
+icon: "microchip"
 ---
 
 import ResourcingOverview from "/snippets/resourcing-overview.mdx"
@@ -18,11 +18,11 @@ Old, unused Docker images take up sizeable disk space. To clean up unused images
 
 For small to mid scale deployments, we recommend deploying Onyx to a single instance in your cloud provider of choice.
 
-<Tip> 
+<Tip>
   For most use cases a single reasonably sized instance is enough for excellent performance!
 </Tip>
 
-When evaluating your instance, follow the Preferred resources in the table above. 
+When evaluating your instance, follow the Preferred resources in the table above.
 
 | Provider | Recommended Instance Type |
 | --- | --- |
@@ -33,18 +33,19 @@ When evaluating your instance, follow the Preferred resources in the table above
 
 <Accordion title="Vespa on older CPUs">
   **Vespa requires Haswell (2013) or later CPUs.**
-  
-  For older CPUs, use the `vespaengine/vespa-generic-intel-x86_64` image in your Docker Compose file. 
+
+  For older CPUs, use the `vespaengine/vespa-generic-intel-x86_64` image in your Docker Compose file.
   This generic image is slower.
-  
-  For  more details, see [Vespa CPU Support](https://docs.vespa.ai/en/cpu-support.html).
+
+  For more details, see [Vespa CPU Support](https://docs.vespa.ai/en/cpu-support.html).
 </Accordion>
 
 ## Container-Specific Resourcing
 
 For more efficient scaling, you can dedicate resources to each Onyx container using Kubernetes or AWS EKS.
 
-See the [Onyx Helm chart](https://github.com/onyx-dot-app/onyx/blob/main/deployment/helm/charts/onyx/values.yaml) `values.yaml` for our default requests and limits.
+See the [Onyx Helm chart](https://github.com/onyx-dot-app/onyx/blob/main/deployment/helm/charts/onyx/values.yaml)
+`values.yaml` for our default requests and limits.
 
 | Component | CPU | Memory |
 | --- | --- | --- |
@@ -57,16 +58,17 @@ See the [Onyx Helm chart](https://github.com/onyx-dot-app/onyx/blob/main/deploym
 | `nginx` | 250m (1/4) | 128 Mi |
 
 <Info>
-  The `vespa` recommendation is the bare minimum for a production deployment. 
-  With 50GB of documents, we recommend at least 10 CPU, 20Gi Memory.
+  The `vespa` recommendation is the bare minimum for a production deployment. With 50GB of documents,
+  we recommend at least 10 CPU, 20Gi Memory.
 </Info>
 
 All together, this comes out to a total available node size of at least ~14 CPU and ~30GB of Memory.
 
 ## How Resource Requirements Scale
 
-The main driver of resource requirements is the number of indexed documents. 
-This primarily affects the index component of Onyx (a [Vespa](https://vespa.ai/) vector database), which is responsible for storing the vectorized documents and handling search requests. 
+The main driver of resource requirements is the number of indexed documents.
+This primarily affects the index component of Onyx (a [Vespa](https://vespa.ai/) vector database),
+which is responsible for storing the vectorized documents and handling search requests.
 
 <Note>
   Vespa's resource requirements scale linearly with the document count.
@@ -81,12 +83,13 @@ These are our rough estimates. Other factors that may affect resource requiremen
 - Whether you have quantization and dimensional reduction enabled
 
 ### Resourcing Example
+
 For a deployment with 10GB of text content, your `index` component will need:
 - CPU: 4 + 10 * 0.5 = 9 cores
 - Memory: 4 + 10 * 3 = 34GB
 
-If deploying in a single instance, this would be *in addition to* the base requirements.
-Overall, that would take us to >= 13 CPU and >= 50GB of memory. 
+If deploying in a single instance, this would be *in addition to* the base requirements. Overall, that would take us to
+>= 13 CPU and >= 50GB of memory.
 
 Given these requirements, a `m7g.4xlarge` or a `c5.9xlarge` EC2 instance would be appropriate.
 
@@ -104,10 +107,12 @@ If deploying with Kubernetes or AWS EKS, this would give a per-component resourc
 Total available node size: ~20 CPU and ~60GB of Memory.
 
 ## Next Steps
+
 <CardGroup cols={2}>
-  <Card title="Guide: Deploy Onyx Locally" icon="microchip" href="/deployment/deployment_guides/local_deployments/docker"> 
+  <Card title="Guide: Deploy Onyx Locally" icon="microchip" href="/deployment/deployment_guides/local_deployments/docker">
     Deploy Onyx locally with Docker.
   </Card>
+
   <Card title="Guide: Deploy on AWS" icon="microchip" href="/deployment/deployment_guides/aws/ec2">
     Deploy Onyx on an EC2 instance.
   </Card>

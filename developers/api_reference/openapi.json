@@ -9268,7 +9268,7 @@
         "/admin/llm/provider": {
             "get": {
                 "summary": "List Llm Providers",
-                "operationId": "list_llm_providers",
+                "operationId": "list_ai_models",
                 "security": [
                     {
                         "BearerAuth": []
@@ -27122,7 +27122,7 @@
                     },
                     "is_internet": {
                         "type": "boolean",
-                        "title": "Is Internet",
+                        "title": "Is Web",
                         "default": false
                     },
                     "db_doc_id": {
@@ -27278,7 +27278,7 @@
                     },
                     "is_internet": {
                         "type": "boolean",
-                        "title": "Is Internet",
+                        "title": "Is Web",
                         "default": false
                     },
                     "db_doc_id": {
@@ -27664,7 +27664,7 @@
                     },
                     "is_internet": {
                         "type": "boolean",
-                        "title": "Is Internet",
+                        "title": "Is Web",
                         "default": false
                     }
                 },

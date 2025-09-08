@@ -1,0 +1,175 @@
+---
+title: "Custom Actions"
+description: "How to create custom actions with Onyx"
+---
+
+First, navigate to the Admin console, and go to the **Actions** tab. Click the **New Action** button.
+
+Next,
+specify a OpenAPI 3.0 or OpenAPI 3.1 schema that defines the APIs that you want to make available as part of this
+action.
+
+Onyx provides dynamic context variables that can be utilized within your OpenAPI definition,
+enhancing the functionality and context-awareness of your custom actions. These variables are:
+
+- `CHAT_SESSION_ID`: Replaced with the chat session ID in your action call
+
+- `CHAT_MESSAGE_ID`: Replaced with the chat message ID in your action call
+
+For example:
+`/persona/CHAT_SESSION_ID/messages/CHAT_MESSAGE_ID` with `CHAT_SESSION_ID` = 20 and `CHAT_MESSAGE_ID` = 10 would become
+`/persona/20/messages/10`
+
+To improve performance:
+
+- Add descriptive `summary`s for each operation (API)
+- Give each operation a descriptive `operationId`
+- Add `description`s for parameter
+
+For example,
+you could use the following to create an action that allows an assistant to fetch and create assistants with Onyx:
+
+```
+{
+   "openapi":"3.0.0",
+   "info":{
+      "version":"1.0.0",
+      "title":"Assistants API",
+      "description":"An API for managing assistants within Onyx"
+   },
+   "servers":[
+      {
+         "url":"http://localhost:8080"
+      }
+   ],
+   "paths":{
+      "/persona":{
+         "get":{
+            "summary":"Get a specific Assistant",
+            "operationId":"getAssistant",
+            "parameters":[
+               {
+                  "name":"assistant_id",
+                  "in":"path",
+                  "required":true,
+                  "schema":{
+                     "type":"string"
+                  }
+               }
+            ]
+         },
+         "post":{
+            "summary":"Create a new Assistant",
+            "operationId":"createAssistant",
+            "requestBody":{
+               "required":true,
+               "content":{
+                  "application/json":{
+                     "schema":{
+                        "type":"object",
+                        "properties":{
+                           "name":{
+                              "type":"string"
+                           },
+                           "description":{
+                              "type":"string"
+                           },
+                           "num_chunks":{
+                              "type":"number"
+                           },
+                           "llm_relevance_filter":{
+                              "type":"boolean"
+                           },
+                           "is_public":{
+                              "type":"boolean"
+                           },
+                           "llm_filter_extraction":{
+                              "type":"boolean"
+                           },
+                           "recency_bias":{
+                              "type":"string",
+                              "enum":[
+                                 "favor_recent",
+                                 "base_decay",
+                                 "no_decay",
+                                 "auto"
+                              ]
+                           },
+                           "prompt_ids":{
+                              "type":"array",
+                              "items":{
+                                 "type":"integer"
+                              }
+                           },
+                           "document_set_ids":{
+                              "type":"array",
+                              "items":{
+                                 "type":"integer"
+                              }
+                           },
+                           "tool_ids":{
+                              "type":"array",
+                              "items":{
+                                 "type":"integer"
+                              }
+                           },
+                           "llm_model_provider_override":{
+                              "type":"string",
+                              "nullable":true
+                           },
+                           "llm_model_version_override":{
+                              "type":"string",
+                              "nullable":true
+                           },
+                           "starter_messages":{
+                              "type":"array",
+                              "items":{
+                                 "type":"object",
+                                 "properties":{
+                                    "role":{
+                                       "type":"string"
+                                    },
+                                    "content":{
+                                       "type":"string"
+                                    }
+                                 }
+                              },
+                              "nullable":true
+                           },
+                           "users":{
+                              "type":"array",
+                              "items":{
+                                 "type":"string",
+                                 "format":"uuid"
+                              },
+                              "nullable":true
+                           },
+                           "groups":{
+                              "type":"array",
+                              "items":{
+                                 "type":"integer"
+                              },
+                              "nullable":true
+                           }
+                        },
+                        "required":[
+                           "name",
+                           "description",
+                           "num_chunks",
+                           "llm_relevance_filter",
+                           "is_public",
+                           "llm_filter_extraction",
+                           "recency_bias",
+                           "prompt_ids",
+                           "document_set_ids",
+                           "tool_ids"
+                        ]
+                     }
+                  }
+               }
+            }
+         }
+      }
+   }
+}
+```

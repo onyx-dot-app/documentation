@@ -1,0 +1,43 @@
+---
+title: "Web Search"
+description: "AI-powered web search"
+icon: "globe"
+---
+
+## Overview
+
+<img className="rounded-image" src="/assets/overview/core_features/web_search.png" alt="Web Search"/>
+
+Onyx can access the internet for questions that require up to date information or for niche information that the LLM may
+not be certain about.
+
+Users can toggle the **Web Search** Action on the fly to override the LLM's decision.
+If [Internal Search](/overview/core_features/internal_search) was used during the research process,
+Onyx will seamlessly combine web sources with internal documents in both the answer generation and for displaying in the
+UI.
+
+## Requirements
+
+To provide Web Search functionality,
+Onyx requires both the ability to get search results and to be able to parse websites for more complete context.
+This is broken down into 1) *the search provider* and 2) *the web scraper*.
+
+### Search Providers
+
+Onyx provides multiple search providers (pricing subject to change, please double check):
+
+| Name | Provider | Price | Benefit |
+|------|----------|-------|---------|
+| Google PSE | Google | Free tier + $5/1000 queries | Official Google search results, high trust option for security conscious teams. |
+| Serper | Serper.dev | Free tier + $0.30/1000 queries | Fast, and cost-effective |
+| Exa | Exa.ai | $5/1000 queries | AI-optimized with better semantic capabilities|
+
+### Web Scraper
+
+As the Search Providers only give short snippets and metadata,
+a scraper is used to fetch the full site contents for more complete/reliable answers.
+
+| Name | Requires Config | Benefits |
+|------|----------------|----------|
+| Onyx built-in | No  | No third parties get access to user queries, free to use |
+| Firecrawl | Yes, API key | More performant with better edge case handling |

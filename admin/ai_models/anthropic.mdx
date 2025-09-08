@@ -1,0 +1,27 @@
+---
+title: "Anthropic"
+description: "Configure Anthropic Claude models for Onyx"
+icon: "brain"
+---
+
+import NavigateToAiModels from "/snippets/navigate-to-ai-models.mdx";
+import StandardAiModelConfigs from "/snippets/standard-ai-model-configs.mdx";
+
+## Guide
+
+<Steps>
+  <NavigateToAiModels />
+
+  <Step title="Configure Anthropic">
+    Select **Anthropic** from the available providers.
+
+    Give this configuration a **Display Name**.
+
+    Create an [API key](https://console.anthropic.com/dashboard)
+    from the Anthropic API dashboard and paste it in the **API Key** field.
+
+    <img className="rounded-image" src="/assets/admin/ai_models/anthropic_config.png" alt="Anthropic Provider Configuration" />
+  </Step>
+
+  <StandardAiModelConfigs />
+</Steps>

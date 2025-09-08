@@ -1,0 +1,38 @@
+---
+title: "Productboard"
+description: "Access product feedback and features from Productboard"
+---
+
+## How it works
+
+The Productboard connector pulls in all the `Features`, `Components`, `Products`, and `Objectives` into Onyx.
+At this time, the Productboard APIs does not support pulling in `Releases` or `Notes`.
+
+Everything is updated every **10** minutes.
+
+## Setting up
+
+### Authorization
+
+<Steps>
+  <Step title="Get access token">
+    Follow the `Getting a token` guide
+    [here](https://developer.productboard.com/#section/Authentication/Public-API-Access-Token) to get an Access Token.
+  </Step>
+</Steps>
+
+### Indexing
+
+<Steps>
+  <Step title="Open Productboard connector">
+    Navigate to the Admin Panel and select the **Productboard** Connector
+  </Step>
+
+  <Step title="Enter access token">
+    In **Step 1**, provide your **Access Token**
+  </Step>
+
+  <Step title="Start indexing">
+    Click `Connect` to begin indexing
+  </Step>
+</Steps>

@@ -1,0 +1,180 @@
+---
+title: "OpenAPI"
+description: "Configure custom actions in Onyx with OpenAPI"
+icon: "code"
+---
+
+You can create custom actions in Onyx using an OpenAPI 3.0 or 3.1 specification of an API.
+This enables your AI agents to interact with REST APIs and trigger workflows in external systems.
+
+<Tip>
+  Include only the endpoints you want your agent to call in the OpenAPI spec.
+  Remove any endpoints you don't want the agent to access.
+</Tip>
+
+## Setting Up Custom Actions
+
+<Steps>
+  <Step title="Navigate to the Actions Dashboard">
+    Click your user profile icon and select **Admin Panel**, then click the **Actions** tab in the sidebar.
+
+    <img className="rounded-image" src="/assets/admin/actions/actions_overview.png" alt="Actions dashboard in Onyx Admin Panel" />
+  </Step>
+
+  <Step title="Create an OpenAPI Action">
+    Click **From OpenAPI schema** under **Create Action**.
+
+    Paste your OpenAPI spec and configure any required authentication or headers.
+
+    <img className="rounded-image" src="/assets/admin/actions/openapi.png" alt="Creating an OpenAPI action in Onyx Admin Panel" />
+  </Step>
+</Steps>
+
+## Example
+
+The below OpenAPI spec can be used to create a Custom Action for fetching and creating Agents in Onyx.
+
+```json OpenAPI expandable
+{
+   "openapi":"3.0.0",
+   "info":{
+      "version":"1.0.0",
+      "title":"Agents API",
+      "description":"An API for managing agents within Onyx"
+   },
+   "servers":[
+      {
+         "url":"http://localhost:8080"
+      }
+   ],
+   "paths":{
+      "/persona":{
+         "get":{
+            "summary":"Get a specific Agent",
+            "operationId":"getAssistant",
+            "parameters":[
+               {
+                  "name":"assistant_id",
+                  "in":"path",
+                  "required":true,
+                  "schema":{
+                     "type":"string"
+                  }
+               }
+            ]
+         },
+         "post":{
+            "summary":"Create a new Agent",
+            "operationId":"createAssistant",
+            "requestBody":{
+               "required":true,
+               "content":{
+                  "application/json":{
+                     "schema":{
+                        "type":"object",
+                        "properties":{
+                           "name":{
+                              "type":"string"
+                           },
+                           "description":{
+                              "type":"string"
+                           },
+                           "num_chunks":{
+                              "type":"number"
+                           },
+                           "llm_relevance_filter":{
+                              "type":"boolean"
+                           },
+                           "is_public":{
+                              "type":"boolean"
+                           },
+                           "llm_filter_extraction":{
+                              "type":"boolean"
+                           },
+                           "recency_bias":{
+                              "type":"string",
+                              "enum":[
+                                 "favor_recent",
+                                 "base_decay",
+                                 "no_decay",
+                                 "auto"
+                              ]
+                           },
+                           "prompt_ids":{
+                              "type":"array",
+                              "items":{
+                                 "type":"integer"
+                              }
+                           },
+                           "document_set_ids":{
+                              "type":"array",
+                              "items":{
+                                 "type":"integer"
+                              }
+                           },
+                           "tool_ids":{
+                              "type":"array",
+                              "items":{
+                                 "type":"integer"
+                              }
+                           },
+                           "llm_model_provider_override":{
+                              "type":"string",
+                              "nullable":true
+                           },
+                           "llm_model_version_override":{
+                              "type":"string",
+                              "nullable":true
+                           },
+                           "starter_messages":{
+                              "type":"array",
+                              "items":{
+                                 "type":"object",
+                                 "properties":{
+                                    "role":{
+                                       "type":"string"
+                                    },
+                                    "content":{
+                                       "type":"string"
+                                    }
+                                 }
+                              },
+                              "nullable":true
+                           },
+                           "users":{
+                              "type":"array",
+                              "items":{
+                                 "type":"string",
+                                 "format":"uuid"
+                              },
+                              "nullable":true
+                           },
+                           "groups":{
+                              "type":"array",
+                              "items":{
+                                 "type":"integer"
+                              },
+                              "nullable":true
+                           }
+                        },
+                        "required":[
+                           "name",
+                           "description",
+                           "num_chunks",
+                           "llm_relevance_filter",
+                           "is_public",
+                           "llm_filter_extraction",
+                           "recency_bias",
+                           "prompt_ids",
+                           "document_set_ids",
+                           "tool_ids"
+                        ]
+                     }
+                  }
+               }
+            }
+         }
+      }
+   }
+}
+```

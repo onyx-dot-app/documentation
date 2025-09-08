@@ -1,0 +1,68 @@
+---
+title: "Discourse"
+description: "Access knowledge from your Discourse **Topics**"
+---
+
+## How it works
+
+The Discourse connector indexes documents from your Discourse **Topics**.
+
+## Setting up
+
+### Authorization
+
+<Steps>
+  <Step title="Log in to Discourse">
+    Log into your Discourse account
+
+    <Info>
+      This Discourse user must have admin privileges
+    </Info>
+  </Step>
+
+  <Step title="Open API keys">
+    Click the **Admin** menu from the home page. Open the **Advanced** sub-menu and select **API keys**.
+
+    <img className="rounded-image" src="/assets/admin/connectors/discourse/discourse_1.gif" width="400" height="auto" alt="Discourse admin navigation to the API keys page" />
+  </Step>
+
+  <Step title="Create API key">
+    Click **New API Key**, name it "Onyx". Select "All Users" for **User Level** and "Read-only" for **Scope**.
+
+    <img className="rounded-image" src="/assets/admin/connectors/discourse/discourse_2.gif" alt="Create and fill out API key" />
+  </Step>
+
+  <Step title="Save and copy key">
+    Click **Save**. Copy the key and put it into Onyx.
+
+    <img className="rounded-image" src="/assets/admin/connectors/discourse/discourse_3.gif" alt="Create and copy API key" />
+  </Step>
+
+  <Step title="Set API key username">
+    For the API Key Username,
+    enter the username of the Discourse account which has access to the information you'd like to index.
+  </Step>
+</Steps>
+
+### Indexing
+
+<Steps>
+  <Step title="Name the connector">
+    Input a name for a connector (if you plan on creating multiple Discourse connectors,
+    this will be used by you to tell between them)
+  </Step>
+
+  <Step title="Provide base URL">
+    Provide your Discourse's base url.
+
+    <img className="rounded-image" src="/assets/admin/connectors/discourse/discourse_4.gif" alt="Fill out Onyx connector" />
+  </Step>
+
+  <Step title="Enter Topics to index">
+    Enter the **Topics** you wish to index. If left blank, all topics available will be indexed.
+  </Step>
+
+  <Step title="Start indexing">
+    Click connector to begin indexing the indicated **topics**.
+  </Step>
+</Steps>

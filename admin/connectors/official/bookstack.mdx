@@ -1,0 +1,57 @@
+---
+title: "BookStack"
+description: "Access knowledge from your own BookStack instance"
+---
+
+## How it works
+
+The BookStack connector fetches all shelves, books, chapters and pages from the connected instance upon connector setup.
+From that point on, the connector will pull in everything updated since last sync every **10** minutes.
+
+## Setting up
+
+### Authorization
+
+You will need API credentials for a user in your BookStack instance. To do this:
+
+<Steps>
+  <Step title="Create/select connection user">
+    Find or create a user you'd want to use as the connection user.
+    - Visibility of BookStack contents will depend on this user's permissions.
+    - This user must have a role assigned that has the "Access system API" system permission.
+  </Step>
+
+  <Step title="Open API Tokens">
+    Edit that user using an admin account, and find the "API Tokens" section at the bottom of the view.
+
+    <img className="rounded-image" src="/assets/admin/connectors/bookstack/BookstackApiTokenList.png" alt="BookStack API Tokens List View" />
+  </Step>
+
+  <Step title="Create and copy token">
+    Click the "Create Token" button, then enter a name and (optionally) an expiry date for the token. Then press save.
+    Copy the shown "Token ID" and "Token Secret" values for the "Indexing" section below.
+
+    <img className="rounded-image" src="/assets/admin/connectors/bookstack/BookstackApiToken.png" alt="BookStack API Token View" />
+  </Step>
+</Steps>
+
+### Indexing
+
+<Steps>
+  <Step title="Open BookStack connector">
+    Navigate to the Admin Panel and select the **BookStack** connector.
+  </Step>
+
+  <Step title="Enter URL and tokens">
+    In **Step 1**, provide the base URL of your BookStack instance,
+    along with the API **Token ID** and the API **Token Secret** you obtained in the "Authorization" steps above:
+
+    <img className="rounded-image" src="/assets/admin/connectors/bookstack/BookstackAuth.png" alt="BookStack connector step 1 view" />
+  </Step>
+
+  <Step title="Start indexing">
+    Click the `Connect` button! Your content will then be pulled into Onyx every **10** minutes.
+
+    <img className="rounded-image" src="/assets/admin/connectors/bookstack/BookstackIndex.png" alt="BookStack connector step 2 view" />
+  </Step>
+</Steps>

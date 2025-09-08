@@ -1,0 +1,50 @@
+---
+title: "GitBook"
+description: "Access documentation from GitBook"
+---
+
+## How it works
+
+The GitBook connector will pull in all the documentation content from your specified GitBook spaces.
+
+## Setting up
+
+### Authorization
+
+<Steps>
+  <Step title="Open Developer settings">
+    Go to your GitBook account settings and navigate to 'Developers' section (https://app.gitbook.com/account/developer)
+  </Step>
+
+  <Step title="Create API token">
+    Click on 'Create new token'. Give your token a name and select the appropriate scopes.
+    Click 'Create' to generate your API token.
+  </Step>
+
+  <Step title="Copy and store token">
+    Copy and save your token securely — you won't be able to see it again.
+  </Step>
+</Steps>
+
+<img className="rounded-image" src="/assets/admin/connectors/gitbook/gitbook_1.png" alt="GitBook Developer Page" />
+
+### Indexing
+
+<Steps>
+  <Step title="Open GitBook connector">
+    Navigate to the Admin Panel and select the **GitBook** Connector
+  </Step>
+
+  <Step title="Enter API token">
+    In **Step 1**, paste your **API Token** from the previous step
+
+    <img className="rounded-image" src="/assets/admin/connectors/gitbook/gitbook_2.png" alt="GitBook API Configuration" />
+  </Step>
+
+  <Step title="Enter Space ID and connect">
+    Enter your **Space ID** - you can find this in the URL of your GitBook space (e.g.,
+    `https://app.gitbook.com/o/<organization>/s/<space-id>`). Click 'Connect' to begin indexing your GitBook content.
+
+    <img className="rounded-image" src="/assets/admin/connectors/gitbook/gitbook_3.png" alt="GitBook Space Configuration" />
+  </Step>
+</Steps>

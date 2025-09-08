@@ -1,0 +1,45 @@
+---
+title: "Image Generation"
+description: "Create visuals according to user prompts"
+icon: "image"
+---
+
+## Overview
+
+The image generation feature allows users to create PNG images according to their prompts which can be rendered in the
+chat and easily downloaded.
+
+<img className="rounded-image" src="/assets/overview/core_features/image_generation.png" alt="Image Generation"/>
+
+## Configuration
+
+Currently, Onyx supports two APIs for image generation, both through OpenAI. In the future,
+there likely will be support for other options such as Google Imagen or Stability AI.
+
+**GPT-Image-1**: Newer model, better prompt adherence. Likely a better default for most use cases.
+
+**DALL-E 3**: Older model, slightly better for more imaginative and rich styles.
+
+## Usage
+
+To use **Image Generation**,
+be explicit in the prompting since the system is tuned to not generate images unless directly instructed.
+
+See below for the instructions provided to the system for when to create images.
+
+<Accordion title="Image Generation Instruction">
+    Tool Description:
+
+    ```
+    Generate an image from a prompt.
+    ```
+
+    Instruction (System Prompt) Modification:
+
+    ```
+    NEVER use image_gen unless the user specifically requests an image.
+    ```
+
+    This phrase is injected into the default **Instruction** for Onyx if the **Image Generation** (image_gen)
+    tool is available.
+</Accordion>

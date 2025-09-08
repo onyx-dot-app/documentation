@@ -1,0 +1,73 @@
+---
+title: "FAQ"
+description: "Frequently asked questions about using Onyx"
+icon: "comments-question"
+---
+
+## General Questions
+
+<AccordionGroup>
+  <Accordion title="What kind of questions can I ask Onyx?">
+    You can ask Onyx about general world knowledge known to the LLM,
+    knowledge from [connected applications](/overview/core_features/internal_search),
+    or things searchable on the web (if [Web Search](/overview/core_features/web_search) is configured)
+  </Accordion>
+
+  <Accordion title="How is my private data being processed?">
+    Please check the [Security](/security/architecture/system_description) tab to learn more.
+    Onyx is built with security and data privacy as a core commitment.
+  </Accordion>
+
+  <Accordion title="How do I know if Onyx is right for me?">
+    Onyx is built for teams of all sizes whether it's a single user looking for a local Chat UI or a global enterprise
+    needing a unified GenAI solution for the entire workforce.
+    Onyx emphasizes data privacy and security as well as reliable responses by connecting to knowledge whether private
+    or from the web.
+  </Accordion>
+
+  <Accordion title="Can I run Onyx offline?">
+   Yes, however Onyx needs an LLM to function properly.
+   You can airgap the entire system but you would need to run a local LLM.
+   Note that we strongly recommend using a recent and non-quantized LLM for the best experience.
+  </Accordion>
+</AccordionGroup>
+
+## Knowledge and Search
+
+<AccordionGroup>
+  <Accordion title="Why can't Onyx find information that I know exists?">
+    If it's an internal document,
+    it may be because the indexing of the application has not completed or because the access controls are incorrectly
+    set. In cases of failure, the system always defaults to least permissive.
+    The most common failure is that the [connector](/admin/connectors/overview) is incorrectly configured.
+  </Accordion>
+
+  <Accordion title="Does Onyx keep its knowledge up to date?">
+    Onyx connectors will fetch updates on a set schedule (typically 30 minutes),
+    this polling frequency can be configured by the admin for each connector. The documents, metadata,
+    and access permissions all receive updates.
+  </Accordion>
+
+  <Accordion title="Why is Onyx refusing to search the internet?">
+    Web Search must be configured by an admin to be usable.
+    It requires setting up one of the supported Search providers and also a scraper (though this is optional as Onyx
+    provides one built in).
+  </Accordion>
+</AccordionGroup>
+
+## Technical Issues
+
+<AccordionGroup>
+  <Accordion title="Why is my Onyx deployment not coming up?">
+    The most common culprit is under-resourcing the deployment.
+    Please refer to the [Resourcing](/deployment/getting_started/resourcing) page to double check.
+  </Accordion>
+
+  <Accordion title="Responses are really slow, is this expected?">
+    No! Onyx is intended to provide a fast and snappy experience. If the responses are slow,
+    it may be due to a couple issues.
+    - The LLM attached to the system is slow, has low throughput, or does not support streaming.
+    - You've configured locally running models that are not the default but you do not have a GPU available to the
+      system. Typically this is from setting a local reranking or embedding model.
+  </Accordion>
+</AccordionGroup>

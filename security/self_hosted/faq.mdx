@@ -1,0 +1,38 @@
+---
+title: "FAQ"
+description: "Common questions specifically for self-hosting"
+icon: "comments-question"
+---
+
+<Tip>
+  Additional FAQ questions are found in the [Architecture section](/security/architecture/faq)
+</Tip>
+
+## Deployment Security
+
+### In what cases should a team self-host?
+
+Self-hosting Onyx offers maximum security by keeping all data within your own infrastructure,
+giving you full control over data processing, storage, and network access configurations.
+
+For teams with the highest security requirements, self-hosting is often the preferred choice. However,
+it requires more operational overhead compared to the Cloud offering,
+so we generally recommend Cloud unless self-hosting is specifically needed.
+
+Teams may also choose to self-host if they don't require Enterprise Edition capabilities. While this can reduce costs,
+it does mean foregoing certain advanced security features available in the Enterprise Edition.
+
+### Can I run Onyx completely offline in an air-gapped fashion?
+
+Yes, but you would need to also host your own LLM for Onyx to connect to.
+It is always recommended to use a large LLM over quantized or light versions of major models.
+
+### How do I keep my Onyx deployment up to date or get security patches?
+
+Every Onyx deployment is backwards compatible and very rarely require any manual intervention outside of running a
+redeployment command. Visit the [Deployment section](/deployment/overview) for more details.
+
+### Is it possible to configure monitoring for Self-Hosted Onyx
+
+Yes, Onyx supports Prometheus and can easily be hooked up to monitoring applications like Grafana.
+For monitoring LLM usage, Onyx uses LangGraph so it can also integrate with LangSmith
