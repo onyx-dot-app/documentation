@@ -34,7 +34,7 @@ def iter_doc_files(root: str) -> List[str]:
     for base, _dirs, fnames in os.walk(root):
         # Skip common build/output dirs if present
         parts = set(base.split(os.sep))
-        if {"node_modules", ".git", ".next", "dist", "build"} & parts:
+        if {"node_modules", ".git", ".next", "dist", "build", "archive"} & parts:
             continue
         for fn in fnames:
             _, ext = os.path.splitext(fn)

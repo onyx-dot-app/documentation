@@ -1,0 +1,41 @@
+---
+title: "Discord Connector"
+description: 'Access knowledge from your Messages'
+---
+
+## How it works
+
+The Discord connector indexes all channels for all servers(guilds) mentioned.
+
+## Setting up a Bot User
+
+1. Login to your discord's developer portal https://discord.com/developers/applications
+2. Click on the “New Application” button.
+3. Give the application a name and click “Create”.
+4. Navigate to the “Bot” tab to configure it.
+5. Make sure that Public Bot is ticked if you want others to invite your bot.
+6. Under the `Privileged Gateway Intents` make sure `MESSAGE CONTENT INTENT` is checked.
+7. Copy the token using the “Copy” button. If you have lost your token, you can click on `Reset Token`.
+
+## Inviting the Bot User to server(s)
+
+So you’ve made a Bot User but it’s not actually in any server. To add the bot user in your server follow the steps
+1. Open your application at https://discord.com/developers/applications .
+2. Head over to the `Installation` tab.
+3. Check the `Guild Install` under the Installation contexts.
+4. Add `bot` scope under the scopes for `Guild Install`.
+5. Under the permissions section for `Guild Install`, give these minimum permissions `Manage Messages`, `Read Message History` and `View Channels`.
+6. Use the `Discord Provided Link` to install the bot to the server(s) you want. Make sure you have `Manager server` permissions on that guild or server
+7. Open the link in the browser and add the bot to your server(s)
+
+### Indexing
+
+1. Navigate to the Connector Dashboard and select the **Discord** Connector.
+2. Enter the **Bot Token** under credentials you fetched from `Setting up a Bot User` step 6.
+3. Enter the server IDs.
+   By default all channels of all servers/guilds in which the bot user is added will be indexed or processed.
+4. To fetch server ID of a particular server. Right click on the name of the server located on the top right corner and click on `Copy Server ID`
+5. Enter the channel names. By default all channel names under the server(s)
+   from step 3 that the bot user has access to will be indexed or processed.
+6. To get the channel name, hit on the settings icon next to the channel name. You will find the channel name in the `Overview` section
+7. Optionally you can set a `Start Date` in the format of `YYYY-MM-DD`. Only messages after this date will be indexed or processed.

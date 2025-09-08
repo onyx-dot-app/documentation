@@ -1,0 +1,47 @@
+---
+title: "Highspot Connector"
+description: "Access knowledge from your Highspot content"
+---
+
+## How it works
+
+The Highspot connector indexes documents from your Highspot instance.
+It can index either specific spots you add or all spots where you have view access and download permissions.
+
+## Setting up
+
+### Authorization
+
+> **IMPORTANT:** Highspot Platform Plus is an add-on feature that provides access to the API. Without Platform Plus, users cannot access the API features required for this connector. Please ensure your organization has purchased the Platform Plus add-on before proceeding.
+
+#### Enabling Developer Options
+
+    1. Log into your Highspot account as an administrator
+    2. Click on your profile icon in the top right corner and select "Settings" from the list
+    3. On the new page that opens, select "your company" under company settings
+    4. Navigate to "Access and Privacy" and click on "API Access"
+    5. Add the user(s) who will need to generate API keys and secrets
+    6. And also confirm you enabled the "API Access for Users"
+
+![HighspotEnableDeveloper](/archive/images/connectors/highspot/highspot_enable_developer.png)
+
+#### Generating API Credentials
+
+    1. Log in as the user who has been granted API access
+    2. Click on the profile icon in the top right corner and select "Settings" from the list
+    3. On the new page that opens, look for the "Developer" tab under user settings
+    4. Navigate to the developer section and generate a new API key
+    5. After generation, you'll receive a key and secret
+
+    ![HighspotGenerateAPI](/archive/images/connectors/highspot/highspot_generate_api.png)
+
+    6. Make a note of your API key, secret and base URL as you will need them for indexing
+
+### Indexing
+
+    1. Navigate to the Admin Dashboard and select the **Highspot** Connector Tile
+    2. Provide your **API Key**, **Secret**, and **Base URL** from the steps above
+    3. Choose one of the following indexing options:
+        - Enter specific spots you want to index
+        - Select the option to index all spots where your user has view access and download permissions
+    4. Click "Connect" to begin indexing your Highspot content
