@@ -18,9 +18,7 @@
             "group": "Getting Started",
             "pages": [
               "welcome",
-              "overview/getting_started/use_cases",
-              "overview/getting_started/open_source_statement",
-              "overview/getting_started/faq"
+              "overview/getting_started/use_cases"
             ]
           },
           {
@@ -49,7 +47,9 @@
           {
             "group": "Miscellaneous",
             "pages": [
-              "overview/contact_us"
+              "overview/miscellaneous/open_source_statement",
+              "overview/miscellaneous/faq",
+              "overview/miscellaneous/contact_us"
             ]
           }
         ]
