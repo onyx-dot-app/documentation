@@ -1,25 +1,35 @@
 ---
 title: "Actions & MCP"
-description: "Using Actions and MCP to extend Onyx's capabilities"
+description: "Extend the capabilities of Onyx Agents"
 icon: "play"
 ---
 
-**Actions** are a way to give an Assistant additional capabilities. They allow the assistant to do things like:
+## Overview
+**Actions** give Agents the ability to interact with external systems.
 
-- Fetch information from an external source (e.g. a database, an API, or the Web)
-- Perform actions (e.g. write to a database or send an email)
-- Generate content (e.g. generate an image or create a plot)
+Onyx comes with 4 built-in Actions and allows users to configure additional ones via
+[OpenAPI](https://en.wikipedia.org/wiki/OpenAPI_Specification) and [Model Context Protocol](https://modelcontextprotocol.io/) (MCP).
 
-## Built-in Actions
-
-By default, we have three actions built-in to Onyx. These are:
-
-- **Knowledge** - This action is the core of Onyx. Adding this action to an Assistant allows it to search over the knowledge you've connected up to Onyx through `Connectors`. This is the only action available to the default `Onyx` assistant.
-
-- **Image Generation** - This action allows your assistant to generate images using DALL-E 3.
-
-- **Web Search** - This action allows your assistant to search the web.
+The built-in Actions including:
+| Name | Description | Requires Config | Provider Choices |
+|------|-------------|-----------------|-----------|
+| Internal Search | Search through your organization's indexed documents and knowledge base | Yes | Built-in with swappable components |
+| Web Search | Search the internet for real-time information and current events | Yes | Google, Serper, Exa, Firecrawl (optional) |
+| Code Interpreter | Execute Python code, analyze data, and generate visualizations | No | Built-in |
+| Image Generation | Create images from text descriptions using AI models | Yes | OpenAI |
 
 ## Custom Actions
+<img className="rounded-image" src="/assets/overview/core_features/mcp.png" alt="MCP Config" />
+Onyx offers flexible options for configuring both custom Actions and their associated authentication.
 
-Beyond the built-in actions, Onyx allows you to create custom actions tailored to your specific needs and workflows.
+Admins can choose to:
+- Use a single shared authentication, giving all users the same level of access to Actions.
+- Require each user to complete their own authentication flow, so Actions respect individual user permissions.
+
+Onyx supports both token-based authentication and OAuth.
+<img className="rounded-image" src="/assets/overview/core_features/mcp_auth.png" alt="MCP Auth" />
+
+## Actions Button
+<img className="rounded-image" src="/assets/overview/core_features/action_toggle.png" alt="Action Toggle" />
+In the Chat input bar, Actions are grouped by the MCP server or OpenAPI schema they are registered with.
+Users have the flexibility to turn on/off the Actions that the Agent/LLM has access to on the fly.
