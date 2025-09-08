@@ -5,10 +5,12 @@ icon: "play"
 ---
 
 ## Overview
+
 **Actions** give Agents the ability to interact with external systems.
 
 Onyx comes with 4 built-in Actions and allows users to configure additional ones via
-[OpenAPI](https://en.wikipedia.org/wiki/OpenAPI_Specification) and [Model Context Protocol](https://modelcontextprotocol.io/) (MCP).
+[OpenAPI](https://en.wikipedia.org/wiki/OpenAPI_Specification)
+and [Model Context Protocol](https://modelcontextprotocol.io/) (MCP).
 
 The built-in Actions including:
 | Name | Description | Requires Config | Provider Choices |
@@ -19,7 +21,9 @@ The built-in Actions including:
 | Image Generation | Create images from text descriptions using AI models | Yes | OpenAI |
 
 ## Custom Actions
+
 <img className="rounded-image" src="/assets/overview/core_features/mcp.png" alt="MCP Config" />
+
 Onyx offers flexible options for configuring both custom Actions and their associated authentication.
 
 Admins can choose to:
@@ -27,9 +31,12 @@ Admins can choose to:
 - Require each user to complete their own authentication flow, so Actions respect individual user permissions.
 
 Onyx supports both token-based authentication and OAuth.
+
 <img className="rounded-image" src="/assets/overview/core_features/mcp_auth.png" alt="MCP Auth" />
 
 ## Actions Button
+
 <img className="rounded-image" src="/assets/overview/core_features/action_toggle.png" alt="Action Toggle" />
+
 In the Chat input bar, Actions are grouped by the MCP server or OpenAPI schema they are registered with.
 Users have the flexibility to turn on/off the Actions that the Agent/LLM has access to on the fly.
