@@ -1,32 +1,32 @@
 ---
 title: "Web Search"
-description: "AI-powered web search capabilities"
+description: "AI-powered web search"
 icon: "globe"
 ---
 
-# Web Search
-
-AI-powered web search to find the latest information and answers from the internet.
-
 ## Overview
+<img className="rounded-image" src="/assets/overview/core_features/web_search.png" alt="Web Search"/>
+Onyx can access the internet for questions that require up to date information or for niche information that the LLM may not be certain about.
 
-Web Search allows Onyx to access real-time information from the internet,
-providing up-to-date answers and insights that complement your organization's internal knowledge.
+Users can toggle the **Web Search** Action on the fly to override the LLM's decision.
+If [Internal Search](/overview/core_features/internal_search) was used during the research process, Onyx will seamlessly combine web sources with internal documents in both the answer generation and for displaying in the UI.
 
-## Features
+## Requirements
+To provide Web Search functionality, Onyx requires both the ability to get search results and to be able to parse websites for more complete context. This is broken down into 1) *the search provider* and 2) *the web scraper*.
 
-- **Real-time Information**: Access current events, news, and live data
-- **AI-Powered Results**: Intelligent filtering and summarization of search results
-- **Contextual Integration**: Seamlessly combine web search with your internal knowledge
-- **Source Attribution**: Clear references to information sources
+### Search Providers
+Onyx provides multiple search providers (pricing subject to change, please double check):
 
-## Use Cases
+| Name | Provider | Price | Benefit |
+|------|----------|-------|---------|
+| Google PSE | Google | Free tier + $5/1000 queries | Official Google search results, high trust option for security conscious teams. |
+| Serper | Serper.dev | Free tier + $0.30/1000 queries | Fast, and cost-effective |
+| Exa | Exa.ai | $5/1000 queries | AI-optimized with better semantic capabilities|
 
-- Research current market trends
-- Verify recent information
-- Get up-to-date answers to time-sensitive questions
-- Complement internal knowledge with external context
+### Web Scraper
+As the Search Providers only give short snippets and metadata, a scraper is used to fetch the full site contents for more complete/reliable answers.
 
----
-
-*This page is under development. Detailed documentation will be added soon.*
+| Name | Requires Config | Benefits |
+|------|----------------|----------|
+| Onyx built-in | No  | No third parties get access to user queries, free to use |
+| Firecrawl | Yes, API key | More performant with better edge case handling |
