@@ -28,11 +28,11 @@
               "overview/core_features/chat",
               "overview/core_features/agents",
               "overview/core_features/actions",
+              "overview/core_features/connectors",
               "overview/core_features/internal_search",
               "overview/core_features/web_search",
               "overview/core_features/code_interpreter",
               "overview/core_features/image_generation",
-              "overview/core_features/connectors",
               "overview/core_features/workflows"
             ]
           },
@@ -746,9 +746,9 @@
   },
   "seo": {
     "title": "Onyx AI – Open Source AI Platform for Work",
-    "description": "Research, create, and automate with LLMs - powered by your team's unique knowledge.",
+    "description": "Onyx AI is the open source AI platform for generation, automation, and enterprise search — powered by your team’s data.",
     "metatags": {
-      "keywords": "danswer, enterprise search, onyx ai, onyx, ai platform, chat UI"
+      "keywords": "onyx ai, onyx, open source ai, enterprise ai, generative ai platform, enterprise search, ai assistant, knowledge management, danswer"
     }
   }
 }
