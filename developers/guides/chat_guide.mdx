@@ -76,9 +76,10 @@ This endpoint has fewer required parameters and returns a concise JSON payload d
     -H "Authorization: Bearer ${API_KEY}" \
     -H "Content-Type: application/json" \
     -d '{
-    "message": "What is Onyx?",
-    "persona_id": 0
-  }')
+      "message": "What is Onyx?",
+      "persona_id": 0
+    }'
+  )
 
   echo "Answer:"
   echo $RESPONSE | jq -r '.answer'

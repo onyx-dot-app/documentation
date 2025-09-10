@@ -785,12 +785,12 @@ def format_content(text: str, width: int) -> str:
     for ln in raw_lines:
         if is_code_fence(ln):
             in_code = not in_code
-            lines.append(ln)
+            lines.append(ln)  # Don't normalize fence lines themselves
             continue
         if in_code:
-            lines.append(ln)
+            lines.append(ln)  # Don't normalize lines inside code blocks
         else:
-            lines.append(normalize_indent(ln))
+            lines.append(normalize_indent(ln))  # Only normalize outside code blocks
 
     # 2) Dedent common leading margin across the file (outside code and frontmatter)
     def dedent_common_margin(ls: List[str]) -> List[str]:
@@ -879,14 +879,8 @@ def format_content(text: str, width: int) -> str:
                     out_ls.append(ln)
                 continue
             if in_code_f:
-                # While inside a fenced code block: indent if inside CodeGroup
-                if stack and stack[-1][0] == "CodeGroup":
-                    s_in = ln.lstrip(" ")
-                    base = stack[-1][1]
-                    desired = base + INDENT_SPACES
-                    out_ls.append(" " * desired + s_in)
-                else:
-                    out_ls.append(ln)
+                # While inside a fenced code block: never modify content, preserve exactly as-is
+                out_ls.append(ln)
                 continue
 
             s = ln.lstrip(" ")
