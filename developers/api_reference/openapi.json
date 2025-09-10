@@ -521,7 +521,7 @@
         "operationId": "handle_new_chat_message",
         "security": [
           {
-            "APIKeyCookie": []
+            "BearerAuth": []
           }
         ],
         "parameters": [
@@ -554,6 +554,45 @@
           "200": {
             "description": "Successful Response",
             "content": { "application/json": { "schema": {} } }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v0/chat/send-message": {
+      "post": {
+        "summary": "Handle New Chat Message V0",
+        "description": "TODO: deprecate this shortly.\n\nV0 API endpoint for sending chat messages.\nReturns responses in the legacy format for backwards compatibility.\n\nThe response format is newline-delimited JSON objects:\n- {\"user_message_id\": int, \"reserved_assistant_message_id\": int}\n- {\"answer_piece\": str}\n- {\"tool_name\": str, \"tool_args\": dict}\n- {\"level\": int, \"level_question_num\": int, \"top_documents\": list}\n- {\"llm_selected_doc_indices\": list}\n- {\"final_context_docs\": list}\n- {\"citations\": list}\n- etc.",
+        "operationId": "handle_new_chat_message_v0",
+        "security": [
+          { "BearerAuth": [] }
+        ],
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateChatMessageRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
           },
           "422": {
             "description": "Validation Error",
@@ -8932,6 +8971,25 @@
         }
       }
     },
+    "/versions": {
+      "get": {
+        "summary": "Get Versions",
+        "description": "Fetches the latest stable and beta versions of Onyx Docker images.\nSince DockerHub does not explicitly flag stable and beta images,\nthis endpoint can be used to programmatically check for new images.",
+        "operationId": "get_versions",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AllVersions"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/onyx-api/connector-docs/{cc_pair_id}": {
       "get": {
         "summary": "Get Docs By Connector Credential Pair",
@@ -14712,7 +14770,7 @@
         "summary": "Handle Simplified Chat Message",
         "description": "This is a Non-Streaming version that only gives back a minimal set of information",
         "operationId": "handle_simplified_chat_message",
-        "security": [{ "APIKeyCookie": [] }],
+        "security": [{ "BearerAuth": [] }],
         "parameters": [
           {
             "name": "tenant_id",
@@ -14759,7 +14817,7 @@
         "summary": "Handle Send Message Simple With History",
         "description": "This is a Non-Streaming version that only gives back a minimal set of information.\ntakes in chat history maintained by the caller\nand does query rephrasing similar to answer-with-quote",
         "operationId": "handle_send_message_simple_with_history",
-        "security": [{ "APIKeyCookie": [] }],
+        "security": [{ "BearerAuth": [] }],
         "parameters": [
           {
             "name": "tenant_id",
@@ -16891,6 +16949,27 @@
   },
   "components": {
     "schemas": {
+      "ContainerVersions": {
+        "properties": {
+          "onyx": { "type": "string", "title": "Onyx" },
+          "relational_db": { "type": "string", "title": "Relational Db" },
+          "index": { "type": "string", "title": "Index" },
+          "nginx": { "type": "string", "title": "Nginx" }
+        },
+        "type": "object",
+        "required": ["onyx", "relational_db", "index", "nginx"],
+        "title": "ContainerVersions"
+      },
+      "AllVersions": {
+        "properties": {
+          "stable": { "$ref": "#/components/schemas/ContainerVersions" },
+          "dev": { "$ref": "#/components/schemas/ContainerVersions" },
+          "migration": { "$ref": "#/components/schemas/ContainerVersions" }
+        },
+        "type": "object",
+        "required": [],
+        "title": "AllVersions"
+      },
       "APIKeyArgs": {
         "properties": {
           "name": {
@@ -17730,17 +17809,6 @@
             "type": "array",
             "title": "Messages"
           },
-          "prompt_id": {
-            "anyOf": [
-              {
-                "type": "integer"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Prompt Id"
-          },
           "persona_id": {
             "type": "integer",
             "title": "Persona Id"
@@ -17809,7 +17877,7 @@
           }
         },
         "type": "object",
-        "required": ["messages", "prompt_id", "persona_id"],
+        "required": ["messages", "persona_id"],
         "title": "BasicCreateChatMessageWithHistoryRequest"
       },
       "BasicExpertInfo": {
@@ -18892,17 +18960,6 @@
           "persona_id": {
             "type": "integer",
             "title": "Persona Id"
-          },
-          "prompt_id": {
-            "anyOf": [
-              {
-                "type": "integer"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Prompt Id"
           },
           "llm_override": {
             "anyOf": [
@@ -20202,10 +20259,6 @@
             "title": "User Folder Ids",
             "default": []
           },
-          "prompt_id": {
-            "anyOf": [{ "type": "integer" }, { "type": "null" }],
-            "title": "Prompt Id"
-          },
           "search_doc_ids": {
             "anyOf": [
               { "items": { "type": "integer" }, "type": "array" },
@@ -20306,7 +20359,6 @@
           "parent_message_id",
           "message",
           "file_descriptors",
-          "prompt_id",
           "search_doc_ids",
           "retrieval_options"
         ],
@@ -24559,17 +24611,6 @@
             },
             "type": "array",
             "title": "Messages"
-          },
-          "prompt_id": {
-            "anyOf": [
-              {
-                "type": "integer"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Prompt Id"
           },
           "retrieval_options": {
             "$ref": "#/components/schemas/RetrievalDetails"

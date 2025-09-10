@@ -423,7 +423,8 @@
                 "pages": [
                   "developers/api_reference/miscellaneous/health_check",
                   "developers/api_reference/miscellaneous/set_rate_limit",
-                  "developers/api_reference/miscellaneous/delete_rate_limit"
+                  "developers/api_reference/miscellaneous/delete_rate_limit",
+                  "developers/api_reference/miscellaneous/get_versions"
                 ]
               }
             ]

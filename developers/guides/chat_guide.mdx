@@ -231,61 +231,112 @@ Skip to the [Full Code](#full-code) section if you don't want the step-by-step g
 
 <CodeGroup>
   ```python Python expandable
+  import json
   import requests
 
-  API_BASE_URL = "https://cloud.onyx.app/api" # or your own domain
+  API_BASE_URL = "https://cloud.onyx.app/api"  # or your own domain
   API_KEY = "YOUR_KEY_HERE"
 
   headers = {
     "Authorization": f"Bearer {API_KEY}",
-    "Content-Type": "application/json"
+    "Content-Type": "application/json",
   }
 
-  # Create a chat session
+  # 1) Create a chat session
   session_response = requests.post(
     f"{API_BASE_URL}/chat/create-chat-session",
     headers=headers,
     json={
-      "persona_id": 0, # The default Onyx Search Agent
-      "description": "Onyx API Guide Chat Session"
-    }
+      "persona_id": 0,  # Default Onyx Search Agent
+      "description": "Onyx API Guide Chat Session",
+    },
   )
-
+  session_response.raise_for_status()
   chat_session_id = session_response.json()["chat_session_id"]
 
-  # Send message
-  message_response = requests.post(
-    f"{API_BASE_URL}/chat/send-message-simple-api",
+  # 2) Send a message
+  # Required fields per CreateChatMessageRequest: chat_session_id, parent_message_id,
+  # message, file_descriptors, prompt_id, search_doc_ids, retrieval_options
+  payload = {
+    "chat_session_id": chat_session_id,
+    "parent_message_id": None,
+    "message": "What is Onyx?",
+    "file_descriptors": [],
+    "prompt_id": None,
+    "search_doc_ids": [],
+    "retrieval_options": {},
+  }
+
+  # Note: This example consumes the streamed packets fully and then prints
+  # a final summary. It does not render tokens incrementally as they arrive.
+  with requests.post(
+    f"{API_BASE_URL}/chat/send-message",
     headers=headers,
-    json={
-      "chat_session_id": chat_session_id,
-      "parent_message_id": None,
-      "message": "What is Onyx?",
-      "file_descriptors": [],
-      "prompt_id": None,
-      "search_doc_ids": [],
-      "retrieval_options": {}
-    }
-  )
+    json=payload,
+    stream=True,
+  ) as resp:
+    resp.raise_for_status()
 
-  # Parse response
-  data = message_response.json()
-  answer = data.get("answer")
-  answer_citationless = data.get("answer_citationless")
-  message_id = data.get("message_id")
-  docs = data.get("top_documents") or []
-  top_documents = [
-    {
-      "id": doc.get("document_id"),
-      "title": doc.get("semantic_identifier"),
-      "link": doc.get("link")
-    } for doc in docs
-  ]
+    full_text = []
+    docs_raw = None
+    citations_map = {}
 
-  print(f"Answer: {answer}")
-  print(f"Answer (citationless): {answer_citationless}")
-  print(f"Message ID: {message_id}")
-  print(f"Top Documents: {top_documents[:5]}")
+    # Each line is a JSON Packet: { ind: int, obj: { type: "...", ... } }
+    for line in resp.iter_lines(decode_unicode=True):
+      if not line:
+        continue
+      try:
+        packet = json.loads(line)
+      except Exception:
+        continue
+
+      obj = packet.get("obj", {})
+      ptype = obj.get("type")
+
+      if ptype == "MessageStart":
+        # Optionally includes final search documents
+        docs_raw = (
+          obj.get("documents")
+          or obj.get("top_documents")
+          or obj.get("search_documents")
+          or docs_raw
+        )
+      elif ptype == "MessageDelta":
+        delta = obj.get("delta", "")
+        full_text.append(delta)
+      elif ptype == "CitationDelta":
+        # Update citation map from common shapes
+        if isinstance(obj.get("citations"), list):
+          for c in obj["citations"]:
+            cid = c.get("citation_id")
+            did = c.get("document_id")
+            if cid is not None and did is not None:
+              citations_map[str(cid)] = str(did)
+        elif obj.get("citation_id") is not None and obj.get("document_id") is not None:
+          citations_map[str(obj["citation_id"])] = str(obj["document_id"])  # single pair
+        elif isinstance(obj.get("map"), dict):
+          citations_map.update({str(k): str(v) for k, v in obj["map"].items()})
+      elif ptype == "OverallStop":
+        break
+
+  # Prepare documents (id/title/link) if present
+  top_documents = []
+  if isinstance(docs_raw, list):
+    for d in docs_raw:
+      top_documents.append(
+        {
+          "id": d.get("document_id") or d.get("id"),
+          "title": d.get("semantic_identifier") or d.get("title"),
+          "link": d.get("link") or d.get("url"),
+        }
+      )
+
+  # Final output: answer, documents, citations
+  print("Final Answer:\n" + "".join(full_text))
+  print("\nTop Documents:")
+  print(json.dumps(top_documents, indent=2))
+  print("\nCitations map (citation_id -> document_id):")
+  print(json.dumps(citations_map, indent=2))
   ```
 
   ```bash Shell expandable
@@ -304,11 +355,13 @@ Skip to the [Full Code](#full-code) section if you don't want the step-by-step g
     }'
   )
 
-  CHAT_SESSION_ID=$(echo $CHAT_SESSION_RESPONSE | jq -r '.chat_session_id')
+  CHAT_SESSION_ID=$(echo "$CHAT_SESSION_RESPONSE" | jq -r '.chat_session_id')
   echo "Created chat session: $CHAT_SESSION_ID"
 
-  echo "Sending message..."
-  MESSAGE_RESPONSE=$(curl -s -X POST "${API_BASE_URL}/chat/send-message-simple-api" \
+  echo "\nReading streamed response to completion (no live token rendering)..."
+  # Note: This consumes the streamed packets fully and prints a final summary
+  # (answer, documents, citations). It does not display tokens as they arrive.
+  curl -s -N -X POST "${API_BASE_URL}/chat/send-message" \
     -H "Authorization: Bearer ${API_KEY}" \
     -H "Content-Type: application/json" \
     -d "{
@@ -319,17 +372,54 @@ Skip to the [Full Code](#full-code) section if you don't want the step-by-step g
       \"prompt_id\": null,
       \"search_doc_ids\": [],
       \"retrieval_options\": {}
-    }"
-  )
+    }" \
+    | (
+      TEXT=""
+      DOCS_JSON=""
+      CITS_JSON='{}'
+      while IFS= read -r line; do
+        [ -z "$line" ] && continue
+        type=$(echo "$line" | jq -r '.obj.type // empty')
+        if [ "$type" = "MessageStart" ]; then
+          docs=$(echo "$line" | jq -c '(.obj.documents // .obj.top_documents // .obj.search_documents) // empty')
+          if [ -n "$docs" ] && [ -z "$DOCS_JSON" ]; then
+            DOCS_JSON="$docs"
+          fi
+        elif [ "$type" = "MessageDelta" ]; then
+          delta=$(echo "$line" | jq -r '.obj.delta // empty')
+          TEXT+="$delta"
+        elif [ "$type" = "CitationDelta" ]; then
+          newmap=$(echo "$line" | jq -c '
+            if (.obj.citations // empty) then
+              (reduce (.obj.citations // [])[] as $c ({}; .[($c.citation_id|tostring)] = ($c.document_id|tostring)))
+            elif (.obj.citation_id and .obj.document_id) then
+              {(.obj.citation_id|tostring): (.obj.document_id|tostring)}
+            elif (.obj.map) then
+              .obj.map
+            else
+              {}
+            end')
+          CITS_JSON=$(jq -c --argjson A "$CITS_JSON" --argjson B "$newmap" '$A * $B' <<< '{}')
+        elif [ "$type" = "OverallStop" ]; then
+          break
+        fi
+      done
 
-  echo "Answer:"
-  echo $MESSAGE_RESPONSE | jq -r '.answer'
+      echo "Final Answer:"
+      printf "%s\n" "$TEXT"
 
-  echo -e "\nMessage ID:"
-  echo $MESSAGE_RESPONSE | jq -r '.message_id'
+      echo
+      echo "Top Documents:"
+      if [ -z "$DOCS_JSON" ]; then
+        echo "[]"
+      else
+        echo "$DOCS_JSON" | jq -c '[.[] | {id: (.document_id // .id), title: (.semantic_identifier // .title), link: (.link // .url)}]'
+      fi
 
-  echo -e "\nTop Documents:"
-  echo $MESSAGE_RESPONSE | jq '.top_documents | .[] | {id: .document_id, title: .semantic_identifier, link: .link}'
+      echo
+      echo "Citations map (citation_id -> document_id):"
+      echo "$CITS_JSON" | jq '.'
+    )
   ```
 </CodeGroup>
 
