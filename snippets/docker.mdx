@@ -21,6 +21,10 @@
   </Step>
 
   <Step title="Launch Onyx">
+    <Note>
+      Make sure Docker has enough memory! If using Docker Desktop, you must increase memory manually!
+    </Note>
+
     To pull images from Docker Hub:
 
     ```bash
@@ -32,6 +36,10 @@
     ```bash
     docker compose -f docker-compose.dev.yml -p onyx-stack up -d --build --force-recreate
     ```
+
+    <Tip>
+      On default settings, you can access Onyx at localhost:3000 after your containers are up.
+    </Tip>
   </Step>
 
   <Step title="(Optional) Configure your Deployment">

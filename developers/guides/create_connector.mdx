@@ -379,7 +379,7 @@ In this example, we'll automate creating Jira Connectors for a selection of proj
         print(f"Status: {response.status_code}. Error: {response.text}")
     except Exception as e:
       print(f"Failed to associate credential with connector {connector_id}: {e}")
-  
+
   print(f"\nCompleted! Created {len(connector_ids)} connectors with IDs: {connector_ids}")
   ```
 
