@@ -28,18 +28,18 @@ be explicit in the prompting since the system is tuned to not generate images un
 See below for the instructions provided to the system for when to create images.
 
 <Accordion title="Image Generation Instruction">
-    Tool Description:
+  Tool Description:
+  
+  ```
+  Generate an image from a prompt.
+  ```
 
-    ```
-    Generate an image from a prompt.
-    ```
+  Instruction (System Prompt) Modification:
 
-    Instruction (System Prompt) Modification:
+  ```
+  NEVER use image_gen unless the user specifically requests an image.
+  ```
 
-    ```
-    NEVER use image_gen unless the user specifically requests an image.
-    ```
-
-    This phrase is injected into the default **Instruction** for Onyx if the **Image Generation** (image_gen)
-    tool is available.
+  This phrase is injected into the default **Instruction** for Onyx if the **Image Generation** (image_gen)
+  tool is available.
 </Accordion>

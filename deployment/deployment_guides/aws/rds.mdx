@@ -161,70 +161,70 @@ This allows Onyx to connect using short-lived IAM credentials.
 
     **For Docker deployments**, add these variables to your `.env` file:
 
-      ```bash
-      USE_IAM_AUTH=true
-      AWS_REGION=<your-region>
-      POSTGRES_HOST=<your-rds-endpoint>
-      POSTGRES_PORT=5432
-      POSTGRES_DB=<your-database-name>
-      POSTGRES_USER=onyxuser
-      ```
+    ```bash
+    USE_IAM_AUTH=true
+    AWS_REGION=<your-region>
+    POSTGRES_HOST=<your-rds-endpoint>
+    POSTGRES_PORT=5432
+    POSTGRES_DB=<your-database-name>
+    POSTGRES_USER=onyxuser
+    ```
 
     Mount the SSL certificate in your `docker-compose.yml`:
 
-      ```yaml docker-compose-prod.yml
-      services:
-        api_server:
-          volumes:
-            - ./rds-combined-ca-bundle.pem:/app/bundle.pem:ro
-      ```
+    ```yaml docker-compose-prod.yml
+    services:
+      api_server:
+        volumes:
+          - ./rds-combined-ca-bundle.pem:/app/bundle.pem:ro
+    ```
 
     **For Kubernetes deployments**, add these to your `values.yaml` file:
 
-      ```yaml
-      configMap:
-        USE_IAM_AUTH: "true"
-        AWS_REGION: "<your-region>"
-        POSTGRES_HOST: "<your-rds-endpoint>"
-        POSTGRES_PORT: "5432"
-        POSTGRES_DB: "<your-database-name>"
-        POSTGRES_USER: "onyxuser"
-      ```
+    ```yaml
+    configMap:
+      USE_IAM_AUTH: "true"
+      AWS_REGION: "<your-region>"
+      POSTGRES_HOST: "<your-rds-endpoint>"
+      POSTGRES_PORT: "5432"
+      POSTGRES_DB: "<your-database-name>"
+      POSTGRES_USER: "onyxuser"
+    ```
 
     Create a secret for the SSL certificate and mount it:
 
-      ```bash
-      kubectl create secret generic bundle-pem-secret --from-file=rds-combined-ca-bundle.pem
-      ```
+    ```bash
+    kubectl create secret generic bundle-pem-secret --from-file=rds-combined-ca-bundle.pem
+    ```
 
     Next, we'll mount the certificate in all of our containers in the `values.yaml` file.
 
     **Go through each container and replace the empty `volumes` and `volumeMounts` with the following:**
 
-      ```yaml
-      volumes:
-      - name: rds-ca
-          secret:
-            secretName: bundle-pem-secret
+    ```yaml
+    volumes:
+    - name: rds-ca
+        secret:
+          secretName: bundle-pem-secret
 
-      volumeMounts:
-        - name: rds-ca
-          mountPath: "/app/bundle.pem"
-          subPath: bundle.pem
-          readOnly: true
-      ```
+    volumeMounts:
+      - name: rds-ca
+        mountPath: "/app/bundle.pem"
+        subPath: bundle.pem
+        readOnly: true
+    ```
   </Step>
 
   <Step title="Restart Onyx">
     Restart your Onyx instance to apply the changes.
 
-      ```bash Docker
-      docker compose -f docker-compose.dev.yml -p onyx-stack up -d --build --force-recreate
-      ```
+    ```bash Docker
+    docker compose -f docker-compose.dev.yml -p onyx-stack up -d --build --force-recreate
+    ```
 
-      ```bash kubectl
-      kubectl rollout restart deployment
-      ```
+    ```bash kubectl
+    kubectl rollout restart deployment
+    ```
   </Step>
 </Steps>
 

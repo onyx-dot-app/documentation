@@ -96,8 +96,8 @@ import AgentsPersonasAssistantsNote from '/snippets/agents-personas-assistants-n
 
     ```python
     class Packet(BaseModel):
-        ind: int        # Sequential index for ordering
-        obj: PacketObj  # The actual content including type of packet
+      ind: int        # Sequential index for ordering
+      obj: PacketObj  # The actual content including type of packet
     ```
 
     **Streaming Flow:**
@@ -180,13 +180,13 @@ import AgentsPersonasAssistantsNote from '/snippets/agents-personas-assistants-n
 
     ```python Python
     class ConnectorBase(BaseModel):
-        name: str
-        source: DocumentSource
-        input_type: InputType
-        connector_specific_config: dict[str, Any]
-        refresh_freq: int | None = None
-        prune_freq: int | None = None
-        indexing_start: datetime | None = None
+      name: str
+      source: DocumentSource
+      input_type: InputType
+      connector_specific_config: dict[str, Any]
+      refresh_freq: int | None = None
+      prune_freq: int | None = None
+      indexing_start: datetime | None = None
     ```
   </Accordion>
 
@@ -231,10 +231,10 @@ import AgentsPersonasAssistantsNote from '/snippets/agents-personas-assistants-n
 
     ```python Python
     class ConnectorCredentialPairMetadata(BaseModel):
-        name: str | None = None
-        access_type: AccessType
-        auto_sync_options: dict[str, Any] | None = None
-        groups: list[int] = Field(default_factory=list)
+      name: str | None = None
+      access_type: AccessType
+      auto_sync_options: dict[str, Any] | None = None
+      groups: list[int] = Field(default_factory=list)
     ```
   </Accordion>
 </AccordionGroup>
@@ -267,24 +267,24 @@ import AgentsPersonasAssistantsNote from '/snippets/agents-personas-assistants-n
 
     ```python Python expandable
     class DocumentBase(BaseModel):
-        """Used for Onyx ingestion api, the ID is inferred before use if not provided"""
+      """Used for Onyx ingestion api, the ID is inferred before use if not provided"""
 
-        id: str | None = None
-        sections: list[TextSection | ImageSection]
-        source: DocumentSource | None = None
-        semantic_identifier: str
-        metadata: dict[str, str | list[str]]
+      id: str | None = None
+      sections: list[TextSection | ImageSection]
+      source: DocumentSource | None = None
+      semantic_identifier: str
+      metadata: dict[str, str | list[str]]
 
-        doc_updated_at: datetime | None = None
-        chunk_count: int | None = None
+      doc_updated_at: datetime | None = None
+      chunk_count: int | None = None
 
-        primary_owners: list[BasicExpertInfo] | None = None
-        secondary_owners: list[BasicExpertInfo] | None = None
-        title: str | None = None
-        from_ingestion_api: bool = False
-        additional_info: Any = None
+      primary_owners: list[BasicExpertInfo] | None = None
+      secondary_owners: list[BasicExpertInfo] | None = None
+      title: str | None = None
+      from_ingestion_api: bool = False
+      additional_info: Any = None
 
-        external_access: ExternalAccess | None = None
+      external_access: ExternalAccess | None = None
     ```
   </Accordion>
 
@@ -357,8 +357,8 @@ import AgentsPersonasAssistantsNote from '/snippets/agents-personas-assistants-n
 
     ```python Python
     class TextSection(Section):
-        text: str
-        link: str | None = None
+      text: str
+      link: str | None = None
     ```
   </Accordion>
 
@@ -370,9 +370,9 @@ import AgentsPersonasAssistantsNote from '/snippets/agents-personas-assistants-n
 
     ```python Python
     class ImageSection(Section):
-        image_file_id: str
-        text: str | None = None
-        link: str | None = None
+      image_file_id: str
+      text: str | None = None
+      link: str | None = None
     ```
   </Accordion>
 
