@@ -163,7 +163,6 @@ Skip to the [Full Code](#full-code) section if you don't want the step-by-step g
           "parent_message_id": None,
           "message": "What is Onyx?",
           "file_descriptors": [],
-          "prompt_id": None,
           "search_doc_ids": [],
           "retrieval_options": {}
         }
@@ -179,7 +178,6 @@ Skip to the [Full Code](#full-code) section if you don't want the step-by-step g
           \"parent_message_id\": null,
           \"message\": \"What is Onyx?\",
           \"file_descriptors\": [],
-          \"prompt_id\": null,
           \"search_doc_ids\": [],
           \"retrieval_options\": {}
         }"
@@ -255,14 +253,11 @@ Skip to the [Full Code](#full-code) section if you don't want the step-by-step g
   chat_session_id = session_response.json()["chat_session_id"]
 
   # 2) Send a message
-  # Required fields per CreateChatMessageRequest: chat_session_id, parent_message_id,
-  # message, file_descriptors, prompt_id, search_doc_ids, retrieval_options
   payload = {
     "chat_session_id": chat_session_id,
     "parent_message_id": None,
     "message": "What is Onyx?",
     "file_descriptors": [],
-    "prompt_id": None,
     "search_doc_ids": [],
     "retrieval_options": {},
   }
@@ -369,7 +364,6 @@ Skip to the [Full Code](#full-code) section if you don't want the step-by-step g
       \"parent_message_id\": null,
       \"message\": \"What is Onyx?\",
       \"file_descriptors\": [],
-      \"prompt_id\": null,
       \"search_doc_ids\": [],
       \"retrieval_options\": {}
     }" \
