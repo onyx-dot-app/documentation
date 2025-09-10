@@ -12,8 +12,7 @@ icon: "bolt"
 
 *Send Message Simple API* is the quickest way to interact with Onyx programmatically.
 
-This endpoint has fewer required parameters and responds with a minimal set of information such as the AI's answer and a
-list of the top documents.
+This endpoint has fewer required parameters and returns a concise JSON payload described by `ChatBasicResponse`.
 
 <Note>
   You must specify either a `chat_session_id` or a `persona_id` in your request.
@@ -27,8 +26,8 @@ list of the top documents.
   API_KEY = "YOUR_KEY_HERE"
 
   headers = {
-  "Authorization": f"Bearer {API_KEY}",
-  "Content-Type": "application/json"
+    "Authorization": f"Bearer {API_KEY}",
+    "Content-Type": "application/json"
   }
 
   '''
@@ -37,26 +36,33 @@ list of the top documents.
   '''
 
   response = requests.post(
-  f"{API_BASE_URL}/chat/send-message-simple-api",
-  headers=headers,
-  json={
-  "message": "What is Onyx?",
-  "persona_id": "0" # The default Onyx Search Agent
-  }
+    f"{API_BASE_URL}/chat/send-message-simple-api",
+    headers=headers,
+    json={
+      "message": "What is Onyx?",
+      "persona_id": 0  # The default Onyx Search Agent (int)
+    }
   )
 
-  answer = response.json()["answer"]
-  chat_session_id = response.json()["chat_session_id"] # Save this to continue the conversation
+  data = response.json()
+  answer = data.get("answer")
+  answer_citationless = data.get("answer_citationless")
+  message_id = data.get("message_id")
+  docs = data.get("top_documents") or []
   top_documents = [
-  {
-  "id": doc["document_id"],
-  "title": doc["semantic_identifier"],
-  "link": doc["link"]
-  } for doc in response.json()["top_documents"]
-  ] # Parse important information from the results
+    {
+      "id": doc.get("document_id"),
+      "title": doc.get("semantic_identifier"),
+      "link": doc.get("link")
+    } for doc in docs
+  ]
+  cited_docs_map = data.get("cited_documents") or {}
 
   print(f"Answer: {answer}")
+  print(f"Answer (citationless): {answer_citationless}")
+  print(f"Message ID: {message_id}")
   print(f"Top Documents: {top_documents[:5]}") # Print top 5 documents
+  print(f"Citations map: {cited_docs_map}")
   ```
 
   ```bash Shell expandable
@@ -67,25 +73,34 @@ list of the top documents.
 
   echo "Sending message to Onyx..."
   RESPONSE=$(curl -s -X POST "${API_BASE_URL}/chat/send-message-simple-api" \
-  -H "Authorization: Bearer ${API_KEY}" \
-  -H "Content-Type: application/json" \
-  -d '{
-  "message": "What is Onyx?",
-  "persona_id": "0"
-  }')
+    -H "Authorization: Bearer ${API_KEY}" \
+    -H "Content-Type: application/json" \
+    -d '{
+      "message": "What is Onyx?",
+      "persona_id": 0
+    }'
+  )
 
   echo "Answer:"
   echo $RESPONSE | jq -r '.answer'
 
-  echo -e "\nChat Session ID (save for continuing conversation):"
-  echo $RESPONSE | jq -r '.chat_session_id'
+  echo -e "\nAnswer (citationless):"
+  echo $RESPONSE | jq -r '.answer_citationless'
+
+  echo -e "\nMessage ID:"
+  echo $RESPONSE | jq -r '.message_id'
 
   echo -e "\nTop Documents:"
-  echo $RESPONSE | jq '.top_documents[] | {id: .document_id, title: .semantic_identifier, link: .link}'
+  echo $RESPONSE | jq '.top_documents | .[] | {id: .document_id, title: .semantic_identifier, link: .link}'
   ```
 </CodeGroup>
 
 ## Advanced Chat Flow
+
+The `/send-message` endpoint is what the Onyx frontend uses to send and receive messages.
+Responses are streamed back in packets of JSON objects.
+
+To understand the response format, see the [Core Concepts documentation](/developers/core_concepts/#chat).
 
 Skip to the [Full Code](#full-code) section if you don't want the step-by-step guide.
 
@@ -99,8 +114,8 @@ Skip to the [Full Code](#full-code) section if you don't want the step-by-step g
       API_KEY = "YOUR_KEY_HERE"
 
       headers = {
-      "Authorization": f"Bearer {API_KEY}",
-      "Content-Type": "application/json"
+        "Authorization": f"Bearer {API_KEY}",
+        "Content-Type": "application/json"
       }
       ```
 
@@ -115,12 +130,12 @@ Skip to the [Full Code](#full-code) section if you don't want the step-by-step g
     <CodeGroup>
       ```python Python
       session_response = requests.post(
-      f"{API_BASE_URL}/chat/create-chat-session",
-      headers=headers,
-      json={
-      "persona_id": 0, # The default Onyx Search Agent
-      "description": "Onyx API Guide Chat Session"
-      }
+        f"{API_BASE_URL}/chat/create-chat-session",
+        headers=headers,
+        json={
+          "persona_id": 0, # The default Onyx Search Agent
+          "description": "Onyx API Guide Chat Session"
+        }
       )
 
       chat_session_id = session_response.json()["chat_session_id"]
@@ -128,12 +143,13 @@ Skip to the [Full Code](#full-code) section if you don't want the step-by-step g
 
       ```bash Shell
       CHAT_SESSION_RESPONSE=$(curl -s -X POST "${API_BASE_URL}/chat/create-chat-session" \
-      -H "Authorization: Bearer ${API_KEY}" \
-      -H "Content-Type: application/json" \
-      -d '{
-      "persona_id": 0,
-      "description": "Onyx API Guide Chat Session"
-      }')
+        -H "Authorization: Bearer ${API_KEY}" \
+        -H "Content-Type: application/json" \
+        -d '{
+          "persona_id": 0,
+          "description": "Onyx API Guide Chat Session"
+        }'
+      )
 
       # Extract chat session ID (requires jq for JSON parsing)
       CHAT_SESSION_ID=$(echo $CHAT_SESSION_RESPONSE | jq -r '.chat_session_id')
@@ -144,62 +160,132 @@ Skip to the [Full Code](#full-code) section if you don't want the step-by-step g
   <Step title="Send message">
     <CodeGroup>
       ```python Python
-      message_response = requests.post(
-      f"{API_BASE_URL}/chat/send-message-simple-api",
-      headers=headers,
-      json={
-      "chat_session_id": chat_session_id,
-      "parent_message_id": None,
-      "message": "What is Onyx?",
-      "file_descriptors": [],
-      "prompt_id": None,
-      "search_doc_ids": [],
-      "retrieval_options": {}
+      payload = {
+        "chat_session_id": chat_session_id,
+        "parent_message_id": None,
+        "message": "What is Onyx?",
+        "file_descriptors": [],
+        "search_doc_ids": [],
+        "retrieval_options": {}
       }
-      )
+
+      # Consume the streamed packets fully and then print a summary
+      with requests.post(
+        f"{API_BASE_URL}/chat/send-message",
+        headers=headers,
+        json=payload,
+        stream=True,
+      ) as resp:
+        resp.raise_for_status()
+
+        full_text = []
+        docs_raw = None
+        citations_map = {}
+
+        # Each line is a JSON Packet: { ind: int, obj: { type: "...", ... } }
+        for line in resp.iter_lines(decode_unicode=True):
+          if not line:
+            continue
+          try:
+            packet = json.loads(line)
+          except Exception:
+            continue
+
+          obj = packet.get("obj", {})
+          ptype = obj.get("type")
+
+          if ptype == "message_start":
+            # Includes final search documents per API spec
+            docs_raw = obj.get("final_documents") or docs_raw
+          elif ptype == "message_delta":
+            delta = obj.get("content", "")
+            full_text.append(delta)
+          elif ptype == "citation_delta":
+            # Update citation map using citation_num -> document_id pairs
+            if isinstance(obj.get("citations"), list):
+              for c in obj["citations"]:
+                cnum = c.get("citation_num")
+                did = c.get("document_id")
+                if cnum is not None and did is not None:
+                  citations_map[str(cnum)] = str(did)
+          elif ptype == "stop":
+            break
+
+      # Prepare documents (id/title/link) if present
+      top_documents = []
+      if isinstance(docs_raw, list):
+        for d in docs_raw:
+          top_documents.append(
+            {
+              "id": d.get("document_id") or d.get("id"),
+              "title": d.get("semantic_identifier") or d.get("title"),
+              "link": d.get("link") or d.get("url"),
+            }
+          )
+
+      print("Final Answer:\n" + "".join(full_text))
+      print("\nTop Documents:")
+      print(json.dumps(top_documents, indent=2))
+      print("\nCitations map (citation_num -> document_id):")
+      print(json.dumps(citations_map, indent=2))
       ```
 
       ```bash Shell
-      MESSAGE_RESPONSE=$(curl -s -X POST "${API_BASE_URL}/chat/send-message-simple-api" \
-      -H "Authorization: Bearer ${API_KEY}" \
-      -H "Content-Type: application/json" \
-      -d "{
-      \"chat_session_id\": \"${CHAT_SESSION_ID}\",
-      \"parent_message_id\": null,
-      \"message\": \"What is Onyx?\",
-      \"file_descriptors\": [],
-      \"prompt_id\": null,
-      \"search_doc_ids\": [],
-      \"retrieval_options\": {}
-      }")
-      ```
-    </CodeGroup>
-  </Step>
+      # Read streamed response to completion (no live token rendering)
+      curl -s -N -X POST "${API_BASE_URL}/chat/send-message" \
+        -H "Authorization: Bearer ${API_KEY}" \
+        -H "Content-Type: application/json" \
+        -d "{
+          \"chat_session_id\": \"${CHAT_SESSION_ID}\",
+          \"parent_message_id\": null,
+          \"message\": \"What is Onyx?\",
+          \"file_descriptors\": [],
+          \"search_doc_ids\": [],
+          \"retrieval_options\": {}
+        }" \
+        | (
+          TEXT=""
+          DOCS_JSON=""
+          CITS_JSON='{}'
+          while IFS= read -r line; do
+            [ -z "$line" ] && continue
+            type=$(echo "$line" | jq -r '.obj.type // empty')
+            if [ "$type" = "message_start" ]; then
+              docs=$(echo "$line" | jq -c '(.obj.final_documents) // empty')
+              if [ -n "$docs" ] && [ -z "$DOCS_JSON" ]; then
+                DOCS_JSON="$docs"
+              fi
+            elif [ "$type" = "message_delta" ]; then
+              delta=$(echo "$line" | jq -r '.obj.content // empty')
+              TEXT+="$delta"
+            elif [ "$type" = "citation_delta" ]; then
+              newmap=$(echo "$line" | jq -c '
+                if (.obj.citations // empty) then
+                  (reduce (.obj.citations // [])[] as $c ({}; .[($c.citation_num|tostring)] = ($c.document_id|tostring)))
+                else
+                  {}
+                end')
+              CITS_JSON=$(jq -c --argjson A "$CITS_JSON" --argjson B "$newmap" '$A * $B' <<< '{}')
+            elif [ "$type" = "stop" ]; then
+              break
+            fi
+          done
 
-  <Step title="Parse response">
-    <CodeGroup>
-      ```python Python
-      answer = message_response.json()["answer"]
-      top_documents = [
-      {
-      "id": doc["document_id"],
-      "title": doc["semantic_identifier"],
-      "link": doc["link"]
-      } for doc in message_response.json()["top_documents"]
-      ]
-      print(f"Answer: {answer}")
-      print(f"Top Documents: {top_documents[:5]}")
-      ```
+          echo "Final Answer:"
+          printf "%s\n" "$TEXT"
 
-      ```bash Shell
-      echo "Response received:"
-      echo $MESSAGE_RESPONSE
+          echo
+          echo "Top Documents:"
+          if [ -z "$DOCS_JSON" ]; then
+            echo "[]"
+          else
+            echo "$DOCS_JSON" | jq -c '[.[] | {id: (.document_id // .id), title: (.semantic_identifier // .title), link: (.link // .url)}]'
+          fi
 
-      ANSWER=$(echo $MESSAGE_RESPONSE | jq -r '.answer')
-      echo "Answer: $ANSWER"
-
-      echo "Top Documents:"
-      echo $MESSAGE_RESPONSE | jq '.top_documents[] | {id: .document_id, title: .semantic_identifier, link: .link}'
+          echo
+          echo "Citations map (citation_num -> document_id):"
+          echo "$CITS_JSON" | jq '.'
+        )
       ```
     </CodeGroup>
   </Step>
@@ -207,98 +293,7 @@ Skip to the [Full Code](#full-code) section if you don't want the step-by-step g
 
 #### Full Code
 
-<CodeGroup>
-  ```python Python expandable
-  import requests
-
-  API_BASE_URL = "https://cloud.onyx.app/api" # or your own domain
-  API_KEY = "YOUR_KEY_HERE"
-
-  headers = {
-  "Authorization": f"Bearer {API_KEY}",
-  "Content-Type": "application/json"
-  }
-
-  # Create a chat session
-  session_response = requests.post(
-  f"{API_BASE_URL}/chat/create-chat-session",
-  headers=headers,
-  json={
-  "persona_id": 0, # The default Onyx Search Agent
-  "description": "Onyx API Guide Chat Session"
-  }
-  )
-
-  chat_session_id = session_response.json()["chat_session_id"]
-
-  # Send message
-  message_response = requests.post(
-  f"{API_BASE_URL}/chat/send-message-simple-api",
-  headers=headers,
-  json={
-  "chat_session_id": chat_session_id,
-  "parent_message_id": None,
-  "message": "What is Onyx?",
-  "file_descriptors": [],
-  "prompt_id": None,
-  "search_doc_ids": [],
-  "retrieval_options": {}
-  }
-  )
-
-  # Parse response
-  answer = message_response.json()["answer"]
-  top_documents = [
-  {
-  "id": doc["document_id"],
-  "title": doc["semantic_identifier"],
-  "link": doc["link"]
-  } for doc in message_response.json()["top_documents"]
-  ]
-
-  print(f"Answer: {answer}")
-  print(f"Top Documents: {top_documents[:5]}")
-  ```
-
-  ```bash Shell expandable
-  #!/bin/bash
-
-  API_BASE_URL="https://cloud.onyx.app/api"
-  API_KEY="YOUR_KEY_HERE"
-
-  echo "Creating chat session..."
-  CHAT_SESSION_RESPONSE=$(curl -s -X POST "${API_BASE_URL}/chat/create-chat-session" \
-  -H "Authorization: Bearer ${API_KEY}" \
-  -H "Content-Type: application/json" \
-  -d '{
-  "persona_id": 0,
-  "description": "Onyx API Guide Chat Session"
-  }')
-
-  CHAT_SESSION_ID=$(echo $CHAT_SESSION_RESPONSE | jq -r '.chat_session_id')
-  echo "Created chat session: $CHAT_SESSION_ID"
-
-  echo "Sending message..."
-  MESSAGE_RESPONSE=$(curl -s -X POST "${API_BASE_URL}/chat/send-message-simple-api" \
-  -H "Authorization: Bearer ${API_KEY}" \
-  -H "Content-Type: application/json" \
-  -d "{
-  \"chat_session_id\": \"${CHAT_SESSION_ID}\",
-  \"parent_message_id\": null,
-  \"message\": \"What is Onyx?\",
-  \"file_descriptors\": [],
-  \"prompt_id\": null,
-  \"search_doc_ids\": [],
-  \"retrieval_options\": {}
-  }")
-
-  echo "Answer:"
-  echo $MESSAGE_RESPONSE | jq -r '.answer'
-
-  echo -e "\nTop Documents:"
-  echo $MESSAGE_RESPONSE | jq '.top_documents[] | {id: .document_id, title: .semantic_identifier, link: .link}'
-  ```
-</CodeGroup>
+The Full Code example has been integrated into the step-by-step flow above for clarity. Use the “Send message (stream and assemble)” step to see the complete streaming example in both Python and Bash.
 
 ## Next Steps
 

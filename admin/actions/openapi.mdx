@@ -36,145 +36,91 @@ The below OpenAPI spec can be used to create a Custom Action for fetching and cr
 
 ```json OpenAPI expandable
 {
-   "openapi":"3.0.0",
-   "info":{
-      "version":"1.0.0",
-      "title":"Agents API",
-      "description":"An API for managing agents within Onyx"
-   },
-   "servers":[
-      {
-         "url":"http://localhost:8080"
-      }
-   ],
-   "paths":{
-      "/persona":{
-         "get":{
-            "summary":"Get a specific Agent",
-            "operationId":"getAssistant",
-            "parameters":[
-               {
-                  "name":"assistant_id",
-                  "in":"path",
-                  "required":true,
-                  "schema":{
-                     "type":"string"
-                  }
-               }
-            ]
-         },
-         "post":{
-            "summary":"Create a new Agent",
-            "operationId":"createAssistant",
-            "requestBody":{
-               "required":true,
-               "content":{
-                  "application/json":{
-                     "schema":{
-                        "type":"object",
-                        "properties":{
-                           "name":{
-                              "type":"string"
-                           },
-                           "description":{
-                              "type":"string"
-                           },
-                           "num_chunks":{
-                              "type":"number"
-                           },
-                           "llm_relevance_filter":{
-                              "type":"boolean"
-                           },
-                           "is_public":{
-                              "type":"boolean"
-                           },
-                           "llm_filter_extraction":{
-                              "type":"boolean"
-                           },
-                           "recency_bias":{
-                              "type":"string",
-                              "enum":[
-                                 "favor_recent",
-                                 "base_decay",
-                                 "no_decay",
-                                 "auto"
-                              ]
-                           },
-                           "prompt_ids":{
-                              "type":"array",
-                              "items":{
-                                 "type":"integer"
-                              }
-                           },
-                           "document_set_ids":{
-                              "type":"array",
-                              "items":{
-                                 "type":"integer"
-                              }
-                           },
-                           "tool_ids":{
-                              "type":"array",
-                              "items":{
-                                 "type":"integer"
-                              }
-                           },
-                           "llm_model_provider_override":{
-                              "type":"string",
-                              "nullable":true
-                           },
-                           "llm_model_version_override":{
-                              "type":"string",
-                              "nullable":true
-                           },
-                           "starter_messages":{
-                              "type":"array",
-                              "items":{
-                                 "type":"object",
-                                 "properties":{
-                                    "role":{
-                                       "type":"string"
-                                    },
-                                    "content":{
-                                       "type":"string"
-                                    }
-                                 }
-                              },
-                              "nullable":true
-                           },
-                           "users":{
-                              "type":"array",
-                              "items":{
-                                 "type":"string",
-                                 "format":"uuid"
-                              },
-                              "nullable":true
-                           },
-                           "groups":{
-                              "type":"array",
-                              "items":{
-                                 "type":"integer"
-                              },
-                              "nullable":true
-                           }
-                        },
-                        "required":[
-                           "name",
-                           "description",
-                           "num_chunks",
-                           "llm_relevance_filter",
-                           "is_public",
-                           "llm_filter_extraction",
-                           "recency_bias",
-                           "prompt_ids",
-                           "document_set_ids",
-                           "tool_ids"
-                        ]
-                     }
-                  }
-               }
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Agents API",
+    "version": "1.0.0",
+    "description": "Minimal OpenAPI schema for creating and fetching agents in Onyx"
+  },
+  "servers": [
+    {
+      "url": "https://cloud.onyx.app/api"
+    }
+  ],
+  "paths": {
+    "/persona": {
+      "post": {
+        "summary": "Create Agent (Persona)",
+        "operationId": "create_persona",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": { "type": "string" },
+                  "description": { "type": "string" },
+                  "document_set_ids": {
+                    "type": "array",
+                    "items": { "type": "integer" }
+                  },
+                  "num_chunks": { "type": "number" },
+                  "is_public": { "type": "boolean" },
+                  "recency_bias": {
+                    "type": "string",
+                    "enum": ["favor_recent", "base_decay", "no_decay", "auto"]
+                  },
+                  "llm_filter_extraction": { "type": "boolean" },
+                  "llm_relevance_filter": { "type": "boolean" },
+                  "tool_ids": {
+                    "type": "array",
+                    "items": { "type": "integer" }
+                  },
+                  "system_prompt": { "type": "string" },
+                  "task_prompt": { "type": "string" },
+                  "datetime_aware": { "type": "boolean" }
+                },
+                "required": [
+                  "name",
+                  "description",
+                  "document_set_ids",
+                  "num_chunks",
+                  "is_public",
+                  "recency_bias",
+                  "llm_filter_extraction",
+                  "llm_relevance_filter",
+                  "tool_ids",
+                  "system_prompt",
+                  "task_prompt",
+                  "datetime_aware"
+                ]
+              }
             }
-         }
+          }
+        },
+        "responses": {
+          "200": { "description": "Created" }
+        }
       }
-   }
+    },
+    "/persona/{persona_id}": {
+      "get": {
+        "summary": "Get Agent (Persona) By ID",
+        "operationId": "get_persona",
+        "parameters": [
+          {
+            "name": "persona_id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer" }
+          }
+        ],
+        "responses": {
+          "200": { "description": "OK" }
+        }
+      }
+    }
+  }
 }
 ```

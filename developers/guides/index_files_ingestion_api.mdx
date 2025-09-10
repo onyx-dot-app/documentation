@@ -50,8 +50,8 @@ In this example, we'll index local files with the Ingestion API.
       API_KEY = "YOUR_KEY_HERE"
 
       headers = {
-      "Authorization": f"Bearer {API_KEY}",
-      "Content-Type": "application/json"
+        "Authorization": f"Bearer {API_KEY}",
+        "Content-Type": "application/json"
       }
       ```
 
@@ -94,53 +94,53 @@ In this example, we'll index local files with the Ingestion API.
     <CodeGroup>
       ```json JSON
       {
-      "document": {
-      "id": "my_unique_id_1",
-      "semantic_identifier": "Onyx FAQ - Title shown in UI",
-      "title": "Onyx FAQ v1 - Title for Search",
-      "sections": [
-      {
-      "text": "What is Onyx?\nOnyx is...",
-      "link": "https://docs.onyx.app/faq#what-is-onyx"
-      },
-      {
-      "text": "How do I get started?\nTo get started...",
-      "link": "https://docs.onyx.app/faq#getting-started"
-      },
-      {
-      "image_file_id": "uuid_generated_by_onyx_file_store",
-      "text": "Advanced - Must upload image first! POST /user/file/upload",
-      "link": "https://docs.onyx.app/faq#about"
-      }
-      ],
-      "source": "file",
-      "metadata": {
-      "category": "faq",
-      "tags": ["frequently-asked", "help"]
-      },
-      "doc_updated_at": "2025-09-19T08:20:00Z",
-      "chunk_count": 15,
-      "primary_owners": [
-      {
-      "display_name": "Alex Chen",
-      "first_name": "Alex",
-      "middle_initial": null,
-      "last_name": "Chen",
-      "email": "alex@onyx.app"
-      }
-      ],
-      "secondary_owners": [
-      {
-      "display_name": "Sarah Johnson",
-      "first_name": "Sarah",
-      "middle_initial": "M",
-      "last_name": "Johnson",
-      "email": "sarah@onyx.app"
-      }
-      ],
-      "from_ingestion_api": true
-      },
-      "cc_pair_id": 243
+        "document": {
+          "id": "my_unique_id_1",
+          "semantic_identifier": "Onyx FAQ - Title shown in UI",
+          "title": "Onyx FAQ v1 - Title for Search",
+          "sections": [
+            {
+              "text": "What is Onyx?\nOnyx is...",
+              "link": "https://docs.onyx.app/faq#what-is-onyx"
+            },
+            {
+              "text": "How do I get started?\nTo get started...",
+              "link": "https://docs.onyx.app/faq#getting-started"
+            },
+            {
+              "image_file_id": "uuid_generated_by_onyx_file_store",
+              "text": "Advanced - Must upload image first! POST /user/file/upload",
+              "link": "https://docs.onyx.app/faq#about"
+            }
+          ],
+          "source": "file",
+          "metadata": {
+            "category": "faq",
+            "tags": ["frequently-asked", "help"]
+          },
+          "doc_updated_at": "2025-09-19T08:20:00Z",
+          "chunk_count": 15,
+          "primary_owners": [
+            {
+              "display_name": "Alex Chen",
+              "first_name": "Alex",
+              "middle_initial": null,
+              "last_name": "Chen",
+              "email": "alex@onyx.app"
+            }
+          ],
+          "secondary_owners": [
+            {
+              "display_name": "Sarah Johnson",
+              "first_name": "Sarah",
+              "middle_initial": "M",
+              "last_name": "Johnson",
+              "email": "sarah@onyx.app"
+            }
+          ],
+          "from_ingestion_api": true
+        },
+        "cc_pair_id": 243
       }
       ```
     </CodeGroup>
@@ -156,65 +156,65 @@ In this example, we'll index local files with the Ingestion API.
       from docx import Document as DocxDocument
 
       def read_files_from_folder(folder_path, cc_pair_id=243):
-      """
-      Read PDF, TXT, DOCX, CSV, and XLSX files and create minimal ingestion payloads
-      """
-      documents = []
-      folder = Path(folder_path)
+        """
+        Read PDF, TXT, DOCX, CSV, and XLSX files and create minimal ingestion payloads
+        """
+        documents = []
+        folder = Path(folder_path)
 
-      # Supported file extensions
-      supported_extensions = {'.pdf', '.txt', '.docx', '.csv', '.xlsx'}
+        # Supported file extensions
+        supported_extensions = {'.pdf', '.txt', '.docx', '.csv', '.xlsx'}
 
-      for file_path in folder.rglob('*'):
-      if file_path.is_file() and file_path.suffix.lower() in supported_extensions:
-      try:
-      # Extract text based on file type
-      if file_path.suffix.lower() == '.txt':
-      with open(file_path, 'r', encoding='utf-8') as f:
-      content = f.read()
+        for file_path in folder.rglob('*'):
+          if file_path.is_file() and file_path.suffix.lower() in supported_extensions:
+            try:
+              # Extract text based on file type
+              if file_path.suffix.lower() == '.txt':
+                with open(file_path, 'r', encoding='utf-8') as f:
+                  content = f.read()
 
-      elif file_path.suffix.lower() == '.pdf':
-      with open(file_path, 'rb') as f:
-      reader = PyPDF2.PdfReader(f)
-      content = ""
-      for page in reader.pages:
-      content += page.extract_text() + "\n"
+              elif file_path.suffix.lower() == '.pdf':
+                with open(file_path, 'rb') as f:
+                  reader = PyPDF2.PdfReader(f)
+                  content = ""
+                  for page in reader.pages:
+                    content += page.extract_text() + "\n"
 
-      elif file_path.suffix.lower() == '.docx':
-      doc = DocxDocument(file_path)
-      content = "\n".join([paragraph.text for paragraph in doc.paragraphs])
+              elif file_path.suffix.lower() == '.docx':
+                doc = DocxDocument(file_path)
+                content = "\n".join([paragraph.text for paragraph in doc.paragraphs])
 
-      elif file_path.suffix.lower() in ['.csv', '.xlsx']:
-      df = pd.read_csv(file_path) if file_path.suffix.lower() == '.csv' else pd.read_excel(file_path)
-      content = df.to_string(index=False)
+              elif file_path.suffix.lower() in ['.csv', '.xlsx']:
+                df = pd.read_csv(file_path) if file_path.suffix.lower() == '.csv' else pd.read_excel(file_path)
+                content = df.to_string(index=False)
 
-      # Skip empty files
-      if not content.strip():
-      continue
+              # Skip empty files
+              if not content.strip():
+                continue
 
-      # Create minimal viable payload
-      document_payload = {
-      "document": {
-      "semantic_identifier": file_path.name,
-      "sections": [
-      {"text": content}
-      ],
-      "source": "file",
-      "metadata": {
-      "file_type": file_path.suffix.lower()
-      }
-      },
-      "cc_pair_id": cc_pair_id
-      }
+              # Create minimal viable payload
+              document_payload = {
+                "document": {
+                  "semantic_identifier": file_path.name,
+                  "sections": [
+                    {"text": content}
+                  ],
+                  "source": "file",
+                  "metadata": {
+                    "file_type": file_path.suffix.lower()
+                  }
+                },
+                "cc_pair_id": cc_pair_id
+              }
 
-      documents.append(document_payload)
-      print(f"Processed: {file_path.name}")
+              documents.append(document_payload)
+              print(f"Processed: {file_path.name}")
 
-      except Exception as e:
-      print(f"Error reading {file_path.name}: {e}")
-      continue
+            except Exception as e:
+              print(f"Error reading {file_path.name}: {e}")
+              continue
 
-      return documents
+        return documents
 
       # Example usage
       LOCAL_FOLDER = "./documents"  # Change to your folder path
@@ -229,27 +229,27 @@ In this example, we'll index local files with the Ingestion API.
       # Create the JSON payload
       cat > document_payload.json << 'EOF'
       {
-      "document": {
-      "id": "ingestion_document_1",
-      "sections": [
-      {
-      "text": "This is the contents of the document that will be processed and saved into the Onyx filestore and Vespa index.",
-      "link": "https://docs.onyx.app/introduction#what-is-onyx"
-      },
-      {
-      "text": "You can include multiple content sections each with their own link or combine them.",
-      "link": "https://docs.onyx.app/introduction#main-features"
-      }
-      ],
-      "source": "file",
-      "semantic_identifier": "Onyx Ingestion Example",
-      "metadata": {
-      "tag": "informational",
-      "topics": ["onyx", "api"]
-      },
-      "doc_updated_at": "2025-09-19T08:20:00Z"
-      },
-      "cc_pair_id": 243
+        "document": {
+          "id": "ingestion_document_1",
+          "sections": [
+            {
+              "text": "This is the contents of the document that will be processed and saved into the Onyx filestore and Vespa index.",
+              "link": "https://docs.onyx.app/introduction#what-is-onyx"
+            },
+            {
+              "text": "You can include multiple content sections each with their own link or combine them.",
+              "link": "https://docs.onyx.app/introduction#main-features"
+            }
+          ],
+          "source": "file",
+          "semantic_identifier": "Onyx Ingestion Example",
+          "metadata": {
+            "tag": "informational",
+            "topics": ["onyx", "api"]
+          },
+          "doc_updated_at": "2025-09-19T08:20:00Z"
+        },
+        "cc_pair_id": 243
       }
       EOF
       ```
@@ -263,21 +263,21 @@ In this example, we'll index local files with the Ingestion API.
       failed_ingestions = 0
 
       for i, document_data in enumerate(documents_to_ingest):
-      print(f"Ingesting document {i+1}/{len(documents_to_ingest)}: {document_data['document']['semantic_identifier']}")
+        print(f"Ingesting document {i+1}/{len(documents_to_ingest)}: {document_data['document']['semantic_identifier']}")
 
-      response = requests.post(
-      f"{API_BASE_URL}/ingestion",
-      headers=headers,
-      json=document_data
-      )
+        response = requests.post(
+          f"{API_BASE_URL}/ingestion",
+          headers=headers,
+          json=document_data
+        )
 
-      if response.status_code == 200:
-      print(f"Successfully ingested: {document_data['document']['semantic_identifier']}")
-      successful_ingestions += 1
-      else:
-      print(f"Failed to ingest {document_data['document']['semantic_identifier']}: {response.status_code}")
-      print(f"   Error: {response.text}")
-      failed_ingestions += 1
+        if response.status_code == 200:
+          print(f"Successfully ingested: {document_data['document']['semantic_identifier']}")
+          successful_ingestions += 1
+        else:
+          print(f"Failed to ingest {document_data['document']['semantic_identifier']}: {response.status_code}")
+          print(f"   Error: {response.text}")
+          failed_ingestions += 1
 
       print(f"\nIngestion complete: {successful_ingestions} successful, {failed_ingestions} failed")
       ```

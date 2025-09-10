@@ -83,21 +83,21 @@ These documents organized around the **Objects** that you indicate. Examples are
     - `fields`: a list of strings describing the fields of the object to index
     - `associations`: a JSON object mapping a Salesforce Object associated with the parent object to a list of fields to be indexed for the child object
 
-            ```json Example
-            {
-                "Account": {
-                    "fields": ["Id", "Name", "Industry", "CreatedDate", "lastModifiedDate"],
-                    "associations": {
-                        "Contact": ["Id", "FirstName", "LastName", "Email"],
-                        "Opportunity": ["Id", "Name", "StageName", "Amount", "CloseDate"]
-                    }
-                },
-                "Lead": {
-                    "fields": ["Id", "FirstName", "LastName", "Company", "Status"],
-                    "associations": {}
-                }
-            }
-            ```
+    ```json Example
+    {
+      "Account": {
+        "fields": ["Id", "Name", "Industry", "CreatedDate", "lastModifiedDate"],
+        "associations": {
+            "Contact": ["Id", "FirstName", "LastName", "Email"],
+            "Opportunity": ["Id", "Name", "StageName", "Amount", "CloseDate"]
+        }
+      },
+      "Lead": {
+        "fields": ["Id", "FirstName", "LastName", "Company", "Status"],
+        "associations": {}
+      }
+    }
+    ```
     </Accordion>
   </Step>
 

@@ -15,72 +15,72 @@
       The Onyx CLI is installed via pip and is automatically kept up to date.
 
       <Accordion title="Optional: Create a virtual environment">
-      A virtual Python environment is useful for isolating dependencies and avoiding conflicts with other projects.
+        A virtual Python environment is useful for isolating dependencies and avoiding conflicts with other projects.
 
-      <Note>
-        If you create a virtual environment, you'll need to activate it before running `onyx` CLI commands.
-      </Note>
+        <Note>
+          If you create a virtual environment, you'll need to activate it before running `onyx` CLI commands.
+        </Note>
 
-              ```bash
-              python3.11 -m venv ~/.onyx-venv   # create virtual environment
-              source ~/.onyx-venv/bin/activate  # activate virtual environment
-              ```
+        ```bash
+        python3.11 -m venv ~/.onyx-venv   # create virtual environment
+        source ~/.onyx-venv/bin/activate  # activate virtual environment
+        ```
       </Accordion>
 
-          ```bash
-          pip install onyx-dot-app
-          # or pip3 install onyx-dot-app
-          onyx doctor
-          ```
+      ```bash
+      pip install onyx-dot-app
+      # or pip3 install onyx-dot-app
+      onyx doctor
+      ```
 
       If you see any errors or warnings,
       please double check the system requirements and the [Resourcing guide](/deployment/getting_started/resourcing).
 
       <Accordion title="Useful Onyx CLI Commands">
-      None exhaustive:
+        Not exhaustive:
 
-              ```bash
-              onyx help     # see all commands
-              onyx doctor   # pre-flight check system requirements
-              onyx up       # start Onyx Docker stack
-              onyx down     # stop Onyx Docker stack
-              onyx clone    # clone the Onyx repo
-              ```
+        ```bash
+        onyx help     # see all commands
+        onyx doctor   # pre-flight check system requirements
+        onyx up       # start Onyx Docker stack
+        onyx down     # stop Onyx Docker stack
+        onyx clone    # clone the Onyx repo
+        ```
       </Accordion>
     </Step>
 
     <Step title="Launch Onyx">
-          ```bash
-          onyx up
-          ```
+      ```bash
+      onyx up
+      ```
 
       <Accordion title="Notes about this command">
-      See [Onyx CLI README] LINK HERE for more details.
-      - This command will launch `onyx-stack` using Docker Compose
-      - Without any additional arguments, this command will:
-      - Create an `~/onyx-dot-app/onyx` directory
-      - Place deployment files in `~/onyx-dot-app/onyx/deployment/`
-      - Pull images from Docker Hub using:
-      - `docker compose -f docker-compose.dev.yml -p onyx-stack up -d --pull always --force-recreate`
-      - Copy the `env.prod.template` file in `~/onyx-dot-app/onyx/deployment/docker_compose/` to `.env` to configure your deployment
-      - You may direct the command to use an existing `onyx` directory by passing the `--source` flag
+        See [Onyx CLI README] LINK HERE for more details.
+        - This command will launch `onyx-stack` using Docker Compose
+        - Without any additional arguments, this command will:
+        - Create an `~/onyx-dot-app/onyx` directory
+        - Place deployment files in `~/onyx-dot-app/onyx/deployment/`
+        - Pull images from Docker Hub using:
+        - `docker compose -f docker-compose.dev.yml -p onyx-stack up -d --pull always --force-recreate`
+        - Copy the `env.prod.template` file in `~/onyx-dot-app/onyx/deployment/docker_compose/` to `.env` to configure your deployment
+        - You may direct the command to use an existing `onyx` directory by passing the `--source` flag
       </Accordion>
     </Step>
 
     <Step title="Configure your Deployment">
       Configure your deployment using a `.env` file.
 
-        ```bash
-        cd ~/onyx-dot-app/onyx/deployment/docker_compose
-        cp env.prod.template .env
-        ```
+      ```bash
+      cd ~/onyx-dot-app/onyx/deployment/docker_compose
+      cp env.prod.template .env
+      ```
 
       You'll need to restart Onyx after changing any `.env` variables.
 
-        ```bash
-        onyx down
-        onyx up
-        ```
+      ```bash
+      onyx down
+      onyx up
+      ```
 
       Read more about [configuration](/deployment/configuration/configuration).
     </Step>

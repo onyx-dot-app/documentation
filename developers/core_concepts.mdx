@@ -84,6 +84,82 @@ import AgentsPersonasAssistantsNote from '/snippets/agents-personas-assistants-n
   </Accordion>
 </AccordionGroup>
 
+## Chat
+
+<AccordionGroup>
+  <Accordion title="Streamed Chat Responses" icon="comment">
+    The chat response system uses a packet-based architecture to deliver real-time responses to users.
+    Instead of waiting for a complete response,
+    the system breaks down the chat interaction into discrete packets that can be streamed incrementally.
+
+    Every packet follows a consistent structure defined by the `Packet` class:
+
+    ```python
+    class Packet(BaseModel):
+      ind: int        # Sequential index for ordering
+      obj: PacketObj  # The actual content including type of packet
+    ```
+
+    **Streaming Flow:**
+
+    - A chat request triggers the streaming process
+    - Various packet types are generated based on the required operations
+    (reasoning, tool calls, AI response, documents, citations, etc.)
+    - Packets are sent with sequential indices to maintain order
+    - The frontend processes packets in real-time to update the UI
+    - An `OverallStop` packet signals completion
+  </Accordion>
+
+  <Accordion title="Basic Message Packets" icon="message">
+    **MessageStart and MessageDelta**
+
+    These packets form the core of the streaming response system:
+
+    - **MessageStart**: Initiates a new message with initial content and final search documents (if any)
+    - **MessageDelta**: Delivers incremental text content as it's generated
+  </Accordion>
+
+  <Accordion title="Control Packets" icon="gear">
+    **Session and Section Management**
+
+    Control packets manage the flow and lifecycle of the streaming process:
+
+    - **OverallStop**: Signals the end of the entire streaming session
+    - **SectionEnd**: Marks the completion of a packet type (reasoning, message, citations, etc.)
+  </Accordion>
+
+  <Accordion title="Tool Packets" icon="wrench">
+    Tool responses are streamed in the same way as the main message response.
+
+    **Search Tools**
+    - SearchToolStart and SearchToolDelta handle document search operations
+
+    **Image Generation**
+    - ImageGenerationToolStart, ImageGenerationToolDelta, and ImageGenerationToolHeartbeat manage AI image creation
+
+    **Custom Tools**
+    - CustomToolStart and CustomToolDelta are used for MCP and custom Actions
+
+    The start packet signals the start of the tool response.
+    The delta packets stream the results as they become available.
+  </Accordion>
+
+  <Accordion title="Reasoning Packets" icon="lightbulb">
+    Any reasoning steps are streamed so the frontend can render them as the system is processing.
+    Reasoning packets are generally the first ones sent.
+
+    - **ReasoningStart**: Begins a reasoning section
+    - **ReasoningDelta**: Streams the AI's reasoning process
+  </Accordion>
+
+  <Accordion title="Citation Packets" icon="quote-right">
+    Citation packets associate citation ids with document ids.
+
+    - **CitationStart**: Initiates citation results
+    - **CitationDelta**: Delivers source citations and references
+  </Accordion>
+</AccordionGroup>
+
 ## Connectors
 
 <Tip>
@@ -104,13 +180,13 @@ import AgentsPersonasAssistantsNote from '/snippets/agents-personas-assistants-n
 
     ```python Python
     class ConnectorBase(BaseModel):
-        name: str
-        source: DocumentSource
-        input_type: InputType
-        connector_specific_config: dict[str, Any]
-        refresh_freq: int | None = None
-        prune_freq: int | None = None
-        indexing_start: datetime | None = None
+      name: str
+      source: DocumentSource
+      input_type: InputType
+      connector_specific_config: dict[str, Any]
+      refresh_freq: int | None = None
+      prune_freq: int | None = None
+      indexing_start: datetime | None = None
     ```
   </Accordion>
 
@@ -155,10 +231,10 @@ import AgentsPersonasAssistantsNote from '/snippets/agents-personas-assistants-n
 
     ```python Python
     class ConnectorCredentialPairMetadata(BaseModel):
-        name: str | None = None
-        access_type: AccessType
-        auto_sync_options: dict[str, Any] | None = None
-        groups: list[int] = Field(default_factory=list)
+      name: str | None = None
+      access_type: AccessType
+      auto_sync_options: dict[str, Any] | None = None
+      groups: list[int] = Field(default_factory=list)
     ```
   </Accordion>
 </AccordionGroup>
@@ -191,24 +267,24 @@ import AgentsPersonasAssistantsNote from '/snippets/agents-personas-assistants-n
 
     ```python Python expandable
     class DocumentBase(BaseModel):
-        """Used for Onyx ingestion api, the ID is inferred before use if not provided"""
+      """Used for Onyx ingestion api, the ID is inferred before use if not provided"""
 
-        id: str | None = None
-        sections: list[TextSection | ImageSection]
-        source: DocumentSource | None = None
-        semantic_identifier: str
-        metadata: dict[str, str | list[str]]
+      id: str | None = None
+      sections: list[TextSection | ImageSection]
+      source: DocumentSource | None = None
+      semantic_identifier: str
+      metadata: dict[str, str | list[str]]
 
-        doc_updated_at: datetime | None = None
-        chunk_count: int | None = None
+      doc_updated_at: datetime | None = None
+      chunk_count: int | None = None
 
-        primary_owners: list[BasicExpertInfo] | None = None
-        secondary_owners: list[BasicExpertInfo] | None = None
-        title: str | None = None
-        from_ingestion_api: bool = False
-        additional_info: Any = None
+      primary_owners: list[BasicExpertInfo] | None = None
+      secondary_owners: list[BasicExpertInfo] | None = None
+      title: str | None = None
+      from_ingestion_api: bool = False
+      additional_info: Any = None
 
-        external_access: ExternalAccess | None = None
+      external_access: ExternalAccess | None = None
     ```
   </Accordion>
 
@@ -281,8 +357,8 @@ import AgentsPersonasAssistantsNote from '/snippets/agents-personas-assistants-n
 
     ```python Python
     class TextSection(Section):
-        text: str
-        link: str | None = None
+      text: str
+      link: str | None = None
     ```
   </Accordion>
 
@@ -294,9 +370,9 @@ import AgentsPersonasAssistantsNote from '/snippets/agents-personas-assistants-n
 
     ```python Python
     class ImageSection(Section):
-        image_file_id: str
-        text: str | None = None
-        link: str | None = None
+      image_file_id: str
+      text: str | None = None
+      link: str | None = None
     ```
   </Accordion>
 
