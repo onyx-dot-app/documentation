@@ -12,8 +12,7 @@ icon: "bolt"
 
 *Send Message Simple API* is the quickest way to interact with Onyx programmatically.
 
-This endpoint has fewer required parameters and responds with a minimal set of information such as the AI's answer and a
-list of the top documents.
+This endpoint has fewer required parameters and returns a concise JSON payload described by `ChatBasicResponse`.
 
 <Note>
   You must specify either a `chat_session_id` or a `persona_id` in your request.
@@ -27,8 +26,8 @@ list of the top documents.
   API_KEY = "YOUR_KEY_HERE"
 
   headers = {
-  "Authorization": f"Bearer {API_KEY}",
-  "Content-Type": "application/json"
+    "Authorization": f"Bearer {API_KEY}",
+    "Content-Type": "application/json"
   }
 
   '''
@@ -37,26 +36,33 @@ list of the top documents.
   '''
 
   response = requests.post(
-  f"{API_BASE_URL}/chat/send-message-simple-api",
-  headers=headers,
-  json={
-  "message": "What is Onyx?",
-  "persona_id": "0" # The default Onyx Search Agent
-  }
+    f"{API_BASE_URL}/chat/send-message-simple-api",
+    headers=headers,
+    json={
+      "message": "What is Onyx?",
+      "persona_id": 0  # The default Onyx Search Agent (int)
+    }
   )
 
-  answer = response.json()["answer"]
-  chat_session_id = response.json()["chat_session_id"] # Save this to continue the conversation
+  data = response.json()
+  answer = data.get("answer")
+  answer_citationless = data.get("answer_citationless")
+  message_id = data.get("message_id")
+  docs = data.get("top_documents") or []
   top_documents = [
-  {
-  "id": doc["document_id"],
-  "title": doc["semantic_identifier"],
-  "link": doc["link"]
-  } for doc in response.json()["top_documents"]
-  ] # Parse important information from the results
+    {
+      "id": doc.get("document_id"),
+      "title": doc.get("semantic_identifier"),
+      "link": doc.get("link")
+    } for doc in docs
+  ]
+  cited_docs_map = data.get("cited_documents") or {}
 
   print(f"Answer: {answer}")
+  print(f"Answer (citationless): {answer_citationless}")
+  print(f"Message ID: {message_id}")
   print(f"Top Documents: {top_documents[:5]}") # Print top 5 documents
+  print(f"Citations map: {cited_docs_map}")
   ```
 
   ```bash Shell expandable
@@ -67,21 +73,24 @@ list of the top documents.
 
   echo "Sending message to Onyx..."
   RESPONSE=$(curl -s -X POST "${API_BASE_URL}/chat/send-message-simple-api" \
-  -H "Authorization: Bearer ${API_KEY}" \
-  -H "Content-Type: application/json" \
-  -d '{
-  "message": "What is Onyx?",
-  "persona_id": "0"
+    -H "Authorization: Bearer ${API_KEY}" \
+    -H "Content-Type: application/json" \
+    -d '{
+    "message": "What is Onyx?",
+    "persona_id": 0
   }')
 
   echo "Answer:"
   echo $RESPONSE | jq -r '.answer'
 
-  echo -e "\nChat Session ID (save for continuing conversation):"
-  echo $RESPONSE | jq -r '.chat_session_id'
+  echo -e "\nAnswer (citationless):"
+  echo $RESPONSE | jq -r '.answer_citationless'
+
+  echo -e "\nMessage ID:"
+  echo $RESPONSE | jq -r '.message_id'
 
   echo -e "\nTop Documents:"
-  echo $RESPONSE | jq '.top_documents[] | {id: .document_id, title: .semantic_identifier, link: .link}'
+  echo $RESPONSE | jq '.top_documents | .[] | {id: .document_id, title: .semantic_identifier, link: .link}'
   ```
 </CodeGroup>
 
@@ -179,15 +188,21 @@ Skip to the [Full Code](#full-code) section if you don't want the step-by-step g
   <Step title="Parse response">
     <CodeGroup>
       ```python Python
-      answer = message_response.json()["answer"]
+      data = message_response.json()
+      answer = data.get("answer")
+      answer_citationless = data.get("answer_citationless")
+      message_id = data.get("message_id")
+      docs = data.get("top_documents") or []
       top_documents = [
       {
-      "id": doc["document_id"],
-      "title": doc["semantic_identifier"],
-      "link": doc["link"]
-      } for doc in message_response.json()["top_documents"]
+      "id": doc.get("document_id"),
+      "title": doc.get("semantic_identifier"),
+      "link": doc.get("link")
+      } for doc in docs
       ]
       print(f"Answer: {answer}")
+      print(f"Answer (citationless): {answer_citationless}")
+      print(f"Message ID: {message_id}")
       print(f"Top Documents: {top_documents[:5]}")
       ```
 
@@ -196,10 +211,14 @@ Skip to the [Full Code](#full-code) section if you don't want the step-by-step g
       echo $MESSAGE_RESPONSE
 
       ANSWER=$(echo $MESSAGE_RESPONSE | jq -r '.answer')
+      ANSWER_CL=$(echo $MESSAGE_RESPONSE | jq -r '.answer_citationless')
+      MESSAGE_ID=$(echo $MESSAGE_RESPONSE | jq -r '.message_id')
       echo "Answer: $ANSWER"
+      echo "Answer (citationless): $ANSWER_CL"
+      echo "Message ID: $MESSAGE_ID"
 
       echo "Top Documents:"
-      echo $MESSAGE_RESPONSE | jq '.top_documents[] | {id: .document_id, title: .semantic_identifier, link: .link}'
+      echo $MESSAGE_RESPONSE | jq '.top_documents | .[] | {id: .document_id, title: .semantic_identifier, link: .link}'
       ```
     </CodeGroup>
   </Step>
@@ -247,16 +266,22 @@ Skip to the [Full Code](#full-code) section if you don't want the step-by-step g
   )
 
   # Parse response
-  answer = message_response.json()["answer"]
+  data = message_response.json()
+  answer = data.get("answer")
+  answer_citationless = data.get("answer_citationless")
+  message_id = data.get("message_id")
+  docs = data.get("top_documents") or []
   top_documents = [
   {
-  "id": doc["document_id"],
-  "title": doc["semantic_identifier"],
-  "link": doc["link"]
-  } for doc in message_response.json()["top_documents"]
+  "id": doc.get("document_id"),
+  "title": doc.get("semantic_identifier"),
+  "link": doc.get("link")
+  } for doc in docs
   ]
 
   print(f"Answer: {answer}")
+  print(f"Answer (citationless): {answer_citationless}")
+  print(f"Message ID: {message_id}")
   print(f"Top Documents: {top_documents[:5]}")
   ```
 
@@ -295,8 +320,11 @@ Skip to the [Full Code](#full-code) section if you don't want the step-by-step g
   echo "Answer:"
   echo $MESSAGE_RESPONSE | jq -r '.answer'
 
+  echo -e "\nMessage ID:"
+  echo $MESSAGE_RESPONSE | jq -r '.message_id'
+
   echo -e "\nTop Documents:"
-  echo $MESSAGE_RESPONSE | jq '.top_documents[] | {id: .document_id, title: .semantic_identifier, link: .link}'
+  echo $MESSAGE_RESPONSE | jq '.top_documents | .[] | {id: .document_id, title: .semantic_identifier, link: .link}'
   ```
 </CodeGroup>
 
