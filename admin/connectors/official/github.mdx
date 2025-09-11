@@ -108,6 +108,14 @@ For basic indexing without permission sync:
     Grant the following permissions:
     - **Repository permissions:**
     - `repo` (Full control of private repositories) - to access PRs and issues
+
+    <Accordion title="Fine-Grain Access Token Requirements">
+      If you're using a fine-grain access token instead of a classic token, ensure it has read access to the following:
+      - **Pull requests** - to access PR data
+      - **Metadata** - for repository metadata
+      - **Issues** - to access issues and comments
+      - **Contents** - to access repository contents
+    </Accordion>
   </Step>
 </Steps>
 
