@@ -168,6 +168,8 @@ To understand the response format, see the [Core Concepts documentation](/develo
       }
 
       # Consume the streamed packets fully and then print a summary
+      # NOTE: The first packet always contains message IDs:
+      #   {"user_message_id": int, "reserved_assistant_message_id": int}
       with requests.post(
         f"{API_BASE_URL}/chat/send-message",
         headers=headers,
@@ -179,6 +181,8 @@ To understand the response format, see the [Core Concepts documentation](/develo
         full_text = []
         docs_raw = None
         citations_map = {}
+        user_message_id = None
+        reserved_assistant_message_id = None
 
         # Each line is a JSON Packet: { ind: int, obj: { type: "...", ... } }
         for line in resp.iter_lines(decode_unicode=True):
@@ -187,6 +191,12 @@ To understand the response format, see the [Core Concepts documentation](/develo
           try:
             packet = json.loads(line)
           except Exception:
+            continue
+
+          # First packet: message IDs
+          if "user_message_id" in packet and "reserved_assistant_message_id" in packet:
+            user_message_id = packet.get("user_message_id")
+            reserved_assistant_message_id = packet.get("reserved_assistant_message_id")
             continue
 
           obj = packet.get("obj", {})
@@ -222,6 +232,10 @@ To understand the response format, see the [Core Concepts documentation](/develo
           )
 
       print("Final Answer:\n" + "".join(full_text))
+      if user_message_id is not None:
+        print(f"\nUser message ID: {user_message_id}")
+      if reserved_assistant_message_id is not None:
+        print(f"Reserved assistant message ID: {reserved_assistant_message_id}")
       print("\nTop Documents:")
       print(json.dumps(top_documents, indent=2))
       print("\nCitations map (citation_num -> document_id):")
@@ -245,8 +259,19 @@ To understand the response format, see the [Core Concepts documentation](/develo
           TEXT=""
           DOCS_JSON=""
           CITS_JSON='{}'
+          USER_MSG_ID=""
+          RESERVED_ASST_ID=""
           while IFS= read -r line; do
             [ -z "$line" ] && continue
+            # First packet contains message IDs
+            uid=$(echo "$line" | jq -r '.user_message_id // empty')
+            rid=$(echo "$line" | jq -r '.reserved_assistant_message_id // empty')
+            if [ -n "$uid" ] || [ -n "$rid" ]; then
+              [ -n "$uid" ] && USER_MSG_ID="$uid"
+              [ -n "$rid" ] && RESERVED_ASST_ID="$rid"
+              continue
+            fi
+
             type=$(echo "$line" | jq -r '.obj.type // empty')
             if [ "$type" = "message_start" ]; then
               docs=$(echo "$line" | jq -c '(.obj.final_documents) // empty')
@@ -271,6 +296,14 @@ To understand the response format, see the [Core Concepts documentation](/develo
 
           echo "Final Answer:"
           printf "%s\n" "$TEXT"
+
+          echo
+          if [ -n "$USER_MSG_ID" ]; then
+            echo "User message ID: $USER_MSG_ID"
+          fi
+          if [ -n "$RESERVED_ASST_ID" ]; then
+            echo "Reserved assistant message ID: $RESERVED_ASST_ID"
+          fi
 
           echo
           echo "Top Documents:"
