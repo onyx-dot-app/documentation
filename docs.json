@@ -158,6 +158,7 @@
                 "pages": [
                   "admin/connectors/official/airtable",
                   "admin/connectors/official/asana",
+                  "admin/connectors/official/bitbucket",
                   "admin/connectors/official/bookstack",
                   "admin/connectors/official/clickup",
                   "admin/connectors/official/confluence",
