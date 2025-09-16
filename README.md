@@ -7,7 +7,7 @@
 This repo generates the docs and setup guide for [Onyx](https://github.com/onyx-dot-app/onyx)
 found at [https://docs.onyx.app/](https://docs.onyx.app/).
 
-It uses Mintlify which is a low-code documentation generation tool.
+It uses Mintlify, a low-code documentation generation tool.
 
 More info on Mintlify found [here](https://mintlify.com/).
 
