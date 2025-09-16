@@ -50,55 +50,55 @@ The color system is built on two main files:
 ### Customization Methods
 
 <AccordionGroup>
-<Accordion title="Method 1: Direct CSS Variable Modification">
-<Steps>
-  <Step title="Navigate to globals.css">
-    Navigate to `web/src/app/globals.css`
-  </Step>
+  <Accordion title="Method 1: Direct CSS Variable Modification">
+    <Steps>
+      <Step title="Navigate to globals.css">
+        Navigate to `web/src/app/globals.css`
+      </Step>
 
-  <Step title="Modify CSS variables">
-    Modify the CSS variables to customize base colors (accent colors, backgrounds, etc.)
-  </Step>
-</Steps>
-</Accordion>
+      <Step title="Modify CSS variables">
+        Modify the CSS variables to customize base colors (accent colors, backgrounds, etc.)
+      </Step>
+    </Steps>
+  </Accordion>
 
-<Accordion title="Method 2: Tailwind Config Override">
-<Steps>
-  <Step title="Navigate to Tailwind config">
-    Navigate to `web/tailwind-themes/tailwind.config.js`
-  </Step>
+  <Accordion title="Method 2: Tailwind Config Override">
+    <Steps>
+      <Step title="Navigate to Tailwind config">
+        Navigate to `web/tailwind-themes/tailwind.config.js`
+      </Step>
 
-  <Step title="Override configuration values">
-    Override specific values from the base configuration
-  </Step>
-</Steps>
-</Accordion>
+      <Step title="Override configuration values">
+        Override specific values from the base configuration
+      </Step>
+    </Steps>
+  </Accordion>
 
-<Accordion title="Method 3: Organization-Specific Theme (Recommended)">
-For comprehensive theming:
+  <Accordion title="Method 3: Organization-Specific Theme (Recommended)">
+    For comprehensive theming:
 
-<Steps>
-  <Step title="Navigate to themes directory">
-    Navigate to `web/tailwind-themes/`
-  </Step>
+    <Steps>
+      <Step title="Navigate to themes directory">
+        Navigate to `web/tailwind-themes/`
+      </Step>
 
-  <Step title="Create organization folder">
-    Create a new folder with your organization's name
-  </Step>
+      <Step title="Create organization folder">
+        Create a new folder with your organization's name
+      </Step>
 
-  <Step title="Create Tailwind config">
-    Create a `tailwind.config.js` file in this folder
-  </Step>
+      <Step title="Create Tailwind config">
+        Create a `tailwind.config.js` file in this folder
+      </Step>
 
-  <Step title="Override base configuration">
-    Override any values from the base configuration
-  </Step>
+      <Step title="Override base configuration">
+        Override any values from the base configuration
+      </Step>
 
-  <Step title="Set environment variable">
-    Set the `NEXT_PUBLIC_THEME` environment variable to your organization's folder name
-  </Step>
-</Steps>
-</Accordion>
+      <Step title="Set environment variable">
+        Set the `NEXT_PUBLIC_THEME` environment variable to your organization's folder name
+      </Step>
+    </Steps>
+  </Accordion>
 </AccordionGroup>
 
 ### Example Configuration

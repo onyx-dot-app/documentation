@@ -91,59 +91,59 @@ In this example, we'll index local files with the Ingestion API.
     </Accordion>
 
     <Accordion title="Full payload with all optional fields">
-    <CodeGroup>
-      ```json JSON
-      {
-        "document": {
-          "id": "my_unique_id_1",
-          "semantic_identifier": "Onyx FAQ - Title shown in UI",
-          "title": "Onyx FAQ v1 - Title for Search",
-          "sections": [
-            {
-              "text": "What is Onyx?\nOnyx is...",
-              "link": "https://docs.onyx.app/faq#what-is-onyx"
+      <CodeGroup>
+        ```json JSON
+        {
+          "document": {
+            "id": "my_unique_id_1",
+            "semantic_identifier": "Onyx FAQ - Title shown in UI",
+            "title": "Onyx FAQ v1 - Title for Search",
+            "sections": [
+              {
+                "text": "What is Onyx?\nOnyx is...",
+                "link": "https://docs.onyx.app/faq#what-is-onyx"
+              },
+              {
+                "text": "How do I get started?\nTo get started...",
+                "link": "https://docs.onyx.app/faq#getting-started"
+              },
+              {
+                "image_file_id": "uuid_generated_by_onyx_file_store",
+                "text": "Advanced - Must upload image first! POST /user/file/upload",
+                "link": "https://docs.onyx.app/faq#about"
+              }
+            ],
+            "source": "file",
+            "metadata": {
+              "category": "faq",
+              "tags": ["frequently-asked", "help"]
             },
-            {
-              "text": "How do I get started?\nTo get started...",
-              "link": "https://docs.onyx.app/faq#getting-started"
-            },
-            {
-              "image_file_id": "uuid_generated_by_onyx_file_store",
-              "text": "Advanced - Must upload image first! POST /user/file/upload",
-              "link": "https://docs.onyx.app/faq#about"
-            }
-          ],
-          "source": "file",
-          "metadata": {
-            "category": "faq",
-            "tags": ["frequently-asked", "help"]
+            "doc_updated_at": "2025-09-19T08:20:00Z",
+            "chunk_count": 15,
+            "primary_owners": [
+              {
+                "display_name": "Alex Chen",
+                "first_name": "Alex",
+                "middle_initial": null,
+                "last_name": "Chen",
+                "email": "alex@onyx.app"
+              }
+            ],
+            "secondary_owners": [
+              {
+                "display_name": "Sarah Johnson",
+                "first_name": "Sarah",
+                "middle_initial": "M",
+                "last_name": "Johnson",
+                "email": "sarah@onyx.app"
+              }
+            ],
+            "from_ingestion_api": true
           },
-          "doc_updated_at": "2025-09-19T08:20:00Z",
-          "chunk_count": 15,
-          "primary_owners": [
-            {
-              "display_name": "Alex Chen",
-              "first_name": "Alex",
-              "middle_initial": null,
-              "last_name": "Chen",
-              "email": "alex@onyx.app"
-            }
-          ],
-          "secondary_owners": [
-            {
-              "display_name": "Sarah Johnson",
-              "first_name": "Sarah",
-              "middle_initial": "M",
-              "last_name": "Johnson",
-              "email": "sarah@onyx.app"
-            }
-          ],
-          "from_ingestion_api": true
-        },
-        "cc_pair_id": 243
-      }
-      ```
-    </CodeGroup>
+          "cc_pair_id": 243
+        }
+        ```
+      </CodeGroup>
     </Accordion>
     </AccordionGroup>
 
