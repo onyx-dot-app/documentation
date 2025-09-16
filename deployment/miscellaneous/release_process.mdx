@@ -1,6 +1,6 @@
 ---
-title: "Release Process"
-description: "Onyx release process and versioning"
+title: "Release Process & Updates"
+description: "Onyx release process, versioning, and recommended update process"
 icon: "rocket"
 ---
 
@@ -89,17 +89,93 @@ Onyx follows a predictable weekly release cycle.
 - Hotfixes bypass the normal weekly cycle for urgent production issues
 - Both stable and pre-release branches receive hotfixes when applicable
 
-## Deployment Best Practices
+## Update Best Practices
 
-Monitor the `/api/versions` endpoint to automate deployment workflows.
+To maintain a stable deployment, we recommend staying on the latest stable release.
+These are tagged with a version number like `v1.2.3`.
 
-Stay tuned to our Github and join our [Slack](/deployment/miscellaneous/contact_us)
-to stay informed about new releases and breaking changes.
+<Steps>
+  <Step title="Check Versions API for Stable Version Tag">
+    Compare your current version with the version tag of the latest stable release.
+    The versions endpoint is public and does not require authentication.
 
-Choose the right version for your deployment environment:
+    ```bash
+    curl -X GET "https://cloud.onyx.app/api/versions"
+    ```
 
-<Info>
-  - **Production environments** - Use stable releases only
-  - **Staging/testing environments** - Use pre-release versions to validate upcoming changes
-  - **Development environments** - Contributors should fork from `main`
-</Info>
+    Look for the `stable: onyx` key in the response.
+
+    ```json Example Response expandable
+    {
+      "stable":{
+        "onyx":"v1.8.1",
+        "relational_db":"postgres:15.2-alpine",
+        "index":"vespaengine/vespa:8.277.17",
+        "nginx":"nginx:1.23.4-alpine"},
+        "dev":{
+          "onyx":"v1.9.0-beta.0",
+          "relational_db":"postgres:15.2-alpine",
+          "index":"vespaengine/vespa:8.277.17",
+          "nginx":"nginx:1.23.4-alpine"
+        },
+        "migration":{
+          "onyx":"airgapped-intfloat-nomic-migration",
+          "relational_db":"postgres:15.2-alpine",
+          "index":"vespaengine/vespa:8.277.17",
+          "nginx":"nginx:1.23.4-alpine"
+        }
+      }
+    }
+    ```
+  </Step>
+
+  <Step title="Launch Onyx with the Version Tag">
+    How you launch the specific Onyx version will depend on your deployment process.
+
+    <Note>
+      Don't forget the `v` prefix! I.e. `v1.2.3` is correct, `1.2.3` is incorrect.
+    </Note>
+
+    <AccordionGroup>
+      <Accordion title="Docker Pull Images">
+        Specify the version tag in the environment.
+
+        ```bash
+        IMAGE_TAG=<v.MAJOR.MINOR.HOTFIX> docker compose -f docker-compose.dev.yml -p onyx-stack up -d --pull always --force-recreate
+        ```
+      </Accordion>
+    </AccordionGroup>
+
+    <Accordion title="Docker Build Images">
+      Pull the release branch from GitHub or just the tagged version and build the images.
+
+      The release branch is where the latest stable version is published.
+      Release branches are named `release/v<MAJOR>.<MINOR>`.
+
+      In the Onyx repo:
+
+      ```bash From Release Branch
+      git fetch origin release/v1.2
+      git switch release/v1.2
+
+      docker compose -f docker-compose.dev.yml -p onyx-stack up -d --build --force-recreate
+      ```
+
+      ```bash From Tagged Version
+      git fetch origin tag v1.2.3
+      git switch --detach v1.2.3
+
+      docker compose -f docker-compose.dev.yml -p onyx-stack up -d --build --force-recreate
+      ```
+    </Accordion>
+
+    <Accordion title="Helm">
+      To specify a version when deploying with Helm, set the `global: version` value in your `values.yaml` file.
+
+      ```yaml values.yaml
+      global:
+        version: "v1.2.3"
+      ```
+    </Accordion>
+  </Step>
+</Steps>
