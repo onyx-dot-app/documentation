@@ -323,7 +323,17 @@ def ensure_blank_lines_around_blocks(lines: List[str]) -> List[str]:
             if is_heading(line) or ((is_markdown_img or is_mdx_image) and not inside_frame) or (is_block_component(line) and not inside_frame):
                 # Ensure blank before and after for other block-ish lines (e.g., images)
                 if len(out) > 0 and out[-1].strip() != "":
-                    out.append("")
+                    prev_non_empty = None
+                    for k in range(len(out) - 1, -1, -1):
+                        if out[k].strip() != "":
+                            prev_non_empty = out[k].lstrip()
+                            break
+                    suppress_before = False
+                    if prev_non_empty is not None:
+                        if prev_non_empty.startswith("<Step") or prev_non_empty.startswith("<AccordionItem") or prev_non_empty.startswith("<Card"):
+                            suppress_before = True
+                    if not suppress_before:
+                        out.append("")
                 out.append(line)
                 # Decide whether to add a blank after
                 add_blank_after = True
@@ -411,7 +421,17 @@ def normalize_steps_indentation(lines: List[str]) -> List[str]:
         if m_open and m_open.group("name") in children_for:
             # Ensure a blank line before
             if len(out) > 0 and out[-1].strip() != "":
-                out.append("")
+                prev_non_empty = None
+                for k in range(len(out) - 1, -1, -1):
+                    if out[k].strip() != "":
+                        prev_non_empty = out[k].lstrip()
+                        break
+                suppress_before = False
+                if prev_non_empty is not None:
+                    if prev_non_empty.startswith("<Step") or prev_non_empty.startswith("<AccordionItem") or prev_non_empty.startswith("<Card"):
+                        suppress_before = True
+                if not suppress_before:
+                    out.append("")
             # Normalize indent of <Steps> tag itself (retain current leading)
             out.append(" " * leading + stripped)
             stack.append((m_open.group("name"), leading, True))
@@ -450,12 +470,23 @@ def normalize_steps_indentation(lines: List[str]) -> List[str]:
         if m_open and stack and m_open.group("name") in children_for.get(stack[-1][0], set()):
             parent_indent = stack[-1][1]
             child_indent = parent_indent + INDENT_SPACES
+            is_self_closing_child = stripped.endswith("/>")
             out.append(" " * child_indent + stripped)
-            stack.append((m_open.group("name"), child_indent, True))
+            if not is_self_closing_child:
+                stack.append((m_open.group("name"), child_indent, True))
             # Skip immediate blank lines after child open
             i += 1
             while i < n and lines[i].strip() == "":
                 i += 1
+            # For self-closing children, add spacing similar to explicit close handling
+            if is_self_closing_child:
+                jn = i
+                while jn < n and lines[jn].strip() == "":
+                    jn += 1
+                if jn < n:
+                    next_lstrip = lines[jn].lstrip()
+                    if not next_lstrip.startswith("</"):
+                        out.append("")
             continue
 
         # Closing child items
@@ -495,14 +526,18 @@ def normalize_steps_indentation(lines: List[str]) -> List[str]:
         inside_child = None
         managed_child = False
         for name, ind, managed in reversed(stack):
-            if name in {"Step", "AccordionItem", "Card"}:
+            if name in {"Step", "Accordion", "AccordionGroup", "AccordionItem", "Card"}:
                 inside_child = ind
                 managed_child = managed
                 break
         if inside_child is not None and stripped != "":
             if managed_child:
-                content_indent = inside_child + INDENT_SPACES
-                out.append(" " * content_indent + stripped)
+                if stripped.startswith("#"):
+                    # Headings should always align to the left margin even inside managed containers
+                    out.append(stripped)
+                else:
+                    content_indent = inside_child + INDENT_SPACES
+                    out.append(" " * content_indent + stripped)
             else:
                 out.append(line)
             i += 1

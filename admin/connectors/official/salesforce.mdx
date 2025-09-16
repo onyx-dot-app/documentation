@@ -57,31 +57,30 @@ These documents organized around the **Objects** that you indicate. Examples are
   </Step>
 
   <Step title="Define the Salesforce Object(s) you wish to index">
-
     <Accordion title="Simple">
-    Enter the [Salesforce
-    Object(s)](https://developer.salesforce.com/docs/atlas.en-us.object_reference.meta/object_reference/sforce_api_objects_list.htm)
-    you wish to index and organize your Onyx documents by.
-    - Make sure to use the singular version of object name (e.g. Opportunity instead of
-    Opportunities)
-    - If no objects are indicated, it will default to indexing by **Account**
-    - Each Onyx Document extracted from Salesforce contains all fields and associations of each
-    object. For example,
-    when indexing each Account we include the fields of the AccountFeed and AccountShare objects as well (but not the
-    associations of those objects).
-    This can lead to bloated queries and memory intensive indexing in larger salesforce instances.
+      Enter the [Salesforce
+      Object(s)](https://developer.salesforce.com/docs/atlas.en-us.object_reference.meta/object_reference/sforce_api_objects_list.htm)
+      you wish to index and organize your Onyx documents by.
+      - Make sure to use the singular version of object name (e.g. Opportunity instead of
+      Opportunities)
+      - If no objects are indicated, it will default to indexing by **Account**
+      - Each Onyx Document extracted from Salesforce contains all fields and associations of each
+      object. For example,
+      when indexing each Account we include the fields of the AccountFeed and AccountShare objects as well (but not the
+      associations of those objects).
+      This can lead to bloated queries and memory intensive indexing in larger salesforce instances.
 
-    <Tip>
-      Use the Advanced mode to have finer grain control over what is indexed.
-    </Tip>
+      <Tip>
+        Use the Advanced mode to have finer grain control over what is indexed.
+      </Tip>
     </Accordion>
 
     <Accordion title="Advanced">
-    Specify which objects, fields, and associations get indexed with a json object.
+      Specify which objects, fields, and associations get indexed with a json object.
 
-    Top level keys are Salesforce Objects, each value is a JSON object specifying:
-    - `fields`: a list of strings describing the fields of the object to index
-    - `associations`: a JSON object mapping a Salesforce Object associated with the parent object to a list of fields to be indexed for the child object
+      Top level keys are Salesforce Objects, each value is a JSON object specifying:
+      - `fields`: a list of strings describing the fields of the object to index
+      - `associations`: a JSON object mapping a Salesforce Object associated with the parent object to a list of fields to be indexed for the child object
 
     ```json Example
     {
