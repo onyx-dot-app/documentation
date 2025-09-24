@@ -1,29 +1,40 @@
 ---
 title: "Quickstart"
-description: "Deploy Onyx quickly with Docker"
+description: "Recommended way to deploy Onyx in minutes"
 icon: "bolt"
 ---
 
 import ResourcingOverview from "/snippets/resourcing-overview.mdx"
-import Docker from "/snippets/docker.mdx"
+import DeploymentNextSteps from "/snippets/deployment-next-steps.mdx"
+
+## Installation Script
+The install script requires `Bash` to run so it works out of the box for Linux and MacOS.
+To run Onyx on Windows, install Bash or refer to the [Docker](/deployment/local/docker) deployment.
+
+To deploy with a single command:
+```
+curl -fsSL https://raw.githubusercontent.com/onyx-dot-app/onyx/main/deployment/docker_compose/install.sh > install.sh && chmod +x install.sh && ./install.sh
+```
+
+Alternatively, download and run the installation script below.
+<Card title="Download Install Script" icon="download" href="https://raw.githubusercontent.com/onyx-dot-app/onyx/main/deployment/docker_compose/install.sh">
+  Click here to download the install.sh script from GitHub.
+</Card>
+After downloading the script, run it with `bash ./install.sh`
+
+The script will do the following:
+- Check your system resources and requirements
+- Pull the necessary deployment and configuration files
+- Prompt the user for the version of Onyx to deploy and other basic information
+- Pull the Onyx containers and start them in Docker
+
+<Info>
+The script will create a directory called **onyx_data** and there will also be a README in there with additional information.
+</Info>
 
 <ResourcingOverview />
 
 For more details, our [Resourcing guide](/deployment/getting_started/resourcing) covers selecting Cloud instances,
 resourcing by container, and how to scale your Onyx deployment.
 
-## Launch with Docker
-
-<Docker />
-
-## Next Steps
-
-<CardGroup cols={2}>
-  <Card title="Configuration Guide" icon="sliders" href="/deployment/configuration/configuration">
-    Learn about how to configure Onyx using environment variables.
-  </Card>
-
-  <Card title="Learn more about Resourcing" icon="microchip" href="/deployment/getting_started/resourcing">
-    Learn about Cloud instances, resourcing by container, and how to scale your Onyx deployment.
-  </Card>
-</CardGroup>
+<DeploymentNextSteps />

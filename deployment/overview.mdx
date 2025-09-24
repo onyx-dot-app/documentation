@@ -4,43 +4,46 @@ description: "An overview of deploying Onyx"
 icon: "server"
 ---
 
-## Hosting Options
+## Quickstart
+
+Click on a card below to get Onyx deployed locally in minutes.
+
+<CardGroup cols={2}>
+  <Card title="Install Script (Recommended)" icon="bolt" href="/deployment/getting_started/quickstart">
+    A guided installation script that verifies the system requirements and deploys the Onyx service on Docker.
+  </Card>
+
+  <Card title="Docker Compose" icon="docker" href="/deployment/local/docker">
+    Pull the code and deploy the Onyx containers with just 3 commands. For slightly more technical users.
+  </Card>
+</CardGroup>
+
+## Deployment Options
+
+Onyx provides a flexible set of deployment options from self-hosted to fully managed.
+Select from the options below to learn more.
 
 <CardGroup cols={1}>
-  <Card title="Open Source" icon="code" href="#quickstart">
-    Get all of Onyx's core features, including Chat, Search, Connectors, Deep Research, Agents, Actions, and more!
-    All of your data remains within your Onyx deployment.
+  <Card title="Self-Host Open Source" icon="code" href="#quickstart">
+    Get all of Onyx's core features, including Chat, Agents, Actions, Connectors, Deep Research, and more!
+    All of your data remains secure within your Onyx deployment.
 
     **For teams looking for a powerful free solution**
   </Card>
 
   <Card title="Onyx Cloud" icon="cloud" href="https://cloud.onyx.app">
-    Onyx managed cloud solution. Includes all of the community and Enterprise Edition features.
+    Onyx managed solution with all Enterprise Edition features.
     Comes with a 2 week free trial (no credit card needed)!
 
     SOC2 Type II and GDPR compliant.
 
-    **Best option for most teams**
+    **The most effortless way to get Onyx to your whole team**
   </Card>
 
-  <Card title="Enterprise Edition" icon="code" href="#/deployment/miscellaneous/enterprise_edition">
-    Self-Host Onyx Enterprise Edition with premium capabilities such as Single Sign-On (SSO),
-    automatic permission synchronization, Role-Based Access Control (RBAC), and other advanced features.
+  <Card title="Self-Host Enterprise Edition" icon="building" href="#/deployment/miscellaneous/enterprise_edition">
+    Self-Host with all premium features such as Role-Based Access Control (RBAC), SSO via OIDC/SAML,
+    automatic sync-ing of permission, and advanced knowledge curation options.
 
-    **Best for large teams with strict requirements.**
-  </Card>
-</CardGroup>
-
-## Quickstart
-
-Click on a card below to get started in minutes.
-
-<CardGroup cols={2}>
-  <Card title="(Recommended) Launch with Docker" icon="bolt" href="/deployment/getting_started/quickstart#launch-with-docker">
-    Clone the repository and pull images or build from source.
-  </Card>
-
-  <Card title="Deploy on Kubernetes" icon="code" href="/deployment/deployment_guides/local_deployments/kubernetes">
-    Use our Helm chart to deploy Onyx in your Kubernetes cluster.
+    **Best for large teams with strict data requirements**
   </Card>
 </CardGroup>
