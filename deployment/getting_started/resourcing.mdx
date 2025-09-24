@@ -12,15 +12,11 @@ import ResourcingOverview from "/snippets/resourcing-overview.mdx"
 
 You can control the resources available to Docker in the **Resources** section of the Docker Desktop settings menu.
 
-Old, unused Docker images take up sizeable disk space. To clean up unused images, run `docker system prune --all`.
+<Info>Often old, unused Docker images take up sizeable disk space. To clean up unused images, run `docker system prune --all`.</Info>
 
 ## Cloud Providers (AWS, GCP, etc.)
 
 For small to mid scale deployments, we recommend deploying Onyx to a single instance in your cloud provider of choice.
-
-<Tip>
-  For most use cases a single reasonably sized instance is enough for excellent performance!
-</Tip>
 
 When evaluating your instance, follow the Preferred resources in the table above.
 
@@ -109,11 +105,11 @@ Total available node size: ~20 CPU and ~60GB of Memory.
 ## Next Steps
 
 <CardGroup cols={2}>
-  <Card title="Guide: Deploy Onyx Locally" icon="microchip" href="/deployment/deployment_guides/local_deployments/docker">
+  <Card title="Guide: Deploy Onyx Locally" icon="microchip" href="/deployment/cloud/local_deployments/docker">
     Deploy Onyx locally with Docker.
   </Card>
 
-  <Card title="Guide: Deploy on AWS" icon="microchip" href="/deployment/deployment_guides/aws/ec2">
+  <Card title="Guide: Deploy on AWS" icon="microchip" href="/deployment/cloud/aws/ec2">
     Deploy Onyx on an EC2 instance.
   </Card>
 </CardGroup>

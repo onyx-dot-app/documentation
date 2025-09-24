@@ -67,28 +67,28 @@
             ]
           },
           {
-            "group": "Deployment Guides",
+            "group": "Local",
             "pages": [
-              {
-                "group": "Local",
-                "icon": "desktop",
-                "pages": [
-                  "deployment/deployment_guides/local_deployments/docker",
-                  "deployment/deployment_guides/local_deployments/kubernetes"
-                ]
-              },
+              "deployment/local/docker",
+              "deployment/local/kubernetes",
+              "deployment/local/terraform"
+            ]
+          },
+          {
+            "group": "Cloud",
+            "pages": [
               {
                 "group": "AWS",
                 "icon": "aws",
                 "pages": [
-                  "deployment/deployment_guides/aws/ec2",
-                  "deployment/deployment_guides/aws/eks",
-                  "deployment/deployment_guides/aws/rds"
+                  "deployment/cloud/aws/ec2",
+                  "deployment/cloud/aws/eks",
+                  "deployment/cloud/aws/rds"
                 ]
               },
-              "deployment/deployment_guides/gcp",
-              "deployment/deployment_guides/azure",
-              "deployment/deployment_guides/digital_ocean"
+              "deployment/cloud/gcp",
+              "deployment/cloud/azure",
+              "deployment/cloud/digital_ocean"
             ]
           },
           {
@@ -688,8 +688,9 @@
     "global": {
       "anchors": [
         {
-          "anchor": "Blog",
-          "href": "https://onyx.app/blog"
+          "anchor": "Website",
+          "href": "https://onyx.app/",
+          "icon": "globe"
         },
         {
           "anchor": "Slack",
@@ -706,7 +707,8 @@
   },
   "logo": {
     "light": "/assets/logo/onyx_logo.svg",
-    "dark": "/assets/logo/onyx_logo_inverted.svg"
+    "dark": "/assets/logo/onyx_logo_inverted.svg",
+    "href": "https://onyx.app/"
   },
   "customization": {
     "css": "/style.css"
