@@ -7,7 +7,7 @@ icon: "docker"
 import DeploymentNextSteps from "/snippets/deployment-next-steps.mdx"
 
 <Tip>
-  Check out the [Quickstart](/deployment/getting_started/quickstart) guide for a more guided Docker deployment
+  Check out the [Resourcing Guide](/deployment/getting_started/resourcing) before getting started with Docker.
 </Tip>
 
 ## Guide
@@ -38,12 +38,17 @@ import DeploymentNextSteps from "/snippets/deployment-next-steps.mdx"
     ```bash
     docker compose up -d
     ```
-    Recommended to use `-d` to run in detached mode.
 
-    > Alternatively, to build images from source:
-    > ```bash
-    > docker compose up -d --build --force-recreate
-    > ```
+    Alternatively, to build images from source:
+    ```bash
+    docker compose up -d --build --force-recreate
+    ```
+
+    <Warning>
+      If you've previously launched Onyx with the old `onyx-stack` service name, you'll need to add `-p onyx-stack` to your launch command. 
+      
+      For example: `docker compose up -p onyx-stack -d`.
+    </Warning>
   </Step>
 </Steps>
 
