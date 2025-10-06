@@ -693,11 +693,6 @@
           "icon": "globe"
         },
         {
-          "anchor": "Slack",
-          "href": "https://join.slack.com/t/onyx-dot-app/shared_invite/zt-34lu4m7xg-TsKGO6h8PDvR5W27zTdyhA",
-          "icon": "slack"
-        },
-        {
           "anchor": "Discord",
           "href": "https://discord.gg/TDJ59cGV2X",
           "icon": "discord"
