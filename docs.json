@@ -165,6 +165,7 @@
                   "admin/connectors/official/discord",
                   "admin/connectors/official/discourse",
                   "admin/connectors/official/document360",
+                  "admin/connectors/official/drupal_wiki",
                   "admin/connectors/official/dropbox",
                   "admin/connectors/official/egnyte",
                   "admin/connectors/official/file",
