@@ -200,6 +200,7 @@
                   "admin/connectors/official/notion",
                   "admin/connectors/official/oci_storage",
                   "admin/connectors/official/productboard",
+                  "admin/connectors/official/pylon",
                   "admin/connectors/official/r2",
                   "admin/connectors/official/requesttracker",
                   "admin/connectors/official/salesforce",

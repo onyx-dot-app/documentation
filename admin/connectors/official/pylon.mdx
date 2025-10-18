@@ -1,0 +1,79 @@
+---
+title: "Pylon"
+description: "Access Issues from your Pylon account"
+---
+
+## How it works
+
+The Pylon Connector indexes data from a specified Pylon account.
+It supports issues and, optionally, related messages and attachments.
+Issues can only be retrieved by their creation date, consider adjusting the Lookback Days for tracking activity.
+
+- It indexes all issues starting from a specified date. This includes text, title and metadata such as assignee, state, creation/update timestamps, and a direct link back to the original issue in Pylon.
+- It also supports indexing messages and attachments related to the issues. Attachments are embedded into resulting focuments, text and images are extracted, and images are saved as files. If image processing is enabled in Onyx, then a summary for images will be retrieved.
+
+
+## Setting up
+
+<Note>
+  Other data such as knowledge base articles is not supported at the moment since it is not accessible via the Pylon API.
+</Note>
+
+### Authorization
+
+The Pylon Connector uses an API Token for authentication.
+
+To create an API token:
+
+<Steps>
+  <Step title="Go to the dashboard">
+    Generate an API token in the [Pylon dashboard](https://app.usepylon.com/settings/api-tokens)
+  </Step>
+
+  <Step title="Create the token">
+    Click "Create" button, enter a name, click "Create" again.
+  </Step>
+
+  <Step title="Copy the token">
+    Copy the token
+  </Step>
+</Steps>
+
+<Note>
+  The token is only displayed once and can't be retrieved later.
+</Note>
+
+For the most up-to-date instructions,
+refer to the [official Pylon
+documentation](https://docs.usepylon.com/pylon-docs/developer/api/authentication).
+
+### Indexing
+
+<Steps>
+  <Step title="Open the Pylon connector">
+    Navigate to the Admin Dashboard and select the **Pylon** Connector.
+  </Step>
+
+  <Step title="Create credentials">
+    Click **Create new credentials** and provide the following:
+
+    - **Name**: A descriptive name for your credentials.
+    - **API token**: The API token you created in the previous step.
+
+    ![PylonConnector](/assets/admin/connectors/pylon/PylonConnectorCred.png)
+  </Step>
+
+  <Step title="Configure connector details">
+    Fill in the connector details:
+
+    - **Name**: A descriptive name for the connector.
+    - **Additional data**: choose if you want to ingest messages and attachments from issues.
+    - **Start date**: The earliest date to index from. Issues created before this date will not be indexed. Format: YYYY-MM-DD
+    - **Lookback days**: Pylon api returns issues based on their creation date only. To track updates to older issues, specify how many days back the connector should look for updates.
+
+    ![PylonConnector](/assets/admin/connectors/pylon/PylonConnector.png)
+  </Step>
+</Steps>
+
+This configuration will index all pull requests from the specified repositories.
+You can also configure it to index all repositories within a project or an entire workspace.
