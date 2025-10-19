@@ -24,22 +24,59 @@ rss: true
   
   ### Single-sign on (SSO) added to Community Edition
 
-  You can now configure Onyx to use OIDC or SAML for authentication in the Community Edition. 
-  You no longer have to be an Enterprise Edition customer to use SSO. 
+  SSO (via OIDC and SAML) is now available in the Community Edition of Onyx! 
+  All users can now configure basic authentication, Google OAuth, or SSO via identity providers like Okta and Azure EntraID.
+
+  Read more about authentication options in our [deployment docs](/deployment/authentication/).
 
   Read more about our open source philosphy [INSERT LINK HERE].
   
   ### Projects
-  Projects allow users to upload, organize, and start chats with their private files in Onyx. Projects is a direct replacement of My Documents. 
+  Projects allow users to organize files and chats based on a specific context.
+  You can think of this as a folder where you upload files, define project-level instructions, and work from the same starting point in every chat session.
 
-  You can find Projects in the chat side panel. After configuring a Project, you can start a new chat session with your uploaded files. Notably, you can start any number of chat sessions from a Project. Files you've previously uploaded to My Documents should appear in Projects. 
+  <img className="rounded-image" src="/assets/changelog/showcase_projects.png" alt="Projects feature screenshot"/>
+
+  Projects is a direct replacement of My Documents, but with added functionality. Files you've previously uploaded to My Documents should appear in Projects. 
 
   ### New Docker Compose File
+
+  We've simplified the Docker Compose files to make it easier to deploy Onyx.
+
+  Previously, you may have used `docker-compose.dev.yml`, `docker-compose.prod.yml`, or `docker-compose.gpu-dev.yml`.
+  These have been consolidated into a single `docker-compose.yml` file.
+
+  With the new compose file, you can run `docker compose up -d` to start Onyx.
+
+  <Note>
+    If you've previously used the old compose files, you will need to add the `-p onyx-stack` flag. 
+    
+    I.e. `docker compose -p onyx-stack up -d`.
+    
+    Additionally, you will need to migrate any changes you may have made to your compose file.
+  </Note>
 
 
   ### Language and Embedding Models
 
+  We've added support for [Claude 4.5 Sonnet](https://www.anthropic.com/news/claude-sonnet-4-5) and [Gemini Embedding 001](https://developers.googleblog.com/en/gemini-embedding-available-gemini-api/)!
+
+  Try them out by configuring Anthropic in the LLM Configuration page and Google Vertex AI on the Search Settings page.
+
   ### Organization info and personalization
+
+  We've found that questions posed to Onyx often require context on who you are, what you work on, and what your company does.
+  It is difficult to infer this from search results alone because they are a narrow view into your context.
+
+  To help with this, admins can now add information about their organization in the Workspace Settings page.
+  Additionally, users can add information about themselves in the User Settings page.
+
+  <img className="rounded-image" src="/assets/changelog/basic_org_info.png" alt="Organization info configuration"/>
+  
+  <img className="rounded-image" src="/assets/changelog/basic_personalization.png" alt="User info configuration"/>
+
+  This is a simple, but powerful first step in our organization and personalization features.
+  In the future, Onyx will extract and save this information automatically.
 
   ## Contributor Shoutouts
   - [@Django149](https://github.com/Django149) added right-to-left language support for the chat interface! 
@@ -51,7 +88,15 @@ rss: true
 
   ### Support for SSE (server-sent events) MCP servers
 
+  Onyx now supports SSE (server-sent events) MCP servers.
+  Configure either Streamable HTTP or SSE servers in the Admin Actions page.
+
+  Read more about MCP in our [admin docs](/admin/actions/mcp/).
+
   ### Ollama Support
+
+  You can now configure both locally-hosted and cloud-hosted models with Ollama.
+  Read more about Ollama in our [admin docs](/admin/ai_models/ollama/).
 
   ### One Line Deployment Script
 

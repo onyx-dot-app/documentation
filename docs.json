@@ -470,6 +470,18 @@
         ]
       },
       {
+        "tab": "Changelog",
+        "icon": "clock-rotate-left",
+        "pages": [
+          {
+            "group": "Updates",
+            "pages": [
+              "changelog"
+            ]
+          }
+        ]
+      },
+      {
         "tab": "Archive",
         "icon": "box-archive",
         "pages": [
