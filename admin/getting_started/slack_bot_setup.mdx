@@ -95,13 +95,11 @@ and with selected data from your index.
   <Step title="Generate an App Token">
     Scroll down to the **App-Level Tokens** section and click **Generate Token and Scopes**.
 
-    Give your token a name,
-    add the `connections:write` scope to the app-level token and click **Generate**.
+    Give your token a name, add the `connections:write` scope to the app-level token and click **Generate**.
     Save this token for later.
 
     <Tip>
-      You can customize your Slack bot's name, description,
-      and icon in the **Display Information** section.
+      You can customize your Slack bot's name, description, and icon in the **Display Information** section.
     </Tip>
 
     <img className="rounded-image" src="/assets/admin/slackbot/slackbot_app_token.png" alt="Onyx Slack Bot App Token" />
@@ -129,8 +127,7 @@ and with selected data from your index.
   </Step>
 
   <Step title="Configure the Slack Bot's Behavior">
-    Once your Slack bot is created,
-    you can configure it's universal behavior through the **Default Configuration**.
+    Once your Slack bot is created, you can configure it's universal behavior through the **Default Configuration**.
 
     You can also set channel-specific behavior using **Channel Configurations**.
 
@@ -142,8 +139,8 @@ and with selected data from your index.
 
 ## Advanced Configuration
 
-There are a set of advanced configuration options available via environment variables that control
-your Slack bot's behavior.
+There are a set of advanced configuration options available via environment variables that control your Slack bot's
+behavior.
 
 You can find the full list of configuration options [in the Onyx
 GitHub](https://github.com/onyx-dot-app/onyx/blob/main/backend/onyx/configs/onyxbot_configs.py).
@@ -190,23 +187,20 @@ GitHub](https://github.com/onyx-dot-app/onyx/blob/main/backend/onyx/configs/onyx
   </Accordion>
 
   <Accordion title="DANSWER_BOT_FEEDBACK_VISIBILITY">
-    Visibility for AI answer feedback submitted to OnyxBot. Options:
-    `private` (only the clicking user), `anonymous` (public but anonymous),
-    `public` (public with username).
+    Visibility for AI answer feedback submitted to OnyxBot. Options: `private` (only the clicking user),
+    `anonymous` (public but anonymous), `public` (public with username).
 
     Default: `private (str)`
   </Accordion>
 
   <Accordion title="NOTIFY_SLACKBOT_NO_ANSWER">
-    If enabled, OnyxBot sends a brief apology message when it cannot find an answer,
-    so users aren't left wondering.
+    If enabled, OnyxBot sends a brief apology message when it cannot find an answer, so users aren't left wondering.
 
     Default: `false (bool)`
   </Accordion>
 
   <Accordion title="DANSWER_BOT_DISPLAY_ERROR_MSGS">
-    Show brief error explanations when something goes wrong answering a question (useful for
-    debugging).
+    Show brief error explanations when something goes wrong answering a question (useful for debugging).
 
     Default: `false (bool)`
   </Accordion>
@@ -230,8 +224,7 @@ GitHub](https://github.com/onyx-dot-app/onyx/blob/main/backend/onyx/configs/onyx
   </Accordion>
 
   <Accordion title="DANSWER_BOT_FEEDBACK_REMINDER">
-    Minutes after which a reminder DM is sent to request feedback on an answer.
-    Set to `0` to disable.
+    Minutes after which a reminder DM is sent to request feedback on an answer. Set to `0` to disable.
 
     Default: `0 (disabled; 0 minutes)`
   </Accordion>

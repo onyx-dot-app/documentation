@@ -133,14 +133,8 @@
             "group": "AI Models",
             "pages": [
               "admin/ai_models/overview",
-              {
-                "group": "Self-Hosted",
-                "icon": "server",
-                "pages": [
-                  "admin/ai_models/ollama"
-                ]
-              },
               "admin/ai_models/openai",
+              "admin/ai_models/ollama",
               "admin/ai_models/azure_openai",
               "admin/ai_models/anthropic",
               "admin/ai_models/bedrock",
@@ -473,6 +467,13 @@
               "security/contact_us"
             ]
           }
+        ]
+      },
+      {
+        "tab": "Changelog",
+        "icon": "clock-rotate-left",
+        "pages": [
+          "changelog"
         ]
       }
     ],

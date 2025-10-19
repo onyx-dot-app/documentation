@@ -1,0 +1,176 @@
+---
+title: "Release Notes"
+description: "New Features, Improvements, and Bug Fixes"
+icon: "rocket" 
+mode: "wide"
+rss: "true"
+---
+
+<Update label="v2.0.0" description="October 20th, 2025" tags={["New Features", "Deployment Changes", "Breaking Changes"]}>
+
+  ## v2.0.0
+
+  <Note>
+    v2.0.0 has breaking changes.
+    You may want to test the upgrade in a staging environment before deploying to production.
+  </Note>
+
+  Today, we're excited to announce the release of Onyx v2.0.0! This release brings a brand new UI, Projects,
+  and many other improvements.
+
+  Thank you to our contributors for helping make this release possible!
+
+  ## Key Improvements
+
+  ### UI Refresh
+
+  Onyx has a brand new UI with updated colors, components, and subtle changes to the layout.
+  Check out this release video showcasing the new UI!
+
+  <div style={{position: 'relative', paddingBottom: '56.25%', height: 0, overflow: 'hidden', borderRadius: '0.5rem'}}>
+    <iframe
+    src="https://www.youtube.com/embed/FE_-6IjyyPw?si=arXXagEUvlgwMfv9" title="YouTube video player" frameborder="0"
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture;
+    web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen style={{position: 'absolute', top: 0,
+    left: 0, width: '100%', height: '100%', borderRadius: '0.5rem'}} />
+  </div>
+
+  ### Single-sign on (SSO) added to Community Edition
+
+  SSO (via OIDC and SAML) is now available in the Community Edition of Onyx!
+
+  All users can now configure basic authentication, Google OAuth,
+  or SSO via identity providers like Okta and Azure EntraID.
+
+  Read more about authentication options in our [deployment docs](/deployment/authentication/).
+  Read more about our open source philosphy in our [Open Source
+  Statement](/overview/miscellaneous/open_source_statement/).
+
+  ### Projects
+
+  Projects allow users to organize files and chats based on a specific context.
+  You can think of this as a folder where you upload files, define project-level instructions,
+  and work from the same starting point in every chat session.
+
+  <img className="rounded-image" src="/assets/changelog/showcase_projects.png" alt="Projects feature screenshot"/>
+
+  Projects is a direct replacement of My Documents, but with added functionality.
+  Files you've previously uploaded to My Documents should appear in Projects.
+
+  ### New Docker Compose File
+
+  We've simplified the Docker Compose files to make it easier to deploy Onyx.
+
+  Previously, you may have used `docker-compose.dev.yml`, `docker-compose.prod.yml`, or `docker-compose.gpu-dev.yml`.
+  These have been consolidated into a single `docker-compose.yml` file.
+
+  With the new compose file, you can run `docker compose up -d` to start Onyx.
+
+  <Note>
+    If you've previously used the old compose files, you will need to add the `-p onyx-stack` flag.
+
+    I.e. `docker compose -p onyx-stack up -d`.
+
+    Additionally, you will need to migrate any changes you may have made to your compose file.
+  </Note>
+
+  ### Organization info and personalization
+
+  We've found that questions posed to Onyx often require context on who you are, what you work on,
+  and what your company does.
+  It is difficult to infer this from search results alone because they are a narrow view into your context.
+
+  To help with this,
+  admins can now add information about their organization in the **Workspace Settings** tab of the Admin Panel.
+  Additionally, users can add information about themselves in the User Settings page.
+
+  <img className="rounded-image" src="/assets/changelog/basic_org_info.png" alt="Organization info configuration"/>
+
+  <img className="rounded-image" src="/assets/changelog/basic_personalization.png" alt="User info configuration"/>
+
+  This is a simple, but powerful first step in our organization and personalization features. In the future,
+  Onyx will extract and save this information automatically.
+
+  ### Curators can now create actions
+
+  Due to popular demand, Curators and Global Curators can now create Actions via OpenAPI or MCP!
+
+  Read more about Actions in our [admin docs](/admin/actions/overview/).
+
+  <img className="rounded-image" src="/assets/changelog/showcase_curator_actions.png" alt="Curators can now create actions"/>
+
+  ### Search filters
+
+  Source filters are back for the Internal Search Action!
+
+  To filter the sources of your search results, click the Actions configuration button in the Input Bar,
+  select the arrow next to Internal Search, and select the sources you want to include.
+
+  <img className="rounded-image" src="/assets/changelog/showcase_filters_1.png" alt="Actions in the Chat Input Bar"/>
+
+  <img className="rounded-image" src="/assets/changelog/showcase_filters_2.png" alt="Source filters"/>
+
+  ### Language and Embedding Models
+
+  We've added support for [Claude Sonnet 4.5](https://www.anthropic.com/news/claude-sonnet-4-5),
+  [Claude Haiku 4.5](https://www.anthropic.com/news/claude-haiku-4-5),
+  and [Gemini Embedding 001](https://developers.googleblog.com/en/gemini-embedding-available-gemini-api/).
+
+  Try them out by configuring Anthropic in the **LLM Configuration** page and Google Vertex AI on the **Search
+  Settings** page of the Admin Panel.
+
+  ## Contributor Highlights
+
+  - [@Django149](https://github.com/Django149) added right-to-left language support for the chat interface!
+  - [@nsklei](https://github.com/nsklei) added support for indexing Microsoft Teams attachments!
+  - [@linkages](https://github.com/linkages) added generation of SHA256 hashes of documents for the Onyx File Store!
+  - [@grafke](https://github.com/grafke) fixed a bug in GPT search timestamps!
+
+  ## Additional Improvements
+
+  ### Support for SSE (server-sent events) MCP servers
+
+  Onyx now supports SSE (server-sent events) MCP servers.
+  Configure either Streamable HTTP or SSE servers in the Admin Actions page.
+
+  Read more about MCP in our [admin docs](/admin/actions/mcp/).
+
+  ### Ollama Support
+
+  You can now configure both locally-hosted and cloud-hosted models with Ollama.
+  Read more about Ollama in our [admin docs](/admin/ai_models/ollama/).
+
+  ### One Line Deployment Script
+
+  We've added a [single line launch script](deployment/getting_started/quickstart) to make it easier to deploy Onyx.
+  This script will check your system resources and requirements and guide you through the necessary steps to deploy
+  Onyx.
+
+  <Note>
+    This script is intended for new users. For existing users,
+    we recommend sticking with your existing deployment method.
+  </Note>
+
+  ### KEDA Autoscaling
+
+  We've added support for KEDA (Kubernetes Event-Driven Autoscaling) to Onyx Helm charts.
+  Kubernetes deployments may choose either HPA (Horizontal Pod Autoscaling) or KEDA for autoscaling.
+
+  ---
+
+  Our [GitHub Releases](https://github.com/onyx-dot-app/onyx/releases)
+  page has the full list of changes and bugfixes for each release.
+
+</Update>
+
+<Update label="Prior Changes" description="<v2.0.0">
+
+  ## Release Notes Prior to v2.0.0
+
+  Check out our [GitHub Releases](https://github.com/onyx-dot-app/onyx/releases)
+  page for details regarding prior changes.
+
+  Additionally, our Discord `#announcements` channel is a great place to stay up to date with Onyx updates.
+
+  Major releases and breaking changes are also announced in the [Discord Server](https://discord.gg/4NA5SbzrWb).
+</Update>
