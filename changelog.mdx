@@ -1,15 +1,17 @@
 ---
-title: Release Notes
-description: New Features, Improvements, and Bug Fixes
-rss: true
+title: "Release Notes"
+description: "New Features, Improvements, and Bug Fixes"
+rss: "true"
 ---
 
 <Update label="October 20th 2025" description="v2.0.0" tags={["New Features", "Deployment Changes", "Breaking Changes"]}>
   <Note>
-    v2.0.0 has breaking changes. Please read the [v2.0.0 Upgrade Guide](#v200-upgrade-guide) for more information.
+    v2.0.0 has breaking changes.
+    You may want to test the upgrade in a staging environment before deploying to production.
   </Note>
 
-  Today, we're excited to announce the release of Onyx v2.0.0! This release brings a brand new UI, Projects, and many other improvements.
+  Today, we're excited to announce the release of Onyx v2.0.0! This release brings a brand new UI, Projects,
+  and many other improvements.
 
   Thank you to our contributors for helping make this release possible!
 
@@ -19,25 +21,29 @@ rss: true
 
   Onyx has a brand new UI with updated colors, components, and subtle changes to the layout.
   Check out this release video showcasing the new UI!
-  
+
   <iframe width="560" height="315" src="https://www.youtube.com/embed/FE_-6IjyyPw?si=arXXagEUvlgwMfv9" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-  
+
   ### Single-sign on (SSO) added to Community Edition
 
-  SSO (via OIDC and SAML) is now available in the Community Edition of Onyx! 
-  All users can now configure basic authentication, Google OAuth, or SSO via identity providers like Okta and Azure EntraID.
+  SSO (via OIDC and SAML) is now available in the Community Edition of Onyx!
+
+  All users can now configure basic authentication, Google OAuth,
+  or SSO via identity providers like Okta and Azure EntraID.
 
   Read more about authentication options in our [deployment docs](/deployment/authentication/).
-
   Read more about our open source philosphy [INSERT LINK HERE].
-  
+
   ### Projects
+
   Projects allow users to organize files and chats based on a specific context.
-  You can think of this as a folder where you upload files, define project-level instructions, and work from the same starting point in every chat session.
+  You can think of this as a folder where you upload files, define project-level instructions,
+  and work from the same starting point in every chat session.
 
   <img className="rounded-image" src="/assets/changelog/showcase_projects.png" alt="Projects feature screenshot"/>
 
-  Projects is a direct replacement of My Documents, but with added functionality. Files you've previously uploaded to My Documents should appear in Projects. 
+  Projects is a direct replacement of My Documents, but with added functionality.
+  Files you've previously uploaded to My Documents should appear in Projects.
 
   ### New Docker Compose File
 
@@ -49,41 +55,54 @@ rss: true
   With the new compose file, you can run `docker compose up -d` to start Onyx.
 
   <Note>
-    If you've previously used the old compose files, you will need to add the `-p onyx-stack` flag. 
-    
+    If you've previously used the old compose files, you will need to add the `-p onyx-stack` flag.
+
     I.e. `docker compose -p onyx-stack up -d`.
-    
+
     Additionally, you will need to migrate any changes you may have made to your compose file.
   </Note>
 
-
-  ### Language and Embedding Models
-
-  We've added support for [Claude 4.5 Sonnet](https://www.anthropic.com/news/claude-sonnet-4-5) and [Gemini Embedding 001](https://developers.googleblog.com/en/gemini-embedding-available-gemini-api/)!
-
-  Try them out by configuring Anthropic in the LLM Configuration page and Google Vertex AI on the Search Settings page.
-
   ### Organization info and personalization
 
-  We've found that questions posed to Onyx often require context on who you are, what you work on, and what your company does.
+  We've found that questions posed to Onyx often require context on who you are, what you work on,
+  and what your company does.
   It is difficult to infer this from search results alone because they are a narrow view into your context.
 
   To help with this, admins can now add information about their organization in the Workspace Settings page.
   Additionally, users can add information about themselves in the User Settings page.
 
   <img className="rounded-image" src="/assets/changelog/basic_org_info.png" alt="Organization info configuration"/>
-  
+
   <img className="rounded-image" src="/assets/changelog/basic_personalization.png" alt="User info configuration"/>
 
-  This is a simple, but powerful first step in our organization and personalization features.
-  In the future, Onyx will extract and save this information automatically.
+  This is a simple, but powerful first step in our organization and personalization features. In the future,
+  Onyx will extract and save this information automatically.
+
+  ### Search filters
+
+  Source filters are back for the Internal Search Action!
+
+  To filter the sources of your search results, click the Actions configuration button in the Chat Input Bar,
+  select the arrow next to Internal Search, and select the sources you want to include.
+
+  <img className="rounded-image" src="/assets/changelog/showcase_filters_1.png" alt="Actions in the Chat Input Bar"/>
+
+  <img className="rounded-image" src="/assets/changelog/showcase_filters_2.png" alt="Source filters"/>
+
+  ### Language and Embedding Models
+
+  We've added support for [Claude 4.5 Sonnet](https://www.anthropic.com/news/claude-sonnet-4-5)
+  and [Gemini Embedding 001](https://developers.googleblog.com/en/gemini-embedding-available-gemini-api/).
+
+  Try them out by configuring Anthropic in the LLM Configuration page and Google Vertex AI on the Search Settings page.
 
   ## Contributor Shoutouts
-  - [@Django149](https://github.com/Django149) added right-to-left language support for the chat interface! 
+
+  - [@Django149](https://github.com/Django149) added right-to-left language support for the chat interface!
   - [@nsklei](https://github.com/nsklei) added support for indexing Microsoft Teams attachments!
   - [@linkages](https://github.com/linkages) added generation of SHA256 hashes of documents for the Onyx File Store!
   - [@grafke](https://github.com/grafke) fixed a bug in GPT search timestamps!
-  
+
   ## Additional Improvements
 
   ### Support for SSE (server-sent events) MCP servers
@@ -100,18 +119,25 @@ rss: true
 
   ### One Line Deployment Script
 
+  We've added a single line deployment script to make it easier to deploy Onyx.
+  This script will check your system resources and requirements and guide you through the necessary steps to deploy
+  Onyx.
+
+  Note, this script is intended for new users. For existing users,
+  we recommend sticking with your existing deployment method.
+
   ### KEDA Autoscaling
 
-
-  ## v2.0.0 Upgrade Guide
+  We've added support for KEDA (Kubernetes Event-Driven Autoscaling) to Onyx.
+  Kubernetes deployments may choose either HPA (Horizontal Pod Autoscaling) or KEDA for autoscaling.
 
 </Update>
 
 <Update label="Prior Changes" description="<v2.0.0">
-  Check out our [GitHub Releases](https://github.com/onyx-dot-app/onyx/releases) page for details regarding prior changes.
+  Check out our [GitHub Releases](https://github.com/onyx-dot-app/onyx/releases)
+  page for details regarding prior changes.
 
-  Additionally, our Discord `#announcements` channel is a great place to stay up to date with Onyx updates. 
-  
+  Additionally, our Discord `#announcements` channel is a great place to stay up to date with Onyx updates.
+
   Major releases and breaking changes are also announced in the [Discord Server](https://discord.gg/4NA5SbzrWb).
 </Update>
-
