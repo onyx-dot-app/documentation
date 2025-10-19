@@ -473,12 +473,7 @@
         "tab": "Changelog",
         "icon": "clock-rotate-left",
         "pages": [
-          {
-            "group": "Updates",
-            "pages": [
-              "changelog"
-            ]
-          }
+          "changelog"
         ]
       },
       {

@@ -22,7 +22,9 @@ rss: "true"
   Onyx has a brand new UI with updated colors, components, and subtle changes to the layout.
   Check out this release video showcasing the new UI!
 
-  <iframe width="560" height="315" src="https://www.youtube.com/embed/FE_-6IjyyPw?si=arXXagEUvlgwMfv9" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+  <iframe width="560" height="315" src="https://www.youtube.com/embed/FE_-6IjyyPw?si=arXXagEUvlgwMfv9"
+  title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media;
+  gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
   ### Single-sign on (SSO) added to Community Edition
 
@@ -68,7 +70,8 @@ rss: "true"
   and what your company does.
   It is difficult to infer this from search results alone because they are a narrow view into your context.
 
-  To help with this, admins can now add information about their organization in the Workspace Settings page.
+  To help with this,
+  admins can now add information about their organization in the **Workspace Settings** tab of the Admin Panel.
   Additionally, users can add information about themselves in the User Settings page.
 
   <img className="rounded-image" src="/assets/changelog/basic_org_info.png" alt="Organization info configuration"/>
@@ -82,7 +85,7 @@ rss: "true"
 
   Source filters are back for the Internal Search Action!
 
-  To filter the sources of your search results, click the Actions configuration button in the Chat Input Bar,
+  To filter the sources of your search results, click the Actions configuration button in the Input Bar,
   select the arrow next to Internal Search, and select the sources you want to include.
 
   <img className="rounded-image" src="/assets/changelog/showcase_filters_1.png" alt="Actions in the Chat Input Bar"/>
@@ -94,7 +97,8 @@ rss: "true"
   We've added support for [Claude 4.5 Sonnet](https://www.anthropic.com/news/claude-sonnet-4-5)
   and [Gemini Embedding 001](https://developers.googleblog.com/en/gemini-embedding-available-gemini-api/).
 
-  Try them out by configuring Anthropic in the LLM Configuration page and Google Vertex AI on the Search Settings page.
+  Try them out by configuring Anthropic in the **LLM Configuration** page and Google Vertex AI on the **Search
+  Settings** page of the Admin Panel.
 
   ## Contributor Shoutouts
 
@@ -119,21 +123,31 @@ rss: "true"
 
   ### One Line Deployment Script
 
-  We've added a single line deployment script to make it easier to deploy Onyx.
+  We've added a [single line launch script](deployment/getting_started/quickstart) to make it easier to deploy Onyx.
   This script will check your system resources and requirements and guide you through the necessary steps to deploy
   Onyx.
 
-  Note, this script is intended for new users. For existing users,
-  we recommend sticking with your existing deployment method.
+  <Note>
+    This script is intended for new users. For existing users,
+    we recommend sticking with your existing deployment method.
+  </Note>
 
   ### KEDA Autoscaling
 
   We've added support for KEDA (Kubernetes Event-Driven Autoscaling) to Onyx.
   Kubernetes deployments may choose either HPA (Horizontal Pod Autoscaling) or KEDA for autoscaling.
 
+  ---
+
+  Our [GitHub Releases](https://github.com/onyx-dot-app/onyx/releases)
+  page has the full list of changes and bugfixes for each release.
+
 </Update>
 
 <Update label="Prior Changes" description="<v2.0.0">
+
+  ## Release Notes Prior to v2.0.0
+
   Check out our [GitHub Releases](https://github.com/onyx-dot-app/onyx/releases)
   page for details regarding prior changes.
 
