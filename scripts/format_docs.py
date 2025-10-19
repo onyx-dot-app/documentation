@@ -783,8 +783,11 @@ def format_content(text: str, width: int) -> str:
             # If the value became double-quoted at both ends (e.g., ""Text""), collapse to single quotes
             if value_norm.startswith('""') and value_norm.endswith('""') and len(value_norm) >= 4:
                 value_norm = value_norm[1:-1]
+            # Check if value is a boolean (true/false) - don't quote these
+            if value_norm.lower() in ('true', 'false'):
+                value_quoted = value_norm.lower()
             # Keep existing quotes if already quoted; otherwise quote with double quotes
-            if (len(value_norm) >= 2 and ((value_norm.startswith('"') and value_norm.endswith('"')) or (value_norm.startswith("'") and value_norm.endswith("'")))):
+            elif (len(value_norm) >= 2 and ((value_norm.startswith('"') and value_norm.endswith('"')) or (value_norm.startswith("'") and value_norm.endswith("'")))):
                 value_quoted = value_norm
             else:
                 value_quoted = '"' + value_norm.replace('"', '\\"') + '"'
