@@ -139,6 +139,7 @@
               "admin/ai_models/anthropic",
               "admin/ai_models/bedrock",
               "admin/ai_models/google_ai",
+              "admin/ai_models/openrouter",
               "admin/ai_models/custom_inference_provider"
             ]
           },
