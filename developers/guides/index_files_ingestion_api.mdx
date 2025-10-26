@@ -27,7 +27,7 @@ Skip to the [Full Code](#full-code) section if you don't want the step-by-step g
 In this example, we'll index local files with the Ingestion API.
 
 <Note>
-  The Ingestion API base URL is `https://cloud.onyx.app/onyx-api/ingestion` or your own domain.
+  The Ingestion API base URL is `https://cloud.onyx.app/api/onyx-api/ingestion` or your own domain.
 </Note>
 
 <Steps>
@@ -46,7 +46,7 @@ In this example, we'll index local files with the Ingestion API.
       ```python Python
       import requests
 
-      API_BASE_URL = "https://cloud.onyx.app/onyx-api/ingestion" # or your own domain
+      API_BASE_URL = "https://cloud.onyx.app/api/onyx-api/ingestion" # or your own domain
       API_KEY = "YOUR_KEY_HERE"
 
       headers = {
@@ -57,7 +57,7 @@ In this example, we'll index local files with the Ingestion API.
 
       ```bash Shell
       # Set your API configuration
-      API_BASE_URL="https://cloud.onyx.app/onyx-api/ingestion"
+      API_BASE_URL="https://cloud.onyx.app/api/onyx-api/ingestion"
       API_KEY="YOUR_KEY_HERE"
       ```
     </CodeGroup>
@@ -308,7 +308,7 @@ import PyPDF2
 import pandas as pd
 from docx import Document as DocxDocument
 
-API_BASE_URL = "https://cloud.onyx.app/onyx-api/ingestion"  # or your own domain
+API_BASE_URL = "https://cloud.onyx.app/api/onyx-api/ingestion"  # or your own domain
 API_KEY = "YOUR_KEY_HERE"
 CC_PAIR_ID = 243  # Replace with your actual cc_pair_id
 LOCAL_FOLDER = "./documents"  # Change this to your folder path
@@ -478,7 +478,7 @@ def parse_arguments() -> argparse.Namespace:
         "-u", "--url",
         type=str,
         help="API endpoint URL to send JSON data to",
-        default="http://localhost:8080/onyx-api/ingestion"
+        default="http://localhost:8080/api/onyx-api/ingestion"
     )
     parser.add_argument(
         "--headers",
