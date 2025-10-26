@@ -181,7 +181,7 @@ LANGUAGE_CHAT_NAMING_HINT="The name of the conversation must be in the same lang
     Disabled be default because many auth providers have very short expiry times.
   </Accordion>
 
-  <Accordion title="OAuth & OIDCConfiguration">
+  <Accordion title="OAuth & OIDC Configuration">
     `OAUTH_CLIENT_ID`: For both Google OAuth and OIDC.
 
     `OAUTH_CLIENT_SECRET`: For both Google OAuth and OIDC.
@@ -283,7 +283,7 @@ LANGUAGE_CHAT_NAMING_HINT="The name of the conversation must be in the same lang
 
     `VESPA_TENANT_PORT`: Vespa tenant port
 
-    `VESPA_NUM_ATTEMPTS_ON_STARTUP`: Startup connection attempts
+    `NUM_RETRIES_ON_STARTUP`: Startup connection attempts
 
     `VESPA_CLOUD_URL`: Vespa Cloud URL
 
@@ -296,8 +296,6 @@ LANGUAGE_CHAT_NAMING_HINT="The name of the conversation must be in the same lang
     `MANAGED_VESPA`: Use managed Vespa (Vespa Cloud)
 
     `VESPA_REQUEST_TIMEOUT`: Request timeout in seconds
-
-    `VESPA_SYNC_MAX_TASKS`: Maximum sync tasks
 
     `VESPA_LANGUAGE_OVERRIDE`: Force Vespa language (en, de, etc.)
   </Accordion>
@@ -342,14 +340,6 @@ LANGUAGE_CHAT_NAMING_HINT="The name of the conversation must be in the same lang
 
     `ENABLE_CONTEXTUAL_RAG`: Enable contextual retrieval
 
-    `DEFAULT_CONTEXTUAL_RAG_LLM_NAME`: Default LLM for contextual RAG
-
-    `DEFAULT_CONTEXTUAL_RAG_LLM_PROVIDER`: Default LLM provider for contextual RAG
-
-    `MINI_CHUNK_SIZE`: Size of mini-chunks in tokens
-
-    `LARGE_CHUNK_RATIO`: Ratio of regular chunks per large chunk
-
     `SKIP_METADATA_IN_CHUNK`: Skip metadata in chunks
 
     `CLEANUP_INDEXING_JOBS_TIMEOUT`: Cleanup timeout in hours
@@ -369,8 +359,6 @@ LANGUAGE_CHAT_NAMING_HINT="The name of the conversation must be in the same lang
     `USE_DOCUMENT_SUMMARY`: Use document summary for contextual RAG
 
     `USE_CHUNK_SUMMARY`: Use chunk summary for contextual RAG
-
-    `MAX_TOKENS_FOR_FULL_INCLUSION`: Maximum tokens for full inclusion
   </Accordion>
 
   <Accordion title="Connector Configuration">
@@ -383,13 +371,9 @@ LANGUAGE_CHAT_NAMING_HINT="The name of the conversation must be in the same lang
 
     `ENABLED_CONNECTOR_TYPES`: Comma-separated list of enabled connector types
 
-    `POLL_CONNECTOR_OFFSET`: Minutes overlap between poll windows
-
     `LEAVE_CONNECTOR_ACTIVE_ON_INITIALIZATION_FAILURE`: Keep connector active on init failure
 
     `CURATORS_CANNOT_VIEW_OR_EDIT_NON_OWNED_ASSISTANTS`: Restrict curator access
-
-    `ENABLE_EXPENSIVE_EXPERT_CALLS`: Enable expensive expert user calls
 
     **Web Connector**
 
@@ -591,8 +575,6 @@ LANGUAGE_CHAT_NAMING_HINT="The name of the conversation must be in the same lang
     `AWS_REGION_NAME`: AWS region name
 
     `TARGET_AVAILABLE_TENANTS`: Number of pre-provisioned tenants to maintain
-
-    `JOB_TIMEOUT`: Job timeout in seconds
 
     `SYSTEM_RECURSION_LIMIT`: System recursion limit
 
