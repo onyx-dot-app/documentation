@@ -109,6 +109,27 @@ If using Docker, set `LOG_LEVEL` to `debug` in each container of your Docker Com
 
 If using Kubernetes, set `LOG_LEVEL` to `debug` in your `values.yaml` file.
 
+### Observability
+
+You can connect your observability tools to Onyx. We support the following providers:
+
+**Braintrust (recommended)**
+
+Braintrust is what we use internally for the cloud version of Onyx. Set the following environment variables:
+
+```bash
+BRAINTRUST_PROJECT="Your project name"
+BRAINTRUST_API_KEY="sk-..."
+```
+
+**Langfuse**
+
+```bash
+LANGFUSE_SECRET_KEY="sk-..."
+LANGFUSE_PUBLIC_KEY="pk-..."
+LANGFUSE_HOST="https://cloud.langfuse.com" # Or "https://us.cloud.langfuse.com"
+```
+
 ### Multilingual Configuration
 
 Although Onyx assumes English by default,
