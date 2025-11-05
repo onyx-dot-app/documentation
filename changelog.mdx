@@ -6,6 +6,70 @@ mode: "wide"
 rss: true
 ---
 
+<Update label="v2.2.0" description="November 5th, 2025" tags={["New Features", "Performance", "Bug Fixes"]}>
+
+  ## v2.2.0
+
+  Welcome to the Onyx v2.2.0 release notes! This release brings major improvements to the agent framework
+  with faster responses and more consistent outputs, a completely redesigned onboarding experience,
+  and significant UI performance enhancements.
+
+  Thank you to our contributors for helping make this release possible!
+
+  ## Key Improvements
+
+  ### Complete Agent Framework Revamp
+
+  We've completely rebuilt the agent framework that powers Onyx conversations.
+  The new implementation moves away from LangGraph to the Agents SDK, resulting in a dramatically
+  simplified flow that delivers more consistent outputs, faster response times, and better tool calling accuracy.
+
+  This architectural change also reduces per-message token consumption,
+  making your conversations more efficient and cost-effective.
+
+  ### New Login UI and Onboarding Flow
+
+  First-time users now experience a streamlined onboarding journey that guides them through
+  personalizing their workspace, setting up their LLMs, and configuring actions like Web Search and Image Generation.
+
+  <img className="rounded-image" src="/assets/changelog/v2.2.0/showcase_onboarding.png" alt="Onboarding flow"/>
+
+  ### UI Performance and Polish
+
+  We've made extensive improvements across the UI for performance and visual consistency.
+
+  For example, the Assistants navigation page has been completely refreshed with a cleaner layout and improved organization.
+
+  <img className="rounded-image" src="/assets/changelog/v2.2.0/showcase_agents_navigation.png" alt="Agents navigation"/>
+
+  ### LLM Usage Observability
+
+  Onyx now supports integration with Braintrust for comprehensive LLM observability.
+  Monitor your costs, latency, token usage, and more to gain insights into your AI operations.
+
+  Read more about setting up observability in our [deployment configuration docs](/deployment/configuration/configuration/).
+
+  <img className="rounded-image" src="/assets/changelog/v2.2.0/showcase_braintrust.png" alt="LLM usage observability"/>
+
+  ## Additional Improvements
+
+  ### Confluence OAuth and Jira Fixes
+
+  We've resolved issues with Confluence OAuth authentication and updated Jira integration
+  to address deprecated API endpoints, ensuring reliable connectivity with your Atlassian tools.
+
+  ### Enhanced Provider Support
+
+  Onyx now has improved support for LLM providers like Ollama and OpenRouter,
+  giving you more flexibility in choosing the models that work best for your use case.
+
+  ---
+
+  Our [GitHub Releases](https://github.com/onyx-dot-app/onyx/releases)
+  page has the full list of changes and bug fixes for each release.
+
+</Update>
+
 <Update label="v2.1.0" description="October 28th, 2025" tags={["New Features", "Bug Fixes"]}>
 
   ## v2.1.0
