@@ -6,13 +6,83 @@ mode: "wide"
 rss: true
 ---
 
+<Update label="v2.3.0" description="November 11th, 2025" tags={["Performance", "New Features", "Bug Fixes"]}>
+
+  ## v2.3.0
+
+  Welcome to the Onyx v2.3.0 release notes!
+  This release brings performance improvements that make Onyx feel significantly faster and more responsive,
+  personal access tokens, expanded LLM provider support, and more.
+
+  Thank you to our contributors for helping make this release possible!
+
+  ## Key Improvements
+
+  ### Personal Access Tokens
+
+  Onyx now supports Personal Access Tokens for API authentication. This feature allows all users to have a secure,
+  programmatic way to interact with Onyx via the API,
+  making it easier to integrate Onyx into your workflows and automation tools.
+
+  <img className="rounded-image" src="/assets/changelog/v2.3.0/showcase_personal_access_tokens.png" alt="Personal Access Tokens"/>
+
+  ### Massive Frontend Performance Improvements
+
+  We've made extensive performance optimizations across the frontend that deliver a noticeably faster and more
+  responsive experience.
+
+  - Typing in the input bar is now lag-free, even during heavy operations.
+  - UI updates are significantly faster with improved reactive performance,
+  making interactions feel instant and smooth throughout the application.
+  - First content load is also much faster with optimizations in data loading.
+
+  <img className="rounded-image" src="/assets/changelog/v2.3.0/showcase_frontend_performance.png" alt="Frontend Performance Improvements"/>
+
+  ### Expanded LLM Provider Support
+
+  We've added support for OpenAI image generation models via Azure,
+  bringing more flexibility to your image generation capabilities.
+
+  Additionally, Onyx now supports AWS GovCloud regions for Bedrock.
+
+  ## Additional Improvements
+
+  ### White Labeling Fixes
+
+  We've resolved several issues with white labeling to ensure your custom branding displays correctly across all areas
+  of the application.
+
+  ### More Resilient Gmail Connector
+
+  The Gmail connector now uses checkpointing for more resilient indexing.
+  This makes the connector more reliable and significantly cheaper to run,
+  especially when re-embedding your entire Gmail history.
+
+  ### Air-Gapped Deployment Support
+
+  We've fixed air-gapped deployments by packaging the tokenizer directly with the model server image.
+  This ensures Onyx can run in completely isolated environments without requiring external dependencies.
+
+  ### Optimized LLM Interactions
+
+  We've simplified both system prompts and tool prompts,
+  resulting in lower token consumption per interaction and more efficient tool calling.
+  This reduces your LLM costs while maintaining the same quality of responses.
+
+  ---
+
+  Our [GitHub Releases](https://github.com/onyx-dot-app/onyx/releases)
+  page has the full list of changes and bug fixes for each release.
+
+</Update>
+
 <Update label="v2.2.0" description="November 5th, 2025" tags={["New Features", "Performance", "Bug Fixes"]}>
 
   ## v2.2.0
 
-  Welcome to the Onyx v2.2.0 release notes! This release brings major improvements to the agent framework
-  with faster responses and more consistent outputs, a completely redesigned onboarding experience,
-  and significant UI performance enhancements.
+  Welcome to the Onyx v2.2.0 release notes!
+  This release brings major improvements to the agent framework with faster responses and more consistent outputs,
+  a completely redesigned onboarding experience, and significant UI performance enhancements.
 
   Thank you to our contributors for helping make this release possible!
 
@@ -21,16 +91,17 @@ rss: true
   ### Complete Agent Framework Revamp
 
   We've completely rebuilt the agent framework that powers Onyx conversations.
-  The new implementation moves away from LangGraph to the Agents SDK, resulting in a dramatically
-  simplified flow that delivers more consistent outputs, faster response times, and better tool calling accuracy.
+  The new implementation moves away from LangGraph to the Agents SDK,
+  resulting in a dramatically simplified flow that delivers more consistent outputs, faster response times,
+  and better tool calling accuracy.
 
   This architectural change also reduces per-message token consumption,
   making your conversations more efficient and cost-effective.
 
   ### New Login UI and Onboarding Flow
 
-  First-time users now experience a streamlined onboarding journey that guides them through
-  personalizing their workspace, setting up their LLMs, and configuring actions like Web Search and Image Generation.
+  First-time users now experience a streamlined onboarding journey that guides them through personalizing their
+  workspace, setting up their LLMs, and configuring actions like Web Search and Image Generation.
 
   <img className="rounded-image" src="/assets/changelog/v2.2.0/showcase_onboarding.png" alt="Onboarding flow"/>
 
@@ -38,16 +109,19 @@ rss: true
 
   We've made extensive improvements across the UI for performance and visual consistency.
 
-  For example, the Assistants navigation page has been completely refreshed with a cleaner layout and improved organization.
+  For example,
+  the Assistants navigation page has been completely refreshed with a cleaner layout and improved organization.
 
   <img className="rounded-image" src="/assets/changelog/v2.2.0/showcase_agents_navigation.png" alt="Agents navigation"/>
 
   ### LLM Usage Observability
 
-  Onyx now supports integration with [Braintrust](https://usebraintrust.com) or [LangFuse](https://www.langfuse.com) for comprehensive LLM observability.
-  Monitor your costs, latency, token usage, and more to gain insights into your AI operations.
+  Onyx now supports integration with [Braintrust](https://usebraintrust.com) or [LangFuse](https://www.langfuse.com)
+  for comprehensive LLM observability. Monitor your costs, latency, token usage,
+  and more to gain insights into your AI operations.
 
-  Read more about setting up observability in our [deployment configuration docs](/deployment/configuration/configuration/).
+  Read more about setting up observability in our [deployment configuration
+  docs](/deployment/configuration/configuration/).
 
   <img className="rounded-image" src="/assets/changelog/v2.2.0/showcase_braintrust.png" alt="LLM usage observability"/>
 
@@ -59,8 +133,8 @@ rss: true
 
   ### Confluence OAuth and Jira Fixes
 
-  We've resolved issues with Confluence OAuth authentication and updated Jira integration
-  to address deprecated API endpoints, ensuring reliable connectivity with your Atlassian tools.
+  We've resolved issues with Confluence OAuth authentication and updated Jira integration to address deprecated API
+  endpoints, ensuring reliable connectivity with your Atlassian tools.
 
   ### Enhanced Provider Support
 
