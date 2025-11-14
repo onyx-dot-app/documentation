@@ -261,7 +261,8 @@
               "admin/advanced_configs/doc_processing",
               "admin/advanced_configs/rate_limits",
               "admin/advanced_configs/workspace_settings",
-              "admin/advanced_configs/white_labeling"
+              "admin/advanced_configs/white_labeling",
+              "admin/advanced_configs/llm_access_controls"
             ]
           },
           {

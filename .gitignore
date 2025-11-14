@@ -5,3 +5,4 @@ package.json
 node_modules/
 .DS_store
 .mypy_cache/
+.vscode/
