@@ -1,0 +1,110 @@
+---
+title: "LLM Access Controls"
+description: "Configure access controls for LLM providers"
+icon: "lock"
+---
+
+## Overview
+
+Onyx provides fine-grained access control for LLM providers, allowing administrators to control **who** can use specific models and **which agents** can use them. This enables better cost control, governance, and enforcement of model usage policies.
+
+<img className="rounded-image" src="/assets/admin/advanced_configs/llm_access_controls.png" alt="LLM Access Controls" />
+
+### Access Control Types
+
+<AccordionGroup>
+  <Accordion title="Public vs Private Providers" icon="lock">
+    **Public Providers**
+    - Accessible to all users and agents
+    - No restrictions applied
+    - Useful for default, unrestricted models
+
+    **Private Providers**
+    - Subject to user group and/or agent restrictions
+    - Enables fine-grained access control
+    - Recommended for expensive or specialized models
+  </Accordion>
+
+  <Accordion title="User Group Restrictions" icon="users">
+    Control **who** can use specific LLM providers by restricting access to specific user groups.
+
+    **How it works:**
+    - Assign one or more user groups to an LLM provider
+    - Only users in those groups can use the provider
+    - Admins bypass group restrictions (but not agent restrictions)
+    - Leave empty for no group restrictions
+
+    **Use cases:**
+    - Restrict expensive models to specific teams
+    - Provide specialized models to certain departments
+    - Implement cost controls by team
+  </Accordion>
+
+  <Accordion title="Agent Restrictions" icon="robot">
+    Control **which agents** can use specific LLM providers.
+
+    **How it works:**
+    - Assign one or more agents to an LLM provider via the "Agent Whitelist"
+    - The provider will only appear as an option when using those agents
+    - Applies to **all users**, including admins
+    - Leave empty for no agent restrictions
+
+    **Use cases:**
+    - Reserve GPT-4 for "Code Review Agent" only
+    - Use Claude Opus exclusively with "Legal Document Analyzer"
+    - Prevent users from selecting inappropriate models for specific use cases
+    - Enforce model policies per agent type
+  </Accordion>
+
+  <Accordion title="Combined Restrictions" icon="layer-group">
+    You can combine both user group and agent restrictions for maximum control.
+
+    **Access Rules (AND logic):**
+    - User must be in an allowed group **AND** using an allowed agent
+    - Both conditions must be satisfied for access
+    - Admins bypass group restrictions but still require allowed agents
+
+    **Example:**
+    - Provider: GPT-4
+    - User Groups: "Engineering Team"
+    - Agent Whitelist: "Code Review Agent", "Architecture Advisor"
+    - **Result:** Only Engineering Team members can use GPT-4, and only with those two agents
+  </Accordion>
+</AccordionGroup>
+
+### Configuring Access Controls
+
+To configure access controls for an LLM provider:
+
+1. Navigate to **Admin Panel → Configuration → LLM**
+2. Click on an existing provider or create a new one
+3. In the **Access Controls** section nested under Advanced options:
+   - Toggle **Make Public** off to enable restrictions
+   - Select user groups in **User Group Access** (optional)
+   - Select agents in **Agent Whitelist** (optional)
+4. Save your changes
+
+<Note>
+  When a provider is set to public, the access control selectors are automatically disabled.
+</Note>
+
+### Access Decision Logic
+
+The system determines access based on the following logic:
+
+| is_public | Groups Set | Agents Set | Access Rule |
+|-----------|------------|------------|-------------|
+| `true` | Any | Any | Everyone has access |
+| `false` | Yes | Yes | Must be in group **AND** using allowed agent |
+| `false` | Yes | No | Must be in group (admins bypass) |
+| `false` | No | Yes | Must use allowed agent (applies to admins) |
+| `false` | No | No | Admin-only access |
+
+### Provider Visibility
+
+Users will only see LLM providers they have access to:
+- In the agent creation/editing interface
+- In the chat UI model selector
+- When using the API to list available providers
+
+Restricted providers are completely hidden from users who don't have access, preventing confusion and unauthorized usage attempts.
