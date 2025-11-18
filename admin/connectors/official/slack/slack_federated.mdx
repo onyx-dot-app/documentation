@@ -58,6 +58,8 @@ oauth_config:
       - search:read
       - channels:history
       - groups:history
+      - im:history
+      - mpim:history
       - users:read
 settings:
   org_deploy_enabled: false
@@ -97,7 +99,27 @@ settings:
   </Step>
 
   <Step title="Enter client credentials">
-    Enter the **Client ID** and **Client Secret** from step 7. Click the **Create** button.
+    Enter the **Client ID** and **Client Secret** from step 7.
+  </Step>
+
+  <Step title="Configure search scope">
+    Configure the search scope for the federated connector. The following configuration options are available:
+
+    **Channel Selection:**
+    - **Search All Channels**: Enable to search all accessible channels. When enabled, the Channels field is disabled.
+    - **Channels**: Specify which channels to search (only used if Search All Channels is disabled). Supports glob patterns (e.g., `general`, `eng*`, `product-*`).
+    - **Exclude Channels**: Exclude specific channels from search. Supports glob patterns (e.g., `secure-channel`, `private-*`, `customer*`).
+
+    **Message Types:**
+    - **Include Direct Messages**: Include user direct messages (1:1 DMs) in search results.
+    - **Include Group Direct Messages**: Include multi-person direct messages (MPIMs) in search results.
+    - **Include Private Channels**: Include private channels in search results (user must have access).
+
+    **Search Parameters:**
+    - **Default Search Days**: Maximum number of days to search back (default: 30). Increasing this value may degrade answer quality.
+    - **Max Messages Per Query**: Maximum number of messages to retrieve per search query (default: 25). Higher values provide more context but may be slower.
+
+    Once configured, click the **Create/Update** button.
 
     <img className="rounded-image" src="/assets/admin/connectors/slack/SlackFederatedConnectorSetting.png" alt="Onyx Slack Federated connector settings showing client credentials" />
   </Step>
@@ -108,8 +130,12 @@ settings:
 </Steps>
 
 <Info>
-  Every user will need to go through this OAuth flow. All DMs, public channels,
-  and private channels that the user has access to will be searchable.
+  Every user will need to go through this OAuth flow. The searchable content depends on:
+  1. The connector configuration settings (channels, DMs, private channels, etc.)
+  2. The OAuth scopes granted during setup
+  3. The user's individual access permissions in Slack
+
+  If certain OAuth scopes are missing (e.g., `mpim:read`, `im:history`), the connector will gracefully continue searching other available channel types and log warnings about the missing scopes.
 </Info>
 
 <img className="rounded-image" src="/assets/admin/connectors/slack/FederatedSlackOauth.png" alt="Slack OAuth consent screen for Onyx Search Assistant" />
