@@ -6,7 +6,9 @@ icon: "lock"
 
 ## Overview
 
-Onyx provides fine-grained access control for LLM providers, allowing administrators to control **who** can use specific models and **which agents** can use them. This enables better cost control, governance, and enforcement of model usage policies.
+Onyx provides fine-grained access control for LLM providers,
+allowing administrators to control **who** can use specific models and **which agents** can use them.
+This enables better cost control, governance, and enforcement of model usage policies.
 
 <img className="rounded-image" src="/assets/admin/advanced_configs/llm_access_controls.png" alt="LLM Access Controls" />
 
@@ -76,13 +78,26 @@ Onyx provides fine-grained access control for LLM providers, allowing administra
 
 To configure access controls for an LLM provider:
 
-1. Navigate to **Admin Panel → Configuration → LLM**
-2. Click on an existing provider or create a new one
-3. In the **Access Controls** section nested under Advanced options:
-   - Toggle **Make Public** off to enable restrictions
-   - Select user groups in **User Group Access** (optional)
-   - Select agents in **Agent Whitelist** (optional)
-4. Save your changes
+<Steps>
+  <Step title="Navigate to LLM Configuration">
+    Navigate to **Admin Panel → Configuration → LLM**
+  </Step>
+
+  <Step title="Select Provider">
+    Click on an existing provider or create a new one
+  </Step>
+
+  <Step title="Configure Access Controls">
+    In the **Access Controls** section nested under Advanced options:
+    - Toggle **Make Public** off to enable restrictions
+    - Select user groups in **User Group Access** (optional)
+    - Select agents in **Agent Whitelist** (optional)
+  </Step>
+
+  <Step title="Save Changes">
+    Save your changes
+  </Step>
+</Steps>
 
 <Note>
   When a provider is set to public, the access control selectors are automatically disabled.
@@ -107,4 +122,5 @@ Users will only see LLM providers they have access to:
 - In the chat UI model selector
 - When using the API to list available providers
 
-Restricted providers are completely hidden from users who don't have access, preventing confusion and unauthorized usage attempts.
+Restricted providers are completely hidden from users who don't have access,
+preventing confusion and unauthorized usage attempts.
