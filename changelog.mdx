@@ -6,6 +6,83 @@ mode: "wide"
 rss: true
 ---
 
+<Update label="v2.4.0" description="November 18th, 2025" tags={["New Features", "Performance", "Bug Fixes"]}>
+
+  ## v2.4.0
+
+  Welcome to the Onyx v2.4.0 release notes!
+  This release introduces powerful new controls for the Slack Federated connector, fine-grained LLM access controls,
+  and various other improvements and bug fixes across the platform.
+
+  Thank you to our contributors for helping make this release possible!
+
+  ## Key Improvements
+
+  ### Advanced Filtering for Slack Federated Connector
+
+  The Slack Federated connector now supports comprehensive, entity-based filtering,
+  which gives you precise control over the data available to Onyx users.
+
+  Configure filters such as:
+  - Channel selection with glob patterns
+  - Message type filtering (1:1 DMs, group DMs, private channels)
+  - Date extraction
+
+  <img className="rounded-image" src="/assets/changelog/v2.4/showcase_slack_federated_scoped_search.png" alt="Slack connector filtering options"/>
+
+  ### LLM Access Controls
+
+  Admins can now configure fine-grained access controls for LLM providers.
+
+  This feature allows you to restrict which users or groups can access specific language models.
+  Use access controls to better manage and monitor generative AI usage across your organization.
+
+  Read more about LLM access controls in our [admin docs](/admin/advanced_configs/llm_access_controls/).
+
+  <img className="rounded-image" src="/assets/changelog/v2.4/showcase_llm_rbac.png" alt="LLM access controls"/>
+
+  ### Disable Default Assistant
+
+  You now have the flexibility to disable the default assistant in your Onyx workspace.
+  This is particularly useful for organizations with many custom assistants, each with specific configurations, tools,
+  and instructions.
+
+  To disable the Default Assistant,
+  go to the **Workspace Settings** page and toggle the **Disable Default Assistant** switch.
+
+  ## Contributor Highlights
+
+  - [@sktbcpraha](https://github.com/sktbcpraha) fixed an issue where the Default Assistant was overriding legacy custom agent prompts!
+  - [@alex000kim](https://github.com/alex000kim) fixed a tricky issue with special characters in the Teams connector!
+
+  ## Additional Improvements
+
+  ### Share Chat Button
+
+  We've made sharing chats easier with a dedicated share button in the top right of the chat interface.
+
+  ### Paginated Document Search API
+
+  The document search API now supports pagination for more efficient retrieval of large result sets.
+
+  ### Projects Token Limits
+
+  We've increased the per-file token limit for Projects to 100k. Additionally,
+  you can configure this limit with the `SKIP_USERFILE_THRESHOLD` environment variable.
+
+  ### SSO User Provisioning Improvements
+
+  Previously, inviting users to join your Onyx workspace would prevent non-invited users from automatically registering.
+
+  Now, SSO-enabled workspaces can have both invited users and JIT-provisioned users!
+
+  ---
+
+  Our [GitHub Releases](https://github.com/onyx-dot-app/onyx/releases)
+  page has the full list of changes and bug fixes for each release.
+
+</Update>
+
 <Update label="v2.3.0" description="November 11th, 2025" tags={["Performance", "New Features", "Bug Fixes"]}>
 
   ## v2.3.0
@@ -24,7 +101,7 @@ rss: true
   programmatic way to interact with Onyx via the API,
   making it easier to integrate Onyx into your workflows and automation tools.
 
-  <img className="rounded-image" src="/assets/changelog/v2.3.0/showcase_personal_access_tokens.png" alt="Personal Access Tokens"/>
+  <img className="rounded-image" src="/assets/changelog/v2.3/showcase_personal_access_tokens.png" alt="Personal Access Tokens"/>
 
   ### Massive Frontend Performance Improvements
 
@@ -36,7 +113,7 @@ rss: true
   making interactions feel instant and smooth throughout the application.
   - First content load is also much faster with optimizations in data loading.
 
-  <img className="rounded-image" src="/assets/changelog/v2.3.0/showcase_frontend_performance.png" alt="Frontend Performance Improvements"/>
+  <img className="rounded-image" src="/assets/changelog/v2.3/showcase_frontend_performance.png" alt="Frontend Performance Improvements"/>
 
   ### Expanded LLM Provider Support
 
@@ -103,7 +180,7 @@ rss: true
   First-time users now experience a streamlined onboarding journey that guides them through personalizing their
   workspace, setting up their LLMs, and configuring actions like Web Search and Image Generation.
 
-  <img className="rounded-image" src="/assets/changelog/v2.2.0/showcase_onboarding.png" alt="Onboarding flow"/>
+  <img className="rounded-image" src="/assets/changelog/v2.2/showcase_onboarding.png" alt="Onboarding flow"/>
 
   ### UI Performance and Polish
 
@@ -112,7 +189,7 @@ rss: true
   For example,
   the Assistants navigation page has been completely refreshed with a cleaner layout and improved organization.
 
-  <img className="rounded-image" src="/assets/changelog/v2.2.0/showcase_agents_navigation.png" alt="Agents navigation"/>
+  <img className="rounded-image" src="/assets/changelog/v2.2/showcase_agents_navigation.png" alt="Agents navigation"/>
 
   ### LLM Usage Observability
 
@@ -123,7 +200,7 @@ rss: true
   Read more about setting up observability in our [deployment configuration
   docs](/deployment/configuration/configuration/).
 
-  <img className="rounded-image" src="/assets/changelog/v2.2.0/showcase_braintrust.png" alt="LLM usage observability"/>
+  <img className="rounded-image" src="/assets/changelog/v2.2/showcase_braintrust.png" alt="LLM usage observability"/>
 
   ## Contributor Highlights
 
@@ -166,14 +243,14 @@ rss: true
 
   Admins can configure OAuth Actions via the OpenAPI tab of the Actions page.
 
-  <img className="rounded-image" src="/assets/changelog/v2.1.0/showcase_oauth_actions.png" alt="OAuth Actions configuration"/>
+  <img className="rounded-image" src="/assets/changelog/v2.1/showcase_oauth_actions.png" alt="OAuth Actions configuration"/>
 
   ### Improved Code Rendering
 
   Code blocks in chat now render much more consistently across all languages with proper syntax highlighting.
   This makes it easier to read and understand code generated by Onyx.
 
-  <img className="rounded-image" src="/assets/changelog/v2.1.0/showcase_code_rendering.png" alt="Code rendering"/>
+  <img className="rounded-image" src="/assets/changelog/v2.1/showcase_code_rendering.png" alt="Code rendering"/>
 
   ### Fully Open Source (FOSS) Repository
 
@@ -199,7 +276,7 @@ rss: true
 
   Your name and role are used to better personalize your conversations in Onyx.
 
-  <img className="rounded-image" src="/assets/changelog/v2.1.0/showcase_personal_name.png" alt="Name personalization"/>
+  <img className="rounded-image" src="/assets/changelog/v2.1/showcase_personal_name.png" alt="Name personalization"/>
 
   ### Theme Preference Persistence
 
@@ -264,7 +341,7 @@ rss: true
   You can think of this as a folder where you upload files, define project-level instructions,
   and work from the same starting point in every chat session.
 
-  <img className="rounded-image" src="/assets/changelog/v2.0.0/showcase_projects.png" alt="Projects feature screenshot"/>
+  <img className="rounded-image" src="/assets/changelog/v2.0/showcase_projects.png" alt="Projects feature screenshot"/>
 
   Projects is a direct replacement of My Documents, but with added functionality.
   Files you've previously uploaded to My Documents should appear in Projects.
@@ -296,9 +373,9 @@ rss: true
   admins can now add information about their organization in the **Workspace Settings** tab of the Admin Panel.
   Additionally, users can add information about themselves in the User Settings page.
 
-  <img className="rounded-image" src="/assets/changelog/v2.0.0/basic_org_info.png" alt="Organization info configuration"/>
+  <img className="rounded-image" src="/assets/changelog/v2.0/basic_org_info.png" alt="Organization info configuration"/>
 
-  <img className="rounded-image" src="/assets/changelog/v2.0.0/basic_personalization.png" alt="User info configuration"/>
+  <img className="rounded-image" src="/assets/changelog/v2.0/basic_personalization.png" alt="User info configuration"/>
 
   This is a simple, but powerful first step in our organization and personalization features. In the future,
   Onyx will extract and save this information automatically.
@@ -309,7 +386,7 @@ rss: true
 
   Read more about Actions in our [admin docs](/admin/actions/overview/).
 
-  <img className="rounded-image" src="/assets/changelog/v2.0.0/showcase_curator_actions.png" alt="Curators can now create actions"/>
+  <img className="rounded-image" src="/assets/changelog/v2.0/showcase_curator_actions.png" alt="Curators can now create actions"/>
 
   ### Search filters
 
@@ -318,9 +395,9 @@ rss: true
   To filter the sources of your search results, click the Actions configuration button in the Input Bar,
   select the arrow next to Internal Search, and select the sources you want to include.
 
-  <img className="rounded-image" src="/assets/changelog/v2.0.0/showcase_filters_1.png" alt="Actions in the Chat Input Bar"/>
+  <img className="rounded-image" src="/assets/changelog/v2.0/showcase_filters_1.png" alt="Actions in the Chat Input Bar"/>
 
-  <img className="rounded-image" src="/assets/changelog/v2.0.0/showcase_filters_2.png" alt="Source filters"/>
+  <img className="rounded-image" src="/assets/changelog/v2.0/showcase_filters_2.png" alt="Source filters"/>
 
   ### Language and Embedding Models
 
