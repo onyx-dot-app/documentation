@@ -134,26 +134,26 @@ If you plan to enable permission sync, you'll need additional permissions:
   <Step title="Microsoft Graph application permissions">
     Click **Microsoft Graph**, then click on **Application permissions**.
     Add the following additional Microsoft Graph permissions:
-    - **Directory.Read.All** - Read directory data
-    - **Group.Read.All** - Read all groups
-    - **GroupMember.Read.All** - Read all group memberships
-    - **Member.Read.Hidden** - Read all hidden memberships
-    - **User.Read.All** - Read all users' full profiles
+    - **Directory.Read.All** - Used to query the overall organizational directory structure, including how users, groups, organizational units, and other directory objects relate to each other.
+    - **Group.Read.All** - Used to read detailed group-specific information such as group properties, settings, types (Security vs Microsoft 365), and configurations.
+    - **GroupMember.Read.All** - Used to retrieve and expand all members within a group, including nested group memberships. This allows Onyx to determine which users have access to SharePoint content through group membership.
+    - **Member.Read.Hidden** - Allows reading memberships of security groups that are marked as "hidden" in Entra ID.
+    - **User.Read.All** - Used to retrieve complete user profiles and enumerate all users in the directory.
     Click **Add permissions**.
   </Step>
 
   <Step title="Microsoft Graph delegated permission">
     Click **Add a permission** again in API Permissions tab. Click **Microsoft Graph**,
     then click on **Delegated permissions**. Add the following delegated permission:
-    - **User.Read** - Sign in and read user profile
+    - **User.Read** - This delegated permission allows the application to sign in on behalf of a user and read the signed-in user's basic profile information. Unlike application permissions which work without a user context, this delegated permission is required when the app needs to establish an authenticated identity context for making API calls to Microsoft Graph and SharePoint. It provides the minimum required access for user authentication flows.
     Click **Add permissions**.
   </Step>
 
   <Step title="SharePoint application permissions">
     Click **Add a permission** again in API Permissions tab. Click **SharePoint**,
     then click on **Application permissions**. Add the following SharePoint permissions:
-    - **Sites.FullControl.All** - Have full control of all site collections
-    - **User.Read.All** - Read user profiles
+    - **Sites.FullControl.All** - Despite the name, Onyx only uses this to retrieve details about permissions. No write operations are performed.
+    - **User.Read.All** - Used to list all users within the directory for permission mapping.
     Click **Add permissions**.
   </Step>
 
