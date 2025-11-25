@@ -1,0 +1,39 @@
+---
+title: "Ollama"
+description: "Using Ollama with Onyx"
+icon: "robot"
+---
+
+import NavigateToAiModels from "/snippets/navigate-to-ai-models.mdx";
+import StandardAiModelConfigs from "/snippets/standard-ai-model-configs.mdx";
+
+## Guide
+
+Configure Onyx to use models served by [Ollama](https://ollama.com/).
+
+<Steps>
+  <Step title="Setup Ollama and Deploy your Models">
+    The [Ollama GitHub repository](https://github.com/ollama/ollama?tab=readme-ov-file#ollama)
+    details how to download and deploy models on Ollama.
+
+    If self-hosting, Ollama is configured to run on port `11434` by default.
+
+    You can also configure Onyx to use [Ollama's managed cloud service](https://ollama.com/cloud).
+  </Step>
+
+  <NavigateToAiModels />
+
+  <Step title="Configure Ollama">
+    Select **Ollama** from the available providers.
+
+    Give your provider a **Display Name**.
+
+    If using Ollama Cloud, enter your Ollama Cloud **API Key**.
+
+    Click the **Fetch Available Models** button to see the models available in your Ollama instance.
+
+    <img className="rounded-image" src="/assets/admins/ai_models/ollama_config.png" alt="Ollama Provider Configuration" />
+  </Step>
+
+  <StandardAiModelConfigs />
+</Steps>

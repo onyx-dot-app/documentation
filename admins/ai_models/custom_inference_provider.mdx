@@ -1,0 +1,68 @@
+---
+title: "Custom Inference Provider"
+description: "Custom Inference Provider"
+icon: "server"
+---
+
+import NavigateToAiModels from "/snippets/navigate-to-ai-models.mdx";
+
+## Guide
+
+If you want to use an AI provider that is not supported by Onyx, you can configure a custom inference provider.
+
+<Tip>
+  Your custom provider must provide OpenAI-compatible API endpoints.
+</Tip>
+
+<Steps>
+  <Step title="Setup your Custom Inference Provider">
+    Determine your provider's API base URL.
+    It should look something like `https://yourprovider.com/v1` or `http://localhost:12345/v1`.
+  </Step>
+
+  <NavigateToAiModels />
+
+  <Step title="Configure Custom Inference Provider">
+    Select **Add Custom LLM Provider** from the available providers.
+
+    Give your provider a **Display Name**.
+
+    Enter your model's **Provider Name**.
+
+    <Note>
+      The **Provider Name** must match Litellm's [list of supported providers](https://docs.litellm.ai/docs/providers).
+    </Note>
+
+    In this example, the provider name is `vertex_ai`.
+
+    <img className="rounded-image" src="/assets/admins/ai_models/litellm_provider_name.png" alt="Custom inference provider name" />
+  </Step>
+
+  <Step title="Configure Optional Fields and Models">
+    Enter the provider's **Base URL**.
+
+    Fill out the other optional fields if applicable.
+
+    In the **Model Configurations** section, enter each of the models you want to use with your provider.
+  </Step>
+
+  <Step title="Configure Default and Fast Models">
+    The **Default Model** is selected automatically for new custom Agents and Chat sessions.
+
+    Designating a **Fast Model** is optional.
+    This **Fast Model** is used behind the scenes for quick operations such as evaluating the type of message,
+    generating different queries (query expansion), and naming the chat session.
+
+    <Tip>
+      If you select a Fast Model,
+      make sure it is a relatively quick and cost-effective model like GPT-4.1-mini or Claude 3.7 Sonnet.
+    </Tip>
+  </Step>
+
+  <Step title="Designate Provider Access">
+    Lastly, you may select whether or not the provider is public to all users in Onyx.
+
+    If set to private,
+    the provider's models will be available to Admins and User Groups you explicitly assign the provider to.
+  </Step>
+</Steps>

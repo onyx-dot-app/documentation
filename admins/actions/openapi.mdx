@@ -1,0 +1,126 @@
+---
+title: "OpenAPI"
+description: "Configure custom actions in Onyx with OpenAPI"
+icon: "code"
+---
+
+You can create custom actions in Onyx using an OpenAPI 3.0 or 3.1 specification of an API.
+This enables your AI agents to interact with REST APIs and trigger workflows in external systems.
+
+<Tip>
+  Include only the endpoints you want your agent to call in the OpenAPI spec.
+  Remove any endpoints you don't want the agent to access.
+</Tip>
+
+## Setting Up Custom Actions
+
+<Steps>
+  <Step title="Navigate to the Actions Dashboard">
+    Click your user profile icon and select **Admin Panel**, then click the **Actions** tab in the sidebar.
+
+    <img className="rounded-image" src="/assets/admins/actions/actions_overview.png" alt="Actions dashboard in Onyx Admin Panel" />
+  </Step>
+
+  <Step title="Create an OpenAPI Action">
+    Click **From OpenAPI schema** under **Create Action**.
+
+    Paste your OpenAPI spec and configure any required authentication or headers.
+
+    <img className="rounded-image" src="/assets/admins/actions/openapi.png" alt="Creating an OpenAPI action in Onyx Admin Panel" />
+  </Step>
+</Steps>
+
+## Example
+
+The below OpenAPI spec can be used to create a Custom Action for fetching and creating Agents in Onyx.
+
+```json OpenAPI expandable
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Agents API",
+    "version": "1.0.0",
+    "description": "Minimal OpenAPI schema for creating and fetching agents in Onyx"
+  },
+  "servers": [
+    {
+      "url": "https://cloud.onyx.app/api"
+    }
+  ],
+  "paths": {
+    "/persona": {
+      "post": {
+        "summary": "Create Agent (Persona)",
+        "operationId": "create_persona",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": { "type": "string" },
+                  "description": { "type": "string" },
+                  "document_set_ids": {
+                    "type": "array",
+                    "items": { "type": "integer" }
+                  },
+                  "num_chunks": { "type": "number" },
+                  "is_public": { "type": "boolean" },
+                  "recency_bias": {
+                    "type": "string",
+                    "enum": ["favor_recent", "base_decay", "no_decay", "auto"]
+                  },
+                  "llm_filter_extraction": { "type": "boolean" },
+                  "llm_relevance_filter": { "type": "boolean" },
+                  "tool_ids": {
+                    "type": "array",
+                    "items": { "type": "integer" }
+                  },
+                  "system_prompt": { "type": "string" },
+                  "task_prompt": { "type": "string" },
+                  "datetime_aware": { "type": "boolean" }
+                },
+                "required": [
+                  "name",
+                  "description",
+                  "document_set_ids",
+                  "num_chunks",
+                  "is_public",
+                  "recency_bias",
+                  "llm_filter_extraction",
+                  "llm_relevance_filter",
+                  "tool_ids",
+                  "system_prompt",
+                  "task_prompt",
+                  "datetime_aware"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Created" }
+        }
+      }
+    },
+    "/persona/{persona_id}": {
+      "get": {
+        "summary": "Get Agent (Persona) By ID",
+        "operationId": "get_persona",
+        "parameters": [
+          {
+            "name": "persona_id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer" }
+          }
+        ],
+        "responses": {
+          "200": { "description": "OK" }
+        }
+      }
+    }
+  }
+}
+```

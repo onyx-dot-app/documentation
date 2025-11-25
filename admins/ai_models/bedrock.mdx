@@ -1,0 +1,107 @@
+---
+title: "Amazon Bedrock"
+description: "Configure Amazon Bedrock models for use with Onyx"
+icon: "aws"
+---
+
+import NavigateToAiModels from "/snippets/navigate-to-ai-models.mdx";
+import StandardAiModelConfigs from "/snippets/standard-ai-model-configs.mdx";
+
+## Authentication Methods
+
+Onyx supports 3 authentication methods for Amazon Bedrock:
+
+<AccordionGroup>
+  <Accordion title="IAM (Recommended for AWS environments)">
+    - Automatically authorizes Onyx through an IAM Role attached to the environment
+    - Use when running on AWS infrastructure (EC2, EKS)
+
+    To connect Onyx to Bedrock using IAM, create an IAM Role with the `AmazonBedrockLimitedAccess` policy. Optionally,
+    you can attach the `AmazonBedrockFullAccess` and `AmazonBedrockMarketplaceAccess` policies.
+
+    Once created, attach the IAM Role to the environment that Onyx is running in. For example,
+    attach the IAM Role to your Onyx EC2 instance or EKS service account.
+  </Accordion>
+
+  <Accordion title="Access Key (for non-AWS environments)">
+    - Manual credential management using an Access Key ID and Secret Access Key
+    - Recommended for accessing Bedrock from non-AWS environments
+
+    To connect Onyx to Bedrock using Access Keys, create an IAM User with the `AmazonBedrockLimitedAccess` policy.
+    Optionally, you can attach the `AmazonBedrockFullAccess` and `AmazonBedrockMarketplaceAccess` policies.
+
+    Once created, go to your IAM User's **Security Credentials** tab.
+    Create a new **Access Key** and copy the **Access Key ID** and **Secret Access Key**.
+
+    Provide these credentials to Onyx using one of the following methods:
+    - Add them to your Onyx `.env` file as `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`
+    - Add them to your AWS CLI config in `~/.aws/credentials`
+    - Enter them directly in the Onyx Bedrock configuration UI
+  </Accordion>
+
+  <Accordion title="Bedrock API Key (for non-AWS environments)">
+    - New method to access Bedrock generated from the AWS Bedrock Console
+    - Recommended for accessing Bedrock from non-AWS environments
+
+    To connect Onyx to Bedrock using an API Key, navigate to the Bedrock console,
+    select **API keys** and create a **Long-term API key**.
+    AWS will automatically create a new IAM User with the `AmazonBedrockLimitedAccess` policy.
+
+    Submit your API key to Onyx through the Onyx Bedrock configuration UI.
+  </Accordion>
+</AccordionGroup>
+
+<Note>
+  When using an IAM role, the role credentials must be attached to the Onyx environment.
+  When using Access Keys or a Bedrock API Key, you must provide the credentials in the Onyx LLM configuration UI.
+</Note>
+
+## Guide
+
+<Steps>
+  <Step title="Set up your Authentication Method">
+    Determine if IAM, Access Keys, or a Bedrock API Key is the best authentication method for your environment.
+
+    Click the above accordions to learn more about each method and how to set them up.
+  </Step>
+
+  <Step title="Enable Desired Models">
+    Navigate to the **Model Catalog** and decide the models you want to use with Onyx.
+
+    If you don't already have access to your desired models, you can request access through the Bedrock Console.
+
+    <Note>
+      If your models are not enabled, you will not be able to see them in Onyx!
+      Ensure your models are available before continuing.
+    </Note>
+  </Step>
+
+  <NavigateToAiModels />
+
+  <Step title="Configure Bedrock Provider">
+    Select **AWS Bedrock** from the available providers.
+
+    Give your provider a **Display Name**.
+
+    Determine your AWS region and enter it in **AWS Region Name**.
+
+    <Tip>
+      Certain models are only available in specific regions or through cross-region inference profiles.
+      Onyx will automatically determine what is available in your region.
+    </Tip>
+
+    Depending on your authentication method,
+    fill out `AWS Access Key ID` and `AWS Secret Access Key` or `AWS Bedrock API Key`.
+
+    Once your region and credentials are set, click the **Fetch Available Model for Region** button.
+
+    <Warning>
+      If you do not click the **Fetch Available Model for Region** button,
+      you will see all Bedrock models listed even if you cannot use them.
+    </Warning>
+
+    <img className="rounded-image" src="/assets/admins/ai_models/bedrock_config.png" alt="Bedrock Provider Configuration" />
+  </Step>
+
+  <StandardAiModelConfigs />
+</Steps>

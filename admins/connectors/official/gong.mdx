@@ -1,0 +1,58 @@
+---
+title: "Gong"
+description: "Access call transcripts from Gong"
+---
+
+## How it works
+
+The Gong connector pulls in the transcripts of calls recorded via Gong. The Gong connector indexes the call title,
+call description, and contents of the actual transcript.
+
+New transcripts are pulled every **10** minutes.
+
+## Setting up
+
+### Authorization
+
+<Steps>
+  <Step title="Obtain API credentials">
+    Get an **Access Key** and **Access Key Secret** to pull in Gong transcripts
+  </Step>
+
+  <Step title="Open Company Settings">
+    As an admin, go to `Company Settings` on the right of the top options bar
+
+    <img className="rounded-image" src="/assets/admins/connectors/gong/GongMenu.png" alt="Gong menu" />
+  </Step>
+
+  <Step title="Open Ecosystem → API">
+    Next, find the **Ecosystem** block and select `API`
+
+    <img className="rounded-image" src="/assets/admins/connectors/gong/GongEcosystem.png" alt="Gong ecosystem" />
+  </Step>
+
+  <Step title="Generate API keys">
+    Once there, select `API KEYS` (it's right next to `INTEGRATIONS`).
+    Click `GET API KEY` and note down the ACCESS KEY and ACCESS KEY SECRET
+  </Step>
+</Steps>
+
+### Indexing
+
+<Steps>
+  <Step title="Open Gong connector">
+    In the Onyx UI, navigate to the Admin Panel and select the **Gong** Connector
+  </Step>
+
+  <Step title="Provide credentials">
+    Provide the Access Key and Access Key Secret from the previous step
+  </Step>
+
+  <Step title="Choose workspaces">
+    Add a list of workspaces to index or leave empty to index all workspaces
+  </Step>
+
+  <Step title="Start indexing">
+    Click `Connect` to begin indexing Gong call transcripts
+  </Step>
+</Steps>
