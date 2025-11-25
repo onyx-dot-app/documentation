@@ -6,6 +6,92 @@ mode: "wide"
 rss: true
 ---
 
+<Update label="v2.5.0" description="November 25th, 2025" tags={["New Features", "Bug Fixes", "Performance"]}>
+
+  ## v2.5.0
+
+  Welcome to the Onyx v2.5.0 release notes! This update introduces code interpreter, new web search providers,
+  and various improvements across the platform.
+
+  Thank you to our contributors for helping make this release possible!
+
+  ## Key Improvements
+
+  ### Web Search Enhancements
+
+  We've officially released support for new web search providers including Google PSE, Serper, Firecrawl,
+  and a built-in Onyx web scraper!
+
+  Configure these providers via the Web Search page in the Admin Panel and give your agents the ability to search the
+  internet for real-time information and current events.
+
+  New APIs for web search are also available for developers. Detailed setup and API reference docs will be coming soon!
+
+  <img className="rounded-image" src="/assets/changelog/v2.5/showcase_additional_web_search.png" alt="Web Search Providers"/>
+
+  ### Claude Opus 4.5 Support
+
+  Onyx now supports Anthropic's newest, most powerful model: Claude Opus 4.5!
+  Configure Claude Opus 4.5 via the LLM Configuration page in the Admin Panel.
+
+  <img className="rounded-image" src="/assets/changelog/v2.5/showcase_45_opus.png" alt="Claude Opus 4.5"/>
+
+  ### Code Interpreter (Alpha)
+
+  Onyx's Code Interpreter is now in alpha!
+  This feature allows your agents to write and execute Python code to solve complex problems, perform data analysis,
+  and generate visualizations.
+
+  <img className="rounded-image" src="/assets/changelog/v2.5/showcase_code_interpreter_alpha.png" alt="Code Interpreter Alpha"/>
+
+  We built the code interpreter, in-house, to work with any model provider and LLM. It's a secure,
+  FastAPI-based service that uses isolated Docker containers with strict resource limits, timeout controls,
+  and file handling capabilities for security and reliability.
+
+  Code interpreter is designed to work with any AI agent, not just Onyx. It's available as a standalone,
+  fully open source project: [onyx-dot-app/code-interpreter](https://github.com/onyx-dot-app/code-interpreter?utm_source=docs&utm_content=changelog).
+  While Python is the first supported language, all common languages will be supported in the future.
+
+  <Note>
+    Code Interpreter is not yet ready for production use. If you enable the feature flag, you may encounter bugs!
+    Please bear with us as we continue to develop and improve this feature.
+  </Note>
+
+  ## Contributor Highlights
+
+  - [@sashank-rayapudi-ai](https://github.com/sashank-rayapudi-ai) added a new connector for Testrail!
+  - [@mristau-alltrails](https://github.com/mristau-alltrails) identified and resolved a vulnerability in our nginx configuration!
+
+  ## Additional Improvements
+
+  ### Default Assistant MCP Tools
+
+  The Default Assistant can now have MCP tools attached,
+  making it easier to extend the default experience with custom actions and integrations.
+
+  ### Document Search APIs in Community Edition
+
+  Document search APIs have been moved from Enterprise Edition to Community Edition,
+  giving all users access to programmatic document search capabilities.
+
+  ### Auto-Pause for Failing Connectors
+
+  Connectors that continuously fail will now automatically be paused.
+  This helps relieve pressure on the background, API, and indexing containers,
+  improving overall system stability.
+
+  ### Kubernetes Affinity and Tolerations
+
+  We've added affinity and tolerations to the Helm deployment templates,
+  allowing you to customize where pods are scheduled in your Kubernetes environment.
+
+  ---
+
+  Our [GitHub Releases](https://github.com/onyx-dot-app/onyx/releases?utm_source=docs&utm_content=changelog)
+  page has the full list of changes and bug fixes for each release.
+
+</Update>
+
 <Update label="v2.4.0" description="November 18th, 2025" tags={["New Features", "Performance", "Bug Fixes"]}>
 
   ## v2.4.0
@@ -86,7 +172,7 @@ rss: true
 
   ---
 
-  Our [GitHub Releases](https://github.com/onyx-dot-app/onyx/releases)
+  Our [GitHub Releases](https://github.com/onyx-dot-app/onyx/releases?utm_source=docs&utm_content=changelog)
   page has the full list of changes and bug fixes for each release.
 
 </Update>
@@ -156,7 +242,7 @@ rss: true
 
   ---
 
-  Our [GitHub Releases](https://github.com/onyx-dot-app/onyx/releases)
+  Our [GitHub Releases](https://github.com/onyx-dot-app/onyx/releases?utm_source=docs&utm_content=changelog)
   page has the full list of changes and bug fixes for each release.
 
 </Update>
@@ -228,7 +314,7 @@ rss: true
 
   ---
 
-  Our [GitHub Releases](https://github.com/onyx-dot-app/onyx/releases)
+  Our [GitHub Releases](https://github.com/onyx-dot-app/onyx/releases?utm_source=docs&utm_content=changelog)
   page has the full list of changes and bug fixes for each release.
 
 </Update>
@@ -270,7 +356,8 @@ rss: true
   We will continue to develop on the main `onyx-dot-app/onyx` repository,
   and `onyx-foss` will automatically sync new changes.
 
-  Checkout the repo at this link: [onyx-foss](https://github.com/onyx-dot-app/onyx-foss).
+  Checkout the repo at this link:
+  [onyx-foss](https://github.com/onyx-dot-app/onyx-foss?utm_source=docs&utm_content=changelog).
 
   ## Contributor Highlights
 
@@ -298,7 +385,7 @@ rss: true
 
   ---
 
-  Our [GitHub Releases](https://github.com/onyx-dot-app/onyx/releases)
+  Our [GitHub Releases](https://github.com/onyx-dot-app/onyx/releases?utm_source=docs&utm_content=changelog)
   page has the full list of changes and bug fixes for each release.
 
 </Update>
@@ -464,7 +551,7 @@ rss: true
 
   ---
 
-  Our [GitHub Releases](https://github.com/onyx-dot-app/onyx/releases)
+  Our [GitHub Releases](https://github.com/onyx-dot-app/onyx/releases?utm_source=docs&utm_content=changelog)
   page has the full list of changes and bug fixes for each release.
 
 </Update>
@@ -473,7 +560,7 @@ rss: true
 
   ## Release Notes Prior to v2.0.0
 
-  Check out our [GitHub Releases](https://github.com/onyx-dot-app/onyx/releases)
+  Check out our [GitHub Releases](https://github.com/onyx-dot-app/onyx/releases?utm_source=docs&utm_content=changelog)
   page for details regarding prior changes.
 
   Additionally, our Discord `#announcements` channel is a great place to stay up to date with Onyx updates.
