@@ -397,8 +397,6 @@
                   "developers/api_reference/group_management/list_groups",
                   "developers/api_reference/group_management/create_group",
                   "developers/api_reference/group_management/update_group",
-                  "developers/api_reference/group_management/add_user_to_group",
-                  "developers/api_reference/group_management/delete_user_from_group",
                   "developers/api_reference/group_management/delete_group"
                 ]
               },
