@@ -1190,9 +1190,10 @@ def main() -> int:
                     has_icon = any(re.match(r"^icon:\s*", ln.strip()) for ln in header.splitlines())
                     rel = os.path.relpath(p, root).replace("\\", "/")
                     is_exempt = (
-                        rel.startswith("admin/connectors/")
+                        rel.startswith("admins/connectors/")
                         or rel.startswith("snippets/")
                         or rel.startswith("developers/api_reference/")
+                        or rel.startswith("deployment/cloud/aws")
                     )
                     if not has_icon and not is_exempt:
                         frontmatter_icon_warnings.append(p)

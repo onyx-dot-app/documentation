@@ -1,0 +1,53 @@
+---
+title: "Overview"
+description: "Curator Overview"
+icon: "eye"
+---
+
+Curators are a special user type available in Onyx Enterprise Edition. Curators can manage Users and User Groups,
+create and manage Connectors, and publish Agents to the User Group(s) they are assigned to.
+
+## Assigning Curators
+
+<Steps>
+  <Step title="Create a User Group">
+    Navigate to the Admin Panel and select the **Groups** tab in the sidebar.
+
+    Select **Create New Group**, assign your users, and add any Connectors that you want to share with the group.
+
+    <img className="rounded-image" src="/assets/admins/user_management/group_overview.png" alt="User Groups management page" />
+  </Step>
+
+  <Step title="Assign Curator Role">
+    Once your Group is created and synced, click into the Group.
+
+    In the Role drop-down, select **Curator** for the users you want to promote.
+
+    <img className="rounded-image" src="/assets/admins/user_management/group_management.png" alt="Group management page" />
+  </Step>
+</Steps>
+
+### Global Curators
+
+Instead of manually assigning Curators within each Group, you can assign Global Curators from the Users management page.
+
+Global Curators are automatically set as Curators for every Group they belong to.
+
+<img className="rounded-image" src="/assets/admins/user_management/user_management.png" alt="Users management page" />
+
+## When to use Curators
+
+Use Curators when you need to delegate administrative tasks to specific teams or departments while maintaining access
+control boundaries.
+
+### Common Scenarios
+
+- Multi-team organizations requiring isolated data access (Sales, Marketing, Engineering)
+- Departmental autonomy for connector and agent management
+- Reducing admin workload while preventing workspace-wide permission escalation
+
+### Benefits
+
+- Group-scoped administrative privileges instead of global admin access
+- Self-service connector and agent management for designated teams
+- Maintains data isolation between different organizational units

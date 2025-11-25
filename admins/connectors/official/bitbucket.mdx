@@ -1,0 +1,115 @@
+---
+title: "Bitbucket Connector"
+description: "Access knowledge from your Bitbucket Repositories (Cloud only)"
+---
+
+## How it works
+
+The Bitbucket Connector indexes all Pull Requests from a specified Bitbucket Cloud repository, project,
+or entire workspace.
+
+- It indexes `OPEN`, `MERGED`, and `DECLINED` pull requests, including their titles and descriptions.
+- It also captures key metadata such as the author, reviewers, current state, creation/update timestamps,
+  and a direct link back to the original pull request in Bitbucket.
+
+## Setting up
+
+<Note>
+  This connector can only be used with Bitbucket Cloud.
+</Note>
+
+### Authorization
+
+The Bitbucket Connector uses an API Token for authentication.
+
+To create an API token:
+
+<Steps>
+  <Step title="Log in to Bitbucket">
+    Log in to your Bitbucket account.
+  </Step>
+
+  <Step title="Open account settings">
+    Select the **Settings** cog in the upper-right corner of the top navigation bar.
+  </Step>
+
+  <Step title="Access Atlassian account settings">
+    Under **Personal settings**, select **Atlassian account settings**.
+  </Step>
+
+  <Step title="Go to the Security tab">
+    Select the **Security** tab on the top navigation bar.
+  </Step>
+
+  <Step title="Manage API tokens">
+    Select **Create and manage API tokens**.
+  </Step>
+
+  <Step title="Create a scoped token">
+    Select **Create API token with scopes**.
+  </Step>
+
+  <Step title="Name the token">
+    Give the API token a name and an expiry date,
+    usually related to the application that will use the token and select **Next**.
+  </Step>
+
+  <Step title="Choose Bitbucket">
+    Select **Bitbucket** as the app and select **Next**.
+  </Step>
+
+  <Step title="Select scopes">
+    Select the scopes (permissions) the API token needs and select **Next**.
+
+    - **Projects**: `read:project:bitbucket`
+    - **Repositories**: `read:repository:bitbucket`
+    - **Pull Requests**: `read:pullrequest:bitbucket`
+  </Step>
+
+  <Step title="Create the token">
+    Review your token and select the *Create token* button. The page will display the new API token.
+  </Step>
+
+  <Step title="Save the token">
+    Copy the generated API token and either record or paste it into the application you want to give access.
+  </Step>
+</Steps>
+
+<Note>
+  The token is only displayed once and can't be retrieved later.
+</Note>
+
+For the most up-to-date instructions,
+refer to the [official Bitbucket
+documentation](https://support.atlassian.com/bitbucket-cloud/docs/create-an-api-token/).
+
+### Indexing
+
+<Steps>
+  <Step title="Open the Bitbucket connector">
+    Navigate to the Admin Dashboard and select the **Bitbucket** Connector.
+  </Step>
+
+  <Step title="Create credentials">
+    Click **Create new credentials** and provide the following:
+
+    - **Name**: A descriptive name for your credentials.
+    - **Email**: The email address for your Bitbucket account.
+    - **API token**: The API token you created in the previous step.
+
+    ![BitbucketConnector](/assets/admins/connectors/bitbucket/BitbucketConnectorCred.png)
+  </Step>
+
+  <Step title="Configure connector details">
+    Fill in the connector details:
+
+    - **Name**: A descriptive name for the connector.
+    - **Workspace name**: The `WORKSPACE_NAME` from your Bitbucket URL (`https://bitbucket.org/{WORKSPACE_NAME}/...`).
+    - **Repositories or Projects (Optional)**: A comma-separated list of repository slugs or project keys to index.
+
+    ![BitbucketConnector](/assets/admins/connectors/bitbucket/BitbucketConnector.png)
+  </Step>
+</Steps>
+
+This configuration will index all pull requests from the specified repositories.
+You can also configure it to index all repositories within a project or an entire workspace.

@@ -1,0 +1,34 @@
+---
+title: "OpenRouter"
+description: "Using OpenRouter with Onyx"
+icon: "robot"
+---
+
+import NavigateToAiModels from "/snippets/navigate-to-ai-models.mdx";
+import StandardAiModelConfigs from "/snippets/standard-ai-model-configs.mdx";
+
+## Guide
+
+Configure Onyx to use models served by [OpenRouter](https://openrouter.ai/).
+
+<Steps>
+  <Step title="Setup OpenRouter and Deploy your Models">
+    Log in to your OpenRouter account and create a new API key.
+  </Step>
+
+  <NavigateToAiModels />
+
+  <Step title="Configure OpenRouter">
+    Select **OpenRouter** from the available providers.
+
+    Give your provider a **Display Name**.
+
+    Enter your OpenRouter **API Key**.
+
+    Click the **Fetch Available Models** button to see the models currently available on OpenRouter.
+
+    <img className="rounded-image" src="/assets/admins/ai_models/openrouter_config.png" alt="OpenRouter Provider Configuration" />
+  </Step>
+
+  <StandardAiModelConfigs />
+</Steps>

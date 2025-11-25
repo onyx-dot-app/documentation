@@ -1,0 +1,61 @@
+---
+title: "Fireflies"
+description: "Access meeting transcripts from Fireflies"
+---
+
+## How it works
+
+The Fireflies connector indexes meetings from your Fireflies account.
+
+## Setting up
+
+### Authorization
+
+<Steps>
+  <Step title="Log in to Fireflies">
+    Login to Fireflies (user must be authorized).
+  </Step>
+
+  <Step title="Open settings">
+    Click on your profile avatar and select **Settings**, or click on **Settings** in the sidebar.
+
+    ![FirefliesConnectorAuth](/assets/admins/connectors/fireflies/fireflies1.png)
+  </Step>
+
+  <Step title="Open Developer Settings">
+    Select **Developer Settings**.
+
+    <img className="rounded-image" src="/assets/admins/connectors/fireflies/fireflies2.png" alt="FirefliesConnectorAuth" />
+  </Step>
+
+  <Step title="Copy API Key">
+    Copy the **API Key**.
+
+    <img className="rounded-image" src="/assets/admins/connectors/fireflies/fireflies3.png" alt="FirefliesConnectorAuth" />
+  </Step>
+
+  <Step title="Authorize connector">
+    Use the API key to authorize your Fireflies connector in Onyx.
+  </Step>
+</Steps>
+
+### Indexing
+
+<Steps>
+  <Step title="Open Fireflies connector">
+    Navigate to the Admin Panel. In the sidebar select **Add Connector** and click on the **Fireflies** tile.
+  </Step>
+
+  <Step title="Create credentials">
+    Select **Create New** and then provide your **API Key**, along with an optional name for your credentials.
+    Click **Create**; your credentials will be saved and automatically selected.
+  </Step>
+
+  <Step title="Configure connector">
+    Click **Continue**, choose a name, determine the document access, and assign groups for your connector.
+  </Step>
+
+  <Step title="Create connector">
+    Click **Create Connector**. Onyx will automatically begin indexing your meetings.
+  </Step>
+</Steps>

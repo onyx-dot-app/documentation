@@ -1,0 +1,113 @@
+---
+title: "Slack Indexed"
+description: "Set up the Slack Indexed connector"
+---
+
+## June 2025 Update
+
+Slack has changed their Terms of Service, preventing users from indexing their data (source:
+[Slack](https://slack.com/terms-of-service/api)).
+
+This change prevents new Onyx users from indexing their messages. However,
+existing users can continue to use the legacy Slack connector until Fall 2025.
+
+For those new to Onyx, check out our Federated Slack Connector to get around these restrictions.
+
+If you have any questions, please reach out to [founders@onyx.app](mailto:founders@onyx.app)
+or send us a message in
+[Slack](https://join.slack.com/t/onyx-dot-app/shared_invite/zt-34lu4m7xg-TsKGO6h8PDvR5W27zTdyhA).
+
+## How it works
+
+The Slack connector indexes all public channels for a given workspace.
+
+- Upcoming: Support for private channels by tagging/adding the Onyx Slack Bot to private channels.
+
+## Setting up
+
+### Authorization
+
+<Steps>
+  <Step title="Admin requirement">
+    **Note: You must be an admin of the Slack workspace to set up the connector**
+  </Step>
+
+  <Step title="Navigate to Slack Apps">
+    Navigate and sign in to [https://api.slack.com/apps](https://api.slack.com/apps).
+  </Step>
+
+  <Step title="Create new Slack app">
+    Create a new Slack app:
+    - Click the **Create New App** button in the top right.
+    - Select **From an app manifest** option.
+    - Select the relevant workspace from the dropdown and click **Next**.
+
+    <img className="rounded-image" src="/assets/admins/connectors/slack/SlackApp.png" alt="Slack app creation flow with manifest option selected" />
+  </Step>
+
+  <Step title="Configure app manifest">
+    Select the "YAML" tab, paste the following manifest into the text box, and click **Next**:
+
+```
+display_information:
+  name: OnyxConnector
+  description: ReadOnly Connector for indexing Onyx
+features:
+  bot_user:
+    display_name: OnyxConnector
+    always_online: false
+oauth_config:
+  scopes:
+    bot:
+      - channels:history
+      - channels:read
+      - groups:history
+      - groups:read
+      - channels:join
+      - im:history
+      - users:read
+      - users:read.email
+      - usergroups:read
+settings:
+  org_deploy_enabled: false
+  socket_mode_enabled: false
+  token_rotation_enabled: false
+```
+  </Step>
+
+  <Step title="Create the app">
+    Click the **Create** button.
+  </Step>
+
+  <Step title="Navigate to OAuth permissions">
+    In the app page, navigate to the **OAuth & Permissions** tab under the **Features** header.
+  </Step>
+
+  <Step title="Copy OAuth token">
+    Copy the **Bot User OAuth Token**, this will be used to access Slack.
+  </Step>
+</Steps>
+
+<img className="rounded-image" src="/assets/admins/connectors/slack/SlackBotToken.png" alt="Slack OAuth & Permissions page showing Bot User OAuth Token" />
+
+### Indexing
+
+<Steps>
+  <Step title="Navigate to connector">
+    Navigate to the Connector Dashboard and select the **Slack** Connector.
+  </Step>
+
+  <Step title="Provide credentials">
+    Place the **Bot User OAuth Token** under **Step 1 Provide Credentials**
+
+    <img className="rounded-image" src="/assets/admins/connectors/slack/SlackConnectorSetting.png" alt="Onyx Slack connector settings showing Bot User OAuth Token input" />
+  </Step>
+
+  <Step title="Set workspace ID and connect">
+    Set the **Workspace ID** (see below) and click **Connect**.
+  </Step>
+</Steps>
+
+<img className="rounded-image" src="/assets/admins/connectors/slack/SlackId.png" alt="Locating the Slack workspace ID in the app configuration" />
+
+**Note:** The first indexing pulls all of the public channels and takes longer than future updates.

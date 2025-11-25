@@ -124,110 +124,110 @@
           {
             "group": "Getting Started",
             "pages": [
-              "admin/overview",
-              "admin/getting_started/slack_bot_setup",
-              "admin/getting_started/enterprise_edition"
+              "admins/overview",
+              "admins/getting_started/slack_bot_setup",
+              "admins/getting_started/enterprise_edition"
             ]
           },
           {
             "group": "AI Models",
             "pages": [
-              "admin/ai_models/overview",
-              "admin/ai_models/openai",
-              "admin/ai_models/ollama",
-              "admin/ai_models/azure_openai",
-              "admin/ai_models/anthropic",
-              "admin/ai_models/bedrock",
-              "admin/ai_models/google_ai",
-              "admin/ai_models/openrouter",
-              "admin/ai_models/custom_inference_provider"
+              "admins/ai_models/overview",
+              "admins/ai_models/openai",
+              "admins/ai_models/ollama",
+              "admins/ai_models/azure_openai",
+              "admins/ai_models/anthropic",
+              "admins/ai_models/bedrock",
+              "admins/ai_models/google_ai",
+              "admins/ai_models/openrouter",
+              "admins/ai_models/custom_inference_provider"
             ]
           },
           {
             "group": "Connectors",
             "pages": [
-              "admin/connectors/overview",
+              "admins/connectors/overview",
               {
                 "group": "Supported Connectors",
                 "icon": "plug",
                 "pages": [
-                  "admin/connectors/official/airtable",
-                  "admin/connectors/official/asana",
-                  "admin/connectors/official/bitbucket",
-                  "admin/connectors/official/bookstack",
-                  "admin/connectors/official/clickup",
-                  "admin/connectors/official/confluence",
-                  "admin/connectors/official/discord",
-                  "admin/connectors/official/discourse",
-                  "admin/connectors/official/document360",
-                  "admin/connectors/official/dropbox",
-                  "admin/connectors/official/egnyte",
-                  "admin/connectors/official/file",
-                  "admin/connectors/official/fireflies",
-                  "admin/connectors/official/freshdesk",
-                  "admin/connectors/official/gitbook",
-                  "admin/connectors/official/github",
-                  "admin/connectors/official/gitlab",
+                  "admins/connectors/official/airtable",
+                  "admins/connectors/official/asana",
+                  "admins/connectors/official/bitbucket",
+                  "admins/connectors/official/bookstack",
+                  "admins/connectors/official/clickup",
+                  "admins/connectors/official/confluence",
+                  "admins/connectors/official/discord",
+                  "admins/connectors/official/discourse",
+                  "admins/connectors/official/document360",
+                  "admins/connectors/official/dropbox",
+                  "admins/connectors/official/egnyte",
+                  "admins/connectors/official/file",
+                  "admins/connectors/official/fireflies",
+                  "admins/connectors/official/freshdesk",
+                  "admins/connectors/official/gitbook",
+                  "admins/connectors/official/github",
+                  "admins/connectors/official/gitlab",
                   {
                     "group": "Gmail",
                     "pages": [
-                      "admin/connectors/official/gmail/overview",
-                      "admin/connectors/official/gmail/oauth",
-                      "admin/connectors/official/gmail/service_account"
+                      "admins/connectors/official/gmail/overview",
+                      "admins/connectors/official/gmail/oauth",
+                      "admins/connectors/official/gmail/service_account"
                     ]
                   },
                   {
                     "group": "Google Drive",
                     "pages": [
-                      "admin/connectors/official/google_drive/overview",
-                      "admin/connectors/official/google_drive/oauth",
-                      "admin/connectors/official/google_drive/service_account"
+                      "admins/connectors/official/google_drive/overview",
+                      "admins/connectors/official/google_drive/oauth",
+                      "admins/connectors/official/google_drive/service_account"
                     ]
                   },
-                  "admin/connectors/official/google_sites",
-                  "admin/connectors/official/google_storage",
-                  "admin/connectors/official/gong",
-                  "admin/connectors/official/guru",
-                  "admin/connectors/official/highspot",
-                  "admin/connectors/official/hubspot",
-                  "admin/connectors/official/jira",
-                  "admin/connectors/official/linear",
-                  "admin/connectors/official/notion",
-                  "admin/connectors/official/oci_storage",
-                  "admin/connectors/official/productboard",
-                  "admin/connectors/official/r2",
-                  "admin/connectors/official/requesttracker",
-                  "admin/connectors/official/salesforce",
+                  "admins/connectors/official/google_sites",
+                  "admins/connectors/official/google_storage",
+                  "admins/connectors/official/gong",
+                  "admins/connectors/official/guru",
+                  "admins/connectors/official/highspot",
+                  "admins/connectors/official/hubspot",
+                  "admins/connectors/official/jira",
+                  "admins/connectors/official/linear",
+                  "admins/connectors/official/notion",
+                  "admins/connectors/official/oci_storage",
+                  "admins/connectors/official/productboard",
+                  "admins/connectors/official/r2",
+                  "admins/connectors/official/requesttracker",
+                  "admins/connectors/official/salesforce",
                   {
                     "group": "S3",
                     "pages": [
-                      "admin/connectors/official/s3/overview",
-                      "admin/connectors/official/s3/access-keys",
-                      "admin/connectors/official/s3/assume-role",
-                      "admin/connectors/official/s3/iam-role"
+                      "admins/connectors/official/s3/overview",
+                      "admins/connectors/official/s3/access-keys",
+                      "admins/connectors/official/s3/assume-role",
+                      "admins/connectors/official/s3/iam-role"
                     ]
                   },
                   {
                     "group": "SharePoint",
                     "pages": [
-                      "admin/connectors/official/sharepoint/sharepoint",
-                      "admin/connectors/official/sharepoint/client-secret",
-                      "admin/connectors/official/sharepoint/certificate"
+                      "admins/connectors/official/sharepoint/sharepoint",
+                      "admins/connectors/official/sharepoint/client-secret",
+                      "admins/connectors/official/sharepoint/certificate"
                     ]
                   },
                   {
                     "group": "Slack",
                     "pages": [
-                      "admin/connectors/official/slack/slack_indexed",
-                      "admin/connectors/official/slack/slack_federated"
+                      "admins/connectors/official/slack/slack_indexed",
+                      "admins/connectors/official/slack/slack_federated"
                     ]
                   },
-                  "admin/connectors/official/slab",
-                  "admin/connectors/official/teams",
-                  "admin/connectors/official/web",
-                  "admin/connectors/official/xenforo",
-                  "admin/connectors/official/zendesk",
-                  "admin/connectors/official/zulip"
+                  "admins/connectors/official/slab",
+                  "admins/connectors/official/teams",
+                  "admins/connectors/official/web",
+                  "admins/connectors/official/xenforo",
+                  "admins/connectors/official/zendesk",
+                  "admins/connectors/official/zulip"
                 ]
               }
             ]
@@ -235,54 +235,54 @@
           {
             "group": "Actions",
             "pages": [
-              "admin/actions/overview",
-              "admin/actions/web_search",
-              "admin/actions/mcp",
-              "admin/actions/openapi"
+              "admins/actions/overview",
+              "admins/actions/web_search",
+              "admins/actions/mcp",
+              "admins/actions/openapi"
             ]
           },
           {
             "group": "Agents",
             "pages": [
-              "admin/agents/overview"
+              "admins/agents/overview"
             ]
           },
           {
             "group": "User Management",
             "pages": [
-              "admin/user_management/users_and_groups",
-              "admin/user_management/api_keys"
+              "admins/user_management/users_and_groups",
+              "admins/user_management/api_keys"
             ]
           },
           {
             "group": "Advanced Configs",
             "pages": [
-              "admin/advanced_configs/search_configs",
-              "admin/advanced_configs/doc_processing",
-              "admin/advanced_configs/rate_limits",
-              "admin/advanced_configs/workspace_settings",
-              "admin/advanced_configs/white_labeling",
-              "admin/advanced_configs/llm_access_controls"
+              "admins/advanced_configs/search_configs",
+              "admins/advanced_configs/doc_processing",
+              "admins/advanced_configs/rate_limits",
+              "admins/advanced_configs/workspace_settings",
+              "admins/advanced_configs/white_labeling",
+              "admins/advanced_configs/llm_access_controls"
             ]
           },
           {
             "group": "Analytics",
             "pages": [
-              "admin/analytics/overview"
+              "admins/analytics/overview"
             ]
           },
           {
             "group": "Curators",
             "pages": [
-              "admin/curators/overview",
-              "admin/curators/curator_responsibilities",
-              "admin/curators/curator_guide"
+              "admins/curators/overview",
+              "admins/curators/curator_responsibilities",
+              "admins/curators/curator_guide"
             ]
           },
           {
             "group": "Miscellaneous",
             "pages": [
-              "admin/miscellaneous/contact_us"
+              "admins/miscellaneous/contact_us"
             ]
           }
         ]
