@@ -60,8 +60,8 @@ checkout the section [here](./service_account).
   <Step title="Set up scopes">
     - Add the scope `.../auth/drive.readonly` for `Google Drive API`
     - Add the scope `.../auth/drive.metadata.readonly` for `Google Drive API`
-    - Add the scope `.../auth/admins.directory.user.readonly` for `Admin SDK API`
-    - Add the scope `.../auth/admins.directory.group.readonly` for `Admin SDK API`
+    - Add the scope `.../auth/admin.directory.user.readonly` for `Admin SDK API`
+    - Add the scope `.../auth/admin.directory.group.readonly` for `Admin SDK API`
 
     <img className="rounded-image" src="/assets/admins/connectors/google_drive/GoogleDriveScopes.png" alt="OAuth consent screen scopes for Google Drive, Admin SDK, Sheets, and Docs" width="60%" />
   </Step>
@@ -86,9 +86,9 @@ checkout the section [here](./service_account).
     - `https://<INTERNAL_DEPLOYMENT_URL>` if you have setup Onyx for production use
     - `https://cloud.onyx.app` if you are using the Onyx Cloud service
     - Add a **Authorized redirect URIs**
-    - `http://localhost:3000/admins/connectors/google-drive/auth/callback` if self-hosting
-    - `https://<INTERNAL_DEPLOYMENT_URL>/admins/connectors/google-drive/auth/callback` if you have setup Onyx for production use
-    - `https://cloud.onyx.app/admins/connectors/google-drive/auth/callback` if you are using the Onyx Cloud service
+    - `http://localhost:3000/admin/connectors/google-drive/auth/callback` if self-hosting
+    - `https://<INTERNAL_DEPLOYMENT_URL>/admin/connectors/google-drive/auth/callback` if you have setup Onyx for production use
+    - `https://cloud.onyx.app/admin/connectors/google-drive/auth/callback` if you are using the Onyx Cloud service
 
     <img className="rounded-image" src="/assets/admins/connectors/google_drive/DriveCredentials.png" alt="Configuring authorized origins and redirect URIs for Google Drive OAuth client" width="70%" />
 
