@@ -18,6 +18,7 @@
             "group": "Getting Started",
             "pages": [
               "welcome",
+              "overview/getting_started/quickstart",
               "overview/getting_started/use_cases",
               "overview/getting_started/faq"
             ]
@@ -542,5 +543,12 @@
     "metatags": {
       "keywords": "onyx ai, onyx, open source ai, enterprise ai, generative ai platform, enterprise search, ai assistant, knowledge management, danswer"
     }
-  }
+  },
+  "redirects": [
+    {
+      "source": "/overview/getting_started/quickstart",
+      "destination": "/deployment/getting_started/quickstart",
+      "permanent": true
+    }
+  ]
 }
