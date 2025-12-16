@@ -46,9 +46,10 @@ display_information:
   name: Onyx Search Assistant
   description: Search your Slack data as yourself
   background_color: "#4A154B"
+
 oauth_config:
   redirect_urls:
-    - <YOUR_ONYX_DOMAIN>/federated/oauth/callback
+    - https://<YOUR_ONYX_DOMAIN>/federated/oauth/callback
   scopes:
     user:
       - channels:read
@@ -61,10 +62,12 @@ oauth_config:
       - im:history
       - mpim:history
       - users:read
+
 settings:
   org_deploy_enabled: false
   socket_mode_enabled: false
   token_rotation_enabled: false
+
 ```
 
 <Info>
