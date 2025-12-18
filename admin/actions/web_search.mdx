@@ -4,9 +4,6 @@ description: "Enable web search capabilities for your AI Agents in Onyx"
 icon: "globe"
 ---
 
-<Warning>
-  This page is still a work in progress. A guide for all Web Search providers is coming soon!
-</Warning>
 
 The web search action allows your Agents to query the internet and retrieve real-time information from web sources.
 
@@ -16,30 +13,70 @@ The web search action allows your Agents to query the internet and retrieve real
 
 Web search is already active and ready to use on Onyx Cloud - no additional configuration required!
 
-### Exa AI
+### Self-Hosted
 
 <Steps>
-  <Step title="Create an Exa AI API key">
-    Navigate to the [Exa AI dashboard](https://exa.ai/dashboard) and create a new API key.
+  <Step title="Naivigate to the Web Search Dashboard">
+  Click your user profile icon and select Admin Panel and select the Web Search tab in the sidebar.
+  <img className="rounded-image" src="/assets/admin/actions/web_search/web_search.png" alt="Web Search dashboard in Onyx Admin Panel" />
   </Step>
 
-  <Step title="Set the EXA_API_KEY environment variable">
-    In your `.env` or `values.yaml` file, provide your Exa AI API key.
+   <Step title="Set up web search providers">
+   We currently support the following web search providers: Exa AI, Serper, and Google PSE. To set any ofthem up, follow the steps below.
+   <img className="rounded-image" src="/assets/admin/actions/web_search/search_engines.png" alt="Search Engine Providers" />
+   #### Exa AI
+   <Steps>
+    <Step title="Create an Exa AI API key">
+      Navigate to the [Exa AI dashboard](https://exa.ai/dashboard) and create a new API key.
+    </Step>
+    <Step title="Enter the API key">
+      Click on the key icon. Enter the API key in the **API Key** field.
+    </Step>
+  </Steps>
+  #### Serper
+  <Steps>
+    <Step title="Create a Serper API key">
+      Navigate to the [Serper dashboard](https://serper.dev/dashboard) and create a new API key.
+    </Step>
+    <Step title="Enter the API key">
+      Click on the key icon. Enter the API key in the **API Key** field.
+    </Step>
+  </Steps>
+  #### Google PSE
+  <Steps>
+    <Step title="Create a Google PSE API key">
+      Navigate to the [Google PSE dashboard](https://programmablesearchengine.google.com/controlpanel/all) and create a new API key and find
+      the Search Engine ID under the details of the API key..
+    </Step>
+    <Step title="Enter the API and Search Engine ID">
+      Click on the key icon. Enter the API key in the **API Key** field and the Search Engine ID in the **Search Engine ID** field.
+    </Step>
+  </Steps>
+  </Step>
+  <Step title="Set up Web Crawler">
+  We currently support the following web crawlers: Onyx web crawler and Firecrawl. To set them up, follow the steps below.
+  <img className="rounded-image" src="/assets/admin/actions/web_search/crawlers.png" alt="Crawler Providers" />
+  #### (Recommended) Onyx Web Crawler
+  It is already set up and ready to use, no additional setup required.
 
-    ```bash .env
-    EXA_API_KEY=your_exa_api_key_here
-    ```
-
-    ```bash values.yaml
-    configMap:
-      EXA_API_KEY: your_exa_api_key_here
-    ```
-
-    Once the EXA_API_KEY is set,
-    the web search action will automatically appear in your Actions dashboard and can be attached to your Agents.
-
-    <Note>
-      Make sure your Agent has the Web Search Action enabled!
-    </Note>
+  #### Firecrawl
+    <Steps>
+      <Step title="Create a Firecrawl API key">
+       Navigate to the [Firecrawl dashboard](https://firecrawl.com/dashboard) and create a new API key.
+      </Step>
+      <Step title="Enter the API key">
+        Click on the key icon.Enter the API key in the **API Key** field.
+      </Step>
+    </Steps>
+  </Step>
+  <Step title="Set Default Provider">
+    Make sure to **Set as Default** the provider if you have multiple providers set up for the search engine and web crawler.
+    You can change it at any time.
+    <img className="rounded-image" src="/assets/admin/actions/web_search/set_default_provider.png" alt="Set Default Provider" />
   </Step>
 </Steps>
+
+<Note>
+  Make sure your Agent has the Web Search Action enabled!
+</Note>
+
