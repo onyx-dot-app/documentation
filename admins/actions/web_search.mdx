@@ -4,7 +4,6 @@ description: "Enable web search capabilities for your AI Agents in Onyx"
 icon: "globe"
 ---
 
-
 The web search action allows your Agents to query the internet and retrieve real-time information from web sources.
 
 ## Web Search in Onyx
@@ -17,61 +16,92 @@ Web search is already active and ready to use on Onyx Cloud - no additional conf
 
 <Steps>
   <Step title="Naivigate to the Web Search Dashboard">
-  Click your user profile icon and select Admin Panel and select the Web Search tab in the sidebar.
-  <img className="rounded-image" src="/assets/admin/actions/web_search/web_search.png" alt="Web Search dashboard in Onyx Admin Panel" />
+    Click your user profile icon and select Admin Panel and select the Web Search tab in the sidebar.
+
+    <img className="rounded-image" src="/assets/admin/actions/web_search/web_search.png" alt="Web Search dashboard in Onyx Admin Panel" />
   </Step>
 
-   <Step title="Set up web search providers">
-   We currently support the following web search providers: Exa AI, Serper, and Google PSE. To set any ofthem up, follow the steps below.
-   <img className="rounded-image" src="/assets/admin/actions/web_search/search_engines.png" alt="Search Engine Providers" />
-   #### Exa AI
-   <Steps>
-    <Step title="Create an Exa AI API key">
-      Navigate to the [Exa AI dashboard](https://exa.ai/dashboard) and create a new API key.
+  <Step title="Set up web search providers">
+    We currently support the following web search providers: Exa AI, Serper, and Google PSE. To set any ofthem up,
+    follow the steps below.
+
+    <img className="rounded-image" src="/assets/admin/actions/web_search/search_engines.png" alt="Search Engine Providers" />
+
+    <Tabs tabs={["Exa AI", "Serper", "Google PSE"]}>
+      <Tab title="Exa AI">
+        <div style={{ marginTop: '-2rem' }}>
+          <Steps>
+          <Step title="Create an Exa AI API key">
+            Navigate to the [Exa AI dashboard](https://exa.ai/dashboard) and create a new API key.
+          </Step>
+
+          <Step title="Enter the API key">
+            Click on the key icon. Enter the API key in the **API Key** field.
+          </Step>
+        </Steps>
+        </div>
+      </Tab>
+        <Tab title="Serper">
+          <div style={{ marginTop: '-2rem' }}>
+          <Steps>
+            <Step title="Create a Serper API key">
+              Navigate to the [Serper dashboard](https://serper.dev/dashboard) and create a new API key.
+            </Step>
+
+            <Step title="Enter the API key">
+              Click on the key icon. Enter the API key in the **API Key** field.
+            </Step>
+          </Steps>
+          </div>
+        </Tab>
+        <Tab title="Google PSE">
+          <div style={{ marginTop: '-2rem' }}>
+          <Steps>
+            <Step title="Create a Google PSE API key">
+              Navigate to the [Google PSE dashboard](https://programmablesearchengine.google.com/controlpanel/all)
+              and create a new API key and find the Search Engine ID under the details of the API key.
+            </Step>
+
+            <Step title="Enter the API and Search Engine ID">
+              Click on the key icon.
+              Enter the API key in the **API Key** field and the Search Engine ID in the **Search Engine ID** field.
+            </Step>
+          </Steps>
+          </div>
+        </Tab>
+      </Tabs>
     </Step>
-    <Step title="Enter the API key">
-      Click on the key icon. Enter the API key in the **API Key** field.
-    </Step>
-  </Steps>
-  #### Serper
-  <Steps>
-    <Step title="Create a Serper API key">
-      Navigate to the [Serper dashboard](https://serper.dev/dashboard) and create a new API key.
-    </Step>
-    <Step title="Enter the API key">
-      Click on the key icon. Enter the API key in the **API Key** field.
-    </Step>
-  </Steps>
-  #### Google PSE
-  <Steps>
-    <Step title="Create a Google PSE API key">
-      Navigate to the [Google PSE dashboard](https://programmablesearchengine.google.com/controlpanel/all) and create a new API key and find
-      the Search Engine ID under the details of the API key..
-    </Step>
-    <Step title="Enter the API and Search Engine ID">
-      Click on the key icon. Enter the API key in the **API Key** field and the Search Engine ID in the **Search Engine ID** field.
-    </Step>
-  </Steps>
-  </Step>
+
   <Step title="Set up Web Crawler">
-  We currently support the following web crawlers: Onyx web crawler and Firecrawl. To set them up, follow the steps below.
-  <img className="rounded-image" src="/assets/admin/actions/web_search/crawlers.png" alt="Crawler Providers" />
-  #### (Recommended) Onyx Web Crawler
-  It is already set up and ready to use, no additional setup required.
+    We currently support the following web crawlers: Onyx web crawler and Firecrawl. To set them up,
+    follow the steps below.
 
-  #### Firecrawl
-    <Steps>
-      <Step title="Create a Firecrawl API key">
-       Navigate to the [Firecrawl dashboard](https://firecrawl.com/dashboard) and create a new API key.
-      </Step>
-      <Step title="Enter the API key">
-        Click on the key icon.Enter the API key in the **API Key** field.
-      </Step>
-    </Steps>
+    <img className="rounded-image" src="/assets/admin/actions/web_search/crawlers.png" alt="Crawler Providers" />
+
+    <Tabs tabs={["Onyx Web Crawler", "Firecrawl"]}>
+      <Tab title="Onyx Web Crawler">
+      **(Recommended)** It is already set up and ready to use, no additional setup required.
+      </Tab>
+      <Tab title="Firecrawl">
+        <div style={{ marginTop: '-2rem' }}>
+        <Steps>
+          <Step title="Create a Firecrawl API key">
+            Navigate to the [Firecrawl dashboard](https://firecrawl.com/dashboard) and create a new API key.
+          </Step>
+
+          <Step title="Enter the API key">
+            Click on the key icon. Enter the API key in the **API Key** field.
+          </Step>
+        </Steps>
+        </div>
+      </Tab>
+    </Tabs>
   </Step>
+
   <Step title="Set Default Provider">
-    Make sure to **Set as Default** the provider if you have multiple providers set up for the search engine and web crawler.
-    You can change it at any time.
+    Make sure to **Set as Default** the provider if you have multiple providers set up for the search engine and web
+    crawler. You can change it at any time.
+
     <img className="rounded-image" src="/assets/admin/actions/web_search/set_default_provider.png" alt="Set Default Provider" />
   </Step>
 </Steps>
@@ -79,4 +109,3 @@ Web search is already active and ready to use on Onyx Cloud - no additional conf
 <Note>
   Make sure your Agent has the Web Search Action enabled!
 </Note>
-
