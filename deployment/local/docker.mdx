@@ -22,7 +22,7 @@ import DeploymentNextSteps from "/snippets/deployment-next-steps.mdx"
 
   <Step title="Clone the Onyx repo">
     ```bash
-    git clone https://github.com/onyx-dot-app/onyx.git
+    git clone --depth 1 https://github.com/onyx-dot-app/onyx.git
     ```
   </Step>
 
@@ -40,18 +40,22 @@ import DeploymentNextSteps from "/snippets/deployment-next-steps.mdx"
     ```
 
     Alternatively, to build images from source:
+
     ```bash
     docker compose up -d --build --force-recreate
     ```
 
     <Warning>
-      If you've previously launched Onyx with the old `onyx-stack` service name, you'll need to add `-p onyx-stack` to your launch command. 
-      
+      If you've previously launched Onyx with the old `onyx-stack` service name,
+      you'll need to add `-p onyx-stack` to your launch command.
+
       For example: `docker compose up -p onyx-stack -d`.
     </Warning>
   </Step>
 </Steps>
 
-After the containers come up, the system needs to go through an initialization process after which you can access Onyx at [localhost:3000](localhost:3000).
+After the containers come up,
+the system needs to go through an initialization process after which you can access Onyx at
+[localhost:3000](localhost:3000).
 
 <DeploymentNextSteps />

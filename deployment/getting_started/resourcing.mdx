@@ -12,7 +12,10 @@ import ResourcingOverview from "/snippets/resourcing-overview.mdx"
 
 You can control the resources available to Docker in the **Resources** section of the Docker Desktop settings menu.
 
-<Info>Often old, unused Docker images take up sizeable disk space. To clean up unused images, run `docker system prune --all`.</Info>
+<Info>
+  Often old, unused Docker images take up sizeable disk space. To clean up unused images,
+  run `docker system prune --all`.
+</Info>
 
 ## Cloud Providers (AWS, GCP, etc.)
 
@@ -54,7 +57,7 @@ See the [Onyx Helm chart](https://github.com/onyx-dot-app/onyx/blob/main/deploym
 | `nginx` | 250m (1/4) | 128 Mi |
 
 <Info>
-  The `vespa` recommendation is the bare minimum for a production deployment. With 50GB of documents,
+  The `vespa` recommendation is the minimum for a production deployment. With 50GB of documents,
   we recommend at least 10 CPU, 20Gi Memory.
 </Info>
 
@@ -105,7 +108,7 @@ Total available node size: ~20 CPU and ~60GB of Memory.
 ## Next Steps
 
 <CardGroup cols={2}>
-  <Card title="Guide: Deploy Onyx Locally" icon="microchip" href="/deployment/cloud/local_deployments/docker">
+  <Card title="Guide: Deploy Onyx Locally" icon="microchip" href="/deployment/local/docker">
     Deploy Onyx locally with Docker.
   </Card>
 

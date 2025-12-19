@@ -8,10 +8,12 @@ import ResourcingOverview from "/snippets/resourcing-overview.mdx"
 import DeploymentNextSteps from "/snippets/deployment-next-steps.mdx"
 
 ## Installation Script
-The install script requires `Bash` to run so it works out of the box for Linux and MacOS.
-To run Onyx on Windows, install Bash or refer to the [Docker](/deployment/local/docker) deployment.
+
+The install script requires `Bash` to run so it works out of the box for Linux and MacOS. To run Onyx on Windows,
+install Bash or refer to the [Docker](/deployment/local/docker) deployment.
 
 To deploy with a single command:
+
 ```
 curl -fsSL https://raw.githubusercontent.com/onyx-dot-app/onyx/main/deployment/docker_compose/install.sh > install.sh && chmod +x install.sh && ./install.sh
 ```
@@ -20,6 +22,7 @@ Alternatively, download and run the installation script below.
 <Card title="Download Install Script" icon="download" href="https://raw.githubusercontent.com/onyx-dot-app/onyx/main/deployment/docker_compose/install.sh">
   Click here to download the install.sh script from GitHub.
 </Card>
+
 After downloading the script, run it with `bash ./install.sh`
 
 The script will do the following:
@@ -29,7 +32,8 @@ The script will do the following:
 - Pull the Onyx containers and start them in Docker
 
 <Info>
-The script will create a directory called **onyx_data** and there will also be a README in there with additional information.
+  The script will create a directory called **onyx_data** and there will also be a README in there with additional
+  information.
 </Info>
 
 <ResourcingOverview />

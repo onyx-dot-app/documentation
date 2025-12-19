@@ -1,0 +1,35 @@
+---
+title: "Airtable"
+description: "Access tables from Airtable"
+---
+
+## How it works
+
+The Airtable connector pulls in tables from Airtable. The Airtable connector indexes the table name, table type,
+and contents of the table.
+
+Table updates are pulled in every 24 hours by default.
+
+## Setup
+
+### Get your Airtable PAT
+
+To get your token, follow the instructions [here](https://airtable.com/developers/web/guides/personal-access-tokens).
+
+### Indexing
+
+<Steps>
+  <Step title="Open Airtable connector">
+    Navigate to the Admin Panel and select the **Airtable** Connector
+  </Step>
+
+  <Step title="Create credential">
+    Create a new credential and paste your Airtable PAT.
+  </Step>
+
+  <Step title="Enter base and table IDs">
+    Fill out the form with the base ID and table ID. You can find these in the URL when viewing the table in Airtable.
+    For example, if the URL is `https://airtable.com/appCXJqDFS4gea8tn/tblRxFQsTlBBZdRY1/viwVUEJjWPd8XYjh8`,
+    then the base ID is `appCXJqDFS4gea8tn` and the table ID is `tblRxFQsTlBBZdRY1`.
+  </Step>
+</Steps>

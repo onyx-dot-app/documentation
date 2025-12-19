@@ -7,7 +7,7 @@ icon: "sliders"
 <Warning>
   This page is for configuring your **deployment**.
 
-  To find out more about configuring the Onyx app, checkout our [Admin docs](/admin/overview)!
+  To find out more about configuring the Onyx app, checkout our [Admin docs](/admins/overview)!
 </Warning>
 
 ## Configuring Onyx Deployments
@@ -72,11 +72,11 @@ These are controlled via environment variables or through your deployment files.
   </Card>
 
   <Card title="OIDC" icon="shield-check" href="/deployment/authentication/oidc">
-    Enterprise Edition SSO
+    Single-sign on with OpenID Connect (OIDC)
   </Card>
 
   <Card title="SAML" icon="shield-check" href="/deployment/authentication/saml">
-    Enterprise Edition SSO
+    Single-sign on with Security Assertion Markup Language (SAML)
   </Card>
 </CardGroup>
 
@@ -108,6 +108,27 @@ When self-hosting Onyx, you can configure the level of detail in the logs. This 
 If using Docker, set `LOG_LEVEL` to `debug` in each container of your Docker Compose file.
 
 If using Kubernetes, set `LOG_LEVEL` to `debug` in your `values.yaml` file.
+
+### Observability
+
+You can connect your observability tools to Onyx. We support the following providers:
+
+**Braintrust (recommended)**
+
+Braintrust is what we use internally for the cloud version of Onyx. Set the following environment variables:
+
+```bash
+BRAINTRUST_PROJECT="Your project name"
+BRAINTRUST_API_KEY="sk-..."
+```
+
+**Langfuse**
+
+```bash
+LANGFUSE_SECRET_KEY="sk-..."
+LANGFUSE_PUBLIC_KEY="pk-..."
+LANGFUSE_BASE_URL="https://cloud.langfuse.com" # Or "https://us.cloud.langfuse.com"
+```
 
 ### Multilingual Configuration
 
@@ -181,7 +202,7 @@ LANGUAGE_CHAT_NAMING_HINT="The name of the conversation must be in the same lang
     Disabled be default because many auth providers have very short expiry times.
   </Accordion>
 
-  <Accordion title="OAuth & OIDCConfiguration">
+  <Accordion title="OAuth & OIDC Configuration">
     `OAUTH_CLIENT_ID`: For both Google OAuth and OIDC.
 
     `OAUTH_CLIENT_SECRET`: For both Google OAuth and OIDC.
@@ -283,7 +304,7 @@ LANGUAGE_CHAT_NAMING_HINT="The name of the conversation must be in the same lang
 
     `VESPA_TENANT_PORT`: Vespa tenant port
 
-    `VESPA_NUM_ATTEMPTS_ON_STARTUP`: Startup connection attempts
+    `NUM_RETRIES_ON_STARTUP`: Startup connection attempts
 
     `VESPA_CLOUD_URL`: Vespa Cloud URL
 
@@ -296,8 +317,6 @@ LANGUAGE_CHAT_NAMING_HINT="The name of the conversation must be in the same lang
     `MANAGED_VESPA`: Use managed Vespa (Vespa Cloud)
 
     `VESPA_REQUEST_TIMEOUT`: Request timeout in seconds
-
-    `VESPA_SYNC_MAX_TASKS`: Maximum sync tasks
 
     `VESPA_LANGUAGE_OVERRIDE`: Force Vespa language (en, de, etc.)
   </Accordion>
@@ -342,14 +361,6 @@ LANGUAGE_CHAT_NAMING_HINT="The name of the conversation must be in the same lang
 
     `ENABLE_CONTEXTUAL_RAG`: Enable contextual retrieval
 
-    `DEFAULT_CONTEXTUAL_RAG_LLM_NAME`: Default LLM for contextual RAG
-
-    `DEFAULT_CONTEXTUAL_RAG_LLM_PROVIDER`: Default LLM provider for contextual RAG
-
-    `MINI_CHUNK_SIZE`: Size of mini-chunks in tokens
-
-    `LARGE_CHUNK_RATIO`: Ratio of regular chunks per large chunk
-
     `SKIP_METADATA_IN_CHUNK`: Skip metadata in chunks
 
     `CLEANUP_INDEXING_JOBS_TIMEOUT`: Cleanup timeout in hours
@@ -369,8 +380,6 @@ LANGUAGE_CHAT_NAMING_HINT="The name of the conversation must be in the same lang
     `USE_DOCUMENT_SUMMARY`: Use document summary for contextual RAG
 
     `USE_CHUNK_SUMMARY`: Use chunk summary for contextual RAG
-
-    `MAX_TOKENS_FOR_FULL_INCLUSION`: Maximum tokens for full inclusion
   </Accordion>
 
   <Accordion title="Connector Configuration">
@@ -383,13 +392,9 @@ LANGUAGE_CHAT_NAMING_HINT="The name of the conversation must be in the same lang
 
     `ENABLED_CONNECTOR_TYPES`: Comma-separated list of enabled connector types
 
-    `POLL_CONNECTOR_OFFSET`: Minutes overlap between poll windows
-
     `LEAVE_CONNECTOR_ACTIVE_ON_INITIALIZATION_FAILURE`: Keep connector active on init failure
 
     `CURATORS_CANNOT_VIEW_OR_EDIT_NON_OWNED_ASSISTANTS`: Restrict curator access
-
-    `ENABLE_EXPENSIVE_EXPERT_CALLS`: Enable expensive expert user calls
 
     **Web Connector**
 
@@ -489,7 +494,7 @@ LANGUAGE_CHAT_NAMING_HINT="The name of the conversation must be in the same lang
   <Accordion title="Logging Configuration">
     `LOG_ALL_MODEL_INTERACTIONS`: Log all LiteLLM model interactions
 
-    `LOG_DANSWER_MODEL_INTERACTIONS`: Log Onyx model interactions
+    `LOG_ONYX_MODEL_INTERACTIONS`: Log Onyx model interactions
 
     `LOG_INDIVIDUAL_MODEL_TOKENS`: Log individual model tokens
 
@@ -552,6 +557,8 @@ LANGUAGE_CHAT_NAMING_HINT="The name of the conversation must be in the same lang
     `LLM_MODEL_UPDATE_API_URL`: LLM model update API endpoint
 
     `LITELLM_CUSTOM_ERROR_MESSAGE_MAPPINGS`: Custom error message mappings (JSON)
+
+    `GEN_AI_MODEL_FALLBACK_MAX_TOKENS`: Maximum token limit for generative AI model fallback
   </Accordion>
 
   <Accordion title="Federated Search Configuration">
@@ -591,8 +598,6 @@ LANGUAGE_CHAT_NAMING_HINT="The name of the conversation must be in the same lang
     `AWS_REGION_NAME`: AWS region name
 
     `TARGET_AVAILABLE_TENANTS`: Number of pre-provisioned tenants to maintain
-
-    `JOB_TIMEOUT`: Job timeout in seconds
 
     `SYSTEM_RECURSION_LIMIT`: System recursion limit
 

@@ -143,7 +143,7 @@ def ensure_blank_lines_around_blocks(lines: List[str]) -> List[str]:
                         k -= 1
                     if k >= 0:
                         prev = out[k].lstrip()
-                        if prev.startswith("<Step") or prev.startswith("<AccordionItem") or prev.startswith("<Card"):
+                        if prev.startswith("<Step") or prev.startswith("<AccordionItem") or prev.startswith("<Card") or prev.startswith("<Tab"):
                             suppress_before = True
                 if len(out) > 0 and out[-1].strip() != "" and not suppress_before:
                     out.append("")
@@ -428,7 +428,7 @@ def normalize_steps_indentation(lines: List[str]) -> List[str]:
                         break
                 suppress_before = False
                 if prev_non_empty is not None:
-                    if prev_non_empty.startswith("<Step") or prev_non_empty.startswith("<AccordionItem") or prev_non_empty.startswith("<Card"):
+                    if prev_non_empty.startswith("<Step") or prev_non_empty.startswith("<AccordionItem") or prev_non_empty.startswith("<Card") or prev_non_empty.startswith("<Tab"):
                         suppress_before = True
                 if not suppress_before:
                     out.append("")
@@ -783,8 +783,11 @@ def format_content(text: str, width: int) -> str:
             # If the value became double-quoted at both ends (e.g., ""Text""), collapse to single quotes
             if value_norm.startswith('""') and value_norm.endswith('""') and len(value_norm) >= 4:
                 value_norm = value_norm[1:-1]
+            # Check if value is a boolean (true/false) - don't quote these
+            if value_norm.lower() in ('true', 'false'):
+                value_quoted = value_norm.lower()
             # Keep existing quotes if already quoted; otherwise quote with double quotes
-            if (len(value_norm) >= 2 and ((value_norm.startswith('"') and value_norm.endswith('"')) or (value_norm.startswith("'") and value_norm.endswith("'")))):
+            elif (len(value_norm) >= 2 and ((value_norm.startswith('"') and value_norm.endswith('"')) or (value_norm.startswith("'") and value_norm.endswith("'")))):
                 value_quoted = value_norm
             else:
                 value_quoted = '"' + value_norm.replace('"', '\\"') + '"'
@@ -986,7 +989,7 @@ def format_content(text: str, width: int) -> str:
     def remove_blank_after_group_opens(ls: List[str]) -> List[str]:
         out_ls: List[str] = []
         in_code_f = False
-        opens = ("<Steps", "<AccordionGroup", "<Accordion", "<Columns", "<CardGroup", "<CodeGroup")
+        opens = ("<Steps", "<AccordionGroup", "<Accordion", "<Columns", "<CardGroup", "<CodeGroup", "<Tab")
         i2 = 0
         n2 = len(ls)
         while i2 < n2:
@@ -1187,9 +1190,10 @@ def main() -> int:
                     has_icon = any(re.match(r"^icon:\s*", ln.strip()) for ln in header.splitlines())
                     rel = os.path.relpath(p, root).replace("\\", "/")
                     is_exempt = (
-                        rel.startswith("admin/connectors/")
+                        rel.startswith("admins/connectors/")
                         or rel.startswith("snippets/")
                         or rel.startswith("developers/api_reference/")
+                        or rel.startswith("deployment/cloud/aws")
                     )
                     if not has_icon and not is_exempt:
                         frontmatter_icon_warnings.append(p)

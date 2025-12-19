@@ -1,0 +1,57 @@
+---
+title: "Overview"
+description: "Actions in Onyx"
+icon: "play"
+---
+
+import BuiltInActionsTable from '/snippets/built-in-actions-table.mdx';
+
+Actions extend your agents beyond basic conversation by enabling them to perform specific tasks and interact with
+external systems.
+
+## Actions Dashboard
+
+Actions can be viewed and configured in the **Actions** tab of the Admin Panel sidebar.
+
+<img className="rounded-image" src="/assets/admins/actions/actions_overview.png" alt="Actions dashboard in Onyx Admin Panel" />
+
+### Built-in Actions
+
+Onyx comes with 4 built-in Actions:
+
+<BuiltInActionsTable />
+
+### Custom Actions
+
+You can configure custom Actions in Onyx using Model Context Protocol (MCP) or an OpenAPI specification.
+
+Click the cards below to learn more about each option:
+
+<Columns cols={2}>
+  <Card title="MCP" icon="handshake" href="/admins/actions/mcp">
+    Connect Onyx to a Model Context Protocol (MCP) server
+  </Card>
+
+  <Card title="OpenAPI Custom Action" icon="globe" href="/admins/actions/openapi">
+    Create custom actions in Onyx with an OpenAPI specification
+  </Card>
+</Columns>
+
+## Using Actions
+
+To use an Action, you must configure an Agent to have access to it.
+Onyx's built-in Actions are available in the general Chat experience.
+
+Once your Agent has access to the action, it will automatically determine when and which Actions to invoke.
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Configure Web Search" icon="globe" href="/admins/actions/web_search">
+    Configure the Web Search Action to use your preferred search provider
+  </Card>
+
+  <Card title="Configure an Agent to use your Custom Action" icon="robot" href="/admins/agents/overview">
+    Configure an Agent to use your Custom Action
+  </Card>
+</CardGroup>

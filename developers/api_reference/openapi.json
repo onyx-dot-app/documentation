@@ -2288,7 +2288,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/AdminSearchRequest"
+                "$ref": "#/components/schemas/adminSearchRequest"
               }
             }
           }
@@ -2299,7 +2299,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/AdminSearchResponse"
+                  "$ref": "#/components/schemas/adminSearchResponse"
                 }
               }
             }

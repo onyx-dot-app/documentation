@@ -6,6 +6,11 @@
 
     To point our domain to the new instance, we need to add an `A` and `CNAME` record to our DNS provider.
 
+    The `A` record should be the subdomain that you would like to use for the Onyx instance like `prod`.
+
+    The `CNAME` record should be the same name with the `www.` in front resulting in `www.prod` pointing to the full
+    domain like `prod.onyx.app`.
+
     <img className="rounded-image" src="/assets/deployment/arecord.png" alt="DNS A Record Configuration" />
 
     <img className="rounded-image" src="/assets/deployment/cname.png" alt="DNS CNAME Record Configuration" />

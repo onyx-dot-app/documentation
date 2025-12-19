@@ -1,0 +1,572 @@
+---
+title: "Release Notes"
+description: "New Features, Improvements, and Bug Fixes"
+icon: "rocket"
+mode: "wide"
+rss: true
+---
+
+<Update label="v2.5.0" description="November 25th, 2025" tags={["New Features", "Bug Fixes", "Performance"]}>
+
+  ## v2.5.0
+
+  Welcome to the Onyx v2.5.0 release notes! This update introduces code interpreter, new web search providers,
+  and various improvements across the platform.
+
+  Thank you to our contributors for helping make this release possible!
+
+  ## Key Improvements
+
+  ### Web Search Enhancements
+
+  We've officially released support for new web search providers including Google PSE, Serper, Firecrawl,
+  and a built-in Onyx web scraper!
+
+  Configure these providers via the Web Search page in the Admin Panel and give your agents the ability to search the
+  internet for real-time information and current events.
+
+  New APIs for web search are also available for developers. Detailed setup and API reference docs will be coming soon!
+
+  <img className="rounded-image" src="/assets/changelog/v2.5/showcase_additional_web_search.png" alt="Web Search Providers"/>
+
+  ### Claude Opus 4.5 Support
+
+  Onyx now supports Anthropic's newest, most powerful model: Claude Opus 4.5!
+  Configure Claude Opus 4.5 via the LLM Configuration page in the Admin Panel.
+
+  <img className="rounded-image" src="/assets/changelog/v2.5/showcase_45_opus.png" alt="Claude Opus 4.5"/>
+
+  ### Code Interpreter (Alpha)
+
+  Onyx's Code Interpreter is now in alpha!
+  This feature allows your agents to write and execute Python code to solve complex problems, perform data analysis,
+  and generate visualizations.
+
+  <img className="rounded-image" src="/assets/changelog/v2.5/showcase_code_interpreter_alpha.png" alt="Code Interpreter Alpha"/>
+
+  We built the code interpreter, in-house, to work with any model provider and LLM. It's a secure,
+  FastAPI-based service that uses isolated Docker containers with strict resource limits, timeout controls,
+  and file handling capabilities for security and reliability.
+
+  Code interpreter is designed to work with any AI agent, not just Onyx. It's available as a standalone,
+  fully open source project:
+  [onyx-dot-app/code-interpreter](https://github.com/onyx-dot-app/code-interpreter?utm_source=docs&utm_content=changelog).
+  While Python is the first supported language, all common languages will be supported in the future.
+
+  <Note>
+    Code Interpreter is not yet ready for production use. If you enable the feature flag, you may encounter bugs!
+    Please bear with us as we continue to develop and improve this feature.
+  </Note>
+
+  ## Contributor Highlights
+
+  - [@sashank-rayapudi-ai](https://github.com/sashank-rayapudi-ai) added a new connector for Testrail!
+  - [@mristau-alltrails](https://github.com/mristau-alltrails) identified and resolved a vulnerability in our nginx configuration!
+
+  ## Additional Improvements
+
+  ### Default Assistant MCP Tools
+
+  The Default Assistant can now have MCP tools attached,
+  making it easier to extend the default experience with custom actions and integrations.
+
+  ### Document Search APIs in Community Edition
+
+  Document search APIs have been moved from Enterprise Edition to Community Edition,
+  giving all users access to programmatic document search capabilities.
+
+  ### Auto-Pause for Failing Connectors
+
+  Connectors that continuously fail will now automatically be paused. This helps relieve pressure on the background,
+  API, and indexing containers, improving overall system stability.
+
+  ### Kubernetes Affinity and Tolerations
+
+  We've added affinity and tolerations to the Helm deployment templates,
+  allowing you to customize where pods are scheduled in your Kubernetes environment.
+
+  ---
+
+  Our [GitHub Releases](https://github.com/onyx-dot-app/onyx/releases?utm_source=docs&utm_content=changelog)
+  page has the full list of changes and bug fixes for each release.
+
+</Update>
+
+<Update label="v2.4.0" description="November 18th, 2025" tags={["New Features", "Performance", "Bug Fixes"]}>
+
+  ## v2.4.0
+
+  Welcome to the Onyx v2.4.0 release notes!
+  This release introduces powerful new controls for the Slack Federated connector, fine-grained LLM access controls,
+  and various other improvements and bug fixes across the platform.
+
+  Thank you to our contributors for helping make this release possible!
+
+  ## Key Improvements
+
+  ### Advanced Filtering for Slack Federated Connector
+
+  The Slack Federated connector now supports comprehensive, entity-based filtering,
+  which gives you precise control over the data available to Onyx users.
+
+  Configure filters such as:
+  - Channel selection with glob patterns
+  - Message type filtering (1:1 DMs, group DMs, private channels)
+  - Date extraction
+
+  <Note>
+    If you have an existing Slack Federated Connector,
+    you will need to update the app's scopes to use the expanded search functionality (e.g. searching group DMs).
+
+    Additionally,
+    each user will need to revoke and re-authorize their OAuth access to the app for the new scopes to take effect.
+
+    See the [Slack Federated Connector](/admins/connectors/official/slack/slack_federated/)
+    app manifest documentation for more details.
+  </Note>
+
+  <img className="rounded-image" src="/assets/changelog/v2.4/showcase_slack_federated_scoped_search.png" alt="Slack connector filtering options"/>
+
+  ### LLM Access Controls
+
+  Admins can now configure fine-grained access controls for LLM providers.
+
+  This feature allows you to restrict which users or groups can access specific language models.
+  Use access controls to better manage and monitor generative AI usage across your organization.
+
+  Read more about LLM access controls in our [admin docs](/admins/advanced_configs/llm_access_controls/).
+
+  <img className="rounded-image" src="/assets/changelog/v2.4/showcase_llm_rbac.png" alt="LLM access controls"/>
+
+  ### Disable Default Assistant
+
+  You now have the flexibility to disable the default assistant in your Onyx workspace.
+  This is particularly useful for organizations with many custom assistants, each with specific configurations, tools,
+  and instructions.
+
+  To disable the Default Assistant,
+  go to the **Workspace Settings** page and toggle the **Disable Default Assistant** switch.
+
+  ## Contributor Highlights
+
+  - [@sktbcpraha](https://github.com/sktbcpraha) fixed an issue where the Default Assistant was overriding legacy custom agent prompts!
+  - [@alex000kim](https://github.com/alex000kim) fixed a tricky issue with special characters in the Teams connector!
+
+  ## Additional Improvements
+
+  ### Share Chat Button
+
+  We've made sharing chats easier with a dedicated share button in the top right of the chat interface.
+
+  ### Paginated Document Search API
+
+  The document search API now supports pagination for more efficient retrieval of large result sets.
+
+  ### Projects Token Limits
+
+  We've increased the per-file token limit for Projects to 100k. Additionally,
+  you can configure this limit with the `SKIP_USERFILE_THRESHOLD` environment variable.
+
+  ### SSO User Provisioning Improvements
+
+  Previously, inviting users to join your Onyx workspace would prevent non-invited users from automatically registering.
+
+  Now, SSO-enabled workspaces can have both invited users and JIT-provisioned users!
+
+  ---
+
+  Our [GitHub Releases](https://github.com/onyx-dot-app/onyx/releases?utm_source=docs&utm_content=changelog)
+  page has the full list of changes and bug fixes for each release.
+
+</Update>
+
+<Update label="v2.3.0" description="November 11th, 2025" tags={["Performance", "New Features", "Bug Fixes"]}>
+
+  ## v2.3.0
+
+  Welcome to the Onyx v2.3.0 release notes!
+  This release brings performance improvements that make Onyx feel significantly faster and more responsive,
+  personal access tokens, expanded LLM provider support, and more.
+
+  Thank you to our contributors for helping make this release possible!
+
+  ## Key Improvements
+
+  ### Personal Access Tokens
+
+  Onyx now supports Personal Access Tokens for API authentication. This feature allows all users to have a secure,
+  programmatic way to interact with Onyx via the API,
+  making it easier to integrate Onyx into your workflows and automation tools.
+
+  <img className="rounded-image" src="/assets/changelog/v2.3/showcase_personal_access_tokens.png" alt="Personal Access Tokens"/>
+
+  ### Massive Frontend Performance Improvements
+
+  We've made extensive performance optimizations across the frontend that deliver a noticeably faster and more
+  responsive experience.
+
+  - Typing in the input bar is now lag-free, even during heavy operations.
+  - UI updates are significantly faster with improved reactive performance,
+  making interactions feel instant and smooth throughout the application.
+  - First content load is also much faster with optimizations in data loading.
+
+  <img className="rounded-image" src="/assets/changelog/v2.3/showcase_frontend_performance.png" alt="Frontend Performance Improvements"/>
+
+  ### Expanded LLM Provider Support
+
+  We've added support for OpenAI image generation models via Azure,
+  bringing more flexibility to your image generation capabilities.
+
+  Additionally, Onyx now supports AWS GovCloud regions for Bedrock.
+
+  ## Additional Improvements
+
+  ### White Labeling Fixes
+
+  We've resolved several issues with white labeling to ensure your custom branding displays correctly across all areas
+  of the application.
+
+  ### More Resilient Gmail Connector
+
+  The Gmail connector now uses checkpointing for more resilient indexing.
+  This makes the connector more reliable and significantly cheaper to run,
+  especially when re-embedding your entire Gmail history.
+
+  ### Air-Gapped Deployment Support
+
+  We've fixed air-gapped deployments by packaging the tokenizer directly with the model server image.
+  This ensures Onyx can run in completely isolated environments without requiring external dependencies.
+
+  ### Optimized LLM Interactions
+
+  We've simplified both system prompts and tool prompts,
+  resulting in lower token consumption per interaction and more efficient tool calling.
+  This reduces your LLM costs while maintaining the same quality of responses.
+
+  ---
+
+  Our [GitHub Releases](https://github.com/onyx-dot-app/onyx/releases?utm_source=docs&utm_content=changelog)
+  page has the full list of changes and bug fixes for each release.
+
+</Update>
+
+<Update label="v2.2.0" description="November 5th, 2025" tags={["New Features", "Performance", "Bug Fixes"]}>
+
+  ## v2.2.0
+
+  Welcome to the Onyx v2.2.0 release notes!
+  This release brings major improvements to the agent framework with faster responses and more consistent outputs,
+  a completely redesigned onboarding experience, and significant UI performance enhancements.
+
+  Thank you to our contributors for helping make this release possible!
+
+  ## Key Improvements
+
+  ### Complete Agent Framework Revamp
+
+  We've completely rebuilt the agent framework that powers Onyx conversations.
+  The new implementation moves away from LangGraph to the Agents SDK,
+  resulting in a dramatically simplified flow that delivers more consistent outputs, faster response times,
+  and better tool calling accuracy.
+
+  This architectural change also reduces per-message token consumption,
+  making your conversations more efficient and cost-effective.
+
+  ### New Login UI and Onboarding Flow
+
+  First-time users now experience a streamlined onboarding journey that guides them through personalizing their
+  workspace, setting up their LLMs, and configuring actions like Web Search and Image Generation.
+
+  <img className="rounded-image" src="/assets/changelog/v2.2/showcase_onboarding.png" alt="Onboarding flow"/>
+
+  ### UI Performance and Polish
+
+  We've made extensive improvements across the UI for performance and visual consistency.
+
+  For example,
+  the Assistants navigation page has been completely refreshed with a cleaner layout and improved organization.
+
+  <img className="rounded-image" src="/assets/changelog/v2.2/showcase_agents_navigation.png" alt="Agents navigation"/>
+
+  ### LLM Usage Observability
+
+  Onyx now supports integration with [Braintrust](https://usebraintrust.com) or [LangFuse](https://www.langfuse.com)
+  for comprehensive LLM observability. Monitor your costs, latency, token usage,
+  and more to gain insights into your AI operations.
+
+  Read more about setting up observability in our [deployment configuration
+  docs](/deployment/configuration/configuration/).
+
+  <img className="rounded-image" src="/assets/changelog/v2.2/showcase_braintrust.png" alt="LLM usage observability"/>
+
+  ## Contributor Highlights
+
+  - [@dafeliton](https://github.com/dafeliton) fixed an elusive bug with the web connector not parsing PDF URLs correctly and crashing!
+
+  ## Additional Improvements
+
+  ### Confluence OAuth and Jira Fixes
+
+  We've resolved issues with Confluence OAuth authentication and updated Jira integration to address deprecated API
+  endpoints, ensuring reliable connectivity with your Atlassian tools.
+
+  ### Enhanced Provider Support
+
+  Onyx now has improved support for LLM providers like Ollama and OpenRouter,
+  giving you more flexibility in choosing the models that work best for your use case.
+
+  ---
+
+  Our [GitHub Releases](https://github.com/onyx-dot-app/onyx/releases?utm_source=docs&utm_content=changelog)
+  page has the full list of changes and bug fixes for each release.
+
+</Update>
+
+<Update label="v2.1.0" description="October 28th, 2025" tags={["New Features", "Bug Fixes"]}>
+
+  ## v2.1.0
+
+  Welcome to the Onyx v2.1.0 release notes! This is a minor update with new support for OAuth Actions,
+  improvements to the developer experience, and a new FOSS repo.
+
+  Thank you to our contributors for helping make this release possible!
+
+  ## Key Improvements
+
+  ### OAuth Actions
+
+  Onyx now supports Actions that require OAuth authentication. With this new feature,
+  Onyx can now invoke many more actions on your behalf.
+
+  Admins can configure OAuth Actions via the OpenAPI tab of the Actions page.
+
+  <img className="rounded-image" src="/assets/changelog/v2.1/showcase_oauth_actions.png" alt="OAuth Actions configuration"/>
+
+  ### Improved Code Rendering
+
+  Code blocks in chat now render much more consistently across all languages with proper syntax highlighting.
+  This makes it easier to read and understand code generated by Onyx.
+
+  <img className="rounded-image" src="/assets/changelog/v2.1/showcase_code_rendering.png" alt="Code rendering"/>
+
+  ### Fully Open Source (FOSS) Repository
+
+  We're excited to share a completely FOSS version of Onyx!
+  All code is MIT licensed and Enterprise Edition code is removed.
+
+  This FOSS repo should make it easier for developers to contribute, audit, and deploy Onyx without licensing concerns.
+
+  We will continue to develop on the main `onyx-dot-app/onyx` repository,
+  and `onyx-foss` will automatically sync new changes.
+
+  Checkout the repo at this link:
+  [onyx-foss](https://github.com/onyx-dot-app/onyx-foss?utm_source=docs&utm_content=changelog).
+
+  ## Contributor Highlights
+
+  - [@camro](https://github.com/camro) fixed a tricky issue where the app was not redirecting to shared chats on login!
+
+  ## Additional Improvements
+
+  ### Name Personalization
+
+  You can now set your name in the bottom left user icon! Just set your name in the User Settings modal.
+
+  Your name and role are used to better personalize your conversations in Onyx.
+
+  <img className="rounded-image" src="/assets/changelog/v2.1/showcase_personal_name.png" alt="Name personalization"/>
+
+  ### Theme Preference Persistence
+
+  Your light mode/dark mode preference is now saved across browsers and sessions, even after cache clears.
+  Set it once and forget about it!
+
+  ### Image Size Reduction
+
+  We've fixed a bug that was doubling the size of the model server Docker image.
+  This reduces disk space requirements significantly for deployments (~26 GB needed for a fresh deployment).
+
+  ---
+
+  Our [GitHub Releases](https://github.com/onyx-dot-app/onyx/releases?utm_source=docs&utm_content=changelog)
+  page has the full list of changes and bug fixes for each release.
+
+</Update>
+
+<Update label="v2.0.0" description="October 20th, 2025" tags={["New Features", "Deployment Changes", "Breaking Changes"]}>
+
+  ## v2.0.0
+
+  <Note>
+    v2.0.0 has breaking changes.
+    You may want to test the upgrade in a staging environment before deploying to production.
+  </Note>
+
+  Today, we're excited to announce the release of Onyx v2.0.0! This release brings a brand new UI, Projects,
+  and many other improvements.
+
+  Thank you to our contributors for helping make this release possible!
+
+  ## Key Improvements
+
+  ### UI Refresh
+
+  Onyx has a brand new UI with updated colors, components, and subtle changes to the layout.
+  Check out this release video showcasing the new UI!
+
+  <div style={{position: 'relative', paddingBottom: '56.25%', height: 0, overflow: 'hidden', borderRadius: '0.5rem'}}>
+    <iframe
+    src="https://www.youtube.com/embed/FE_-6IjyyPw?si=arXXagEUvlgwMfv9" title="YouTube video player" frameborder="0"
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture;
+    web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen style={{position: 'absolute', top: 0,
+    left: 0, width: '100%', height: '100%', borderRadius: '0.5rem'}} />
+  </div>
+
+  ### Single-sign on (SSO) added to Community Edition
+
+  SSO (via OIDC and SAML) is now available in the Community Edition of Onyx!
+
+  All users can now configure basic authentication, Google OAuth,
+  or SSO via identity providers like Okta and Azure EntraID.
+
+  Read more about authentication options in our [deployment docs](/deployment/authentication/).
+  Read more about our open source philosphy in our [Open Source
+  Statement](/overview/miscellaneous/open_source_statement/).
+
+  ### Projects
+
+  Projects allow users to organize files and chats based on a specific context.
+  You can think of this as a folder where you upload files, define project-level instructions,
+  and work from the same starting point in every chat session.
+
+  <img className="rounded-image" src="/assets/changelog/v2.0/showcase_projects.png" alt="Projects feature screenshot"/>
+
+  Projects is a direct replacement of My Documents, but with added functionality.
+  Files you've previously uploaded to My Documents should appear in Projects.
+
+  ### New Docker Compose File
+
+  We've simplified the Docker Compose files to make it easier to deploy Onyx.
+
+  Previously, you may have used `docker-compose.dev.yml`, `docker-compose.prod.yml`, or `docker-compose.gpu-dev.yml`.
+  These have been consolidated into a single `docker-compose.yml` file.
+
+  With the new compose file, you can run `docker compose up -d` to start Onyx.
+
+  <Note>
+    If you've previously used the old compose files, you will need to add the `-p onyx-stack` flag.
+
+    I.e. `docker compose -p onyx-stack up -d`.
+
+    Additionally, you will need to migrate any changes you may have made to your compose file.
+  </Note>
+
+  ### Organization info and personalization
+
+  We've found that questions posed to Onyx often require context on who you are, what you work on,
+  and what your company does.
+  It is difficult to infer this from search results alone because they are a narrow view into your context.
+
+  To help with this,
+  admins can now add information about their organization in the **Workspace Settings** tab of the Admin Panel.
+  Additionally, users can add information about themselves in the User Settings page.
+
+  <img className="rounded-image" src="/assets/changelog/v2.0/basic_org_info.png" alt="Organization info configuration"/>
+
+  <img className="rounded-image" src="/assets/changelog/v2.0/basic_personalization.png" alt="User info configuration"/>
+
+  This is a simple, but powerful first step in our organization and personalization features. In the future,
+  Onyx will extract and save this information automatically.
+
+  ### Curators can now create actions
+
+  Due to popular demand, Curators and Global Curators can now create Actions via OpenAPI or MCP!
+
+  Read more about Actions in our [admin docs](/admins/actions/overview/).
+
+  <img className="rounded-image" src="/assets/changelog/v2.0/showcase_curator_actions.png" alt="Curators can now create actions"/>
+
+  ### Search filters
+
+  Source filters are back for the Internal Search Action!
+
+  To filter the sources of your search results, click the Actions configuration button in the Input Bar,
+  select the arrow next to Internal Search, and select the sources you want to include.
+
+  <img className="rounded-image" src="/assets/changelog/v2.0/showcase_filters_1.png" alt="Actions in the Chat Input Bar"/>
+
+  <img className="rounded-image" src="/assets/changelog/v2.0/showcase_filters_2.png" alt="Source filters"/>
+
+  ### Language and Embedding Models
+
+  We've added support for [Claude Sonnet 4.5](https://www.anthropic.com/news/claude-sonnet-4-5),
+  [Claude Haiku 4.5](https://www.anthropic.com/news/claude-haiku-4-5),
+  and [Gemini Embedding 001](https://developers.googleblog.com/en/gemini-embedding-available-gemini-api/).
+
+  Try them out by configuring Anthropic in the **LLM Configuration** page and Google Vertex AI on the **Search
+  Settings** page of the Admin Panel.
+
+  ## Contributor Highlights
+
+  - [@Django149](https://github.com/Django149) added right-to-left language support for the chat interface!
+  - [@nsklei](https://github.com/nsklei) added support for indexing Microsoft Teams attachments!
+  - [@linkages](https://github.com/linkages) added generation of SHA256 hashes of documents for the Onyx File Store!
+  - [@grafke](https://github.com/grafke) fixed a bug in GPT search timestamps!
+
+  ## Additional Improvements
+
+  ### Support for SSE (server-sent events) MCP servers
+
+  Onyx now supports SSE (server-sent events) MCP servers.
+  Configure either Streamable HTTP or SSE servers in the Admin Actions page.
+
+  Read more about MCP in our [admin docs](/admins/actions/mcp/).
+
+  ### Permission Sync Status updates
+
+  Permission sync connectors will now display sync status in the Admin Panel.
+
+  ### Ollama Support
+
+  You can now configure both locally-hosted and cloud-hosted models with Ollama.
+  Read more about Ollama in our [admin docs](/admins/ai_models/ollama/).
+
+  ### OpenRouter Support
+
+  You can now configure Onyx to use models from OpenRouter.
+  Read more about OpenRouter in our [admin docs](/admins/ai_models/openrouter/).
+
+  ### One Line Deployment Script
+
+  We've added a [single line launch script](deployment/getting_started/quickstart) to make it easier to deploy Onyx.
+  This script will check your system resources and requirements and guide you through the necessary steps to deploy
+  Onyx.
+
+  <Note>
+    This script is intended for new users. For existing users,
+    we recommend sticking with your existing deployment method.
+  </Note>
+
+  ### KEDA Autoscaling
+
+  We've added support for KEDA (Kubernetes Event-Driven Autoscaling) to Onyx Helm charts.
+  Kubernetes deployments may choose either HPA (Horizontal Pod Autoscaling) or KEDA for autoscaling.
+
+  ---
+
+  Our [GitHub Releases](https://github.com/onyx-dot-app/onyx/releases?utm_source=docs&utm_content=changelog)
+  page has the full list of changes and bug fixes for each release.
+
+</Update>
+
+<Update label="Prior Changes" description="<v2.0.0">
+
+  ## Release Notes Prior to v2.0.0
+
+  Check out our [GitHub Releases](https://github.com/onyx-dot-app/onyx/releases?utm_source=docs&utm_content=changelog)
+  page for details regarding prior changes.
+
+  Additionally, our Discord `#announcements` channel is a great place to stay up to date with Onyx updates.
+
+  Major releases and breaking changes are also announced in the [Discord Server](https://discord.gg/4NA5SbzrWb).
+</Update>

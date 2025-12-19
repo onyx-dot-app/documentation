@@ -1,0 +1,123 @@
+---
+title: "Google Drive OAuth"
+description: "Set up Google Drive OAuth for the connector"
+---
+
+This section walks through setting up the Google Drive connector using a OAuth-enabled Google App.
+Anyone can do this (even without a paid Google Workspace)!
+
+If you're an organization with a Google Workspace, and you'd rather use a Service Account to access Google Drive,
+checkout the section [here](./service_account).
+
+### Authorization
+
+<Steps>
+  <Step title="Create Google Cloud Project">
+    - [https://console.cloud.google.com/projectcreate](https://console.cloud.google.com/projectcreate)
+  </Step>
+
+  <Step title="Enable Google Drive API">
+    - On the left panel, open **APIs & services**
+    - Go to **Enabled APIs and services**
+    - On the top click **+ENABLE APIS AND SERVICES**
+    - Search for **Google Drive API** and click **ENABLE**
+    - Alternatively visit this [link](https://console.cloud.google.com/flows/enableapi?apiid=drive.googleapis.com),
+    select your project and enable the **Google Drive API**
+  </Step>
+
+  <Step title="Enable Admin SDK API">
+    - Click on **+ENABLE APIS AND SERVICES** again.
+    - Search for **Admin SDK API** and click **ENABLE**
+    - Alternatively visit this [link](https://console.cloud.google.com/flows/enableapi?apiid=admin.googleapis.com),
+    select your project and enable the **Admin SDK API**
+  </Step>
+
+  <Step title="Enable Google Sheets API">
+    - Click on **+ENABLE APIS AND SERVICES** again.
+    - Search for **Google Sheets API** and click **ENABLE**
+    - Alternatively visit this [link](https://console.cloud.google.com/flows/enableapi?apiid=sheets.googleapis.com),
+    select your project and enable the **Google Sheets API**
+  </Step>
+
+  <Step title="Enable Google Docs API">
+    - Click on **+ENABLE APIS AND SERVICES** again.
+    - Search for **Google Docs API** and click **ENABLE**
+    - Alternatively visit this [link](https://console.cloud.google.com/flows/enableapi?apiid=docs.googleapis.com),
+    select your project and enable the **Google Docs API**
+
+    <img className="rounded-image" src="/assets/admins/connectors/google_drive/GoogleDriveEnableAPI.png" alt="Google Cloud Console enabling Google Docs API for the project" />
+  </Step>
+
+  <Step title="Set up OAuth consent screen">
+    - Under **APIs & services**, select the **OAuth consent screen** tab
+    - If you don't have a **Google Organization** select **External** for **User Type**
+    - Call the app Onyx (or whatever you want)
+    - For the required emails, use any email of your choice or `founders@onyx.app`
+    if you wish for the Onyx team to help handle issues.
+    - Click **SAVE AND CONTINUE**
+  </Step>
+
+  <Step title="Set up scopes">
+    - Add the scope `.../auth/drive.readonly` for `Google Drive API`
+    - Add the scope `.../auth/drive.metadata.readonly` for `Google Drive API`
+    - Add the scope `.../auth/admin.directory.user.readonly` for `Admin SDK API`
+    - Add the scope `.../auth/admin.directory.group.readonly` for `Admin SDK API`
+
+    <img className="rounded-image" src="/assets/admins/connectors/google_drive/GoogleDriveScopes.png" alt="OAuth consent screen scopes for Google Drive, Admin SDK, Sheets, and Docs" width="60%" />
+  </Step>
+
+  <Step title="Set up test users">
+    - This is only applicable for users without a Google Organization.
+    - Typically for a company, Onyx would be set up as an internal app so this step would
+    not apply.
+    - Add at least one test user email. Only the email accounts added here will be allowed to
+    run the OAuth flow to index new documents.
+    - Click **SAVE AND CONTINUE**, review the changes and click **BACK TO DASHBOARD**
+  </Step>
+
+  <Step title="Create credentials">
+    - Go to the **Credentials** tab and select **+ CREATE CREDENTIALS** -> **OAuth client ID**
+
+    <img className="rounded-image" src="/assets/admins/connectors/google_drive/GoogleDriveCredential.png" alt="Creating OAuth client ID in Google Cloud Console" width="90%" />
+
+    - Choose **Web application** and give it some name like `OnyxConnector`
+    - Add a **Authorized JavaScript origins**
+    - `http://localhost:3000` if self-hosting
+    - `https://<INTERNAL_DEPLOYMENT_URL>` if you have setup Onyx for production use
+    - `https://cloud.onyx.app` if you are using the Onyx Cloud service
+    - Add a **Authorized redirect URIs**
+    - `http://localhost:3000/admin/connectors/google-drive/auth/callback` if self-hosting
+    - `https://<INTERNAL_DEPLOYMENT_URL>/admin/connectors/google-drive/auth/callback` if you have setup Onyx for production use
+    - `https://cloud.onyx.app/admin/connectors/google-drive/auth/callback` if you are using the Onyx Cloud service
+
+    <img className="rounded-image" src="/assets/admins/connectors/google_drive/DriveCredentials.png" alt="Configuring authorized origins and redirect URIs for Google Drive OAuth client" width="70%" />
+
+    - Click create and on the right hand side next to **Client secret**, there is an option to
+    download the credentials as a JSON. Download the JSON for use in the next step.
+
+    <img className="rounded-image" src="/assets/admins/connectors/google_drive/DriveDownloadCredentials.png" alt="Download OAuth client JSON credentials from Google Cloud Console" width="70%" />
+  </Step>
+</Steps>
+
+### Indexing
+
+First, navigate to the Admin Panel and select the Google Drive connector.
+
+Then, create a new credential, then upload the key you downloaded in the final step. From there,
+click **Authenticate with Google Drive** and continue with the account you want to use to index Google Drive.
+
+<img className="rounded-image" src="/assets/admins/connectors/google_drive/OAuthCredential.png" alt="Onyx Google Drive connector showing OAuth credential selection" />
+
+Once complete, select the newly created credential, and click the **Continue** button to configure the connector!
+
+<Note>
+  If you plan on using permission syncing for this connector,
+  the account performing the OAuth flow must have an Admin role in the Google Workspace that has access to the
+  following:
+  - Admin console privileges -> Services -> Drive and Docs -> Settings
+  - Admin API privileges -> Users -> Read
+  - Admin API privileges -> Groups -> Read
+  - Admin API privileges -> Organization Units -> Read
+
+  This can be set by an admin in the admin panel of the Google Workspace under Account > Admin roles.
+</Note>
