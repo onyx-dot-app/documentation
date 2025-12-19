@@ -110,28 +110,66 @@ For basic indexing without permission sync:
     - `repo` (Full control of private repositories) - to access PRs and issues
 
     <Accordion title="Fine-Grain Access Token Requirements">
-      If you're using a fine-grain access token instead of a classic token, ensure it has read access to the following:
-      - **Pull requests** - to access PR data
-      - **Metadata** - for repository metadata
-      - **Issues** - to access issues and comments
-      - **Contents** - to access repository contents
+      If you're using a fine-grain access token instead of a classic token:
+
+      <Steps>
+        <Step title="Open repository permissions">
+          In the token configuration page, go to **Repository permissions**
+        </Step>
+
+        <Step title="Add permissions">
+          Click **Add permission**, then add the following with **Read access**:
+          - **Pull requests** - to access PR data
+          - **Metadata** - for repository metadata
+          - **Issues** - to access issues and comments
+          - **Contents** - to access repository contents
+        </Step>
+      </Steps>
     </Accordion>
   </Step>
 </Steps>
 
-#### Permission Sync Setup
+#### Permission Sync Setup (Fine-Grain Access Token)
 
-For permission sync functionality, you need additional permissions:
+When creating a **fine-grained** GitHub access token for **permission sync**, make sure you select the correct
+**Resource owner organization** (the GitHub **organization** that owns the repositories you want to create the connector for).
+Fine-grained tokens scoped to a personal user account do **not** allow granting **Organization permissions** (like **Members**),
+so permission sync requires selecting an organization as the resource owner.
+If you select the wrong organization, the token will not be able to access the intended org/repositories and permission sync will fail.
 
-**Repository permissions:**
-- **Administration:** Read access
-- **Issues:** Read access
-- **Metadata:** Read access
-- **Pull requests:** Read access
 
-**Organization permissions:**
-- **Administration:** Read only
-- **Members:** Read only
+For permission sync functionality, you also need additional permissions. Add these in the token configuration page by using
+**Repository permissions** -> **Add permission** and **Organization permissions** -> **Add permission**:
+
+<img className="rounded-image" src="/assets/admins/connectors/github/Permissions.png" alt="GitHub fine-grained token permissions: Repository permissions and Organization permissions" />
+
+<Steps>
+  <Step title="Repository permissions">
+    Add the following with **Read access**:
+    - **Administration**
+    - **Issues**
+    - **Metadata**
+    - **Pull requests**
+  </Step>
+
+  <Step title="Organization permissions">
+    Add the following with **Read only**:
+    - **Administration**
+    - **Members**
+  </Step>
+</Steps>
+
+#### Permission Sync Setup (Classic Token)
+
+If you're using a **classic** GitHub personal access token (PAT) and want **permission sync**, you must also grant the
+organization read scope so Onyx can enumerate org membership:
+
+- `read:org`
+
+Keep the basic indexing permission enabled as well:
+
+- `repo` (Full control of private repositories) - to access PRs and issues
+
 
 #### Token Configuration
 
