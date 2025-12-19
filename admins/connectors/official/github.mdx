@@ -33,37 +33,37 @@ which ensures that users can only access documents they have permissions to view
   they will not get access to any documents through Onyx.
 </Info>
 
-How to Make Your Email Public on GitHub:
+<Accordion title="How to make your email public on GitHub">
+  <Steps>
+    <Step title="Log in to GitHub">
+      Log in to your GitHub account
+    </Step>
 
-<Steps>
-  <Step title="Log in to GitHub">
-    Log in to your GitHub account
-  </Step>
+    <Step title="Access profile settings">
+      Click on your profile picture in the top-right corner and select **Settings** from the dropdown menu
+    </Step>
 
-  <Step title="Access profile settings">
-    Click on your profile picture in the top-right corner and select **Settings** from the dropdown menu
-  </Step>
+    <Step title="Navigate to email settings">
+      In the left sidebar, click on **Emails**
+    </Step>
 
-  <Step title="Navigate to email settings">
-    In the left sidebar, click on **Emails**
-  </Step>
+    <Step title="Enable public email">
+      Scroll down to **Keep my email addresses private** and **uncheck this option**
+    </Step>
 
-  <Step title="Enable public email">
-    Scroll down to **Keep my email addresses private** and **uncheck this option**
-  </Step>
+    <Step title="Configure public profile">
+      Now go back to the left sidebar and click on **Public profile**
+    </Step>
 
-  <Step title="Configure public profile">
-    Now go back to the left sidebar and click on **Public profile**
-  </Step>
+    <Step title="Set public email">
+      Scroll down to the **Public email** section and select your email address from the dropdown
+    </Step>
 
-  <Step title="Set public email">
-    Scroll down to the **Public email** section and select your email address from the dropdown
-  </Step>
-
-  <Step title="Save changes">
-    Click **Update profile** to save the changes
-  </Step>
-</Steps>
+    <Step title="Save changes">
+      Click **Update profile** to save the changes
+    </Step>
+  </Steps>
+</Accordion>
 
 **Why is this required?**
 
@@ -110,28 +110,65 @@ For basic indexing without permission sync:
     - `repo` (Full control of private repositories) - to access PRs and issues
 
     <Accordion title="Fine-Grain Access Token Requirements">
-      If you're using a fine-grain access token instead of a classic token, ensure it has read access to the following:
-      - **Pull requests** - to access PR data
-      - **Metadata** - for repository metadata
-      - **Issues** - to access issues and comments
-      - **Contents** - to access repository contents
+      If you're using a fine-grain access token instead of a classic token:
+
+      <Steps>
+        <Step title="Open repository permissions">
+          In the token configuration page, go to **Repository permissions**
+        </Step>
+
+        <Step title="Add permissions">
+          Click **Add permission**, then add the following with **Read access**:
+          - **Pull requests** - to access PR data
+          - **Metadata** - for repository metadata
+          - **Issues** - to access issues and comments
+          - **Contents** - to access repository contents
+        </Step>
+      </Steps>
     </Accordion>
   </Step>
 </Steps>
 
 #### Permission Sync Setup
 
-For permission sync functionality, you need additional permissions:
+Pick the token type you're using:
 
-**Repository permissions:**
-- **Administration:** Read access
-- **Issues:** Read access
-- **Metadata:** Read access
-- **Pull requests:** Read access
+<Tabs tabs={["Fine-grained access token", "Classic token"]}>
+  <Tab title="Fine-grained access token">
+    <Steps>
+      <Step title="Select the organization (resource owner)">
+        When creating a **fine-grained** GitHub access token for **permission sync**, make sure you select the correct
+        **Resource owner organization** (the GitHub **organization** that owns the repositories you want to create the connector for).
+        Fine-grained tokens scoped to a personal user account do **not** allow granting **Organization permissions** (like **Members**),
+        so permission sync requires selecting an organization as the resource owner.
+      </Step>
 
-**Organization permissions:**
-- **Administration:** Read only
-- **Members:** Read only
+      <Step title="Add required permissions">
+        Add these in the token configuration page using **Repository permissions** -> **Add permission**
+        and **Organization permissions** -> **Add permission**:
+
+        <img className="rounded-image" src="/assets/admins/connectors/github/Permissions.png" alt="GitHub fine-grained token permissions: Repository permissions and Organization permissions" />
+
+        - **Repository permissions** (Read access): **Administration**, **Issues**, **Metadata**, **Pull requests**
+        - **Organization permissions** (Read only): **Administration**, **Members**
+      </Step>
+    </Steps>
+  </Tab>
+
+  <Tab title="Classic token">
+    <Steps>
+      <Step title="Add the org read scope">
+        If you're using a **classic** GitHub personal access token (PAT) and want **permission sync**, you must also grant:
+        - `read:org`
+      </Step>
+
+      <Step title="Keep indexing scopes enabled">
+        Keep the basic indexing permission enabled as well:
+        - `repo` (Full control of private repositories) - to access PRs and issues
+      </Step>
+    </Steps>
+  </Tab>
+</Tabs>
 
 #### Token Configuration
 
