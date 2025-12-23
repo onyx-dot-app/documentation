@@ -538,8 +538,8 @@
     }
   },
   "seo": {
-    "title": "Onyx AI – Open Source AI Platform for Work",
-    "description": "Onyx AI is the open source AI platform for generation, automation, and enterprise search — powered by your team’s data.",
+    "title": "Onyx AI - Open Source AI Platform for Work",
+    "description": "Onyx AI is the open source AI platform for generation, automation, and enterprise search — powered by your team's data.",
     "metatags": {
       "keywords": "onyx ai, onyx, open source ai, enterprise ai, generative ai platform, enterprise search, ai assistant, knowledge management, danswer"
     }
@@ -550,5 +550,23 @@
       "destination": "/deployment/overview",
       "permanent": true
     }
-  ]
+  ],
+  "contextual": {
+    "options": [
+      {
+        "title": "Open in Onyx",
+        "description": "Creates an Onyx conversation with the current page as context",
+        "icon": "/assets/logo/onyx_favicon.svg",
+        "href": {
+          "base": "https://cloud.onyx.app/chat",
+          "query": [
+            {
+              "key": "user-prompt",
+              "value": "Use this page as context: https://docs.onyx.app/$path"
+            }
+          ]
+        }
+      }
+    ]
+  }
 }
