@@ -370,6 +370,7 @@ def normalize_steps_indentation(lines: List[str]) -> List[str]:
     - <Steps> with child <Step>
     - <Accordion> with child <AccordionItem>
     - <Columns> with child <Card>
+    - <Tabs> with child <Tab>
 
     Rules:
     - Blank line before container open and after container close.
@@ -390,6 +391,7 @@ def normalize_steps_indentation(lines: List[str]) -> List[str]:
         "AccordionGroup": {"Accordion"},
         "Columns": {"Card"},
         "CardGroup": {"Card"},
+        "Tabs": {"Tab"},
     }
 
     SELF_CLOSING_RE = re.compile(r"^\s*<(?P<name>\w+)(?:[^>]*)/?>\s*$")
@@ -419,6 +421,14 @@ def normalize_steps_indentation(lines: List[str]) -> List[str]:
 
         # Opening group containers
         if m_open and m_open.group("name") in children_for:
+            # If nested inside a managed child (e.g., <Tab>/<Step>), align the container
+            # as a content line inside that child.
+            desired_leading = leading
+            if stack:
+                top_name, top_indent, _top_managed = stack[-1]
+                # If the immediate parent is not a group container, treat it as a child-item.
+                if top_name not in children_for:
+                    desired_leading = top_indent + INDENT_SPACES
             # Ensure a blank line before
             if len(out) > 0 and out[-1].strip() != "":
                 prev_non_empty = None
@@ -433,8 +443,8 @@ def normalize_steps_indentation(lines: List[str]) -> List[str]:
                 if not suppress_before:
                     out.append("")
             # Normalize indent of <Steps> tag itself (retain current leading)
-            out.append(" " * leading + stripped)
-            stack.append((m_open.group("name"), leading, True))
+            out.append(" " * desired_leading + stripped)
+            stack.append((m_open.group("name"), desired_leading, True))
             # Skip immediate blank lines after opening
             i += 1
             while i < n and lines[i].strip() == "":
@@ -490,7 +500,7 @@ def normalize_steps_indentation(lines: List[str]) -> List[str]:
             continue
 
         # Closing child items
-        if m_close and m_close.group("name") in {"Step", "AccordionItem", "Card"}:
+        if m_close and m_close.group("name") in {"Step", "AccordionItem", "Card", "Tab"}:
             # Align to stored child indent
             child_indent = leading
             for name, ind, _managed in reversed(stack):
@@ -526,7 +536,7 @@ def normalize_steps_indentation(lines: List[str]) -> List[str]:
         inside_child = None
         managed_child = False
         for name, ind, managed in reversed(stack):
-            if name in {"Step", "Accordion", "AccordionGroup", "AccordionItem", "Card"}:
+            if name in {"Step", "Accordion", "AccordionGroup", "AccordionItem", "Card", "Tab"}:
                 inside_child = ind
                 managed_child = managed
                 break
@@ -989,7 +999,7 @@ def format_content(text: str, width: int) -> str:
     def remove_blank_after_group_opens(ls: List[str]) -> List[str]:
         out_ls: List[str] = []
         in_code_f = False
-        opens = ("<Steps", "<AccordionGroup", "<Accordion", "<Columns", "<CardGroup", "<CodeGroup", "<Tab")
+        opens = ("<Steps", "<AccordionGroup", "<Accordion", "<Columns", "<CardGroup", "<CodeGroup", "<Tabs", "<Tab")
         i2 = 0
         n2 = len(ls)
         while i2 < n2:
@@ -1161,6 +1171,12 @@ def main() -> int:
     parser.add_argument("--check", action="store_true", help="Only report files that would change")
     parser.add_argument("--write", action="store_true", help="Write changes to files")
     parser.add_argument("--width", type=int, default=120, help="Wrap width for text lines")
+    parser.add_argument(
+        "--paths",
+        nargs="*",
+        default=[],
+        help="Optional list of files/directories to format (defaults to entire repo).",
+    )
     # Link checks always run; flag retained for compatibility but ignored
     parser.add_argument("--check-links", action="store_true", help=argparse.SUPPRESS)
     args = parser.parse_args()
@@ -1170,7 +1186,16 @@ def main() -> int:
         return 2
 
     root = os.getcwd()
-    files = iter_doc_files(root)
+    if args.paths:
+        files: List[str] = []
+        for p in args.paths:
+            abspath = os.path.abspath(p)
+            if os.path.isdir(abspath):
+                files.extend(iter_doc_files(abspath))
+            else:
+                files.append(abspath)
+    else:
+        files = iter_doc_files(root)
     changed: List[str] = []
     numbered_list_warnings: List[tuple[str, int, str]] = []
     numbered_list_found: List[tuple[str, int, str]] = []
