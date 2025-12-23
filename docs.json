@@ -562,7 +562,7 @@
           "query": [
             {
               "key": "user-prompt",
-              "value": "Use this page as context: https://docs.onyx.app/$path"
+              "value": "Use this page as context: https://docs.onyx.app$path"
             }
           ]
         }
