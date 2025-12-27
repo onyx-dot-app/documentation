@@ -308,8 +308,6 @@ LANGUAGE_CHAT_NAMING_HINT="The name of the conversation must be in the same lang
 
     `VESPA_CLOUD_URL`: Vespa Cloud URL
 
-    `VESPA_DEPLOYMENT_ZIP`: Vespa deployment zip path
-
     `VESPA_CLOUD_CERT_PATH`: Vespa Cloud certificate path
 
     `VESPA_CLOUD_KEY_PATH`: Vespa Cloud key path
@@ -335,8 +333,6 @@ LANGUAGE_CHAT_NAMING_HINT="The name of the conversation must be in the same lang
     `CELERY_WORKER_DOCFETCHING_CONCURRENCY`: Document fetching worker concurrency
 
     `CELERY_WORKER_KG_PROCESSING_CONCURRENCY`: Knowledge graph processing worker concurrency
-
-    `EXPERIMENTAL_CHECKPOINTING_ENABLED`: Enable experimental checkpointing
   </Accordion>
 
   <Accordion title="Rate Limiting">
@@ -363,13 +359,9 @@ LANGUAGE_CHAT_NAMING_HINT="The name of the conversation must be in the same lang
 
     `SKIP_METADATA_IN_CHUNK`: Skip metadata in chunks
 
-    `CLEANUP_INDEXING_JOBS_TIMEOUT`: Cleanup timeout in hours
-
     `INDEXING_SIZE_WARNING_THRESHOLD`: Size warning threshold in bytes
 
     `INDEXING_EMBEDDING_MODEL_NUM_THREADS`: Embedding model threads
-
-    `INDEXING_EXCEPTION_LIMIT`: Exception limit during indexing
 
     `CONTINUE_ON_CONNECTOR_FAILURE`: Continue indexing on connector failures
 
@@ -412,8 +404,6 @@ LANGUAGE_CHAT_NAMING_HINT="The name of the conversation must be in the same lang
 
     `CONFLUENCE_CONNECTOR_LABELS_TO_SKIP`: Labels to skip during indexing
 
-    `CONFLUENCE_CONNECTOR_INDEX_ARCHIVED_PAGES`: Index archived pages
-
     `CONFLUENCE_CONNECTOR_ATTACHMENT_SIZE_THRESHOLD`: Attachment size threshold
 
     `CONFLUENCE_CONNECTOR_ATTACHMENT_CHAR_COUNT_THRESHOLD`: Attachment character threshold
@@ -437,10 +427,6 @@ LANGUAGE_CHAT_NAMING_HINT="The name of the conversation must be in the same lang
     `SHAREPOINT_CONNECTOR_SIZE_THRESHOLD`: File size threshold for SharePoint
 
     **Jira Connector**
-
-    `OAUTH_JIRA_CLOUD_CLIENT_ID`: Jira Cloud OAuth client ID
-
-    `OAUTH_JIRA_CLOUD_CLIENT_SECRET`: Jira Cloud OAuth client secret
 
     `JIRA_CONNECTOR_LABELS_TO_SKIP`: Labels to skip during indexing
 
@@ -492,11 +478,7 @@ LANGUAGE_CHAT_NAMING_HINT="The name of the conversation must be in the same lang
   </Accordion>
 
   <Accordion title="Logging Configuration">
-    `LOG_ALL_MODEL_INTERACTIONS`: Log all LiteLLM model interactions
-
     `LOG_ONYX_MODEL_INTERACTIONS`: Log Onyx model interactions
-
-    `LOG_INDIVIDUAL_MODEL_TOKENS`: Log individual model tokens
 
     `LOG_VESPA_TIMING_INFORMATION`: Log Vespa query performance
 
@@ -510,19 +492,25 @@ LANGUAGE_CHAT_NAMING_HINT="The name of the conversation must be in the same lang
   <Accordion title="Image Processing Configuration">
     `IMAGE_MODEL_NAME`: Image model name
 
-    `AZURE_DALLE_API_VERSION`: Azure DALL-E API version
+    `AZURE_IMAGE_API_VERSION`: Azure OpenAI image API version
 
-    `AZURE_DALLE_API_KEY`: Azure DALL-E API key
+    `AZURE_IMAGE_API_KEY`: Azure OpenAI key used for image generation
 
-    `AZURE_DALLE_API_BASE`: Azure DALL-E API base URL
+    `AZURE_IMAGE_API_BASE`: Azure OpenAI endpoint base URL for image generation
 
-    `AZURE_DALLE_DEPLOYMENT_NAME`: Azure DALL-E deployment name
+    `AZURE_IMAGE_DEPLOYMENT_NAME`: Azure OpenAI image deployment namespace
+
+    `AZURE_DALLE_API_VERSION`: Legacy alias for `AZURE_IMAGE_API_VERSION` (kept for backwards compatibility)
+
+    `AZURE_DALLE_API_KEY`: Legacy alias for `AZURE_IMAGE_API_KEY` (kept for backwards compatibility)
+
+    `AZURE_DALLE_API_BASE`: Legacy alias for `AZURE_IMAGE_API_BASE` (kept for backwards compatibility)
+
+    `AZURE_DALLE_DEPLOYMENT_NAME`: Legacy alias for `AZURE_IMAGE_DEPLOYMENT_NAME` (kept for backwards compatibility)
 
     `IMAGE_SUMMARIZATION_SYSTEM_PROMPT`: System prompt for image summarization
 
     `IMAGE_SUMMARIZATION_USER_PROMPT`: User prompt for image summarization
-
-    `IMAGE_ANALYSIS_SYSTEM_PROMPT`: System prompt for image analysis
   </Accordion>
 
   <Accordion title="File Storage Configuration">
@@ -542,8 +530,6 @@ LANGUAGE_CHAT_NAMING_HINT="The name of the conversation must be in the same lang
   <Accordion title="Telemetry & Analytics">
     `DISABLE_TELEMETRY`: Disable anonymous usage telemetry
 
-    `TOKEN_BUDGET_GLOBALLY_ENABLED`: Enable global token budget
-
     `CUSTOM_ANSWER_VALIDITY_CONDITIONS`: Custom answer validity conditions
   </Accordion>
 
@@ -562,9 +548,6 @@ LANGUAGE_CHAT_NAMING_HINT="The name of the conversation must be in the same lang
   </Accordion>
 
   <Accordion title="Federated Search Configuration">
-    `MAX_FEDERATED_SECTIONS`: Maximum federated sections to keep
-
-    `MAX_FEDERATED_CHUNKS`: Maximum chunks per federated connector
   </Accordion>
 
   <Accordion title="Enterprise Configuration">
@@ -585,8 +568,6 @@ LANGUAGE_CHAT_NAMING_HINT="The name of the conversation must be in the same lang
 
     `INTEGRATION_TESTS_MODE`: Enable integration tests mode
 
-    `TEST_ENV`: Test environment flag
-
     `MOCK_LLM_RESPONSE`: Boolean to create mock LLM responses for testing
   </Accordion>
 
@@ -600,8 +581,6 @@ LANGUAGE_CHAT_NAMING_HINT="The name of the conversation must be in the same lang
     `TARGET_AVAILABLE_TENANTS`: Number of pre-provisioned tenants to maintain
 
     `SYSTEM_RECURSION_LIMIT`: System recursion limit
-
-    `DISABLE_AUTO_AUTH_REFRESH`: Disable automatic auth refresh
   </Accordion>
 </AccordionGroup>
 
