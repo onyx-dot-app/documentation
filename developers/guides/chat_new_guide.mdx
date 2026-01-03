@@ -22,13 +22,13 @@ icon: "bolt"
       The specific model version (e.g., `gpt-4o`, `claude-3-opus`).
     </ParamField>
     <ParamField body="temperature" type="number">
-      Sampling temperature for the LLM (model specific but typically 0.0 - 1.0).
+      Sampling temperature for the LLM (model-specific but typically 0.0 - 1.0).
     </ParamField>
   </Expandable>
 </ParamField>
 
 <ParamField body="allowed_tool_ids" type="list[int]">
-  The set of tools/actions made available to the Agent. You can get the list of tools/actions and their ids via the tools endpoint. You can
+  The set of tools/actions made available to the Agent. You can get the list of tools/actions and their IDs via the tools endpoint. You can
   check the list by sending a GET to `https://cloud.onyx.app/api/tool` or your own Onyx deployment. Pass in an empty list to not
   allow any tools/actions or pass in a null value to allow all the tools/actions which are available to the specific Agent of the chat session.
 </ParamField>
@@ -61,7 +61,7 @@ icon: "bolt"
 </ParamField>
 
 <ParamField body="deep_research" type="boolean">
-  Turn on to use the Deep Research flow. Note that this mode is a lot more token intensive so be careful if accessing it programmatically.
+  Turn on to use the Deep Research flow. Note that this mode is much more token-intensive, so be careful if accessing it programmatically.
 </ParamField>
 
 <ParamField body="parent_message_id" type="integer">
@@ -71,7 +71,7 @@ icon: "bolt"
 </ParamField>
 
 <ParamField body="chat_session_id" type="integer">
-  The ID of chat session where the message is sent. To send follow ups in a conversation, specify the chat session where the message
+  The ID of the chat session where the message is sent. To send follow-ups in a conversation, specify the chat session where the message
   should be sent. If left blank, a new chat session will be created for the message according to chat_session_info (see below).
 </ParamField>
 
@@ -85,14 +85,14 @@ icon: "bolt"
     </ParamField>
     <ParamField body="project_id" type="number">
       ID of a Project if the chat should be scoped to a Project. Projects are used to organize files and instructions and are a
-      lighter weight version of Agents. Through programmatic use, it is typically recommended to use Agents instead.
+      lighter-weight version of Agents. Through programmatic use, it is typically recommended to use Agents instead.
     </ParamField>
   </Expandable>
 </ParamField>
 
 <ParamField body="stream" type="boolean">
   If true, then it responds with an SSE stream of individual packets. This is the same set used for the Onyx UI. Fields like the Answer,
-  Reasoning tokens, iterative Tool Calls, need to be pieced together from streamed tokens.
+  reasoning tokens, and iterative Tool Calls need to be pieced together from streamed tokens.
 
   If false, a single response is given at the end with the fields described in the section below. Recommended for most developers first trying out
   Onyx.
@@ -103,12 +103,12 @@ icon: "bolt"
 The response will come back with all of the following:
 - Answer to the query
 - Answer with citations removed
-- Any intermediate reasonings
+- Any intermediate reasoning
 - Tool call details (reasoning, call arguments, tool responses)
 - Any referenced documents and citations
 - Chat Session ID to continue the conversation
 - Message ID for use cases where conversation branching logic is needed
-- Any errors that occured during the call
+- Any errors that occurred during the call
 
 
 ## Sample Request
@@ -143,7 +143,7 @@ The response will come back with all of the following:
   API_BASE_URL="https://cloud.onyx.app/api"  # or your own domain
   API_KEY="YOUR_KEY_HERE"
 
-  RESPONSE=$(curl -s -X POST "${API_BASE_URL}/chat/send-message-simple-api" \
+  RESPONSE=$(curl -s -X POST "${API_BASE_URL}/chat/send-chat-message" \
     -H "Authorization: Bearer ${API_KEY}" \
     -H "Content-Type: application/json" \
     -d '{
