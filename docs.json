@@ -162,6 +162,7 @@
                   "admins/connectors/official/discourse",
                   "admins/connectors/official/document360",
                   "admins/connectors/official/dropbox",
+                  "admin/connectors/official/drupal_wiki",
                   "admins/connectors/official/egnyte",
                   "admins/connectors/official/file",
                   "admins/connectors/official/fireflies",
