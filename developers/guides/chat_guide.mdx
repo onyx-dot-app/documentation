@@ -1,138 +1,326 @@
 ---
-title: "Send a Message to Onyx"
-description: "Sending messages programmatically to Onyx"
+title: "Send Message (Deprecated)"
+description: "Guide to send a message to Onyx"
 icon: "bolt"
 ---
 
-<Note> This API will be out in version 2.8 and is not live yet </Note>
+<Note>
+  This API is being deprecated in favor of the /chat/send-chat-message API, it will be removed by end of Jan 2026.
+</Note>
 
-## POST `/chat/send-message-non-streaming`
-<Tip>
-  There is a streaming version of the endpoint `/chat/send-message` which gives back fine grained packets such as the reasoning
-  tokens, answer tokens, and tool calls/responses as they happen. The caller must reconstruct the reasoning, tool calls and
-  answer from these packets.
-</Tip>
+## Simple Chat Flow
 
-<ParamField body="message" type="string" required>
-  The user message to send to the Agent.
-</ParamField>
+*Send Message Simple API* is the quickest way to interact with Onyx programmatically.
 
-<ParamField body="parent_message_id" type="integer">
-  The ID of the parent message in the chat history. This is the primary-key (unique identifier) for the previous message of the tree.
-  If not passed in, it is assumed that there is no branching/editing of the last message and it is a new message on top of it.
-  If set to null explicitly, the new message is considered an edit of the root message instead.
-</ParamField>
+This endpoint has fewer required parameters and returns a concise JSON payload described by `ChatBasicResponse`.
 
-<ParamField body="chat_session_id" type="integer">
-  The ID of chat session where the message is sent. To send follow ups in a conversation, specify the chat session where the message
-  should be sent. If left blank, a new chat session will be created for the message according to chat_session_info (see below).
-</ParamField>
+<Note>
+  You must specify either a `chat_session_id` or a `persona_id` in your request.
+</Note>
 
-<ParamField body="chat_session_info" type="object">
-  Specify details about the chat session which will be used for all messages in the session. This is ignored if an existing
-  chat_session_id is provided instead. It can also be left blank to use the default settings.
-  <Expandable title="properties">
-    <ParamField body="persona_id" type="string">
-      The ID of the Agent to use for the chat session. On the backend, it's called persona because the feature was built before Agents
-      became a mainstream term - it is entirely equivalent.
-    </ParamField>
-    <ParamField body="project_id" type="number">
-      ID of a Project if the chat should be scoped to a Project. Projects are used to organize files and instructions and are a
-      lighter weight version of Agents. Through programmatic use, it is typically recommended to use Agents instead.
-    </ParamField>
-  </Expandable>
-</ParamField>
-
-<ParamField body="llm_override" type="object">
-  Override the default LLM settings for this request. The fields can be left as None to not impact the default behavior. For example,
-  you can only update the temperature value alone if desired. Note that if you provide an invalid configuration, for example if the
-  default model_provider is OpenAI and you specify claude-4.5, it will not be able to complete the request.
-  <Expandable title="properties">
-    <ParamField body="model_provider" type="string">
-      The LLM provider (e.g., `openai`, `anthropic`).
-    </ParamField>
-    <ParamField body="model_version" type="string">
-      The specific model version (e.g., `gpt-4o`, `claude-3-opus`).
-    </ParamField>
-    <ParamField body="temperature" type="number">
-      Sampling temperature for the LLM (model specific but typically 0.0 - 1.0).
-    </ParamField>
-  </Expandable>
-</ParamField>
-
-<ParamField body="allowed_tool_ids" type="list[int]">
-  The set of tools/actions made available to the Agent. You can get the list of tools/actions and their ids via the tools endpoint. You can
-  check the list by sending a GET to `https://cloud.onyx.app/api/tool` or your own Onyx deployment. Pass in an empty list to not
-  allow any tools/actions or pass in a null value to allow all the tools/actions which are available to the specific Agent of the chat session.
-</ParamField>
-
-<ParamField body="forced_tool_id" type="int">
-  A specific tool/action which must be run by the Agent. The Agent may run other tools/actions before returning its final response to the user
-  but it will be guaranteed to use this one. Leave empty to leave the choice entirely to the Agent.
-</ParamField>
-
-<ParamField body="file_descriptors" type="list[int]">
-  A list of file IDs to include along with the message. These file IDs are given back when the file upload API is called.
-</ParamField>
-
-<ParamField body="deep_research" type="boolean">
-  Turn on to use the Deep Research flow. Note that this mode is a lot more token intensive so be careful if accessing it programmatically.
-</ParamField>
-
-## Response Format
-The response will come back with all of the following:
-- Tool calls
-- Tool call responses
-- Any intermediate reasonings
-- Any referenced documents
-- Final LLM response to the user query
-
-
-## Sample Request
 <CodeGroup>
   ```python Python expandable
   import requests
 
-  API_BASE_URL = "https://cloud.onyx.app/api"  # or your own domain
+  API_BASE_URL = "https://cloud.onyx.app/api" # or your own domain
   API_KEY = "YOUR_KEY_HERE"
 
   headers = {
-      "Authorization": f"Bearer {API_KEY}",
-      "Content-Type": "application/json"
+    "Authorization": f"Bearer {API_KEY}",
+    "Content-Type": "application/json"
   }
 
+  '''
+  - To create a chat session, see the Full-featured Chat Flow guide below.
+  - To find your persona_id, see the List Agents endpoint in the Agents API Reference.
+  '''
+
   response = requests.post(
-      f"{API_BASE_URL}/chat/send-message-simple-api",
-      headers=headers,
-      json={
-          "message": "What is Onyx?",
-      }
+    f"{API_BASE_URL}/chat/send-message-simple-api",
+    headers=headers,
+    json={
+      "message": "What is Onyx?",
+      "persona_id": 0  # The default Onyx Search Agent (int)
+    }
   )
 
   data = response.json()
-  print("Answer:", data["answer"])
-  print("Message ID:", data["message_id"])
+  answer = data.get("answer")
+  answer_citationless = data.get("answer_citationless")
+  message_id = data.get("message_id")
+  docs = data.get("top_documents") or []
+  top_documents = [
+    {
+      "id": doc.get("document_id"),
+      "title": doc.get("semantic_identifier"),
+      "link": doc.get("link")
+    } for doc in docs
+  ]
+  cited_docs_map = data.get("cited_documents") or {}
+
+  print(f"Answer: {answer}")
+  print(f"Answer (citationless): {answer_citationless}")
+  print(f"Message ID: {message_id}")
+  print(f"Top Documents: {top_documents[:5]}") # Print top 5 documents
+  print(f"Citations map: {cited_docs_map}")
   ```
 
   ```bash Shell expandable
   #!/bin/bash
 
-  API_BASE_URL="https://cloud.onyx.app/api"  # or your own domain
+  API_BASE_URL="https://cloud.onyx.app/api"
   API_KEY="YOUR_KEY_HERE"
 
+  echo "Sending message to Onyx..."
   RESPONSE=$(curl -s -X POST "${API_BASE_URL}/chat/send-message-simple-api" \
     -H "Authorization: Bearer ${API_KEY}" \
     -H "Content-Type: application/json" \
     -d '{
-      "message": "What is Onyx?"
+      "message": "What is Onyx?",
+      "persona_id": 0
     }'
   )
 
-  echo "Answer:" $(echo "$RESPONSE" | jq -r '.answer')
-  echo "Message ID:" $(echo "$RESPONSE" | jq -r '.message_id')
+  echo "Answer:"
+  echo $RESPONSE | jq -r '.answer'
+
+  echo -e "\nAnswer (citationless):"
+  echo $RESPONSE | jq -r '.answer_citationless'
+
+  echo -e "\nMessage ID:"
+  echo $RESPONSE | jq -r '.message_id'
+
+  echo -e "\nTop Documents:"
+  echo $RESPONSE | jq '.top_documents | .[] | {id: .document_id, title: .semantic_identifier, link: .link}'
   ```
 </CodeGroup>
 
+## Advanced Chat Flow
+
+The `/send-message` endpoint is what the Onyx frontend uses to send and receive messages.
+Responses are streamed back in packets of JSON objects.
+
+To understand the response format, see the [Core Concepts documentation](/developers/core_concepts/#chat).
+
+<Steps>
+  <Step title="Prepare your request">
+    <CodeGroup>
+      ```python Python
+      import requests
+
+      API_BASE_URL = "https://cloud.onyx.app/api" # or your own domain
+      API_KEY = "YOUR_KEY_HERE"
+
+      headers = {
+        "Authorization": f"Bearer {API_KEY}",
+        "Content-Type": "application/json"
+      }
+      ```
+
+      ```bash Shell
+      API_BASE_URL="https://cloud.onyx.app/api"
+      API_KEY="YOUR_KEY_HERE"
+      ```
+    </CodeGroup>
+  </Step>
+
+  <Step title="Create a chat session">
+    <CodeGroup>
+      ```python Python
+      session_response = requests.post(
+        f"{API_BASE_URL}/chat/create-chat-session",
+        headers=headers,
+        json={
+          "persona_id": 0, # The default Onyx Search Agent
+          "description": "Onyx API Guide Chat Session"
+        }
+      )
+
+      chat_session_id = session_response.json()["chat_session_id"]
+      ```
+
+      ```bash Shell
+      CHAT_SESSION_RESPONSE=$(curl -s -X POST "${API_BASE_URL}/chat/create-chat-session" \
+        -H "Authorization: Bearer ${API_KEY}" \
+        -H "Content-Type: application/json" \
+        -d '{
+          "persona_id": 0,
+          "description": "Onyx API Guide Chat Session"
+        }'
+      )
+
+      # Extract chat session ID (requires jq for JSON parsing)
+      CHAT_SESSION_ID=$(echo $CHAT_SESSION_RESPONSE | jq -r '.chat_session_id')
+      ```
+    </CodeGroup>
+  </Step>
+
+  <Step title="Send message">
+    <CodeGroup>
+      ```python Python
+      payload = {
+        "chat_session_id": chat_session_id,
+        "parent_message_id": None,
+        "message": "What is Onyx?",
+        "file_descriptors": [],
+        "search_doc_ids": [],
+        "retrieval_options": {}
+      }
+
+      # Consume the streamed packets fully and then print a summary
+      # NOTE: The first packet always contains message IDs:
+      #   {"user_message_id": int, "reserved_assistant_message_id": int}
+      with requests.post(
+        f"{API_BASE_URL}/chat/send-message",
+        headers=headers,
+        json=payload,
+        stream=True,
+      ) as resp:
+        resp.raise_for_status()
+
+        full_text = []
+        docs_raw = None
+        citations_map = {}
+        user_message_id = None
+        reserved_assistant_message_id = None
+
+        # Each line is a JSON Packet: { ind: int, obj: { type: "...", ... } }
+        for line in resp.iter_lines(decode_unicode=True):
+          if not line:
+            continue
+          try:
+            packet = json.loads(line)
+          except Exception:
+            continue
+
+          # First packet: message IDs
+          if "user_message_id" in packet and "reserved_assistant_message_id" in packet:
+            user_message_id = packet.get("user_message_id")
+            reserved_assistant_message_id = packet.get("reserved_assistant_message_id")
+            continue
+
+          obj = packet.get("obj", {})
+          ptype = obj.get("type")
+
+          if ptype == "message_start":
+            # Includes final search documents per API spec
+            docs_raw = obj.get("final_documents") or docs_raw
+          elif ptype == "message_delta":
+            delta = obj.get("content", "")
+            full_text.append(delta)
+          elif ptype == "citation_delta":
+            # Update citation map using citation_num -> document_id pairs
+            if isinstance(obj.get("citations"), list):
+              for c in obj["citations"]:
+                cnum = c.get("citation_num")
+                did = c.get("document_id")
+                if cnum is not None and did is not None:
+                  citations_map[str(cnum)] = str(did)
+          elif ptype == "stop":
+            break
+
+      # Prepare documents (id/title/link) if present
+      top_documents = []
+      if isinstance(docs_raw, list):
+        for d in docs_raw:
+          top_documents.append(
+            {
+              "id": d.get("document_id") or d.get("id"),
+              "title": d.get("semantic_identifier") or d.get("title"),
+              "link": d.get("link") or d.get("url"),
+            }
+          )
+
+      print("Final Answer:\n" + "".join(full_text))
+      if user_message_id is not None:
+        print(f"\nUser message ID: {user_message_id}")
+      if reserved_assistant_message_id is not None:
+        print(f"Reserved assistant message ID: {reserved_assistant_message_id}")
+      print("\nTop Documents:")
+      print(json.dumps(top_documents, indent=2))
+      print("\nCitations map (citation_num -> document_id):")
+      print(json.dumps(citations_map, indent=2))
+      ```
+
+      ```bash Shell
+      # Read streamed response to completion (no live token rendering)
+      curl -s -N -X POST "${API_BASE_URL}/chat/send-message" \
+        -H "Authorization: Bearer ${API_KEY}" \
+        -H "Content-Type: application/json" \
+        -d "{
+          \"chat_session_id\": \"${CHAT_SESSION_ID}\",
+          \"parent_message_id\": null,
+          \"message\": \"What is Onyx?\",
+          \"file_descriptors\": [],
+          \"search_doc_ids\": [],
+          \"retrieval_options\": {}
+        }" \
+        | (
+          TEXT=""
+          DOCS_JSON=""
+          CITS_JSON='{}'
+          USER_MSG_ID=""
+          RESERVED_ASST_ID=""
+          while IFS= read -r line; do
+            [ -z "$line" ] && continue
+            # First packet contains message IDs
+            uid=$(echo "$line" | jq -r '.user_message_id // empty')
+            rid=$(echo "$line" | jq -r '.reserved_assistant_message_id // empty')
+            if [ -n "$uid" ] || [ -n "$rid" ]; then
+              [ -n "$uid" ] && USER_MSG_ID="$uid"
+              [ -n "$rid" ] && RESERVED_ASST_ID="$rid"
+              continue
+            fi
+
+            type=$(echo "$line" | jq -r '.obj.type // empty')
+            if [ "$type" = "message_start" ]; then
+              docs=$(echo "$line" | jq -c '(.obj.final_documents) // empty')
+              if [ -n "$docs" ] && [ -z "$DOCS_JSON" ]; then
+                DOCS_JSON="$docs"
+              fi
+            elif [ "$type" = "message_delta" ]; then
+              delta=$(echo "$line" | jq -r '.obj.content // empty')
+              TEXT+="$delta"
+            elif [ "$type" = "citation_delta" ]; then
+              newmap=$(echo "$line" | jq -c '
+                if (.obj.citations // empty) then
+                  (reduce (.obj.citations // [])[] as $c ({}; .[($c.citation_num|tostring)] = ($c.document_id|tostring)))
+                else
+                  {}
+                end')
+              CITS_JSON=$(jq -c --argjson A "$CITS_JSON" --argjson B "$newmap" '$A * $B' <<< '{}')
+            elif [ "$type" = "stop" ]; then
+              break
+            fi
+          done
+
+          echo "Final Answer:"
+          printf "%s\n" "$TEXT"
+
+          echo
+          if [ -n "$USER_MSG_ID" ]; then
+            echo "User message ID: $USER_MSG_ID"
+          fi
+          if [ -n "$RESERVED_ASST_ID" ]; then
+            echo "Reserved assistant message ID: $RESERVED_ASST_ID"
+          fi
+
+          echo
+          echo "Top Documents:"
+          if [ -z "$DOCS_JSON" ]; then
+            echo "[]"
+          else
+            echo "$DOCS_JSON" | jq -c '[.[] | {id: (.document_id // .id), title: (.semantic_identifier // .title), link: (.link // .url)}]'
+          fi
+
+          echo
+          echo "Citations map (citation_num -> document_id):"
+          echo "$CITS_JSON" | jq '.'
+        )
+      ```
+    </CodeGroup>
+  </Step>
+</Steps>
 
 ## Next Steps
 
