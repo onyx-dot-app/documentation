@@ -304,7 +304,7 @@
             "group": "Guides & Examples",
             "icon": "book-open",
             "pages": [
-              "developers/guides/chat_guide",
+              "developers/guides/chat_new_guide",
               "developers/guides/index_files_ingestion_api",
               "developers/guides/create_connector"
             ]
@@ -429,6 +429,7 @@
           {
             "group": "Miscellaneous",
             "pages": [
+              "developers/guides/chat_guide",
               "developers/contact_us"
             ]
           }

@@ -1,0 +1,170 @@
+---
+title: "Send a Message to Onyx"
+description: "Sending messages programmatically to Onyx"
+icon: "bolt"
+---
+
+## POST `/chat/send-chat-message`
+
+<ParamField body="message" type="string" required>
+  The user message to send to the Agent.
+</ParamField>
+
+<ParamField body="llm_override" type="object">
+  Override the default LLM settings for this request. The fields can be left as None to not impact the default behavior. For example,
+  you can only update the temperature value alone if desired. Note that if you provide an invalid configuration, for example if the
+  default model_provider is OpenAI and you specify claude-4.5, it will not be able to complete the request.
+  <Expandable title="properties">
+    <ParamField body="model_provider" type="string">
+      The LLM provider (e.g., `openai`, `anthropic`).
+    </ParamField>
+    <ParamField body="model_version" type="string">
+      The specific model version (e.g., `gpt-4o`, `claude-3-opus`).
+    </ParamField>
+    <ParamField body="temperature" type="number">
+      Sampling temperature for the LLM (model-specific but typically 0.0 - 1.0).
+    </ParamField>
+  </Expandable>
+</ParamField>
+
+<ParamField body="allowed_tool_ids" type="list[int]">
+  The set of tools/actions made available to the Agent. You can get the list of tools/actions and their IDs via the tools endpoint. You can
+  check the list by sending a GET to `https://cloud.onyx.app/api/tool` or your own Onyx deployment. Pass in an empty list to not
+  allow any tools/actions or pass in a null value to allow all the tools/actions which are available to the specific Agent of the chat session.
+</ParamField>
+
+<ParamField body="forced_tool_id" type="int">
+  A specific tool/action which must be run by the Agent. The Agent may run other tools/actions before returning its final response to the user
+  but it will be guaranteed to use this one. Leave empty to leave the choice entirely to the Agent.
+</ParamField>
+
+<ParamField body="file_descriptors" type="list[int]">
+  A list of file IDs to include along with the message. These file IDs are given back when the file upload API is called.
+</ParamField>
+
+<ParamField body="search_filters" type="object">
+  Filters to narrow down the internal search results used by the Agent. All filters are optional and can be combined.
+  <Expandable title="properties">
+    <ParamField body="source_type" type="list[string]">
+      Filter by document source types (e.g., `web`, `slack`, `google_drive`, `confluence`). Only documents from the specified sources will be searched.
+    </ParamField>
+    <ParamField body="document_set" type="list[string]">
+      Filter by document set names. Only documents belonging to the specified document sets will be included in search results.
+    </ParamField>
+    <ParamField body="time_cutoff" type="string (ISO 8601 datetime)">
+      Only include documents created or modified after this timestamp. Format: `YYYY-MM-DDTHH:MM:SSZ` (e.g., `2024-01-01T00:00:00Z`).
+    </ParamField>
+    <ParamField body="tags" type="list[object]">
+      Filter by document tags. Each tag object contains `tag_key` and `tag_value` fields. Only documents with matching tags will be searched.
+    </ParamField>
+  </Expandable>
+</ParamField>
+
+<ParamField body="deep_research" type="boolean">
+  Turn on to use the Deep Research flow. Note that this mode is much more token-intensive, so be careful if accessing it programmatically.
+</ParamField>
+
+<ParamField body="parent_message_id" type="integer">
+  The ID of the parent message in the chat history. This is the primary-key (unique identifier) for the previous message of the tree.
+  If not passed in, it is assumed that there is no branching/editing of the last message and it is a new message on top of it.
+  If set to null explicitly, the new message is considered an edit of the root message instead.
+</ParamField>
+
+<ParamField body="chat_session_id" type="integer">
+  The ID of the chat session where the message is sent. To send follow-ups in a conversation, specify the chat session where the message
+  should be sent. If left blank, a new chat session will be created for the message according to chat_session_info (see below).
+</ParamField>
+
+<ParamField body="chat_session_info" type="object">
+  Specify details about the chat session which will be used for all messages in the session. The field values can be left blank to use the default
+  chat settings.
+  <Expandable title="properties">
+    <ParamField body="persona_id" type="string">
+      The ID of the Agent to use for the chat session. On the backend, it's called persona because the feature was built before Agents
+      became a mainstream term - it is entirely equivalent.
+    </ParamField>
+    <ParamField body="project_id" type="number">
+      ID of a Project if the chat should be scoped to a Project. Projects are used to organize files and instructions and are a
+      lighter-weight version of Agents. Through programmatic use, it is typically recommended to use Agents instead.
+    </ParamField>
+  </Expandable>
+</ParamField>
+
+<ParamField body="stream" type="boolean">
+  If true, then it responds with an SSE stream of individual packets. This is the same set used for the Onyx UI. Fields like the Answer,
+  reasoning tokens, and iterative Tool Calls need to be pieced together from streamed tokens.
+
+  If false, a single response is given at the end with the fields described in the section below. Recommended for most developers first trying out
+  Onyx.
+</ParamField>
+
+
+## Response Format
+The response will come back with all of the following:
+- Answer to the query
+- Answer with citations removed
+- Any intermediate reasoning
+- Tool call details (reasoning, call arguments, tool responses)
+- Any referenced documents and citations
+- Chat Session ID to continue the conversation
+- Message ID for use cases where conversation branching logic is needed
+- Any errors that occurred during the call
+
+
+## Sample Request
+<CodeGroup>
+  ```python Python expandable
+  import requests
+
+  API_BASE_URL = "https://cloud.onyx.app/api"  # or your own domain
+  API_KEY = "YOUR_KEY_HERE"
+
+  headers = {
+      "Authorization": f"Bearer {API_KEY}",
+      "Content-Type": "application/json"
+  }
+
+  response = requests.post(
+      f"{API_BASE_URL}/chat/send-chat-message",
+      headers=headers,
+      json={
+          "message": "What is Onyx?",
+      }
+  )
+
+  data = response.json()
+  print("Answer:", data["answer"])
+  print("Message ID:", data["message_id"])
+  ```
+
+  ```bash Shell expandable
+  #!/bin/bash
+
+  API_BASE_URL="https://cloud.onyx.app/api"  # or your own domain
+  API_KEY="YOUR_KEY_HERE"
+
+  RESPONSE=$(curl -s -X POST "${API_BASE_URL}/chat/send-chat-message" \
+    -H "Authorization: Bearer ${API_KEY}" \
+    -H "Content-Type: application/json" \
+    -d '{
+      "message": "What is Onyx?"
+    }'
+  )
+
+  echo "Answer:" $(echo "$RESPONSE" | jq -r '.answer')
+  echo "Message ID:" $(echo "$RESPONSE" | jq -r '.message_id')
+  ```
+</CodeGroup>
+
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Guide: Use the Ingestion API" icon="upload" href="/developers/guides/index_files_ingestion_api">
+    Use the lightweight ingestion API to index documents
+  </Card>
+
+  <Card title="Guide: Create a Connector" icon="link" href="/developers/guides/create_connector">
+    Learn how to create and configure Connectors programmatically
+  </Card>
+</CardGroup>
