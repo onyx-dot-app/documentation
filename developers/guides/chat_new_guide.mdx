@@ -4,114 +4,177 @@ description: "Sending messages programmatically to Onyx"
 icon: "bolt"
 ---
 
-## POST `/chat/send-chat-message`
+<Note>
+  We recommend you migrate any usage of `/chat/send-message` and `/chat/send-message-simple-api` to this new API by
+  February 1st, 2026.
+</Note>
 
-<ParamField body="message" type="string" required>
-  The user message to send to the Agent.
-</ParamField>
+The `/chat/send-chat-message` API is used to send a message to Onyx.
+It is the same API that the Onyx frontend uses to send and receive messages.
+You have the option of receiving a streaming response or the complete response as a string.
 
-<ParamField body="llm_override" type="object">
-  Override the default LLM settings for this request. The fields can be left as None to not impact the default behavior. For example,
-  you can only update the temperature value alone if desired. Note that if you provide an invalid configuration, for example if the
-  default model_provider is OpenAI and you specify claude-4.5, it will not be able to complete the request.
-  <Expandable title="properties">
-    <ParamField body="model_provider" type="string">
-      The LLM provider (e.g., `openai`, `anthropic`).
-    </ParamField>
-    <ParamField body="model_version" type="string">
-      The specific model version (e.g., `gpt-4o`, `claude-3-opus`).
-    </ParamField>
-    <ParamField body="temperature" type="number">
-      Sampling temperature for the LLM (model-specific but typically 0.0 - 1.0).
-    </ParamField>
-  </Expandable>
-</ParamField>
+This guide was explain all of the parameters you can pass in to the API and provide a code sample.
 
-<ParamField body="allowed_tool_ids" type="list[int]">
-  The set of tools/actions made available to the Agent. You can get the list of tools/actions and their IDs via the tools endpoint. You can
-  check the list by sending a GET to `https://cloud.onyx.app/api/tool` or your own Onyx deployment. Pass in an empty list to not
-  allow any tools/actions or pass in a null value to allow all the tools/actions which are available to the specific Agent of the chat session.
-</ParamField>
+<AccordionGroup>
+  <Accordion title="message">
+    The user message to send to the Agent.
+  </Accordion>
 
-<ParamField body="forced_tool_id" type="int">
-  A specific tool/action which must be run by the Agent. The Agent may run other tools/actions before returning its final response to the user
-  but it will be guaranteed to use this one. Leave empty to leave the choice entirely to the Agent.
-</ParamField>
+  <Accordion title="llm_override">
+    Pass an object to override the default LLM settings for this request. If `None`,
+    you will get the default Onyx behavior.
 
-<ParamField body="file_descriptors" type="list[int]">
-  A list of file IDs to include along with the message. These file IDs are given back when the file upload API is called.
-</ParamField>
+    You can pass or exclude any of the following fields: `model_provider`, `model_version`, `temperature`
 
-<ParamField body="search_filters" type="object">
-  Filters to narrow down the internal search results used by the Agent. All filters are optional and can be combined.
-  <Expandable title="properties">
-    <ParamField body="source_type" type="list[string]">
-      Filter by document source types (e.g., `web`, `slack`, `google_drive`, `confluence`). Only documents from the specified sources will be searched.
-    </ParamField>
-    <ParamField body="document_set" type="list[string]">
-      Filter by document set names. Only documents belonging to the specified document sets will be included in search results.
-    </ParamField>
-    <ParamField body="time_cutoff" type="string (ISO 8601 datetime)">
-      Only include documents created or modified after this timestamp. Format: `YYYY-MM-DDTHH:MM:SSZ` (e.g., `2024-01-01T00:00:00Z`).
-    </ParamField>
-    <ParamField body="tags" type="list[object]">
-      Filter by document tags. Each tag object contains `tag_key` and `tag_value` fields. Only documents with matching tags will be searched.
-    </ParamField>
-  </Expandable>
-</ParamField>
+    If you pass an invalid configuration,
+    for example if the default `model_provider` is OpenAI and you only specify `claude-sonnet-4.5`,
+    your request will fail.
+  </Accordion>
 
-<ParamField body="deep_research" type="boolean">
-  Turn on to use the Deep Research flow. Note that this mode is much more token-intensive, so be careful if accessing it programmatically.
-</ParamField>
+  <Accordion title="allowed_tool_ids">
+    Agents are created with a set of Actions they are allowed to invoke.
+    You can further configure this set for your immediate interaction using this parameter.
 
-<ParamField body="parent_message_id" type="integer">
-  The ID of the parent message in the chat history. This is the primary-key (unique identifier) for the previous message of the tree.
-  If not passed in, it is assumed that there is no branching/editing of the last message and it is a new message on top of it.
-  If set to null explicitly, the new message is considered an edit of the root message instead.
-</ParamField>
+    See the list of Actions and their IDs via the [GET /tool](/developers/api_reference/actions/list_tools) endpoint.
 
-<ParamField body="chat_session_id" type="integer">
-  The ID of the chat session where the message is sent. To send follow-ups in a conversation, specify the chat session where the message
-  should be sent. If left blank, a new chat session will be created for the message according to chat_session_info (see below).
-</ParamField>
+    Pass in an empty list to disable all Actions.
+    Pass in `None` to allow all the Actions which are configured for the Agent.
+  </Accordion>
 
-<ParamField body="chat_session_info" type="object">
-  Specify details about the chat session which will be used for all messages in the session. The field values can be left blank to use the default
-  chat settings.
-  <Expandable title="properties">
-    <ParamField body="persona_id" type="string">
-      The ID of the Agent to use for the chat session. On the backend, it's called persona because the feature was built before Agents
-      became a mainstream term - it is entirely equivalent.
-    </ParamField>
-    <ParamField body="project_id" type="number">
-      ID of a Project if the chat should be scoped to a Project. Projects are used to organize files and instructions and are a
-      lighter-weight version of Agents. Through programmatic use, it is typically recommended to use Agents instead.
-    </ParamField>
-  </Expandable>
-</ParamField>
+  <Accordion title="forced_tool_id">
+    Force the Agent to use a specific Action for this request. A specific tool/action which must be run by the Agent.
+    The Agent may run other Actions before returning its final response, but it will be guaranteed to use this one.
 
-<ParamField body="stream" type="boolean">
-  If true, then it responds with an SSE stream of individual packets. This is the same set used for the Onyx UI. Fields like the Answer,
-  reasoning tokens, and iterative Tool Calls need to be pieced together from streamed tokens.
+    Leave empty to let the Agent decide which Actions to use.
+  </Accordion>
 
-  If false, a single response is given at the end with the fields described in the section below. Recommended for most developers first trying out
-  Onyx.
-</ParamField>
+  <Accordion title="file_descriptors">
+    A list of files to include along with your request.
+    File IDs can be found via the [POST
+    /user/projects/file/upload](/developers/api_reference/projects/upload_user_files)
+    and the [GET /user/projects/file/{file_id}](/developers/api_reference/projects/get_user_file) endpoints.
+  </Accordion>
 
+  <Accordion title="search_filters">
+    Filters to narrow down the internal search results used by the Agent.
+    All filters arguments are optional and can be combined.
+    - `source_type`: Source types like `web`, `slack`, `google_drive`, `confluence`
+    - `document_set`: The name of the document sets to search within
+    - `time_cutoff`: Only include documents created or modified after this timestamp. ISO 8601 format: `YYYY-MM-DDTHH:MM:SSZ` (e.g.,
+    `2024-01-01T00:00:00Z`).
+    - `tags`: Document tags in the format `{"tag_key": "tag_value"}`.
+    Only documents with matching tags will be searched.
+  </Accordion>
+
+  <Accordion title="deep_research">
+    Enables Deep Research mode for this request.
+
+    Note that this mode consumes significantly more tokens, so be careful accessing it via the API.
+  </Accordion>
+
+  <Accordion title="parent_message_id">
+    The ID of the parent message in the chat history. This is the primary-key (unique identifier)
+    for the previous message in the chat history tree.
+
+    If not passed in, it is assumed that your new message is sequentially after the last message in the chat history.
+
+    <Warning>
+      If set to `None`,
+      the chat history is reset and the new message is considered the first message in the chat history.
+    </Warning>
+  </Accordion>
+
+  <Accordion title="chat_session_id">
+    To continue an existing conversation, pass in the chat session ID where the message should be sent.
+
+    If left blank, a new chat session will be created for the message according to `chat_session_info` (see below).
+  </Accordion>
+
+  <Accordion title="chat_session_info">
+    Details about the chat session which will be used for all messages in the session.
+    The field values can be left blank to use the default chat settings.
+
+    - `persona_id`: The ID of the Agent to use for the chat session
+    - `project_id`: ID of a Project if the chat should be scoped to a Project. Projects are used to organize files and instructions and are a lighter-weight version of Agents. Through programmatic use, it is typically recommended to use Agents instead.
+  </Accordion>
+
+  <Accordion title="stream">
+    If true, then it responds with an SSE stream of individual packets. This is the same set used for the Onyx UI.
+    Fields like the Answer, reasoning tokens, and iterative Tool Calls need to be pieced together from streamed tokens.
+  </Accordion>
+</AccordionGroup>
 
 ## Response Format
-The response will come back with all of the following:
-- Answer to the query
-- Answer with citations removed
-- Any intermediate reasoning
-- Tool call details (reasoning, call arguments, tool responses)
-- Any referenced documents and citations
-- Chat Session ID to continue the conversation
-- Message ID for use cases where conversation branching logic is needed
-- Any errors that occurred during the call
 
+### Streaming Response
+
+Onyx returns various types of packets in the streaming response depending on the LLM's behavior.
+
+See our
+[streaming_models.py](https://github.com/onyx-dot-app/onyx/blob/main/backend/onyx/server/query_and_chat/streaming_models.py)
+on GitHub for the complete list of packet types and their corresponding fields.
+
+```python expandable
+class StreamingType(Enum):
+    """Enum defining all streaming packet types."""
+
+    SECTION_END = "section_end"
+    STOP = "stop"
+    TOP_LEVEL_BRANCHING = "top_level_branching"
+    ERROR = "error"
+
+    MESSAGE_START = "message_start"
+    MESSAGE_DELTA = "message_delta"
+    SEARCH_TOOL_START = "search_tool_start"
+    SEARCH_TOOL_QUERIES_DELTA = "search_tool_queries_delta"
+    SEARCH_TOOL_DOCUMENTS_DELTA = "search_tool_documents_delta"
+    OPEN_URL_START = "open_url_start"
+    OPEN_URL_URLS = "open_url_urls"
+    OPEN_URL_DOCUMENTS = "open_url_documents"
+    IMAGE_GENERATION_START = "image_generation_start"
+    IMAGE_GENERATION_HEARTBEAT = "image_generation_heartbeat"
+    IMAGE_GENERATION_FINAL = "image_generation_final"
+    PYTHON_TOOL_START = "python_tool_start"
+    PYTHON_TOOL_DELTA = "python_tool_delta"
+    CUSTOM_TOOL_START = "custom_tool_start"
+    CUSTOM_TOOL_DELTA = "custom_tool_delta"
+    REASONING_START = "reasoning_start"
+    REASONING_DELTA = "reasoning_delta"
+    REASONING_DONE = "reasoning_done"
+    CITATION_INFO = "citation_info"
+
+    DEEP_RESEARCH_PLAN_START = "deep_research_plan_start"
+    DEEP_RESEARCH_PLAN_DELTA = "deep_research_plan_delta"
+    RESEARCH_AGENT_START = "research_agent_start"
+    INTERMEDIATE_REPORT_START = "intermediate_report_start"
+    INTERMEDIATE_REPORT_DELTA = "intermediate_report_delta"
+    INTERMEDIATE_REPORT_CITED_DOCS = "intermediate_report_cited_docs"
+```
+
+### Non-streaming Response
+
+```python
+class ChatFullResponse(BaseModel):
+    """Complete non-streaming response with all available data."""
+
+    # Core response fields
+    answer: str
+    answer_citationless: str
+    pre_answer_reasoning: str | None = None
+    tool_calls: list[ToolCallResponse] = []
+
+    # Documents & citations
+    top_documents: list[SearchDoc]
+    citation_info: list[CitationInfo]
+
+    # Metadata
+    message_id: int
+    chat_session_id: UUID | None = None
+    error_msg: str | None = None
+```
 
 ## Sample Request
+
 <CodeGroup>
   ```python Python expandable
   import requests
@@ -155,7 +218,6 @@ The response will come back with all of the following:
   echo "Message ID:" $(echo "$RESPONSE" | jq -r '.message_id')
   ```
 </CodeGroup>
-
 
 ## Next Steps
 

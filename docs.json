@@ -317,7 +317,6 @@
                 "icon": "comment",
                 "pages": [
                   "developers/api_reference/chat/create_new_chat_session",
-                  "developers/api_reference/chat/handle_new_chat_message",
                   "developers/api_reference/chat/handle_send_chat_message",
                   "developers/api_reference/chat/seed_chat",
                   "developers/api_reference/chat/stop_chat_session",
