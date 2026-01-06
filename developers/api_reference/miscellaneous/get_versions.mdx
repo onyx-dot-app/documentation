@@ -1,24 +1,4 @@
 ---
-title: "Latest Version Tags"
+title: "Get Versions"
 openapi: "GET /versions"
 ---
-
-Fetches the latest stable and beta versions of Onyx Docker images.
-
-Since DockerHub does not explicitly flag stable and beta images,
-this endpoint can be used to programmatically check for new images.
-
-## Response
-
-Returns version information for both stable and beta releases of Onyx Docker images.
-
-## Example
-
-```bash
-curl -X GET "https://cloud.onyx.app/api/versions"
-```
-
-This endpoint is useful for:
-- Automated deployment scripts that need to check for new versions
-- Monitoring systems that track available updates
-- CI/CD pipelines that deploy the latest stable or beta versions
