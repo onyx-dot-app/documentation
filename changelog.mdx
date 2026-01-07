@@ -6,6 +6,82 @@ mode: "wide"
 rss: true
 ---
 
+<Update label="v2.7.0" description="January 7th, 2026" tags={["New Features", "Breaking Changes", "Bug Fixes"]}>
+
+  ## v2.7.0
+
+  A brand new Agent creation page, LLM configuration forms saw some love, and a new Image Generation page!
+
+  Thank you to our contributors for helping make this release possible!
+
+  <Warning>
+    v2.7.0 introduces [a new API](/developers/guides/chat_new_guide) for sending messages to Onyx.
+
+    The old `/chat/send-message` and `/chat/send-message-simple-api` endpoints will be removed by Feb 1st, 2026.
+  </Warning>
+
+  ## Key Improvements
+
+  ### Agent Creation
+
+  The Agent creation page received a makeover!
+
+  The form is now simpler, more intuitive, and matches the (sleek and beautiful)
+  design of the rest of the Onyx interface.
+
+  <img className="rounded-image" src="/assets/changelog/v2.7/showcase_agent_creation.png" alt="Agent Creation Page"/>
+
+  ### Image Generation Configuration
+
+  Gone are the days of setting environemnt variables for image generation.
+  There's a new page for configuring image generation models in the Admin Panel.
+
+  You can re-use your existing OpenAI API key or setup new OpenAI or Azure providers.
+  Nano Banana support is coming soon!
+
+  <img className="rounded-image" src="/assets/changelog/v2.7/showcase_image_generation_configuration.png" alt="Image Generation Configuration Page"/>
+
+  ### New LLM Configuration Forms
+
+  The LLM configuration form also received a refresh in this release.
+
+  If you're using OpenAI, Anthropic, Vertex/Gemini, or OpenRouter,
+  you can now set the providers to "auto-update" and display the latest, most recommended models.
+
+  <Note>
+    The auto-update feature requires an internet connection to GitHub to fetch our recommended models list.
+  </Note>
+
+  <img className="rounded-image" src="/assets/changelog/v2.7/showcase_llm_configuration_forms.png" alt="LLM Configuration Forms"/>
+
+  ## Additional Improvements
+
+  ### MCP Server Deployment
+
+  The Onyx MCP Server is now disabled by default in the `docker-compose.yml` file.
+  You will no longer see the container start and stop (when disabled) in Docker.
+
+  To deploy the MCP Server,
+  you will need to set `MCP_SERVER_ENABLED=true` in your environment and uncomment the MCP Server section in your
+  `docker-compose.yml` file.
+
+  ### Model Server Changes
+
+  Multiple custom models were removed from the model server image. As a result,
+  Onyx's total disk and memory footprint was reduced!
+
+  ### New Cloud Usage Limits
+
+  We've recently seen a wave of abuse of our Cloud service's free LLM access. Moving forward,
+  if you use our provided LLM keys, you'll see a weekly limit on LLM usage cost.
+
+  If you run into this limit, feel free to reach out to us at hello@onyx.app, and we'll be happy to help!
+
+  <Tip>
+    These changes only apply if you use Onyx-provided LLM keys on [Onyx Cloud](https://cloud.onyx.app?utm_source=docs&utm_content=changelog).
+  </Tip>
+</Update>
+
 <Update label="v2.6.0" description="December 30th, 2025" tags={["New Features", "Bug Fixes", "Performance"]}>
 
   ## v2.6.0
