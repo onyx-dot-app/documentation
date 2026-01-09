@@ -7,15 +7,22 @@ icon: "chrome"
 The Onyx Chrome Extension allows users to access Onyx from anywhere in their browser.
 
 Features include:
+
 - An Onyx browser home page
-- Favorite website bookmarks
 - An Onyx sidebar in your browser
+- Contextual search on selected text
+- Deep Research capabilities
 
 <Info>
-  Coming soon: Ask questions about the page you're viewing and index visited pages into your Onyx knowledge base!
+  Coming soon: Full page context chat and indexing visited pages into your Onyx
+  knowledge base!
 </Info>
 
-<img className="rounded-image" src="/assets/deployment/onyx_chrome_extension.png" alt="Onyx Chrome Extension Home Page" />
+<img
+  className="rounded-image"
+  src="/assets/deployment/onyx_chrome_extension.png"
+  alt="Onyx Chrome Extension Home Page"
+/>
 
 ## Installation Options
 
@@ -31,10 +38,12 @@ Features include:
   </Step>
 
   <Step title="Enable Developer Mode">
+
     - Visit `chrome://extensions/` in your Chrome browser
     - In the upper right corner, click **Developer mode** to enable it
 
     <img className="rounded-image" src="/assets/deployment/chrome_extension.png" alt="Chrome Extension Developer Mode"/>
+
   </Step>
 
   <Step title="Load the extension">
@@ -43,9 +52,11 @@ Features include:
     - Click **Load**
 
     The extension is now installed and ready to configure.
+
   </Step>
 
   <Step title="Configure connection settings">
+
     - Click the three dots (...) next to the extension
     - Select **Options**
     - Set the **Root Domain** to your self-hosted Onyx instance's URL
@@ -53,11 +64,13 @@ Features include:
     <img className="rounded-image" src="/assets/deployment/extension_settings.png" alt="Extension Settings Menu"/>
 
     <img className="rounded-image" src="/assets/deployment/root_domain.png" alt="Root Domain Configuration" />
+
   </Step>
 </Steps>
 
 <Note>
-  The extension will now connect to your self-hosted Onyx instance and can be used from any page in Chrome.
+  The extension will now connect to your self-hosted Onyx instance and can be
+  used from any page in Chrome.
 </Note>
 
 ## Enterprise Deployment
@@ -66,22 +79,27 @@ For organizations deploying the extension at scale, use Google Admin Console for
 
 <Steps>
   <Step title="Access Chrome Management">
+    
     - Log in to your Google Admin console
     - Navigate to **Devices → Chrome → Apps and extensions**
   </Step>
 
-  <Step title="Add the extension">
-    - Obtain the Chrome extension ID from an Onyx team member
-    - Click the yellow plus icon to add the extension
-    - Enter the Chrome extension ID and click **Add**
-  </Step>
+{" "}
+
+<Step title="Add the extension">
+  - Obtain the Chrome extension ID from an Onyx team member - Click the yellow
+  plus icon to add the extension - Enter the Chrome extension ID and click
+  **Add**
+</Step>
 
   <Step title="Configure deployment">
     Configure deployment options such as:
+
     - Force installation for specific organizational units
     - User access controls
     - Update policies and version management
     - Installation policies (allowed, forced, or blocked)
+
   </Step>
 
   <Step title="Save configuration">
