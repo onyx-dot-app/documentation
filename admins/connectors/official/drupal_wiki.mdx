@@ -20,10 +20,24 @@ whether public or private.
 You will need an API access token for your Drupal Wiki instance.
 The token must start with `pat:` (Personal Access Token).
 
-1. Navigate to your Drupal Wiki instance
-2. Follow the documentation to generate an access token: [https://help.drupal-wiki.com/node/605#2-Zugriffs-Token-generieren](https://help.drupal-wiki.com/node/605#2-Zugriffs-Token-generieren)
-3. Ensure the REST API interface is available in your Drupal instance
-4. Copy the generated API token (it should start with `pat:`)
+<Steps>
+  <Step title="Navigate to your Drupal Wiki instance">
+    Navigate to your Drupal Wiki instance
+  </Step>
+
+  <Step title="Generate an access token">
+    Follow the documentation to generate an access token:
+    [https://help.drupal-wiki.com/node/605#2-Zugriffs-Token-generieren](https://help.drupal-wiki.com/node/605#2-Zugriffs-Token-generieren)
+  </Step>
+
+  <Step title="Ensure REST API is available">
+    Ensure the REST API interface is available in your Drupal instance
+  </Step>
+
+  <Step title="Copy the API token">
+    Copy the generated API token (it should start with `pat:`)
+  </Step>
+</Steps>
 
 <Info>
   The API token determines which content will be accessible to Onyx.
@@ -32,24 +46,38 @@ The token must start with `pat:` (Personal Access Token).
 
 ### Indexing
 
-1. Navigate to the Admin Dashboard and select the **Drupal Wiki** connector
-2. In **Step 1**, provide your Drupal Wiki configuration:
-    - **API Token**: The access token you generated (starting with `pat:`)
+<Steps>
+  <Step title="Navigate to the Admin Dashboard">
+    Navigate to the Admin Dashboard and select the **Drupal Wiki** connector
+  </Step>
 
-3. In **Step 2**, choose your indexing scope:
+  <Step title="Provide your Drupal Wiki configuration">
+    In **Step 1**, provide your Drupal Wiki configuration:
+    - **API Token**: The access token you generated (starting with `pat:`)
+  </Step>
+
+  <Step title="Choose your indexing scope">
+    In **Step 2**, choose your indexing scope:
     - **Base URL**: The base URL of your Drupal Wiki instance (e.g., `https://help.drupal-wiki.com`)
     - **All Content**: Index all spaces and pages accessible to your API token
     - **Specific Spaces**: Enter specific Space IDs to index only certain areas
-      - To find Space IDs, refer to: [https://help.drupal-wiki.com/node/606](https://help.drupal-wiki.com/node/606)
+    - To find Space IDs, refer to: [https://help.drupal-wiki.com/node/606](https://help.drupal-wiki.com/node/606)
     - **Specific Pages**: Enter specific Page (Node) IDs to index only certain pages
+  </Step>
 
-4. Configure additional options:
+  <Step title="Configure additional options">
+    Configure additional options:
     - **Include Attachments**: Check this to also index file attachments (PDF, DOC, DOCX, XLS, XLSX, PPT, PPTX, TXT,
-      HTML, MD, CSV)
+    HTML, MD, CSV)
+  </Step>
 
-5. Click the `Connect` button! Your Drupal Wiki content will be indexed and kept up to date with incremental synchronization.
+  <Step title="Connect and start indexing">
+    Click the `Connect` button!
+    Your Drupal Wiki content will be indexed and kept up to date with incremental synchronization.
+  </Step>
+</Steps>
 
-![OnyxDrupalWikiConfig](/assets/admin/connectors/drupal_wiki/OnyxDrupalWikiConfig.png)
+<img className="rounded-image" src="/assets/admins/connectors/drupal_wiki/OnyxDrupalWikiConfig.png" alt="Onyx Drupal Wiki configuration"/>
 
 ## Supported Content Types
 
