@@ -305,7 +305,7 @@
             "group": "Guides & Examples",
             "icon": "book-open",
             "pages": [
-              "developers/guides/chat_guide",
+              "developers/guides/chat_new_guide",
               "developers/guides/index_files_ingestion_api",
               "developers/guides/create_connector"
             ]
@@ -317,111 +317,163 @@
                 "group": "Chat",
                 "icon": "comment",
                 "pages": [
-                  "developers/api_reference/chat/get_chat_session",
-                  "developers/api_reference/chat/create_chat_session",
-                  "developers/api_reference/chat/send_message",
-                  "developers/api_reference/chat/send_message_simple",
-                  "developers/api_reference/chat/upload_file",
-                  "developers/api_reference/chat/delete_chat",
-                  "developers/api_reference/chat/share_chat_session",
+                  "developers/api_reference/chat/create_new_chat_session",
+                  "developers/api_reference/chat/handle_send_chat_message",
+                  "developers/api_reference/chat/seed_chat",
+                  "developers/api_reference/chat/stop_chat_session",
                   "developers/api_reference/chat/search_chats",
-                  "developers/api_reference/chat/create_folder",
-                  "developers/api_reference/chat/add_chat_to_folder"
+                  "developers/api_reference/chat/get_chat_session",
+                  "developers/api_reference/chat/get_user_chat_sessions",
+                  "developers/api_reference/chat/fetch_chat_file",
+                  "developers/api_reference/chat/delete_chat_session_by_id",
+                  "developers/api_reference/chat/delete_all_chat_sessions"
                 ]
               },
               {
                 "group": "Search",
                 "icon": "magnifying-glass",
                 "pages": [
-                  "developers/api_reference/search/get_document_by_id",
-                  "developers/api_reference/search/document_search"
+                  "developers/api_reference/search/handle_search_request",
+                  "developers/api_reference/search/execute_web_search",
+                  "developers/api_reference/search/execute_web_search_lite",
+                  "developers/api_reference/search/execute_open_urls"
                 ]
               },
               {
                 "group": "Agents",
                 "icon": "robot",
                 "pages": [
-                  "developers/api_reference/agents/list_agents",
-                  "developers/api_reference/agents/get_agent_by_id",
-                  "developers/api_reference/agents/create_agent",
-                  "developers/api_reference/agents/update_agent",
-                  "developers/api_reference/agents/delete_agent"
+                  "developers/api_reference/agents/create_persona",
+                  "developers/api_reference/agents/get_persona",
+                  "developers/api_reference/agents/update_persona",
+                  "developers/api_reference/agents/delete_persona",
+                  "developers/api_reference/agents/get_agents_paginated",
+                  "developers/api_reference/agents/get_agents_admin_paginated",
+                  "developers/api_reference/agents/list_personas_admin",
+                  "developers/api_reference/agents/undelete_persona"
                 ]
               },
               {
                 "group": "Actions",
                 "icon": "play",
                 "pages": [
-                  "developers/api_reference/actions/list_actions",
-                  "developers/api_reference/actions/get_action_by_id",
-                  "developers/api_reference/actions/create_action",
-                  "developers/api_reference/actions/update_action",
-                  "developers/api_reference/actions/delete_action"
+                  "developers/api_reference/actions/create_custom_tool",
+                  "developers/api_reference/actions/update_custom_tool",
+                  "developers/api_reference/actions/delete_custom_tool",
+                  "developers/api_reference/actions/validate_tool",
+                  "developers/api_reference/actions/list_tools",
+                  "developers/api_reference/actions/list_openapi_tools",
+                  "developers/api_reference/actions/get_custom_tool"
                 ]
               },
               {
-                "group": "Connectors",
+                "group": "Connectors & Credentials",
                 "icon": "plug",
                 "pages": [
-                  "developers/api_reference/files_connectors/create_connector",
-                  "developers/api_reference/files_connectors/list_credentials",
-                  "developers/api_reference/files_connectors/associate_connector_credential"
+                  {
+                    "group": "Connectors",
+                    "pages": [
+                      "developers/api_reference/files_connectors/create_connector_from_model",
+                      "developers/api_reference/files_connectors/get_connectors_by_credential",
+                      "developers/api_reference/files_connectors/get_connectors",
+                      "developers/api_reference/files_connectors/get_connector_by_id",
+                      "developers/api_reference/files_connectors/get_basic_connector_indexing_status",
+                      "developers/api_reference/files_connectors/get_connector_status",
+                      "developers/api_reference/files_connectors/get_currently_failed_indexing_status",
+                      "developers/api_reference/files_connectors/get_connector_indexing_status",
+                      "developers/api_reference/files_connectors/connector_run_once",
+                      "developers/api_reference/files_connectors/upload_files_api",
+                      "developers/api_reference/files_connectors/list_connector_files",
+                      "developers/api_reference/files_connectors/update_connector_files",
+                      "developers/api_reference/files_connectors/delete_connector_by_id",
+                      "developers/api_reference/files_connectors/create_deletion_attempt_for_connector_id",
+                      "developers/api_reference/files_connectors/get_indexed_sources",
+                      "developers/api_reference/files_connectors/get_cc_pair_full_info",
+                      "developers/api_reference/files_connectors/get_cc_pair_index_attempts",
+                      "developers/api_reference/files_connectors/get_cc_pair_indexing_errors",
+                      "developers/api_reference/files_connectors/update_cc_pair_status",
+                      "developers/api_reference/files_connectors/prune_cc_pair",
+                      "developers/api_reference/files_connectors/get_cc_source_full_info"
+                    ]
+                  },
+                  {
+                    "group": "Credentials",
+                    "pages": [
+                      "developers/api_reference/files_connectors/list_credentials_admin",
+                      "developers/api_reference/files_connectors/list_credentials",
+                      "developers/api_reference/files_connectors/get_credential_by_id",
+                      "developers/api_reference/files_connectors/create_credential_from_model",
+                      "developers/api_reference/files_connectors/create_credential_with_private_key",
+                      "developers/api_reference/files_connectors/update_credential_from_model",
+                      "developers/api_reference/files_connectors/update_credential_data",
+                      "developers/api_reference/files_connectors/update_credential_private_key",
+                      "developers/api_reference/files_connectors/delete_credential_by_id",
+                      "developers/api_reference/files_connectors/delete_credential_by_id_admin",
+                      "developers/api_reference/files_connectors/force_delete_credential_by_id",
+                      "developers/api_reference/files_connectors/swap_credentials_for_connector",
+                      "developers/api_reference/files_connectors/associate_credential_to_connector",
+                      "developers/api_reference/files_connectors/dissociate_credential_from_connector"
+                    ]
+                  }
                 ]
               },
               {
-                "group": "Documents & Ingestion",
-                "icon": "page",
+                "group": "Projects & Files",
+                "icon": "folder",
                 "pages": [
-                  "developers/api_reference/files_connectors/get_document_by_id",
-                  "developers/api_reference/files_connectors/list_ingestion_documents",
-                  "developers/api_reference/files_connectors/ingest_document",
-                  "developers/api_reference/files_connectors/delete_document_by_id",
-                  "developers/api_reference/miscellaneous/set_document_boost"
+                  "developers/api_reference/projects/get_projects",
+                  "developers/api_reference/projects/create_project",
+                  "developers/api_reference/projects/get_project",
+                  "developers/api_reference/projects/update_project",
+                  "developers/api_reference/projects/delete_project",
+                  "developers/api_reference/projects/get_project_details",
+                  "developers/api_reference/projects/get_project_instructions",
+                  "developers/api_reference/projects/upsert_project_instructions",
+                  "developers/api_reference/projects/get_files_in_project",
+                  "developers/api_reference/projects/get_chat_session_project_files",
+                  "developers/api_reference/projects/upload_user_files",
+                  "developers/api_reference/projects/get_user_file_statuses",
+                  "developers/api_reference/projects/get_user_file",
+                  "developers/api_reference/projects/delete_user_file",
+                  "developers/api_reference/projects/link_user_file_to_project",
+                  "developers/api_reference/projects/unlink_user_file_from_project"
                 ]
               },
               {
                 "group": "User Management",
                 "icon": "user",
                 "pages": [
-                  "developers/api_reference/user_management/list_users",
-                  "developers/api_reference/user_management/get_user_by_id",
-                  "developers/api_reference/user_management/create_user",
-                  "developers/api_reference/user_management/update_user",
-                  "developers/api_reference/user_management/delete_user",
-                  "developers/api_reference/user_management/invite_user",
-                  "developers/api_reference/user_management/cancel_user_invite",
-                  "developers/api_reference/user_management/reset_user_password"
+                  "developers/api_reference/user_management/get_auth_type",
+                  "developers/api_reference/user_management/verify_user_logged_in",
+                  "developers/api_reference/user_management/get_user_role",
+                  "developers/api_reference/user_management/set_user_role",
+                  "developers/api_reference/user_management/list_all_users_basic_info",
+                  "developers/api_reference/user_management/list_all_users",
+                  "developers/api_reference/user_management/list_invited_users",
+                  "developers/api_reference/user_management/list_accepted_users",
+                  "developers/api_reference/user_management/bulk_invite_users",
+                  "developers/api_reference/user_management/remove_invited_user",
+                  "developers/api_reference/user_management/activate_user_api",
+                  "developers/api_reference/user_management/deactivate_user_api",
+                  "developers/api_reference/user_management/delete_user"
                 ]
               },
               {
-                "group": "Group Management",
-                "icon": "user-group",
+                "group": "Token Limits",
+                "icon": "gauge",
                 "pages": [
-                  "developers/api_reference/group_management/list_groups",
-                  "developers/api_reference/group_management/create_group",
-                  "developers/api_reference/group_management/update_group",
-                  "developers/api_reference/group_management/delete_group"
-                ]
-              },
-              {
-                "group": "Analytics",
-                "icon": "chart-line",
-                "pages": [
-                  "developers/api_reference/analytics/get_query_analytics",
-                  "developers/api_reference/analytics/get_user_analytics",
-                  "developers/api_reference/analytics/get_onyxbot_analytics",
-                  "developers/api_reference/analytics/get_assistant_stats",
-                  "developers/api_reference/analytics/read_usage_report",
-                  "developers/api_reference/analytics/start_query_history_export"
+                  "developers/api_reference/miscellaneous/get_global_token_limit_settings",
+                  "developers/api_reference/miscellaneous/create_global_token_limit_settings",
+                  "developers/api_reference/miscellaneous/update_token_limit_settings",
+                  "developers/api_reference/miscellaneous/delete_token_limit_settings"
                 ]
               },
               {
                 "group": "Miscellaneous",
                 "icon": "list",
                 "pages": [
-                  "developers/api_reference/miscellaneous/health_check",
-                  "developers/api_reference/miscellaneous/set_rate_limit",
-                  "developers/api_reference/miscellaneous/delete_rate_limit",
+                  "developers/api_reference/miscellaneous/healthcheck",
+                  "developers/api_reference/miscellaneous/get_version",
                   "developers/api_reference/miscellaneous/get_versions"
                 ]
               }
@@ -430,6 +482,7 @@
           {
             "group": "Miscellaneous",
             "pages": [
+              "developers/guides/chat_guide",
               "developers/contact_us"
             ]
           }
@@ -539,8 +592,8 @@
     }
   },
   "seo": {
-    "title": "Onyx AI – Open Source AI Platform for Work",
-    "description": "Onyx AI is the open source AI platform for generation, automation, and enterprise search — powered by your team’s data.",
+    "title": "Onyx AI - Open Source AI Platform for Work",
+    "description": "Onyx AI is the open source AI platform for generation, automation, and enterprise search \u2014 powered by your team's data.",
     "metatags": {
       "keywords": "onyx ai, onyx, open source ai, enterprise ai, generative ai platform, enterprise search, ai assistant, knowledge management, danswer"
     }
@@ -551,5 +604,23 @@
       "destination": "/deployment/overview",
       "permanent": true
     }
-  ]
+  ],
+  "contextual": {
+    "options": [
+      {
+        "title": "Open in Onyx",
+        "description": "Creates an Onyx conversation with the current page as context",
+        "icon": "/assets/logo/onyx_favicon.svg",
+        "href": {
+          "base": "https://cloud.onyx.app/chat",
+          "query": [
+            {
+              "key": "user-prompt",
+              "value": "Use this page as context: https://docs.onyx.app$path"
+            }
+          ]
+        }
+      }
+    ]
+  }
 }

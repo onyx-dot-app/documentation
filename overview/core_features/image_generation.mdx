@@ -13,8 +13,11 @@ chat and easily downloaded.
 
 ## Configuration
 
-Currently, Onyx supports two APIs for image generation, both through OpenAI. In the future,
-there likely will be support for other options such as Google Imagen or Stability AI.
+Currently, Onyx supports three models for image generation, all through OpenAI or Azure. In the future,
+we will be adding support for other options such as Nano Banana or Stability AI.
+
+**GPT-Image-1.5**: Newest model, best for production-quality generation,
+with strong prompt control and reliable in-image text/structured layouts
 
 **GPT-Image-1**: Newer model, better prompt adherence. Likely a better default for most use cases.
 
@@ -22,24 +25,10 @@ there likely will be support for other options such as Google Imagen or Stabilit
 
 ## Usage
 
-To use **Image Generation**,
-be explicit in the prompting since the system is tuned to not generate images unless directly instructed.
+Configure your image generation models in the Admin Panel under **Configuration** → **Image Generation**.
 
-See below for the instructions provided to the system for when to create images.
+Once configured, you can invoke the Image Generation action from any Agent or AI model in Onyx.
 
-<Accordion title="Image Generation Instruction">
-  Tool Description:
-
-  ```
-  Generate an image from a prompt.
-  ```
-
-  Instruction (System Prompt) Modification:
-
-  ```
-  NEVER use image_gen unless the user specifically requests an image.
-  ```
-
-  This phrase is injected into the default **Instruction** for Onyx if the **Image Generation** (image_gen)
-  tool is available.
-</Accordion>
+<Tip>
+  Be explicit in prompting for specific Actions you want your Agent to invoke.
+</Tip>

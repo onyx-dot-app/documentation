@@ -6,6 +6,215 @@ mode: "wide"
 rss: true
 ---
 
+<Update label="v2.7.0" description="January 7th, 2026" tags={["New Features", "Breaking Changes", "Bug Fixes"]}>
+
+  ## v2.7.0
+
+  A brand new Agent creation page, LLM configuration forms saw some love, and a new Image Generation page!
+
+  Thank you to our contributors for helping make this release possible!
+
+  <Warning>
+    v2.7.0 introduces [a new API](/developers/guides/chat_new_guide) for sending messages to Onyx.
+
+    The old `/chat/send-message` and `/chat/send-message-simple-api` endpoints will be removed by Feb 1st, 2026.
+  </Warning>
+
+  ## Key Improvements
+
+  ### Agent Creation
+
+  The Agent creation page received a makeover!
+
+  The form is now simpler, more intuitive, and matches the (sleek and beautiful)
+  design of the rest of the Onyx interface.
+
+  <img className="rounded-image" src="/assets/changelog/v2.7/showcase_agent_creation.png" alt="Agent Creation Page"/>
+
+  ### Image Generation Configuration
+
+  Gone are the days of setting environemnt variables for image generation.
+  There's a new page for configuring image generation models in the Admin Panel.
+
+  You can re-use your existing OpenAI API key or setup new OpenAI or Azure providers.
+  Nano Banana support is coming soon!
+
+  <Info>
+    If you've previously set up an image generation model via environment variables,
+    you will need to create a new configuration via the Admin Panel to continue generating images.
+  </Info>
+
+  <img className="rounded-image" src="/assets/changelog/v2.7/showcase_image_generation_configuration.png" alt="Image Generation Configuration Page"/>
+
+  ### New LLM Configuration Forms
+
+  The LLM configuration form also received a refresh in this release.
+
+  If you're using OpenAI, Anthropic, Vertex/Gemini, or OpenRouter,
+  you can now set the providers to "auto-update" and display the latest, most recommended models.
+
+  <Note>
+    The auto-update feature requires an internet connection to GitHub to fetch our recommended models list.
+  </Note>
+
+  <img className="rounded-image" src="/assets/changelog/v2.7/showcase_llm_configuration_forms.png" alt="LLM Configuration Forms"/>
+
+  ## Additional Improvements
+
+  ### MCP Server Deployment
+
+  The Onyx MCP Server is now disabled by default in the `docker-compose.yml` file.
+  You will no longer see the container start and stop (when disabled) in Docker.
+
+  To deploy the MCP Server,
+  you will need to set `MCP_SERVER_ENABLED=true` in your environment and uncomment the MCP Server section in your
+  `docker-compose.yml` file.
+
+  ### Model Server Changes
+
+  Multiple custom models were removed from the model server image. As a result,
+  Onyx's total disk and memory footprint was reduced!
+
+  ### New Cloud Usage Limits
+
+  We've recently seen a wave of abuse of our Cloud service's free LLM access. Moving forward,
+  if you use our provided LLM keys, you'll see a weekly limit on LLM usage cost.
+
+  If you run into this limit, feel free to reach out to us at hello@onyx.app, and we'll be happy to help!
+
+  <Tip>
+    These changes only apply if you use Onyx-provided LLM keys on [Onyx
+    Cloud](https://cloud.onyx.app?utm_source=docs&utm_content=changelog).
+  </Tip>
+</Update>
+
+<Update label="v2.6.0" description="December 30th, 2025" tags={["New Features", "Bug Fixes", "Performance"]}>
+
+  ## v2.6.0
+
+  Welcome to the Onyx v2.6.0 release notes!
+
+  This is one of our **largest releases to date**, and it includes a completely rebuilt chat experience,
+  the Onyx Desktop App and MCP Server,
+  and smarter model management that brings you the latest models from your providers without additional effort.
+
+  Thank you to our contributors for helping make this release possible!
+
+  <Note>
+    **Known issue in v2.6.0:** During an embedding model swap,
+    you will not be able to search your knowledge base until the swap is complete.
+    This functionality will be restored in the next major release.
+  </Note>
+
+  ## Key Improvements
+
+  ### Chat Experience Revamped
+
+  In v2.0.0, we overhauled the visual design of Onyx. In this release,
+  we've dug into the chat internals to make it more powerful, work with more models,
+  and ultimately deliver the best LLM experience possible.
+
+  To do this, we've built custom architecture for managing conversations and context, introduced parallel tool calling,
+  and added the ability to invoke agents as tools in the chat.
+
+  The result is an AI chat experience where your agent can find information from your knowledge base and the internet,
+  keep only the most relevant information in context, call tools precisely when needed,
+  and answer your questions quickly and accurately.
+
+  Our Deep Research mode makes use of all of these new features. Try it out and let us know what you think!
+
+  <img className="rounded-image" src="/assets/changelog/v2.6/showcase_new_chat_flow.png" alt="Deep Research with new chat capabilities"/>
+
+  ### Dynamic Model management
+
+  No more redeploying to access new models. Onyx now fetches model information dynamically with richer metadata,
+  which means:
+
+  - New models are automatically retrieved and work out of the box, including vision-capable models
+  - Deprecated models are automatically hidden from your interface
+  - When max tokens can't be detected, we now fall back to 32k instead of the previous 4k limit
+
+  Note that admins will still need to make new models visible for end users via the LLM configuration page.
+
+  <img className="rounded-image" src="/assets/changelog/v2.6/showcase_dynamic_model_management.png" alt="Dynamic model management"/>
+
+  ### Onyx MCP Server
+
+  Bring Onyx directly into your development workflow with our new MCP server!
+
+  Connect Onyx to Claude Code, your terminal, or any MCP-compatible client.
+  Authenticate with your PAT or API key and access your document index and web search capabilities without leaving your
+  tools.
+
+  Upcoming features include OAuth authentication and uploading and managing files.
+
+  <img className="rounded-image" src="/assets/changelog/v2.6/showcase_onyx_mcp_server.png" alt="Onyx MCP Server"/>
+
+  ### Onyx Desktop App (Preview)
+
+  We're developing a native desktop application! The Onyx desktop app will be available on Windows, macOS, and Linux.
+  If you would like to try it out,
+  you can download the app from the [v2.6.0 release
+  page](https://github.com/onyx-dot-app/onyx/releases/tag/v2.6.0#:~:text=21%20other%20contributors-,Assets,-10).
+
+  Through the desktop app, you can access Onyx Cloud or your self-hosted instance.
+
+  <img className="rounded-image" src="/assets/changelog/v2.6/showcase_onyx_desktop_app.png" alt="Onyx Desktop App"/>
+
+  <Warning>
+    The Onyx desktop app is currently published as a development/preview build.
+    Please be aware that there may be bugs and issues.
+    Documentation will be available when the app is officially published.
+  </Warning>
+
+  ## Contributor Highlights
+
+  - [@Django149](https://github.com/Django149) overhauled the file connector. You can now directly upload and remove files from the connector without creating a new one!
+  - [@brano-rohlik](https://github.com/brano-rohlik) added Gemini 3 Pro and Claude Opus 4.5 support!
+  - [@ethanwater](https://github.com/ethanwater) added a new connector for Coda!
+  - [@rexjohannes](https://github.com/rexjohannes) added a Drupal wiki connector!
+  - [@emerzon](https://github.com/emerzon) went on a tear this release! He:
+    - Hardened markdown link processing to prevent potential security vulnerabilities
+    - Removed duplicate DB operations to speed up chat deletion
+    - Fixed a connector state bug, resulting in fewer connector failures
+    - Added LiteLLM user and session tracking for budget control and observability
+  - [@kiwamizamurai](https://github.com/kiwamizamurai) fixed an issue with the DISABLE_MODEL_SERVER environment variable not being respected!
+  - [@vinitngr](https://github.com/vinitngr) cleaned up the install script to use a consistent root directory!
+
+  ## Additional Improvements
+
+  ### SearXNG Web Search Support
+
+  We've added SearXNG as a web search provider,
+  giving you another self-hostable choice for powering your agents' internet access.
+
+  Through SearXNG, you can configure multiple search engines and keep your search results private and secure.
+
+  ### Improved File Handling in Chat
+
+  Files uploaded to chat are now processed more reliably, with the ability to preview them directly in the interface.
+
+  <img className="rounded-image" src="/assets/changelog/v2.6/showcase_improved_file_handling.png" alt="Improved File Handling in Chat"/>
+
+  ### MCP Passthrough Authentication
+
+  MCP connections now support passthrough authentication for seamless integration with your existing auth systems.
+
+  ### Embedding Model Configuration
+
+  You can now update API keys for embedding models without recreating the configuration.
+
+  ### Bug Fixes
+
+  - Multiple fixes to Confluence, Jira, and web connectors
+  - Improved document processing stability, reducing likelihood of OOM errors when using API-based embedding models
+
+  ---
+
+  Our [GitHub Releases](https://github.com/onyx-dot-app/onyx/releases?utm_source=docs&utm_content=changelog)
+  page has the full list of changes and bug fixes for each release.
+</Update>
+
 <Update label="v2.5.0" description="November 25th, 2025" tags={["New Features", "Bug Fixes", "Performance"]}>
 
   ## v2.5.0
@@ -359,7 +568,7 @@ rss: true
   We will continue to develop on the main `onyx-dot-app/onyx` repository,
   and `onyx-foss` will automatically sync new changes.
 
-  Checkout the repo at this link:
+  Check out the repo at this link:
   [onyx-foss](https://github.com/onyx-dot-app/onyx-foss?utm_source=docs&utm_content=changelog).
 
   ## Contributor Highlights
@@ -430,7 +639,7 @@ rss: true
   or SSO via identity providers like Okta and Azure EntraID.
 
   Read more about authentication options in our [deployment docs](/deployment/authentication/).
-  Read more about our open source philosphy in our [Open Source
+  Read more about our open source philosophy in our [Open Source
   Statement](/overview/miscellaneous/open_source_statement/).
 
   ### Projects

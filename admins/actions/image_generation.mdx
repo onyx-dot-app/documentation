@@ -9,54 +9,41 @@ any AI model in Onyx can invoke this action to generate images using supported i
 
 ## Supported Models
 
-Onyx supports the following image generation models:
-
 | Model | Provider |
 | ----- | -------- |
-| DALL-E 3 | OpenAI / Azure OpenAI |
+| GPT Image 1.5 | OpenAI / Azure OpenAI |
 | GPT Image 1 | OpenAI / Azure OpenAI |
+| DALL-E 3 | OpenAI / Azure OpenAI |
 
-## Enabling Image Generation
+## Configuration
 
-You can enable image generation in Onyx by configuring either an OpenAI provider or Azure OpenAI environment variables.
+<Steps>
+  <Step title="Navigate to Image Generation">
+    Go to the **Admin Panel** and select **Image Generation** under the **Configuration** section.
 
-### Option 1: OpenAI Provider
+    <img className="rounded-image" src="/assets/admins/actions/image_generation_overview.png" alt="Image Generation Configuration Page"/>
+  </Step>
 
-If you have an OpenAI LLM provider configured in Onyx, image generation is automatically enabled.
+  <Step title="Connect a Model">
+    The page displays available models grouped by provider (OpenAI and Azure OpenAI).
 
-Follow the [OpenAI configuration guide](/admins/ai_models/openai) to set up an OpenAI provider.
+    Click **Connect** on any model to configure it. A modal will open where you can set up credentials:
 
-Once configured, the image generation action will automatically appear in your Actions dashboard.
+    - **Use existing API key**: Select from previously configured OpenAI or Azure OpenAI API keys
+    - **Enter new API key**: Add a new API key for the provider
 
-### Option 2: Azure OpenAI Environment Variables
+    The last configured model will automatically become the **Current Default**.
+  </Step>
 
-If you are using Azure OpenAI,
-you can enable image generation by [creating an Azure model deployment](/admins/ai_models/azure_openai)
-and setting the following environment variables in your `.env` or `values.yaml` file.
+  <Step title="Manage Default Model">
+    The model marked as **Current Default** is used when users request image generation in chat.
 
-```bash .env
-AZURE_IMAGE_API_KEY=your_azure_image_api_key
-AZURE_IMAGE_API_BASE=https://your-resource.openai.azure.com
-AZURE_IMAGE_API_VERSION=2024-02-01
-AZURE_IMAGE_DEPLOYMENT_NAME=your_image_deployment_name
-```
-
-```yaml values.yaml
-configMap:
-  AZURE_IMAGE_API_KEY: your_azure_image_api_key
-  AZURE_IMAGE_API_BASE: https://your-resource.openai.azure.com
-  AZURE_IMAGE_API_VERSION: 2024-02-01
-  AZURE_IMAGE_DEPLOYMENT_NAME: your_image_deployment_name
-```
-
-<Info>
-  An image generation model configuration page will be available soon in the Admin Panel!
-</Info>
+    - To **remove** a model as default: Click the "Current Default" badge on that model
+    - To **edit credentials**: Click the settings icon (gear) to open a modal where you can update the API key
+  </Step>
+</Steps>
 
 ## Using Image Generation
 
-Once image generation is enabled,
-you will see the **Image Generation** action in the **Actions** tab of the Admin Panel.
-
-Any AI model configured in Onyx can invoke the image generation action. When a user requests an image,
-the Agent will automatically use the configured image generation model.
+Once image generation is configured with a default model, any AI model in Onyx can invoke the image generation action.
+When a user requests an image, the Agent will automatically use the configured default image generation model.

@@ -137,17 +137,18 @@ Pick the token type you're using:
   <Tab title="Fine-grained access token">
     <Steps>
       <Step title="Select the organization (resource owner)">
-        When creating a **fine-grained** GitHub access token for **permission sync**, make sure you select the correct
-        **Resource owner organization** (the GitHub **organization** that owns the repositories you want to create the connector for).
-        Fine-grained tokens scoped to a personal user account do **not** allow granting **Organization permissions** (like **Members**),
-        so permission sync requires selecting an organization as the resource owner.
+        When creating a **fine-grained** GitHub access token for **permission sync**,
+        make sure you select the correct **Resource owner organization** (the GitHub **organization** that owns the
+        repositories you want to create the connector for).
+        Fine-grained tokens scoped to a personal user account do **not** allow granting **Organization permissions**
+        (like **Members**), so permission sync requires selecting an organization as the resource owner.
       </Step>
 
       <Step title="Add required permissions">
-        Add these in the token configuration page using **Repository permissions** -> **Add permission**
-        and **Organization permissions** -> **Add permission**:
+        Add these in the token configuration page using **Repository permissions** -> **Add permission** and
+        **Organization permissions** -> **Add permission**:
 
-        <img className="rounded-image" src="/assets/admins/connectors/github/Permissions.png" alt="GitHub fine-grained token permissions: Repository permissions and Organization permissions" />
+        <img className="rounded-image" src="/assets/admins/connectors/github/Permissions.png" alt="GitHub fine-grained token permissions: Repository permissions and Organization permissions"/>
 
         - **Repository permissions** (Read access): **Administration**, **Issues**, **Metadata**, **Pull requests**
         - **Organization permissions** (Read only): **Administration**, **Members**
@@ -158,7 +159,8 @@ Pick the token type you're using:
   <Tab title="Classic token">
     <Steps>
       <Step title="Add the org read scope">
-        If you're using a **classic** GitHub personal access token (PAT) and want **permission sync**, you must also grant:
+        If you're using a **classic** GitHub personal access token (PAT) and want **permission sync**,
+        you must also grant:
         - `read:org`
       </Step>
 
@@ -196,6 +198,6 @@ Pick the token type you're using:
   </Step>
 </Steps>
 
-<img className="rounded-image" src="/assets/admins/connectors/github/GithubCredential.png" alt="Onyx GitHub connector credentials entry screen" />
+<img className="rounded-image" src="/assets/admins/connectors/github/GithubCredential.png" alt="Onyx GitHub connector credentials entry screen"/>
 
-<img className="rounded-image" src="/assets/admins/connectors/github/GithubConnector.png" alt="Onyx GitHub connector repository configuration example" />
+<img className="rounded-image" src="/assets/admins/connectors/github/GithubConnector.png" alt="Onyx GitHub connector repository configuration example"/>

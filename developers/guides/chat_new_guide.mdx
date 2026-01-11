@@ -1,0 +1,232 @@
+---
+title: "Send a Message to Onyx"
+description: "Sending messages programmatically to Onyx"
+icon: "bolt"
+---
+
+<Note>
+  We recommend you migrate any usage of `/chat/send-message` and `/chat/send-message-simple-api` to this new API by
+  February 1st, 2026.
+</Note>
+
+The `/chat/send-chat-message` API is used to send a message to Onyx.
+It is the same API that the Onyx frontend uses to send and receive messages.
+You have the option of receiving a streaming response or the complete response as a string.
+
+This guide was explain all of the parameters you can pass in to the API and provide a code sample.
+
+<AccordionGroup>
+  <Accordion title="message">
+    The user message to send to the Agent.
+  </Accordion>
+
+  <Accordion title="llm_override">
+    Pass an object to override the default LLM settings for this request. If `None`,
+    you will get the default Onyx behavior.
+
+    You can pass or exclude any of the following fields: `model_provider`, `model_version`, `temperature`
+
+    If you pass an invalid configuration,
+    for example if the default `model_provider` is OpenAI and you only specify `claude-sonnet-4.5`,
+    your request will fail.
+  </Accordion>
+
+  <Accordion title="allowed_tool_ids">
+    Agents are created with a set of Actions they are allowed to invoke.
+    You can further configure this set for your immediate interaction using this parameter.
+
+    See the list of Actions and their IDs via the [GET /tool](/developers/api_reference/actions/list_tools) endpoint.
+
+    Pass in an empty list to disable all Actions.
+    Pass in `None` to allow all the Actions which are configured for the Agent.
+  </Accordion>
+
+  <Accordion title="forced_tool_id">
+    Force the Agent to use a specific Action for this request. A specific tool/action which must be run by the Agent.
+    The Agent may run other Actions before returning its final response, but it will be guaranteed to use this one.
+
+    Leave empty to let the Agent decide which Actions to use.
+  </Accordion>
+
+  <Accordion title="file_descriptors">
+    A list of files to include along with your request.
+    File IDs can be found via the [POST
+    /user/projects/file/upload](/developers/api_reference/projects/upload_user_files)
+    and the [GET /user/projects/file/{file_id}](/developers/api_reference/projects/get_user_file) endpoints.
+  </Accordion>
+
+  <Accordion title="search_filters">
+    Filters to narrow down the internal search results used by the Agent.
+    All filters arguments are optional and can be combined.
+    - `source_type`: Source types like `web`, `slack`, `google_drive`, `confluence`
+    - `document_set`: The name of the document sets to search within
+    - `time_cutoff`: Only include documents created or modified after this timestamp. ISO 8601 format: `YYYY-MM-DDTHH:MM:SSZ` (e.g.,
+    `2024-01-01T00:00:00Z`).
+    - `tags`: Document tags in the format `{"tag_key": "tag_value"}`.
+    Only documents with matching tags will be searched.
+  </Accordion>
+
+  <Accordion title="deep_research">
+    Enables Deep Research mode for this request.
+
+    Note that this mode consumes significantly more tokens, so be careful accessing it via the API.
+  </Accordion>
+
+  <Accordion title="parent_message_id">
+    The ID of the parent message in the chat history. This is the primary-key (unique identifier)
+    for the previous message in the chat history tree.
+
+    If not passed in, it is assumed that your new message is sequentially after the last message in the chat history.
+
+    <Warning>
+      If set to `None`,
+      the chat history is reset and the new message is considered the first message in the chat history.
+    </Warning>
+  </Accordion>
+
+  <Accordion title="chat_session_id">
+    To continue an existing conversation, pass in the chat session ID where the message should be sent.
+
+    If left blank, a new chat session will be created for the message according to `chat_session_info` (see below).
+  </Accordion>
+
+  <Accordion title="chat_session_info">
+    Details about the chat session which will be used for all messages in the session.
+    The field values can be left blank to use the default chat settings.
+
+    - `persona_id`: The ID of the Agent to use for the chat session
+    - `project_id`: ID of a Project if the chat should be scoped to a Project. Projects are used to organize files and instructions and are a lighter-weight version of Agents. Through programmatic use, it is typically recommended to use Agents instead.
+  </Accordion>
+
+  <Accordion title="stream">
+    If true, then it responds with an SSE stream of individual packets. This is the same set used for the Onyx UI.
+    Fields like the Answer, reasoning tokens, and iterative Tool Calls need to be pieced together from streamed tokens.
+  </Accordion>
+</AccordionGroup>
+
+## Response Format
+
+### Streaming Response
+
+Onyx returns various types of packets in the streaming response depending on the LLM's behavior.
+
+See our
+[streaming_models.py](https://github.com/onyx-dot-app/onyx/blob/main/backend/onyx/server/query_and_chat/streaming_models.py)
+on GitHub for the complete list of packet types and their corresponding fields.
+
+```python expandable
+class StreamingType(Enum):
+    """Enum defining all streaming packet types."""
+
+    SECTION_END = "section_end"
+    STOP = "stop"
+    TOP_LEVEL_BRANCHING = "top_level_branching"
+    ERROR = "error"
+
+    MESSAGE_START = "message_start"
+    MESSAGE_DELTA = "message_delta"
+    SEARCH_TOOL_START = "search_tool_start"
+    SEARCH_TOOL_QUERIES_DELTA = "search_tool_queries_delta"
+    SEARCH_TOOL_DOCUMENTS_DELTA = "search_tool_documents_delta"
+    OPEN_URL_START = "open_url_start"
+    OPEN_URL_URLS = "open_url_urls"
+    OPEN_URL_DOCUMENTS = "open_url_documents"
+    IMAGE_GENERATION_START = "image_generation_start"
+    IMAGE_GENERATION_HEARTBEAT = "image_generation_heartbeat"
+    IMAGE_GENERATION_FINAL = "image_generation_final"
+    PYTHON_TOOL_START = "python_tool_start"
+    PYTHON_TOOL_DELTA = "python_tool_delta"
+    CUSTOM_TOOL_START = "custom_tool_start"
+    CUSTOM_TOOL_DELTA = "custom_tool_delta"
+    REASONING_START = "reasoning_start"
+    REASONING_DELTA = "reasoning_delta"
+    REASONING_DONE = "reasoning_done"
+    CITATION_INFO = "citation_info"
+
+    DEEP_RESEARCH_PLAN_START = "deep_research_plan_start"
+    DEEP_RESEARCH_PLAN_DELTA = "deep_research_plan_delta"
+    RESEARCH_AGENT_START = "research_agent_start"
+    INTERMEDIATE_REPORT_START = "intermediate_report_start"
+    INTERMEDIATE_REPORT_DELTA = "intermediate_report_delta"
+    INTERMEDIATE_REPORT_CITED_DOCS = "intermediate_report_cited_docs"
+```
+
+### Non-streaming Response
+
+```python
+class ChatFullResponse(BaseModel):
+    """Complete non-streaming response with all available data."""
+
+    # Core response fields
+    answer: str
+    answer_citationless: str
+    pre_answer_reasoning: str | None = None
+    tool_calls: list[ToolCallResponse] = []
+
+    # Documents & citations
+    top_documents: list[SearchDoc]
+    citation_info: list[CitationInfo]
+
+    # Metadata
+    message_id: int
+    chat_session_id: UUID | None = None
+    error_msg: str | None = None
+```
+
+## Sample Request
+
+<CodeGroup>
+  ```python Python expandable
+  import requests
+
+  API_BASE_URL = "https://cloud.onyx.app/api"  # or your own domain
+  API_KEY = "YOUR_KEY_HERE"
+
+  headers = {
+      "Authorization": f"Bearer {API_KEY}",
+      "Content-Type": "application/json"
+  }
+
+  response = requests.post(
+      f"{API_BASE_URL}/chat/send-chat-message",
+      headers=headers,
+      json={
+          "message": "What is Onyx?",
+      }
+  )
+
+  data = response.json()
+  print("Answer:", data["answer"])
+  print("Message ID:", data["message_id"])
+  ```
+
+  ```bash Shell expandable
+  #!/bin/bash
+
+  API_BASE_URL="https://cloud.onyx.app/api"  # or your own domain
+  API_KEY="YOUR_KEY_HERE"
+
+  RESPONSE=$(curl -s -X POST "${API_BASE_URL}/chat/send-chat-message" \
+    -H "Authorization: Bearer ${API_KEY}" \
+    -H "Content-Type: application/json" \
+    -d '{
+      "message": "What is Onyx?"
+    }'
+  )
+
+  echo "Answer:" $(echo "$RESPONSE" | jq -r '.answer')
+  echo "Message ID:" $(echo "$RESPONSE" | jq -r '.message_id')
+  ```
+</CodeGroup>
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Guide: Use the Ingestion API" icon="upload" href="/developers/guides/index_files_ingestion_api">
+    Use the lightweight ingestion API to index documents
+  </Card>
+
+  <Card title="Guide: Create a Connector" icon="link" href="/developers/guides/create_connector">
+    Learn how to create and configure Connectors programmatically
+  </Card>
+</CardGroup>
