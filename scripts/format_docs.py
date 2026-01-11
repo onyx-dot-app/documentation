@@ -1024,6 +1024,120 @@ def format_content(text: str, width: int) -> str:
 
     lines = remove_blank_after_group_opens(lines)
 
+    # 6.8) Normalize img tag format: className first, then src, then alt
+    def normalize_img_tags(ls: List[str]) -> List[str]:
+        out_ls: List[str] = []
+        in_code_f = False
+        # Pattern to match complete img tag (handles multi-line by joining)
+        # Match: <img ... /> or <img ... >
+        img_start_pattern = re.compile(r"<img\s+", re.IGNORECASE)
+        # Pattern to extract attribute values: attr="value" or attr='value'
+        attr_pattern = re.compile(r'(className|src|alt|class)\s*=\s*["\']([^"\']*)["\']', re.IGNORECASE)
+        
+        i = 0
+        n = len(ls)
+        while i < n:
+            ln = ls[i]
+            if is_code_fence(ln):
+                in_code_f = not in_code_f
+                out_ls.append(ln)
+                i += 1
+                continue
+            if in_code_f:
+                out_ls.append(ln)
+                i += 1
+                continue
+            
+            stripped = ln.lstrip()
+            leading = len(ln) - len(stripped)
+            
+            # Check if line starts with <img
+            if img_start_pattern.match(stripped):
+                # Collect the full img tag (may span multiple lines)
+                # Only collect lines that are part of the img tag, not blank lines or other tags
+                img_parts = [stripped]
+                j = i + 1
+                tag_closed = False
+                
+                # Check if tag is already closed on this line (ends with /> or >)
+                stripped_rstrip = stripped.rstrip()
+                if stripped_rstrip.endswith("/>") or stripped_rstrip.endswith(">"):
+                    tag_closed = True
+                
+                # Collect continuation lines until tag is closed
+                # Stop immediately if we hit a blank line, code fence, or other tag
+                while j < n and not tag_closed:
+                    if is_code_fence(ls[j]):
+                        break
+                    # Stop if we hit a blank line (img tag shouldn't span blank lines)
+                    if ls[j].strip() == "":
+                        break
+                    next_line = ls[j].lstrip()
+                    # Stop if next line starts a new tag or component (but allow if it's another img tag continuation)
+                    if next_line.startswith("<"):
+                        # If it's not an img tag, stop collecting - this line is NOT part of the img tag
+                        if not img_start_pattern.match(next_line):
+                            break
+                    # This line is part of the img tag, add it
+                    img_parts.append(next_line)
+                    next_rstrip = next_line.rstrip()
+                    if next_rstrip.endswith("/>") or next_rstrip.endswith(">"):
+                        tag_closed = True
+                        break
+                    j += 1
+                
+                # Join all parts into a single string for processing
+                img_content = " ".join(img_parts)
+                
+                # Extract className, src, and alt attributes
+                className_val = None
+                class_val = None  # fallback for "class" attribute
+                src_val = None
+                alt_val = None
+                
+                for attr_match in attr_pattern.finditer(img_content):
+                    attr_name = attr_match.group(1).lower()
+                    attr_value = attr_match.group(2)
+                    if attr_name == "classname":
+                        className_val = attr_value
+                    elif attr_name == "class":
+                        class_val = attr_value
+                    elif attr_name == "src":
+                        src_val = attr_value
+                    elif attr_name == "alt":
+                        alt_val = attr_value
+                
+                # Use className if available, otherwise fall back to class
+                if not className_val and class_val:
+                    className_val = class_val
+                
+                # Build normalized img tag if we have all required attributes
+                if className_val and src_val and alt_val:
+                    # Determine closing style
+                    is_self_closing = "/>" in img_content
+                    closing = "/>" if is_self_closing else ">"
+                    normalized = f'<img className="{className_val}" src="{src_val}" alt="{alt_val}"{closing}'
+                    out_ls.append(" " * leading + normalized)
+                    # IMPORTANT: j points to the first line AFTER the img tag
+                    # This could be a blank line, closing tag like </Step>, or another element
+                    # We set i = j so the next iteration processes that line normally
+                    i = j
+                else:
+                    # If any required attribute is missing, keep original lines
+                    # Output all lines from i to j-1 (the img tag lines)
+                    for k in range(i, j):
+                        out_ls.append(ls[k])
+                    # Move to line j (first line after img tag)
+                    i = j
+            else:
+                # Not an img tag line, preserve as-is
+                out_ls.append(ln)
+                i += 1
+        
+        return out_ls
+
+    lines = normalize_img_tags(lines)
+
     # 7) Wrap long lines (outside code blocks)
     lines = wrap_long_lines(lines, width)
 
