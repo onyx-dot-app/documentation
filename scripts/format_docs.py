@@ -1321,7 +1321,7 @@ def main() -> int:
         except UnicodeDecodeError:
             original = ""
         if original:
-            # Frontmatter icon check (skip for admin/connectors/* pages)
+            # Frontmatter icon check (skip for admins/connectors/* pages)
             if original.startswith("---\n"):
                 end = original.find("\n---", 4)
                 if end != -1:
