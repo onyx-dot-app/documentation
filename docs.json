@@ -441,7 +441,7 @@
                 ]
               },
               {
-                "group": "Ingestion",
+                "group": "Ingestion API",
                 "icon": "file-arrow-up",
                 "pages": [
                   "developers/api_reference/ingestion/get_ingestion_docs",
