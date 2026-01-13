@@ -6,6 +6,77 @@ mode: "wide"
 rss: true
 ---
 
+<Update label="v2.8.0" description="January 13th, 2026" tags={["New Features", "Breaking Changes", "Bug Fixes"]}>
+
+  ## v2.8.0
+
+  Big cost savings, better cost tracking (and observability), and a heads up for v2.11!
+
+  Thank you to our contributors for helping make this release possible!
+
+  ## Key Improvements
+
+  ### Migrating Vector Database
+
+  We've recently made the decision to migrate the Onyx vector database from Vespa to OpenSearch.
+  OpenSearch is a FOSS fork of ElasticSearch, and will be deployed similarly to the existing `index` container.
+  We expect OpenSearch to be easier to develop with, provide equal if not better search performance, and, importantly,
+  have a smaller memory footprint.
+
+  <Note>
+    The official migration from Vespa to OpenSearch will begin in February, 2026, with the **v2.11.0** release.
+  </Note>
+
+  In v2.11.0, admins will be prompted to start a migration process,
+  which will copy over all indexed data from Vespa to OpenSearch.
+  Onyx will remain fully functional with Vespa in this version.
+
+  Following v2.11.0, we plan to release v3.0.0, which will use OpenSearch exclusively.
+
+  This timeline is not set in stone.
+  We will publish a detailed migration guide in the coming weeks and communicate any changes!
+
+  <img className="rounded-image" src="/assets/changelog/v2.8/onyx_x_opensearch.png" alt="Onyx X OpenSearch"/>
+
+  ### Prompt Caching Cost savings
+
+  We've added prompt caching support for providers that require explicit caching parameters.
+
+  This could reduce total LLM costs by up to 50-90%, depending on your usage patterns and your models/providers.
+  Anthropic, Gemini, and Bedrock users should see the largest savings.
+
+  <Info>
+    You may not see any cost reduction if you are using OpenAI or Azure OpenAI,
+    since they implicitly cache prompts for models newer than GPT-4o.
+  </Info>
+
+  ### Cost Tracking
+
+  We've added LLM cost tracking and time to first token metrics for tracing providers like Braintrust.
+
+  See our [deployment configuration docs](/deployment/configuration/configuration#observability)
+  for how to set up observability for your deployment.
+
+  ## Additional Improvements
+
+  ### Azure Image Generation Models
+
+  Added support for Azure image generation models for GPT Image 1.5 and GPT Image 1.
+
+  ### Various Bug Fixes and Improvements
+
+  - Agents can now "open" PDF files to read their contents in the internal search flow
+  - Fixed a web connector bug where certain pages served as raw bytes were not being parsed as text
+  - Fixed Mistral model tool calling support
+  - Multiple fixes to frontend styling, component rendering, markdown formatting, and performance
+
+  ---
+
+  Our [GitHub Releases](https://github.com/onyx-dot-app/onyx/releases?utm_source=docs&utm_content=changelog)
+  page has the full list of changes and bug fixes for each release.
+
+</Update>
+
 <Update label="v2.7.0" description="January 7th, 2026" tags={["New Features", "Breaking Changes", "Bug Fixes"]}>
 
   ## v2.7.0
@@ -33,7 +104,7 @@ rss: true
 
   ### Image Generation Configuration
 
-  Gone are the days of setting environemnt variables for image generation.
+  Gone are the days of setting environment variables for image generation.
   There's a new page for configuring image generation models in the Admin Panel.
 
   You can re-use your existing OpenAI API key or setup new OpenAI or Azure providers.
@@ -86,6 +157,12 @@ rss: true
     These changes only apply if you use Onyx-provided LLM keys on [Onyx
     Cloud](https://cloud.onyx.app?utm_source=docs&utm_content=changelog).
   </Tip>
+
+   ---
+
+  Our [GitHub Releases](https://github.com/onyx-dot-app/onyx/releases?utm_source=docs&utm_content=changelog)
+  page has the full list of changes and bug fixes for each release.
+
 </Update>
 
 <Update label="v2.6.0" description="December 30th, 2025" tags={["New Features", "Bug Fixes", "Performance"]}>
@@ -213,6 +290,7 @@ rss: true
 
   Our [GitHub Releases](https://github.com/onyx-dot-app/onyx/releases?utm_source=docs&utm_content=changelog)
   page has the full list of changes and bug fixes for each release.
+
 </Update>
 
 <Update label="v2.5.0" description="November 25th, 2025" tags={["New Features", "Bug Fixes", "Performance"]}>
@@ -778,4 +856,5 @@ rss: true
   Additionally, our Discord `#announcements` channel is a great place to stay up to date with Onyx updates.
 
   Major releases and breaking changes are also announced in the [Discord Server](https://discord.gg/4NA5SbzrWb).
+
 </Update>
