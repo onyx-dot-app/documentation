@@ -393,7 +393,8 @@
                       "developers/api_reference/files_connectors/get_cc_pair_indexing_errors",
                       "developers/api_reference/files_connectors/update_cc_pair_status",
                       "developers/api_reference/files_connectors/prune_cc_pair",
-                      "developers/api_reference/files_connectors/get_cc_source_full_info"
+                      "developers/api_reference/files_connectors/get_cc_source_full_info",
+                      "developers/api_reference/files_connectors/get_docs_by_connector_credential_pair"
                     ]
                   },
                   {
@@ -437,6 +438,15 @@
                   "developers/api_reference/projects/delete_user_file",
                   "developers/api_reference/projects/link_user_file_to_project",
                   "developers/api_reference/projects/unlink_user_file_from_project"
+                ]
+              },
+              {
+                "group": "Ingestion",
+                "icon": "file-arrow-up",
+                "pages": [
+                  "developers/api_reference/ingestion/get_ingestion_docs",
+                  "developers/api_reference/ingestion/upsert_ingestion_doc",
+                  "developers/api_reference/ingestion/delete_ingestion_doc"
                 ]
               },
               {
