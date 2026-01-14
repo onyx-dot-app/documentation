@@ -3,18 +3,11 @@ title: "Slack Federated"
 description: "Set up the Slack Federated connector"
 ---
 
-## June 2025 Update
+## Jan 2026 Update
 
-Slack has changed their Terms of Service, preventing users from indexing their data (source:
-[Slack](https://slack.com/terms-of-service/api)). As a result,
-the only way to add Slack information into Onyx is by using the `search` APIs that Slack provides.
-
-These APIs are significantly slower and lower quality than the previous index-based approach.
-
-Your data is your data — if you care about higher quality Slack search then please talk to your customer success
-representative and make it clear that this change reduces the value you get out of Slack.
-
-If you have any questions, please reach out to founders@onyx.app or send us a message in Slack.
+Slack seems to have softened their stance on API rate limits, which allows us the standard approach to work again.
+We strongly recommend going that direction if it's an option for better search quality until the [Assistant Search](https://docs.slack.dev/reference/methods/assistant.search.info/)
+API is publically released.
 
 ## Setting up
 
