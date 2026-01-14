@@ -139,7 +139,7 @@ In this example, we'll automate creating Jira Connectors for a selection of proj
         }
 
         response = requests.post(
-          f"{API_BASE_URL}/manage/admins/connector",
+          f"{API_BASE_URL}/manage/admin/connector",
           headers=headers,
           json=connector_payload
         )
@@ -158,7 +158,7 @@ In this example, we'll automate creating Jira Connectors for a selection of proj
 
       ```bash Shell expandable
       # Create connector for TECH project
-      curl -X POST "${API_BASE_URL}/manage/admins/connector" \
+      curl -X POST "${API_BASE_URL}/manage/admin/connector" \
         -H "Authorization: Bearer ${API_KEY}" \
         -H "Content-Type: application/json" \
         -d '{
@@ -176,7 +176,7 @@ In this example, we'll automate creating Jira Connectors for a selection of proj
         }'
 
       # Create connector for SALES project
-      curl -X POST "${API_BASE_URL}/manage/admins/connector" \
+      curl -X POST "${API_BASE_URL}/manage/admin/connector" \
         -H "Authorization: Bearer ${API_KEY}" \
         -H "Content-Type: application/json" \
         -d '{
@@ -194,7 +194,7 @@ In this example, we'll automate creating Jira Connectors for a selection of proj
         }'
 
       # Create connector for OPS project
-      curl -X POST "${API_BASE_URL}/manage/admins/connector" \
+      curl -X POST "${API_BASE_URL}/manage/admin/connector" \
         -H "Authorization: Bearer ${API_KEY}" \
         -H "Content-Type: application/json" \
         -d '{
@@ -225,12 +225,12 @@ In this example, we'll automate creating Jira Connectors for a selection of proj
     Certain Connectors may not require a Credential such as the File and Web connectors. `credential_id:
     0` is a default empty Credential you can use for these Connectors.
 
-    To list your Credentials, you can use the `GET manage/admins/credential` endpoint.
+    To list your Credentials, you can use the `GET manage/admin/credential` endpoint.
 
     <CodeGroup>
       ```python Python
       response = requests.get(
-        f"{API_BASE_URL}/manage/admins/credential",
+        f"{API_BASE_URL}/manage/admin/credential",
         headers=headers
       )
 
@@ -239,7 +239,7 @@ In this example, we'll automate creating Jira Connectors for a selection of proj
       ```
 
       ```bash Shell
-      curl -X GET "${API_BASE_URL}/manage/admins/credential" \
+      curl -X GET "${API_BASE_URL}/manage/admin/credential" \
         -H "Authorization: Bearer ${API_KEY}" \
         -H "Content-Type: application/json"
       ```
@@ -256,7 +256,7 @@ In this example, we'll automate creating Jira Connectors for a selection of proj
       for connector_id in connector_ids:
         try:
           response = requests.put(
-            f"{API_BASE_URL}/manage/admins/connector/{connector_id}/credential/{jira_credential_id}",
+            f"{API_BASE_URL}/manage/admin/connector/{connector_id}/credential/{jira_credential_id}",
             headers=headers,
           )
 
@@ -271,7 +271,7 @@ In this example, we'll automate creating Jira Connectors for a selection of proj
 
       ```bash Shell
       # Replace CONNECTOR_ID and CREDENTIAL_ID with actual values
-      curl -X PUT "${API_BASE_URL}/manage/admins/connector/CONNECTOR_ID/credential/CREDENTIAL_ID" \
+      curl -X PUT "${API_BASE_URL}/manage/admin/connector/CONNECTOR_ID/credential/CREDENTIAL_ID" \
         -H "Authorization: Bearer ${API_KEY}" \
         -H "Content-Type: application/json"
       ```
@@ -324,7 +324,7 @@ In this example, we'll automate creating Jira Connectors for a selection of proj
     }
 
     response = requests.post(
-      f"{API_BASE_URL}/manage/admins/connector",
+      f"{API_BASE_URL}/manage/admin/connector",
       headers=headers,
       json=connector_payload
     )
@@ -343,7 +343,7 @@ In this example, we'll automate creating Jira Connectors for a selection of proj
   # Step 2: Get credentials
   print("\nFetching credentials...")
   response = requests.get(
-    f"{API_BASE_URL}/manage/admins/credential",
+    f"{API_BASE_URL}/manage/admin/credential",
     headers=headers
   )
 
@@ -368,7 +368,7 @@ In this example, we'll automate creating Jira Connectors for a selection of proj
   for connector_id in connector_ids:
     try:
       response = requests.put(
-        f"{API_BASE_URL}/manage/admins/connector/{connector_id}/credential/{jira_credential_id}",
+        f"{API_BASE_URL}/manage/admin/connector/{connector_id}/credential/{jira_credential_id}",
         headers=headers,
       )
 
@@ -403,7 +403,7 @@ In this example, we'll automate creating Jira Connectors for a selection of proj
   for PROJECT in "${PROJECTS[@]}"; do
     echo "Creating connector for project: $PROJECT"
 
-    RESPONSE=$(curl -s -w "\n%{http_code}" -X POST "${API_BASE_URL}/manage/admins/connector" \
+    RESPONSE=$(curl -s -w "\n%{http_code}" -X POST "${API_BASE_URL}/manage/admin/connector" \
       -H "Authorization: Bearer ${API_KEY}" \
       -H "Content-Type: application/json" \
       -d "{
@@ -438,7 +438,7 @@ In this example, we'll automate creating Jira Connectors for a selection of proj
 
   # Step 2: Get credentials
   echo -e "\nFetching credentials..."
-  CRED_RESPONSE=$(curl -s -w "\n%{http_code}" -X GET "${API_BASE_URL}/manage/admins/credential" \
+  CRED_RESPONSE=$(curl -s -w "\n%{http_code}" -X GET "${API_BASE_URL}/manage/admin/credential" \
   -H "Authorization: Bearer ${API_KEY}" \
   -H "Content-Type: application/json")
 
@@ -465,7 +465,7 @@ In this example, we'll automate creating Jira Connectors for a selection of proj
   for CONNECTOR_ID in "${CONNECTOR_IDS[@]}"; do
     echo "Associating credential with connector: $CONNECTOR_ID"
 
-    ASSOC_RESPONSE=$(curl -s -w "\n%{http_code}" -X PUT "${API_BASE_URL}/manage/admins/connector/${CONNECTOR_ID}/credential/${JIRA_CREDENTIAL_ID}" \
+    ASSOC_RESPONSE=$(curl -s -w "\n%{http_code}" -X PUT "${API_BASE_URL}/manage/admin/connector/${CONNECTOR_ID}/credential/${JIRA_CREDENTIAL_ID}" \
       -H "Authorization: Bearer ${API_KEY}" \
       -H "Content-Type: application/json")
 
