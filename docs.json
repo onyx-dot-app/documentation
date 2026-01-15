@@ -106,7 +106,8 @@
             "group": "Configuration",
             "pages": [
               "deployment/configuration/configuration",
-              "deployment/configuration/chrome_extension"
+              "deployment/configuration/chrome_extension",
+              "deployment/configuration/website_widget"
             ]
           },
           {

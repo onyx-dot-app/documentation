@@ -1,0 +1,218 @@
+---
+title: "Website Widget"
+description: "Deploy the Onyx chat widget on your website"
+icon: "window"
+---
+
+The Onyx Website Widget allows you to embed AI-powered chat directly on any website.
+
+Features include:
+
+- Lightweight ~100-150kb gzipped bundle
+- Fully customizable colors and branding
+- Responsive design (desktop popup, mobile fullscreen)
+- Real-time streaming responses via SSE
+- Session persistence across page reloads
+
+## Deployment Options
+
+### Cloud Deployment (Recommended)
+
+For Onyx Cloud users, the widget is served from Onyx's CDN. Simply add the following to your website:
+
+```html
+<!-- Load the widget -->
+<script type="module" src="https://cdn.onyx.app/widget/v1/onyx-widget.js"></script>
+
+<!-- Configure and display -->
+<onyx-chat-widget
+  backend-url="https://cloud.onyx.app"
+  api-key="your_api_key_here"
+  mode="launcher"
+>
+</onyx-chat-widget>
+```
+
+### Self-Hosted Deployment
+
+For self-hosted Onyx instances, you'll need to build and host the widget yourself.
+
+<Steps>
+  <Step title="Clone the repository">
+    Clone the [Onyx repository](https://github.com/onyx-dot-app/onyx) from GitHub.
+  </Step>
+
+  <Step title="Navigate to widget directory">
+    ```bash
+    cd widget/
+    ```
+  </Step>
+
+  <Step title="Install dependencies">
+    ```bash
+    npm install
+    ```
+  </Step>
+
+  <Step title="Obtain a widget API key">
+    Navigate to your Onyx admin panel and create a new API key specifically for the widget.
+
+    <img className="rounded-image" src="/assets/deployment/widget_api_key.png" alt="Creating a widget API key in the Onyx admin panel"/>
+
+    <Warning>
+      Create a **limited-scope API key** with only chat permissions.
+      Never use admin or full-access keys since the API key will be visible in client-side code.
+    </Warning>
+  </Step>
+
+  <Step title="Configure environment (optional)">
+    For builds with baked-in configuration, create a `.env` file:
+
+    ```bash
+    cp .env.example .env
+    ```
+
+    Edit `.env` and set your backend URL and API key:
+
+    ```
+    VITE_WIDGET_BACKEND_URL=https://your-backend.com
+    VITE_WIDGET_API_KEY=your_api_key
+    ```
+  </Step>
+
+  <Step title="Build the widget">
+    For **cloud-style deployment** (config via HTML attributes):
+
+    ```bash
+    npm run build:cloud
+    ```
+
+    For **self-hosted deployment** (config baked into bundle):
+
+    ```bash
+    npm run build:self-hosted
+    ```
+  </Step>
+
+  <Step title="Deploy the bundle">
+    Upload `dist/onyx-widget.js` to your CDN or web server.
+  </Step>
+</Steps>
+
+### Customer Embed Code
+
+After deployment, provide customers with the embed code:
+
+**Cloud-style (attributes required):**
+
+```html
+<script type="module" src="https://your-cdn.com/onyx-widget.js"></script>
+<onyx-chat-widget
+  backend-url="https://your-backend.com"
+  api-key="customer_api_key"
+  agent-name="Support"
+  logo="https://path-to-your-logo.com/"
+>
+</onyx-chat-widget>
+```
+
+**Self-hosted (config baked in):**
+
+```html
+<script type="module" src="https://your-cdn.com/onyx-widget.js"></script>
+<onyx-chat-widget
+  agent-name="Support"
+  logo="https://path-to-your-logo.com/"
+>
+</onyx-chat-widget>
+```
+
+## Configuration Reference
+
+### Required Attributes
+
+| Attribute     | Type   | Description                          |
+| ------------- | ------ | ------------------------------------ |
+| `backend-url` | string | Your Onyx backend API URL            |
+| `api-key`     | string | API key for authentication           |
+
+#### `backend-url`
+
+The URL of your Onyx backend API. This is where the widget sends chat requests.
+
+- **Onyx Cloud**: Use `https://cloud.onyx.app` or your tenant-specific URL
+- **Self-hosted**: Use your Onyx instance URL (e.g., `https://onyx.yourcompany.com`)
+
+```html
+<!-- Onyx Cloud -->
+<onyx-chat-widget backend-url="https://cloud.onyx.app" ...></onyx-chat-widget>
+
+<!-- Self-hosted -->
+<onyx-chat-widget backend-url="https://onyx.yourcompany.com" ...></onyx-chat-widget>
+```
+
+#### `api-key`
+
+A valid Onyx API key for authenticating widget requests. **This key is visible in client-side code**,
+so always use a limited-scope key.
+
+```html
+<onyx-chat-widget
+  backend-url="https://cloud.onyx.app"
+  api-key="on_abc123xyz789"
+  ...
+></onyx-chat-widget>
+```
+
+<Note>
+  For self-hosted builds with baked-in config,
+  `backend-url` and `api-key` can be set via environment variables during build instead of HTML attributes.
+</Note>
+
+### Optional Attributes
+
+| Attribute          | Type   | Default       | Description                              |
+| ------------------ | ------ | ------------- | ---------------------------------------- |
+| `agent-id`         | number | `undefined`   | Specific agent/persona to use            |
+| `agent-name`       | string | `"Assistant"` | Display name in header                   |
+| `logo`             | string | Onyx logo     | URL to custom logo image                 |
+| `primary-color`    | string | `#1c1c1c`     | Primary brand color (buttons, accents)   |
+| `background-color` | string | `#e9e9e9`     | Widget background color                  |
+| `text-color`       | string | `#000000bf`   | Text color (75% opacity black)           |
+| `mode`             | string | `"launcher"`  | Display mode: `"launcher"` or `"inline"` |
+
+## API Key Security
+
+<Warning>
+  The widget's API key is exposed in client-side code. Always create a dedicated API key with:
+
+  - **Limited permissions** - Only chat access, no admin features
+  - **Rate limiting** - Prevent abuse from malicious actors
+  - **Monitoring** - Track usage and detect anomalies
+</Warning>
+
+<Steps>
+  <Step title="Create a widget-specific API key">
+    In your Onyx admin panel, create a new API key with minimal permissions.
+  </Step>
+
+  <Step title="Enable rate limiting">
+    Configure rate limits appropriate for your expected usage.
+  </Step>
+
+  <Step title="Monitor usage">
+    Regularly review API key usage for unusual patterns.
+  </Step>
+</Steps>
+
+## Browser Support
+
+- ✅ Chrome/Edge 90+ (Chromium)
+- ✅ Firefox 90+
+- ✅ Safari 15+
+- ✅ Mobile Safari (iOS 15+)
+- ✅ Mobile Chrome (Android)
+
+<Info>
+  **Need help with setup?** Contact your Onyx administrator for API key configuration or deployment assistance.
+</Info>
