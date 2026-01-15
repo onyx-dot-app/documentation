@@ -43,6 +43,7 @@
               "overview/onyx_anywhere/web_interface",
               "overview/onyx_anywhere/slack",
               "overview/onyx_anywhere/chrome_extension",
+              "overview/onyx_anywhere/website_widget",
               "overview/onyx_anywhere/mobile_app"
             ]
           },
