@@ -22,11 +22,11 @@ For Onyx Cloud users, the widget is served from Onyx's CDN. Simply add the follo
 
 ```html
 <!-- Load the widget -->
-<script type="module" src="https://cdn.onyx.app/widget/v1/onyx-widget.js"></script>
+<script type="module" src="https://cdn.onyx.app/widget/1.0/dist/onyx-widget.js"></script>
 
 <!-- Configure and display -->
 <onyx-chat-widget
-  backend-url="https://cloud.onyx.app"
+  backend-url="https://cloud.onyx.app/api"
   api-key="your_api_key_here"
   mode="launcher"
 >
@@ -145,7 +145,7 @@ The URL of your Onyx backend API. This is where the widget sends chat requests.
 
 ```html
 <!-- Onyx Cloud -->
-<onyx-chat-widget backend-url="https://cloud.onyx.app" ...></onyx-chat-widget>
+<onyx-chat-widget backend-url="https://cloud.onyx.app/api" ...></onyx-chat-widget>
 
 <!-- Self-hosted -->
 <onyx-chat-widget backend-url="https://onyx.yourcompany.com" ...></onyx-chat-widget>
@@ -158,7 +158,7 @@ so always use a limited-scope key.
 
 ```html
 <onyx-chat-widget
-  backend-url="https://cloud.onyx.app"
+  backend-url="https://cloud.onyx.app/api"
   api-key="on_abc123xyz789"
   ...
 ></onyx-chat-widget>
