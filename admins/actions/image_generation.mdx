@@ -14,6 +14,8 @@ any AI model in Onyx can invoke this action to generate images using supported i
 | GPT Image 1.5 | OpenAI / Azure OpenAI |
 | GPT Image 1 | OpenAI / Azure OpenAI |
 | DALL-E 3 | OpenAI / Azure OpenAI |
+| Nano Banana | Vertex (Google) |
+| Nano Banana Pro | Vertex (Google) |
 
 ## Configuration
 
@@ -25,12 +27,25 @@ any AI model in Onyx can invoke this action to generate images using supported i
   </Step>
 
   <Step title="Connect a Model">
-    The page displays available models grouped by provider (OpenAI and Azure OpenAI).
+    The page displays available models grouped by provider (OpenAI, Azure OpenAI and Vertex).
 
     Click **Connect** on any model to configure it. A modal will open where you can set up credentials:
 
-    - **Use existing API key**: Select from previously configured OpenAI or Azure OpenAI API keys
-    - **Enter new API key**: Add a new API key for the provider
+    <Tabs>
+      <Tab title="OpenAI">
+        - **Use existing API key**: Select from previously configured OpenAI API keys
+        - **Enter new API key**: Add a new OpenAI API key
+      </Tab>
+      <Tab title="Azure OpenAI">
+        - **Use existing API key**: Select from previously configured Azure OpenAI API keys
+        - **Enter new API key**: Add a new Azure OpenAI API key
+      </Tab>
+      <Tab title="Vertex (Google)">
+        - **Service Account**: Create a Google Cloud service account, then generate and download a JSON key file
+        - **Upload credentials**: Upload the service account JSON key file
+        - **Region (Optional)**: Define the region you want requests sent to. Defaults to global 
+      </Tab>
+    </Tabs>
 
     The last configured model will automatically become the **Current Default**.
   </Step>
