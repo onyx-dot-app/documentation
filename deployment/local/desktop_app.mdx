@@ -1,0 +1,61 @@
+---
+title: "Desktop App"
+description: "Install and configure the Onyx desktop application"
+icon: "desktop"
+---
+
+The Onyx Desktop App provides users with a native application experience for accessing Onyx on Windows, macOS, and Linux.
+
+Features include:
+
+- Quick-launch from system tray or dock
+- Global keyboard shortcuts
+- Desktop notifications
+
+<img className="rounded-image" src="/assets/deployment/onyx_desktop_app.png" alt="Onyx Desktop App"/>
+
+<Info>
+  The desktop app connects to your existing Onyx deployment. Users will need access to your Onyx instance URL.
+</Info>
+
+## Download
+
+Download the latest Onyx Desktop App for your platform:
+
+<CardGroup cols={3}>
+  <Card title="Windows" icon="windows" href="https://github.com/onyx-dot-app/onyx/releases/latest/Onyx_x64.exe">
+    Download for Windows (.exe)
+  </Card>
+  <Card title="macOS" icon="apple" href="https://github.com/onyx-dot-app/onyx/releases/latest/Onyx_universal.dmg">
+    Download for macOS (.dmg)
+  </Card>
+  <Card title="Linux" icon="linux" href="https://github.com/onyx-dot-app/onyx/releases/latest/Onyx_amd64.deb">
+    Download for Linux (.deb)
+  </Card>
+</CardGroup>
+
+<Tip>
+  Additional architectures and formats (.msi, .rpm, .app.tar.gz) are available on the [GitHub Releases page](https://github.com/onyx-dot-app/onyx/releases/latest).
+</Tip>
+
+## Installation Options
+
+**Self-hosted users**: On first launch, users will need to configure the connection to your Onyx instance:
+
+- **Server URL**: Your Onyx instance URL (e.g., `https://onyx.yourcompany.com`)
+- **Authentication**: Sign in with your configured authentication method
+
+<Note>
+  The desktop app will remember the server URL after initial configuration. Users only need to authenticate on subsequent launches if their session expires.
+</Note>
+
+## Enterprise Deployment
+
+For organizations deploying the desktop app at scale, you can pre-configure the connection settings.
+
+## Configuration Options
+
+| Option | Description |
+|--------|-------------|
+| `server_url` | Your Onyx instance URL |
+| `window_title` | Custom window title |
