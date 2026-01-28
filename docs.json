@@ -34,6 +34,7 @@
               "overview/core_features/web_search",
               "overview/core_features/code_interpreter",
               "overview/core_features/image_generation",
+              "overview/core_features/craft",
               "overview/core_features/workflows"
             ]
           },
@@ -248,7 +249,9 @@
           },
           {
             "group": "Agents",
-            "pages": ["admins/agents/overview"]
+            "pages": [
+              "admins/agents/overview"
+            ]
           },
           {
             "group": "User Management",
@@ -270,7 +273,9 @@
           },
           {
             "group": "Analytics",
-            "pages": ["admins/analytics/overview"]
+            "pages": [
+              "admins/analytics/overview"
+            ]
           },
           {
             "group": "Curators",
@@ -282,7 +287,9 @@
           },
           {
             "group": "Miscellaneous",
-            "pages": ["admins/miscellaneous/contact_us"]
+            "pages": [
+              "admins/miscellaneous/contact_us"
+            ]
           }
         ]
       },
@@ -292,7 +299,10 @@
         "pages": [
           {
             "group": "Getting Started",
-            "pages": ["developers/overview", "developers/core_concepts"]
+            "pages": [
+              "developers/overview",
+              "developers/core_concepts"
+            ]
           },
           {
             "group": "Guides & Examples",
@@ -484,7 +494,10 @@
           },
           {
             "group": "Miscellaneous",
-            "pages": ["developers/guides/chat_guide", "developers/contact_us"]
+            "pages": [
+              "developers/guides/chat_guide",
+              "developers/contact_us"
+            ]
           }
         ]
       },
@@ -519,14 +532,18 @@
           },
           {
             "group": "Miscellaneous",
-            "pages": ["security/contact_us"]
+            "pages": [
+              "security/contact_us"
+            ]
           }
         ]
       },
       {
         "tab": "Changelog",
         "icon": "clock-rotate-left",
-        "pages": ["changelog"]
+        "pages": [
+          "changelog"
+        ]
       }
     ],
     "global": {
@@ -553,7 +570,9 @@
     "css": "/style.css"
   },
   "api": {
-    "openapi": ["developers/api_reference/openapi.json"]
+    "openapi": [
+      "developers/api_reference/openapi.json"
+    ]
   },
   "navbar": {
     "primary": {

@@ -1,0 +1,143 @@
+---
+title: "Craft (beta)"
+description: "Create web apps, documents, slides, and more from your company knowledge"
+icon: "hammer"
+---
+
+<img className="rounded-image" src="/assets/overview/core_features/craft.png" alt="Onyx Craft Interface"/>
+
+Onyx Craft lets users create web applications, documents, presentations,
+and more from company knowledge using an AI coding agent in an isolated sandbox. Users describe what they want,
+and the agent builds artifacts using their indexed documents and uploaded files.
+
+<Note>
+  Craft requires an LLM provider to be configured (Anthropic, OpenAI, etc.) to function.
+</Note>
+
+## Key Capabilities
+
+<CardGroup cols={2}>
+  <Card title="Web Applications" icon="browser">
+    Build Next.js applications with React, shadcn/ui, and Recharts for beautiful, interactive dashboards and tools.
+  </Card>
+
+  <Card title="Documents" icon="file-lines">
+    Generate polished documents, reports, and markdown files from your company knowledge.
+  </Card>
+
+  <Card title="Slides & Images" icon="presentation-screen">
+    Create presentations and visual content with nanobanana for slides and image generation.
+  </Card>
+
+  <Card title="Knowledge Integration" icon="database">
+    Access indexed documents from your connectors (Linear, Slack, Google Drive, Confluence, etc.)
+    directly in your outputs.
+  </Card>
+</CardGroup>
+
+<Note>
+  **Coming soon:** Spreadsheets and HTML dashboards
+</Note>
+
+<img className="rounded-image" src="/assets/overview/core_features/craft_sandbox.png" alt="Craft Sandbox Environment"/>
+
+## How It Works
+
+1. **Create a Session** - Start a new Craft session from the `/build` route in Onyx
+2. **Describe What You Need** - Tell the agent what you want to build in natural language
+3. **Watch It Build** - The agent creates your artifact using your company knowledge
+4. **Preview & Iterate** - See your output live and request changes or additions
+5. **Download** - Export your finished artifact
+
+## What You Can Build
+
+Craft excels at creating artifacts that leverage your company's knowledge:
+
+- **Interactive Dashboards** - Visualize metrics and KPIs from your connected data sources
+- **Internal Tools** - Build custom web applications for specific workflows
+- **Documents & Reports** - Generate polished documents from your indexed content
+- **Presentations** - Create slide decks with AI-generated visuals
+- **Data Explorers** - Interactive interfaces for browsing and analyzing documents
+- **Prototypes** - Quickly prototype ideas using your existing data
+
+## Technical Details
+
+<Accordion title="Sandbox Environment">
+  Each Craft session runs in an isolated sandbox with:
+  - **Next.js** application framework with React
+  - **shadcn/ui** component library for polished UI elements
+  - **Recharts** for data visualization
+  - **Python environment** with numpy, pandas, and matplotlib for data processing
+  - Read-only access to your indexed documents
+  - Separate workspace for each session
+</Accordion>
+
+<Accordion title="File Upload Limits">
+  - Maximum file size: **50MB** per file
+  - Maximum files per session: **20 files**
+  - Maximum total size per session: **200MB**
+  - Supported formats: CSV, JSON, PDF, images, and common code files
+</Accordion>
+
+<Accordion title="Deployment Options">
+  Craft can run in two modes:
+  - **Local mode** - Sandboxes run as directories within the Docker Compose deployment (default)
+  - **Kubernetes mode** - Sandboxes run as isolated Kubernetes pods with automatic snapshots and cleanup
+    (production-scale deployments)
+</Accordion>
+
+## Enabling Craft
+
+### New Deployments
+
+When installing Onyx, use the `--include-craft` flag:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/onyx-dot-app/onyx/main/deployment/docker_compose/install.sh > install.sh && chmod +x install.sh && ./install.sh --include-craft
+```
+
+The `--include-craft` flag:
+- Sets `ENABLE_CRAFT=true` in the `.env` file
+- Builds the backend image with Node.js and the opencode CLI
+- Runs the Craft template setup script on container startup
+
+<Note>
+  Craft adds Node.js 20 and the opencode CLI to the backend image, which increases build time and image size.
+  The first startup may take longer while templates are set up.
+</Note>
+
+### Existing Deployments
+
+If you've already deployed Onyx without Craft, you can enable it manually:
+
+1. Navigate to the installation directory (default: `onyx_data/deployment`)
+2. Edit the `.env` file and set:
+
+   ```bash
+   ENABLE_CRAFT=true
+   ```
+
+3. Rebuild and restart:
+
+   ```bash
+   docker compose up -d --build
+   ```
+
+### Verify Craft is Enabled
+
+After installation:
+- The backend container logs should show "Setting up Onyx Craft templates..."
+- The `/build` route should be accessible in the UI
+
+<Warning>
+  Ensure you have an LLM provider configured (Anthropic, OpenAI, etc.) for Craft to work.
+</Warning>
+
+## Configuration
+
+| Environment Variable | Description | Default |
+|---------------------|-------------|---------|
+| `ENABLE_CRAFT` | Enable/disable Craft | `false` |
+| `SANDBOX_BACKEND` | Sandbox mode: `local` or `kubernetes` | `local` |
+| `SANDBOX_IDLE_TIMEOUT_SECONDS` | Idle timeout before sandbox cleanup | `3600` |
+| `SANDBOX_MAX_CONCURRENT_PER_ORG` | Max concurrent sandboxes per organization | `10` |

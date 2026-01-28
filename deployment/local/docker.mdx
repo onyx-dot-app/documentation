@@ -58,4 +58,42 @@ After the containers come up,
 the system needs to go through an initialization process after which you can access Onyx at
 [localhost:3000](localhost:3000).
 
+## Enabling Onyx Craft
+
+To enable [Onyx Craft](/overview/core_features/craft) (AI-powered artifact builder for web apps, documents, and slides):
+
+### Option 1: Use the installation script (Recommended)
+
+Run the installation script with the `--include-craft` flag:
+
+```bash
+cd onyx/deployment/docker_compose
+./install.sh --include-craft
+```
+
+Then start the services:
+
+```bash
+cd onyx_data/deployment
+docker compose up -d
+```
+
+### Option 2: Manual setup
+
+If you've already set up Onyx, you can enable Craft manually by uncommenting the `ENABLE_CRAFT` line in `env.template`:
+
+```bash
+ENABLE_CRAFT=true
+```
+
+Then rebuild:
+
+```bash
+docker compose up -d --build
+```
+
+<Tip>
+  See the [Craft documentation](/overview/core_features/craft) for full details on capabilities and configuration.
+</Tip>
+
 <DeploymentNextSteps />
