@@ -83,7 +83,7 @@ Craft excels at creating artifacts that leverage your company's knowledge:
   Craft can run in two modes:
   - **Local mode** - Sandboxes run as directories within the Docker Compose deployment (default)
   - **Kubernetes mode** - Sandboxes run as isolated Kubernetes pods with automatic snapshots and cleanup
-    (production-scale deployments)
+  (production-scale deployments)
 </Accordion>
 
 ## Enabling Craft
@@ -98,7 +98,7 @@ curl -fsSL https://raw.githubusercontent.com/onyx-dot-app/onyx/main/deployment/d
 
 The `--include-craft` flag:
 - Sets `ENABLE_CRAFT=true` in the `.env` file
-- Builds the backend image with Node.js and the opencode CLI
+- Sets `IMAGE_TAG=craft-latest` to use the Craft-enabled images
 - Runs the Craft template setup script on container startup
 
 <Note>
@@ -115,6 +115,7 @@ If you've already deployed Onyx without Craft, you can enable it manually:
 
    ```bash
    ENABLE_CRAFT=true
+   IMAGE_TAG=craft-latest
    ```
 
 3. Rebuild and restart:
