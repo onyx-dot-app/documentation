@@ -108,21 +108,11 @@ The `--include-craft` flag:
 
 ### Existing Deployments
 
-If you've already deployed Onyx without Craft, you can enable it manually:
+If you've already deployed Onyx without Craft, you can enable it by running:
 
-1. Navigate to the installation directory (default: `onyx_data/deployment`)
-2. Edit the `.env` file and set:
-
-   ```bash
-   ENABLE_CRAFT=true
-   IMAGE_TAG=craft-latest
-   ```
-
-3. Rebuild and restart:
-
-   ```bash
-   docker compose up -d --build
-   ```
+```bash
+ENABLE_CRAFT=true IMAGE_TAG=craft-latest docker compose up -d
+```
 
 ### Verify Craft is Enabled
 

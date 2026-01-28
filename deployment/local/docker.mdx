@@ -78,19 +78,12 @@ cd onyx_data/deployment
 docker compose up -d
 ```
 
-### Option 2: Manual setup
+### Option 2: Existing deployments
 
-If you've already set up Onyx, you can enable Craft manually by uncommenting the following lines in `env.template`:
-
-```bash
-ENABLE_CRAFT=true
-IMAGE_TAG=craft-latest
-```
-
-Then rebuild:
+If you've already set up Onyx, you can enable Craft by running:
 
 ```bash
-docker compose up -d --build
+ENABLE_CRAFT=true IMAGE_TAG=craft-latest docker compose up -d
 ```
 
 <Tip>
