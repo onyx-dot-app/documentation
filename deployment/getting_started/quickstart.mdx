@@ -14,9 +14,21 @@ install Bash or refer to the [Docker](/deployment/local/docker) deployment.
 
 To deploy with a single command:
 
-```
+```bash
 curl -fsSL https://raw.githubusercontent.com/onyx-dot-app/onyx/main/deployment/docker_compose/install.sh > install.sh && chmod +x install.sh && ./install.sh
 ```
+
+### With Onyx Craft
+
+To deploy Onyx with **[Onyx Craft](/overview/core_features/craft)** enabled (AI-powered web application builder):
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/onyx-dot-app/onyx/main/deployment/docker_compose/install.sh > install.sh && chmod +x install.sh && ./install.sh --include-craft
+```
+
+<Tip>
+  See the [Craft documentation](/overview/core_features/craft) for full details on capabilities, configuration, and enabling Craft on existing deployments.
+</Tip>
 
 Alternatively, download and run the installation script below.
 <Card title="Download Install Script" icon="download" href="https://raw.githubusercontent.com/onyx-dot-app/onyx/main/deployment/docker_compose/install.sh">
