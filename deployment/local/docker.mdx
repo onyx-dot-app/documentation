@@ -80,10 +80,11 @@ docker compose up -d
 
 ### Option 2: Manual setup
 
-If you've already set up Onyx, you can enable Craft manually by uncommenting the `ENABLE_CRAFT` line in `env.template`:
+If you've already set up Onyx, you can enable Craft manually by uncommenting the following lines in `env.template`:
 
 ```bash
 ENABLE_CRAFT=true
+IMAGE_TAG=craft-latest
 ```
 
 Then rebuild:
