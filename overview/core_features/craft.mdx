@@ -6,7 +6,9 @@ icon: "hammer"
 
 <img className="rounded-image" src="/assets/overview/core_features/craft.png" alt="Onyx Craft Interface"/>
 
-Onyx Craft lets users create web applications, documents, presentations, and more from company knowledge using an AI coding agent in an isolated sandbox. Users describe what they want, and the agent builds artifacts using their indexed documents and uploaded files.
+Onyx Craft lets users create web applications, documents, presentations,
+and more from company knowledge using an AI coding agent in an isolated sandbox. Users describe what they want,
+and the agent builds artifacts using their indexed documents and uploaded files.
 
 <Note>
   Craft requires an LLM provider to be configured (Anthropic, OpenAI, etc.) to function.
@@ -18,14 +20,18 @@ Onyx Craft lets users create web applications, documents, presentations, and mor
   <Card title="Web Applications" icon="browser">
     Build Next.js applications with React, shadcn/ui, and Recharts for beautiful, interactive dashboards and tools.
   </Card>
+
   <Card title="Documents" icon="file-lines">
     Generate polished documents, reports, and markdown files from your company knowledge.
   </Card>
+
   <Card title="Slides & Images" icon="presentation-screen">
     Create presentations and visual content with nanobanana for slides and image generation.
   </Card>
+
   <Card title="Knowledge Integration" icon="database">
-    Access indexed documents from your connectors (Linear, Slack, Google Drive, Confluence, etc.) directly in your outputs.
+    Access indexed documents from your connectors (Linear, Slack, Google Drive, Confluence, etc.)
+    directly in your outputs.
   </Card>
 </CardGroup>
 
@@ -76,7 +82,8 @@ Craft excels at creating artifacts that leverage your company's knowledge:
 <Accordion title="Deployment Options">
   Craft can run in two modes:
   - **Local mode** - Sandboxes run as directories within the Docker Compose deployment (default)
-  - **Kubernetes mode** - Sandboxes run as isolated Kubernetes pods with automatic snapshots and cleanup (production-scale deployments)
+  - **Kubernetes mode** - Sandboxes run as isolated Kubernetes pods with automatic snapshots and cleanup
+    (production-scale deployments)
 </Accordion>
 
 ## Enabling Craft
@@ -95,7 +102,8 @@ The `--include-craft` flag:
 - Runs the Craft template setup script on container startup
 
 <Note>
-  Craft adds Node.js 20 and the opencode CLI to the backend image, which increases build time and image size. The first startup may take longer while templates are set up.
+  Craft adds Node.js 20 and the opencode CLI to the backend image, which increases build time and image size.
+  The first startup may take longer while templates are set up.
 </Note>
 
 ### Existing Deployments
@@ -104,10 +112,13 @@ If you've already deployed Onyx without Craft, you can enable it manually:
 
 1. Navigate to the installation directory (default: `onyx_data/deployment`)
 2. Edit the `.env` file and set:
+
    ```bash
    ENABLE_CRAFT=true
    ```
+
 3. Rebuild and restart:
+
    ```bash
    docker compose up -d --build
    ```
