@@ -43,7 +43,7 @@ and the agent builds artifacts using their indexed documents and uploaded files.
 
 ## How It Works
 
-1. **Create a Session** - Start a new Craft session from the `/build` route in Onyx
+1. **Create a Session** - Start a new Craft session from the `/craft` route in Onyx
 2. **Describe What You Need** - Tell the agent what you want to build in natural language
 3. **Watch It Build** - The agent creates your artifact using your company knowledge
 4. **Preview & Iterate** - See your output live and request changes or additions
@@ -118,7 +118,7 @@ ENABLE_CRAFT=true IMAGE_TAG=craft-latest docker compose up -d
 
 After installation:
 - The backend container logs should show "Setting up Onyx Craft templates..."
-- The `/build` route should be accessible in the UI
+- The `/craft` route should be accessible in the UI
 
 <Warning>
   Ensure you have an LLM provider configured (Anthropic, OpenAI, etc.) for Craft to work.
