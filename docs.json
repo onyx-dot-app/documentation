@@ -45,6 +45,7 @@
               "overview/onyx_anywhere/desktop_app",
               "overview/onyx_anywhere/slack",
               "overview/onyx_anywhere/chrome_extension",
+              "overview/onyx_anywhere/website_widget",
               "overview/onyx_anywhere/mobile_app"
             ]
           },
@@ -108,7 +109,8 @@
             "group": "Configuration",
             "pages": [
               "deployment/configuration/configuration",
-              "deployment/configuration/chrome_extension"
+              "deployment/configuration/chrome_extension",
+              "deployment/configuration/website_widget"
             ]
           },
           {
