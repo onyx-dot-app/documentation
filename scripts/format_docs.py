@@ -1024,15 +1024,53 @@ def format_content(text: str, width: int) -> str:
 
     lines = remove_blank_after_group_opens(lines)
 
-    # 6.8) Normalize img tag format: className first, then src, then alt
+    # 6.8) Normalize img tag format: className first, then src, then alt, then other attributes
     def normalize_img_tags(ls: List[str]) -> List[str]:
         out_ls: List[str] = []
         in_code_f = False
         # Pattern to match complete img tag (handles multi-line by joining)
         # Match: <img ... /> or <img ... >
         img_start_pattern = re.compile(r"<img\s+", re.IGNORECASE)
-        # Pattern to extract attribute values: attr="value" or attr='value'
-        attr_pattern = re.compile(r'(className|src|alt|class)\s*=\s*["\']([^"\']*)["\']', re.IGNORECASE)
+        # Pattern to extract all attribute values: attr="value" or attr='value' or attr={value}
+        # For JSX-style attributes with nested braces, we need a more sophisticated approach
+        def extract_attributes(content: str) -> dict[str, str]:
+            """Extract all attributes from an img tag, handling both quoted and JSX-style attributes."""
+            attrs: dict[str, str] = {}
+            # Pattern for quoted attributes: attr="value" or attr='value'
+            quoted_pattern = re.compile(r'(\w+)\s*=\s*(["\'])([^"\']*)\2', re.IGNORECASE)
+            for match in quoted_pattern.finditer(content):
+                attr_name = match.group(1).lower()
+                quote_char = match.group(2)
+                attr_value = match.group(3)
+                attrs[attr_name] = f'{quote_char}{attr_value}{quote_char}'
+            
+            # Pattern for JSX-style attributes: attr={...}
+            # We need to handle nested braces, so we'll find the opening { and match the closing }
+            jsx_pattern = re.compile(r'(\w+)\s*=\s*(\{)', re.IGNORECASE)
+            pos = 0
+            while True:
+                match = jsx_pattern.search(content, pos)
+                if not match:
+                    break
+                attr_name = match.group(1).lower()
+                brace_start = match.start(2)
+                # Find matching closing brace
+                brace_count = 0
+                brace_end = brace_start
+                for i in range(brace_start, len(content)):
+                    if content[i] == '{':
+                        brace_count += 1
+                    elif content[i] == '}':
+                        brace_count -= 1
+                        if brace_count == 0:
+                            brace_end = i
+                            break
+                if brace_count == 0:
+                    attr_value = content[brace_start:brace_end + 1]
+                    attrs[attr_name] = attr_value
+                pos = brace_end + 1
+            
+            return attrs
         
         i = 0
         n = len(ls)
@@ -1089,34 +1127,68 @@ def format_content(text: str, width: int) -> str:
                 # Join all parts into a single string for processing
                 img_content = " ".join(img_parts)
                 
-                # Extract className, src, and alt attributes
+                # Extract all attributes using the helper function
+                attrs = extract_attributes(img_content)
+                
+                # Extract values for required attributes
                 className_val = None
                 class_val = None  # fallback for "class" attribute
                 src_val = None
                 alt_val = None
                 
-                for attr_match in attr_pattern.finditer(img_content):
-                    attr_name = attr_match.group(1).lower()
-                    attr_value = attr_match.group(2)
+                for attr_name, attr_value in attrs.items():
                     if attr_name == "classname":
-                        className_val = attr_value
+                        # Extract value, handling both quoted and JSX-style
+                        if attr_value.startswith("{") and attr_value.endswith("}"):
+                            className_val = attr_value[1:-1].strip().strip('"').strip("'")
+                        else:
+                            className_val = attr_value.strip('"').strip("'")
                     elif attr_name == "class":
-                        class_val = attr_value
+                        if attr_value.startswith("{") and attr_value.endswith("}"):
+                            class_val = attr_value[1:-1].strip().strip('"').strip("'")
+                        else:
+                            class_val = attr_value.strip('"').strip("'")
                     elif attr_name == "src":
-                        src_val = attr_value
+                        if attr_value.startswith("{") and attr_value.endswith("}"):
+                            src_val = attr_value[1:-1].strip().strip('"').strip("'")
+                        else:
+                            src_val = attr_value.strip('"').strip("'")
                     elif attr_name == "alt":
-                        alt_val = attr_value
+                        if attr_value.startswith("{") and attr_value.endswith("}"):
+                            alt_val = attr_value[1:-1].strip().strip('"').strip("'")
+                        else:
+                            alt_val = attr_value.strip('"').strip("'")
                 
                 # Use className if available, otherwise fall back to class
                 if not className_val and class_val:
                     className_val = class_val
+                    # Update attrs dict to use className instead of class
+                    if "classname" not in attrs:
+                        attrs["classname"] = attrs.pop("class", f'"{class_val}"')
                 
                 # Build normalized img tag if we have all required attributes
                 if className_val and src_val and alt_val:
                     # Determine closing style
                     is_self_closing = "/>" in img_content
                     closing = "/>" if is_self_closing else ">"
-                    normalized = f'<img className="{className_val}" src="{src_val}" alt="{alt_val}"{closing}'
+                    
+                    # Build attribute list: className first, then src, then alt, then others
+                    attr_parts = []
+                    # Add className first
+                    if "classname" in attrs:
+                        attr_parts.append(f'className={attrs["classname"]}')
+                    # Add src second
+                    if "src" in attrs:
+                        attr_parts.append(f'src={attrs["src"]}')
+                    # Add alt third
+                    if "alt" in attrs:
+                        attr_parts.append(f'alt={attrs["alt"]}')
+                    # Add all other attributes (preserve original order)
+                    for attr_name, attr_value in attrs.items():
+                        if attr_name not in {"classname", "class", "src", "alt"}:
+                            attr_parts.append(f'{attr_name}={attr_value}')
+                    
+                    normalized = f'<img {" ".join(attr_parts)} {closing}'.replace(" />", "/>").replace(" >", ">")
                     out_ls.append(" " * leading + normalized)
                     # IMPORTANT: j points to the first line AFTER the img tag
                     # This could be a blank line, closing tag like </Step>, or another element

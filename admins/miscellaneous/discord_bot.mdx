@@ -1,0 +1,202 @@
+---
+title: "Discord Bot"
+description: "Configure your Discord bot"
+icon: "discord"
+---
+
+## Overview
+
+You can access Onyx Cloud or your self-hosted instance through a Discord bot.
+
+<Note>
+  If you want to use Onyx Cloud, you must use the official OnyxBot Discord app.
+
+  Self-hosted instances must create their own Discord app in the Developer Portal.
+</Note>
+
+## Configuration
+
+### Official OnyxBot
+
+You'll need to be an admin of the Discord server and an admin in your Onyx instance to install and configure OnyxBot.
+
+<Steps>
+  <Step title="Install OnyxBot in your Discord server">
+    Click [here](https://discord.com/oauth2/authorize?client_id=1460722463431327804)
+    to install the official OnyxBot in your Discord server.
+
+    <img className="rounded-image" src="/assets/admins/discord_bot/install_discordbot.png" alt="Install OnyxBot in Discord server" style={{maxHeight: '400px'}}/>
+  </Step>
+
+  <Step title="Allow access to a private text channel">
+    Go to the channel settings and click on the "Permissions" tab.
+
+    Add OnyxBot to the "Allowed Users" list.
+
+    <img className="rounded-image" src="/assets/admins/discord_bot/discord_private_channel_config.png" alt="Allow OnyxBot to access a private text channel"/>
+  </Step>
+
+  <Step title="Create a registration key in Onyx">
+    Create or log in to your account on [Onyx Cloud](https://cloud.onyx.app).
+
+    Navigate to the Onyx Admin Panel > Discord Bots and click on the **Add Server** button.
+
+    Copy the registration key.
+
+    <Note>
+      The registration key will only be shown once. If you lose it,
+      delete the server configuration and create a new one.
+
+      The key is invalidated as soon as you use it and does not allow any other access to your Onyx instance.
+    </Note>
+  </Step>
+
+  <Step title="Register your Server in Onyx">
+    Send your registration key in the private channel you allowed OnyxBot to access.
+
+    OnyxBot should respond with a message confirming the server has been registered.
+
+    <img className="rounded-image" src="/assets/admins/discord_bot/register_server.png" alt="OnyxBot registered in Onyx"/>
+
+    In Onyx, you should see the server status **Registered**.
+
+    <img className="rounded-image" src="/assets/admins/discord_bot/configured_discord_server.png" alt="OnyxBot registered in Onyx"/>
+  </Step>
+
+  <Step title="Configure Channel behavior">
+    Click the pencil icon next to the server name to configure the bot's behavior.
+
+    <Tip>
+      By default, the bot will not respond in any channels. You must select the channels you want the bot to respond in.
+
+      We highly recommend configuring a **custom agent** with specific data access for the bot.
+      Otherwise it may answer from privately indexed data.
+    </Tip>
+
+    You can customize:
+    - The default agent that powers the bot's responses
+    - Agent overrides for specific channels
+    - Whether the bot should respond to all messages or only to messages tagged with @OnyxBot
+    - Whether the bot responds in replies or threads
+
+    <img className="rounded-image" src="/assets/admins/discord_bot/discord_channel_configs.png" alt="Configure Channel Behavior"/>
+  </Step>
+</Steps>
+
+### Self-hosted Discord Bot
+
+If you want to deploy your own Discord bot with your self-hosted Onyx instance,
+you'll need to set up your own Discord app.
+
+<Info>
+  In the Developer Portal, you'll see references to "Guilds." This is Discord's internal term for servers.
+</Info>
+
+<Steps>
+  <Step title="Create a new Discord app">
+    Navigate to the [Discord Developer Portal](https://discord.com/developers/applications)
+    and click **New Application**.
+
+    Give your app a name and click **Create**.
+
+    <img className="rounded-image" src="/assets/admins/discord_bot/new_discord_app.png" alt="Create a new Discord app"/>
+  </Step>
+
+  <Step title="Configure permissions and installation settings">
+    Navigate to the **Installation** tab.
+
+    Uncheck **User Install**. The Discord app cannot be installed for pesronal use.
+    It must be installed in servers only.
+
+    Add the following scopes:
+
+    ```
+    - bot
+    - applications.commands
+    ```
+
+    Add the following permissions:
+
+    ```
+    - View channels
+    - Send messages
+    - Send messages in threads
+    - Create public threads
+    - Create private threads
+    - Read message history
+    - Add reactions
+    ```
+
+    <img className="rounded-image" src="/assets/admins/discord_bot/installation_config.png" alt="Discord installation configuration"/>
+  </Step>
+
+  <Step title="Install the app in your Discord server">
+    Use the **Install Link** on the **Installation** tab to install the app in your Discord server.
+  </Step>
+
+  <Step title="Allow your app to access a private text channel">
+    Go to the channel settings and click on the "Permissions" tab.
+
+    Add your app to the "Allowed Users" list.
+
+    <img className="rounded-image" src="/assets/admins/discord_bot/discord_private_channel_config.png" alt="Allow OnyxBot to access a private text channel"/>
+  </Step>
+
+  <Step title="Retrieve your bot token">
+    In the Developer Portal, navigate to the **Bot** tab and look for the **Token** section.
+
+    Click **Reset Token** and copy your bot token.
+
+    <img className="rounded-image" src="/assets/admins/discord_bot/bot_token_config.png" alt="Discord bot token configuration"/>
+  </Step>
+
+  <Step title="Configure your app in Onyx">
+    Navigate to the Onyx Admin Panel > Discord Bots.
+
+    Paste your bot token into the **Bot Token** field and click **Create!**
+
+    <img className="rounded-image" src="/assets/admins/discord_bot/configure_discord_bot_token.png" alt="Discord bot token"/>
+  </Step>
+
+  <Step title="Create a registration key in Onyx">
+    Click on the **Add Server** button and copy the registration key.
+
+    <Note>
+      The registration key will only be shown once. If you lose it,
+      delete the server configuration and create a new one.
+
+      The key is invalidated as soon as you use it and does not allow any other access to your Onyx instance.
+    </Note>
+  </Step>
+
+  <Step title="Register your Server in Onyx">
+    Send your registration key in the private channel you allowed your app to access.
+
+    Your Onyx bot should respond with a message confirming the server has been registered.
+
+    <img className="rounded-image" src="/assets/admins/discord_bot/register_server.png" alt="OnyxBot registered in Onyx"/>
+
+    In Onyx, you should see the server status **Registered**.
+
+    <img className="rounded-image" src="/assets/admins/discord_bot/configured_discord_server.png" alt="OnyxBot registered in Onyx"/>
+  </Step>
+
+  <Step title="Configure Channel behavior">
+    Click the pencil icon next to the server name to configure the bot's behavior.
+
+    <Tip>
+      By default, the bot will not respond in any channels. You must select the channels you want the bot to respond in.
+
+      We highly recommend configuring a **custom agent** with specific data access for the bot.
+      Otherwise it may answer from privately indexed data.
+    </Tip>
+
+    You can customize:
+    - The default agent that powers the bot's responses
+    - Agent overrides for specific channels
+    - Whether the bot should respond to all messages or only to messages tagged with @OnyxBot
+    - Whether the bot responds in replies or threads
+
+    <img className="rounded-image" src="/assets/admins/discord_bot/discord_channel_configs.png" alt="Configure Channel Behavior"/>
+  </Step>
+</Steps>
