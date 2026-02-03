@@ -226,3 +226,14 @@ If you are self-hosting, you can set the `DISCORD_BOT_INVOKE_CHAR` environment v
 
 If you are using the official OnyxBot, unfortunately, we cannot change the prefix. However,
 you may still be able to run the command by creating a private channel that only OnyxBot has access to.
+
+### My Discord bot is connected but not responding to any messages
+
+If you are seeing this behavior, you could be experiencing the following error (in background container):
+
+```
+api_client.py  182: Failed to connect to API: Cannot connect to host 127.0.0.1:8080
+```
+
+To fix this, make sure you have the latest docker-compose.yml files by running `git pull` in your Onyx repo.
+Verify that `API_SERVER_PROTOCOL` and `API_SERVER_HOST` exists in your compose file.
