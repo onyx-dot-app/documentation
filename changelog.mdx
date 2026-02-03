@@ -6,6 +6,116 @@ mode: "wide"
 rss: true
 ---
 
+<Update label="v2.10.0" description="January 31st, 2026" tags={["New Features", "Bug Fixes"]}>
+
+  ## v2.10.0
+
+  An update on the OpenSearch migration, Onyx in your Discord server, expanded image generation support,
+  and multilingual Deep Research.
+
+  Thank you to our contributors for helping make this release possible!
+
+  ## [Update] Vector Database Migration
+
+  A small change in plans for our migration from Vespa to OpenSearch (announced in [v2.8.0
+  notes](#[announcement]-vector-database-migration)).
+
+  Instead of v2.11.0, the migration version will be **v3.0.0**. Vespa will be deprecated in **v4.0.0**.
+
+  Our intention is that everyone must upgrade to a **v3.x.x** version before moving on to **v4.x.x**. Additionally,
+  we do not anticipate many minor versions of v3 before moving to v4.
+
+  <Note>
+    If you skip a v3 version, you will lose all of your indexed data!
+    This means re-indexing all of your data and re-uploading your files in Projects.
+  </Note>
+
+  Everything else remains the same. When you upgrade to a v3 version,
+  admins will be prompted to start the migration process and Vespa will continue to power your search until v4.0.0.
+
+  To accomodate this change, our timeline has been pushed by 2 weeks:
+  - **v3.0.0 Beta** will be released in the second week of February
+  - **v3.0.0 Stable** is slated for the third week of February
+
+  We will continue to share details, migration guides, and any changes to the plan moving forward!
+
+  ## Key Improvements
+
+  ### Onyx Discord Bot
+
+  You can now chat with your agents and search your knowledge base directly from Discord!
+
+  OnyxBot is available in our [Discord server](https://discord.gg/4NA5SbzrWb).
+  Just tag `@onyxbot` in your message to start a conversation.
+
+  You can install our [official OnyxBot Discord app](https://discord.com/oauth2/authorize?client_id=1460722463431327804)
+  or deploy your own Discord bot with your self-hosted Onyx instance.
+
+  Check out the [Discord Bot documentation](/admins/miscellaneous/discord_bot) to get started!
+
+  <img className="rounded-image" src="/assets/admins/discord_bot/register_server.png" alt="Onyx Discord Bot"/>
+
+  ### Nano Banana Image Generation
+
+  You can now configure Nano Banana as an image generation provider.
+
+  Add Vertex AI credentials in the **Image Generation** page of the Admin Panel to use Gemini 2.5 Flash Image (Nano
+  Banana) and Gemini 3 Pro Image (Nano Banana Pro).
+
+  <img className="rounded-image" src="/assets/changelog/v2.10/showcase_nano_banana.png" alt="Nano Banana Image Generation"/>
+
+  ### Multilingual Deep Research
+
+  Our Deep Research mode was previously biased toward English responses.
+  We've tuned it to work and respond in the language you ask your question in,
+  making Deep Research more accessible for international users.
+
+  <img className="rounded-image" src="/assets/changelog/v2.10/showcase_multilingual_dr.png" alt="Multilingual Deep Research"/>
+
+  ## Additional Improvements
+
+  ### Slack Connector Restored
+
+  Slack has rolled back changes to their API that previously prevented indexing. For the time being,
+  we recommend using the indexing connector if possible, as the search quality is significantly better.
+
+  If you don't see the indexing connector, make sure you've removed all Slack Federated connectors first.
+
+  <Info>
+    Note that if you switch from the federated connector,
+    you will lose access to searching group DMs and direct messages.
+  </Info>
+
+  Read more about the [Slack connector](/admins/connectors/official/slack/slack_indexed)
+  and [Slack Federated connector](/admins/connectors/official/slack/slack_federated) in our documentation.
+
+  ### Agent Access Controls Restored
+
+  User and group access configuration was briefly removed from the Agent configuration page during refactoring.
+  This interface has been restored!
+
+  <Info>
+    Pre-existing agents that had access controls configured continued to respect those settings during this period.
+  </Info>
+
+  ### Empty Packets Fix
+
+  If you've encountered an error like "message failed due to empty packet," we've implemented a fix and you should no
+  longer see this issue. This fix was particularly targeted at models hosted with vLLM.
+
+  ### Chat Naming Fix for Long Messages
+
+  Previously, if your very first interaction was too long,
+  the chat session could be renamed to an error message about exceeding context limits.
+  We've adjusted this behavior and chat naming now works correctly regardless of message length.
+
+  ---
+
+  Our [GitHub Releases](https://github.com/onyx-dot-app/onyx/releases?utm_source=docs&utm_content=changelog)
+  page has the full list of changes and bug fixes for each release.
+
+</Update>
+
 <Update label="v2.9.0" description="January 21st, 2026" tags={["New Features", "Bug Fixes"]}>
 
   ## v2.9.0
