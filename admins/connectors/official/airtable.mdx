@@ -5,9 +5,11 @@ description: "Access tables from Airtable"
 
 ## How it works
 
-The Airtable connector indexes records from your Airtable bases. Each record becomes a searchable document in Onyx, with field names and values preserved.
+The Airtable connector indexes records from your Airtable bases. Each record becomes a searchable document in Onyx,
+with field names and values preserved.
 
-You can choose to index **all bases and tables** accessible by your API token, or a **specific table** by pasting its URL.
+You can choose to index **all bases and tables** accessible by your API token,
+or a **specific table** by pasting its URL.
 
 Table updates are pulled every 24 hours by default.
 
@@ -58,12 +60,13 @@ Table updates are pulled every 24 hours by default.
   <Step title="Choose what to index">
     You have two options:
 
-    **Everything** — Automatically discovers and indexes all bases and tables that your token has access to. No additional configuration needed.
+    **Everything** — Automatically discovers and indexes all bases and tables that your token has access to.
+    No additional configuration needed.
 
     **Specific Table** — Indexes a single table. To use this option:
-    1. Open the table you want in Airtable in your browser.
-    2. Copy the URL from the address bar (it looks like `https://airtable.com/appXXX/tblYYY/viwZZZ`).
-    3. Paste it into the **Airtable URL** field.
+    - Open the table you want in Airtable in your browser.
+    - Copy the URL from the address bar (it looks like `https://airtable.com/appXXX/tblYYY/viwZZZ`).
+    - Paste it into the **Airtable URL** field.
 
     The base ID, table ID, and view ID are automatically extracted from the URL.
   </Step>
@@ -71,6 +74,10 @@ Table updates are pulled every 24 hours by default.
 
 ### Advanced options
 
-- **Treat all fields except attachments as metadata** — When enabled, text fields (like "Title" or "Description") are stored as metadata key-value pairs instead of searchable document content. Only attachment file contents become the searchable body of the document. Use this when the primary content you care about is in file attachments, and the other columns are just labels or categories.
+- **Treat all fields except attachments as metadata** — When enabled, text fields (like "Title" or "Description")
+  are stored as metadata key-value pairs instead of searchable document content.
+  Only attachment file contents become the searchable body of the document.
+  Use this when the primary content you care about is in file attachments,
+  and the other columns are just labels or categories.
 
 - **Share ID** (Specific Table only) — If you want record links in Onyx to use a shared view URL, enter the share ID here (e.g. `shrkfjEzDmLaDtK83`). You can find this by creating a shared view in Airtable.
