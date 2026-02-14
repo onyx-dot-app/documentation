@@ -632,21 +632,6 @@
     }
   ],
   "contextual": {
-    "options": [
-      {
-        "title": "Open in Onyx",
-        "description": "Creates an Onyx conversation with the current page as context",
-        "icon": "/assets/logo/onyx_favicon.svg",
-        "href": {
-          "base": "https://cloud.onyx.app/chat",
-          "query": [
-            {
-              "key": "user-prompt",
-              "value": "Use this page as context: https://docs.onyx.app$path"
-            }
-          ]
-        }
-      }
-    ]
+    "options": []
   }
 }
