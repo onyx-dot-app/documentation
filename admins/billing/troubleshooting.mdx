@@ -6,8 +6,8 @@ icon: "wrench"
 
 ## "Access Restricted" — Locked Out of the Application
 
-If users see an **Access Restricted** page, the workspace is locked. This happens when a subscription
-expires or when the seat limit is exceeded.
+If users see an **Access Restricted** page, the workspace is locked.
+This happens when a subscription expires or when the seat limit is exceeded.
 
 Only **admins** can resolve this. Non-admin users will see a message asking them to contact their administrator.
 
@@ -16,24 +16,22 @@ Even when locked out, admins can still access:
 - **Admin Panel > Plans & Billing** — to renew or resubscribe
 - **Admin Panel > Users** — to manage users and free up seats
 
-<AccordionGroup>
-  <Accordion title="Subscription expired">
-    **Cloud**: Go to **Plans & Billing** and resubscribe through Stripe.
+### Subscription expired
 
-    **Self-hosted**: Go to **Plans & Billing** and either renew your subscription or
-    [upload an updated license file](/admins/billing/manage#air-gapped-license-activation).
+**Cloud**: Go to **Plans & Billing** and resubscribe through Stripe.
 
-    Access is restored immediately after renewal. No data is lost.
-  </Accordion>
+**Self-hosted**:
+Go to **Plans & Billing** and either renew your subscription or [upload an updated license
+file](/admins/billing/manage#air-gapped-license-activation).
 
-  <Accordion title="Seat limit exceeded">
-    Your workspace has more active users than your plan allows. **All users** are blocked — not just the
-    most recent ones.
+Access is restored immediately after renewal. No data is lost.
 
-    To fix this, either increase your seat count from **Plans & Billing**, or remove users from
-    **Admin Panel > Users** until usage is within the limit. Access is restored immediately.
-  </Accordion>
-</AccordionGroup>
+### Seat limit exceeded
+
+Your workspace has more active users than your plan allows. **All users** are blocked — not just the most recent ones.
+
+To fix this, either increase your seat count from **Plans & Billing**,
+or remove users from **Admin Panel > Users** until usage is within the limit. Access is restored immediately.
 
 ## Enterprise Features Unavailable
 

@@ -20,13 +20,11 @@ icon: "credit-card"
   </Step>
 
   <Step title="Set your seat count">
-    Enter the number of seats you need.
-    The minimum is based on your current active users and Slack bot accounts.
+    Enter the number of seats you need. The minimum is based on your current active users and Slack bot accounts.
   </Step>
 
   <Step title="Complete payment">
-    Click **Continue to Payment** to open Stripe checkout.
-    After payment, you'll be redirected back to Onyx.
+    Click **Continue to Payment** to open Stripe checkout. After payment, you'll be redirected back to Onyx.
   </Step>
 </Steps>
 
@@ -40,12 +38,12 @@ Once subscribed, paid features like RBAC, analytics, and query history are enabl
 
 On **Onyx Cloud**, your subscription is active immediately after checkout — there's nothing else to do.
 
-On **self-hosted** deployments, a **license** is automatically claimed and stored on your instance
-after checkout. The license is cryptographically signed and validated locally, so your instance does not
-need to phone home on every request.
+On **self-hosted** deployments, a **license** is automatically claimed and stored on your instance after checkout.
+The license is cryptographically signed and validated locally,
+so your instance does not need to phone home on every request.
 
 <Note>
-  If your self-hosted deployment cannot reach the internet, you can
-  [upload a license file manually](/admins/billing/manage#air-gapped-license-activation) instead of
-  going through Stripe checkout.
+  If your self-hosted deployment cannot reach the internet,
+  you can [upload a license file manually](/admins/billing/manage#air-gapped-license-activation)
+  instead of going through Stripe checkout.
 </Note>
