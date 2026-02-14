@@ -1,0 +1,82 @@
+---
+title: "Manage Your Subscription"
+description: "Update seats, manage licenses, and access the Stripe portal"
+icon: "gear"
+---
+
+Once you have an active subscription, you can manage it from **Admin Panel > Plans & Billing**.
+
+The billing page shows your plan, next payment date, and current seat usage.
+
+## Managing Seats
+
+Every active user in your workspace counts as a seat, including Slack bot accounts.
+You can adjust your seat count at any time.
+
+<Steps>
+  <Step title="Open seat management">
+    Click **Update Seats** on the billing page.
+  </Step>
+
+  <Step title="Set the new count">
+    Enter your desired number of seats.
+    You cannot go below the number of seats currently in use (active users + pending invitations).
+
+    <Note>
+      Need to reduce seats below current usage?
+      [Remove users](/admins/user_management/users_and_groups) first, then adjust the seat count.
+    </Note>
+  </Step>
+
+  <Step title="Review the billing impact">
+    - **Adding seats** — you'll be billed a pro-rated amount immediately.
+    - **Removing seats** — the change takes effect at the end of your current billing cycle.
+  </Step>
+
+  <Step title="Confirm">
+    Click **Confirm Change** to apply.
+  </Step>
+</Steps>
+
+## Stripe Customer Portal
+
+Click **Manage Plan** on the billing page to open the Stripe customer portal. From there you can:
+
+- Update your payment method
+- View and download invoices
+- Cancel or modify your subscription
+
+## Air-Gapped License Activation
+
+For self-hosted deployments without internet access, you can activate a license manually
+instead of going through Stripe checkout.
+
+Contact the Onyx team at **support@onyx.app** to request a license file.
+You will receive a file containing your signed license in this format:
+
+```
+-----BEGIN ONYX LICENSE-----
+eyJwYXlsb2FkIjogeyJ2ZXJzaW9...
+-----END ONYX LICENSE-----
+```
+
+<Steps>
+  <Step title="Open Plans & Billing">
+    Navigate to **Admin Panel > Plans & Billing** from the sidebar.
+  </Step>
+
+  <Step title="Open the license form">
+    Click **Activate License Key** at the bottom of the billing page.
+  </Step>
+
+  <Step title="Upload your license">
+    Paste the contents of your license file, or use the file upload button to attach it directly.
+  </Step>
+
+  <Step title="Activate">
+    Click **Activate License**. Your license will be validated and paid features will be enabled immediately.
+  </Step>
+</Steps>
+
+To update an existing license (e.g., after renewal or a seat change), click **Update License Key** instead
+and follow the same steps.

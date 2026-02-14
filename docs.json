@@ -137,6 +137,15 @@
             ]
           },
           {
+            "group": "Plans & Billing",
+            "pages": [
+              "admins/billing/overview",
+              "admins/billing/subscribing",
+              "admins/billing/manage",
+              "admins/billing/troubleshooting"
+            ]
+          },
+          {
             "group": "AI Models",
             "pages": [
               "admins/ai_models/overview",
