@@ -102,6 +102,16 @@ This guide was explain all of the parameters you can pass in to the API and prov
     If true, then it responds with an SSE stream of individual packets. This is the same set used for the Onyx UI.
     Fields like the Answer, reasoning tokens, and iterative Tool Calls need to be pieced together from streamed tokens.
   </Accordion>
+
+  <Accordion title="additional_context">
+    A string of extra context injected into the LLM call for this request. The context is passed to the
+    model but is **not stored in the database** and will not appear in the chat history.
+
+    Use this to supply ephemeral, request-scoped information (e.g. the user's current page URL, session
+    metadata, or any runtime context) without polluting the persistent conversation history.
+
+    Pass `null` or omit the field to use no additional context.
+  </Accordion>
 </AccordionGroup>
 
 ## Response Format
