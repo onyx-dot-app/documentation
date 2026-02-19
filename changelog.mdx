@@ -6,7 +6,7 @@ mode: "wide"
 rss: true
 ---
 
-<Update label="v2.11.0" description="February 12th, 2026" tags={["New Features", "Bug Fixes"]}>
+<Update label="v2.11.0" description="February 18th, 2026" tags={["New Features", "Bug Fixes"]}>
 
   ## v2.11.0
 
@@ -20,27 +20,33 @@ rss: true
   Our migration from Vespa to OpenSearch (announced in [v2.8.0
   notes](#[announcement]-vector-database-migration)) continues to make good progress.
 
-  We've successfully migrated our internal Onyx instance to OpenSearch
-  and are now polishing bugs, improving the migration flow, and building out full feature parity.
-  This release adds complete retrieval filtering, dual document indices, and OpenSearch Helm charts for Kubernetes deployments.
+  We've successfully migrated our internal Onyx instance to OpenSearch!
+  The migration processed ~200k chunks/hour on a Helm-based cluster
+  with 128GB Vespa (r6i.4xlarge nodes), 8GB OpenSearch, and 8GB migration worker memory limits.
 
-  We'll continue to share updates as we move toward the v3.0.0 release.
+  Remaining work includes polishing the migration flow, improving performance, and final QA.
+  We expect v3.0.0, the stable release of the OpenSearch migration, to be released next week.
 
   ## Key Improvements
 
   ### Custom Chat Backgrounds
 
   You can now personalize your chat experience with custom backgrounds!
-  Upload an image or choose from a selection of backgrounds in the new Backgrounds section of the Settings page.
+  Choose from a selection of options in the new Appearance section of the User Settings page.
+
+  <img className="rounded-image" src="/assets/changelog/v2.11/showcase_custom_backgrounds_dark.png" alt="Custom Dark Chat Backgrounds"/>
+  <img className="rounded-image" src="/assets/changelog/v2.11/showcase_custom_backgrounds_light.png" alt="Custom Light Chat Backgrounds"/>
 
   ### Refreshed User Settings Page
 
   The user settings page has been completely redesigned with a cleaner layout and better organization,
   making it easier to manage your profile, preferences, and backgrounds all in one place.
 
+  <img className="rounded-image" src="/assets/changelog/v2.11/showcase_user_settings.png" alt="Refreshed User Settings Page"/>
+
   ### Desktop App Updates
 
-  The Onyx Desktop App (introduced in [v2.6.0](#v2.6.0)) received several important updates in this release:
+  The Onyx Desktop App received several important updates in this release:
 
   - **Domain configuration** — You can now configure which Onyx instance the desktop app connects to directly from the app
   - **Proper macOS code signing** — The Mac app is now properly signed, so you won't see Gatekeeper warnings on install
