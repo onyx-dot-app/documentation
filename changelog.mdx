@@ -6,6 +6,267 @@ mode: "wide"
 rss: true
 ---
 
+<Update label="v2.11.0" description="February 18th, 2026" tags={["New Features", "Bug Fixes"]}>
+
+  ## v2.11.0
+
+  Custom chat backgrounds, a refreshed user settings page, the desktop app matures,
+  and continued progress on the OpenSearch migration.
+
+  Thank you to our contributors for helping make this release possible!
+
+  ## [Update] OpenSearch Migration
+
+  Our migration from Vespa to OpenSearch (announced in [v2.8.0 notes](#[announcement]-vector-database-migration))
+  continues to make good progress.
+
+  We've successfully migrated our internal Onyx instance to OpenSearch!
+  The migration processed ~200k chunks/hour on a Helm-based cluster with 128GB Vespa (r6i.4xlarge nodes),
+  8GB OpenSearch, and 8GB migration worker memory limits.
+
+  Remaining work includes polishing the migration flow, improving performance, and final QA. We expect v3.0.0,
+  the stable release of the OpenSearch migration, to be released in the final week of February.
+
+  ## Key Improvements
+
+  ### Custom Chat Backgrounds
+
+  You can now personalize your chat experience with custom backgrounds!
+  Choose from a selection of options in the new Appearance section of the User Settings page.
+
+  <img className="rounded-image" src="/assets/changelog/v2.11/showcase_custom_backgrounds_dark.png" alt="Custom Dark Chat Backgrounds"/>
+
+  <img className="rounded-image" src="/assets/changelog/v2.11/showcase_custom_backgrounds_light.png" alt="Custom Light Chat Backgrounds"/>
+
+  ### Refreshed User Settings Page
+
+  The user settings page has been completely redesigned with a cleaner layout and better organization,
+  making it easier to manage your profile, preferences, and backgrounds all in one place.
+
+  <img className="rounded-image" src="/assets/changelog/v2.11/showcase_user_settings.png" alt="Refreshed User Settings Page"/>
+
+  ### Desktop App Updates
+
+  The Onyx Desktop App received several important updates in this release:
+
+  - **Domain configuration** — You can now configure which Onyx instance the desktop app connects to directly from the
+    app
+  - **Proper macOS code signing** — The Mac app is now properly signed, so you won't see Gatekeeper warnings on install
+  - **Light/dark mode** — The desktop app now correctly reflects your theme preference
+
+  ## Contributor Highlights
+
+  - [@ciaransweet](https://github.com/ciaransweet) clarified the send-chat-message API docs to document the `ChatFullResponse` response model!
+
+  ## Additional Improvements
+
+  ### User MCP Actions
+
+  Users can now attach MCP actions to their agents directly.
+  This is an early step toward giving all users the ability to extend their agents with custom tools and integrations.
+
+  ### Allow No System Prompt
+
+  Agents can now be configured with no system prompt,
+  giving you full control over the model's behavior for use cases that require an empty system context.
+
+  ### Prompt Shortcuts
+
+  Prompt shortcuts now enforce uniqueness constraints and received several usability enhancements.
+
+  ### Notable Bug Fixes
+
+  - Fixed Azure OpenAI tool calling and LiteLLM Azure model streaming issues
+  - Fixed streaming text appearing in bursts after citations
+  - Fixed citation sidebar not appearing for web_search-only assistants
+  - Fixed Ollama model selection in the UI
+  - Fixed Asana connector workspace/team ID mismatch
+  - Fixed Salesforce connector cleanup logic
+  - Improved Slack query expansion to filter garbage from person names
+  - Added Redis TTLs to prevent potential memory issues
+  - Multiple UI fixes across modals, dropdowns, LLM provider configuration, and agent creation
+
+  ---
+
+  Our [GitHub Releases](https://github.com/onyx-dot-app/onyx/releases?utm_source=docs&utm_content=changelog)
+  page has the full list of changes and bug fixes for each release.
+
+</Update>
+
+<Update label="v2.10.0" description="January 31st, 2026" tags={["New Features", "Bug Fixes"]}>
+
+  ## v2.10.0
+
+  An update on the OpenSearch migration, Onyx in your Discord server, expanded image generation support,
+  and multilingual Deep Research.
+
+  Thank you to our contributors for helping make this release possible!
+
+  ## [Update] Vector Database Migration
+
+  A small change in plans for our migration from Vespa to OpenSearch (announced in [v2.8.0
+  notes](#[announcement]-vector-database-migration)).
+
+  Instead of v2.11.0, the migration version will be **v3.0.0**. Vespa will be deprecated in **v4.0.0**.
+
+  Our intention is that everyone must upgrade to a **v3.x.x** version before moving on to **v4.x.x**. Additionally,
+  we do not anticipate many minor versions of v3 before moving to v4.
+
+  <Note>
+    If you skip a v3 version, you will lose all of your indexed data!
+    This means re-indexing all of your data and re-uploading your files in Projects.
+  </Note>
+
+  Everything else remains the same. When you upgrade to a v3 version,
+  admins will be prompted to start the migration process and Vespa will continue to power your search until v4.0.0.
+
+  To accomodate this change, our timeline has been pushed by 2 weeks:
+  - **v3.0.0 Beta** will be released in the second week of February
+  - **v3.0.0 Stable** is slated for the third week of February
+
+  We will continue to share details, migration guides, and any changes to the plan moving forward!
+
+  ## Key Improvements
+
+  ### Onyx Discord Bot
+
+  You can now chat with your agents and search your knowledge base directly from Discord!
+
+  OnyxBot is available in our [Discord server](https://discord.gg/4NA5SbzrWb).
+  Just tag `@onyxbot` in your message to start a conversation.
+
+  You can install our [official OnyxBot Discord app](https://discord.com/oauth2/authorize?client_id=1460722463431327804)
+  or deploy your own Discord bot with your self-hosted Onyx instance.
+
+  Check out the [Discord Bot documentation](/admins/miscellaneous/discord_bot) to get started!
+
+  <img className="rounded-image" src="/assets/admins/discord_bot/register_server.png" alt="Onyx Discord Bot"/>
+
+  ### Nano Banana Image Generation
+
+  You can now configure Nano Banana as an image generation provider.
+
+  Add Vertex AI credentials in the **Image Generation** page of the Admin Panel to use Gemini 2.5 Flash Image (Nano
+  Banana) and Gemini 3 Pro Image (Nano Banana Pro).
+
+  <img className="rounded-image" src="/assets/changelog/v2.10/showcase_nano_banana.png" alt="Nano Banana Image Generation"/>
+
+  ### Multilingual Deep Research
+
+  Our Deep Research mode was previously biased toward English responses.
+  We've tuned it to work and respond in the language you ask your question in,
+  making Deep Research more accessible for international users.
+
+  <img className="rounded-image" src="/assets/changelog/v2.10/showcase_multilingual_dr.png" alt="Multilingual Deep Research"/>
+
+  ## Additional Improvements
+
+  ### Slack Connector Restored
+
+  Slack has rolled back changes to their API that previously prevented indexing. For the time being,
+  we recommend using the indexing connector if possible, as the search quality is significantly better.
+
+  If you don't see the indexing connector, make sure you've removed all Slack Federated connectors first.
+
+  <Info>
+    Note that if you switch from the federated connector,
+    you will lose access to searching group DMs and direct messages.
+  </Info>
+
+  Read more about the [Slack connector](/admins/connectors/official/slack/slack_indexed)
+  and [Slack Federated connector](/admins/connectors/official/slack/slack_federated) in our documentation.
+
+  ### Agent Access Controls Restored
+
+  User and group access configuration was briefly removed from the Agent configuration page during refactoring.
+  This interface has been restored!
+
+  <Info>
+    Pre-existing agents that had access controls configured continued to respect those settings during this period.
+  </Info>
+
+  ### Empty Packets Fix
+
+  If you've encountered an error like "message failed due to empty packet," we've implemented a fix and you should no
+  longer see this issue. This fix was particularly targeted at models hosted with vLLM.
+
+  ### Chat Naming Fix for Long Messages
+
+  Previously, if your very first interaction was too long,
+  the chat session could be renamed to an error message about exceeding context limits.
+  We've adjusted this behavior and chat naming now works correctly regardless of message length.
+
+  ---
+
+  Our [GitHub Releases](https://github.com/onyx-dot-app/onyx/releases?utm_source=docs&utm_content=changelog)
+  page has the full list of changes and bug fixes for each release.
+
+</Update>
+
+<Update label="v2.9.0" description="January 21st, 2026" tags={["New Features", "Bug Fixes"]}>
+
+  ## v2.9.0
+
+  Two brand new ways to access Onyx and a bumper crop of bug fixes!
+
+  Thank you to our contributors for helping make this release possible.
+
+  ## Key Improvements
+
+  ### Onyx Chrome Extension
+
+  Chrome(-ium) users can now have Onyx in every tab! The Onyx Chrome Extension brings your Agents, chat,
+  and search to where you are.
+
+  Features include:
+  - **Quick-access address bar** - Type your question directly in the address bar
+  - **New-tab page** - Start every browsing session with Onyx
+  - **Contextual insights** - Highlight any text on a webpage and birng it into your chat
+  - **Always-on sidebar** - Open Onyx as a sidebar on any webpage
+
+  Check out the [Chrome Extension](/overview/onyx_anywhere/chrome_extension) page to get started!
+
+  <img className="rounded-image" src="/assets/changelog/v2.9/showcase_chrome_extension.png" alt="Onyx Chrome Extension"/>
+
+  ### Onyx Widget
+
+  You can now embed an Onyx chatbot into any website!
+  Easily add an AI agent or knowledge search to your website with a single line of code.
+
+  The widget abstracts our chat API and can be configured to use our Cloud or your self-hosted instance of Onyx.
+
+  <Info>
+    Requests from the widget must use an Onyx API key.
+    We recommend using a Limited API key and monitoring usage to avoid unexpected costs.
+  </Info>
+
+  Read more about [deploying the widget here](/deployment/configuration/website_widget)
+  or check out the [widget README](https://github.com/onyx-dot-app/onyx/blob/main/widget/README.md)!
+
+  <img className="rounded-image" src="/assets/changelog/v2.9/showcase_widget.png" alt="Onyx Widget"/>
+
+  ## Contributor Highlights
+
+  - [@coreyauger](https://github.com/coreyauger) updated some out-of-date links in our READMEs!
+
+  ## Additional Improvements
+
+  ### In-app Notifications System
+
+  We've added a new notifications system to Onyx! You'll see in-app release notifications and feature announcements.
+
+  We have no intentions to spam 😅! Depending on feedback, we can add or remove notification frequency.
+
+  --
+
+  Editor's note: Apologies for the belated release of the v2.9 notes.
+  It's been a busy start to 2026 and we'll try to resume our regular schedule of releases.
+
+  As always, our [GitHub Releases](https://github.com/onyx-dot-app/onyx/releases?utm_source=docs&utm_content=changelog)
+  page has the full list of changes and bug fixes for each release.
+
+</Update>
+
 <Update label="v2.8.0" description="January 13th, 2026" tags={["New Features", "Breaking Changes", "Bug Fixes"]}>
 
   ## v2.8.0

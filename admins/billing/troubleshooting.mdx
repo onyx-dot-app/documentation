@@ -1,0 +1,77 @@
+---
+title: "Troubleshooting"
+description: "Common billing and licensing issues and how to resolve them"
+icon: "wrench"
+---
+
+## "Access Restricted" — Locked Out of the Application
+
+If users see an **Access Restricted** page, the workspace is locked.
+This happens when a subscription expires or when the seat limit is exceeded.
+
+Only **admins** can resolve this. Non-admin users will see a message asking them to contact their administrator.
+
+Even when locked out, admins can still access:
+
+- **Admin Panel > Plans & Billing** — to renew or resubscribe
+- **Admin Panel > Users** — to manage users and free up seats
+
+### Subscription expired
+
+**Cloud**: Go to **Plans & Billing** and resubscribe through Stripe.
+
+**Self-hosted**:
+Go to **Plans & Billing** and either renew your subscription or [upload an updated license
+file](/admins/billing/manage#air-gapped-license-activation).
+
+Access is restored immediately after renewal. No data is lost.
+
+### Seat limit exceeded
+
+Your workspace has more active users than your plan allows. **All users** are blocked — not just the most recent ones.
+
+To fix this, either increase your seat count from **Plans & Billing**,
+or remove users from **Admin Panel > Users** until usage is within the limit. Access is restored immediately.
+
+## Enterprise Features Unavailable
+
+If you see an error when trying to access features like analytics, user groups, or query history,
+your workspace does not have an active paid plan.
+
+These features require a Business or Enterprise subscription:
+
+- User Groups and access controls
+- Analytics and usage dashboards
+- Query History
+- Usage Reports
+- Standard Answers
+- Token Rate Limits
+
+Navigate to **Admin Panel > Plans & Billing** to [subscribe](/admins/billing/subscribing).
+
+## Cannot Invite or Add Users
+
+If inviting users, new sign-ups, or reactivating users fails, your seat limit has likely been reached.
+
+Either increase your seat count from the [billing page](/admins/billing/manage),
+or remove users from **Admin Panel > Users** to free up seats.
+
+## Unable to Connect to Stripe (Self-Hosted)
+
+If your self-hosted instance cannot reach Stripe, you'll see a banner on the billing page:
+
+> "Unable to connect to Stripe payment portal."
+
+Click **Connect to Stripe** to retry. If your instance is permanently offline or behind a firewall,
+you can [upload a license file manually](/admins/billing/manage#air-gapped-license-activation) instead.
+
+## License File Fails to Validate (Self-Hosted)
+
+If uploading a license file returns an error:
+
+- Make sure you are using the **complete** file contents, including the `-----BEGIN ONYX LICENSE-----`
+  and `-----END ONYX LICENSE-----` delimiters
+- Check for extra whitespace or line breaks that may have been introduced when copying
+- Ensure the file was issued for your specific Onyx instance
+
+Contact **support@onyx.app** if the issue persists.
