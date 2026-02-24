@@ -1,0 +1,60 @@
+---
+title: "MCP Server"
+description: "Access Onyx from Claude, Cursor, and other AI tools via the Model Context Protocol"
+icon: "plug"
+---
+
+## Overview
+
+The Onyx MCP Server lets you connect any MCP-compatible AI tool to your Onyx knowledge base. Ask Claude, Cursor,
+Windsurf, or any other MCP client to search your company's documents without leaving your workflow.
+
+## What You Can Do
+
+- **Search your knowledge base** — query Confluence, Google Drive, Slack, GitHub, Jira, and 40+ other sources
+- **Search the web** — find current events and public information
+- **Fetch full page content** — retrieve complete text from any URL
+
+All of your existing Onyx permissions and access controls are enforced automatically.
+
+## Supported Clients
+
+Any client that supports the Model Context Protocol over HTTP works with Onyx, including:
+
+- [Claude Desktop](https://claude.ai/download)
+- [Claude Code](https://docs.anthropic.com/en/docs/claude-code)
+- [Cursor](https://cursor.com)
+- [Windsurf](https://codeium.com/windsurf)
+- Any other [MCP-compatible client](https://modelcontextprotocol.io/)
+
+## Quick Setup
+
+Add this to your MCP client's configuration:
+
+```jsonc
+{
+  "mcpServers": {
+    "onyx": {
+      "url": "https://cloud.onyx.app/mcp", // or your self-hosted Onyx domain
+      "headers": {
+        "Authorization": "Bearer YOUR_ONYX_TOKEN_HERE"
+      }
+    }
+  }
+}
+```
+
+Replace `YOUR_ONYX_TOKEN_HERE` with a [Personal Access Token](/developers/overview#personal-access-tokens)
+or [API Key](/admins/user_management/api_keys).
+
+## Learn More
+
+<CardGroup cols={2}>
+  <Card title="Full MCP Server Guide" icon="book-open" href="/deployment/configuration/mcp_server">
+    Detailed setup instructions, tool reference, troubleshooting, and self-hosting configuration
+  </Card>
+
+  <Card title="Personal Access Tokens" icon="key" href="/developers/overview#personal-access-tokens">
+    Create a token to authenticate with the MCP server
+  </Card>
+</CardGroup>

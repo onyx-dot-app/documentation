@@ -47,6 +47,7 @@
               "overview/onyx_anywhere/chrome_extension",
               "overview/onyx_anywhere/website_widget",
               "overview/onyx_anywhere/discord_bot",
+              "overview/onyx_anywhere/mcp_server",
               "overview/onyx_anywhere/mobile_app"
             ]
           },
@@ -110,6 +111,7 @@
             "group": "Configuration",
             "pages": [
               "deployment/configuration/configuration",
+              "deployment/configuration/mcp_server",
               "deployment/configuration/chrome_extension",
               "deployment/configuration/website_widget"
             ]
