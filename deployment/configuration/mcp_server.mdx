@@ -1,0 +1,314 @@
+---
+title: "Onyx MCP Server"
+description: "Connect LLMs like Claude, Cursor, and other AI tools to your Onyx knowledge base via the Model Context Protocol"
+icon: "plug"
+---
+
+## Overview
+
+The Onyx MCP Server lets any MCP-compatible LLM client (Claude Desktop, Claude Code, Cursor, Windsurf, etc.)
+access your Onyx knowledge base, web search,
+and URL fetching capabilities through the [Model Context Protocol](https://modelcontextprotocol.io/).
+
+## Prerequisites
+
+Before connecting, you'll need:
+
+- **A running Onyx instance** (either self-hosted or Onyx Cloud)
+- **Authentication** — see [Personal Access Tokens](/developers/personal_access_tokens)
+   or [API Keys](/admins/user_management/api_keys)
+- **An MCP-compatible client** (Claude Desktop, Claude Code, Cursor, etc.)
+
+<Card title="Self-Hosted MCP Server Configuration" icon="server" href="#self-hosted-configuration">
+  Jump to environment variables, networking, and deployment settings for self-hosted MCP server
+</Card>
+
+## Quick Start
+
+### Claude Code (CLI)
+
+```bash
+claude mcp add --transport http onyx https://cloud.onyx.app/mcp \
+  --header "Authorization: Bearer YOUR_ONYX_TOKEN_HERE"
+```
+
+Or add it to your project's `.mcp.json`:
+
+```json
+{
+  "mcpServers": {
+    "onyx": {
+      "type": "http",
+      "url": "https://cloud.onyx.app/mcp",
+      "headers": {
+        "Authorization": "Bearer ${ONYX_TOKEN}"
+      }
+    }
+  }
+}
+```
+
+Then set the environment variable before running Claude Code:
+
+```bash
+export ONYX_TOKEN="your-token-here"
+claude
+```
+
+### Claude Desktop
+
+Add the following to your Claude Desktop config file:
+
+- **macOS**: `~/Library/Application Support/Claude/claude_desktop_config.json`
+- **Windows**: `%APPDATA%\Claude\claude_desktop_config.json`
+
+```json
+{
+  "mcpServers": {
+    "onyx": {
+      "url": "https://cloud.onyx.app/mcp",
+      "headers": {
+        "Authorization": "Bearer YOUR_ONYX_TOKEN_HERE"
+      }
+    }
+  }
+}
+```
+
+<Tip>
+  Replace `https://cloud.onyx.app/mcp` with `http://YOUR_ONYX_DOMAIN:8090/` if you're self-hosting.
+</Tip>
+
+### Cursor / Windsurf / Other MCP Clients
+
+Most MCP clients support HTTP transport with custom headers. The connection details are:
+
+| Setting | Value |
+|---|---|
+| **URL** | `https://cloud.onyx.app/mcp` (or `http://YOUR_DOMAIN:8090/`) |
+| **Transport** | HTTP (Streamable HTTP) |
+| **Auth Header** | `Authorization: Bearer YOUR_TOKEN` |
+
+Refer to your client's MCP documentation for exact configuration steps.
+
+## Available Tools
+
+The MCP server exposes three tools that LLM clients can invoke:
+
+<AccordionGroup>
+  <Accordion title="search_indexed_documents" icon="magnifying-glass">
+    Search your private knowledge base indexed in Onyx. Returns ranked document chunks with content, relevance scores,
+    and metadata.
+
+    **Parameters:**
+
+    | Parameter | Type | Required | Default | Description |
+    |---|---|---|---|---|
+    | `query` | string | Yes | — | Natural language search query |
+    | `source_types` | string[] | No | All sources | Filter by connector type (e.g. `["confluence", "github", "jira"]`) |
+    | `time_cutoff` | string | No | No cutoff | ISO 8601 datetime — only return docs updated after this time |
+    | `limit` | integer | No | `10` | Maximum number of results to return |
+
+    **Example call:**
+
+    ```json
+    {
+      "query": "What is the latest status of PROJ-1234?",
+      "source_types": ["jira", "google_drive"],
+      "time_cutoff": "2025-01-01T00:00:00Z",
+      "limit": 5
+    }
+    ```
+
+    **Response fields:**
+
+    | Field | Description |
+    |---|---|
+    | `documents` | Array of result objects |
+    | `documents[].semantic_identifier` | Human-readable document name |
+    | `documents[].content` | Relevant text snippet |
+    | `documents[].source_type` | Connector source (e.g. `"confluence"`) |
+    | `documents[].link` | URL to the original document |
+    | `documents[].score` | Relevance score |
+    | `total_results` | Number of results returned |
+    | `query` | The original query |
+    | `executed_queries` | List of queries actually executed (may include expansions) |
+
+    <Tip>
+      To discover which source types are available, use the `indexed_sources` resource (see below).
+    </Tip>
+  </Accordion>
+
+  <Accordion title="search_web" icon="globe">
+    Search the public internet for general knowledge and current events.
+
+    **Parameters:**
+
+    | Parameter | Type | Required | Default | Description |
+    |---|---|---|---|---|
+    | `query` | string | Yes | — | Search query |
+    | `limit` | integer | No | `5` | Maximum number of results |
+
+    **Example call:**
+
+    ```json
+    {
+      "query": "React 19 migration guide",
+      "limit": 5
+    }
+    ```
+
+    **Response fields:**
+
+    | Field | Description |
+    |---|---|
+    | `results` | Array of web search results |
+    | `results[].title` | Page title |
+    | `results[].url` | Page URL |
+    | `results[].snippet` | Short text excerpt |
+    | `query` | The original query |
+
+    <Note>
+      `search_web` returns snippets, not full page content. Use `open_urls` to fetch the complete text of any result.
+    </Note>
+  </Accordion>
+
+  <Accordion title="open_urls" icon="link">
+    Retrieve the complete text content from one or more web URLs.
+
+    **Parameters:**
+
+    | Parameter | Type | Required | Description |
+    |---|---|---|---|
+    | `urls` | string[] | Yes | List of URLs to fetch |
+
+    **Example call:**
+
+    ```json
+    {
+      "urls": [
+        "https://react.dev/blog/2024/12/05/react-19",
+        "https://react.dev/learn/react-compiler"
+      ]
+    }
+    ```
+
+    **Response fields:**
+
+    | Field | Description |
+    |---|---|
+    | `results` | Array of fetched pages |
+    | `results[].title` | Page title |
+    | `results[].url` | The fetched URL |
+    | `results[].content` | Full extracted text content |
+  </Accordion>
+</AccordionGroup>
+
+## Available Resources
+
+<AccordionGroup>
+  <Accordion title="indexed_sources" icon="database">
+    **URI:** `resource://indexed_sources`
+
+    Lists all document connector types currently indexed in your Onyx instance (e.g. `"confluence"`, `"github"`,
+    `"google_drive"`, `"slack"`).
+
+    Use this to discover valid values for the `source_types` filter in `search_indexed_documents`.
+
+    **Example response:**
+
+    ```json
+    {
+      "indexed_sources": ["confluence", "github", "google_drive", "jira", "slack"]
+    }
+    ```
+  </Accordion>
+</AccordionGroup>
+
+## Self-Hosted Configuration
+
+To self-host the MCP server, you will need to enable the deployment via environment variables.
+
+Docker:
+```bash .env
+MCP_SERVER_ENABLED=true
+```
+
+Kubernetes:
+```yaml values.yaml
+configMap:
+  MCP_SERVER_ENABLED: "true"
+```
+
+### Health Check
+
+Verify the MCP server is running:
+
+```bash
+curl http://localhost:8090/health # or http://YOUR_DOMAIN:8090/health
+```
+
+Expected response:
+
+```json
+{
+  "status": "healthy",
+  "service": "mcp_server"
+}
+```
+
+### Environment Variables
+
+<Info>
+  Most users should not need to configure these environment variables.
+</Info>
+
+| Variable | Default | Description |
+|---|---|---|
+| `MCP_SERVER_ENABLED` | `false` | Set to `"true"` to enable the MCP server |
+| `MCP_SERVER_HOST` | `0.0.0.0` | Host to bind the MCP server |
+| `MCP_SERVER_PORT` | `8090` | Port for the MCP server |
+| `MCP_SERVER_CORS_ORIGINS` | (empty) | Comma-separated list of allowed CORS origins |
+| `API_SERVER_PROTOCOL` | `http` | Protocol for internal API server connection |
+| `API_SERVER_HOST` | `127.0.0.1` | Hostname for internal API server connection |
+| `API_SERVER_URL_OVERRIDE_FOR_HTTP_REQUESTS` | (unset) | Full URL override for API server. Use this when self-hosting the MCP server against Onyx Cloud |
+
+## Debugging & Testing
+
+### MCP Inspector
+
+The [MCP Inspector](https://github.com/modelcontextprotocol/inspector) is an interactive debugging tool for MCP servers:
+
+```bash
+npx @modelcontextprotocol/inspector
+```
+
+**Setup in Inspector:**
+
+1. Ignore the OAuth configuration menus
+2. Open the **Authentication** tab
+3. Select **Bearer Token** authentication
+4. Paste your Onyx PAT or API key
+5. Click **Connect**
+
+Once connected, you can browse tools, test calls with different parameters, and inspect request/response payloads.
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Personal Access Tokens" icon="key" href="/developers/personal_access_tokens">
+    Create a token to authenticate with the MCP server
+  </Card>
+
+  <Card title="API Keys" icon="shield-check" href="/admins/user_management/api_keys">
+    Create shared API keys for team-wide MCP access
+  </Card>
+
+  <Card title="Connectors" icon="plug" href="/admins/connectors/overview">
+    Add data sources to make your knowledge searchable via MCP
+  </Card>
+
+  <Card title="MCP Actions" icon="diagram-project" href="/admins/actions/mcp">
+    Connect Onyx to external MCP servers as a client
+  </Card>
+</CardGroup>
