@@ -31,6 +31,7 @@ This guide was explain all of the parameters you can pass in to the API and prov
 | `chat_session_info` | Details about the chat session which will be used for all messages in the session. Fields can be left blank to use defaults. <br/><br/>• `persona_id` – The ID of the Agent to use for the chat session <br/>• `project_id` – ID of a Project if the chat should be scoped to a Project |
 | `stream` | If true, responds with an SSE stream of individual packets (same set used for the Onyx UI). Fields like the Answer, reasoning tokens, and iterative Tool Calls need to be pieced together from streamed tokens. |
 | `include_citations` | If true, responses will include citations for the sources used to generate the answer. |
+| `additional_context` | A string of extra context injected into the LLM call for this request. The context is passed to the model but is **not stored in the database** and will not appear in chat history.<br></br>Use this to supply ephemeral, request-scoped information (e.g. the user's current page URL, session metadata, or any runtime context) without polluting the persistent conversation history.<br></br>Pass `null` or omit the field to use no additional context. |
 
 ## Response Format
 
