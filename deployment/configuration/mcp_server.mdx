@@ -230,11 +230,13 @@ The MCP server exposes three tools that LLM clients can invoke:
 To self-host the MCP server, you will need to enable the deployment via environment variables.
 
 Docker:
+
 ```bash .env
 MCP_SERVER_ENABLED=true
 ```
 
 Kubernetes:
+
 ```yaml values.yaml
 configMap:
   MCP_SERVER_ENABLED: "true"
@@ -285,11 +287,11 @@ npx @modelcontextprotocol/inspector
 
 **Setup in Inspector:**
 
-1. Ignore the OAuth configuration menus
-2. Open the **Authentication** tab
-3. Select **Bearer Token** authentication
-4. Paste your Onyx PAT or API key
-5. Click **Connect**
+- Ignore the OAuth configuration menus
+- Open the **Authentication** tab
+- Select **Bearer Token** authentication
+- Paste your Onyx PAT or API key
+- Click **Connect**
 
 Once connected, you can browse tools, test calls with different parameters, and inspect request/response payloads.
 
