@@ -42,6 +42,7 @@
             "group": "Onyx Anywhere",
             "pages": [
               "overview/onyx_anywhere/web_interface",
+              "overview/onyx_anywhere/cli",
               "overview/onyx_anywhere/desktop_app",
               "overview/onyx_anywhere/slack",
               "overview/onyx_anywhere/chrome_extension",
