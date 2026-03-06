@@ -60,9 +60,9 @@ and saves config to `~/.config/onyx-cli/config.json`.
 Navigate to **User Settings > Accounts & Access > New Access Token** (`/app/settings/accounts-access`)
 to create an access token for the CLI.
 
-<img src="/assets/overview/cli/access_tokens.png" alt="Accounts & Access page showing the Access Tokens section" />
+<img src="/assets/overview/cli/access_tokens.png" alt="Accounts & Access page showing the Access Tokens section" width="600" />
 
-<img src="/assets/overview/cli/create_access_token.png" alt="Create Access Token modal with token name and expiration options" />
+<img src="/assets/overview/cli/create_access_token.png" alt="Create Access Token modal with token name and expiration options" width="500" />
 
 ### Environment Variables
 
@@ -150,6 +150,59 @@ When using the interactive chat, the following slash commands are available:
 | `/connectors` | Open connectors in browser |
 | `/settings` | Open settings in browser |
 | `/quit` | Exit Onyx CLI |
+
+## Using as an AI Coding Assistant Skill
+
+The Onyx CLI can be used as a tool by AI coding assistants (such as Claude Code and Cursor)
+to query your knowledge base directly from within your development environment.
+A pre-built skill definition is available in the Onyx repository at
+[`.cursor/skills/onyx-cli/SKILL.md`](https://github.com/onyx-dot-app/onyx/blob/main/.cursor/skills/onyx-cli/SKILL.md).
+
+Once configured, the AI assistant can call `onyx-cli ask` to look up company-specific information — policies,
+internal docs, connected data sources — without leaving the editor.
+
+### When the skill is invoked
+
+The skill is triggered when you ask your AI assistant about:
+
+- Company-specific information (policies, processes, documentation)
+- Internal knowledge bases or connected data sources
+- Anything referencing Onyx, "search Onyx", or querying company documents
+
+It is **not** used for general programming questions or questions about code in the current repository.
+
+### Configuration for agents
+
+The simplest approach is to run `onyx-cli configure` once manually — after that,
+AI assistants can invoke `onyx-cli ask` directly without any additional setup.
+
+```shell
+onyx-cli configure
+```
+
+Alternatively, you can configure via environment variables,
+which override the config file and are useful for CI/CD or sandboxed environments:
+
+```shell
+export ONYX_SERVER_URL="https://your-onyx-server.com"
+export ONYX_API_KEY="your-api-key"
+```
+
+### JSON output for structured parsing
+
+Use `--json` to get NDJSON event output, which is easier for agents to parse programmatically:
+
+```shell
+onyx-cli ask --json "List all active API integrations"
+```
+
+| Event Type | Description |
+|------------|-------------|
+| `message_delta` | Content token — concatenate all `content` fields for the full answer |
+| `stop` | Stream complete |
+| `error` | Error with `error` message field |
+| `search_tool_start` | Onyx started searching documents |
+| `citation_info` | Source citation with `citation_number` and `document_id` |
 
 ## Keyboard Shortcuts
 
