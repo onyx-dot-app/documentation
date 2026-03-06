@@ -5,7 +5,8 @@ icon: "terminal"
 ---
 
 The Onyx CLI is a terminal interface for chatting with your Onyx agents and querying your knowledge base.
-Built with Go using [Bubble Tea](https://github.com/charmbracelet/bubbletea), it provides both an interactive TUI and non-interactive commands for scripting and automation.
+Built with Go using [Bubble Tea](https://github.com/charmbracelet/bubbletea),
+it provides both an interactive TUI and non-interactive commands for scripting and automation.
 
 ## Installation
 
@@ -29,10 +30,8 @@ uv pip install onyx-cli
 ### Go
 
 ```shell
-go install <PLACEHOLDER_GO_MODULE_PATH>@latest
+go install github.com/onyx-dot-app/onyx/cli@latest
 ```
-
-{/* TODO: Replace with actual Go package URL once published */}
 
 ### Build from Source
 
@@ -53,11 +52,17 @@ Run the interactive setup to configure your server URL and API key:
 onyx-cli configure
 ```
 
-This prompts for your Onyx server URL and API key, tests the connection, and saves config to `~/.config/onyx-cli/config.json`.
+This prompts for your Onyx server URL and API key, tests the connection,
+and saves config to `~/.config/onyx-cli/config.json`.
 
 <Tip>
-  You can generate an API key from **Settings > API Keys** in the Onyx web interface.
+  You can generate an access token from **Settings > Accounts & Access** (`/app/settings/accounts-access`)
+  in the Onyx web interface.
 </Tip>
+
+<img src="/assets/overview/cli/access_tokens.png" alt="Accounts & Access page showing the Access Tokens section" />
+
+<img src="/assets/overview/cli/create_access_token.png" alt="Create Access Token modal with token name and expiration options" />
 
 ### Environment Variables
 
