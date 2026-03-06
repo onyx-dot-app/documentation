@@ -1,0 +1,163 @@
+---
+title: "CLI"
+description: "Interact with Onyx from the command line"
+icon: "terminal"
+---
+
+The Onyx CLI is a terminal interface for chatting with your Onyx agents and querying your knowledge base.
+Built with Go using [Bubble Tea](https://github.com/charmbracelet/bubbletea),
+it provides both an interactive TUI and non-interactive commands for scripting and automation.
+
+## Installation
+
+### PyPI (recommended)
+
+```shell
+pip install onyx-cli
+```
+
+Or with uv:
+
+```shell
+uv pip install onyx-cli
+```
+
+{/* TODO: Replace with actual PyPI URL once published */}
+<Card title="PyPI Package" icon="python" href="https://pypi.org/project/onyx-cli/">
+  pip install onyx-cli
+</Card>
+
+### Go
+
+```shell
+go install github.com/onyx-dot-app/onyx/cli@latest
+```
+
+### Build from Source
+
+Requires [Go 1.24+](https://go.dev/dl/).
+
+```shell
+git clone https://github.com/onyx-dot-app/onyx.git
+cd onyx/cli
+go build -o onyx-cli .
+sudo mv onyx-cli /usr/local/bin/
+```
+
+## Setup
+
+Run the interactive setup to configure your server URL and API key:
+
+```shell
+onyx-cli configure
+```
+
+This prompts for your Onyx server URL and API key, tests the connection,
+and saves config to `~/.config/onyx-cli/config.json`.
+
+### Generating an Access Token
+
+Navigate to **User Settings > Accounts & Access > New Access Token** (`/app/settings/accounts-access`)
+to create an access token for the CLI.
+
+<img src="/assets/overview/cli/access_tokens.png" alt="Accounts & Access page showing the Access Tokens section" />
+
+<img src="/assets/overview/cli/create_access_token.png" alt="Create Access Token modal with token name and expiration options" />
+
+### Environment Variables
+
+Environment variables override config file values. This is useful for CI/CD pipelines and scripting.
+
+| Variable | Required | Description |
+|----------|----------|-------------|
+| `ONYX_SERVER_URL` | No | Server base URL (default: `https://cloud.onyx.app`) |
+| `ONYX_API_KEY` | Yes | API key for authentication |
+| `ONYX_PERSONA_ID` | No | Default agent/persona ID |
+
+### Validate Configuration
+
+Verify that your configuration is correct and the server is reachable:
+
+```shell
+onyx-cli validate-config
+```
+
+## Commands
+
+| Command | Description |
+|---------|-------------|
+| `onyx-cli` | Launch the interactive chat TUI (default) |
+| `onyx-cli ask` | Ask a one-shot question (non-interactive) |
+| `onyx-cli agents` | List available agents |
+| `onyx-cli configure` | Configure server URL and API key |
+| `onyx-cli validate-config` | Validate configuration and test connection |
+
+### Interactive Chat
+
+```shell
+onyx-cli
+```
+
+Opens a full-screen terminal UI for conversational interaction with your Onyx agents.
+
+### One-Shot Questions
+
+Ask a question and get a response without entering the TUI:
+
+```shell
+onyx-cli ask "What is our company's PTO policy?"
+```
+
+Use `--agent-id` to target a specific agent:
+
+```shell
+onyx-cli ask --agent-id 5 "Summarize our Q4 roadmap"
+```
+
+Use `--json` for structured NDJSON output (useful for scripting):
+
+```shell
+onyx-cli ask --json "List all active API integrations"
+```
+
+| Flag | Description |
+|------|-------------|
+| `--agent-id <int>` | Agent ID to use (overrides default) |
+| `--json` | Output NDJSON events instead of plain text |
+
+### List Agents
+
+```shell
+onyx-cli agents
+onyx-cli agents --json
+```
+
+Prints a table of available agent IDs, names, and descriptions.
+
+## Slash Commands (Interactive TUI)
+
+When using the interactive chat, the following slash commands are available:
+
+| Command | Description |
+|---------|-------------|
+| `/help` | Show help message |
+| `/new` | Start a new chat session |
+| `/agent` | List and switch agents |
+| `/attach <path>` | Attach a file to next message |
+| `/sessions` | List recent chat sessions |
+| `/clear` | Clear the chat display |
+| `/configure` | Re-run connection setup |
+| `/connectors` | Open connectors in browser |
+| `/settings` | Open settings in browser |
+| `/quit` | Exit Onyx CLI |
+
+## Keyboard Shortcuts
+
+| Key | Action |
+|-----|--------|
+| `Enter` | Send message |
+| `Escape` | Cancel current generation |
+| `Ctrl+O` | Toggle source citations |
+| `Ctrl+D` | Quit (press twice) |
+| `Scroll` / `Shift+Up/Down` | Scroll chat history |
+| `Page Up` / `Page Down` | Scroll half page |
