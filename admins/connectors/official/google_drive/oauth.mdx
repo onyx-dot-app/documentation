@@ -16,27 +16,26 @@ checkout the section [here](./service_account).
     - [https://console.cloud.google.com/projectcreate](https://console.cloud.google.com/projectcreate)
   </Step>
 
-<Step title="Enable Google Drive API">
-	- On the left panel, open **APIs & services** - Go to **Enabled APIs and
-	services** - On the top click **+ENABLE APIS AND SERVICES** - Search for
-	**Google Drive API** and click **ENABLE** - Alternatively visit this
-	[link](https://console.cloud.google.com/flows/enableapi?apiid=drive.googleapis.com),
-	select your project and enable the **Google Drive API**
-</Step>
+  <Step title="Enable Google Drive API">
+    - On the left panel, open **APIs & services** - Go to **Enabled APIs and
+    services** - On the top click **+ENABLE APIS AND SERVICES** - Search for **Google Drive API** and click **ENABLE** -
+    Alternatively visit this [link](https://console.cloud.google.com/flows/enableapi?apiid=drive.googleapis.com),
+    select your project and enable the **Google Drive API**
+  </Step>
 
-<Step title="Enable Admin SDK API">
-	- Click on **+ENABLE APIS AND SERVICES** again. - Search for **Admin SDK API**
-	and click **ENABLE** - Alternatively visit this
-	[link](https://console.cloud.google.com/flows/enableapi?apiid=admin.googleapis.com),
-	select your project and enable the **Admin SDK API**
-</Step>
+  <Step title="Enable Admin SDK API">
+    - Click on **+ENABLE APIS AND SERVICES** again. - Search for **Admin SDK API**
+    and click **ENABLE** - Alternatively visit this
+    [link](https://console.cloud.google.com/flows/enableapi?apiid=admin.googleapis.com),
+    select your project and enable the **Admin SDK API**
+  </Step>
 
-<Step title="Enable Google Sheets API">
-	- Click on **+ENABLE APIS AND SERVICES** again. - Search for **Google Sheets
-	API** and click **ENABLE** - Alternatively visit this
-	[link](https://console.cloud.google.com/flows/enableapi?apiid=sheets.googleapis.com),
-	select your project and enable the **Google Sheets API**
-</Step>
+  <Step title="Enable Google Sheets API">
+    - Click on **+ENABLE APIS AND SERVICES** again. - Search for **Google Sheets
+    API** and click **ENABLE** - Alternatively visit this
+    [link](https://console.cloud.google.com/flows/enableapi?apiid=sheets.googleapis.com),
+    select your project and enable the **Google Sheets API**
+  </Step>
 
   <Step title="Enable Google Docs API">
     - Click on **+ENABLE APIS AND SERVICES** again.
@@ -45,17 +44,15 @@ checkout the section [here](./service_account).
     select your project and enable the **Google Docs API**
 
     <img className="rounded-image" src="/assets/admins/connectors/google_drive/GoogleDriveEnableAPI.png" alt="Google Cloud Console enabling Google Docs API for the project"/>
-
   </Step>
 
-<Step title="Set up Google Auth Platform">
-	- Under **APIs & services**, select **Google Auth Platform** (previously
-	called "OAuth consent screen") - If not configured yet, click **Get started**
-	- Fill in the **App name** (e.g., `Onyx`) and **User support email**, then
-	click **Next** - For **Audience**, select **External** if you don't have a
-	Google Organization, then click **Next** - Fill in your **Developer contact
-	email**, click **Next**, then **Continue**
-</Step>
+  <Step title="Set up Google Auth Platform">
+    - Under **APIs & services**, select **Google Auth Platform** (previously
+    called "OAuth consent screen") - If not configured yet, click **Get started**
+    - Fill in the **App name** (e.g., `Onyx`) and **User support email**, then
+    click **Next** - For **Audience**, select **External** if you don't have a Google Organization,
+    then click **Next** - Fill in your **Developer contact email**, click **Next**, then **Continue**
+  </Step>
 
   <Step title="Set up scopes">
     - In the left sidebar, click **Data Access**
@@ -67,17 +64,14 @@ checkout the section [here](./service_account).
     - Click **Update**, then **Save**
 
     <img className="rounded-image" src="/assets/admins/connectors/google_drive/GoogleDriveScopes.png" alt="OAuth consent screen scopes for Google Drive, Admin SDK, Sheets, and Docs"/>
-
   </Step>
 
-<Step title="Set up test users">
-	- This is only applicable for users without a Google Organization. - Typically
-	for a company, Onyx would be set up as an internal app so this step would not
-	apply. - In the left sidebar, click **Audience**, then scroll down to **Test
-	users** - Click **Add users** and add at least one test user email. Only the
-	email accounts added here will be allowed to run the OAuth flow to index new
-	documents. - Click **Save**
-</Step>
+  <Step title="Set up test users">
+    - This is only applicable for users without a Google Organization. - Typically
+    for a company, Onyx would be set up as an internal app so this step would not apply. - In the left sidebar,
+    click **Audience**, then scroll down to **Test users** - Click **Add users** and add at least one test user email.
+    Only the email accounts added here will be allowed to run the OAuth flow to index new documents. - Click **Save**
+  </Step>
 
   <Step title="Create credentials">
     - Go to the **Credentials** tab and select **+ CREATE CREDENTIALS** -> **OAuth client ID**
@@ -100,7 +94,6 @@ checkout the section [here](./service_account).
     download the credentials as a JSON. Download the JSON for use in the next step.
 
     <img className="rounded-image" src="/assets/admins/connectors/google_drive/DriveDownloadCredentials.png" alt="Download OAuth client JSON credentials from Google Cloud Console"/>
-
   </Step>
 </Steps>
 
@@ -112,10 +105,9 @@ Then, create a new credential, then upload the key you downloaded in the final s
 click **Authenticate with Google Drive** and continue with the account you want to use to index Google Drive.
 
 <img
-	className="rounded-image"
-	src="/assets/admins/connectors/google_drive/OAuthCredential.png"
-	alt="Onyx Google Drive connector showing OAuth credential selection"
-/>
+
+className="rounded-image" src="/assets/admins/connectors/google_drive/OAuthCredential.png" alt="Onyx Google Drive
+connector showing OAuth credential selection" />
 
 Once complete, select the newly created credential, and click the **Continue** button to configure the connector!
 
@@ -128,6 +120,5 @@ Once complete, select the newly created credential, and click the **Continue** b
   - Admin API privileges -> Groups -> Read
   - Admin API privileges -> Organization Units -> Read
 
-This can be set by an admin in the admin panel of the Google Workspace under Account > Admin roles.
-
+  This can be set by an admin in the admin panel of the Google Workspace under Account > Admin roles.
 </Note>
