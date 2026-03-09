@@ -5,6 +5,88 @@ icon: "rocket"
 mode: "wide"
 rss: true
 ---
+<Update label="v2.12.0" description="March 1st, 2026" tags={["New Features", "Bug Fixes", "Performance"]}>
+
+  ## v2.12.0
+
+  A redesigned agent message experience, Brave web search,
+  and the OpenSearch migration enters its final stretch.
+
+  Thank you to our contributors for helping make this release possible!
+
+  ## [Update] OpenSearch Migration
+  We've begun migrating Onyx Cloud to OpenSearch!
+  So far, the migration has progressed smoothly and we expect it to be completed by the end of the week.
+
+  The v3.0.0 beta tag should be promoted very soon.
+
+  As a reminder, everyone must upgrade to a v3.x.x version before moving on to v4.x.x, where Vespa will be fully removed.
+
+  ## Key Improvements
+
+  ### Redesigned Agent Message Timeline
+
+  Agent messages have been refreshed with a new timeline experience.
+
+  When an agent processes your request, you now see a step-by-step, expandable timeline
+  showing exactly what the agent is doing.
+
+  <img className="rounded-image" src="/assets/changelog/v2.12/showcase_agent_message_timeline.png" alt="Agent Message Timeline"/>
+
+  ### Brave Web Search
+
+  Brave is now available as a web search provider!
+
+  Configure it via the Web Search page in the Admin Panel with your Brave API key.
+
+  <img className="rounded-image" src="/assets/changelog/v2.12/showcase_brave_web_search.png" alt="Brave Web Search"/>
+
+  ### Chat History Compression
+
+  Long conversations now automatically summarize older messages to keep context windows efficient.
+
+  This reduces token consumption for extended chats while preserving the key information
+  from earlier in the conversation.
+
+  ## Contributor Highlights
+
+  - [@victoriamreese](https://github.com/victoriamreese) enabled optional host settings and resolved pod label duplication in Helm charts!
+
+  ## Additional Improvements
+
+  ### Chat and Project Search
+
+  You can now search across your chat history and projects directly from the sidebar.
+
+  The new command menu supports keyboard navigation, infinite scroll, and fast filtering
+  to quickly find past conversations.
+
+  ### Helm and Infrastructure
+
+  - Added health probes for all containers in Helm charts
+  - Fixed Ingress template generation
+  - Fixed PostgreSQL operator labeling
+  - Improved IRSA support by passing the correct AWS region
+
+  ### Notable Bug Fixes
+
+  - Fixed Bedrock tool calling configuration
+  - Fixed Ollama model selection in the UI
+  - Fixed desktop app link clicking behavior
+  - Fixed LLM provider configuration not syncing model flow data
+  - Fixed search tool being enabled when no knowledge sources were selected
+  - Fixed private models appearing in Agent creation
+  - Fixed LLM read timeout handling
+  - Fixed Asana connector workspace/team ID mismatch
+  - Fixed Salesforce connector cleanup logic
+  - Multiple UI fixes across modals, dropdowns, agent creation, and sidebar rendering
+
+  ---
+
+  Our [GitHub Releases](https://github.com/onyx-dot-app/onyx/releases?utm_source=docs&utm_content=changelog)
+  page has the full list of changes and bug fixes for each release.
+
+</Update>
 
 <Update label="v2.11.0" description="February 18th, 2026" tags={["New Features", "Bug Fixes"]}>
 
