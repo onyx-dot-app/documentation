@@ -17,11 +17,11 @@ table {
   text-align: left !important;       /* horizontal left */
 }
 
-/* Remove Mintlify's dark-mode background box on file-path card icons
-   and invert dark SVGs to light in dark mode */
-[data-component-part="card-icon"] img {
+/* Scoped fix for file-path SVG card icons: remove Mintlify's dark-mode
+   background box and invert black SVGs to white in dark mode */
+.dark-mode-invert-icon [data-component-part="card-icon"] img {
   background: transparent !important;
 }
-.dark [data-component-part="card-icon"] img {
+.dark .dark-mode-invert-icon [data-component-part="card-icon"] img {
   filter: invert(1) !important;
 }
