@@ -34,7 +34,7 @@ Onyx Lite retains the following capabilities:
 ### What's Removed
 
 To reduce resource requirements, Onyx Lite disables:
-- **Vespa** (vector database) — no document indexing or RAG search
+- **Vespa / Opensearch** (vector database) — no document indexing or RAG search
 - **Redis** — PostgreSQL is used for caching and session management instead
 - **Model servers** — no local embedding models (LLM inference is handled by your configured provider)
 - **Celery background workers** — the API server handles background work directly
