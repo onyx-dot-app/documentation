@@ -16,3 +16,12 @@ table {
 .prose table th {
   text-align: left !important;       /* horizontal left */
 }
+
+/* Remove Mintlify's dark-mode background box on file-path card icons
+   and invert dark SVGs to light in dark mode */
+[data-component-part="card-icon"] img {
+  background: transparent !important;
+}
+.dark [data-component-part="card-icon"] img {
+  filter: invert(1) !important;
+}
