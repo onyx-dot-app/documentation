@@ -105,7 +105,8 @@
               "deployment/authentication/basic",
               "deployment/authentication/oauth",
               "deployment/authentication/oidc",
-              "deployment/authentication/saml"
+              "deployment/authentication/saml",
+              "deployment/authentication/scim"
             ]
           },
           {
