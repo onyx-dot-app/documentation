@@ -17,10 +17,11 @@ table {
   text-align: left !important;       /* horizontal left */
 }
 
-/* Fix Okta icon: remove dark-mode background box and invert to white */
-img[src="/assets/icons/okta.svg"] {
+/* Apply to Cards with file-path SVG icons to fix dark-mode background
+   box and invert the icon to white */
+.icon-dark-invert [data-component-part="card-icon"] img {
   background: transparent !important;
 }
-.dark img[src="/assets/icons/okta.svg"] {
+.dark .icon-dark-invert [data-component-part="card-icon"] img {
   filter: invert(1) !important;
 }
