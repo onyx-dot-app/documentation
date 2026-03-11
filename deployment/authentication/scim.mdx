@@ -10,11 +10,15 @@ import EnterpriseEditionInfo from "/snippets/enterprise-edition-info.mdx";
 
 Configure Onyx with SCIM 2.0 to automatically provision and deprovision users and groups from your identity provider.
 
-Onyx has been tested with **Okta** and **Microsoft Entra ID** (Azure AD). Other SCIM 2.0 providers have not been validated yet. If you need support for a specific provider, reach out on our [Slack](https://join.slack.com/t/onyx-dot-app/shared_invite/zt-2twesxdr6-5iQitKZQpgq~hYIZ~dv3KA) or [Discord](https://discord.gg/onyx) channels and we can add it to the roadmap.
+Onyx has been tested with **Okta** and **Microsoft Entra ID** (Azure AD).
+Other SCIM 2.0 providers have not been validated yet. If you need support for a specific provider,
+reach out on our [Slack](https://join.slack.com/t/onyx-dot-app/shared_invite/zt-2twesxdr6-5iQitKZQpgq~hYIZ~dv3KA)
+or [Discord](https://discord.gg/onyx) channels and we can add it to the roadmap.
 
 <Note>
-  SCIM handles **provisioning** — syncing users and groups into Onyx. You still need a separate authentication method
-  (e.g. [OIDC](/deployment/authentication/oidc) or [SAML](/deployment/authentication/saml)) for user sign-in.
+  SCIM handles **provisioning** — syncing users and groups into Onyx.
+  You still need a separate authentication method (e.g. [OIDC](/deployment/authentication/oidc)
+  or [SAML](/deployment/authentication/saml)) for user sign-in.
 </Note>
 
 ## What SCIM Does
@@ -56,9 +60,10 @@ Use the **SCIM Base URL** and **Bearer Token** from the previous step when confi
 
 <CardGroup cols={2}>
   <div className="icon-dark-invert">
-    <Card title="Okta" icon="/assets/icons/okta.svg" href="https://help.okta.com/en-us/content/topics/apps/apps_app_integration_wizard_scim.htm">
-      Follow Okta's guide to add SCIM provisioning to your application
-    </Card>
+
+  <Card title="Okta" icon="/assets/icons/okta.svg" href="https://help.okta.com/en-us/content/topics/apps/apps_app_integration_wizard_scim.htm">
+    Follow Okta's guide to add SCIM provisioning to your application
+  </Card>
   </div>
   <Card title="Microsoft Entra ID" icon="microsoft" href="https://learn.microsoft.com/en-us/entra/identity/app-provisioning/use-scim-to-provision-users-and-groups#getting-started">
     Follow Microsoft's guide to configure automatic provisioning
@@ -74,6 +79,6 @@ When prompted for connection details, use:
 
 ## Verifying the Connection
 
-Once provisioning is configured, the **SCIM** page in the Onyx Admin Panel will show a **Connected** status
-once the IdP has made its first request. You can also check the **Users and Groups** page to confirm that
-provisioned users and groups appear correctly.
+Once provisioning is configured,
+the **SCIM** page in the Onyx Admin Panel will show a **Connected** status once the IdP has made its first request.
+You can also check the **Users and Groups** page to confirm that provisioned users and groups appear correctly.

@@ -119,7 +119,8 @@ If you are **not** planning to enable permission sync, you only need basic permi
     <Accordion title="How to grant site-specific access">
       If you selected **Sites.Selected**, you need to grant your app **read** access to each site you want to index.
 
-      The steps below use [Microsoft Graph Explorer](https://developer.microsoft.com/en-us/graph/graph-explorer), but you can also grant site permissions using:
+      The steps below use [Microsoft Graph Explorer](https://developer.microsoft.com/en-us/graph/graph-explorer),
+      but you can also grant site permissions using:
       - [PnP PowerShell](https://pnp.github.io/powershell/cmdlets/Grant-PnPAzureADAppSitePermission.html) (`Grant-PnPAzureADAppSitePermission` cmdlet)
       - [Resource Specific Consent guide](https://learn.microsoft.com/en-us/sharepoint/dev/sp-add-ins-modernize/understanding-rsc-for-msgraph-and-sharepoint-online)
 
@@ -137,18 +138,23 @@ If you are **not** planning to enable permission sync, you only need basic permi
 
         <Step title="Get the site ID">
           Run a **GET** request, replacing `{tenant}` and `YourSiteName`:
+
           ```
           GET https://graph.microsoft.com/v1.0/sites/{tenant}.sharepoint.com:/sites/YourSiteName?$select=id
           ```
+
           Copy the `id` from the response (format: `onyx.sharepoint.com,guid1,guid2`).
         </Step>
 
         <Step title="Grant Read permission">
           Change the method to **POST**:
+
           ```
           POST https://graph.microsoft.com/v1.0/sites/{site-id}/permissions
           ```
+
           Request body:
+
           ```json
           {
             "roles": ["read"],
@@ -164,9 +170,11 @@ If you are **not** planning to enable permission sync, you only need basic permi
 
         <Step title="Verify">
           Change the method to **GET**:
+
           ```
           GET https://graph.microsoft.com/v1.0/sites/{site-id}/permissions
           ```
+
           Confirm `"roles": ["read"]` appears for the Onyx app.
         </Step>
       </Steps>
@@ -219,7 +227,8 @@ If you plan to enable permission sync, you'll need additional permissions:
     then click on **Application permissions**. Add the following SharePoint permissions:
     - **Sites.FullControl.All** - Despite the name, Onyx only uses this to retrieve details about permissions.
     No write operations are performed.
-    If you selected **Sites.Selected** and need to grant fullcontrol only for specific sites, see the **Using Sites.Selected with Permission Sync** section below.
+    If you selected **Sites.Selected** and need to grant fullcontrol only for specific sites,
+    see the **Using Sites.Selected with Permission Sync** section below.
     - **User.Read.All** - Used to list all users within the directory for permission mapping.
     Click **Add permissions**.
   </Step>
@@ -233,7 +242,8 @@ If you plan to enable permission sync, you'll need additional permissions:
   If you selected **Sites.Selected** instead of **Sites.Read.All** and plan to enable permission sync,
   you need to grant your app **fullcontrol** access to each site.
 
-  The steps below use [Microsoft Graph Explorer](https://developer.microsoft.com/en-us/graph/graph-explorer), but you can also grant site permissions using:
+  The steps below use [Microsoft Graph Explorer](https://developer.microsoft.com/en-us/graph/graph-explorer),
+  but you can also grant site permissions using:
   - [PnP PowerShell](https://pnp.github.io/powershell/cmdlets/Grant-PnPAzureADAppSitePermission.html) (`Grant-PnPAzureADAppSitePermission` cmdlet)
   - [Resource Specific Consent guide](https://learn.microsoft.com/en-us/sharepoint/dev/sp-add-ins-modernize/understanding-rsc-for-msgraph-and-sharepoint-online)
 
@@ -251,18 +261,23 @@ If you plan to enable permission sync, you'll need additional permissions:
 
     <Step title="Get the site ID">
       Run a **GET** request, replacing `{tenant}` and `YourSiteName`:
+
       ```
       GET https://graph.microsoft.com/v1.0/sites/{tenant}.sharepoint.com:/sites/YourSiteName?$select=id
       ```
+
       Copy the `id` from the response (format: `onyx.sharepoint.com,guid1,guid2`).
     </Step>
 
     <Step title="Grant FullControl permission">
       Change the method to **POST**:
+
       ```
       POST https://graph.microsoft.com/v1.0/sites/{site-id}/permissions
       ```
+
       Request body:
+
       ```json
       {
         "roles": ["fullcontrol"],
@@ -278,9 +293,11 @@ If you plan to enable permission sync, you'll need additional permissions:
 
     <Step title="Verify">
       Change the method to **GET**:
+
       ```
       GET https://graph.microsoft.com/v1.0/sites/{site-id}/permissions
       ```
+
       Confirm `"roles": ["fullcontrol"]` appears for the Onyx app.
     </Step>
   </Steps>
