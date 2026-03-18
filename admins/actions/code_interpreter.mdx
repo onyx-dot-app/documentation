@@ -1,0 +1,38 @@
+---
+title: "Code Interpreter"
+description: "Enable python code execution for your AI Agent in Onyx"
+icon: "code"
+---
+
+The code interpreter action allows your Agents to write and run Python code to complete more complex tasks such as performing calculations, analyzing data, and generating visualizations.
+
+## Capabilities
+
+- **Calculations**: Accurately perform large or complex mathematical operations
+- **Data Analysis**: Run analysis on files provided by the user (e.g., CSVs, spreadsheets)
+- **File Generation**: Create and return files such as reports, modified datasets, or exports
+- **Visualizations**: Generate graphs and charts that render directly in the [Chat UI](/overview/core_features/chat)
+
+## Configuration
+
+No configuration is required. The code interpreter is a built-in action available to all Onyx deployments out of the box.
+
+To enable it for a specific Agent, make sure the **Code Interpreter** action is toggled on in the Agent's configuration.
+
+## Connect / Disconnect Code Interpreter Server
+
+The code interpreter server is connected by default. You can disconnect or reconnect it at any time from the **Admin Panel**. This page also displays the server's health and connection status.
+
+
+<img className="rounded-image" src="/assets/admins/actions/code_interpreter.png" alt="Code Interpreter"/>
+
+
+## How It Works
+
+The code interpreter runs in a secure, sandboxed Python environment with:
+
+- **Pre-installed libraries** such as numpy, pandas, scipy, and matplotlib
+- **Network access disabled** and restricted filesystem access for security
+- **Resource limits and timeouts** to prevent runaway execution
+
+The LLM decides when to invoke the code interpreter based on the user's query — no explicit invocation is needed.

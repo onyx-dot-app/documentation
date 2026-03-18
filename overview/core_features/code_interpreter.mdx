@@ -4,35 +4,33 @@ description: "Safe and sandboxed Python runtime available to the LLM"
 icon: "code"
 ---
 
-## Overview
+The code interpreter gives Onyx's LLMs the ability to write and execute Python code, unlocking capabilities such as
+performing complex calculations, running data analysis on uploaded files, and generating or modifying documents.
 
-<Accordion title="Code Interpreter example">
-  Example run where the LLM generates code to run data analysis on a business report.
+<Tip>
+  The code interpreter is built-in functionality available to all deployments without any configuration needed.
+</Tip>
 
-  <img className="rounded-image" src="/assets/overview/core_features/code_interpreter.png" alt="Code Interpreter"/>
-</Accordion>
+<img className="rounded-image" src="/assets/overview/core_features/code_interpreter.png" alt="Code Interpreter"/>
 
-The ability to execute code unlocks the ability for the LLMs to do things such as:
-- Performing larger calculations accurately
-- Running data analysis on provided files
-- Generating or modifying data/files
-
-**Note**: The code interpreter is built-in functionality available to all deployments without any configuration needed.
+<Info>
+  The LLM determines when to use the code interpreter based on the user's query — no explicit invocation is needed.
+  It can also be attached to custom [Agents](/admins/agents/overview), giving the LLM the option to use it as needed.
+</Info>
 
 ## Features
 
-- **Python Runtime**: A secure Python runtime with all dangerous functionality removed (such as accessing the network,
-  directories outside of the specified, etc.)
-- **Libraries**: Comes with a set of libraries such as numpy, pandas, scipy, matplotlib, and more.
-- **File Input**: Ability to pass arbitrary file types along with the code to run against it.
+The code interpreter runs in a secure, sandboxed Python environment with all dangerous functionality removed
+(such as network access and filesystem access outside of the sandbox).
+
+- **Libraries**: Comes with pre-installed libraries such as numpy, pandas, scipy, matplotlib, and more.
+- **File Input**: Pass arbitrary file types along with the code to run against them.
 - **File Output**: Files can be created and provided back to the user.
-- **STDIN/STDOUT Capture**: Ability to show the user any outputs of the programs executed.
+- **STDIN/STDOUT Capture**: All program outputs are captured and displayed to the user.
 - **Graph Rendering**: The Onyx [Chat UI](/overview/core_features/chat)
-  is able to render returned graphs and other visualization for the user.
+  renders returned graphs and other visualizations directly in the conversation.
 
-## Usage
+## Configuration
 
-The Code Interpreter does not need to be invoked explicitly,
-the LLM will determine when to use it depending on the user query.
-
-It can also be attached to custom Agents, giving the LLM the option to use it as needed.
+To learn more about managing the code interpreter server, see the
+[admin configuration guide](/admins/actions/code_interpreter).
