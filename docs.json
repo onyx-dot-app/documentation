@@ -251,7 +251,8 @@
               "admins/actions/web_search",
               "admins/actions/image_generation",
               "admins/actions/mcp",
-              "admins/actions/openapi"
+              "admins/actions/openapi",
+              "admins/actions/code_interpreter"
             ]
           },
           {
