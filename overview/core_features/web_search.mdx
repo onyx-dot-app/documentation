@@ -28,16 +28,19 @@ Onyx provides multiple search providers (pricing subject to change, please doubl
 
 | Name | Provider | Price | Benefit |
 |------|----------|-------|---------|
-| Google PSE | Google | Free tier + $5/1000 queries | Official Google search results, high trust option for security conscious teams. |
-| Serper | Serper.dev | Free tier + $0.30/1000 queries | Fast, and cost-effective |
-| Exa | Exa.ai | $5/1000 queries | AI-optimized with better semantic capabilities|
+| Exa | Exa.ai | $5/1000 queries | AI-optimized with better semantic capabilities. |
+| Serper | Serper.dev | Free tier + $0.30/1000 queries | Fast and cost-effective. |
+| Brave | Brave Search API | Usage-based | Independent search index with strong web coverage and simple API-based setup. |
+| Google PSE | Google | Free tier + $5/1000 queries | Official Google search results, high-trust option for security-conscious teams. |
+| SearXNG | SearXNG | Self-hosted / infrastructure cost only | Self-hostable metasearch option that can aggregate multiple engines and keep searches private. |
 
-### Web Scraper
+### Web Scrapers
 
 As the Search Providers only give short snippets and metadata,
 a scraper is used to fetch the full site contents for more complete/reliable answers.
 
 | Name | Requires Config | Benefits |
 |------|----------------|----------|
-| Onyx built-in | No  | No third parties get access to user queries, free to use |
-| Firecrawl | Yes, API key | More performant with better edge case handling |
+| Onyx Web Crawler | No | Built-in crawler that works for most pages, keeps queries in your deployment, and is free to use. |
+| Firecrawl | Yes, API key + base URL | More performant with better edge case handling. |
+| Exa | Yes, API key | Fetches and summarizes page content through Exa for teams already using Exa as their search provider. |
