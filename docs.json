@@ -35,6 +35,7 @@
               "overview/core_features/code_interpreter",
               "overview/core_features/image_generation",
               "overview/core_features/craft",
+              "overview/core_features/voice_mode",
               "overview/core_features/workflows"
             ]
           },
@@ -250,6 +251,7 @@
             "pages": [
               "admins/actions/overview",
               "admins/actions/web_search",
+              "admins/actions/voice_mode",
               "admins/actions/image_generation",
               "admins/actions/mcp",
               "admins/actions/openapi",
