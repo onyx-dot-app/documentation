@@ -615,9 +615,6 @@
     }
   },
   "integrations": {
-    "gtm": {
-      "tagId": "GTM-MFZGFSR5"
-    },
     "posthog": {
       "apiKey": "phc_ghlrcfXpgWq9XxZeVMfoJpfaISgFGoXhHYOEcBwdulK",
       "apiHost": "https://us.i.posthog.com"
