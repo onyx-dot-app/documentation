@@ -1,0 +1,52 @@
+---
+title: "LM Studio"
+description: "Using LM Studio with Onyx"
+icon: "desktop"
+---
+
+import NavigateToAiModels from "/snippets/navigate-to-ai-models.mdx";
+import StandardAiModelConfigs from "/snippets/standard-ai-model-configs.mdx";
+
+## Guide
+
+Configure Onyx to use models served by [LM Studio](https://lmstudio.ai/).
+
+Onyx has a built-in integration with LM Studio that auto-discovers your loaded models,
+including their capabilities (vision, reasoning) and context length.
+
+<Steps>
+  <Step title="Setup LM Studio and Load Your Models">
+    Download LM Studio from [lmstudio.ai](https://lmstudio.ai/) and load the models you want to use.
+
+    Start the LM Studio local server:
+
+    ```bash
+    lms server start --port 1234
+    ```
+
+    LM Studio runs on port `1234` by default.
+
+    <Tip>
+      For best results, use a model with strong instruction-following and tool-use capabilities (e.g., Qwen 3.5).
+    </Tip>
+
+    If LM Studio is running on a different machine than Onyx,
+    make sure the server is accessible from the Onyx host (e.g., `http://<lm-studio-host>:1234`).
+  </Step>
+
+  <NavigateToAiModels />
+
+  <Step title="Configure LM Studio">
+    Select **LM Studio** from the available providers.
+
+    Give your provider a **Display Name**.
+
+    Set the **API Base URL** to your LM Studio server address (e.g., `http://localhost:1234`).
+
+    Onyx will automatically connect and discover your loaded models.
+
+    <img className="rounded-image" src="/assets/admins/ai_models/lm_studio_config.png" alt="LM Studio Provider Configuration"/>
+  </Step>
+
+  <StandardAiModelConfigs />
+</Steps>
