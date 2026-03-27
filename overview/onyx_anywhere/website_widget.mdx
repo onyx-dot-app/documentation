@@ -21,6 +21,7 @@ providing your visitors instant access to AI-powered conversations without leavi
 - **Real-time Streaming** - Server-sent events (SSE) for fast responses
 - **Session Persistence** - Conversations survive page reloads
 - **Two Display Modes** - Floating launcher or inline embed
+- **Source Citations** - Optional citation badges linking to source documents
 
 ## Quick Start
 
@@ -28,7 +29,7 @@ Add these few lines to your website:
 
 ```html
 <!-- Load the widget -->
-<script type="module" src="https://cdn.onyx.app/widget/1.0/dist/onyx-widget.js"></script>
+<script type="module" src="https://cdn.onyx.app/widget/1.1/dist/onyx-widget.js"></script>
 
 <!-- Configure and display -->
 <onyx-chat-widget
@@ -97,6 +98,15 @@ The widget embeds directly in your page layout. Perfect for dedicated support pa
 | `background-color` | string | `#e9e9e9`     | Widget background color                  |
 | `text-color`       | string | `#000000bf`   | Text color (75% opacity black)           |
 | `mode`             | string | `"launcher"`  | Display mode: `"launcher"` or `"inline"` |
+| `include-citations`| boolean| `false`       | Show citation badges linking to source documents |
+
+<Warning>
+  **Citations and private documents:** When `include-citations` is enabled,
+  the widget will cite any documents accessible to the configured agent or API key.
+  If the agent has access to private or internal documents,
+  citation links may point to resources that end users cannot view. Scope the agent's document access appropriately,
+  or disable citations for public-facing deployments with sensitive sources.
+</Warning>
 
 ### Configuration Examples
 
@@ -122,6 +132,7 @@ The widget embeds directly in your page layout. Perfect for dedicated support pa
   background-color="#FFFFFF"
   text-color="#1A1A1A"
   mode="launcher"
+  include-citations="true"
 >
 </onyx-chat-widget>
 ```

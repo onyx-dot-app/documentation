@@ -22,7 +22,7 @@ For Onyx Cloud users, the widget is served from Onyx's CDN. Simply add the follo
 
 ```html
 <!-- Load the widget -->
-<script type="module" src="https://cdn.onyx.app/widget/1.0/dist/onyx-widget.js"></script>
+<script type="module" src="https://cdn.onyx.app/widget/1.1/dist/onyx-widget.js"></script>
 
 <!-- Configure and display -->
 <onyx-chat-widget
@@ -180,6 +180,30 @@ so always use a limited-scope key.
 | `background-color` | string | `#e9e9e9`     | Widget background color                  |
 | `text-color`       | string | `#000000bf`   | Text color (75% opacity black)           |
 | `mode`             | string | `"launcher"`  | Display mode: `"launcher"` or `"inline"` |
+| `include-citations`| boolean| `false`       | Show citation badges linking to source documents |
+
+#### `include-citations`
+
+When enabled, assistant messages display clickable citation badges below the response text.
+Each badge shows a sequential number and the source document title, linking directly to the original document.
+
+```html
+<onyx-chat-widget
+  backend-url="https://cloud.onyx.app/api"
+  api-key="on_abc123"
+  include-citations="true"
+>
+</onyx-chat-widget>
+```
+
+<Warning>
+  **Be mindful of document access when enabling citations.** The widget will cite any documents accessible to the
+  configured agent or API key. If the agent has access to private or internal documents,
+  citation links may point to resources that end users do not have permission to view.
+
+  To avoid exposing private document links, either scope the agent's document access to only public-facing sources,
+  or disable citations for public-facing widget deployments.
+</Warning>
 
 ## API Key Security
 
