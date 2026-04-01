@@ -1,0 +1,346 @@
+---
+title: "Hook Extensions"
+description: "Inject custom logic into Onyx's pipeline at defined stages without modifying source code"
+icon: "/assets/icons/share_webhook.svg"
+---
+
+<Note>
+  Hook Extensions are an [Enterprise Edition](/deployment/miscellaneous/enterprise_edition) feature.
+</Note>
+
+<Note>
+  Hook Extensions are only available on single-tenant deployments.
+</Note>
+
+## Overview
+
+Hook Extensions let you inject custom logic into Onyx's pipeline at defined stages — without modifying Onyx source code. You provide an HTTP endpoint; Onyx calls it at the right moment, sends a JSON payload, and uses your response to influence what happens next.
+
+## Concepts
+
+### Hook Points
+
+A hook point is a defined stage in Onyx's pipeline where custom logic can be injected. Each hook point specifies:
+
+- **When** it fires in the pipeline
+- **What** payload it sends to your endpoint
+- **What** response it expects back
+- A default timeout and fail strategy
+
+Hook points are intentional — once a hook point is added, Onyx commits to maintaining its payload structure, response format, and behavior — meaning it won't change in a breaking way without a proper deprecation process. Because of this long-term commitment, each proposal is evaluated carefully before being added.
+
+### Hooks
+
+A hook connects a hook point to your HTTPS endpoint. When the hook point is triggered, Onyx POSTs a request to your endpoint and uses your response to continue, modify, or abort the pipeline.
+
+Only one hook per hook point is allowed at a time.
+
+## How It Works
+
+<Steps>
+  <Step title="Onyx reaches a hook point in the pipeline">
+    The pipeline triggers at a defined stage.
+  </Step>
+  <Step title="Onyx POSTs to your endpoint">
+    If an active hook is configured for that point, Onyx sends a JSON payload to your endpoint URL.
+  </Step>
+  <Step title="Your endpoint responds">
+    Your endpoint processes the payload and returns a JSON response.
+  </Step>
+  <Step title="Onyx continues">
+    Onyx uses your response to continue, modify, or abort the pipeline.
+  </Step>
+</Steps>
+
+If your endpoint is unreachable, times out, or returns an invalid response, Onyx follows the **fail strategy** you configured.
+
+## Adding a Hook
+
+<Steps>
+  <Step title="Navigate to Hook Extensions">
+    Go to the **Admin Panel** and select **Hook Extensions**.
+  </Step>
+  <Step title="Connect a hook point">
+    Find the hook point you want to use and click **Connect**.
+  </Step>
+  <Step title="Fill in the hook details">
+    Complete the form:
+
+    <img className="rounded-image" src="/assets/admins/advanced_configs/add_hook.png" alt="Add Hook Form"/>
+
+    | Field | Required | Description |
+    |---|---|---|
+    | Display Name | Yes | A human-readable label for this hook |
+    | Fail Strategy | No | **Hard** — abort the pipeline. **Soft** — log and continue. Defaults to the hook point's recommended strategy |
+    | Timeout | No | Seconds to wait for your endpoint to respond (1–600). Defaults to the hook point's recommended timeout |
+    | Endpoint URL | Yes | The HTTPS URL Onyx will POST to when the hook point is triggered. Must use HTTPS. |
+    | API Key | No | If provided, Onyx sends this as `Authorization: Bearer <api_key>` on every request |
+  </Step>
+  <Step title="Connect">
+    Click **Connect**. Onyx validates your endpoint with a test request before saving. On success, the hook appears in the connected list.
+  </Step>
+</Steps>
+
+## Managing a Hook
+
+Once connected, you can:
+
+- **Activate / Deactivate** — toggle whether the hook runs
+- **Edit** — update the name, endpoint URL, API key, timeout, or fail strategy
+- **Delete** — remove the hook entirely
+- **View Logs** — inspect recent execution failures for debugging
+
+## Hook Health
+
+Onyx monitors your endpoint after the hook is registered and connected, displays its current health status.
+
+| Status | Meaning |
+|---|---|
+| <img src="/assets/icons/check_circle.svg" width="16" style={{display:"inline", marginRight:"6px"}} />Healthy | Reachable, no failures in the last hour |
+| <img src="/assets/icons/alert_triangle.svg" width="16" style={{display:"inline", marginRight:"6px"}} />Degraded | Reachable, but failures occurred in the last hour |
+| <img src="/assets/icons/x_octagon.svg" width="16" style={{display:"inline", marginRight:"6px"}} />Unreachable | Onyx cannot reach your endpoint |
+
+The 10 most recent failures from the past 30 days are also shown to help with debugging.
+
+---
+
+## Document Ingestion
+
+The Document Ingestion hook point lets you intercept every document before it enters the Onyx indexing pipeline. Your endpoint receives the fully-formed document and can filter it out, rewrite its content, or pass it through unchanged.
+
+It runs immediately after Onyx's internal validation and before the indexing pipeline begins — no partial writes have occurred yet.
+
+| Setting | Value |
+|---|---|
+| Default Timeout | 30 seconds (configurable) |
+| Default Fail Strategy | Hard (configurable) |
+| On Hard Fail | The document will not be indexed |
+
+### Input Schema
+
+Onyx sends a `POST` request to your endpoint once per document with the following JSON body:
+
+```json
+{
+  "document_id": "string",
+  "title": "string | null",
+  "semantic_identifier": "string",
+  "source": "string",
+  "sections": [
+    {
+      "text": "string | null",
+      "link": "string | null",
+      "image_file_id": "string | null"
+    }
+  ],
+  "metadata": { "key": ["string"] },
+  "doc_updated_at": "string | null",
+  "primary_owners": [
+    { "display_name": "string | null", "email": "string | null" }
+  ],
+  "secondary_owners": [
+    { "display_name": "string | null", "email": "string | null" }
+  ]
+}
+```
+
+<Note>
+  All input fields are provided for context only. Your endpoint can only influence the pipeline through the output schema — specifically the `sections` field.
+</Note>
+
+| Field | Type | Required | Description |
+|---|---|---|---|
+| `document_id` | string | Yes | Unique identifier for the document. |
+| `title` | string \| null | Yes | Title of the document. |
+| `semantic_identifier` | string | Yes | Human-readable identifier used for display (e.g. file name, page title). |
+| `source` | string | Yes | Connector source type. For the full list of possible values, see [`DocumentSource`](https://github.com/onyx-dot-app/onyx/blob/main/backend/onyx/configs/constants.py) in the Onyx source code. |
+| `sections` | object[] | Yes | All sections of the document — both text sections and image sections. |
+| `sections[].text` | string \| null | Yes | Text content. Set for text sections, `null` for image sections. |
+| `sections[].link` | string \| null | No | Optional URL associated with this section. |
+| `sections[].image_file_id` | string \| null | No | Opaque image identifier. Set for image sections, `null` for text sections. Image content is not included — hooks can reorder or drop image sections but cannot read or modify the image. |
+| `metadata` | object | Yes | Key-value metadata. Values are always `string[]`. |
+| `doc_updated_at` | string \| null | Yes | Timestamp of the last update at the source in the format `YYYY-MM-DDTHH:MM:SS.ffffff+00:00`, or `null` if unknown. |
+| `primary_owners` | object[] \| null | Yes | Primary owners of the document, or `null` if not available. |
+| `primary_owners[].display_name` | string \| null | No | Human-readable name of the owner. |
+| `primary_owners[].email` | string \| null | No | Email address of the owner. |
+| `secondary_owners` | object[] \| null | Yes | Secondary owners of the document, or `null` if not available. |
+| `secondary_owners[].display_name` | string \| null | No | Human-readable name of the owner. |
+| `secondary_owners[].email` | string \| null | No | Email address of the owner. |
+
+**Example**
+
+```json
+{
+  "document_id": "FILE_CONNECTOR__0376357d-6431-4082-b71a-9f83688f1f16",
+  "title": "Q4 2024 Refund Policy",
+  "semantic_identifier": "Q4 2024 Refund Policy",
+  "source": "confluence",
+  "sections": [
+    {
+      "text": "Our refund policy allows returns within 30 days...",
+      "link": "https://wiki.example.com/pages/123456",
+      "image_file_id": null
+    },
+    {
+      "text": null,
+      "link": null,
+      "image_file_id": "846d6333-1a2b-4c5d-8e9f-0a1b2c3d4e5f"
+    }
+  ],
+  "metadata": {
+    "space": ["HR"],
+    "labels": ["policy", "finance"]
+  },
+  "doc_updated_at": "2024-10-01T12:00:00.000000+00:00",
+  "primary_owners": [
+    { "display_name": "Alice Smith", "email": "alice@example.com" }
+  ],
+  "secondary_owners": null
+}
+```
+
+### Output Schema
+
+A successful response from your endpoint must return HTTP `200` and a JSON body:
+
+| Field | Type | Required | Description |
+|---|---|---|---|
+| `sections` | object[] \| null | Yes | The sections to index, using the same schema as the input `sections`. The hook controls final ordering. `null` or empty list drops the document. |
+| `rejection_reason` | string \| null | No | Logged when `sections` is `null` or empty. Falls back to a generic message if omitted. |
+
+<AccordionGroup>
+  <Accordion title="Example: Pass through unchanged">
+    ```json
+    {
+      "sections": [
+        {
+          "text": "Our refund policy allows returns within 30 days...",
+          "link": "https://wiki.example.com/pages/123456",
+          "image_file_id": null
+        },
+        {
+          "text": null,
+          "link": null,
+          "image_file_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+        }
+      ],
+      "rejection_reason": null
+    }
+    ```
+  </Accordion>
+  <Accordion title="Example: Rewrite content (PII redaction)">
+    ```json
+    {
+      "sections": [
+        { "text": "Our refund policy allows returns within 30 days. Contact [REDACTED] for details." }
+      ],
+      "rejection_reason": null
+    }
+    ```
+  </Accordion>
+  <Accordion title="Example: Drop the document">
+    ```json
+    {
+      "sections": null,
+      "rejection_reason": "Document contains restricted classification label."
+    }
+    ```
+  </Accordion>
+</AccordionGroup>
+
+### Authentication
+
+If you configured an API key when registering the hook, Onyx includes it in every request:
+
+```
+Authorization: Bearer <your-api-key>
+```
+
+---
+
+## Query Processing
+
+The Query Processing hook point lets you intercept every user query before it enters the Onyx pipeline. Your endpoint receives the raw query and the user's identity, and can rewrite the query, reject it entirely, or pass it through unchanged.
+
+It runs immediately after the user submits a message, before anything is saved to the database or sent to the LLM. This is the earliest possible point in the pipeline — no side effects have occurred yet.
+
+| Setting | Value |
+|---|---|
+| Default Timeout | 5 seconds (configurable) |
+| Default Fail Strategy | Hard (configurable) |
+| On Hard Fail | The query will be blocked and the user will see an error message |
+
+### Input Schema
+
+Onyx sends a `POST` request to your endpoint with the following JSON body:
+
+```json
+{
+  "query": "What is our refund policy?",
+  "user_email": "alice@example.com",
+  "chat_session_id": "550e8400-e29b-41d4-a716-446655440000"
+}
+```
+
+| Field | Type | Required | Description |
+|---|---|---|---|
+| `query` | string | Yes | The raw query exactly as the user typed it. |
+| `user_email` | string \| null | Yes | Email of the user submitting the query, or `null` if unauthenticated. |
+| `chat_session_id` | string | Yes | UUID of the chat session. |
+
+### Output Schema
+
+A successful response from your endpoint must return HTTP `200` and a JSON body:
+
+| Field | Type | Required | Description |
+|---|---|---|---|
+| `query` | string \| null | Yes | The query to use downstream. Set to `null` or empty string to reject the query. |
+| `rejection_message` | string \| null | No | Message shown to the user when `query` is `null`. Falls back to a generic message if omitted. |
+
+<AccordionGroup>
+  <Accordion title="Example: Pass through unchanged">
+    ```json
+    {
+      "query": "What is our refund policy?",
+      "rejection_message": null
+    }
+    ```
+  </Accordion>
+  <Accordion title="Example: Rewrite the query">
+    ```json
+    {
+      "query": "What is the refund policy for enterprise customers?",
+      "rejection_message": null
+    }
+    ```
+  </Accordion>
+  <Accordion title="Example: Reject the query">
+    ```json
+    {
+      "query": null,
+      "rejection_message": "This topic is restricted. Please contact your administrator."
+    }
+    ```
+  </Accordion>
+</AccordionGroup>
+
+### Authentication
+
+If you configured an API key when registering the hook, Onyx includes it in every request:
+
+```
+Authorization: Bearer <your-api-key>
+```
+
+---
+
+## Suggesting a New Hook Point
+
+If your use case requires a pipeline injection point that doesn't exist yet, open a GitHub issue describing:
+
+- **Where** in the pipeline you need to inject logic (e.g. after retrieval, before document indexing)
+- **What your endpoint would receive** — what context does it need to do its job?
+- **What your endpoint would return** — how should Onyx change its behavior based on your response?
+- **Use cases** — what problem does this solve? Are other customers likely to need the same point?
+
+The Onyx team reviews proposals and implements hook points that have broad applicability. Once a hook point is added, Onyx commits to maintaining its payload structure, response format, and behavior — meaning it won't change in a breaking way without a proper deprecation process. Because of this long-term commitment, each proposal is evaluated carefully before being added.
