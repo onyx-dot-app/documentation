@@ -279,7 +279,8 @@
               "admins/advanced_configs/rate_limits",
               "admins/advanced_configs/workspace_settings",
               "admins/advanced_configs/white_labeling",
-              "admins/advanced_configs/llm_access_controls"
+              "admins/advanced_configs/llm_access_controls",
+              "admins/advanced_configs/hook_extensions"
             ]
           },
           {
