@@ -18,38 +18,34 @@
             "group": "Getting Started",
             "pages": [
               "welcome",
-              "overview/getting_started/quickstart",
-              "overview/getting_started/use_cases",
-              "overview/getting_started/faq"
+              "overview/getting_started/quickstart"
             ]
           },
           {
             "group": "Core Features",
             "pages": [
               "overview/core_features/chat",
+              "overview/core_features/internal_search",
+              "overview/core_features/connectors",
               "overview/core_features/agents",
               "overview/core_features/actions",
-              "overview/core_features/connectors",
-              "overview/core_features/internal_search",
               "overview/core_features/web_search",
               "overview/core_features/code_interpreter",
               "overview/core_features/image_generation",
-              "overview/core_features/craft",
               "overview/core_features/voice_mode",
-              "overview/core_features/workflows"
+              "overview/core_features/craft"
             ]
           },
           {
             "group": "Onyx Anywhere",
             "pages": [
-              "overview/onyx_anywhere/web_interface",
-              "overview/onyx_anywhere/cli",
               "overview/onyx_anywhere/desktop_app",
-              "overview/onyx_anywhere/slack",
               "overview/onyx_anywhere/chrome_extension",
               "overview/onyx_anywhere/website_widget",
+              "overview/onyx_anywhere/slack",
               "overview/onyx_anywhere/discord_bot",
               "overview/onyx_anywhere/mcp_server",
+              "overview/onyx_anywhere/cli",
               "overview/onyx_anywhere/mobile_app"
             ]
           },
@@ -57,6 +53,8 @@
             "group": "Miscellaneous",
             "pages": [
               "overview/miscellaneous/open_source_statement",
+              "overview/getting_started/use_cases",
+              "overview/getting_started/faq",
               "overview/miscellaneous/contact_us"
             ]
           }
@@ -75,16 +73,24 @@
             ]
           },
           {
-            "group": "Local",
+            "group": "Deploy Locally",
             "pages": [
               "deployment/local/docker",
               "deployment/local/kubernetes",
-              "deployment/local/terraform",
-              "deployment/local/desktop_app"
+              "deployment/local/terraform"
             ]
           },
           {
-            "group": "Cloud",
+            "group": "Onyx Anywhere",
+            "pages": [
+              "deployment/local/desktop_app",
+              "deployment/configuration/chrome_extension",
+              "deployment/configuration/website_widget",
+              "deployment/configuration/mcp_server"
+            ]
+          },
+          {
+            "group": "Deploy on Cloud",
             "pages": [
               {
                 "group": "AWS",
@@ -111,17 +117,9 @@
             ]
           },
           {
-            "group": "Configuration",
-            "pages": [
-              "deployment/configuration/configuration",
-              "deployment/configuration/mcp_server",
-              "deployment/configuration/chrome_extension",
-              "deployment/configuration/website_widget"
-            ]
-          },
-          {
             "group": "Miscellaneous",
             "pages": [
+              "deployment/configuration/configuration",
               "deployment/miscellaneous/enterprise_edition",
               "deployment/miscellaneous/release_process",
               "deployment/miscellaneous/contact_us"
@@ -517,7 +515,6 @@
           {
             "group": "Miscellaneous",
             "pages": [
-              "developers/guides/chat_guide",
               "developers/contact_us"
             ]
           }
@@ -599,7 +596,7 @@
   "navbar": {
     "primary": {
       "type": "button",
-      "label": "Try Onyx Cloud!",
+      "label": "Onyx Cloud",
       "href": "https://cloud.onyx.app/?utm_source=docs"
     },
     "links": [
@@ -630,13 +627,6 @@
       "keywords": "onyx ai, onyx, open source ai, enterprise ai, generative ai platform, enterprise search, ai assistant, knowledge management, danswer"
     }
   },
-  "redirects": [
-    {
-      "source": "/overview/getting_started/quickstart",
-      "destination": "/deployment/overview",
-      "permanent": true
-    }
-  ],
   "contextual": {
     "options": []
   }
