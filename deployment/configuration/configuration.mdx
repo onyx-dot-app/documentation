@@ -87,26 +87,6 @@ LANGFUSE_PUBLIC_KEY="pk-..."
 LANGFUSE_BASE_URL="https://cloud.langfuse.com" # Or "https://us.cloud.langfuse.com"
 ```
 
-### Multilingual Configuration
-
-Although Onyx assumes English by default,
-the system can be configured to support multiple languages in the Admin Panel and through environment variables.
-
-- Select a multi-lingual embedding model in the **Search Settings** of the Admin Panel
-
-- Set the following environment variables:
-
-```bash
-MULTILINGUAL_QUERY_EXPANSION="English, French, YOUR_LANGUAGE_HERE"
-
-LANGUAGE_HINT="IMPORTANT: ALWAYS RESPOND IN FRENCH! Even if the documents and the user query are in English, your response must be in French."
-LANGUAGE_CHAT_NAMING_HINT="The name of the conversation must be in the same language as the user query."
-```
-
-<Tip>
-  Feel free to change the `LANGUAGE_HINT` and `LANGUAGE_CHAT_NAMING_HINT` prompts to your liking!
-</Tip>
-
 ## Onyx Environment Variables
 
 <Info>

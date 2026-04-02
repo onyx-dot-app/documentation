@@ -112,8 +112,7 @@
               "deployment/authentication/basic",
               "deployment/authentication/oauth",
               "deployment/authentication/oidc",
-              "deployment/authentication/saml",
-              "deployment/authentication/scim"
+              "deployment/authentication/saml"
             ]
           },
           {
@@ -135,7 +134,6 @@
             "group": "Getting Started",
             "pages": [
               "admins/overview",
-              "admins/getting_started/slack_bot_setup",
               "admins/getting_started/enterprise_edition"
             ]
           },
@@ -143,15 +141,21 @@
             "group": "AI Models",
             "pages": [
               "admins/ai_models/overview",
-              "admins/ai_models/openai",
-              "admins/ai_models/anthropic",
-              "admins/ai_models/ollama",
-              "admins/ai_models/lm_studio",
-              "admins/ai_models/azure_openai",
-              "admins/ai_models/bedrock",
-              "admins/ai_models/google_ai",
-              "admins/ai_models/openrouter",
-              "admins/ai_models/custom_inference_provider"
+              {
+                "group": "Supported LLMs",
+                "icon": "microchip",
+                "pages": [
+                  "admins/ai_models/openai",
+                  "admins/ai_models/anthropic",
+                  "admins/ai_models/ollama",
+                  "admins/ai_models/lm_studio",
+                  "admins/ai_models/azure_openai",
+                  "admins/ai_models/bedrock",
+                  "admins/ai_models/google_ai",
+                  "admins/ai_models/openrouter",
+                  "admins/ai_models/custom_inference_provider"
+                ]
+              }
             ]
           },
           {
@@ -245,54 +249,59 @@
             ]
           },
           {
-            "group": "Actions",
+            "group": "Managing Features",
             "pages": [
-              "admins/actions/overview",
+              "admins/managing_features/chat",
+              {
+                "group": "RAG and Search",
+                "icon": "magnifying-glass",
+                "pages": [
+                  "admins/managing_features/connectors_link",
+                  "admins/advanced_configs/search_configs",
+                  "admins/managing_features/document_sets"
+                ]
+              },
+              "admins/agents/overview",
+              {
+                "group": "Actions",
+                "icon": "play",
+                "pages": [
+                  "admins/actions/mcp",
+                  "admins/actions/openapi"
+                ]
+              },
               "admins/actions/web_search",
-              "admins/actions/voice_mode",
+              "admins/actions/code_interpreter",
               "admins/actions/image_generation",
-              "admins/actions/mcp",
-              "admins/actions/openapi",
-              "admins/actions/code_interpreter"
+              "admins/actions/voice_mode"
             ]
           },
           {
-            "group": "Agents",
-            "pages": [
-              "admins/agents/overview"
-            ]
-          },
-          {
-            "group": "User Management",
+            "group": "Access Control",
             "pages": [
               "admins/user_management/users_and_groups",
+              "deployment/authentication/scim",
               "admins/user_management/api_keys"
             ]
           },
           {
             "group": "Advanced Configs",
             "pages": [
-              "admins/advanced_configs/search_configs",
-              "admins/advanced_configs/doc_processing",
               "admins/advanced_configs/rate_limits",
-              "admins/advanced_configs/workspace_settings",
               "admins/advanced_configs/white_labeling",
               "admins/advanced_configs/llm_access_controls",
-              "admins/advanced_configs/hook_extensions"
+              "admins/advanced_configs/hook_extensions",
+              "admins/getting_started/slack_bot_setup",
+              "admins/miscellaneous/discord_bot",
+              "admins/advanced_configs/spending_limits"
             ]
           },
           {
-            "group": "Analytics",
+            "group": "Auditing",
             "pages": [
-              "admins/analytics/overview"
-            ]
-          },
-          {
-            "group": "Curators",
-            "pages": [
-              "admins/curators/overview",
-              "admins/curators/curator_responsibilities",
-              "admins/curators/curator_guide"
+              "admins/analytics/overview",
+              "admins/analytics/query_history",
+              "admins/analytics/custom_analytics"
             ]
           },
           {
@@ -307,7 +316,6 @@
           {
             "group": "Miscellaneous",
             "pages": [
-              "admins/miscellaneous/discord_bot",
               "admins/miscellaneous/contact_us"
             ]
           }
