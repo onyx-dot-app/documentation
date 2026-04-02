@@ -82,3 +82,64 @@ When prompted for connection details, use:
 Once provisioning is configured,
 the **SCIM** page in the Onyx Admin Panel will show a **Connected** status once the IdP has made its first request.
 You can also check the **Users and Groups** page to confirm that provisioned users and groups appear correctly.
+
+## Supported Attributes
+
+The SCIM discovery endpoints are **unauthenticated** — no token required. You can query them directly to see exactly what Onyx supports without guessing.
+
+```bash
+curl -s https://YOUR_ONYX_DOMAIN/scim/v2/Schemas -H "Accept: application/scim+json" | jq .
+curl -s https://YOUR_ONYX_DOMAIN/scim/v2/ServiceProviderConfig -H "Accept: application/scim+json" | jq .
+curl -s https://YOUR_ONYX_DOMAIN/scim/v2/ResourceTypes -H "Accept: application/scim+json" | jq .
+```
+
+The tables below reflect the current responses.
+
+### User Attributes (`/scim/v2/Schemas`)
+
+| Attribute | Type | Required | Notes |
+|-----------|------|----------|-------|
+| `userName` | string | Yes | Unique identifier — typically the user's email address |
+| `name.givenName` | string | No | First name |
+| `name.familyName` | string | No | Last name |
+| `name.formatted` | string | No | Full name including middle names and titles |
+| `emails[].value` | string | No | Email address |
+| `emails[].type` | string | No | Label, e.g. `work` |
+| `emails[].primary` | boolean | No | Whether this is the primary email |
+| `active` | boolean | No | Whether the account is active |
+| `externalId` | string | No | Identifier from the IdP (case-sensitive) |
+
+**Enterprise User extension** (`urn:ietf:params:scim:schemas:extension:enterprise:2.0:User`):
+
+| Attribute | Type | Required | Notes |
+|-----------|------|----------|-------|
+| `department` | string | No | Department |
+| `manager.value` | string | No | Manager's user ID |
+
+### Group Attributes (`/scim/v2/Schemas`)
+
+| Attribute | Type | Required | Notes |
+|-----------|------|----------|-------|
+| `displayName` | string | Yes | Human-readable group name |
+| `members[].value` | string | No | User ID of the group member |
+| `members[].display` | string | No | Display name of the member (read-only) |
+| `externalId` | string | No | Identifier from the IdP (case-sensitive) |
+
+### Supported Operations (`/scim/v2/ServiceProviderConfig`)
+
+| Feature | Supported |
+|---------|-----------|
+| PATCH | Yes |
+| Bulk operations | No |
+| Filtering | Yes (max 100 results) |
+| Change password | No |
+| Sorting | No |
+| ETags | No |
+| Authentication | Bearer token |
+
+### Resource Types (`/scim/v2/ResourceTypes`)
+
+| Resource | Endpoint | Schema |
+|----------|----------|--------|
+| User | `/scim/v2/Users` | `urn:ietf:params:scim:schemas:core:2.0:User` + Enterprise extension (optional) |
+| Group | `/scim/v2/Groups` | `urn:ietf:params:scim:schemas:core:2.0:Group` |
