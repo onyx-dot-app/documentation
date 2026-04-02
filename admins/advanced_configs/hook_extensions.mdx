@@ -5,7 +5,7 @@ icon: "webhook"
 ---
 
 <Note>
-  Hook Extensions are an [Enterprise Edition](/deployment/miscellaneous/enterprise_edition) feature and are only available on single-tenant deployments.
+  Hook Extensions are an [Enterprise Edition](/deployment/miscellaneous/enterprise_edition) feature and are only available on **single-tenant** deployments.
 </Note>
 
 ## Overview
@@ -92,11 +92,20 @@ Onyx monitors your endpoint after the hook is registered and connected, displays
 
 | Status | Meaning |
 |---|---|
-| <img src="/assets/icons/check_circle.svg" width="16" style={{display:"inline", marginRight:"6px"}} />Healthy | Reachable, no failures in the last hour |
+| <img src="/assets/icons/check_circle.svg" width="16" style={{display:"inline", marginRight:"6px"}} />Connected | Reachable, no failures in the last hour |
 | <img src="/assets/icons/alert_triangle.svg" width="16" style={{display:"inline", marginRight:"6px"}} />Degraded | Reachable, but failures occurred in the last hour |
-| <img src="/assets/icons/x_octagon.svg" width="16" style={{display:"inline", marginRight:"6px"}} />Unreachable | Onyx cannot reach your endpoint |
+| <img src="/assets/icons/x_octagon.svg" width="16" style={{display:"inline", marginRight:"6px"}} />Connection Lost | Onyx cannot reach your endpoint |
+
+<img className="rounded-image" src="/assets/admins/advanced_configs/hook_card_connected.png" alt="Connected Hook Card"/>
+
+<img className="rounded-image" src="/assets/admins/advanced_configs/hook_one_hour_errors.png" alt="Hook Errors in the Last Hour"/>
+
+<img className="rounded-image" src="/assets/admins/advanced_configs/hook_card_connection_lost.png" alt="Hook Connection Lost"/>
+
 
 The 10 most recent failures from the past 30 days are also shown to help with debugging.
+
+<img className="rounded-image" src="/assets/admins/advanced_configs/hook_thirty_days_errors.png" alt="Hook Errors in the Last 30 Days"/>
 
 ---
 
@@ -154,7 +163,7 @@ Onyx sends a `POST` request to your endpoint once per document with the followin
 | `sections[].text` | string \| null | Yes | Text content. Set for text sections, `null` for image sections. |
 | `sections[].link` | string \| null | No | Optional URL associated with this section. |
 | `sections[].image_file_id` | string \| null | No | Opaque image identifier. Set for image sections, `null` for text sections. Image content is not included — hooks can reorder or drop image sections but cannot read or modify the image. |
-| `metadata` | object | Yes | Key-value metadata. Values are always `string[]`. |
+| `metadata` | object | Yes | Key-value metadata. Values are always `string[]`. Connector-specific — see below. |
 | `doc_updated_at` | string \| null | Yes | Timestamp of the last update at the source in the format `YYYY-MM-DDTHH:MM:SS.ffffff+00:00`, or `null` if unknown. |
 | `primary_owners` | object[] \| null | Yes | Primary owners of the document, or `null` if not available. |
 | `primary_owners[].display_name` | string \| null | No | Human-readable name of the owner. |
@@ -162,6 +171,16 @@ Onyx sends a `POST` request to your endpoint once per document with the followin
 | `secondary_owners` | object[] \| null | Yes | Secondary owners of the document, or `null` if not available. |
 | `secondary_owners[].display_name` | string \| null | No | Human-readable name of the owner. |
 | `secondary_owners[].email` | string \| null | No | Email address of the owner. |
+
+#### Metadata Keys by Connector
+
+The keys present in `metadata` depend on the connector source. Below are a few examples:
+
+| Connector | Keys |
+|---|---|
+| Confluence | `space`, `labels` |
+| Jira | `key`, `project`, `project_name`, `issuetype`, `status`, `priority`, `assignee`, `assignee_email`, `reporter`, `reporter_email`, `labels`, `created`, `updated`, `duedate`, `resolution`, `resolution_date`, `parent` |
+| File | Arbitrary user-defined tags. You can embed custom key-value pairs directly in the file using an `ONYX_METADATA` block — see the [File connector docs](/admins/connectors/official/file) for details. |
 
 **Example**
 
@@ -252,6 +271,112 @@ If you configured an API key when registering the hook, Onyx includes it in ever
 Authorization: Bearer <your-api-key>
 ```
 
+### Lambda Example
+
+You can use an [AWS Lambda function](https://docs.aws.amazon.com/lambda/latest/dg/getting-started.html) as your hook endpoint by exposing it over HTTPS via a [Lambda Function URL](https://docs.aws.amazon.com/lambda/latest/dg/lambda-urls.html). This is the simplest way to deploy a hook without managing a server.
+
+When Onyx calls your endpoint, the request arrives as an API Gateway-style event. Your handler reads the JSON body from `event["body"]`, processes the document, and returns a response with a `statusCode` and a JSON-encoded `body`.
+
+If you configured an API key on the hook, validate it against the `Authorization` header in the event before processing.
+
+<Accordion title="Lambda Example (Python)">
+  ```python
+  import json
+  import logging
+  import os
+
+  logger = logging.getLogger()
+  logger.setLevel(logging.INFO)
+
+  # Set the HOOK_API_KEY environment variable in your Lambda configuration.
+  # If not set, API key validation is skipped.
+  API_KEY = os.environ.get("HOOK_API_KEY")
+
+
+  def lambda_handler(event, context):
+      # Validate API key if configured
+      if API_KEY:
+          auth = (event.get("headers") or {}).get("authorization", "")
+          if auth != f"Bearer {API_KEY}":
+              logger.warning("Unauthorized request — invalid or missing API key")
+              return {"statusCode": 401, "body": json.dumps({"error": "Unauthorized"})}
+
+      body = json.loads(event.get("body", "{}"))
+      source = body.get("source", "")
+      document_id = body.get("document_id", "")
+      sections = body.get("sections", [])
+
+      logger.info("Received document: id=%s source=%s sections=%d", document_id, source, len(sections))
+
+      # Reject documents from the file connector
+      if source == "file":
+          logger.info("Rejecting document %s — file connector documents are not allowed", document_id)
+          return {
+              "statusCode": 200,
+              "body": json.dumps({
+                  "sections": None,
+                  "rejection_reason": "File connector documents are not allowed.",
+              }),
+          }
+
+      logger.info("Passing through document %s", document_id)
+      return {
+          "statusCode": 200,
+          "body": json.dumps({"sections": sections}),
+      }
+  ```
+</Accordion>
+
+### Testing
+
+Use `curl` to test your Lambda Function URL before connecting it to Onyx.
+
+**Pass-through (non-file source):**
+
+```bash
+curl -X POST https://<your-function-url> \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer <your-api-key>" \
+  -d '{
+    "document_id": "confluence::page::123456",
+    "title": "Q4 Refund Policy",
+    "semantic_identifier": "Q4 Refund Policy",
+    "source": "confluence",
+    "sections": [{"text": "Our refund policy allows returns within 30 days.", "link": null, "image_file_id": null}],
+    "metadata": {},
+    "doc_updated_at": null,
+    "primary_owners": null,
+    "secondary_owners": null
+  }'
+```
+
+**Rejected (file source):**
+
+```bash
+curl -X POST https://<your-function-url> \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer <your-api-key>" \
+  -d '{
+    "document_id": "FILE_CONNECTOR__abc123",
+    "title": "Internal Doc",
+    "semantic_identifier": "Internal Doc",
+    "source": "file",
+    "sections": [{"text": "Some content.", "link": null, "image_file_id": null}],
+    "metadata": {},
+    "doc_updated_at": null,
+    "primary_owners": null,
+    "secondary_owners": null
+  }'
+```
+
+Once the hook is connected, you can validate end-to-end by adding a File connector and uploading a document. After the connector syncs, search for content from that document in the chat window — if the hook is working correctly, the material should not appear in results since file connector documents are being rejected.
+
+<img className="rounded-image" src="/assets/admins/advanced_configs/document_ingestion_file_connector.png" alt="File Connector"/>
+
+<img className="rounded-image" src="/assets/admins/advanced_configs/document_ingestion_add_file.png" alt="Add File"/>
+
+<img className="rounded-image" src="/assets/admins/advanced_configs/document_ingestion_test.png" alt="Document Ingestion Test — File Content Not Found"/>
+
 ---
 
 ## Query Processing
@@ -327,6 +452,88 @@ If you configured an API key when registering the hook, Onyx includes it in ever
 ```
 Authorization: Bearer <your-api-key>
 ```
+
+### Lambda Example
+
+You can use an [AWS Lambda function](https://docs.aws.amazon.com/lambda/latest/dg/getting-started.html) as your hook endpoint by exposing it over HTTPS via a [Lambda Function URL](https://docs.aws.amazon.com/lambda/latest/dg/lambda-urls.html). This is the simplest way to deploy a hook without managing a server.
+
+When Onyx calls your endpoint, the request arrives as an API Gateway-style event. Your handler reads the JSON body from `event["body"]`, processes the query, and returns a response with a `statusCode` and a JSON-encoded `body`.
+
+If you configured an API key on the hook, validate it against the `Authorization` header in the event before processing.
+
+<Accordion title="Lambda Example (Python)">
+  ```python
+  import json
+  import os
+
+  BLOCKED_KEYWORDS = ["ssn", "phone number"]
+
+  # Set the HOOK_API_KEY environment variable in your Lambda configuration.
+  # If not set, API key validation is skipped.
+  API_KEY = os.environ.get("HOOK_API_KEY")
+
+
+  def lambda_handler(event, context):
+      # Validate API key if configured
+      if API_KEY:
+          auth = (event.get("headers") or {}).get("authorization", "")
+          if auth != f"Bearer {API_KEY}":
+              return {"statusCode": 401, "body": json.dumps({"error": "Unauthorized"})}
+
+      body = json.loads(event.get("body", "{}"))
+      query = body.get("query", "")
+
+      # Reject queries containing blocked keywords
+      for keyword in BLOCKED_KEYWORDS:
+          if keyword.lower() in query.lower():
+              return {
+                  "statusCode": 200,
+                  "body": json.dumps({
+                      "query": None,
+                      "rejection_message": "Your query contains restricted terms. Please contact your administrator.",
+                  }),
+              }
+
+      return {
+          "statusCode": 200,
+          "body": json.dumps({"query": query}),
+      }
+  ```
+</Accordion>
+
+### Testing
+
+Use `curl` to test your Lambda Function URL before connecting it to Onyx.
+
+**Pass-through (no blocked keywords):**
+
+```bash
+curl -X POST https://<your-function-url> \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer <your-api-key>" \
+  -d '{
+    "query": "What is our refund policy?",
+    "user_email": "alice@example.com",
+    "chat_session_id": "550e8400-e29b-41d4-a716-446655440000"
+  }'
+```
+
+**Rejected (contains blocked keyword):**
+
+```bash
+curl -X POST https://<your-function-url> \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer <your-api-key>" \
+  -d '{
+    "query": "What is the SSN format?",
+    "user_email": "alice@example.com",
+    "chat_session_id": "550e8400-e29b-41d4-a716-446655440000"
+  }'
+```
+
+Once the hook is connected, you can also validate the logic directly in the Onyx chat window. Try sending a query that contains a blocked keyword (e.g. "ssn" or "phone number") — you should see the rejection message instead of a response. Queries without blocked keywords should pass through normally.
+
+<img className="rounded-image" src="/assets/admins/advanced_configs/query_processing_test.png" alt="Query Processing Hook Test"/>
 
 ---
 
