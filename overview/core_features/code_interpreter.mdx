@@ -1,27 +1,27 @@
 ---
-title: "Code Interpreter"
+title: "Code Execution"
 description: "Safe and sandboxed Python runtime available to the LLM"
 icon: "code"
 ---
 
-The code interpreter gives Onyx's LLMs the ability to write and execute Python code,
+The code execution action gives Onyx's LLMs the ability to write and execute Python code,
 unlocking capabilities such as performing complex calculations, running data analysis on uploaded files,
 and generating or modifying documents.
 
 <Tip>
-  The code interpreter is built-in functionality available to all deployments without any configuration needed.
+  The code execution action is built-in functionality available to all deployments without any configuration needed.
 </Tip>
 
-<img className="rounded-image" src="/assets/overview/core_features/code_interpreter.png" alt="Code Interpreter"/>
+<img className="rounded-image" src="/assets/overview/core_features/code_interpreter.png" alt="Code Execution"/>
 
 <Info>
-  The LLM determines when to use the code interpreter based on the user's query — no explicit invocation is needed.
+  The LLM determines when to use code execution based on the user's query — no explicit invocation is needed.
   It can also be attached to custom [Agents](/admins/agents/overview), giving the LLM the option to use it as needed.
 </Info>
 
 ## Features
 
-The code interpreter runs in a secure,
+The code execution action runs in a secure,
 sandboxed Python environment with all dangerous functionality removed (such as network access and filesystem access
 outside of the sandbox).
 
@@ -34,5 +34,5 @@ outside of the sandbox).
 
 ## Configuration
 
-To learn more about managing the code interpreter server,
+To learn more about managing the code execution server,
 see the [admin configuration guide](/admins/actions/code_interpreter).

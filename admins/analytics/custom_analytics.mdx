@@ -1,0 +1,36 @@
+---
+title: "Custom Analytics"
+description: "Configure a custom analytics provider in Onyx"
+icon: "chart-mixed"
+---
+
+import EnterpriseEditionInfo from "/snippets/enterprise-edition-info.mdx";
+
+<EnterpriseEditionInfo />
+
+Onyx Enterprise Edition allows you to configure a custom analytics provider.
+
+<Steps>
+  <Step title="Set the CUSTOM_ANALYTICS_SECRET_KEY environment variable">
+    Set the `CUSTOM_ANALYTICS_SECRET_KEY` environment variable to some random string.
+    Make sure you have the value saved temporarily somewhere.
+
+    Re-deploy Onyx.
+  </Step>
+
+  <Step title="Go to the Custom Analytics tab in the Admin Panel">
+    Go to the Custom Analytics tab in the Admin Panel.
+  </Step>
+
+  <Step title="Enter in the Javascript snippet provided by your Analytics provider">
+    This snippet would normally be placed within the `<head>` tags at the base of your project. For the Secret Key,
+    use the value you saved in Step 1.
+
+    <Note>
+      The `<script>` tag MUST be removed before being copied into the text box.
+    </Note>
+  </Step>
+</Steps>
+
+For reference: [PostHog's documentation](https://posthog.com/docs/product-analytics/installation)
+on how to set up a custom analytics provider.

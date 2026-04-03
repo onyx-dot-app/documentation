@@ -1,10 +1,10 @@
 ---
-title: "Code Interpreter"
-description: "Enable python code execution for your AI Agent in Onyx"
+title: "Code Execution"
+description: "Enable Python code execution for your AI Agents in Onyx"
 icon: "code"
 ---
 
-The code interpreter action allows your Agents to write and run Python code to complete more complex tasks such as
+The code execution action allows your Agents to write and run Python code to complete more complex tasks such as
 performing calculations, analyzing data, and generating visualizations.
 
 ## Capabilities
@@ -17,24 +17,24 @@ performing calculations, analyzing data, and generating visualizations.
 ## Configuration
 
 No configuration is required.
-The code interpreter is a built-in action available to all Onyx deployments out of the box.
+Code execution is a built-in action available to all Onyx deployments out of the box.
 
-To enable it for a specific Agent, make sure the **Code Interpreter** action is toggled on in the Agent's configuration.
+To enable it for a specific Agent, make sure the **Code Execution** action is toggled on in the Agent's configuration.
 
-## Connect / Disconnect Code Interpreter Server
+## Connect / Disconnect Code Execution Server
 
-The code interpreter server is connected by default.
+The code execution server is connected by default.
 You can disconnect or reconnect it at any time from the **Admin Panel**.
 This page also displays the server's health and connection status.
 
-<img className="rounded-image" src="/assets/admins/actions/code_interpreter.png" alt="Code Interpreter"/>
+<img className="rounded-image" src="/assets/admins/actions/code_interpreter.png" alt="Code Execution"/>
 
 ## How It Works
 
-The code interpreter runs in a secure, sandboxed Python environment with:
+Code execution runs in a secure, sandboxed Python environment with:
 
 - **Pre-installed libraries** such as numpy, pandas, scipy, and matplotlib
 - **Network access disabled** and restricted filesystem access for security
 - **Resource limits and timeouts** to prevent runaway execution
 
-The LLM decides when to invoke the code interpreter based on the user's query — no explicit invocation is needed.
+The LLM decides when to invoke code execution based on the user's query — no explicit invocation is needed.
