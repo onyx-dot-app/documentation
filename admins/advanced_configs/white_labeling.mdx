@@ -1,125 +1,48 @@
 ---
 title: "White Labeling"
 description: "Customize Onyx's branding and appearance"
-icon: "palette"
+icon: "brush"
 ---
 
-White labeling allows you to customize Onyx's appearance to match your organization's identity.
+White labeling allows you to customize Onyx's appearance to match your organization's identity. These settings are found in the **Admin Panel** under **Appearance & Theming**.
 
 <Note>
-  White labeling is an Enterprise Edition feature.
+  White labeling is an [Enterprise Edition](/deployment/miscellaneous/enterprise_edition) feature.
 </Note>
 
 {/* The screenshots here should really be of the white-labeled content and not the admin page. */}
 
 ## White Labeling Options
 
-<img className="rounded-image" src="/assets/admins/advanced_configs/whitelabeling_overview.png" alt="White Labeling Overview"/>
+### Logo and Name
 
-### Name and Logo
+You can customize the logo, the application name, or both independently:
 
-Adjust the name and logo of your Onyx instance by specifying **Application Name** and uploading a **Custom Logo**.
+- **Custom Logo** — upload an image to replace the default Onyx logo shown in the top left corner and on the login page
+- **Application Name** — set a custom name displayed alongside or in place of the logo
 
-These elements change what is shown in the top left corner of the Onyx interface as well as on the login page.
+<img className="rounded-image" src="/assets/admins/advanced_configs/whitelabeling_logo_name.png" alt="Custom Logo and Name"/>
 
-### Headers and Popups
+### Messaging
 
-In the **Advanced Options** section, you can add content in the header as well as a custom popup window.
+Customize the text shown throughout the chat interface:
 
-Additionally, you can enable a Consent Screen that will be shown to users before they can access the Onyx interface.
+- **Greeting Message** — shown to users when they start a new chat session
+- **Chat Header Text** — displayed in the header of the chat interface
+- **Chat Footer Text** — displayed in the footer of the chat interface
 
-<img className="rounded-image" src="/assets/admins/advanced_configs/whitelabeling_advanced.png" alt="White Labeling Headers and Popups"/>
+<img className="rounded-image" src="/assets/admins/advanced_configs/whitelabeling_message_header_footer.png" alt="Greeting Message, Chat Header, and Footer"/>
 
-### Footer
+### First Visit Notice
 
-Below the Consent Screen toggle, you can add content to the footer of the Onyx interface.
+Configure a notice shown to users the first time they access Onyx. The notice has the following options:
 
-<img className="rounded-image" src="/assets/admins/advanced_configs/whitelabeling_footer.png" alt="White Labeling Footer"/>
+| Option | Description |
+|---|---|
+| **Show Notice** | Toggle to enable or disable the first visit notice |
+| **Notice Header** | Title text displayed at the top of the notice |
+| **Notice Content** | Body text of the notice |
+| **Require Consent** | When enabled, users must acknowledge the notice before they can access Onyx |
 
-## Color Theming
+<img className="rounded-image" src="/assets/admins/advanced_configs/whitelabeling_first_visit_notice.png" alt="First Visit Notice"/>
 
-Onyx uses [Tailwind CSS](https://tailwindcss.com/).
-
-### Theme Architecture
-
-The color system is built on two main files:
-
-- `web/tailwind-themes/tailwind.config.js`: Base Tailwind configuration and color definitions
-- `web/src/app/globals.css`: CSS variables for colors used in the Tailwind config
-
-### Customization Methods
-
-<AccordionGroup>
-  <Accordion title="Method 1: Direct CSS Variable Modification">
-    <Steps>
-      <Step title="Navigate to globals.css">
-        Navigate to `web/src/app/globals.css`
-      </Step>
-
-      <Step title="Modify CSS variables">
-        Modify the CSS variables to customize base colors (accent colors, backgrounds, etc.)
-      </Step>
-    </Steps>
-  </Accordion>
-
-  <Accordion title="Method 2: Tailwind Config Override">
-    <Steps>
-      <Step title="Navigate to Tailwind config">
-        Navigate to `web/tailwind-themes/tailwind.config.js`
-      </Step>
-
-      <Step title="Override configuration values">
-        Override specific values from the base configuration
-      </Step>
-    </Steps>
-  </Accordion>
-
-  <Accordion title="Method 3: Organization-Specific Theme (Recommended)">
-    For comprehensive theming:
-
-    <Steps>
-      <Step title="Navigate to themes directory">
-        Navigate to `web/tailwind-themes/`
-      </Step>
-
-      <Step title="Create organization folder">
-        Create a new folder with your organization's name
-      </Step>
-
-      <Step title="Create Tailwind config">
-        Create a `tailwind.config.js` file in this folder
-      </Step>
-
-      <Step title="Override base configuration">
-        Override any values from the base configuration
-      </Step>
-
-      <Step title="Set environment variable">
-        Set the `NEXT_PUBLIC_THEME` environment variable to your organization's folder name
-      </Step>
-    </Steps>
-  </Accordion>
-</AccordionGroup>
-
-### Example Configuration
-
-To change the background to black, create or modify your theme file:
-
-```javascript
-/** @type {import('tailwindcss').Config} */
-
-module.exports = {
-  theme: {
-    extend: {
-      colors: {
-        "background": "#000000",
-      },
-    },
-  },
-};
-```
-
-<Warning>
-  Color customizations require building Onyx from source. For local testing,
-  restart the NextJS application to apply changes.
-</Warning>
