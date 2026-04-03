@@ -29,18 +29,12 @@ uv pip install onyx-cli
   pip install onyx-cli
 </Card>
 
-### Go
-
-```shell
-go install github.com/onyx-dot-app/onyx/cli@latest
-```
-
 ### Build from Source
 
-Requires [Go 1.24+](https://go.dev/dl/).
+Requires [Go 1.26+](https://go.dev/dl/).
 
 ```shell
-git clone https://github.com/onyx-dot-app/onyx.git
+git clone --depth 1 https://github.com/onyx-dot-app/onyx.git
 cd onyx/cli
 go build -o onyx-cli .
 sudo mv onyx-cli /usr/local/bin/
