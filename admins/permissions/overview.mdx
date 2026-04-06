@@ -1,0 +1,148 @@
+---
+title: "Group-Based Permissions (Coming Soon)"
+description: "Understanding Onyx's upcoming group-based permission system"
+icon: "shield-check"
+---
+
+<Warning>
+  This page describes an **upcoming feature** that is not yet available. The current permission system (Admin, Curator, Basic roles) remains in effect until this feature is released. See the [Migration Guide](/admins/permissions/migration_guide) for details on what will change.
+</Warning>
+
+## Overview
+
+Onyx uses a **group-based permission system** where permissions are assigned to groups, not individual users. A user's effective permissions are the **union of all permissions** from every group they belong to.
+
+This system has three layers:
+
+1. **Account Type** — What kind of user is this? (Standard, Bot, Service Account, etc.)
+2. **Group Permissions** — What can this user do? (Determined by their group memberships)
+3. **Resource Access** — Which specific resources can they access? (Determined by group-to-resource associations)
+
+## Account Types
+
+Account types describe how an account was created and what interface it uses. They are **not** a permission system — permissions come from groups.
+
+| Account Type | Description | Uses Group Permissions? |
+|---|---|---|
+| **Standard** | Normal web users (signup, OAuth, SAML, SCIM). All permission differentiation is handled through groups. | Yes |
+| **Service Account** | Programmatic API key accounts. Admin selects group(s) at creation time. | Yes |
+| **Bot** | Auto-created on first Slack bot interaction. Upgrades to Standard on first web login. | No (fixed behavior) |
+| **External Permission User** | Shadow accounts from external permission sync (Google Drive, Confluence, etc.). No interactive access. | No (fixed behavior) |
+| **Anonymous** | Single pre-created read-only account for unauthenticated access when enabled. | No (fixed behavior) |
+
+## Default Groups
+
+Two protected groups are created automatically during setup and **cannot be deleted**.
+
+### Basic Group
+
+- **All Standard users are automatically added** when their account is created
+- Grants the `basic` permission — core platform usage including chat, search, creating personal agents, and managing personal projects
+- Cannot be deleted
+
+### Admins Group
+
+- Must always have **at least one member** (the system prevents removing the last admin)
+- Members **cannot remove themselves** from this group
+- Grants the `admin` permission — an override that passes any permission check
+- The first user to sign up and any users in the seed admin configuration are automatically added
+- Cannot be deleted
+
+## Permissions Reference
+
+Permissions control what actions a user can perform. There are two categories:
+
+### Automatic Permissions
+
+These are granted automatically and cannot be configured by admins:
+
+| Permission | Description |
+|---|---|
+| `basic` | Core platform usage — chat, search, create/edit own agents, personal projects. Auto-granted to every group. |
+
+### Configurable Permissions
+
+<Info>
+  Custom groups with configurable permissions are an **Enterprise Edition** feature. Community Edition users have the Basic and Admins groups only.
+</Info>
+
+Admins can enable or disable these permissions per group:
+
+| Permission | Category | Description |
+|---|---|---|
+| `add:agents` | Agents | Create and edit your own agents |
+| `manage:agents` | Agents | Create and edit any agent (includes `add:agents`) |
+| `add:connectors` | Connectors | Create and edit your own connectors |
+| `manage:connectors` | Connectors | Create and edit any connector (includes `add:connectors`) |
+| `manage:document_sets` | Documents | Create and edit any document set |
+| `manage:llms` | LLM | Create and edit LLM configurations |
+| `manage:actions` | Actions | Manage custom tools and MCP servers |
+| `manage:user_groups` | Administration | Create and manage user groups |
+| `read:agent_analytics` | Analytics | View agent analytics dashboards |
+| `read:query_history` | Analytics | View query history |
+| `create:user_api_keys` | Administration | Create user-level API keys |
+| `create:service_account_api_keys` | Administration | Create service account API keys |
+| `create:slack_discord_bots` | Administration | Create and configure Slack/Discord bots |
+| `admin` | Administration | Full access override — any permission check passes |
+
+### Understanding `add` vs `manage`
+
+- **`add:X`** — You can create new resources and edit resources **you created**
+- **`manage:X`** — You can create new resources and edit **any** resource, regardless of who created it. This automatically includes the corresponding `add:X` permission.
+
+For example, a user with `add:connectors` can create their own connectors and edit them, but cannot edit connectors created by others. A user with `manage:connectors` can edit any connector.
+
+## How Permissions Work
+
+When a user makes a request, the system:
+
+1. **Authenticates** the user
+2. **Checks the account type** — Bot, External Permission User, and Anonymous accounts have fixed behavior and skip the group system
+3. **Loads permissions** from all groups the user belongs to
+4. **Expands implied permissions** — management permissions automatically include related read permissions (see below)
+5. **Checks the required permission** — if the user has the `admin` permission, they pass any check. Otherwise, the system verifies the user has the specific permission required by the endpoint.
+
+### Implied Permissions
+
+Some permissions automatically grant related read access. You don't need to assign these separately.
+
+| Permission | Automatically Grants |
+|---|---|
+| `manage:user_groups` | `read:connectors`, `read:document_sets`, `read:agents`, `read:users` |
+| `manage:document_sets` | `read:document_sets`, `read:connectors` |
+| `manage:connectors` | `add:connectors`, `read:connectors` |
+| `add:connectors` | `read:connectors` |
+| `manage:agents` | `add:agents`, `read:agents` |
+| `add:agents` | `read:agents` |
+
+### Default Access (No Permission Required)
+
+Every authenticated user — regardless of group permissions — can:
+- Use chat and search
+- View public agents
+- Access public documents through search
+- Submit feedback on chat messages
+- View available LLM providers
+
+## Custom Groups (Enterprise Edition)
+
+With Enterprise Edition, you can create custom groups with specific permissions to enable granular delegation.
+
+For example, you might create:
+- A **"Content Managers"** group with `manage:connectors` and `manage:document_sets`
+- An **"Analytics Viewers"** group with `read:agent_analytics` and `read:query_history`
+- A **"Team Leads"** group with `add:agents` and `manage:document_sets`
+
+Every Standard user already has `basic` through the Basic group. Custom groups add specific permissions on top.
+
+For step-by-step instructions, see [Managing Group Permissions](/admins/permissions/managing_permissions).
+
+## Document Access
+
+Permission controls **what actions** a user can perform (e.g., create connectors, manage agents). **Which documents** appear in search results is a separate system controlled by:
+
+- Connector access type (Public, Private, Synced)
+- Group-to-resource associations
+- External permission sync from source systems (Google Drive, Confluence, etc.)
+
+The new permission system does not change how document-level access works.

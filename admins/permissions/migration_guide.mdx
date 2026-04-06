@@ -1,0 +1,149 @@
+---
+title: "Permissions Migration Guide"
+description: "Guide for transitioning from role-based access control to the new group-based permission system"
+icon: "arrow-right-arrow-left"
+---
+
+<Warning>
+  This page describes an **upcoming migration** that will take effect in a future release. No action is required yet. We are publishing this guide early so you can plan ahead.
+</Warning>
+
+## Why We're Changing
+
+Onyx's current permission system uses a flat set of roles — **Admin**, **Basic**, **Curator**, and **Global Curator** — with authorization split across two paths: the user's role _and_ a separate `is_curator` flag on each group membership. These two sources must be manually coordinated, making the system error-prone and hard to reason about.
+
+The new **group-based permission system** replaces this with a single authorization path:
+**user → groups → permissions**. Permissions are assigned to groups, and a user's effective permissions are the union of all their groups' permissions. This enables granular delegation — for example, giving a team lead access to manage connectors without granting them full admin or curator powers.
+
+## What's Being Removed
+
+<Warning>
+  The following roles and features are **permanently removed** in this release. Please review your current setup before upgrading.
+</Warning>
+
+- **Curator role** — Removed
+- **Global Curator role** — Removed
+- **`is_curator` flag** on group membership — Removed
+- **`CURATORS_CANNOT_VIEW_OR_EDIT_NON_OWNED_ASSISTANTS`** environment variable — Removed
+- **UserRole system** — Replaced by Account Types + group permissions
+
+## What Replaces It
+
+Groups now carry **permissions** such as `manage:connectors`, `manage:agents`, and `manage:document_sets`. Any member of a group automatically inherits that group's permissions.
+
+This is more flexible than the old Curator model:
+- You can grant **connector management** without granting agent management
+- You can grant **read-only analytics access** without any management permissions
+- You can create purpose-specific groups like "Content Managers" or "Analytics Viewers"
+
+For full details, see the [Permission System Overview](/admins/permissions/overview).
+
+## Before and After
+
+| Old (Current System) | New (Group-Based Permissions) |
+|---|---|
+| Admin role | Member of **Admins** group (has `admin` permission) |
+| Basic role | Member of **Basic** group (has `basic` permission) |
+| Curator role (per-group) | Group member with specific permissions (e.g., `manage:connectors`, `manage:agents`) |
+| Global Curator role | No direct equivalent — assign permissions to each relevant group, or create a group with broad permissions |
+| `is_curator` on group membership | Permissions assigned directly to the group |
+| LIMITED (anonymous) | `ANONYMOUS` account type |
+| LIMITED (API key) | `SERVICE_ACCOUNT` account type |
+| SLACK_USER | `BOT` account type |
+
+## What Happens Automatically During Upgrade
+
+The upgrade migration handles the following automatically:
+
+<Steps>
+  <Step title="Admin users">
+    All users with the **Admin** role become `STANDARD` account type and are auto-joined to both the **Basic** and **Admins** groups. They retain full system access.
+  </Step>
+  <Step title="Basic users">
+    All users with the **Basic** role become `STANDARD` account type and are auto-joined to the **Basic** group. Their capabilities are unchanged.
+  </Step>
+  <Step title="Curator and Global Curator users">
+    All users with **Curator** or **Global Curator** roles become `STANDARD` account type and are auto-joined to the **Basic** group only.
+
+    <Warning>
+      Curator privileges are **not** automatically migrated. These users will have Basic-level access after the upgrade. You must manually assign permissions to their groups after upgrading.
+    </Warning>
+  </Step>
+  <Step title="Bot and system users">
+    Slack users become `BOT` account type. External permission users remain unchanged. Anonymous users become `ANONYMOUS` account type.
+  </Step>
+  <Step title="Default groups created">
+    Two protected groups are automatically created:
+    - **Basic** — all `STANDARD` users are auto-joined. Has the `basic` permission.
+    - **Admins** — all former Admin users are auto-joined. Has the `admin` permission (full access override).
+  </Step>
+</Steps>
+
+## What You Need to Do
+
+<Info>
+  The most important action is **re-assigning permissions to groups** for any workflows that previously relied on Curator or Global Curator roles.
+</Info>
+
+### Before Upgrading
+
+1. **Audit your Curator assignments** — Identify all users with Curator or Global Curator roles and note which groups they manage and what actions they perform.
+
+2. **Plan your permission assignments** — For each Curator, determine which permissions their groups should have in the new system. Use the [permissions reference](/admins/permissions/overview#permissions-reference) to map old capabilities to new permissions.
+
+### After Upgrading
+
+3. **Assign permissions to groups** — Navigate to the group settings page and enable the appropriate permissions for each group.
+
+4. **Verify access** — Confirm that users who previously had Curator access can still perform their required tasks.
+
+### Example Walkthrough
+
+**Scenario:** You have a user "Jane" who was a Curator for the "Engineering" group, managing connectors and document sets for that team.
+
+**Before upgrade:** Jane has the Curator role with `is_curator=true` on the Engineering group.
+
+**After upgrade:** Jane is a Standard user in the Basic group only — her Curator permissions are gone.
+
+**What to do:** Edit the "Engineering" group and enable:
+- `manage:connectors` — so group members can create and manage connectors
+- `manage:document_sets` — so group members can create and manage document sets
+
+Now Jane (and any other Engineering group member) can manage connectors and document sets for that group.
+
+For more common setups, see [Common Permission Configurations](/admins/permissions/managing_permissions#common-permission-configurations).
+
+## Timeline
+
+<Note>
+  Specific version numbers and dates will be confirmed closer to the release.
+</Note>
+
+| Phase | Description |
+|---|---|
+| **Current release** | Deprecation banners appear in the Admin UI on the Users and Groups pages, warning that Curator and Global Curator roles will be removed |
+| **Next major release** | New group-based permission system ships. Curator and Global Curator roles are permanently removed. Migration runs automatically on upgrade. |
+
+## Frequently Asked Questions
+
+<AccordionGroup>
+  <Accordion title="What happens to resources that my Curators created?">
+    All resources (connectors, document sets, agents) are preserved with their original ownership. The creator remains the owner. Only the _permissions_ that controlled who could manage these resources have changed — the resources themselves are untouched.
+  </Accordion>
+
+  <Accordion title="Can I recreate Curator-like behavior in the new system?">
+    Yes. Assign the relevant permissions to a group — for example, `manage:connectors`, `manage:document_sets`, and `manage:agents`. Any member of that group will have similar capabilities to a Curator, scoped to that group's resources. See [Common Permission Configurations](/admins/permissions/managing_permissions#common-permission-configurations) for ready-made recipes.
+  </Accordion>
+
+  <Accordion title="Is this a breaking change for Community Edition (CE) users?">
+    No. CE behavior is identical to today. CE has two default groups (Basic and Admins) that mirror the current Admin/Basic role split. Custom groups with configurable permissions are an Enterprise Edition feature.
+  </Accordion>
+
+  <Accordion title="What about API keys and service accounts?">
+    Existing API keys are migrated to `SERVICE_ACCOUNT` account type. Admin API keys are placed in the Admins group. Basic API keys are placed in the Basic group. After upgrading, you can assign service accounts to specific groups for more granular access.
+  </Accordion>
+
+  <Accordion title="Can I roll back to the old system?">
+    The old role system is fully removed in this release. We recommend auditing your Curator assignments and planning your permission configuration before upgrading. If you need help planning your migration, reach out to our support team.
+  </Accordion>
+</AccordionGroup>
