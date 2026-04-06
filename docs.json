@@ -9,7 +9,7 @@
   },
   "favicon": "assets/logo/onyx_favicon.svg",
   "banner": {
-    "content": "**Upcoming change:** Onyx is moving to group-based permissions. Curator and Global Curator roles will be removed. [Learn more](/admins/permissions/migration_guide)",
+    "content": "**Upcoming change:** Onyx is moving to group-based permissions. Curator and Global Curator roles will be removed. [See what's changing](/admins/permissions/whats_changing)",
     "dismissible": true
   },
   "navigation": {
@@ -284,8 +284,7 @@
             "group": "Access Control",
             "pages": [
               "admins/user_management/users_and_groups",
-              "admins/permissions/overview",
-              "admins/permissions/migration_guide",
+              "admins/permissions/whats_changing",
               "deployment/authentication/scim",
               "admins/user_management/api_keys"
             ]
