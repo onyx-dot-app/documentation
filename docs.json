@@ -8,6 +8,10 @@
     "dark": "#0050B4"
   },
   "favicon": "assets/logo/onyx_favicon.svg",
+  "banner": {
+    "content": "**Upcoming change:** Onyx is moving to group-based permissions. Curator and Global Curator roles will be removed. [See what's changing](/admins/permissions/whats_changing)",
+    "dismissible": true
+  },
   "navigation": {
     "tabs": [
       {
@@ -282,6 +286,7 @@
             "group": "Access Control",
             "pages": [
               "admins/user_management/users_and_groups",
+              "admins/permissions/whats_changing",
               "deployment/authentication/scim",
               "admins/user_management/api_keys"
             ]
