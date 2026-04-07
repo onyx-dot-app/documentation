@@ -1,0 +1,47 @@
+---
+title: "LiteLLM Proxy"
+description: "Configure LiteLLM Proxy as a language model gateway for Onyx"
+icon: "server"
+---
+
+import NavigateToAiModels from "/snippets/navigate-to-ai-models.mdx";
+import StandardAiModelConfigs from "/snippets/standard-ai-model-configs.mdx";
+
+## Guide
+
+Configure Onyx to use models exposed by your LiteLLM Proxy server.
+
+<Note>
+  Onyx reads the available models from the LiteLLM Proxy `/v1/models` endpoint.
+  This is a good option when you want one gateway in front of multiple providers or self-hosted backends.
+</Note>
+
+<Steps>
+  <Step title="Set Up LiteLLM Proxy">
+    Deploy LiteLLM Proxy and make sure it is reachable from the Onyx server.
+
+    You will need the LiteLLM Proxy **API Base URL** and **API Key**.
+
+    The local default is commonly `http://localhost:4000`.
+  </Step>
+
+  <NavigateToAiModels />
+
+  <Step title="Configure LiteLLM Proxy">
+    Select **LiteLLM Proxy** from the available providers.
+
+    Give your provider a **Display Name**.
+
+    Enter the proxy **API Base URL** and **API Key**.
+
+    Click **Fetch Available Models** to load the models currently exposed by your LiteLLM Proxy instance.
+  </Step>
+
+  <Step title="Review the Imported Models">
+    Onyx stores the model IDs returned by LiteLLM Proxy and makes those models available to your users.
+
+    This is useful when LiteLLM is routing requests to multiple providers through a single gateway.
+  </Step>
+
+  <StandardAiModelConfigs />
+</Steps>

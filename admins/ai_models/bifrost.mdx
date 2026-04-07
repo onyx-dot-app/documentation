@@ -1,0 +1,49 @@
+---
+title: "Bifrost"
+description: "Configure Bifrost as a language model gateway for Onyx"
+icon: "server"
+---
+
+import NavigateToAiModels from "/snippets/navigate-to-ai-models.mdx";
+import StandardAiModelConfigs from "/snippets/standard-ai-model-configs.mdx";
+
+## Guide
+
+Configure Onyx to use models served through [Bifrost](https://docs.getbifrost.ai/overview).
+
+<Note>
+  Onyx connects to your Bifrost gateway by fetching the models exposed at its `/v1/models` endpoint.
+  Bifrost can expose models from multiple vendors behind a single endpoint.
+</Note>
+
+<Steps>
+  <Step title="Set Up Your Bifrost Gateway">
+    Make sure your Bifrost deployment is reachable from the Onyx server.
+
+    You will need your Bifrost **API Base URL**.
+
+    If your Bifrost deployment requires authentication, also generate a Bifrost **API Key**.
+  </Step>
+
+  <NavigateToAiModels />
+
+  <Step title="Configure Bifrost">
+    Select **Bifrost** from the available providers.
+
+    Give your provider a **Display Name**.
+
+    Enter the **API Base URL** for your Bifrost gateway.
+
+    If your gateway requires authentication, enter your **API Key**.
+
+    Click **Fetch Available Models** to load the language models currently exposed by Bifrost.
+  </Step>
+
+  <Step title="Review the Imported Models">
+    Onyx will import the model IDs returned by Bifrost and use the display names returned by the gateway when available.
+
+    This is useful when your Bifrost gateway exposes models from multiple vendors such as Anthropic, OpenAI, or others.
+  </Step>
+
+  <StandardAiModelConfigs />
+</Steps>

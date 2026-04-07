@@ -138,11 +138,11 @@
             ]
           },
           {
-            "group": "AI Models",
+            "group": "Language Models",
             "pages": [
               "admins/ai_models/overview",
               {
-                "group": "Supported LLMs",
+                "group": "Supported Providers",
                 "icon": "microchip",
                 "pages": [
                   "admins/ai_models/openai",
@@ -153,6 +153,8 @@
                   "admins/ai_models/bedrock",
                   "admins/ai_models/google_ai",
                   "admins/ai_models/openrouter",
+                  "admins/ai_models/bifrost",
+                  "admins/ai_models/litellm_proxy",
                   "admins/ai_models/custom_inference_provider"
                 ]
               }

@@ -1,6 +1,6 @@
 ---
 title: "Custom Inference Provider"
-description: "Custom Inference Provider"
+description: "Configure an OpenAI-compatible language model provider"
 icon: "server"
 ---
 
@@ -8,7 +8,8 @@ import NavigateToAiModels from "/snippets/navigate-to-ai-models.mdx";
 
 ## Guide
 
-If you want to use an AI provider that is not supported by Onyx, you can configure a custom inference provider.
+If you want to use a language model provider that is not supported directly by Onyx, you can configure a custom
+inference provider.
 
 <Tip>
   Your custom provider must provide OpenAI-compatible API endpoints.
@@ -43,7 +44,7 @@ If you want to use an AI provider that is not supported by Onyx, you can configu
 
     Fill out the other optional fields if applicable.
 
-    In the **Model Configurations** section, enter each of the models you want to use with your provider.
+    In the **Model Configurations** section, enter each model you want to make available through this provider.
   </Step>
 
   <Step title="Configure Default and Fast Models">
@@ -55,7 +56,7 @@ If you want to use an AI provider that is not supported by Onyx, you can configu
 
     <Tip>
       If you select a Fast Model,
-      make sure it is a relatively quick and cost-effective model like GPT-4.1-mini or Claude 3.7 Sonnet.
+      make sure it is a relatively quick and cost-effective model.
     </Tip>
   </Step>
 

@@ -1,16 +1,16 @@
 ---
-title: "LLM Access Controls"
-description: "Configure access controls for LLM providers"
+title: "Language Model Access Controls"
+description: "Configure access controls for language model providers"
 icon: "lock"
 ---
 
 ## Overview
 
-Onyx provides fine-grained access control for LLM providers,
+Onyx provides fine-grained access control for language model providers,
 allowing administrators to control **who** can use specific models and **which agents** can use them.
 This enables better cost control, governance, and enforcement of model usage policies.
 
-<img className="rounded-image" src="/assets/admins/advanced_configs/llm_access_controls.png" alt="LLM Access Controls"/>
+<img className="rounded-image" src="/assets/admins/advanced_configs/llm_access_controls.png" alt="Language model access controls"/>
 
 ### Access Control Types
 
@@ -28,10 +28,10 @@ This enables better cost control, governance, and enforcement of model usage pol
   </Accordion>
 
   <Accordion title="User Group Restrictions" icon="users">
-    Control **who** can use specific LLM providers by restricting access to specific user groups.
+    Control **who** can use specific language model providers by restricting access to specific user groups.
 
     **How it works:**
-    - Assign one or more user groups to an LLM provider
+    - Assign one or more user groups to a provider
     - Only users in those groups can use the provider
     - Admins bypass group restrictions (but not agent restrictions)
     - Leave empty for no group restrictions
@@ -43,10 +43,10 @@ This enables better cost control, governance, and enforcement of model usage pol
   </Accordion>
 
   <Accordion title="Agent Restrictions" icon="robot">
-    Control **which agents** can use specific LLM providers.
+    Control **which agents** can use specific language model providers.
 
     **How it works:**
-    - Assign one or more agents to an LLM provider via the "Agent Whitelist"
+    - Assign one or more agents to a provider via the "Agent Whitelist"
     - The provider will only appear as an option when using those agents
     - Applies to **all users**, including admins
     - Leave empty for no agent restrictions
@@ -76,11 +76,11 @@ This enables better cost control, governance, and enforcement of model usage pol
 
 ### Configuring Access Controls
 
-To configure access controls for an LLM provider:
+To configure access controls for a language model provider:
 
 <Steps>
-  <Step title="Navigate to LLM Configuration">
-    Navigate to **Admin Panel → Configuration → LLM**
+  <Step title="Navigate to Language Models">
+    Navigate to **Admin Panel → Configuration → Language Models**
   </Step>
 
   <Step title="Select Provider">
@@ -117,7 +117,7 @@ The system determines access based on the following logic:
 
 ### Provider Visibility
 
-Users will only see LLM providers they have access to:
+Users will only see the language model providers they have access to:
 - In the agent creation/editing interface
 - In the chat UI model selector
 - When using the API to list available providers
