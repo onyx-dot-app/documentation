@@ -294,13 +294,12 @@
           {
             "group": "Advanced Configs",
             "pages": [
-              "admins/advanced_configs/rate_limits",
+              "admins/advanced_configs/spending_limits",
               "admins/advanced_configs/white_labeling",
               "admins/advanced_configs/llm_access_controls",
               "admins/advanced_configs/hook_extensions",
               "admins/getting_started/slack_bot_setup",
-              "admins/miscellaneous/discord_bot",
-              "admins/advanced_configs/spending_limits"
+              "admins/miscellaneous/discord_bot"
             ]
           },
           {
