@@ -29,8 +29,8 @@ The new **group-based permission system** solves this by assigning permissions d
 Instead of assigning roles to individual users, you assign **permissions to groups**. Any member of a group automatically inherits that group's permissions.
 
 This is more flexible than the old Curator model:
-- You can grant **connector management** without granting agent management
-- You can grant **read-only analytics access** without any management permissions
+- You can grant **Manage Connectors & Document Sets** without granting agent management
+- You can grant **View Agent Analytics** or **View Query History** without any management permissions
 - You can create purpose-specific groups like "Content Managers" or "Analytics Viewers"
 
 ### Available Permissions
@@ -39,20 +39,17 @@ The following permissions can be assigned to any group:
 
 | Permission | Description |
 |---|---|
-| Manage Connectors | Create and edit all connectors |
-| Add Connectors | Create and edit only your own connectors |
-| Manage Agents | Create and edit all agents |
-| Add Agents | Create and edit only your own agents |
-| Manage Document Sets | Create and edit all document sets |
-| Manage User Groups | Create and manage all user groups. Automatically grants read access to connectors, document sets, agents, and users. |
-| Manage LLMs | Create and edit LLM configurations |
-| Manage Actions | Manage custom tools and MCP servers |
-| View Agent Analytics | View agent analytics dashboards |
-| View Query History | View query history |
-| Create User API Keys | Create user-level API keys |
-| Create Service Account API Keys | Create service account API keys |
-| Create Slack/Discord Bots | Create and configure Slack/Discord bots |
-| Full Admin Access | Full access to everything |
+| Manage LLMs | Add and update configurations for language models (LLMs). |
+| Manage Connectors & Document Sets | Add and update connectors and document sets. |
+| Manage Actions | Add and update custom tools and MCP/OpenAPI actions. |
+| Manage Groups | Add and update user groups. |
+| Manage Service Accounts | Add and update service accounts and their API keys. |
+| Manage Slack/Discord Bots | Add and update Onyx integrations with Slack or Discord. |
+| Create Agents | Create and edit the user's own agents. |
+| Manage Agents | View and update all public and shared agents in the organization. |
+| View Agent Analytics | View analytics for agents the group can manage. |
+| View Query History | View query history of everyone in the organization. |
+| Create User Access Token | Add and update the user's personal access tokens. |
 
 ## Before and After
 
@@ -69,10 +66,10 @@ In the old system, a **Curator** could manage resources (connectors, agents, doc
 
 In the new system, these capabilities are split into separate permissions:
 
-- **Managing group membership and resources within a group** (adding connectors, agents, document sets, and users to a group) is controlled by the "manage user groups" permission.
-- **Creating and editing connectors, agents, or document sets themselves** is controlled by separate permissions like "manage connectors," "manage agents," and "manage document sets."
+- **Managing group membership and resources within a group** (adding connectors, agents, document sets, and users to a group) is controlled by the "Manage Groups" permission.
+- **Creating and editing connectors, agents, or document sets themselves** is controlled by separate permissions like "Manage Connectors & Document Sets" and "Manage Agents."
 
-A key difference: in the old system, a Curator's powers were scoped to their specific group. In the new system, each permission grants access to **all** resources of that type. For example, "manage connectors" gives access to all connectors, "manage agents" gives access to all agents, and "manage user groups" gives access to all groups. There is no way to scope a permission to a specific group's resources.
+A key difference: in the old system, a Curator's powers were scoped to their specific group. In the new system, each permission grants access to **all** resources of that type. For example, "Manage Connectors & Document Sets" gives access to all connectors and document sets, "Manage Agents" gives access to all agents, and "Manage Groups" gives access to all groups. There is no way to scope a permission to a specific group's resources.
 
 If you previously relied on Curators having different levels of access across different groups, you may need to restructure your groups or consolidate management responsibilities.
 
