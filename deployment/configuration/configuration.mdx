@@ -15,6 +15,168 @@ icon: "sliders"
 Onyx offers a wide range of deployment-level configuration options.
 These are controlled via environment variables or through your deployment files.
 
+## Onyx Lite
+
+Onyx Lite is a minimal deployment of Onyx designed for teams that only need the core LLM chat experience
+without connectors or RAG search. It is ideal for resource-constrained environments, quick evaluations,
+or use cases where you want to bring your own LLM and tools without ingesting external data sources.
+
+### What's Included
+
+Onyx Lite retains the following capabilities:
+- LLM chat conversations
+- Tools (including code interpreter in Docker deployments)
+- User file uploads
+- Projects
+- Agent knowledge
+- Assistants (without RAG retrieval)
+
+### What's Removed
+
+To reduce resource requirements, Onyx Lite disables:
+- **Vespa** (vector database) — no document indexing or RAG search
+- **Redis** — PostgreSQL is used for caching and session management instead
+- **Model servers** — no local embedding models (LLM inference is handled by your configured provider)
+- **Celery background workers** — the API server handles background work directly
+- **MinIO / S3 file storage** — PostgreSQL is used for file storage instead
+- **Connectors** — all data source connectors are disabled
+
+### How It Works
+
+Onyx Lite is not a separate application. It uses the same Onyx images with a different configuration
+that consolidates all storage onto PostgreSQL and disables the vector database. The key environment
+variables that drive this are:
+
+| Variable             | Lite Value   | Full Onyx Default | Purpose                                      |
+|----------------------|--------------|-------------------|----------------------------------------------|
+| `DISABLE_VECTOR_DB`  | `true`       | `false`           | Disables Vespa, connectors, and RAG search   |
+| `CACHE_BACKEND`      | `postgres`   | `redis`           | Uses PostgreSQL for caching instead of Redis |
+| `AUTH_BACKEND`       | `postgres`   | `redis`           | Uses PostgreSQL for sessions instead of Redis|
+| `FILE_STORE_BACKEND` | `postgres`   | `s3`              | Uses PostgreSQL for file storage instead of S3/MinIO |
+
+<Note>
+  Onyx Lite cannot be used with the Craft feature (`ENABLE_CRAFT`).
+</Note>
+
+<AccordionGroup>
+  <Accordion title="Configuring Docker Deployments">
+    If you don't have a `.env` file:
+
+    ```bash
+    cd onyx/deployment/docker_compose
+    cp env.prod.template .env
+
+    # If applicable
+    cp env.nginx.template .env.nginx
+    ```
+
+    The template files have a subset of common environment variables provided for you.
+    You can add more environment variables (listed below) to these `.env` files.
+
+    Some configuration options must be set in your Docker Compose file.
+
+    <Note>
+
+      The Docker Compose file you use to launch Onyx is the one you will need to modify.
+      Likely either `docker-compose.dev.yml` or `docker-compose.prod.yml`.
+    </Note>
+
+    ### Deploying Onyx Lite with Docker Compose
+
+    Onyx Lite is deployed using a Docker Compose override file that layers on top of your base Compose file.
+    The override moves non-essential services (Vespa, Redis, model servers, background workers) into Docker Compose
+    [profiles](https://docs.docker.com/compose/how-tos/profiles/) so they do not start by default.
+
+    **Quick start:**
+
+    ```bash
+    cd onyx/deployment/docker_compose
+    docker compose -f docker-compose.yml -f docker-compose.onyx-lite.yml up -d
+    ```
+
+    With development ports exposed:
+
+    ```bash
+    docker compose -f docker-compose.yml -f docker-compose.onyx-lite.yml \
+                   -f docker-compose.dev.yml up -d --wait
+    ```
+
+    Services started in Lite mode:
+    | Service | Description |
+    |------------------|-----------------------------------|
+    | api_server | Onyx API server (also handles background work) |
+    | web_server | Next.js frontend |
+    | relational_db | PostgreSQL database |
+    | nginx | Reverse proxy |
+    Services not started (moved to profiles):
+    | Service | Profile | Bring back with |
+    |--------------------------|----------------|-----------------------------------------|
+    | background (Celery) | background | --profile background (also needs --profile redis) |
+    | cache (Redis) | redis | --profile redis |
+    | index (Vespa) | vectordb | --profile vectordb |
+    | indexing_model_server | vectordb | --profile vectordb |
+    | inference_model_server | inference | --profile inference |
+    <Tip>
+    You can selectively bring services back by adding `--profile <name>` flags.
+    For example, to run Lite with Redis:
+
+    ```bash
+    docker compose -f docker-compose.yml -f docker-compose.onyx-lite.yml \
+                --profile redis up -d
+    ```
+  
+    </Tip>
+    <Note>
+      The .env file setup is the same as a standard Docker deployment.
+      Lite-specific environment variables (DISABLE_VECTOR_DB, CACHE_BACKEND, AUTH_BACKEND,
+      FILE_STORE_BACKEND) are set automatically by the override file — you do not need to add them
+      to your .env.
+    </Note>
+  </Accordion>
+
+  <Accordion title="Configuring Kubernetes Deployments">
+    Kubernetes deployments are configured using Helm charts.
+    We have provided a `values.yaml` file where you can set all environment variables.
+
+    ```bash
+    cd onyx/deployment/helm/charts/onyx
+    vim values.yaml
+    ```
+
+    Add environment variables and secrets to the `configMap` and `auth.secrets` sections.
+    A subset of common configuration options are provided for you. You can add more environment variables (listed below)
+    to these sections.
+
+    ### Deploying Onyx Lite with Helm
+    Onyx Lite is deployed by providing the values-lite.yaml file when installing the Helm chart.
+    This values file disables the vector database, Redis, and all Celery workers, leaving only the
+    API server, web server, and PostgreSQL.
+    Quick start:
+
+    ```
+    helm install onyx ./deployment/helm/charts/onyx \
+      -f ./deployment/helm/charts/onyx/values-lite.yaml
+    ```
+
+    To merge with your own overrides (custom domain, auth, LLM config, etc.):
+    ```
+      helm install onyx ./deployment/helm/charts/onyx \
+    -f ./deployment/helm/charts/onyx/values-lite.yaml \
+    -f my-overrides.yaml
+    ```
+
+    <Tip>
+      You can always upgrade from Lite to a full deployment later by re-installing
+      with the default values.yaml (without values-lite.yaml). This will bring up
+      Opensearch, Redis, and all background workers.
+    </Tip>
+  </Accordion>
+</AccordionGroup>
+
+<Tip>
+  Many configuration options are available in the Admin Panel! This page only covers deployment-level configuration.
+</Tip>
+
 ## Commonly Configured Options
 
 ### Authentication
