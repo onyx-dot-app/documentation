@@ -1,9 +1,111 @@
 ---
 title: "Chat UI"
-description: "Managing the Chat UI experience"
+description: "Managing the Chat UI experience across your organization"
 icon: "comment"
 ---
 
+**Chat Preferences** page in the Admin Panel defines default chat contexts, settings, and capabilities for your organization. These defaults apply to all users unless they have customized overrides in their own settings.
+
+<img className="rounded-image" src="/assets/admins/chat_preferences/chat_preferences.png" alt="Chat Preferences in the Admin Panel"/>
+
+## Feature Controls
+
+You can enable or disable core chat behaviors for your organization:
+
+- **Search Mode**: UI mode for quick document search across your organization.
+- **Multi-Model Generation**: When enabled, multiple models can generate responses in parallel in chat.
+- **Deep Research**: Agentic research across the web and connected sources. This uses significantly more tokens per query than typical chat.
+- **Chat Auto-Scroll**: When enabled, the chat view automatically scrolls to new content as the model generates responses. Users can override this in their personal settings.
+
+<img className="rounded-image" src="/assets/admins/chat_preferences/chat_preferences_features.png" alt="Chat Preferences feature switches for Search Mode, Multi-Model Generation, Deep Research, and Chat Auto-Scroll"/>
+
+## Team Information
+
+- **Team Name**: This is added to all chat sessions as extra context to tailor responses (e.g. your team or company name).
+- **Team Context**: Use this for a short description of your team or company. It is included as additional context alongside the team name.
+
+<Info>
+  Users can also add **individual context** in personal settings on top of these organization-level fields.
+</Info>
+
+<img className="rounded-image" src="/assets/admins/chat_preferences/chat_preferences_team_context.png" alt="Team Name and Team Context fields on Chat Preferences"/>
+
+## System Prompt
+
+This is the base instruction set for chats, [agents](/admins/agents/overview), and projects. You can edit the prompt in the editor or use reset to restore the default.
+
+<Warning>
+  Changing this prompt can significantly affect answer quality and behavior across your workspace. Review changes carefully before saving.
+</Warning>
+
+The full default system prompt:
+
+```text
+You are an expert assistant who is truthful, nuanced, insightful, and efficient. Your goal is to deeply understand the user's intent, think step-by-step through complex problems, provide clear and accurate answers, and proactively anticipate helpful follow-up information. Whenever there is any ambiguity around the user's query (or more information would be helpful), you use available tools (if any) to get more context.
+
+The current date is {{CURRENT_DATETIME}}.{{CITATION_GUIDANCE}}
+
+# Response Style
+You use different text styles, bolding, emojis (sparingly), block quotes, and other formatting to make your responses more readable and engaging.
+You use proper Markdown and LaTeX to format your responses for math, scientific, and chemical formulas, symbols, etc.: '$$\n[expression]\n$$' for standalone cases and '\( [expression] \)' when inline.
+For code you prefer to use Markdown and specify the language.
+You can use horizontal rules (---) to separate sections of your responses.
+You can use Markdown tables to format your responses for data, lists, and other structured information.
+
+{{REMINDER_TAG_DESCRIPTION}}
+```
+
+<Info>
+  The prompt may include placeholders that Onyx expands at runtime:
+  
+  - `{{CURRENT_DATETIME}}` inserts the current date and day of the week in a human-readable form.
+  - `{{CITATION_GUIDANCE}}` adds citation instructions when facts are retrieved via search tools. Only included when search tools are used.
+  - `{{REMINDER_TAG_DESCRIPTION}}` describes how to interpret system reminders in user messages.
+</Info>
+
+## Connectors, Actions & Tools
+
+Manage data sources and tool availability for the default chat experience. See [connectors](/admins/connectors/overview) for more details on data sources and knowledge.
+
+Capabilities shown here are available to default chat (e.g. web search, code execution, or MCP-based tools). Some tools require additional setup before they can run.
+
 <Note>
-  This page is a work in progress.
+  These settings do not apply to [agents](/admins/agents/overview). Configure knowledge and tools for each agent on its own page.
 </Note>
+
+<img className="rounded-image" src="/assets/admins/chat_preferences/chat_preferences_connectors_actions_tools.png" alt="Connectors and Actions and Tools on Chat Preferences"/>
+
+## Advanced Options
+
+<img className="rounded-image" src="/assets/admins/chat_preferences/chat_preferences_advanced_options.png" alt="Advanced Options on Chat Preferences"/>
+
+### Keep Chat History
+
+Set how long Onyx retains chat history for your organization (indefinitely or a limited period).
+
+<Warning>
+  If you **shorten** retention (e.g. switching from "forever" to a fixed number of days), older chat sessions across your organization are **permanently deleted**.
+</Warning>
+
+### File Attachment Size Limits
+
+Attachments must stay within **both** a size cap and a token cap, or be rejected:
+
+- **File size limit**: Cap for upload size per file (up to a 250 MB maximum).
+- **File token limit**: Cap for token budget attributed to each uploaded file.
+
+<Info>
+  Stricter limits reduce latency, memory use, and token cost.
+</Info>
+
+### Allow Anonymous Users
+
+When enabled, visitors can start chats **without signing in**. Anonymous users only see their own chats and cannot create agents or change settings. Those sessions still invoke your models, so they count toward token usage and cost like any other traffic.
+
+### Always Start with an Agent
+
+When enabled, the default standalone chat entry point is removed. Users always start in an agent view, and new chats are created in their last active agent.
+
+**Connectors** and **Actions & Tools** on this page apply to the default chat experience. For agent-first mode, configure knowledge and tools on each [agent](/admins/agents/overview) instead.
+
+If you use this option, set [featured agents](/admins/agents/overview) so new users have a clear starting point.
