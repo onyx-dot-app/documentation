@@ -95,7 +95,7 @@ Attachments must stay within **both** a size cap and a token cap, or be rejected
 - **File token limit**: Cap for token budget attributed to each uploaded file.
 
 <Info>
-  Stricter limits reduce latency, memory use, and token cost.
+  Larger files increase latency, memory use, and token cost. Large text files (e.g. CSVs) may stay under the size limit but easily exceed the token limit.
 </Info>
 
 ### Allow Anonymous Users
@@ -106,6 +106,8 @@ When enabled, visitors can start chats **without signing in**. Anonymous users o
 
 When enabled, the default standalone chat entry point is removed. Users always start in an agent view, and new chats are created in their last active agent.
 
-**Connectors** and **Actions & Tools** on this page apply to the default chat experience. For agent-first mode, configure knowledge and tools on each [agent](/admins/agents/overview) instead.
+<Note>
+  Enabling this mode effectively bypasses the global **Connectors** and **Actions & Tools** sections located earlier on this page. For agent-first mode, configure knowledge and tools on each [agent](/admins/agents/overview) instead.
+</Note>
 
 If you use this option, set [featured agents](/admins/agents/overview) so new users have a clear starting point.
