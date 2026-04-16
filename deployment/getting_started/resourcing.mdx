@@ -13,8 +13,7 @@ import ResourcingOverview from "/snippets/resourcing-overview.mdx"
 You can control the resources available to Docker in the **Resources** section of the Docker Desktop settings menu.
 
 <Info>
-  Often old, unused Docker images take up sizeable disk space. To clean up unused images,
-  run `docker system prune --all`.
+  Often old, unused Docker images take up sizeable disk space. To clean up dangling images, run `docker image prune`.
 </Info>
 
 ## Cloud Providers (AWS, GCP, etc.)
@@ -76,21 +75,21 @@ Onyx Lite runs only four services. All storage is consolidated onto PostgreSQL.
 | `nginx` | 250m (1/4) | 128 Mi |
 
 <Info>
-  Memory usage in Lite mode scales with the number of user-uploaded files, since PostgreSQL
-  handles file storage, caching, and session management.
+  Memory usage in Lite mode scales with the number of user-uploaded files, since PostgreSQL handles file storage,
+  caching, and session management.
 </Info>
 
 ## How Resource Requirements Scale
 
 The main driver of resource requirements for Standard mode is the number of indexed documents.
-This primarily affects the search index (OpenSearch), which is responsible for storing documents
-and handling search requests.
+This primarily affects the search index (OpenSearch),
+which is responsible for storing documents and handling search requests.
 
 ### OpenSearch Memory
 
 OpenSearch memory is split roughly 50/50 between the JVM heap and the OS file system cache.
-Both halves are critical — the heap handles indexing and search operations while the file system cache
-keeps frequently accessed index segments in memory for fast reads.
+Both halves are critical — the heap handles indexing and search operations while the file system cache keeps frequently
+accessed index segments in memory for fast reads.
 
 Key rules for JVM heap sizing:
 - Set `Xms` and `Xmx` to **50% of available RAM** (the other 50% goes to OS/file cache)
@@ -114,13 +113,13 @@ and OpenSearch internal overhead (~20%), plus a safety margin.
 
 ### Scaling Guidelines
 
-OpenSearch resource requirements scale linearly with the volume of indexed data. The exact ratio depends
-on deployment size — large distributed clusters are more efficient per GB than single-node deployments
-due to fixed per-node overhead (cluster management, garbage collection, segment merging).
+OpenSearch resource requirements scale linearly with the volume of indexed data.
+The exact ratio depends on deployment size — large distributed clusters are more efficient per GB than single-node
+deployments due to fixed per-node overhead (cluster management, garbage collection, segment merging).
 
-Industry guidelines for large clusters suggest a memory-to-data ratio of around 1:16 for search-heavy
-workloads. However, for the **single-node deployments typical of self-hosted Onyx**, the fixed overhead
-per node is a much larger fraction of total resources.
+Industry guidelines for large clusters suggest a memory-to-data ratio of around 1:16 for search-heavy workloads.
+However, for the **single-node deployments typical of self-hosted Onyx**,
+the fixed overhead per node is a much larger fraction of total resources.
 
 Based on our experience, we recommend the following for single-node or small-cluster deployments:
 
@@ -130,8 +129,8 @@ Based on our experience, we recommend the following for single-node or small-clu
 | Medium (5–50 GB) | ~1.5 GB | ~0.25 CPU |
 | Large (50+ GB) | ~1 GB | ~0.2 CPU |
 
-The per-GB cost decreases at larger scale because the fixed baseline overhead is amortized.
-At very large scale, consider a dedicated OpenSearch cluster or a managed service.
+The per-GB cost decreases at larger scale because the fixed baseline overhead is amortized. At very large scale,
+consider a dedicated OpenSearch cluster or a managed service.
 
 Other factors that may affect resource requirements include:
 - The embedding model and vector dimensions
