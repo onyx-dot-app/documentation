@@ -35,34 +35,35 @@ hide or show certain Agents, and delete them.
 
     <img className="rounded-image" src="/assets/admins/agents/create_agent_2.png" alt="Onyx Agent Knowledge configuration"/>
 
-    If **Use Knowledge** is toggled on but nothing is selected (as in the screenshot above), the agent will have access
-    to anything accessible to the person using the agent. This includes:
+    If **Use Knowledge** is toggled on but nothing is selected (as in the screenshot above),
+    the agent will have access to anything accessible to the person using the agent. This includes:
 
     - Any files that the user has uploaded ("Your Files" in the admin view, visible from the Upload Files icon in the
-      chat window for basic users chatting with the agent)
+    chat window for basic users chatting with the agent)
     - All documents from all public connectors
     - Documents that the user has access to in the external source for permission-synced connectors
 
     See the [Connectors](/admins/connectors/overview) page for more detail on permissions.
 
     Explicitly selecting anything in Add Knowledge will narrow the Agent's scope to _only_ that selected knowledge.
-    This can be useful because search quality tends to slowly degrade at scale, so in larger organizations narrowing
-    the scope of what is searched over may improve answer quality.
+    This can be useful because search quality tends to slowly degrade at scale,
+    so in larger organizations narrowing the scope of what is searched over may improve answer quality.
 
     For Onyx versions prior to 3.0 and 3.x deployments that have not yet completed a migration to OpenSearch,
     the primary way of scoping access to connectors and granting an agent access to private connectors is to put the
-    desired connectors into a [Document Set](/admins/managing_features/document_sets), then select that document set
-    in the Document Sets section of the Add Knowledge pane.
+    desired connectors into a [Document Set](/admins/managing_features/document_sets),
+    then select that document set in the Document Sets section of the Add Knowledge pane.
 
     <Note>
       The OpenSearch migration note above is relevant for existing deployments upgrading to 3.x, not new deployments.
     </Note>
 
-    This functionality is still available in Onyx 3.x+, but with OpenSearch enabled Onyx also provides a more granular
-    way to attach knowledge to agents. By clicking on specific source types (added by creating a connector of that
-    source type and indexing successfully), you can view the hierarchy of knowledge in your source and select files and
-    folders you want your agent to have access to when searching for knowledge. Selecting a folder gives the agent
-    access to all information in that folder and in all its sub-folders.
+    This functionality is still available in Onyx 3.x+,
+    but with OpenSearch enabled Onyx also provides a more granular way to attach knowledge to agents.
+    By clicking on specific source types (added by creating a connector of that source type and indexing successfully),
+    you can view the hierarchy of knowledge in your source and select files and folders you want your agent to have
+    access to when searching for knowledge.
+    Selecting a folder gives the agent access to all information in that folder and in all its sub-folders.
 
     <img className="rounded-image" src="/assets/admins/agents/agent_hierarchy_knowledge.png" alt="Onyx Agent hierarchical knowledge selection showing folder and file browsing"/>
   </Step>
@@ -81,8 +82,8 @@ hide or show certain Agents, and delete them.
 
     You can configure the default language model for your Agent.
 
-    You can also configure certain knowledge options for your Agent, such as a knowledge cutoff date
-    and overwriting the system prompt.
+    You can also configure certain knowledge options for your Agent,
+    such as a knowledge cutoff date and overwriting the system prompt.
 
     <img className="rounded-image" src="/assets/admins/agents/agent_advanced.png" alt="Onyx Agent advanced configuration options"/>
   </Step>

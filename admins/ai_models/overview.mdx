@@ -34,42 +34,46 @@ which models are visible, and which models should be the default or fast option 
     These providers expose language models through a broader cloud or routing layer.
 
     Common choices include **Azure OpenAI**, **Amazon Bedrock**, **Google Vertex AI**, **OpenRouter**,
-    **LiteLLM Proxy**, and **Bifrost**.
-    They are useful when you need enterprise controls, cloud alignment, regional hosting options, or access to
-    multiple model families from one integration point.
+    **LiteLLM Proxy**, and **Bifrost**. They are useful when you need enterprise controls, cloud alignment,
+    regional hosting options, or access to multiple model families from one integration point.
   </Accordion>
 
   <Accordion title="Self-Hosted and Local Runtimes" icon="desktop">
     These options let you run open-weight models on your own infrastructure or local hardware.
 
-    Onyx includes built-in integrations for [Ollama](/admins/ai_models/ollama) and [LM Studio](/admins/ai_models/lm_studio).
-    This is a good fit when your team needs local development workflows, tighter data residency, or lower per-token costs.
+    Onyx includes built-in integrations for [Ollama](/admins/ai_models/ollama)
+    and [LM Studio](/admins/ai_models/lm_studio). This is a good fit when your team needs local development workflows,
+    tighter data residency, or lower per-token costs.
   </Accordion>
 
   <Accordion title="OpenAI-Compatible Custom Providers" icon="cpu">
     If your provider is not listed directly, you can still connect it through an OpenAI-compatible API.
 
-    This covers custom gateways, hosted inference endpoints, and internal model platforms that expose an OpenAI-style
-    `/chat/completions` or `/models` interface.
+    This covers custom gateways, hosted inference endpoints,
+    and internal model platforms that expose an OpenAI-style `/chat/completions` or `/models` interface.
   </Accordion>
 </AccordionGroup>
 
 ### Choosing a Good Starting Setup
 
 <Note>
-  If cloud-hosted models are approved for your organization, they are usually the best default choice because they are
-  easier to operate and generally provide the best capability-to-cost tradeoff.
+  If cloud-hosted models are approved for your organization,
+  they are usually the best default choice because they are easier to operate and generally provide the best
+  capability-to-cost tradeoff.
 </Note>
 
 - Start with one primary provider for most users.
-- Use a recent **GPT**, **Claude**, or **Gemini** family model as your default if you want the strongest out-of-the-box experience.
+- Use a recent **GPT**, **Claude**,
+  or **Gemini** family model as your default if you want the strongest out-of-the-box experience.
 - Use **Bedrock**, **Vertex AI**, **Azure OpenAI**, **OpenRouter**, **LiteLLM Proxy**, or **Bifrost** when procurement,
   routing, or cloud alignment matters more than a direct vendor integration.
 - Use open-weight families such as **Llama**, **Qwen**, **DeepSeek**, or **gpt-oss** if you are self-hosting.
-- Keep the visible model list short so users are choosing between a few intentional options instead of every possible version.
+- Keep the visible model list short so users are choosing between a few intentional options instead of every possible
+  version.
 
 <Info>
-  Self-hosting is best for advanced teams that already know which models they want to run and how they will operate them.
+  Self-hosting is best for advanced teams that already know which models they want to run and how they will operate
+  them.
 </Info>
 
 ## Configure Your Providers

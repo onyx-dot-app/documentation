@@ -13,55 +13,63 @@ providers.
   <Step title="Navigate to the Voice Mode Dashboard">
     Click your user profile icon and select Admin Panel, then select the Voice Mode tab in the sidebar.
 
-    <img className="rounded-image" src="/assets/admins/actions/voice-mode/voice_mode_dashboard.png" alt="Voice Mode dashboard in Onyx Admin Panel" />
+    <img className="rounded-image" src="/assets/admins/actions/voice-mode/voice_mode_dashboard.png" alt="Voice Mode dashboard in Onyx Admin Panel"/>
   </Step>
 
   <Step title="Set up Speech-to-Text (STT) provider">
     Configure a provider to transcribe user speech into text.
 
-    <img className="rounded-image" src="/assets/admins/actions/voice-mode/stt.png" alt="Speech-to-Text Providers" />
+    <img className="rounded-image" src="/assets/admins/actions/voice-mode/stt.png" alt="Speech-to-Text Providers"/>
 
     <Tabs tabs={["OpenAI Whisper", "Azure STT", "ElevenLabs"]}>
       <Tab title="OpenAI Whisper">
         <div style={{ marginTop: '-2rem' }}>
-          <Steps>
-            <Step title="Get an OpenAI API key">
-              Navigate to the [OpenAI dashboard](https://platform.openai.com/api-keys) and create a new API key, or
-              reuse an existing OpenAI API key already configured for your LLM provider.
-            </Step>
 
-            <Step title="Enter the API key">
-              Click **Connect** and enter the API key.
-            </Step>
-          </Steps>
+        <Steps>
+          <Step title="Get an OpenAI API key">
+            Navigate to the [OpenAI dashboard](https://platform.openai.com/api-keys) and create a new API key,
+            or reuse an existing OpenAI API key already configured for your LLM provider.
+          </Step>
+
+          <Step title="Enter the API key">
+            Click **Connect** and enter the API key.
+          </Step>
+        </Steps>
+
         </div>
       </Tab>
+
       <Tab title="Azure STT">
         <div style={{ marginTop: '-2rem' }}>
-          <Steps>
-            <Step title="Get Azure Speech credentials">
-              Navigate to the [Azure Portal](https://portal.azure.com) and create a Speech resource. Copy the API key
-              and region.
-            </Step>
 
-            <Step title="Enter the credentials">
-              Click **Connect** and enter the API key, region, and target URI.
-            </Step>
-          </Steps>
+        <Steps>
+          <Step title="Get Azure Speech credentials">
+            Navigate to the [Azure Portal](https://portal.azure.com) and create a Speech resource.
+            Copy the API key and region.
+          </Step>
+
+          <Step title="Enter the credentials">
+            Click **Connect** and enter the API key, region, and target URI.
+          </Step>
+        </Steps>
+
         </div>
       </Tab>
+
       <Tab title="ElevenLabs">
         <div style={{ marginTop: '-2rem' }}>
-          <Steps>
-            <Step title="Get an ElevenLabs API key">
-              Navigate to the [ElevenLabs dashboard](https://elevenlabs.io/app/settings/api-keys) and create a new
-              API key.
-            </Step>
 
-            <Step title="Enter the API key">
-              Click **Connect** and enter the API key.
-            </Step>
-          </Steps>
+        <Steps>
+          <Step title="Get an ElevenLabs API key">
+            Navigate to the [ElevenLabs dashboard](https://elevenlabs.io/app/settings/api-keys)
+            and create a new API key.
+          </Step>
+
+          <Step title="Enter the API key">
+            Click **Connect** and enter the API key.
+          </Step>
+        </Steps>
+
         </div>
       </Tab>
     </Tabs>
@@ -70,81 +78,91 @@ providers.
   <Step title="Set up Text-to-Speech (TTS) provider">
     Configure a provider to convert AI responses into spoken audio.
 
-    <img className="rounded-image" src="/assets/admins/actions/voice-mode/tts.png" alt="Text-to-Speech Providers" />
+    <img className="rounded-image" src="/assets/admins/actions/voice-mode/tts.png" alt="Text-to-Speech Providers"/>
 
     <Tabs tabs={["OpenAI TTS-1", "OpenAI TTS-1 HD", "Azure TTS", "ElevenLabs"]}>
       <Tab title="OpenAI TTS-1">
         <div style={{ marginTop: '-2rem' }}>
-          <Steps>
-            <Step title="Get an OpenAI API key">
-              Navigate to the [OpenAI dashboard](https://platform.openai.com/api-keys) and create a new API key
-              (or reuse the one from Whisper).
-            </Step>
 
-            <Step title="Enter the API key">
-              Click **Connect** and enter the API key.
-            </Step>
-          </Steps>
+        <Steps>
+          <Step title="Get an OpenAI API key">
+            Navigate to the [OpenAI dashboard](https://platform.openai.com/api-keys)
+            and create a new API key (or reuse the one from Whisper).
+          </Step>
+
+          <Step title="Enter the API key">
+            Click **Connect** and enter the API key.
+          </Step>
+        </Steps>
+
         </div>
       </Tab>
+
       <Tab title="OpenAI TTS-1 HD">
         <div style={{ marginTop: '-2rem' }}>
-          <Steps>
-            <Step title="Get an OpenAI API key">
-              Navigate to the [OpenAI dashboard](https://platform.openai.com/api-keys) and create a new API key
-              (or reuse the one from Whisper).
-            </Step>
 
-            <Step title="Enter the API key">
-              Click **Connect** and enter the API key.
-            </Step>
-          </Steps>
+        <Steps>
+          <Step title="Get an OpenAI API key">
+            Navigate to the [OpenAI dashboard](https://platform.openai.com/api-keys)
+            and create a new API key (or reuse the one from Whisper).
+          </Step>
 
-          <Note>
-            TTS-1 HD provides higher quality audio than TTS-1 but may have slightly higher latency and cost.
-          </Note>
+          <Step title="Enter the API key">
+            Click **Connect** and enter the API key.
+          </Step>
+        </Steps>
+
+        <Note>
+          TTS-1 HD provides higher quality audio than TTS-1 but may have slightly higher latency and cost.
+        </Note>
         </div>
       </Tab>
+
       <Tab title="Azure TTS">
         <div style={{ marginTop: '-2rem' }}>
-          <Steps>
-            <Step title="Get Azure Speech credentials">
-              Navigate to the [Azure Portal](https://portal.azure.com) and create a Speech resource. Copy the API key
-              and region.
-            </Step>
 
-            <Step title="Enter the credentials">
-              Click **Connect** and enter the API key, region, and target URI.
-            </Step>
-          </Steps>
+        <Steps>
+          <Step title="Get Azure Speech credentials">
+            Navigate to the [Azure Portal](https://portal.azure.com) and create a Speech resource.
+            Copy the API key and region.
+          </Step>
+
+          <Step title="Enter the credentials">
+            Click **Connect** and enter the API key, region, and target URI.
+          </Step>
+        </Steps>
+
         </div>
       </Tab>
+
       <Tab title="ElevenLabs">
         <div style={{ marginTop: '-2rem' }}>
-          <Steps>
-            <Step title="Get an ElevenLabs API key">
-              Navigate to the [ElevenLabs dashboard](https://elevenlabs.io/app/settings/api-keys) and create a new
-              API key.
-            </Step>
 
-            <Step title="Enter the API key">
-              Click **Connect** and enter the API key.
-            </Step>
-          </Steps>
+        <Steps>
+          <Step title="Get an ElevenLabs API key">
+            Navigate to the [ElevenLabs dashboard](https://elevenlabs.io/app/settings/api-keys)
+            and create a new API key.
+          </Step>
+
+          <Step title="Enter the API key">
+            Click **Connect** and enter the API key.
+          </Step>
+        </Steps>
+
         </div>
       </Tab>
     </Tabs>
 
     Once your TTS provider is configured, select a voice from the dropdown or input a voice ID directly.
 
-    <img className="rounded-image" src="/assets/admins/actions/voice-mode/voice_selection.png" alt="Voice Selection" />
+    <img className="rounded-image" src="/assets/admins/actions/voice-mode/voice_selection.png" alt="Voice Selection"/>
   </Step>
 
   <Step title="Set Default Provider">
-    If you have multiple providers configured, make sure to **Set as Default** for both your preferred STT and TTS
-    provider.
+    If you have multiple providers configured,
+    make sure to **Set as Default** for both your preferred STT and TTS provider.
 
-    <img className="rounded-image" src="/assets/admins/actions/voice-mode/set_default.png" alt="Set Default Provider" />
+    <img className="rounded-image" src="/assets/admins/actions/voice-mode/set_default.png" alt="Set Default Provider"/>
   </Step>
 </Steps>
 

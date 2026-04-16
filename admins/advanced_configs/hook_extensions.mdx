@@ -5,12 +5,15 @@ icon: "webhook"
 ---
 
 <Note>
-  Hook Extensions are an [Enterprise Edition](/deployment/miscellaneous/enterprise_edition) feature and are only available on **single-tenant** deployments.
+  Hook Extensions are an [Enterprise Edition](/deployment/miscellaneous/enterprise_edition)
+  feature and are only available on **single-tenant** deployments.
 </Note>
 
 ## Overview
 
-Hook Extensions let you inject custom logic into Onyx's pipeline at defined stages — without modifying Onyx source code. You provide an HTTP endpoint; Onyx calls it at the right moment, sends a JSON payload, and uses your response to influence what happens next.
+Hook Extensions let you inject custom logic into Onyx's pipeline at defined stages — without modifying Onyx source code.
+You provide an HTTP endpoint; Onyx calls it at the right moment, sends a JSON payload,
+and uses your response to influence what happens next.
 
 ## Concepts
 
@@ -23,11 +26,14 @@ A hook point is a defined stage in Onyx's pipeline where custom logic can be inj
 - **What** response it expects back
 - A default timeout and fail strategy
 
-Hook points are intentional — once a hook point is added, Onyx commits to maintaining its payload structure, response format, and behavior — meaning it won't change in a breaking way without a proper deprecation process. Because of this long-term commitment, each proposal is evaluated carefully before being added.
+Hook points are intentional — once a hook point is added, Onyx commits to maintaining its payload structure,
+response format, and behavior — meaning it won't change in a breaking way without a proper deprecation process.
+Because of this long-term commitment, each proposal is evaluated carefully before being added.
 
 ### Hooks
 
-A hook connects a hook point to your HTTPS endpoint. When the hook point is triggered, Onyx POSTs a request to your endpoint and uses your response to continue, modify, or abort the pipeline.
+A hook connects a hook point to your HTTPS endpoint. When the hook point is triggered,
+Onyx POSTs a request to your endpoint and uses your response to continue, modify, or abort the pipeline.
 
 Only one hook per hook point is allowed at a time.
 
@@ -37,18 +43,22 @@ Only one hook per hook point is allowed at a time.
   <Step title="Onyx reaches a hook point in the pipeline">
     The pipeline triggers at a defined stage.
   </Step>
+
   <Step title="Onyx POSTs to your endpoint">
     If an active hook is configured for that point, Onyx sends a JSON payload to your endpoint URL.
   </Step>
+
   <Step title="Your endpoint responds">
     Your endpoint processes the payload and returns a JSON response.
   </Step>
+
   <Step title="Onyx continues">
     Onyx uses your response to continue, modify, or abort the pipeline.
   </Step>
 </Steps>
 
-If your endpoint is unreachable, times out, or returns an invalid response, Onyx follows the **fail strategy** you configured.
+If your endpoint is unreachable, times out, or returns an invalid response,
+Onyx follows the **fail strategy** you configured.
 
 ## Adding a Hook
 
@@ -56,9 +66,11 @@ If your endpoint is unreachable, times out, or returns an invalid response, Onyx
   <Step title="Navigate to Hook Extensions">
     Go to the **Admin Panel** and select **Hook Extensions**.
   </Step>
+
   <Step title="Connect a hook point">
     Find the hook point you want to use and click **Connect**.
   </Step>
+
   <Step title="Fill in the hook details">
     Complete the form:
 
@@ -72,8 +84,10 @@ If your endpoint is unreachable, times out, or returns an invalid response, Onyx
     | Endpoint URL | Yes | The HTTPS URL Onyx will POST to when the hook point is triggered. Must use HTTPS. |
     | API Key | No | If provided, Onyx sends this as `Authorization: Bearer <api_key>` on every request |
   </Step>
+
   <Step title="Connect">
-    Click **Connect**. Onyx validates your endpoint with a test request before saving. On success, the hook appears in the connected list.
+    Click **Connect**. Onyx validates your endpoint with a test request before saving. On success,
+    the hook appears in the connected list.
   </Step>
 </Steps>
 
@@ -102,7 +116,6 @@ Onyx monitors your endpoint after the hook is registered and connected, displays
 
 <img className="rounded-image" src="/assets/admins/advanced_configs/hook_card_connection_lost.png" alt="Hook Connection Lost"/>
 
-
 The 10 most recent failures from the past 30 days are also shown to help with debugging.
 
 <img className="rounded-image" src="/assets/admins/advanced_configs/hook_thirty_days_errors.png" alt="Hook Errors in the Last 30 Days"/>
@@ -111,9 +124,12 @@ The 10 most recent failures from the past 30 days are also shown to help with de
 
 ## Document Ingestion
 
-The Document Ingestion hook point lets you intercept every document before it enters the Onyx indexing pipeline. Your endpoint receives the fully-formed document and can filter it out, rewrite its content, or pass it through unchanged.
+The Document Ingestion hook point lets you intercept every document before it enters the Onyx indexing pipeline.
+Your endpoint receives the fully-formed document and can filter it out, rewrite its content,
+or pass it through unchanged.
 
-It runs immediately after Onyx's internal validation and before the indexing pipeline begins — no partial writes have occurred yet.
+It runs immediately after Onyx's internal validation and before the indexing pipeline begins — no partial writes have
+occurred yet.
 
 | Setting | Value |
 |---|---|
@@ -150,7 +166,8 @@ Onyx sends a `POST` request to your endpoint once per document with the followin
 ```
 
 <Note>
-  All input fields are provided for context only. Your endpoint can only influence the pipeline through the output schema — specifically the `sections` field.
+  All input fields are provided for context only.
+  Your endpoint can only influence the pipeline through the output schema — specifically the `sections` field.
 </Note>
 
 | Field | Type | Required | Description |
@@ -243,6 +260,7 @@ A successful response from your endpoint must return HTTP `200` and a JSON body:
     }
     ```
   </Accordion>
+
   <Accordion title="Example: Rewrite content (PII redaction)">
     ```json
     {
@@ -253,6 +271,7 @@ A successful response from your endpoint must return HTTP `200` and a JSON body:
     }
     ```
   </Accordion>
+
   <Accordion title="Example: Drop the document">
     ```json
     {
@@ -273,9 +292,14 @@ Authorization: Bearer <your-api-key>
 
 ### Lambda Example
 
-You can use an [AWS Lambda function](https://docs.aws.amazon.com/lambda/latest/dg/getting-started.html) as your hook endpoint by exposing it over HTTPS via a [Lambda Function URL](https://docs.aws.amazon.com/lambda/latest/dg/lambda-urls.html). This is the simplest way to deploy a hook without managing a server.
+You can use an [AWS Lambda function](https://docs.aws.amazon.com/lambda/latest/dg/getting-started.html)
+as your hook endpoint by exposing it over HTTPS via a [Lambda Function
+URL](https://docs.aws.amazon.com/lambda/latest/dg/lambda-urls.html).
+This is the simplest way to deploy a hook without managing a server.
 
-When Onyx calls your endpoint, the request arrives as an API Gateway-style event. Your handler reads the JSON body from `event["body"]`, processes the document, and returns a response with a `statusCode` and a JSON-encoded `body`.
+When Onyx calls your endpoint, the request arrives as an API Gateway-style event.
+Your handler reads the JSON body from `event["body"]`, processes the document,
+and returns a response with a `statusCode` and a JSON-encoded `body`.
 
 If you configured an API key on the hook, validate it against the `Authorization` header in the event before processing.
 
@@ -291,7 +315,6 @@ If you configured an API key on the hook, validate it against the `Authorization
   # Set the HOOK_API_KEY environment variable in your Lambda configuration.
   # If not set, API key validation is skipped.
   API_KEY = os.environ.get("HOOK_API_KEY")
-
 
   def lambda_handler(event, context):
       # Validate API key if configured
@@ -369,7 +392,9 @@ curl -X POST https://<your-function-url> \
   }'
 ```
 
-Once the hook is connected, you can validate end-to-end by adding a File connector and uploading a document. After the connector syncs, search for content from that document in the chat window — if the hook is working correctly, the material should not appear in results since file connector documents are being rejected.
+Once the hook is connected, you can validate end-to-end by adding a File connector and uploading a document.
+After the connector syncs, search for content from that document in the chat window — if the hook is working correctly,
+the material should not appear in results since file connector documents are being rejected.
 
 <img className="rounded-image" src="/assets/admins/advanced_configs/document_ingestion_file_connector.png" alt="File Connector"/>
 
@@ -381,9 +406,12 @@ Once the hook is connected, you can validate end-to-end by adding a File connect
 
 ## Query Processing
 
-The Query Processing hook point lets you intercept every user query before it enters the Onyx pipeline. Your endpoint receives the raw query and the user's identity, and can rewrite the query, reject it entirely, or pass it through unchanged.
+The Query Processing hook point lets you intercept every user query before it enters the Onyx pipeline.
+Your endpoint receives the raw query and the user's identity, and can rewrite the query, reject it entirely,
+or pass it through unchanged.
 
-It runs immediately after the user submits a message, before anything is saved to the database or sent to the LLM. This is the earliest possible point in the pipeline — no side effects have occurred yet.
+It runs immediately after the user submits a message, before anything is saved to the database or sent to the LLM.
+This is the earliest possible point in the pipeline — no side effects have occurred yet.
 
 | Setting | Value |
 |---|---|
@@ -427,6 +455,7 @@ A successful response from your endpoint must return HTTP `200` and a JSON body:
     }
     ```
   </Accordion>
+
   <Accordion title="Example: Rewrite the query">
     ```json
     {
@@ -435,6 +464,7 @@ A successful response from your endpoint must return HTTP `200` and a JSON body:
     }
     ```
   </Accordion>
+
   <Accordion title="Example: Reject the query">
     ```json
     {
@@ -455,9 +485,14 @@ Authorization: Bearer <your-api-key>
 
 ### Lambda Example
 
-You can use an [AWS Lambda function](https://docs.aws.amazon.com/lambda/latest/dg/getting-started.html) as your hook endpoint by exposing it over HTTPS via a [Lambda Function URL](https://docs.aws.amazon.com/lambda/latest/dg/lambda-urls.html). This is the simplest way to deploy a hook without managing a server.
+You can use an [AWS Lambda function](https://docs.aws.amazon.com/lambda/latest/dg/getting-started.html)
+as your hook endpoint by exposing it over HTTPS via a [Lambda Function
+URL](https://docs.aws.amazon.com/lambda/latest/dg/lambda-urls.html).
+This is the simplest way to deploy a hook without managing a server.
 
-When Onyx calls your endpoint, the request arrives as an API Gateway-style event. Your handler reads the JSON body from `event["body"]`, processes the query, and returns a response with a `statusCode` and a JSON-encoded `body`.
+When Onyx calls your endpoint, the request arrives as an API Gateway-style event.
+Your handler reads the JSON body from `event["body"]`, processes the query,
+and returns a response with a `statusCode` and a JSON-encoded `body`.
 
 If you configured an API key on the hook, validate it against the `Authorization` header in the event before processing.
 
@@ -471,7 +506,6 @@ If you configured an API key on the hook, validate it against the `Authorization
   # Set the HOOK_API_KEY environment variable in your Lambda configuration.
   # If not set, API key validation is skipped.
   API_KEY = os.environ.get("HOOK_API_KEY")
-
 
   def lambda_handler(event, context):
       # Validate API key if configured
@@ -531,7 +565,10 @@ curl -X POST https://<your-function-url> \
   }'
 ```
 
-Once the hook is connected, you can also validate the logic directly in the Onyx chat window. Try sending a query that contains a blocked keyword (e.g. "ssn" or "phone number") — you should see the rejection message instead of a response. Queries without blocked keywords should pass through normally.
+Once the hook is connected, you can also validate the logic directly in the Onyx chat window.
+Try sending a query that contains a blocked keyword (e.g. "ssn" or "phone number")
+— you should see the rejection message instead of a response.
+Queries without blocked keywords should pass through normally.
 
 <img className="rounded-image" src="/assets/admins/advanced_configs/query_processing_test.png" alt="Query Processing Hook Test"/>
 
@@ -546,4 +583,7 @@ If your use case requires a pipeline injection point that doesn't exist yet, ope
 - **What your endpoint would return** — how should Onyx change its behavior based on your response?
 - **Use cases** — what problem does this solve? Are other customers likely to need the same point?
 
-The Onyx team reviews proposals and implements hook points that have broad applicability. Once a hook point is added, Onyx commits to maintaining its payload structure, response format, and behavior — meaning it won't change in a breaking way without a proper deprecation process. Because of this long-term commitment, each proposal is evaluated carefully before being added.
+The Onyx team reviews proposals and implements hook points that have broad applicability. Once a hook point is added,
+Onyx commits to maintaining its payload structure, response format,
+and behavior — meaning it won't change in a breaking way without a proper deprecation process.
+Because of this long-term commitment, each proposal is evaluated carefully before being added.
