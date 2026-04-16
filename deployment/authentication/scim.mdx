@@ -85,7 +85,8 @@ You can also check the **Users and Groups** page to confirm that provisioned use
 
 ## Supported Attributes
 
-The SCIM discovery endpoints are **unauthenticated** — no token required. You can query them directly to see exactly what Onyx supports without guessing.
+The SCIM discovery endpoints are **unauthenticated** — no token required.
+You can query them directly to see exactly what Onyx supports without guessing.
 
 ```bash
 curl -s https://YOUR_ONYX_DOMAIN/scim/v2/Schemas -H "Accept: application/scim+json" | jq .
