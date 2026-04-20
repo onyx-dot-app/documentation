@@ -1,0 +1,87 @@
+---
+title: "OpenSearch Document Index Migration"
+description: "Migrating indexed documents from Vespa to OpenSearch"
+icon: "arrow-right-arrow-left"
+---
+
+## Overview
+
+Onyx has gradually been working towards switching our backing document index
+database from Vespa to OpenSearch. This motivating factors behind this decision
+are to reduce the baseline resources required to run Onyx, and to switch to a
+widely used and supported documented index provider.
+
+<Note>
+    This is a living page and more details will be added over the coming weeks.
+</Note>
+
+## Migration
+
+As of `v3`, Onyx uses both Vespa and OpenSearch. Any documents which Onyx
+indexes while using this version are indexed into both Vespa and OpenSearch, and
+there is no migration required.
+
+Also as of `v3`, Onyx automatically runs a task to migrate your existing
+documents from Vespa to OpenSearch. This task makes checkpointed progress so
+Onyx does not necessarily need to be running continuously until the migration
+completes in order for it to complete successfully. No explicit input is needed
+from admins other than upgrading to `v3` in order for this task to run.
+
+The migration's progress can be monitored in the Admin Panel, in the Document
+Index Migration sidebar tab.
+
+<Warning>
+    The migration is best-effort. Although the vast majority of documents are
+    not expected to have migration issues, some documents (in particular
+    documents which were indexed a long time ago in versions of Onyx which
+    enforced weaker/different contracts for indexed content) may have
+    irreconcilable migration issues. In this event the only solution is a
+    re-index of connectors for those documents, where they will be processed in
+    such a way that they can then be indexed into OpenSearch.
+</Warning>
+
+## Deprecation of Vespa
+
+`v4` of Onyx will represent the first major version to use OpenSearch entirely
+without Vespa.
+
+<Warning>
+    In order to preserve existing indexed content in Vespa without requiring
+    re-indexing, it will be necessary to upgrade to `v3` of Onyx to allow
+    migrations to run before upgrading to `v4`, when released.
+
+    Although it may be technically feasible without breaking the product for a
+    determined admin to upgrade Onyx directly from some version < `v3` directly
+    to some version > `v3` skipping `v3` entirely, this will result in complete
+    loss of indexed data and will require re-indexing all connectors in order to
+    be able to search over documents.
+</Warning>
+
+## Retrieval
+
+During `v3`, document retrieval can be done via either Vespa (the default) or
+OpenSearch, and which one is used can be toggled in the Document Index Migration
+sidebar tab on the Admin Panel. Naturally, if the migration is not yet complete,
+retrieval via OpenSearch may not yield every expected document.
+
+## cloud.onyx.app
+
+The migration for cloud users began in March 2026, and by April 2026 virtually
+all tenants' migrations indicated completion.
+
+As of `v3.2.0-cloud.7` in April, all tenants in the cloud have been swapped over
+to OpenSearch for retrieval, and Vespa is no longer in the loop with Onyx, so
+all new documents indexed are indexed only using OpenSearch.
+
+<Warning>
+    Due to a unique failure mode involving automatic updates in Vespa Cloud,
+    there may be some migrations which report successful completion despite
+    there being some existing documents which did not exist from the perspective
+    of Vespa at the time of migration for that particular document, and which
+    therefore might not have been migrated into OpenSearch.
+
+    Similarly to the best-effort warning above, the recommended solution to this
+    is a re-index for connectors suspected of having missing documents.
+    Unfortunately due to the nature of this issue, there is little visibility
+    into which specific documents may have experienced this.
+</Warning>
