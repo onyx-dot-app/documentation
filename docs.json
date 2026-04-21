@@ -264,7 +264,8 @@
                 "pages": [
                   "admins/managing_features/connectors_link",
                   "admins/advanced_configs/search_configs",
-                  "admins/managing_features/document_sets"
+                  "admins/managing_features/document_sets",
+                  "admins/advanced_configs/opensearch_document_index_migration"
                 ]
               },
               "admins/agents/overview",
