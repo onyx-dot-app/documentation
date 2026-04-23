@@ -305,6 +305,21 @@ LANGFUSE_BASE_URL="https://cloud.langfuse.com" # Or "https://us.cloud.langfuse.c
     `OAUTH_CLIENT_SECRET`: For both Google OAuth and OIDC.
 
     `OPENID_CONFIG_URL`: For OIDC.
+
+    `GOOGLE_OAUTH_SCOPE_OVERRIDE`: For Google OAuth login (`AUTH_TYPE=google_oauth`
+    or `cloud`). Comma-separated list of scopes to request from Google instead
+    of the defaults (`openid,email,profile`). Useful when the access token from
+    login needs to be passed through to tool calls that require additional
+    Google API scopes (i.e. when using Pass-Through OAuth for an MCP server). 
+    Any scopes added here must also be enabled on the OAuth client in Google 
+    Cloud Console.
+
+    `OIDC_SCOPE_OVERRIDE`: For OIDC login (`AUTH_TYPE=oidc`). Comma-separated
+    list of scopes to request from the OIDC provider instead of the defaults.
+    Same use case as `GOOGLE_OAUTH_SCOPE_OVERRIDE`.
+
+    `OIDC_PKCE_ENABLED`: For OIDC login. Set to `true` to enable PKCE in the
+    OIDC login flow. Disabled by default for backwards compatibility.
   </Accordion>
 
   <Accordion title="Email Configuration">

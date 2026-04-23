@@ -118,3 +118,33 @@ providing a seamless login experience through existing Google accounts.
     ```
   </Step>
 </Steps>
+
+## Customizing requested scopes
+
+By default, Onyx requests `openid`, `email`, and `profile` from Google during
+login — the minimum needed to identify the user. You can override this list
+with `GOOGLE_OAUTH_SCOPE_OVERRIDE`, a comma-separated list of scopes to request
+instead. This is primarily useful when the access token issued at login should
+be passed through to tool calls that need additional Google API access.
+
+```bash .env
+GOOGLE_OAUTH_SCOPE_OVERRIDE=openid,email,profile,https://www.googleapis.com/auth/drive.readonly
+```
+
+<Warning>
+  The override **replaces** the default scopes — make sure `openid`, `email`,
+  and `profile` are still included if you want standard login to keep working.
+</Warning>
+
+<Note>
+  Any scopes you add here must also be enabled on the OAuth client in Google
+  Cloud Console (consent screen + client configuration). Onyx only changes
+  what is sent in the authorize request; Google still rejects scopes that are
+  not configured for the client.
+</Note>
+
+<Note>
+  These scopes apply only to the **app login** and pass-through OAuth flows.
+  The Google Drive and Gmail **connectors** use their own scopes and OAuth 
+  flow, which are not affected by this setting.
+</Note>
