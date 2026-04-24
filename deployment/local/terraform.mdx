@@ -220,8 +220,14 @@ The composed `onyx` module exposes the inputs you'll most often want to tune.
 
 ### OpenSearch (optional)
 
-OpenSearch is **off by default**.
-Enable it if you want a managed search backend instead of the in-cluster Vespa node group.
+Managed OpenSearch is **off by default**.
+Enable it if you want a managed document index backend instead of the in-cluster
+Vespa node group.
+
+If provisioning a managed document index, you should disable starting an
+OpenSearch container in your relevant docker-compose/Helm as Onyx will not use
+this container. You should also set the relevant environment variables. See how
+to [configure Onyx with OpenSearch](/deployment/local/opensearch).
 
 <ParamField path="enable_opensearch" type="bool" default="false">
   Provision an Amazon OpenSearch domain inside the VPC.
