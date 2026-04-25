@@ -46,7 +46,9 @@ rss: true
   providers like Okta and Entra ID can create, update, and deactivate users and
   groups against Onyx via the standard `/scim/v2/*` endpoints with bearer-token
   auth. Admins can mint and rotate SCIM tokens from a new section in the Admin
-  Panel, and we've passed Okta's Runscope spec test for OIN submission.
+  Panel, and we've passed Okta's Runscope spec test for OIN submission. [More
+  details can be found in our
+  documentation.](https://docs.onyx.app/deployment/authentication/scim#scim)
 
   ### Unified Search and Chat
 
@@ -61,12 +63,20 @@ rss: true
   Helm — no extra setup required. Sessions stream output as they run, accept
   file inputs, embed generated images directly into chat, and ship with rich
   preview modals for CSV, PDF, and DOCX outputs. The Python tool is also enabled
-  by default on the default agent.
+  by default on the default agent. [More information can be found
+  here.](https://docs.onyx.app/admins/actions/code_interpreter)
 
   ### Onyx CLI
 
   A new command-line tool for working with Onyx, distributed as a PyPI package
   and a Docker image. Look for `onyx-cli` to grow over the next few releases.
+  [Get started here.](https://docs.onyx.app/overview/onyx_anywhere/cli#cli)
+
+  ### Onyx Lite
+
+  A new "lite" deployment mode for installations that don't need a vector
+  database. Onyx Lite runs without the indexing stack and is suitable for
+  chat-only and tooling-focused use cases.
 
   ## Contributor Highlights
 
@@ -75,19 +85,6 @@ rss: true
     self-hosted deployments!
 
   ## Additional Improvements
-
-  ### Onyx Lite
-
-  A new "lite" deployment mode for installations that don't need a vector
-  database. Onyx Lite runs without the indexing stack and is suitable for
-  chat-only and tooling-focused use cases.
-
-  ### Refreshed Memory
-
-  Memory has been rewritten with ID-based persistence and a redesigned UI for
-  managing what your agent remembers. Agents now read structured user context
-  directly from the system prompt, and the memory tool can add or update
-  memories during a conversation.
 
   ### Image Generation Edits with Historical Context
 
@@ -99,23 +96,11 @@ rss: true
   - SharePoint connector received a major scalability rework, including delta
     sync, more resilient credential refresh, better permission sync, and
     substantially better throughput on large multi-site tenants
-  - LM Studio is available as a new LLM provider
   - Slack connector can now optionally include bot messages during indexing
   - Slack bot responses convert markdown tables to a Slack-friendly format and
     sanitize HTML and broken citation links
-  - New local file connector for Craft
-  - Slab connector validation
   - Confluence and Google Drive connectors are now backed by hierarchy nodes for
     more accurate pruning
-
-  ### Craft and Artifacts
-
-  - PPTX generation, editing, and preview
-  - Improved PDF preview and a refreshed output panel
-  - Sandbox sessions persist across sleep/wake
-  - Shareable webapp URLs with two-tier access control
-  - Output files are downloadable from the Artifacts tab
-  - S3 snapshot files are cleaned up when a craft is deleted
 
   ### Agents and Chat
 
@@ -130,33 +115,24 @@ rss: true
     for double-collapse in agent timelines
   - Throughout the codebase and UI, "assistant" identifiers have been renamed to
     "agent" for consistency, and "LLM Models" is now "Language Models"
+  - LM Studio is available as a new LLM provider
 
   ### Auth and Licensing
 
   - Enterprise license enforcement is now on by default; deployments without a
     valid license fall back to a gated mode
-  - Seat limits are enforced on every user-creation path, including bulk invite
-    and Slack
   - Slack users are excluded from seat counts; deactivated Slack users can be
     reactivated when seats are available
   - New invite-whitelist setting with a dedicated "account blocked" page for
     users outside the whitelist
-  - Public OAuth clients are now supported via Dynamic Client Registration
 
-  ### Deployment, Helm, and Observability
+  ### Deployment and Helm
 
   - Production Prometheus instrumentation for the API server, including
     SQLAlchemy connection pool and per-tenant metrics
-  - OpenSearch is included in the default `docker-compose.yml` and Helm chart
   - Code Interpreter is included in the default Docker and Helm deployments
-  - Dedicated Celery migration queue in the Helm chart
-  - KEDA `idleReplicaCount` is now optional and fallbacks apply only on custom
-    metrics
-  - nginx routes `/openapi.json` to the API server correctly
-  - EE license public key is now baked into the Docker image
   - New Postgres-backed cache backend abstraction for caches that previously
     required Redis
-  - Background tasks can run via FastAPI in addition to Celery
 
   ### Notable Bug Fixes
 
@@ -166,7 +142,6 @@ rss: true
     names
   - Fixed Ollama context-window passthrough, content skipping, and DeepSeek
     handling
-  - Fixed Anthropic model selection under multi-tenant
   - Fixed desktop app link clicking behavior
   - Fixed basic users being unable to share agents
   - Fixed `/llm/provider` returning a filtered set of providers
