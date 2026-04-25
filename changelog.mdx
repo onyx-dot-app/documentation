@@ -5,6 +5,189 @@ icon: "rocket"
 mode: "wide"
 rss: true
 ---
+
+<Update label="v3.0.0" description="March 9th, 2026" tags={["New Features", "Deployment Changes", "Bug Fixes"]}>
+
+  ## v3.0.0
+
+  The Vespa to OpenSearch migration is here, SCIM 2.0 lands for Enterprise,
+  search and chat are unified into a single experience, Code Interpreter ships
+  by default, and Onyx Lite and the Onyx CLI debut. v3.0.0 is the largest
+  release we've ever cut. Thank you to our contributors for helping make this
+  release possible!
+
+  ## [Update] OpenSearch Migration
+
+  v3.0.0 ships the full Vespa to OpenSearch migration toolchain. OpenSearch now
+  runs alongside Vespa in the standard `docker-compose.yml` and Helm chart, and
+  admins get a new Migration tab in the Admin Panel for kicking off and
+  monitoring the migration with live progress.
+  
+  Vespa continues to serve all queries throughout the migration by default. Once
+  the migration completes, admins can switch Onyx to read from OpenSearch. Setup
+  details and guidance live in the [OpenSearch deployment
+  guide](https://docs.onyx.app/deployment/local/opensearch), and the full
+  migration walkthrough is in the [Vespa to OpenSearch migration
+  guide](https://docs.onyx.app/admins/advanced_configs/opensearch_document_index_migration).
+
+  ## Upgrade Path to v4.0.0
+
+  v3.0.0 starts the final stretch of the Vespa to OpenSearch migration. **Every
+  deployment must run a v3.x.x release long enough for the migration to complete
+  before upgrading to v4.x.x, where Vespa will be fully removed.** If you skip
+  v3 entirely, you will lose all of your indexed data and have to re-index from
+  scratch — including re-uploading any Project files.
+
+  ## Key Improvements
+
+  ### SCIM 2.0 User and Group Provisioning
+
+  Onyx Enterprise now ships a complete SCIM 2.0 implementation. Identity
+  providers like Okta and Entra ID can create, update, and deactivate users and
+  groups against Onyx via the standard `/scim/v2/*` endpoints with bearer-token
+  auth. Admins can mint and rotate SCIM tokens from a new section in the Admin
+  Panel, and we've passed Okta's Runscope spec test for OIN submission.
+
+  ### Unified Search and Chat
+
+  Search and chat are now driven from the same input bar, with smooth animated
+  transitions between modes. Whether you're asking a question of an agent or
+  running a quick keyword search across your knowledge base, you start in the
+  same place.
+
+  ### Code Interpreter, by default
+
+  Code Interpreter is now part of the default deployment for both Docker and
+  Helm — no extra setup required. Sessions stream output as they run, accept
+  file inputs, embed generated images directly into chat, and ship with rich
+  preview modals for CSV, PDF, and DOCX outputs. The Python tool is also enabled
+  by default on the default agent.
+
+  ### Onyx CLI
+
+  A new command-line tool for working with Onyx, distributed as a PyPI package
+  and a Docker image. Look for `onyx-cli` to grow over the next few releases.
+
+  ## Contributor Highlights
+
+  - [@victoriamreese](https://github.com/victoriamreese) added a configurable
+    MCP host setting and continued to harden Helm and KEDA scaling for
+    self-hosted deployments!
+
+  ## Additional Improvements
+
+  ### Onyx Lite
+
+  A new "lite" deployment mode for installations that don't need a vector
+  database. Onyx Lite runs without the indexing stack and is suitable for
+  chat-only and tooling-focused use cases.
+
+  ### Refreshed Memory
+
+  Memory has been rewritten with ID-based persistence and a redesigned UI for
+  managing what your agent remembers. Agents now read structured user context
+  directly from the system prompt, and the memory tool can add or update
+  memories during a conversation.
+
+  ### Image Generation Edits with Historical Context
+
+  OpenAI, Azure, and Vertex AI image generation now support editing images using
+  historical context from earlier in the conversation.
+
+  ### Connectors
+
+  - SharePoint connector received a major scalability rework, including delta
+    sync, more resilient credential refresh, better permission sync, and
+    substantially better throughput on large multi-site tenants
+  - LM Studio is available as a new LLM provider
+  - Slack connector can now optionally include bot messages during indexing
+  - Slack bot responses convert markdown tables to a Slack-friendly format and
+    sanitize HTML and broken citation links
+  - New local file connector for Craft
+  - Slab connector validation
+  - Confluence and Google Drive connectors are now backed by hierarchy nodes for
+    more accurate pruning
+
+  ### Craft and Artifacts
+
+  - PPTX generation, editing, and preview
+  - Improved PDF preview and a refreshed output panel
+  - Sandbox sessions persist across sleep/wake
+  - Shareable webapp URLs with two-tier access control
+  - Output files are downloadable from the Artifacts tab
+  - S3 snapshot files are cleaned up when a craft is deleted
+
+  ### Agents and Chat
+
+  - Featured agents with labels can be highlighted in the agent picker without
+    being public
+  - New chat sharing UI with cleaner permissioning
+  - Refreshed admin Chat Preferences page
+  - Infinite scroll in the chat session sidebar
+  - Configurable MCP host setting
+  - Tab reading from the Chrome extension side panel
+  - Tooltip and timeline polish, including better tool status messages and a fix
+    for double-collapse in agent timelines
+  - Throughout the codebase and UI, "assistant" identifiers have been renamed to
+    "agent" for consistency, and "LLM Models" is now "Language Models"
+
+  ### Auth and Licensing
+
+  - Enterprise license enforcement is now on by default; deployments without a
+    valid license fall back to a gated mode
+  - Seat limits are enforced on every user-creation path, including bulk invite
+    and Slack
+  - Slack users are excluded from seat counts; deactivated Slack users can be
+    reactivated when seats are available
+  - New invite-whitelist setting with a dedicated "account blocked" page for
+    users outside the whitelist
+  - Public OAuth clients are now supported via Dynamic Client Registration
+
+  ### Deployment, Helm, and Observability
+
+  - Production Prometheus instrumentation for the API server, including
+    SQLAlchemy connection pool and per-tenant metrics
+  - OpenSearch is included in the default `docker-compose.yml` and Helm chart
+  - Code Interpreter is included in the default Docker and Helm deployments
+  - Dedicated Celery migration queue in the Helm chart
+  - KEDA `idleReplicaCount` is now optional and fallbacks apply only on custom
+    metrics
+  - nginx routes `/openapi.json` to the API server correctly
+  - EE license public key is now baked into the Docker image
+  - New Postgres-backed cache backend abstraction for caches that previously
+    required Redis
+  - Background tasks can run via FastAPI in addition to Celery
+
+  ### Notable Bug Fixes
+
+  - Fixed Bedrock tool calling configuration and tool content handling without
+    `toolConfig`
+  - Fixed Vertex AI Claude Opus 4.6 model selection and sorted Vertex model
+    names
+  - Fixed Ollama context-window passthrough, content skipping, and DeepSeek
+    handling
+  - Fixed Anthropic model selection under multi-tenant
+  - Fixed desktop app link clicking behavior
+  - Fixed basic users being unable to share agents
+  - Fixed `/llm/provider` returning a filtered set of providers
+  - Fixed model configuration not populating during sync
+  - Fixed metadata file handling for larger ZIPs
+  - Fixed SharePoint credential refresh and `driveItem` permission sync
+  - Fixed `open_url` on non-normalized URLs and SearXNG web search
+  - Fixed search tool being enabled when no knowledge sources were selected
+  - Fixed Google connectors redirecting to an auth error page after disconnect
+  - Fixed Gong connector to respect the `Retry-After` header
+  - Multiple UI fixes across modals, dropdowns, sidebar, whitelabel logo, code
+    blocks, popovers, and the projects modal
+
+  ---
+
+  Our [GitHub
+  Releases](https://github.com/onyx-dot-app/onyx/releases?utm_source=docs&utm_content=changelog)
+  page has the full list of changes and bug fixes for each release.
+
+</Update>
+
 <Update label="v2.12.0" description="March 1st, 2026" tags={["New Features", "Bug Fixes", "Performance"]}>
 
   ## v2.12.0
