@@ -81,7 +81,8 @@
             "pages": [
               "deployment/local/docker",
               "deployment/local/kubernetes",
-              "deployment/local/terraform"
+              "deployment/local/terraform",
+              "deployment/local/opensearch"
             ]
           },
           {
