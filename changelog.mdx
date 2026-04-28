@@ -20,9 +20,6 @@ rss: true
   Two default behaviors changed in v3.1.0 that operators should be aware of
   before upgrading:
 
-  - **Agents are private by default.** Newly-created agents are no longer
-    shared with everyone in the deployment unless the creator explicitly
-    chooses to share them.
   - **OpenSearch admin password default removed.** The standard
     `docker-compose.yml` no longer ships a fallback for
     `OPENSEARCH_ADMIN_PASSWORD`. If you previously relied on the default, set
@@ -95,10 +92,13 @@ rss: true
   - Tool call arguments now stream live, with a delta-based jsonriver
     implementation
   - Custom tools have improved error handling and a refreshed timeline UI
-  - Configurable file upload size limit, with a frontend precheck for
-    oversized uploads
+  - Configurable file upload size limit, with a frontend precheck for oversized
+    uploads. This can be configured in the Admin Panel, under Advanced Options
+    for Chat Preferences.
+    <img className="rounded-image" src="/assets/changelog/v3.1/file_attachment_size_limit_page.png" alt="File Attachment Size Limit"/>
   - More file types can be attached to chats, and the file preview supports
-    significantly more formats
+    significantly more formats. File types which are not explicitly
+    supported/recognized are parsed using a text-detection heuristic.
   - Slackbot now resolves channel references and can filter search results by
     channel
   - Search state machine consolidated for more predictable behavior
@@ -117,8 +117,6 @@ rss: true
 
   ### Performance
 
-  - jemalloc replaces glibc malloc in the API server, reducing memory
-    fragmentation
   - Stop deep-copying during indexing
   - Plaintext file results are now cached in chat
   - OpenSearch tuning continues with configurable shards/replicas, configurable
@@ -136,11 +134,6 @@ rss: true
 
   ### Notable Bug Fixes
 
-  - Fixed Vespa ACL query failures by using `weightedSet` for filters
-  - Fixed assistant file transfer
-  - Fixed default model removal/hiding edge cases
-  - Fixed Craft webapp asset and HMR reload leaks, and a route conflict in the
-    webapp download endpoint
   - Fixed CSV inline display responsiveness and comma-literal parsing
   - Fixed memories immediately losing focus on click
   - Fixed numerous modal centering, popover, sidebar, and Safari-specific UI
