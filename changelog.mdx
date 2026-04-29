@@ -52,13 +52,13 @@ rss: true
 
   ## Additional Improvements
 
-  ### Onyx CLI
+  ### [Onyx CLI](https://docs.onyx.app/overview/onyx_anywhere/cli)
 
   - `onyx-cli serve` over SSH for working with remote deployments
   - `onyx install-skill` command
   - Version compatibility check between CLI and backend
   - Streaming markdown rendering in CLI output
-  - Agent-friendly output mode
+  - [Agent-friendly output mode](https://docs.onyx.app/overview/onyx_anywhere/cli#using-as-an-ai-coding-assistant-skill)
 
   ### Connectors
 
@@ -82,8 +82,6 @@ rss: true
 
   - Migrated limited-role checks to account-type-based access control
   - Default Admin and Basic user groups are now seeded automatically
-  - Federated credentials are protected from corruption when masked secrets
-    are submitted
 
   ### Performance
 
@@ -92,8 +90,8 @@ rss: true
     eliminating duplicate fetches and stabilizing revalidation behavior
   - Removed unnecessary user-memory eager loads from auth paths
   - Indexing pipeline streams chunks through a unified iterable-based
-    abstraction with batched processing across both Vespa and OpenSearch,
-    improving memory usage and throughput on large corpora
+    abstraction with batched processing, improving memory usage and throughput
+    on large corpora
 
   ### Deployment and Observability
 
