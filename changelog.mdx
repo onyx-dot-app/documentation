@@ -6,6 +6,147 @@ mode: "wide"
 rss: true
 ---
 
+<Update label="v3.1.0" description="April 1st, 2026" tags={["New Features", "Bug Fixes", "Performance"]}>
+
+  ## v3.1.0
+
+  Voice mode lands, the new Hook system opens up Onyx for extension, the Admin
+  Users and Groups pages get a full rewrite, and we've added two new LLM
+  gateway providers. Thank you to our contributors for helping make this
+  release possible!
+
+  ## [Update] Defaults that Changed
+
+  Two default behaviors changed in v3.1.0 that operators should be aware of
+  before upgrading:
+
+  - **OpenSearch admin password default removed.** The standard
+    `docker-compose.yml` no longer ships a fallback for
+    `OPENSEARCH_ADMIN_PASSWORD`. If you previously relied on the default, set
+    the password explicitly in your environment before upgrading.
+
+  ## Key Improvements
+
+  ### Voice Mode
+
+  [Onyx now supports voice conversations
+  end-to-end](https://docs.onyx.app/overview/core_features/voice_mode#voice-mode).
+  [Speech-to-text and text-to-speech are configurable from the Admin
+  Panel](https://docs.onyx.app/admins/actions/voice_mode#voice-mode), and chats
+  can be revisited with their voice playback intact.
+
+  <img className="rounded-image" src="/assets/changelog/v3.1/voice_page.png" alt="Voice Admin Page"/>
+
+  ### Hooks
+
+  Onyx now ships a first-party Hook system for extending behavior at
+  well-defined points in the request lifecycle. [Hooks are managed from a new
+  admin
+  page](https://docs.onyx.app/admins/advanced_configs/hook_extensions#hooks),
+  configured through a connect/manage modal, and currently integrate with the
+  query-processing pipeline, with more hook points planned.
+
+  ### Redesigned Admin Users and Groups
+
+  The admin Users page has been rebuilt from the ground up with a stats bar,
+  server-side pagination, role/group/status filters, inline role editing, an
+  invite flow, and edit-group-membership. The Groups page is also new, with
+  list and create/edit pages, inline renaming, shared resources, and
+  token-limit configuration.
+
+  <img className="rounded-image" src="/assets/changelog/v3.1/users_page.png" alt="Users and Requests Admin Page"/>
+
+  ### LiteLLM and Bifrost gateway providers
+
+  Two new LLM gateway integrations join the provider list:
+  [**LiteLLM**](https://docs.onyx.app/admins/ai_models/litellm_proxy), which
+  auto-fetches available models from your LiteLLM proxy, and
+  [**Bifrost**](https://docs.onyx.app/admins/ai_models/bifrost#bifrost),
+  configurable from a dedicated provider modal. Both make it easier to
+  centralize model access and routing through your existing infrastructure.
+
+  ## Contributor Highlights
+
+  - [@Fizza-Mukhtar](https://github.com/Fizza-Mukhtar) fixed an LLM bug where
+    Onyx was sending `tool_choice` even when no tools were provided!
+  - [@ciaransweet](https://github.com/ciaransweet) corrected the OpenSearch
+    admin password `secretKeyRef` documentation in the Helm values file!
+  - [@benwu408](https://github.com/benwu408) contributed the initial scaffold
+    for a new Canvas connector!
+
+  ## Additional Improvements
+
+  ### Connectors
+
+  - SharePoint connector gained deduplication, filters/denylists, non-public
+    shareable links, and better error logging
+  - Notion connector upgraded to the latest API version
+  - Confluence client retries on transient failures
+  - Jira large-batch JSON decode fix
+  - Google Drive: rate-limit retry and fallback access path for externally
+    owned items
+  - Discord connector now properly cleans up async resources
+
+  ### Agents and Chat
+
+  - Tool call arguments now stream live, with a delta-based jsonriver
+    implementation
+  - Custom tools have improved error handling and a refreshed timeline UI
+  - Configurable file upload size limit, with a frontend precheck for oversized
+    uploads. This can be configured in the Admin Panel, under Advanced Options
+    for Chat Preferences.
+    <img className="rounded-image" src="/assets/changelog/v3.1/file_attachment_size_limit_page.png" alt="File Attachment Size Limit"/>
+  - More file types can be attached to chats, and the file preview supports
+    significantly more formats. File types which are not explicitly
+    supported/recognized are parsed using a text-detection heuristic.
+  - Slackbot now resolves channel references and can filter search results by
+    channel
+  - Search state machine consolidated for more predictable behavior
+
+  ### Auth and Security
+
+  - PKCE support for OIDC
+
+  ### LLM providers
+
+  - LiteLLM and Bifrost gateways
+  - All provider types can now be deleted (previously some were soft-locked)
+  - Editing an LLM provider correctly uses the global default model
+  - Surface masked OpenAI quota failures so users see a real error
+  - Filter embedding models out of LiteLLM model lists
+
+  ### Performance
+
+  - Stop deep-copying during indexing
+  - Plaintext file results are now cached in chat
+  - OpenSearch tuning continues with configurable shards/replicas, configurable
+    Vespa migration page size, configurable hybrid subquery hits, vectors
+    excluded from hybrid/random search payloads, and Prometheus metrics for
+    retrieval
+
+  ### Deployment
+
+  - Windows installer
+  - Terraform module for OpenSearch on AWS
+  - Configurable `api_server` resource limits in Docker
+  - Reusable Prometheus metrics server for Celery workers, with queue depth,
+    connector health, task lifecycle, and per-connector metrics
+
+  ### Notable Bug Fixes
+
+  - Fixed CSV inline display responsiveness and comma-literal parsing
+  - Fixed memories immediately losing focus on click
+  - Fixed numerous modal centering, popover, sidebar, and Safari-specific UI
+    issues
+
+  ---
+
+  Our [GitHub
+  Releases](https://github.com/onyx-dot-app/onyx/releases?utm_source=docs&utm_content=changelog)
+  page has the full list of changes and bug fixes for each release.
+
+</Update>
+
 <Update label="v3.0.0" description="March 9th, 2026" tags={["New Features", "Deployment Changes", "Bug Fixes"]}>
 
   ## v3.0.0
