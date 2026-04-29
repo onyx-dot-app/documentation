@@ -6,6 +6,123 @@ mode: "wide"
 rss: true
 ---
 
+<Update label="v3.2.0" description="April 9th, 2026" tags={["New Features", "Performance", "Bug Fixes"]}>
+
+  ## v3.2.0
+
+  Multi-model chat lets you run a prompt across several models at once and pick
+  the best response, a generic OpenAI-compatible provider opens the door to any
+  LLM endpoint, the indexing pipeline gets a significant performance rework,
+  and the Hook system matures with a second hook point and admin status views.
+  Thank you to our contributors for helping make this release possible!
+
+  ## Key Improvements
+
+  ### Multi-Model Chat
+
+  You can now send a single prompt to multiple models in parallel and compare
+  their responses side by side. Pick the response you like best to continue
+  the conversation with that model, or deselect to keep exploring. Multi-model
+  is wired through the chat UI and the Chrome extension.
+
+  <img className="rounded-image" src="/assets/changelog/v3.2/multi_modal_chat.png" alt="Multi-Modal Chat"/>
+
+  ### Generic OpenAI-Compatible Provider
+
+  Onyx now ships a generic "OpenAI Compatible" provider that lets you point at
+  any OpenAI-compatible endpoint — local inference servers, gateway proxies,
+  or self-hosted model runners — without needing a dedicated integration. The
+  Custom LLM provider configuration was also reworked to support this cleanly.
+
+  ### Hooks: status, logs, and document ingestion
+
+  The Hook system introduced in v3.1.0 has matured. A new admin page lets you
+  create, edit, and monitor hooks with live status and logs, and a second
+  integration point — document ingestion — joins query processing in the set
+  of hookable lifecycle events. Connection-lost states surface clearly in the
+  UI when a hook becomes unreachable.
+
+  <img className="rounded-image" src="/assets/changelog/v3.2/hook_extensions_page.png" alt="Hook Extensions Page"/>
+
+  ## Contributor Highlights
+
+  - [@alex000kim](https://github.com/alex000kim) added an optional CA
+    certificate update step to the api-server startup in the Helm chart,
+    making it easier to deploy Onyx behind corporate TLS-inspecting proxies!
+
+  ## Additional Improvements
+
+  ### Onyx CLI
+
+  - `onyx-cli serve` over SSH for working with remote deployments
+  - `onyx install-skill` command
+  - Version compatibility check between CLI and backend
+  - Streaming markdown rendering in CLI output
+  - Agent-friendly output mode
+
+  ### Connectors
+
+  - Notion connector now extracts people properties and inline table content
+  - Discord connector validates tokens up front
+
+  ### Chat and search
+
+  - Files exceeding the token limit can still be uploaded; only indexing is
+    skipped
+  - Citation badges in the embedded chat widget
+
+  ### LLM providers
+
+  - Generic OpenAI-Compatible provider type
+  - Custom LLM provider configuration revamp, with first-class fields
+    extracted from the key-value list
+  - Force-delete supported for the last remaining LLM provider
+
+  ### Auth and Security
+
+  - Migrated limited-role checks to account-type-based access control
+  - Default Admin and Basic user groups are now seeded automatically
+  - Federated credentials are protected from corruption when masked secrets
+    are submitted
+
+  ### Performance
+
+  - Chat sessions query optimized to prevent cascading DB failures under load
+  - Many client-side requests migrated to SWR with a centralized key registry,
+    eliminating duplicate fetches and stabilizing revalidation behavior
+  - Removed unnecessary user-memory eager loads from auth paths
+  - Indexing pipeline streams chunks through a unified iterable-based
+    abstraction with batched processing across both Vespa and OpenSearch,
+    improving memory usage and throughput on large corpora
+
+  ### Deployment and Observability
+
+  - Grafana dashboard provisioning via Helm, with a dedicated OpenSearch
+    retrieval dashboard
+  - AWS deployment additions: RDS snapshots, EKS CloudWatch logging, RDS CPU
+    / memory / IO alerts, and support for multiple Postgres hosts
+
+  ### Notable Bug Fixes
+
+  - Fixed owner-password-only PDFs being incorrectly rejected as protected
+  - Fixed XLSX empty row/column handling
+  - Fixed PowerPoint chart conversion failing during indexing
+  - Fixed paused file connectors not reindexing correctly
+  - Fixed MCP server propagating generic error messages instead of the real
+    cause
+  - Fixed mobile sidebar overlapping content on medium-sized screens, plus
+    several other sidebar and modal responsive issues
+  - Fixed default-provider selection when multiple providers share the same
+    type
+
+  ---
+
+  Our [GitHub
+  Releases](https://github.com/onyx-dot-app/onyx/releases?utm_source=docs&utm_content=changelog)
+  page has the full list of changes and bug fixes for each release.
+
+</Update>
+
 <Update label="v3.1.0" description="April 1st, 2026" tags={["New Features", "Bug Fixes", "Performance"]}>
 
   ## v3.1.0
