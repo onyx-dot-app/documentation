@@ -422,6 +422,7 @@ The response body is not used — any `2xx` response is treated as success.
 | Default Timeout | 30 seconds (configurable) |
 | Default Fail Strategy | Soft (configurable) |
 | On Soft Fail | The push is skipped; indexing continues |
+| On Hard Fail | The indexing batch will fail |
 
 ### Input Schema
 
@@ -443,7 +444,7 @@ Onyx sends a `POST` request to your endpoint once per successfully indexed docum
 |---|---|---|
 | `document_id` | string | Unique identifier for the document. |
 | `title` | string \| null | Title of the document. |
-| `content` | string | Full text content (all text sections concatenated). |
+| `content` | string | Full text content (all text sections joined with a space). |
 | `source` | string | Connector source type (e.g. `confluence`, `slack`, `google_drive`). For the full list see [`DocumentSource`](https://github.com/onyx-dot-app/onyx/blob/main/backend/onyx/configs/constants.py) in the Onyx source code. |
 | `url` | string \| null | Canonical URL of the document at its source, if available. |
 | `doc_updated_at` | string \| null | ISO 8601 UTC timestamp of the last update at the source, or `null` if unknown. |
