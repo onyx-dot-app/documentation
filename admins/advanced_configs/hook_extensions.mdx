@@ -491,39 +491,19 @@ URL](https://docs.aws.amazon.com/lambda/latest/dg/lambda-urls.html).
   import logging
   import os
 
-  import boto3
-
   logger = logging.getLogger()
   logger.setLevel(logging.INFO)
 
-  # Set the HOOK_API_KEY environment variable in your Lambda configuration.
-  # If not set, API key validation is skipped.
   API_KEY = os.environ.get("HOOK_API_KEY")
 
-  # Example: forward to an S3 bucket for archiving
-  s3 = boto3.client("s3")
-  BUCKET = os.environ.get("TARGET_BUCKET", "my-onyx-archive")
-
   def lambda_handler(event, context):
-      # Validate API key if configured
       if API_KEY:
           auth = (event.get("headers") or {}).get("authorization", "")
           if auth != f"Bearer {API_KEY}":
-              logger.warning("Unauthorized request — invalid or missing API key")
               return {"statusCode": 401, "body": json.dumps({"error": "Unauthorized"})}
 
       body = json.loads(event.get("body", "{}"))
-      document_id = body.get("document_id", "unknown")
-
-      logger.info("Received document push: id=%s source=%s", document_id, body.get("source"))
-
-      # Write to S3
-      s3.put_object(
-          Bucket=BUCKET,
-          Key=f"documents/{document_id}.json",
-          Body=json.dumps(body),
-          ContentType="application/json",
-      )
+      logger.info("Received document: id=%s title=%s", body.get("document_id"), body.get("title"))
 
       return {"statusCode": 200, "body": "{}"}
   ```
