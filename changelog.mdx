@@ -11,86 +11,77 @@ rss: true
   ## v3.0.0
 
   The Vespa to OpenSearch migration is here, SCIM 2.0 lands for Enterprise,
-  search and chat are unified into a single experience, Code Interpreter ships
-  by default, and Onyx Lite and the Onyx CLI debut. v3.0.0 is the largest
-  release we've ever cut. Thank you to our contributors for helping make this
-  release possible!
+  search and chat are unified into a single experience, Code Interpreter ships by default,
+  and Onyx Lite and the Onyx CLI debut. v3.0.0 is the largest release we've ever cut.
+  Thank you to our contributors for helping make this release possible!
 
   ## [Update] OpenSearch Migration
 
-  v3.0.0 ships the full Vespa to OpenSearch migration toolchain. OpenSearch now
-  runs alongside Vespa in the standard `docker-compose.yml` and Helm chart, and
-  admins get a new Migration tab in the Admin Panel for kicking off and
-  monitoring the migration with live progress.
-  
-  Vespa continues to serve all queries throughout the migration by default. Once
-  the migration completes, admins can switch Onyx to read from OpenSearch. Setup
-  details and guidance live in the [OpenSearch deployment
-  guide](https://docs.onyx.app/deployment/local/opensearch), and the full
-  migration walkthrough is in the [Vespa to OpenSearch migration
+  v3.0.0 ships the full Vespa to OpenSearch migration toolchain.
+  OpenSearch now runs alongside Vespa in the standard `docker-compose.yml` and Helm chart,
+  and admins get a new Migration tab in the Admin Panel for kicking off and monitoring the migration with live progress.
+
+  Vespa continues to serve all queries throughout the migration by default. Once the migration completes,
+  admins can switch Onyx to read from OpenSearch.
+  Setup details and guidance live in the [OpenSearch deployment
+  guide](https://docs.onyx.app/deployment/local/opensearch),
+  and the full migration walkthrough is in the [Vespa to OpenSearch migration
   guide](https://docs.onyx.app/admins/advanced_configs/opensearch_document_index_migration).
 
   ## Upgrade Path to v4.0.0
 
-  v3.0.0 starts the final stretch of the Vespa to OpenSearch migration. **Every
-  deployment must run a v3.x.x release long enough for the migration to complete
-  before upgrading to v4.x.x, where Vespa will be fully removed.** If you skip
-  v3 entirely, you will lose all of your indexed data and have to re-index from
-  scratch — including re-uploading any Project files.
+  v3.0.0 starts the final stretch of the Vespa to OpenSearch migration.
+  **Every deployment must run a v3.x.x release long enough for the migration to complete before upgrading to v4.x.x,
+  where Vespa will be fully removed.** If you skip v3 entirely,
+  you will lose all of your indexed data and have to re-index from scratch — including re-uploading any Project files.
 
   ## Key Improvements
 
   ### SCIM 2.0 User and Group Provisioning
 
-  Onyx Enterprise now ships a complete SCIM 2.0 implementation. Identity
-  providers like Okta and Entra ID can create, update, and deactivate users and
-  groups against Onyx via the standard `/scim/v2/*` endpoints with bearer-token
-  auth. Admins can mint and rotate SCIM tokens from a new section in the Admin
-  Panel, and we've passed Okta's Runscope spec test for OIN submission. [More
-  details can be found in our
-  documentation.](https://docs.onyx.app/deployment/authentication/scim#scim)
+  Onyx Enterprise now ships a complete SCIM 2.0 implementation. Identity providers like Okta and Entra ID can create,
+  update, and deactivate users and groups against Onyx via the standard `/scim/v2/*` endpoints with bearer-token auth.
+  Admins can mint and rotate SCIM tokens from a new section in the Admin Panel,
+  and we've passed Okta's Runscope spec test for OIN submission.
+  [More details can be found in our documentation.](https://docs.onyx.app/deployment/authentication/scim#scim)
 
   ### Unified Search and Chat
 
-  Search and chat are now driven from the same input bar, with smooth animated
-  transitions between modes. Whether you're asking a question of an agent or
-  running a quick keyword search across your knowledge base, you start in the
-  same place.
+  Search and chat are now driven from the same input bar, with smooth animated transitions between modes.
+  Whether you're asking a question of an agent or running a quick keyword search across your knowledge base,
+  you start in the same place.
 
   ### Code Interpreter, by default
 
-  Code Interpreter is now part of the default deployment for both Docker and
-  Helm — no extra setup required. Sessions stream output as they run, accept
-  file inputs, embed generated images directly into chat, and ship with rich
-  preview modals for CSV, PDF, and DOCX outputs. The Python tool is also enabled
-  by default on the default agent. [More information can be found
-  here.](https://docs.onyx.app/admins/actions/code_interpreter)
+  Code Interpreter is now part of the default deployment for both Docker and Helm — no extra setup required.
+  Sessions stream output as they run, accept file inputs, embed generated images directly into chat,
+  and ship with rich preview modals for CSV, PDF, and DOCX outputs.
+  The Python tool is also enabled by default on the default agent.
+  [More information can be found here.](https://docs.onyx.app/admins/actions/code_interpreter)
 
   ### Onyx CLI
 
-  A new command-line tool for working with Onyx, distributed as a PyPI package
-  and a Docker image. Look for `onyx-cli` to grow over the next few releases.
+  A new command-line tool for working with Onyx, distributed as a PyPI package and a Docker image.
+  Look for `onyx-cli` to grow over the next few releases.
   [Get started here.](https://docs.onyx.app/overview/onyx_anywhere/cli#cli)
 
   ### Onyx Lite
 
-  A new "lite" deployment mode for installations that don't need a vector
-  database. Onyx Lite runs without the indexing stack and is suitable for
-  chat-only and tooling-focused use cases.
+  A new "lite" deployment mode for installations that don't need a vector database.
+  Onyx Lite runs without the indexing stack and is suitable for chat-only and tooling-focused use cases.
 
   ## Contributor Highlights
 
   - [@victoriamreese](https://github.com/victoriamreese) added a configurable
-    MCP host setting and continued to harden Helm and KEDA scaling for
-    self-hosted deployments!
+    MCP host setting and continued to harden Helm and KEDA scaling for self-hosted deployments!
 
   ## Additional Improvements
 
   ### Connectors
 
   - SharePoint connector received a major scalability rework, including delta
-    sync, more resilient credential refresh, better permission sync, and
-    substantially better throughput on large multi-site tenants
+    sync, more resilient credential refresh, better permission sync,
+    and substantially better throughput on large multi-site tenants
   - Slack connector can now optionally include bot messages during indexing
   - Slack bot responses convert markdown tables to a Slack-friendly format and
     sanitize HTML and broken citation links
@@ -152,8 +143,7 @@ rss: true
 
   ---
 
-  Our [GitHub
-  Releases](https://github.com/onyx-dot-app/onyx/releases?utm_source=docs&utm_content=changelog)
+  Our [GitHub Releases](https://github.com/onyx-dot-app/onyx/releases?utm_source=docs&utm_content=changelog)
   page has the full list of changes and bug fixes for each release.
 
 </Update>

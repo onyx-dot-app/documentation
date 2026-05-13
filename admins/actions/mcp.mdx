@@ -27,9 +27,9 @@ You can configure Onyx to be an MCP client and allow your Agents to retrieve dat
     <img className="rounded-image" src="/assets/overview/core_features/mcp.png" alt="Add MCP Server dialog in Onyx Admin Panel"/>
 
     - **Server Name** — A human-readable name for this MCP server.
-      Typically the name of the service you're connecting to (e.g. "Slack", "Jira").
+    Typically the name of the service you're connecting to (e.g. "Slack", "Jira").
     - **Description** — Any additional information that helps identify the server.
-      Useful for distinguishing multiple configured MCP server connections that talk to the same service.
+    Useful for distinguishing multiple configured MCP server connections that talk to the same service.
     - **MCP Server URL** — The URL of the MCP server, which must be reachable from your Onyx instance. Most URLs end in `/mcp`, or `/sse` for older servers.
     - **Managed MCP server:** The URL is typically found in the provider's documentation describing how to connect.
     - **Self-hosted MCP server:** You'll need to run your server in HTTP transport mode — Onyx doesn't currently support connecting via stdio. If the server is running on the same machine as Onyx, use `http://127.0.0.1:<port>`. Otherwise, use the URL and port the server is exposed at.
@@ -56,12 +56,12 @@ You can configure Onyx to be an MCP client and allow your Agents to retrieve dat
     There are two sub-modes:
 
     - **Shared Key** — The admin configures a single API key used for all user requests.
-      Similar to No Auth in that users won't need any additional configuration and will all get the same level of access
-      (whatever is provided by the API key you choose).
+    Similar to No Auth in that users won't need any additional configuration and will all get the same level of access
+    (whatever is provided by the API key you choose).
     - **Individual Key** — Users authenticate in the chat flow by providing their own API key(s)
-      to connect to the server. Useful when you want users to have differing access to an external service by identity.
-      This mode is also the most configurable — Onyx allows the admin to specify arbitrary header patterns to send to
-      the MCP server.
+    to connect to the server. Useful when you want users to have differing access to an external service by identity.
+    This mode is also the most configurable — Onyx allows the admin to specify arbitrary header patterns to send to the
+    MCP server.
 
 ### OAuth
 
