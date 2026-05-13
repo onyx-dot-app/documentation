@@ -404,6 +404,133 @@ the material should not appear in results since file connector documents are bei
 
 ---
 
+## Document Push
+
+The Document Push hook point fires after each document is successfully indexed.
+Use it to push indexed content to an external destination such as a wiki, data warehouse, or audit log.
+
+Unlike Document Ingestion (which runs before indexing and can modify or drop documents),
+this hook fires **after** the document has been written to the index.
+The response body is not used — any `2xx` response is treated as success.
+
+<Note>
+  Document Push only fires for **public connectors** in **single-tenant** deployments.
+</Note>
+
+| Setting | Value |
+|---|---|
+| Default Timeout | 30 seconds (configurable) |
+| Default Fail Strategy | Soft (configurable) |
+| On Soft Fail | The push is skipped; indexing continues |
+| On Hard Fail | The indexing batch will fail |
+
+### Input Schema
+
+Onyx sends a `POST` request to your endpoint once per successfully indexed document with the following JSON body:
+
+```json
+{
+  "document_id": "string",
+  "title": "string | null",
+  "content": "string",
+  "source": "string",
+  "url": "string | null",
+  "doc_updated_at": "string | null",
+  "metadata": { "key": ["string"] }
+}
+```
+
+| Field | Type | Description |
+|---|---|---|
+| `document_id` | string | Unique identifier for the document. |
+| `title` | string \| null | Title of the document. |
+| `content` | string | Full text content (all text sections joined with a space). |
+| `source` | string | Connector source type (e.g. `confluence`, `slack`, `google_drive`). For the full list see [`DocumentSource`](https://github.com/onyx-dot-app/onyx/blob/main/backend/onyx/configs/constants.py) in the Onyx source code. |
+| `url` | string \| null | Canonical URL of the document at its source, if available. |
+| `doc_updated_at` | string \| null | ISO 8601 UTC timestamp of the last update at the source, or `null` if unknown. |
+| `metadata` | object | Key-value metadata. Values are always `string[]`. |
+
+**Example**
+
+```json
+{
+  "document_id": "confluence::page::789012",
+  "title": "Engineering Onboarding Guide",
+  "content": "Welcome to the engineering team. This guide covers...",
+  "source": "confluence",
+  "url": "https://wiki.example.com/pages/789012",
+  "doc_updated_at": "2025-03-15T09:30:00.000000+00:00",
+  "metadata": {
+    "space": ["Engineering"],
+    "labels": ["onboarding", "guide"]
+  }
+}
+```
+
+### Output Schema
+
+The response body is **not used** — any `2xx` status code is treated as success.
+Your endpoint can return an empty body or any JSON object.
+
+### Authentication
+
+If you configured an API key when registering the hook, Onyx includes it in every request:
+
+```
+Authorization: Bearer <your-api-key>
+```
+
+### Lambda Example
+
+You can use an [AWS Lambda function](https://docs.aws.amazon.com/lambda/latest/dg/getting-started.html)
+as your hook endpoint by exposing it over HTTPS via a [Lambda Function
+URL](https://docs.aws.amazon.com/lambda/latest/dg/lambda-urls.html).
+
+<Accordion title="Lambda Example (Python)">
+  ```python
+  import json
+  import logging
+  import os
+
+  logger = logging.getLogger()
+  logger.setLevel(logging.INFO)
+
+  API_KEY = os.environ.get("HOOK_API_KEY")
+
+  def lambda_handler(event, context):
+      if API_KEY:
+          auth = (event.get("headers") or {}).get("authorization", "")
+          if auth != f"Bearer {API_KEY}":
+              return {"statusCode": 401, "body": json.dumps({"error": "Unauthorized"})}
+
+      body = json.loads(event.get("body", "{}"))
+      logger.info("Received document: id=%s title=%s", body.get("document_id"), body.get("title"))
+
+      return {"statusCode": 200, "body": "{}"}
+  ```
+</Accordion>
+
+### Testing
+
+Use `curl` to test your endpoint before connecting it to Onyx:
+
+```bash
+curl -X POST https://<your-function-url> \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer <your-api-key>" \
+  -d '{
+    "document_id": "confluence::page::789012",
+    "title": "Engineering Onboarding Guide",
+    "content": "Welcome to the engineering team. This guide covers...",
+    "source": "confluence",
+    "url": "https://wiki.example.com/pages/789012",
+    "doc_updated_at": "2025-03-15T09:30:00.000000+00:00",
+    "metadata": { "space": ["Engineering"], "labels": ["onboarding"] }
+  }'
+```
+
+---
+
 ## Query Processing
 
 The Query Processing hook point lets you intercept every user query before it enters the Onyx pipeline.
