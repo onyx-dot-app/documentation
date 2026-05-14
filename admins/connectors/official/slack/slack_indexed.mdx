@@ -9,6 +9,9 @@ The Slack connector indexes all public channels for a given workspace.
 
 To index private channels, add the Slack App to the private channel.
 
+For Slack Enterprise Grid orgs, a single install covers every workspace in the
+org. See [Enterprise Grid setup](#enterprise-grid-setup) below.
+
 ## Setting up
 
 ### Authorization
@@ -97,3 +100,120 @@ settings:
 <img className="rounded-image" src="/assets/admins/connectors/slack/SlackId.png" alt="Locating the Slack workspace ID in the app configuration"/>
 
 **Note:** The first indexing pulls all of the public channels and takes longer than future updates.
+
+## Enterprise Grid setup
+
+If your Slack instance is an [Enterprise Grid](https://slack.com/help/articles/360000281563) org with multiple
+workspaces, install the app once at the org level instead of per workspace. Onyx detects Grid automatically from
+the bot token and indexes every workspace the bot is installed in.
+
+<Note>
+  You must be an **Org Owner** or **Org Admin** of the Slack Enterprise Grid org to do the org-level install.
+</Note>
+
+### What changes vs the single-workspace setup
+
+- The app manifest must enable org-level deploys and include the `team:read` scope.
+- The app is installed once **to the organization** (not to a single workspace) and must then be added to each
+  workspace whose channels you want indexed.
+- Channel links in indexed documents resolve to the correct per-workspace URL.
+- Document permissions for public channels are scoped to the users in the workspaces the channel is shared into
+  (not the entire org), so a user in Workspace A cannot see Workspace B's public channel documents in Onyx.
+
+### Authorization (Grid)
+
+<Steps>
+  <Step title="Create a new Slack app">
+    On [https://api.slack.com/apps](https://api.slack.com/apps), click **Create New App** → **From an app manifest**.
+    Select **any** workspace inside your Grid org as the development workspace (the manifest below promotes the app
+    to org-level on install).
+  </Step>
+
+  <Step title="Use the Grid manifest">
+    Paste the following manifest. The two differences from the single-workspace manifest are
+    `org_deploy_enabled: true` and the added `team:read` bot scope:
+
+```yaml
+display_information:
+  name: OnyxConnector
+  description: ReadOnly Connector for indexing Onyx
+features:
+  bot_user:
+    display_name: OnyxConnector
+    always_online: false
+oauth_config:
+  scopes:
+    bot:
+      - channels:history
+      - channels:read
+      - groups:history
+      - groups:read
+      - channels:join
+      - im:history
+      - users:read
+      - users:read.email
+      - usergroups:read
+      - team:read
+settings:
+  org_deploy_enabled: true
+  socket_mode_enabled: false
+  token_rotation_enabled: false
+```
+  </Step>
+
+  <Step title="Install to the organization">
+    Open **OAuth & Permissions** and click **Install to Organization** (not "Install to Workspace"). Approve the
+    request as an Org Admin.
+  </Step>
+
+  <Step title="Add the bot to each workspace">
+    From the Grid org admin panel (`https://<your-org>.enterprise.slack.com/admin`) → **Apps** → **Onyx Connector**,
+    add the app to each workspace you want indexed. Without this step `auth.teams.list` returns zero workspaces and
+    Onyx will only see the workspace the app was developed in.
+  </Step>
+
+  <Step title="Copy the org-level bot token">
+    Back on the app's **OAuth & Permissions** page, copy the **Bot User OAuth Token**. The token starts with `xoxb-`
+    just like a regular bot token but carries org-level permissions.
+  </Step>
+</Steps>
+
+### Indexing (Grid)
+
+The connector setup in Onyx is identical to the single-workspace flow — paste the bot token and click **Connect**.
+Onyx inspects `auth.test()` on the token; if `enterprise_id` is present it switches to Grid mode automatically:
+
+- Enumerates workspaces via `auth.teams.list`
+- Lists channels per workspace via `conversations.list?team_id=...` and dedupes org-shared channels
+- Resolves the per-workspace URL via `team.info` for channel link building
+- Builds per-workspace user-email sets for public-channel permission scoping
+
+### Permission scoping behavior
+
+| Channel type | ACL on Onyx |
+| -- | -- |
+| Public channel in one workspace | Granted to users of that workspace |
+| Org-shared public channel (`is_org_shared: true`) | Granted to the union of users across all `shared_team_ids` |
+| Private channel | Granted to the channel's actual members (workspace-agnostic) |
+| Union exceeds 5000 users or all teams unknown | Falls back to `is_public=true` so the doc stays searchable |
+
+### Troubleshooting (Grid)
+
+<AccordionGroup>
+  <Accordion title="Validation error: missing `team:read` scope">
+    The Grid path requires `team:read` to enumerate workspaces. Add the scope to the manifest, reinstall the app to
+    the organization, and copy the new bot token into Onyx.
+  </Accordion>
+
+  <Accordion title="Onyx only indexes channels from one workspace">
+    `auth.teams.list` only returns workspaces the bot has been added to. Open the Grid org admin panel →
+    **Apps** → **Onyx Connector** and add it to every workspace you want indexed, then trigger a new index attempt.
+  </Accordion>
+
+  <Accordion title="A user from another workspace can search a workspace's public-channel content">
+    Only happens when the per-workspace user union exceeds `5000`. Above that limit Onyx falls back to marking the
+    doc public so it stays accessible; the same fallback applies when none of the channel's workspaces are in
+    Onyx's cache (for example a workspace added to the Grid org after the connector was set up). Re-saving the
+    credential re-builds the workspace cache.
+  </Accordion>
+</AccordionGroup>
