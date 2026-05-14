@@ -104,8 +104,10 @@ settings:
 ## Enterprise Grid setup
 
 If your Slack instance is an [Enterprise Grid](https://slack.com/help/articles/360000281563) org with multiple
-workspaces, install the app once at the org level instead of per workspace. Onyx detects Grid automatically from
-the bot token and indexes every workspace the bot is installed in.
+workspaces, you go through the app-creation flow once at the org level and use a single org-level bot token in
+Onyx. Slack still requires the org admin to choose which workspaces the bot is deployed to (it is not auto-deployed
+to every workspace just because the app is approved at the org level). Onyx detects Grid automatically from the
+bot token and indexes every workspace the bot has been deployed to.
 
 <Note>
   You must be an **Org Owner** or **Org Admin** of the Slack Enterprise Grid org to do the org-level install.
@@ -114,8 +116,9 @@ the bot token and indexes every workspace the bot is installed in.
 ### What changes vs the single-workspace setup
 
 - The app manifest must enable org-level deploys and include the `team:read` scope.
-- The app is installed once **to the organization** (not to a single workspace) and must then be added to each
-  workspace whose channels you want indexed.
+- You install the app to the **organization** once (a single OAuth approval as Org Admin), but you must also pick
+  which workspaces in the org the bot is deployed to — Onyx can only index the workspaces the bot is actually a
+  member of.
 - Channel links in indexed documents resolve to the correct per-workspace URL.
 - Document permissions for public channels are scoped to the users in the workspaces the channel is shared into
   (not the entire org), so a user in Workspace A cannot see Workspace B's public channel documents in Onyx.
@@ -163,13 +166,15 @@ settings:
 
   <Step title="Install to the organization">
     Open **OAuth & Permissions** and click **Install to Organization** (not "Install to Workspace"). Approve the
-    request as an Org Admin.
+    request as an Org Admin. This is a single OAuth approval — it does **not** deploy the bot to any workspace
+    yet.
   </Step>
 
-  <Step title="Add the bot to each workspace">
-    From the Grid org admin panel (`https://<your-org>.enterprise.slack.com/admin`) → **Apps** → **Onyx Connector**,
-    add the app to each workspace you want indexed. Without this step `auth.teams.list` returns zero workspaces and
-    Onyx will only see the workspace the app was developed in.
+  <Step title="Deploy the bot to each workspace you want indexed">
+    Slack does not auto-deploy org-approved apps to every workspace. Open the Grid org admin panel
+    (`https://<your-org>.enterprise.slack.com/admin`) → **Apps** → **Onyx Connector**, and select the workspaces
+    the bot should be deployed to. Without this step `auth.teams.list` returns zero workspaces and Onyx will only
+    see the workspace the app was developed in.
   </Step>
 
   <Step title="Copy the org-level bot token">
