@@ -6,6 +6,109 @@ mode: "wide"
 rss: true
 ---
 
+<Update label="v3.3.6" description="May 18th, 2026" tags={["New Features", "Breaking Changes", "Bug Fixes", "Performance"]}>
+
+  ## v3.3.6
+
+  This release improves connector reliability and file understanding, adds stronger admin and security controls,
+  expands deployment observability, and brings the first wave of Craft, Skills, and CLI workflows into the product.
+  Thank you to our contributors for helping make this release possible!
+
+  ## [Update] Deployment and Admin Changes
+
+  <Note>
+    Self-hosted deployments using `DANSWER_RUNNING_IN_DOCKER` should update to `ONYX_RUNNING_IN_DOCKER`.
+    The Admin Panel language-models route has also moved from `/admin/configuration/llm` to
+    `/admin/configuration/language-models`.
+  </Note>
+
+  The legacy Knowledge Graph admin page has been removed,
+  and connector pruning now uses the backend as the source of truth for pruning frequency with a new default of 25 days.
+
+  ## Key Improvements
+
+  ### Better File and Tabular Data Understanding
+
+  Onyx now indexes spreadsheets and CSVs with dedicated tabular sections, sheet descriptors, and total descriptors,
+  making table-heavy files easier to search and cite. File handling also improved across Google Drive, SharePoint,
+  Blob storage, and uploaded files, with safer file previews, reduced Excel memory usage, image extraction from PDFs,
+  and clearer behavior when very large uploads or image-heavy files are processed.
+
+  ### More Reliable Connectors
+
+  Connectors received a broad reliability pass. Slack search now supports full thread replies and direct URL fetch,
+  the Slack bot agent selector is searchable, and Slack bot invocation can be restricted by member group allowlists.
+  Google Drive, SharePoint, Confluence, Jira, Freshdesk, Asana, Gmail, Gong, Linear, Notion,
+  and GitLab all received fixes for retries, pagination, pruning, group sync, encoding, authorization,
+  or edge-case failures.
+
+  ### Admin, Auth, and Security Hardening
+
+  Admins get tighter controls around query history, invite limits, user-directory access, agent filters,
+  and connector failure visibility. Authentication and security paths now include Redis-backed rate limits,
+  stronger captcha checks for signup and login, OIDC token refresh fixes, SAML refresh-loop fixes,
+  and stricter access checks for chat sessions, agents, document sets, and file downloads.
+
+  ### Observability and Operations
+
+  Operators get expanded Prometheus and Grafana coverage for Celery workers, connector metrics, pruning, deletion,
+  embedding, image processing, index attempts, OpenSearch, Redis queues, and generated reports.
+  Helm deployments now include additional ServiceMonitors, dashboard updates, per-deployment `extraEnv` hooks,
+  OpenSearch-only deployment options, and more resilient Redis, Postgres, and OpenSearch behavior.
+
+  ### Craft, Skills, and CLI Foundations
+
+  This release introduces the first Skills V1 foundations, scheduled Craft tasks, sandbox credential provisioning,
+  company-search wiring inside Craft sandboxes, and a more agent-friendly `onyx-cli search` workflow.
+  The CLI also now shows help by default, handles non-JSON server responses more cleanly,
+  and builds release binaries across supported platforms.
+
+  ## Additional Improvements
+
+  ### Chat and Agents
+
+  - Multi-model chat gained a global admin toggle, better follow-up behavior, isolated streaming errors, inline
+    citation chips, and several UI polish fixes
+  - Chat streaming is smoother, tables scroll more cleanly, LaTeX renders during streaming, and admins can disable
+    smooth streaming if needed
+  - Agent access checks were tightened, agent filters were standardized across admin pages, and chat session creation
+    now enforces agent permissions
+  - Uploaded-file citations and generated image files now open previews more reliably
+
+  ### Language Models and Providers
+
+  - Model/provider setup now better handles provider grouping, API-key resolution before model fetches, optional
+    provider display names, provider renaming, and OpenRouter auto-update mode
+  - GPT Image 2 support was added
+  - Anthropic Opus 4.7 handling was updated, and recommended model lists were refreshed
+  - OpenAI, Ollama, LiteLLM, Vertex, and embedding-provider paths received fixes and test coverage
+
+  ### MCP, Hooks, and Extensions
+
+  - MCP OAuth callbacks, masked credential handling, document-set options, Azure OpenAI parameter schemas, tool-name
+    handling, and per-user headers were fixed
+  - Hooks added a document-push hook point
+  - The Chrome extension gained multi-model support, and desktop/widget flows received welcome-message and trial
+    rate-limit polish
+
+  ### Notable Bug Fixes
+
+  - Fixed Jira bulk issue fetch batching
+  - Fixed Confluence 504 retries, Cyrillic encoding, and `/Date` macro preservation
+  - Fixed SharePoint member recursion and pruning crashes with client-secret site-page auth
+  - Fixed Freshdesk pagination past 300 pages
+  - Fixed Asana allowlisted projects with no team
+  - Fixed Google Drive pruning, orphaned-folder walks, removed Workspace users, and group-sync 403s
+  - Fixed OIDC token refresh for non-Google providers and SAML refresh request loops
+  - Fixed seat-limit races and service-account seat counting
+
+  ---
+
+  Our [GitHub Releases](https://github.com/onyx-dot-app/onyx/releases?utm_source=docs&utm_content=changelog)
+  page has the full list of changes and bug fixes for each release.
+
+</Update>
+
 <Update label="v3.2.0" description="April 9th, 2026" tags={["New Features", "Performance", "Bug Fixes"]}>
 
   ## v3.2.0
