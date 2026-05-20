@@ -20,10 +20,7 @@
         "pages": [
           {
             "group": "Getting Started",
-            "pages": [
-              "welcome",
-              "overview/getting_started/quickstart"
-            ]
+            "pages": ["welcome", "overview/getting_started/quickstart"]
           },
           {
             "group": "Core Features",
@@ -273,10 +270,7 @@
               {
                 "group": "Actions",
                 "icon": "play",
-                "pages": [
-                  "admins/actions/mcp",
-                  "admins/actions/openapi"
-                ]
+                "pages": ["admins/actions/mcp", "admins/actions/openapi"]
               },
               "admins/actions/web_search",
               "admins/actions/code_interpreter",
@@ -323,9 +317,7 @@
           },
           {
             "group": "Miscellaneous",
-            "pages": [
-              "admins/miscellaneous/contact_us"
-            ]
+            "pages": ["admins/miscellaneous/contact_us"]
           }
         ]
       },
@@ -335,10 +327,7 @@
         "pages": [
           {
             "group": "Getting Started",
-            "pages": [
-              "developers/overview",
-              "developers/core_concepts"
-            ]
+            "pages": ["developers/overview", "developers/core_concepts"]
           },
           {
             "group": "Guides & Examples",
@@ -530,9 +519,7 @@
           },
           {
             "group": "Miscellaneous",
-            "pages": [
-              "developers/contact_us"
-            ]
+            "pages": ["developers/contact_us"]
           }
         ]
       },
@@ -567,18 +554,14 @@
           },
           {
             "group": "Miscellaneous",
-            "pages": [
-              "security/contact_us"
-            ]
+            "pages": ["security/contact_us"]
           }
         ]
       },
       {
         "tab": "Changelog",
         "icon": "clock-rotate-left",
-        "pages": [
-          "changelog"
-        ]
+        "pages": ["changelog"]
       }
     ],
     "global": {
@@ -605,9 +588,7 @@
     "css": "/style.css"
   },
   "api": {
-    "openapi": [
-      "developers/api_reference/openapi.json"
-    ]
+    "openapi": ["developers/api_reference/openapi.json"]
   },
   "navbar": {
     "primary": {

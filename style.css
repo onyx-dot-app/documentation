@@ -14,7 +14,7 @@ table {
 
 /* Table header cells */
 .prose table th {
-  text-align: left !important;       /* horizontal left */
+  text-align: left !important; /* horizontal left */
 }
 
 /* Apply to Cards with file-path SVG icons to fix dark-mode background
