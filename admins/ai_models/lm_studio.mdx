@@ -32,6 +32,16 @@ including their capabilities (vision, reasoning) and context length.
 
     If LM Studio is running on a different machine than Onyx,
     make sure the server is accessible from the Onyx host (e.g., `http://<lm-studio-host>:1234`).
+
+    <Info>
+      **Running Onyx in Docker on the same machine as LM Studio?**
+
+      By default, LM Studio binds only to `127.0.0.1`, which is unreachable from inside an Onyx container.
+
+      1. In LM Studio's **Developer** tab, enable **"Serve on Local Network"** (or set the host to `0.0.0.0`) and restart the server.
+      2. Use `http://host.docker.internal:1234` as the **API Base URL** instead of `http://localhost:1234`.
+      ```
+    </Info>
   </Step>
 
   <NavigateToAiModels />
@@ -42,6 +52,10 @@ including their capabilities (vision, reasoning) and context length.
     Give your provider a **Display Name**.
 
     Set the **API Base URL** to your LM Studio server address (e.g., `http://localhost:1234`).
+
+    If Onyx is running in Docker on the same machine as LM Studio, use `http://host.docker.internal:1234`
+    instead — `localhost` inside the container points to the container itself, not your host. Make sure
+    LM Studio is set to **"Serve on Local Network"** (see the Info callout in the previous step).
 
     Onyx will automatically connect and discover your loaded models.
 
