@@ -13,9 +13,7 @@
   "paths": {
     "/chat/get-user-chat-sessions": {
       "get": {
-        "tags": [
-          "public"
-        ],
+        "tags": ["public"],
         "summary": "Get User Chat Sessions",
         "operationId": "get_user_chat_sessions",
         "security": [
@@ -87,9 +85,7 @@
     },
     "/chat/get-chat-session/{session_id}": {
       "get": {
-        "tags": [
-          "public"
-        ],
+        "tags": ["public"],
         "summary": "Get Chat Session",
         "operationId": "get_chat_session",
         "security": [
@@ -155,9 +151,7 @@
     },
     "/chat/create-chat-session": {
       "post": {
-        "tags": [
-          "public"
-        ],
+        "tags": ["public"],
         "summary": "Create New Chat Session",
         "operationId": "create_new_chat_session",
         "security": [
@@ -201,9 +195,7 @@
     },
     "/chat/delete-all-chat-sessions": {
       "delete": {
-        "tags": [
-          "public"
-        ],
+        "tags": ["public"],
         "summary": "Delete All Chat Sessions",
         "operationId": "delete_all_chat_sessions",
         "security": [
@@ -235,9 +227,7 @@
     },
     "/chat/delete-chat-session/{session_id}": {
       "delete": {
-        "tags": [
-          "public"
-        ],
+        "tags": ["public"],
         "summary": "Delete Chat Session By Id",
         "operationId": "delete_chat_session_by_id",
         "security": [
@@ -297,9 +287,7 @@
     },
     "/chat/send-chat-message": {
       "post": {
-        "tags": [
-          "public"
-        ],
+        "tags": ["public"],
         "summary": "Handle Send Chat Message",
         "description": "This endpoint is used to send a new chat message.\n\nArgs:\n    chat_message_req (SendMessageRequest): Details about the new chat message.\n        - When stream=True (default): Returns StreamingResponse with SSE\n        - When stream=False: Returns ChatFullResponse with complete data\n    request (Request): The current HTTP request context.\n    user (User | None): The current user, obtained via dependency injection.\n    _ (None): Rate limit check is run if user/group/global rate limits are enabled.\n\nReturns:\n    StreamingResponse | ChatFullResponse: Either streams or returns complete response.",
         "operationId": "handle_send_chat_message",
@@ -342,9 +330,7 @@
     },
     "/chat/seed-chat-session": {
       "post": {
-        "tags": [
-          "public"
-        ],
+        "tags": ["public"],
         "summary": "Seed Chat",
         "operationId": "seed_chat",
         "security": [
@@ -388,9 +374,7 @@
     },
     "/chat/file/{file_id}": {
       "get": {
-        "tags": [
-          "public"
-        ],
+        "tags": ["public"],
         "summary": "Fetch Chat File",
         "operationId": "fetch_chat_file",
         "security": [
@@ -433,9 +417,7 @@
     },
     "/chat/search": {
       "get": {
-        "tags": [
-          "public"
-        ],
+        "tags": ["public"],
         "summary": "Search Chats",
         "description": "Search for chat sessions based on the provided query.\nIf no query is provided, returns recent chat sessions.",
         "operationId": "search_chats",
@@ -508,9 +490,7 @@
     },
     "/chat/stop-chat-session/{chat_session_id}": {
       "post": {
-        "tags": [
-          "public"
-        ],
+        "tags": ["public"],
         "summary": "Stop Chat Session",
         "description": "Stop a chat session by setting a stop signal in Redis.\nThis endpoint is called by the frontend when the user clicks the stop button.",
         "operationId": "stop_chat_session",
@@ -561,9 +541,7 @@
     },
     "/manage/set-user-role": {
       "patch": {
-        "tags": [
-          "public"
-        ],
+        "tags": ["public"],
         "summary": "Set User Role",
         "operationId": "set_user_role",
         "security": [
@@ -605,9 +583,7 @@
     },
     "/manage/users/accepted": {
       "get": {
-        "tags": [
-          "public"
-        ],
+        "tags": ["public"],
         "summary": "List Accepted Users",
         "operationId": "list_accepted_users",
         "security": [
@@ -711,9 +687,7 @@
     },
     "/manage/users/invited": {
       "get": {
-        "tags": [
-          "public"
-        ],
+        "tags": ["public"],
         "summary": "List Invited Users",
         "operationId": "list_invited_users",
         "security": [
@@ -751,9 +725,7 @@
     },
     "/manage/users": {
       "get": {
-        "tags": [
-          "public"
-        ],
+        "tags": ["public"],
         "summary": "List All Users",
         "operationId": "list_all_users",
         "security": [
@@ -863,9 +835,7 @@
     },
     "/manage/admin/users": {
       "put": {
-        "tags": [
-          "public"
-        ],
+        "tags": ["public"],
         "summary": "Bulk Invite Users",
         "description": "emails are string validated. If any email fails validation, no emails are\ninvited and an exception is raised.",
         "operationId": "bulk_invite_users",
@@ -911,9 +881,7 @@
     },
     "/manage/admin/remove-invited-user": {
       "patch": {
-        "tags": [
-          "public"
-        ],
+        "tags": ["public"],
         "summary": "Remove Invited User",
         "operationId": "remove_invited_user",
         "security": [
@@ -958,9 +926,7 @@
     },
     "/manage/admin/deactivate-user": {
       "patch": {
-        "tags": [
-          "public"
-        ],
+        "tags": ["public"],
         "summary": "Deactivate User Api",
         "operationId": "deactivate_user_api",
         "security": [
@@ -1002,9 +968,7 @@
     },
     "/manage/admin/delete-user": {
       "delete": {
-        "tags": [
-          "public"
-        ],
+        "tags": ["public"],
         "summary": "Delete User",
         "operationId": "delete_user",
         "security": [
@@ -1046,9 +1010,7 @@
     },
     "/manage/admin/activate-user": {
       "patch": {
-        "tags": [
-          "public"
-        ],
+        "tags": ["public"],
         "summary": "Activate User Api",
         "operationId": "activate_user_api",
         "security": [
@@ -1090,9 +1052,7 @@
     },
     "/users": {
       "get": {
-        "tags": [
-          "public"
-        ],
+        "tags": ["public"],
         "summary": "List All Users Basic Info",
         "operationId": "list_all_users_basic_info",
         "security": [
@@ -1130,9 +1090,7 @@
     },
     "/get-user-role": {
       "get": {
-        "tags": [
-          "public"
-        ],
+        "tags": ["public"],
         "summary": "Get User Role",
         "operationId": "get_user_role",
         "security": [
@@ -1166,9 +1124,7 @@
     },
     "/me": {
       "get": {
-        "tags": [
-          "public"
-        ],
+        "tags": ["public"],
         "summary": "Verify User Logged In",
         "operationId": "verify_user_logged_in",
         "security": [
@@ -1202,9 +1158,7 @@
     },
     "/manage/admin/deletion-attempt": {
       "post": {
-        "tags": [
-          "public"
-        ],
+        "tags": ["public"],
         "summary": "Create Deletion Attempt For Connector Id",
         "operationId": "create_deletion_attempt_for_connector_id",
         "security": [
@@ -1246,9 +1200,7 @@
     },
     "/manage/admin/connector/file/upload": {
       "post": {
-        "tags": [
-          "public"
-        ],
+        "tags": ["public"],
         "summary": "Upload Files Api",
         "operationId": "upload_files_api",
         "security": [
@@ -1292,9 +1244,7 @@
     },
     "/manage/admin/connector/{connector_id}/files": {
       "get": {
-        "tags": [
-          "public"
-        ],
+        "tags": ["public"],
         "summary": "List Connector Files",
         "description": "List all files in a file connector.",
         "operationId": "list_connector_files",
@@ -1340,9 +1290,7 @@
     },
     "/manage/admin/connector/{connector_id}/files/update": {
       "post": {
-        "tags": [
-          "public"
-        ],
+        "tags": ["public"],
         "summary": "Update Connector Files",
         "description": "Update files in a connector by adding new files and/or removing existing ones.\nThis is an atomic operation that validates, updates the connector config, and triggers indexing.",
         "operationId": "update_connector_files",
@@ -1397,9 +1345,7 @@
     },
     "/manage/admin/connector": {
       "get": {
-        "tags": [
-          "public"
-        ],
+        "tags": ["public"],
         "summary": "Get Connectors By Credential",
         "description": "Get a list of connectors. Allow filtering by a specific credential id.",
         "operationId": "get_connectors_by_credential",
@@ -1454,9 +1400,7 @@
         }
       },
       "post": {
-        "tags": [
-          "public"
-        ],
+        "tags": ["public"],
         "summary": "Create Connector From Model",
         "operationId": "create_connector_from_model",
         "security": [
@@ -1500,9 +1444,7 @@
     },
     "/manage/admin/connector/failed-indexing-status": {
       "get": {
-        "tags": [
-          "public"
-        ],
+        "tags": ["public"],
         "summary": "Get Currently Failed Indexing Status",
         "operationId": "get_currently_failed_indexing_status",
         "security": [
@@ -1564,9 +1506,7 @@
     },
     "/manage/admin/connector/status": {
       "get": {
-        "tags": [
-          "public"
-        ],
+        "tags": ["public"],
         "summary": "Get Connector Status",
         "operationId": "get_connector_status",
         "security": [
@@ -1604,9 +1544,7 @@
     },
     "/manage/admin/connector/indexing-status": {
       "post": {
-        "tags": [
-          "public"
-        ],
+        "tags": ["public"],
         "summary": "Get Connector Indexing Status",
         "operationId": "get_connector_indexing_status",
         "security": [
@@ -1654,9 +1592,7 @@
     },
     "/manage/admin/connector/{connector_id}": {
       "patch": {
-        "tags": [
-          "public"
-        ],
+        "tags": ["public"],
         "summary": "Update Connector From Model",
         "operationId": "update_connector_from_model",
         "security": [
@@ -1717,9 +1653,7 @@
         }
       },
       "delete": {
-        "tags": [
-          "public"
-        ],
+        "tags": ["public"],
         "summary": "Delete Connector By Id",
         "operationId": "delete_connector_by_id",
         "security": [
@@ -1764,9 +1698,7 @@
     },
     "/manage/admin/connector/run-once": {
       "post": {
-        "tags": [
-          "public"
-        ],
+        "tags": ["public"],
         "summary": "Connector Run Once",
         "description": "Used to trigger indexing on a set of cc_pairs associated with a\nsingle connector.",
         "operationId": "connector_run_once",
@@ -1811,9 +1743,7 @@
     },
     "/manage/connector": {
       "get": {
-        "tags": [
-          "public"
-        ],
+        "tags": ["public"],
         "summary": "Get Connectors",
         "operationId": "get_connectors",
         "security": [
@@ -1851,9 +1781,7 @@
     },
     "/manage/indexed-sources": {
       "get": {
-        "tags": [
-          "public"
-        ],
+        "tags": ["public"],
         "summary": "Get Indexed Sources",
         "operationId": "get_indexed_sources",
         "security": [
@@ -1887,9 +1815,7 @@
     },
     "/manage/connector/{connector_id}": {
       "get": {
-        "tags": [
-          "public"
-        ],
+        "tags": ["public"],
         "summary": "Get Connector By Id",
         "operationId": "get_connector_by_id",
         "security": [
@@ -1942,9 +1868,7 @@
     },
     "/manage/connector-status": {
       "get": {
-        "tags": [
-          "public"
-        ],
+        "tags": ["public"],
         "summary": "Get Basic Connector Indexing Status",
         "operationId": "get_basic_connector_indexing_status",
         "security": [
@@ -1982,9 +1906,7 @@
     },
     "/manage/admin/credential": {
       "get": {
-        "tags": [
-          "public"
-        ],
+        "tags": ["public"],
         "summary": "List Credentials Admin",
         "description": "Lists all public credentials",
         "operationId": "list_credentials_admin",
@@ -2023,9 +1945,7 @@
     },
     "/manage/admin/similar-credentials/{source_type}": {
       "get": {
-        "tags": [
-          "public"
-        ],
+        "tags": ["public"],
         "summary": "Get Cc Source Full Info",
         "operationId": "get_cc_source_full_info",
         "security": [
@@ -2085,9 +2005,7 @@
     },
     "/manage/admin/credential/{credential_id}": {
       "delete": {
-        "tags": [
-          "public"
-        ],
+        "tags": ["public"],
         "summary": "Delete Credential By Id Admin",
         "description": "Same as the user endpoint, but can delete any credential (not just the user's own)",
         "operationId": "delete_credential_by_id_admin",
@@ -2131,9 +2049,7 @@
         }
       },
       "put": {
-        "tags": [
-          "public"
-        ],
+        "tags": ["public"],
         "summary": "Update Credential Data",
         "operationId": "update_credential_data",
         "security": [
@@ -2188,9 +2104,7 @@
     },
     "/manage/admin/credential/swap": {
       "put": {
-        "tags": [
-          "public"
-        ],
+        "tags": ["public"],
         "summary": "Swap Credentials For Connector",
         "operationId": "swap_credentials_for_connector",
         "security": [
@@ -2234,9 +2148,7 @@
     },
     "/manage/credential": {
       "post": {
-        "tags": [
-          "public"
-        ],
+        "tags": ["public"],
         "summary": "Create Credential From Model",
         "operationId": "create_credential_from_model",
         "security": [
@@ -2278,9 +2190,7 @@
         }
       },
       "get": {
-        "tags": [
-          "public"
-        ],
+        "tags": ["public"],
         "summary": "List Credentials",
         "operationId": "list_credentials",
         "security": [
@@ -2318,9 +2228,7 @@
     },
     "/manage/credential/private-key": {
       "post": {
-        "tags": [
-          "public"
-        ],
+        "tags": ["public"],
         "summary": "Create Credential With Private Key",
         "operationId": "create_credential_with_private_key",
         "security": [
@@ -2364,9 +2272,7 @@
     },
     "/manage/credential/{credential_id}": {
       "get": {
-        "tags": [
-          "public"
-        ],
+        "tags": ["public"],
         "summary": "Get Credential By Id",
         "operationId": "get_credential_by_id",
         "security": [
@@ -2417,9 +2323,7 @@
         }
       },
       "patch": {
-        "tags": [
-          "public"
-        ],
+        "tags": ["public"],
         "summary": "Update Credential From Model",
         "operationId": "update_credential_from_model",
         "security": [
@@ -2480,9 +2384,7 @@
         }
       },
       "delete": {
-        "tags": [
-          "public"
-        ],
+        "tags": ["public"],
         "summary": "Delete Credential By Id",
         "operationId": "delete_credential_by_id",
         "security": [
@@ -2527,9 +2429,7 @@
     },
     "/manage/admin/credential/private-key/{credential_id}": {
       "put": {
-        "tags": [
-          "public"
-        ],
+        "tags": ["public"],
         "summary": "Update Credential Private Key",
         "operationId": "update_credential_private_key",
         "security": [
@@ -2584,9 +2484,7 @@
     },
     "/manage/credential/force/{credential_id}": {
       "delete": {
-        "tags": [
-          "public"
-        ],
+        "tags": ["public"],
         "summary": "Force Delete Credential By Id",
         "operationId": "force_delete_credential_by_id",
         "security": [
@@ -2631,9 +2529,7 @@
     },
     "/manage/admin/cc-pair/{cc_pair_id}/index-attempts": {
       "get": {
-        "tags": [
-          "public"
-        ],
+        "tags": ["public"],
         "summary": "Get Cc Pair Index Attempts",
         "operationId": "get_cc_pair_index_attempts",
         "security": [
@@ -2701,9 +2597,7 @@
     },
     "/manage/admin/cc-pair/{cc_pair_id}": {
       "get": {
-        "tags": [
-          "public"
-        ],
+        "tags": ["public"],
         "summary": "Get Cc Pair Full Info",
         "operationId": "get_cc_pair_full_info",
         "security": [
@@ -2748,9 +2642,7 @@
     },
     "/manage/admin/cc-pair/{cc_pair_id}/status": {
       "put": {
-        "tags": [
-          "public"
-        ],
+        "tags": ["public"],
         "summary": "Update Cc Pair Status",
         "description": "This method returns nearly immediately. It simply sets some signals and\noptimistically assumes any running background processes will clean themselves up.\nThis is done to improve the perceived end user experience.\n\nReturns HTTPStatus.OK if everything finished.",
         "operationId": "update_cc_pair_status",
@@ -2804,9 +2696,7 @@
     },
     "/manage/admin/cc-pair/{cc_pair_id}/prune": {
       "post": {
-        "tags": [
-          "public"
-        ],
+        "tags": ["public"],
         "summary": "Prune Cc Pair",
         "description": "Triggers pruning on a particular cc_pair immediately",
         "operationId": "prune_cc_pair",
@@ -2852,9 +2742,7 @@
     },
     "/manage/admin/cc-pair/{cc_pair_id}/errors": {
       "get": {
-        "tags": [
-          "public"
-        ],
+        "tags": ["public"],
         "summary": "Get Cc Pair Indexing Errors",
         "description": "Gives back all errors for a given CC Pair. Allows pagination based on page and page_size params.\n\nArgs:\n    cc_pair_id: ID of the connector-credential pair to get errors for\n    include_resolved: Whether to include resolved errors in the results\n    page_num: Page number for pagination, starting at 0\n    page_size: Number of errors to return per page\n    _: Current user, must be curator or admin\n    db_session: Database session\n\nReturns:\n    Paginated list of indexing errors for the CC pair.",
         "operationId": "get_cc_pair_indexing_errors",
@@ -2933,9 +2821,7 @@
     },
     "/manage/connector/{connector_id}/credential/{credential_id}": {
       "put": {
-        "tags": [
-          "public"
-        ],
+        "tags": ["public"],
         "summary": "Associate Credential To Connector",
         "description": "NOTE(rkuo): internally discussed and the consensus is this endpoint\nand create_connector_with_mock_credential should be combined.\n\nThe intent of this endpoint is to handle connectors that actually need credentials.",
         "operationId": "associate_credential_to_connector",
@@ -2998,9 +2884,7 @@
         }
       },
       "delete": {
-        "tags": [
-          "public"
-        ],
+        "tags": ["public"],
         "summary": "Dissociate Credential From Connector",
         "operationId": "dissociate_credential_from_connector",
         "security": [
@@ -3054,9 +2938,7 @@
     },
     "/user/projects/": {
       "get": {
-        "tags": [
-          "public"
-        ],
+        "tags": ["public"],
         "summary": "Get Projects",
         "operationId": "get_projects",
         "security": [
@@ -3094,9 +2976,7 @@
     },
     "/user/projects/create": {
       "post": {
-        "tags": [
-          "public"
-        ],
+        "tags": ["public"],
         "summary": "Create Project",
         "operationId": "create_project",
         "security": [
@@ -3141,9 +3021,7 @@
     },
     "/user/projects/file/upload": {
       "post": {
-        "tags": [
-          "public"
-        ],
+        "tags": ["public"],
         "summary": "Upload User Files",
         "operationId": "upload_user_files",
         "security": [
@@ -3187,9 +3065,7 @@
     },
     "/user/projects/{project_id}": {
       "get": {
-        "tags": [
-          "public"
-        ],
+        "tags": ["public"],
         "summary": "Get Project",
         "operationId": "get_project",
         "security": [
@@ -3232,9 +3108,7 @@
         }
       },
       "patch": {
-        "tags": [
-          "public"
-        ],
+        "tags": ["public"],
         "summary": "Update Project",
         "operationId": "update_project",
         "security": [
@@ -3287,9 +3161,7 @@
         }
       },
       "delete": {
-        "tags": [
-          "public"
-        ],
+        "tags": ["public"],
         "summary": "Delete Project",
         "operationId": "delete_project",
         "security": [
@@ -3332,9 +3204,7 @@
     },
     "/user/projects/files/{project_id}": {
       "get": {
-        "tags": [
-          "public"
-        ],
+        "tags": ["public"],
         "summary": "Get Files In Project",
         "operationId": "get_files_in_project",
         "security": [
@@ -3383,9 +3253,7 @@
     },
     "/user/projects/{project_id}/files/{file_id}": {
       "delete": {
-        "tags": [
-          "public"
-        ],
+        "tags": ["public"],
         "summary": "Unlink User File From Project",
         "description": "Unlink an existing user file from a specific project for the current user.\n\nDoes not delete the underlying file; only removes the association.",
         "operationId": "unlink_user_file_from_project",
@@ -3437,9 +3305,7 @@
         }
       },
       "post": {
-        "tags": [
-          "public"
-        ],
+        "tags": ["public"],
         "summary": "Link User File To Project",
         "description": "Link an existing user file to a specific project for the current user.\n\nCreates the association in the Project__UserFile join table if it does not exist.\nReturns the linked user file snapshot.",
         "operationId": "link_user_file_to_project",
@@ -3495,9 +3361,7 @@
     },
     "/user/projects/{project_id}/instructions": {
       "get": {
-        "tags": [
-          "public"
-        ],
+        "tags": ["public"],
         "summary": "Get Project Instructions",
         "operationId": "get_project_instructions",
         "security": [
@@ -3540,9 +3404,7 @@
         }
       },
       "post": {
-        "tags": [
-          "public"
-        ],
+        "tags": ["public"],
         "summary": "Upsert Project Instructions",
         "description": "Create or update this project's instructions stored on the project itself.",
         "operationId": "upsert_project_instructions",
@@ -3598,9 +3460,7 @@
     },
     "/user/projects/{project_id}/details": {
       "get": {
-        "tags": [
-          "public"
-        ],
+        "tags": ["public"],
         "summary": "Get Project Details",
         "operationId": "get_project_details",
         "security": [
@@ -3645,9 +3505,7 @@
     },
     "/user/projects/file/{file_id}": {
       "delete": {
-        "tags": [
-          "public"
-        ],
+        "tags": ["public"],
         "summary": "Delete User File",
         "description": "Delete a user file belonging to the current user.\n\nThis will also remove any project associations for the file.",
         "operationId": "delete_user_file",
@@ -3692,9 +3550,7 @@
         }
       },
       "get": {
-        "tags": [
-          "public"
-        ],
+        "tags": ["public"],
         "summary": "Get User File",
         "description": "Fetch a single user file by ID for the current user.\n\nIncludes files in any status (including FAILED) to allow status polling.",
         "operationId": "get_user_file",
@@ -3741,9 +3597,7 @@
     },
     "/user/projects/file/statuses": {
       "post": {
-        "tags": [
-          "public"
-        ],
+        "tags": ["public"],
         "summary": "Get User File Statuses",
         "description": "Fetch statuses for a set of user file IDs owned by the current user.\n\nIncludes files in any status so the client can detect transitions to FAILED.",
         "operationId": "get_user_file_statuses",
@@ -3792,9 +3646,7 @@
     },
     "/user/projects/session/{chat_session_id}/files": {
       "get": {
-        "tags": [
-          "public"
-        ],
+        "tags": ["public"],
         "summary": "Get Chat Session Project Files",
         "description": "Return user files for the project linked to the given chat session.\n\nIf the chat session has no project, returns an empty list.\nOnly returns files owned by the current user and not FAILED.",
         "operationId": "get_chat_session_project_files",
@@ -3844,9 +3696,7 @@
     },
     "/persona": {
       "post": {
-        "tags": [
-          "public"
-        ],
+        "tags": ["public"],
         "summary": "Create Persona",
         "operationId": "create_persona",
         "security": [
@@ -3890,9 +3740,7 @@
     },
     "/persona/{persona_id}": {
       "patch": {
-        "tags": [
-          "public"
-        ],
+        "tags": ["public"],
         "summary": "Update Persona",
         "operationId": "update_persona",
         "security": [
@@ -3945,9 +3793,7 @@
         }
       },
       "delete": {
-        "tags": [
-          "public"
-        ],
+        "tags": ["public"],
         "summary": "Delete Persona",
         "operationId": "delete_persona",
         "security": [
@@ -3988,9 +3834,7 @@
         }
       },
       "get": {
-        "tags": [
-          "public"
-        ],
+        "tags": ["public"],
         "summary": "Get Persona",
         "operationId": "get_persona",
         "security": [
@@ -4035,9 +3879,7 @@
     },
     "/admin/persona": {
       "get": {
-        "tags": [
-          "public"
-        ],
+        "tags": ["public"],
         "summary": "List Personas Admin",
         "operationId": "list_personas_admin",
         "security": [
@@ -4099,9 +3941,7 @@
     },
     "/admin/persona/{persona_id}/undelete": {
       "patch": {
-        "tags": [
-          "public"
-        ],
+        "tags": ["public"],
         "summary": "Undelete Persona",
         "operationId": "undelete_persona",
         "security": [
@@ -4144,9 +3984,7 @@
     },
     "/agents": {
       "get": {
-        "tags": [
-          "public"
-        ],
+        "tags": ["public"],
         "summary": "Get Agents Paginated",
         "description": "Paginated endpoint for listing agents available to the user.\n\nReturns items for the requested page plus total count.\nPersonas are ordered by display_priority (ASC, nulls last) then by ID (ASC).\n\nNOTE: persona_ids filter is not supported with pagination. Use the\nnon-paginated endpoint if filtering by specific IDs is needed.",
         "operationId": "get_agents_paginated",
@@ -4246,9 +4084,7 @@
     },
     "/admin/agents": {
       "get": {
-        "tags": [
-          "public"
-        ],
+        "tags": ["public"],
         "summary": "Get Agents Admin Paginated",
         "description": "Paginated endpoint for listing agents (formerly personas) (admin view).\n\nReturns items for the requested page plus total count.\nAgents are ordered by display_priority (ASC, nulls last) then by ID (ASC).",
         "operationId": "get_agents_admin_paginated",
@@ -4348,9 +4184,7 @@
     },
     "/tool/openapi": {
       "get": {
-        "tags": [
-          "public"
-        ],
+        "tags": ["public"],
         "summary": "List Openapi Tools",
         "operationId": "list_openapi_tools",
         "security": [
@@ -4388,9 +4222,7 @@
     },
     "/tool/{tool_id}": {
       "get": {
-        "tags": [
-          "public"
-        ],
+        "tags": ["public"],
         "summary": "Get Custom Tool",
         "operationId": "get_custom_tool",
         "security": [
@@ -4435,9 +4267,7 @@
     },
     "/tool": {
       "get": {
-        "tags": [
-          "public"
-        ],
+        "tags": ["public"],
         "summary": "List Tools",
         "operationId": "list_tools",
         "security": [
@@ -4475,9 +4305,7 @@
     },
     "/admin/tool/custom": {
       "post": {
-        "tags": [
-          "public"
-        ],
+        "tags": ["public"],
         "summary": "Create Custom Tool",
         "operationId": "create_custom_tool",
         "security": [
@@ -4521,9 +4349,7 @@
     },
     "/admin/tool/custom/{tool_id}": {
       "put": {
-        "tags": [
-          "public"
-        ],
+        "tags": ["public"],
         "summary": "Update Custom Tool",
         "operationId": "update_custom_tool",
         "security": [
@@ -4576,9 +4402,7 @@
         }
       },
       "delete": {
-        "tags": [
-          "public"
-        ],
+        "tags": ["public"],
         "summary": "Delete Custom Tool",
         "operationId": "delete_custom_tool",
         "security": [
@@ -4621,9 +4445,7 @@
     },
     "/admin/tool/custom/validate": {
       "post": {
-        "tags": [
-          "public"
-        ],
+        "tags": ["public"],
         "summary": "Validate Tool",
         "operationId": "validate_tool",
         "security": [
@@ -4667,9 +4489,7 @@
     },
     "/health": {
       "get": {
-        "tags": [
-          "public"
-        ],
+        "tags": ["public"],
         "summary": "Healthcheck",
         "operationId": "healthcheck",
         "responses": {
@@ -4688,9 +4508,7 @@
     },
     "/auth/type": {
       "get": {
-        "tags": [
-          "public"
-        ],
+        "tags": ["public"],
         "summary": "Get Auth Type",
         "operationId": "get_auth_type",
         "responses": {
@@ -4709,9 +4527,7 @@
     },
     "/version": {
       "get": {
-        "tags": [
-          "public"
-        ],
+        "tags": ["public"],
         "summary": "Get Version",
         "operationId": "get_version",
         "responses": {
@@ -4730,9 +4546,7 @@
     },
     "/versions": {
       "get": {
-        "tags": [
-          "public"
-        ],
+        "tags": ["public"],
         "summary": "Get Versions",
         "description": "Fetches the latest stable and beta versions of Onyx Docker images.\nSince DockerHub does not explicitly flag stable and beta images,\nthis endpoint can be used to programmatically check for new images.",
         "operationId": "get_versions",
@@ -4752,9 +4566,7 @@
     },
     "/onyx-api/connector-docs/{cc_pair_id}": {
       "get": {
-        "tags": [
-          "public"
-        ],
+        "tags": ["public"],
         "summary": "Get Docs By Connector Credential Pair",
         "operationId": "get_docs_by_connector_credential_pair",
         "security": [
@@ -4803,9 +4615,7 @@
     },
     "/onyx-api/ingestion": {
       "get": {
-        "tags": [
-          "public"
-        ],
+        "tags": ["public"],
         "summary": "Get Ingestion Docs",
         "operationId": "get_ingestion_docs",
         "security": [
@@ -4841,9 +4651,7 @@
         }
       },
       "post": {
-        "tags": [
-          "public"
-        ],
+        "tags": ["public"],
         "summary": "Upsert Ingestion Doc",
         "operationId": "upsert_ingestion_doc",
         "security": [
@@ -4887,9 +4695,7 @@
     },
     "/onyx-api/ingestion/{document_id}": {
       "delete": {
-        "tags": [
-          "public"
-        ],
+        "tags": ["public"],
         "summary": "Delete Ingestion Doc",
         "operationId": "delete_ingestion_doc",
         "security": [
@@ -4932,9 +4738,7 @@
     },
     "/web-search/search": {
       "post": {
-        "tags": [
-          "public"
-        ],
+        "tags": ["public"],
         "summary": "Execute Web Search",
         "description": "Perform a web search and immediately fetch content for the returned URLs.\n\nUse this when you want both snippets and page contents from one call.\n\nIf you want to selectively fetch content (i.e. let the LLM decide which URLs to read),\nuse `/search-lite` and then call `/open-urls` separately.",
         "operationId": "execute_web_search",
@@ -4979,9 +4783,7 @@
     },
     "/web-search/search-lite": {
       "post": {
-        "tags": [
-          "public"
-        ],
+        "tags": ["public"],
         "summary": "Execute Web Search Lite",
         "description": "Lightweight search-only endpoint. Returns search snippets and URLs without\nfetching page contents. Pair with `/open-urls` if you need to fetch content\nlater.",
         "operationId": "execute_web_search_lite",
@@ -5026,9 +4828,7 @@
     },
     "/web-search/open-urls": {
       "post": {
-        "tags": [
-          "public"
-        ],
+        "tags": ["public"],
         "summary": "Execute Open Urls",
         "description": "Fetch content for specific URLs using the configured content provider.\nIntended to complement `/search-lite` when you need content for a subset of URLs.",
         "operationId": "execute_open_urls",
@@ -5073,9 +4873,7 @@
     },
     "/admin/token-rate-limits/global": {
       "get": {
-        "tags": [
-          "public"
-        ],
+        "tags": ["public"],
         "summary": "Get Global Token Limit Settings",
         "operationId": "get_global_token_limit_settings",
         "security": [
@@ -5111,9 +4909,7 @@
         }
       },
       "post": {
-        "tags": [
-          "public"
-        ],
+        "tags": ["public"],
         "summary": "Create Global Token Limit Settings",
         "operationId": "create_global_token_limit_settings",
         "security": [
@@ -5157,9 +4953,7 @@
     },
     "/admin/token-rate-limits/rate-limit/{token_rate_limit_id}": {
       "put": {
-        "tags": [
-          "public"
-        ],
+        "tags": ["public"],
         "summary": "Update Token Limit Settings",
         "operationId": "update_token_limit_settings",
         "security": [
@@ -5212,9 +5006,7 @@
         }
       },
       "delete": {
-        "tags": [
-          "public"
-        ],
+        "tags": ["public"],
         "summary": "Delete Token Limit Settings",
         "operationId": "delete_token_limit_settings",
         "security": [
@@ -5283,12 +5075,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "id",
-          "name",
-          "source",
-          "access_type"
-        ],
+        "required": ["id", "name", "source", "access_type"],
         "title": "CCPairSummary",
         "description": "Simplified connector-credential pair information with just essential data"
       },
@@ -5305,10 +5092,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "name",
-          "credential_json"
-        ],
+        "required": ["name", "credential_json"],
         "title": "CredentialDataUpdateRequest"
       },
       "CitationInfo": {
@@ -5329,10 +5113,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "citation_number",
-          "document_id"
-        ],
+        "required": ["citation_number", "document_id"],
         "title": "CitationInfo"
       },
       "IngestionDocument": {
@@ -5353,9 +5134,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "document"
-        ],
+        "required": ["document"],
         "title": "IngestionDocument"
       },
       "FullUserSnapshot": {
@@ -5382,13 +5161,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "id",
-          "email",
-          "role",
-          "is_active",
-          "password_configured"
-        ],
+        "required": ["id", "email", "role", "is_active", "password_configured"],
         "title": "FullUserSnapshot"
       },
       "ChatSessionSummary": {
@@ -5452,11 +5225,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "id",
-          "time_created",
-          "shared_status"
-        ],
+        "required": ["id", "time_created", "shared_status"],
         "title": "ChatSessionSummary"
       },
       "UserFileDeleteResult": {
@@ -5483,9 +5252,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "has_associations"
-        ],
+        "required": ["has_associations"],
         "title": "UserFileDeleteResult"
       },
       "ConnectorFilesResponse": {
@@ -5499,9 +5266,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "files"
-        ],
+        "required": ["files"],
         "title": "ConnectorFilesResponse"
       },
       "BaseFilters": {
@@ -5566,13 +5331,7 @@
       },
       "UserFileStatus": {
         "type": "string",
-        "enum": [
-          "PROCESSING",
-          "COMPLETED",
-          "FAILED",
-          "CANCELED",
-          "DELETING"
-        ],
+        "enum": ["PROCESSING", "COMPLETED", "FAILED", "CANCELED", "DELETING"],
         "title": "UserFileStatus"
       },
       "ValidateToolRequest": {
@@ -5584,9 +5343,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "definition"
-        ],
+        "required": ["definition"],
         "title": "ValidateToolRequest"
       },
       "CredentialBase": {
@@ -5628,11 +5385,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "credential_json",
-          "admin_public",
-          "source"
-        ],
+        "required": ["credential_json", "admin_public", "source"],
         "title": "CredentialBase"
       },
       "DocumentSource": {
@@ -5726,9 +5479,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "success"
-        ],
+        "required": ["success"],
         "title": "StatusResponse[int]"
       },
       "WebSearchWithContentResponse": {
@@ -5777,9 +5528,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "number_of_users"
-        ],
+        "required": ["number_of_users"],
         "title": "TenantSnapshot"
       },
       "IntermediateReportStart": {
@@ -5934,10 +5683,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "tool_name",
-          "response_type"
-        ],
+        "required": ["tool_name", "response_type"],
         "title": "CustomToolDelta"
       },
       "ImageGenerationToolHeartbeat": {
@@ -5963,9 +5709,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "methods"
-        ],
+        "required": ["methods"],
         "title": "ValidateToolResponse"
       },
       "CredentialSnapshot": {
@@ -6067,10 +5811,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "key",
-          "value"
-        ],
+        "required": ["key", "value"],
         "title": "Header"
       },
       "Placement": {
@@ -6097,9 +5838,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "turn_index"
-        ],
+        "required": ["turn_index"],
         "title": "Placement"
       },
       "ObjectCreationIdResponse": {
@@ -6120,9 +5859,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "id"
-        ],
+        "required": ["id"],
         "title": "ObjectCreationIdResponse"
       },
       "OpenUrlUrls": {
@@ -6142,9 +5879,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "urls"
-        ],
+        "required": ["urls"],
         "title": "OpenUrlUrls",
         "description": "URLs to be fetched (sent before crawling begins)."
       },
@@ -6163,11 +5898,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "connector_id",
-          "credential_id",
-          "status"
-        ],
+        "required": ["connector_id", "credential_id", "status"],
         "title": "DeletionAttemptSnapshot"
       },
       "UserInfo": {
@@ -6407,9 +6138,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "sources"
-        ],
+        "required": ["sources"],
         "title": "IndexedSourcesResponse"
       },
       "Body_update_credential_private_key_manage_admin_credential_private_key__credential_id__put": {
@@ -6473,9 +6202,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "connector_id"
-        ],
+        "required": ["connector_id"],
         "title": "RunConnectorRequest"
       },
       "PermissionSyncStatus": {
@@ -6493,11 +6220,7 @@
       },
       "ThemePreference": {
         "type": "string",
-        "enum": [
-          "light",
-          "dark",
-          "system"
-        ],
+        "enum": ["light", "dark", "system"],
         "title": "ThemePreference"
       },
       "OpenUrlStart": {
@@ -6533,23 +6256,13 @@
           }
         },
         "type": "object",
-        "required": [
-          "id",
-          "name",
-          "source",
-          "entities"
-        ],
+        "required": ["id", "name", "source", "entities"],
         "title": "FederatedConnectorSummary",
         "description": "Simplified federated connector information with just essential data"
       },
       "InputType": {
         "type": "string",
-        "enum": [
-          "load_state",
-          "poll",
-          "event",
-          "slim_retrieval"
-        ],
+        "enum": ["load_state", "poll", "event", "slim_retrieval"],
         "title": "InputType"
       },
       "UserRoleResponse": {
@@ -6560,9 +6273,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "role"
-        ],
+        "required": ["role"],
         "title": "UserRoleResponse"
       },
       "Body_create_credential_with_private_key_manage_credential_private_key_post": {
@@ -6645,9 +6356,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "documents"
-        ],
+        "required": ["documents"],
         "title": "SearchToolDocumentsDelta"
       },
       "PythonToolDelta": {
@@ -6692,9 +6401,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "files"
-        ],
+        "required": ["files"],
         "title": "Body_upload_files_api_manage_admin_connector_file_upload_post"
       },
       "IndexAttemptSnapshot": {
@@ -6826,10 +6533,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "items",
-          "total_items"
-        ],
+        "required": ["items", "total_items"],
         "title": "PaginatedReturn[PersonaSnapshot]"
       },
       "ChatSessionGroup": {
@@ -6847,10 +6551,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "title",
-          "chats"
-        ],
+        "required": ["title", "chats"],
         "title": "ChatSessionGroup"
       },
       "IndexAttemptErrorPydantic": {
@@ -6956,9 +6657,7 @@
       },
       "FederatedConnectorSource": {
         "type": "string",
-        "enum": [
-          "federated_slack"
-        ],
+        "enum": ["federated_slack"],
         "title": "FederatedConnectorSource"
       },
       "ReasoningDone": {
@@ -6981,9 +6680,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "user_email"
-        ],
+        "required": ["user_email"],
         "title": "UserByEmail"
       },
       "AllVersions": {
@@ -6999,11 +6696,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "stable",
-          "dev",
-          "migration"
-        ],
+        "required": ["stable", "dev", "migration"],
         "title": "AllVersions"
       },
       "OpenUrlsToolResponse": {
@@ -7027,9 +6720,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "results"
-        ],
+        "required": ["results"],
         "title": "OpenUrlsToolResponse"
       },
       "DocumentBase": {
@@ -7184,11 +6875,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "sections",
-          "semantic_identifier",
-          "metadata"
-        ],
+        "required": ["sections", "semantic_identifier", "metadata"],
         "title": "DocumentBase",
         "description": "Used for Onyx ingestion api, the ID is inferred before use if not provided"
       },
@@ -7253,9 +6940,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "instructions"
-        ],
+        "required": ["instructions"],
         "title": "ProjectInstructionsResponse"
       },
       "MethodSpec": {
@@ -7283,13 +6968,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "name",
-          "summary",
-          "path",
-          "method",
-          "spec"
-        ],
+        "required": ["name", "summary", "path", "method", "spec"],
         "title": "MethodSpec"
       },
       "AgentResponseStart": {
@@ -7329,9 +7008,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "sessions"
-        ],
+        "required": ["sessions"],
         "title": "ChatSessionsResponse"
       },
       "PromptOverride": {
@@ -7385,10 +7062,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "document_id",
-          "semantic_id"
-        ],
+        "required": ["document_id", "semantic_id"],
         "title": "DocMinimalInfo"
       },
       "TenantInfo": {
@@ -7419,14 +7093,7 @@
       },
       "AuthType": {
         "type": "string",
-        "enum": [
-          "disabled",
-          "basic",
-          "google_oauth",
-          "oidc",
-          "saml",
-          "cloud"
-        ],
+        "enum": ["disabled", "basic", "google_oauth", "oidc", "saml", "cloud"],
         "title": "AuthType"
       },
       "ConnectorCredentialPairMetadata": {
@@ -7466,9 +7133,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "access_type"
-        ],
+        "required": ["access_type"],
         "title": "ConnectorCredentialPairMetadata"
       },
       "Packet": {
@@ -7600,10 +7265,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "placement",
-          "obj"
-        ],
+        "required": ["placement", "obj"],
         "title": "Packet"
       },
       "ConnectorCredentialPairStatus": {
@@ -7652,9 +7314,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "files"
-        ],
+        "required": ["files"],
         "title": "Body_upload_user_files_user_projects_file_upload_post"
       },
       "FileDescriptor": {
@@ -7690,10 +7350,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "id",
-          "type"
-        ],
+        "required": ["id", "type"],
         "title": "FileDescriptor",
         "description": "NOTE: is a `TypedDict` so it can be used as a type hint for a JSONB column\nin Postgres"
       },
@@ -7739,9 +7396,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "code"
-        ],
+        "required": ["code"],
         "title": "PythonToolStart"
       },
       "AllUsersResponse": {
@@ -7840,11 +7495,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "enabled",
-          "token_budget",
-          "period_hours"
-        ],
+        "required": ["enabled", "token_budget", "period_hours"],
         "title": "TokenRateLimitArgs"
       },
       "ToolSnapshot": {
@@ -8036,10 +7687,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "items",
-          "total_items"
-        ],
+        "required": ["items", "total_items"],
         "title": "PaginatedReturn[FullUserSnapshot]"
       },
       "UpsertProjectInstructionsRequest": {
@@ -8050,9 +7698,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "instructions"
-        ],
+        "required": ["instructions"],
         "title": "UpsertProjectInstructionsRequest"
       },
       "DocumentSetSummary": {
@@ -8301,9 +7947,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "chat_session_id"
-        ],
+        "required": ["chat_session_id"],
         "title": "CreateChatSessionID"
       },
       "SectionEnd": {
@@ -8402,9 +8046,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "file_ids"
-        ],
+        "required": ["file_ids"],
         "title": "UserFileIdsRequest"
       },
       "ConnectorIndexingStatusLiteResponse": {
@@ -8549,9 +8191,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "success"
-        ],
+        "required": ["success"],
         "title": "StatusResponse"
       },
       "PaginatedReturn_MinimalPersonaSnapshot_": {
@@ -8569,10 +8209,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "items",
-          "total_items"
-        ],
+        "required": ["items", "total_items"],
         "title": "PaginatedReturn[MinimalPersonaSnapshot]"
       },
       "MinimalUserSnapshot": {
@@ -8588,10 +8225,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "id",
-          "email"
-        ],
+        "required": ["id", "email"],
         "title": "MinimalUserSnapshot"
       },
       "SearchToolStart": {
@@ -8641,9 +8275,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "text"
-        ],
+        "required": ["text"],
         "title": "TextSection",
         "description": "Section containing text content"
       },
@@ -8684,11 +8316,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "loc",
-          "msg",
-          "type"
-        ],
+        "required": ["loc", "msg", "type"],
         "title": "ValidationError"
       },
       "CCStatusUpdateRequest": {
@@ -8698,9 +8326,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "status"
-        ],
+        "required": ["status"],
         "title": "CCStatusUpdateRequest"
       },
       "StatusResponse_list_int__": {
@@ -8736,9 +8362,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "success"
-        ],
+        "required": ["success"],
         "title": "StatusResponse[list[int]]"
       },
       "IntermediateReportDelta": {
@@ -8755,18 +8379,12 @@
           }
         },
         "type": "object",
-        "required": [
-          "content"
-        ],
+        "required": ["content"],
         "title": "IntermediateReportDelta"
       },
       "DocsCountOperator": {
         "type": "string",
-        "enum": [
-          ">",
-          "<",
-          "="
-        ],
+        "enum": [">", "<", "="],
         "title": "DocsCountOperator"
       },
       "PaginatedReturn_IndexAttemptErrorPydantic_": {
@@ -8784,10 +8402,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "items",
-          "total_items"
-        ],
+        "required": ["items", "total_items"],
         "title": "PaginatedReturn[IndexAttemptErrorPydantic]"
       },
       "CredentialSwapRequest": {
@@ -8805,11 +8420,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "new_credential_id",
-          "connector_id",
-          "access_type"
-        ],
+        "required": ["new_credential_id", "connector_id", "access_type"],
         "title": "CredentialSwapRequest"
       },
       "AgentResponseDelta": {
@@ -8826,9 +8437,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "content"
-        ],
+        "required": ["content"],
         "title": "AgentResponseDelta"
       },
       "RejectedFile": {
@@ -8843,19 +8452,12 @@
           }
         },
         "type": "object",
-        "required": [
-          "file_name",
-          "reason"
-        ],
+        "required": ["file_name", "reason"],
         "title": "RejectedFile"
       },
       "AccessType": {
         "type": "string",
-        "enum": [
-          "public",
-          "private",
-          "sync"
-        ],
+        "enum": ["public", "private", "sync"],
         "title": "AccessType"
       },
       "SearchToolQueriesDelta": {
@@ -8875,9 +8477,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "queries"
-        ],
+        "required": ["queries"],
         "title": "SearchToolQueriesDelta"
       },
       "DeepResearchPlanStart": {
@@ -8921,10 +8521,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "document_citation_number",
-          "content"
-        ],
+        "required": ["document_citation_number", "content"],
         "title": "LlmOpenUrlResult",
         "description": "Result from opening/fetching a URL"
       },
@@ -9184,12 +8781,7 @@
       },
       "TaskStatus": {
         "type": "string",
-        "enum": [
-          "PENDING",
-          "STARTED",
-          "SUCCESS",
-          "FAILURE"
-        ],
+        "enum": ["PENDING", "STARTED", "SUCCESS", "FAILURE"],
         "title": "TaskStatus"
       },
       "PersonaSnapshot": {
@@ -9472,12 +9064,7 @@
       },
       "RecencyBiasSetting": {
         "type": "string",
-        "enum": [
-          "favor_recent",
-          "base_decay",
-          "no_decay",
-          "auto"
-        ],
+        "enum": ["favor_recent", "base_decay", "no_decay", "auto"],
         "title": "RecencyBiasSetting"
       },
       "ImageGenerationFinal": {
@@ -9497,9 +9084,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "images"
-        ],
+        "required": ["images"],
         "title": "ImageGenerationFinal"
       },
       "CustomToolCreate": {
@@ -9555,11 +9140,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "name",
-          "definition",
-          "passthrough_auth"
-        ],
+        "required": ["name", "definition", "passthrough_auth"],
         "title": "CustomToolCreate"
       },
       "TokenRateLimitDisplay": {
@@ -9582,12 +9163,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "token_id",
-          "enabled",
-          "token_budget",
-          "period_hours"
-        ],
+        "required": ["token_id", "enabled", "token_budget", "period_hours"],
         "title": "TokenRateLimitDisplay"
       },
       "Body_update_connector_files_manage_admin_connector__connector_id__files_update_post": {
@@ -9704,9 +9280,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "backend_version"
-        ],
+        "required": ["backend_version"],
         "title": "VersionResponse"
       },
       "FileUploadResponse": {
@@ -9732,11 +9306,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "file_paths",
-          "file_names",
-          "zip_metadata"
-        ],
+        "required": ["file_paths", "file_names", "zip_metadata"],
         "title": "FileUploadResponse"
       },
       "CustomToolStart": {
@@ -9753,18 +9323,12 @@
           }
         },
         "type": "object",
-        "required": [
-          "tool_name"
-        ],
+        "required": ["tool_name"],
         "title": "CustomToolStart"
       },
       "WebContentProviderType": {
         "type": "string",
-        "enum": [
-          "onyx_web_crawler",
-          "firecrawl",
-          "exa"
-        ],
+        "enum": ["onyx_web_crawler", "firecrawl", "exa"],
         "title": "WebContentProviderType"
       },
       "GeneratedImage": {
@@ -9794,11 +9358,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "file_id",
-          "url",
-          "revised_prompt"
-        ],
+        "required": ["file_id", "url", "revised_prompt"],
         "title": "GeneratedImage",
         "description": "Represents an image generated by an image generation tool."
       },
@@ -9956,9 +9516,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "message"
-        ],
+        "required": ["message"],
         "title": "SendMessageRequest"
       },
       "UserSpecificAssistantPreference": {
@@ -9972,17 +9530,12 @@
           }
         },
         "type": "object",
-        "required": [
-          "disabled_tool_ids"
-        ],
+        "required": ["disabled_tool_ids"],
         "title": "UserSpecificAssistantPreference"
       },
       "ChatSessionSharedStatus": {
         "type": "string",
-        "enum": [
-          "public",
-          "private"
-        ],
+        "enum": ["public", "private"],
         "title": "ChatSessionSharedStatus"
       },
       "StarterMessage": {
@@ -9997,10 +9550,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "name",
-          "message"
-        ],
+        "required": ["name", "message"],
         "title": "StarterMessage",
         "description": "Starter message for a persona."
       },
@@ -10018,9 +9568,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "research_task"
-        ],
+        "required": ["research_task"],
         "title": "ResearchAgentStart"
       },
       "SavedSearchDoc": {
@@ -10199,9 +9747,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "urls"
-        ],
+        "required": ["urls"],
         "title": "OpenUrlsToolRequest"
       },
       "CustomToolUpdate": {
@@ -10504,12 +10050,7 @@
       },
       "ChatFileType": {
         "type": "string",
-        "enum": [
-          "image",
-          "document",
-          "plain_text",
-          "csv"
-        ],
+        "enum": ["image", "document", "plain_text", "csv"],
         "title": "ChatFileType"
       },
       "LlmWebSearchResult": {
@@ -10549,12 +10090,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "document_citation_number",
-          "url",
-          "title",
-          "snippet"
-        ],
+        "required": ["document_citation_number", "url", "title", "snippet"],
         "title": "LlmWebSearchResult",
         "description": "Result from a web search query"
       },
@@ -10582,10 +10118,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "document_id",
-          "already_existed"
-        ],
+        "required": ["document_id", "already_existed"],
         "title": "IngestionResult"
       },
       "PersonaLabelSnapshot": {
@@ -10600,10 +10133,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "id",
-          "name"
-        ],
+        "required": ["id", "name"],
         "title": "PersonaLabelSnapshot"
       },
       "FailedConnectorIndexingStatus": {
@@ -10674,11 +10204,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "id",
-          "source",
-          "name"
-        ],
+        "required": ["id", "source", "name"],
         "title": "FederatedConnectorStatus"
       },
       "UserRoleUpdateRequest": {
@@ -10697,10 +10223,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "user_email",
-          "new_role"
-        ],
+        "required": ["user_email", "new_role"],
         "title": "UserRoleUpdateRequest"
       },
       "ConnectorFileInfo": {
@@ -10737,10 +10260,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "file_id",
-          "file_name"
-        ],
+        "required": ["file_id", "file_name"],
         "title": "ConnectorFileInfo"
       },
       "WebSearchToolResponse": {
@@ -10757,10 +10277,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "results",
-          "provider_type"
-        ],
+        "required": ["results", "provider_type"],
         "title": "WebSearchToolResponse"
       },
       "ReasoningDelta": {
@@ -10777,9 +10294,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "reasoning"
-        ],
+        "required": ["reasoning"],
         "title": "ReasoningDelta"
       },
       "ImageSection": {
@@ -10812,9 +10327,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "image_file_id"
-        ],
+        "required": ["image_file_id"],
         "title": "ImageSection",
         "description": "Section containing an image reference"
       },
@@ -11053,9 +10566,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "documents"
-        ],
+        "required": ["documents"],
         "title": "OpenUrlDocuments",
         "description": "Final documents after crawling completes."
       },
@@ -11067,9 +10578,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "redirect_url"
-        ],
+        "required": ["redirect_url"],
         "title": "ChatSeedResponse"
       },
       "ChatSessionDetailResponse": {
@@ -11217,9 +10726,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "queries"
-        ],
+        "required": ["queries"],
         "title": "WebSearchToolRequest"
       },
       "Tag": {
@@ -11234,10 +10741,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "tag_key",
-          "tag_value"
-        ],
+        "required": ["tag_key", "tag_value"],
         "title": "Tag"
       },
       "UpdateProjectRequest": {
@@ -11276,9 +10780,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "email"
-        ],
+        "required": ["email"],
         "title": "InvitedUserSnapshot"
       },
       "CategorizedFilesSnapshot": {
@@ -11299,10 +10801,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "user_files",
-          "rejected_files"
-        ],
+        "required": ["user_files", "rejected_files"],
         "title": "CategorizedFilesSnapshot"
       },
       "FullPersonaSnapshot": {
@@ -11550,12 +11049,7 @@
       },
       "WebSearchProviderType": {
         "type": "string",
-        "enum": [
-          "google_pse",
-          "serper",
-          "exa",
-          "searxng"
-        ],
+        "enum": ["google_pse", "serper", "exa", "searxng"],
         "title": "WebSearchProviderType"
       },
       "ChatSeedRequest": {
@@ -11608,9 +11102,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "persona_id"
-        ],
+        "required": ["persona_id"],
         "title": "ChatSeedRequest"
       },
       "TopLevelBranching": {
@@ -11627,9 +11119,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "num_parallel_branches"
-        ],
+        "required": ["num_parallel_branches"],
         "title": "TopLevelBranching"
       },
       "IndexingStatusRequest": {
@@ -11897,10 +11387,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "groups",
-          "has_more"
-        ],
+        "required": ["groups", "has_more"],
         "title": "ChatSearchResponse"
       },
       "BasicExpertInfo": {
@@ -12227,10 +11714,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "items",
-          "total_items"
-        ],
+        "required": ["items", "total_items"],
         "title": "PaginatedReturn[IndexAttemptSnapshot]"
       },
       "ContainerVersions": {
@@ -12253,12 +11737,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "onyx",
-          "relational_db",
-          "index",
-          "nginx"
-        ],
+        "required": ["onyx", "relational_db", "index", "nginx"],
         "title": "ContainerVersions"
       },
       "DeepResearchPlanDelta": {
@@ -12275,9 +11754,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "content"
-        ],
+        "required": ["content"],
         "title": "DeepResearchPlanDelta"
       },
       "ConnectorCredentialPairIdentifier": {
@@ -12292,10 +11769,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "connector_id",
-          "credential_id"
-        ],
+        "required": ["connector_id", "credential_id"],
         "title": "ConnectorCredentialPairIdentifier"
       },
       "BasicCCPairInfo": {
@@ -12309,10 +11783,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "has_successful_run",
-          "source"
-        ],
+        "required": ["has_successful_run", "source"],
         "title": "BasicCCPairInfo"
       },
       "ProjectPayload": {
@@ -12350,9 +11821,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "project"
-        ],
+        "required": ["project"],
         "title": "ProjectPayload"
       },
       "Body_bulk_invite_users_manage_admin_users_put": {
@@ -12366,9 +11835,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "emails"
-        ],
+        "required": ["emails"],
         "title": "Body_bulk_invite_users_manage_admin_users_put"
       }
     },
