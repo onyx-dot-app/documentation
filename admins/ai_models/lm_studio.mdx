@@ -36,15 +36,12 @@ including their capabilities (vision, reasoning) and context length.
     <Info>
       **Running Onyx in Docker on the same machine as LM Studio?**
 
-      By default, LM Studio binds only to `127.0.0.1`, which is unreachable from inside an Onyx container.
+      By default, LM Studio binds only to `127.0.0.1`, which is unreachable from inside an Onyx container. To fix:
 
-      1. In LM Studio's **Developer** tab, enable **"Serve on Local Network"** (or set the host to `0.0.0.0`) and restart the server.
-      2. Use `http://host.docker.internal:1234` as the **API Base URL** instead of `http://localhost:1234`.
+      - In LM Studio's **Developer** tab, enable **"Serve on Local Network"** (or set the host to `0.0.0.0`) and restart the server.
+      - Use `http://host.docker.internal:1234` as the **API Base URL** instead of `http://localhost:1234`.
 
-      For more information,
-      see [LM Studio > Serve on Local Network](https://lmstudio.ai/docs/developer/core/server/serve-on-network).
-
-      ```
+      See [LM Studio's docs](https://lmstudio.ai/docs/developer/core/server/serve-on-network) for more details.
     </Info>
   </Step>
 
@@ -57,9 +54,10 @@ including their capabilities (vision, reasoning) and context length.
 
     Set the **API Base URL** to your LM Studio server address (e.g., `http://localhost:1234`).
 
-    If Onyx is running in Docker on the same machine as LM Studio, use `http://host.docker.internal:1234`
-    instead — `localhost` inside the container points to the container itself, not your host. Make sure
-    LM Studio is set to **"Serve on Local Network"** (see the Info callout in the previous step).
+    If Onyx is running in Docker on the same machine as LM Studio,
+    use `http://host.docker.internal:1234` instead — `localhost` inside the container points to the container itself,
+    not your host.
+    Make sure LM Studio is set to **"Serve on Local Network"** (see the Info callout in the previous step).
 
     Onyx will automatically connect and discover your loaded models.
 
