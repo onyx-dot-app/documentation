@@ -6,6 +6,85 @@ mode: "wide"
 rss: true
 ---
 
+<Update label="v3.3.6" description="May 18th, 2026" tags={["New Features", "Deployment Changes", "Bug Fixes"]}>
+
+  ## v3.3.6
+
+  Onyx v3.3 makes OpenSearch-only deployments available, improves image-heavy document understanding,
+  adds targeted reindexing tools for admins, and brings a wide set of connector, Slack bot, security,
+  and indexing reliability fixes.
+
+  ## Key Improvements
+
+  ### OpenSearch-only deployments
+
+  Self-hosted deployments can now run Onyx without Vespa by setting `ONYX_DISABLE_VESPA=true`.
+  Onyx will use OpenSearch for retrieval, skip Vespa-specific migration work, and disable the retrieval-source
+  toggle when Vespa is not configured. `ENABLE_OPENSEARCH_INDEXING_FOR_ONYX` must remain enabled, which is the
+  default for v3 deployments.
+
+  ### Better image and document understanding
+
+  PDFs and DOCX files with embedded images are now indexed with image extraction and analysis, so image-only
+  or image-heavy documents can become searchable and answerable when a vision-capable default LLM is configured.
+  Google Slides are exported as PowerPoint files to preserve embedded images, and OpenAI and Azure configurations
+  now include support for GPT Image 2.
+
+  ### Targeted Reindexing
+
+  Admins now have the foundation for targeted document reindexing, including job tracking, per-document targets,
+  API endpoints, and a Resolve-All flow for indexing errors. Targeted reindex jobs can run alongside full crawls
+  without confusing freshness, scheduling, or indexing-count queries.
+
+  ### Runtime Query History Controls
+
+  Query History visibility can now be controlled from Admin Chat Preferences instead of only through an environment
+  variable. Admins can show query history with user information, anonymize it, or hide it entirely, and the setting
+  applies immediately across the app and exports.
+
+  ## Additional Improvements
+
+  ### Chat, Slack, and Search
+
+  - Slack search can include full thread replies and fetch threads directly from pasted Slack URLs.
+  - Slack bot agent selection is searchable, and Slack bot invocation can be gated by member-group allowlists.
+  - Chat tables render with scrollable overflow fades, multi-model follow-up behavior is more reliable, and admins
+    can control multi-model chat globally.
+  - Usage exports now include the LLM model used for each assistant response, including multi-model branches.
+
+  ### Connectors and Indexing
+
+  - Google Drive, Jira, HubSpot, Asana, GitLab, SharePoint, Freshdesk, Fireflies, Slack, and XLSX handling all received
+    connector-specific reliability fixes.
+  - Connector workers now have additional HTTP timeouts to reduce hanging jobs.
+  - Image extraction, PowerPoint parsing, contextual RAG thread caps, pruning defaults, and staged-file cleanup were
+    hardened for larger or more complex indexing workloads.
+  - OpenRouter model auto-update mode is available again.
+
+  ### Admin, Security, and Deployment
+
+  - Admin and feature access continue moving from legacy roles to group-based permission checks.
+  - Document set access in search filters and agent access on chat-session creation are enforced more strictly.
+  - Seat-limit enforcement was hardened with tenant-scoped locking, better SCIM and Slack promotion handling, and
+    cloud auto-billing support for new seats.
+  - Helm and Docker deployments received OpenSearch, Redis, monitoring, ServiceMonitor, and LetsEncrypt startup fixes.
+
+  ### Notable Bug Fixes
+
+  - Fixed SAML deployments getting stuck in `/api/auth/refresh` request loops.
+  - Fixed uploaded-file citations failing to open previews.
+  - Fixed Slack token and inactive-account handling so users get clearer re-auth prompts.
+  - Fixed MCP OAuth callback routing and masked OAuth credential storage on re-auth.
+  - Fixed service account seat counting and SCIM seat-limit race conditions.
+  - Fixed Google connector impersonation failures, Google Slides image loss, and HubSpot incremental polling performance.
+
+  ---
+
+  Our [GitHub Releases](https://github.com/onyx-dot-app/onyx/releases?utm_source=docs&utm_content=changelog)
+  page has the full list of changes and bug fixes for each release.
+
+</Update>
+
 <Update label="v3.2.0" description="April 9th, 2026" tags={["New Features", "Performance", "Bug Fixes"]}>
 
   ## v3.2.0
