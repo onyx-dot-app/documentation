@@ -24,9 +24,6 @@ rss: true
   - **`POSTGRES_POOL_PRE_PING` now defaults to `true`.** This makes database
     connection handling more resilient by default; set it to `false` to restore
     the previous behavior.
-  - **The default connector pruning frequency is now 25 days**, and the backend
-    is now the source of truth for this value. A migration updates existing
-    connectors.
 
   ## Key Improvements
 
@@ -35,9 +32,9 @@ rss: true
   Spreadsheets and CSVs are now indexed as structured tabular content rather
   than flattened text. A new section-based chunking pipeline emits field-value
   chunks, per-sheet descriptors, and whole-file summary chunks, so questions
-  about the data in an XLSX or CSV return meaningful results. Tabular files are
-  supported across the file upload path and the Google Drive, Blob, and
-  SharePoint connectors.
+  more accurately choose the right XLSX or CSV document, which the llm can then
+  interpret. Tabular files are supported across the file upload path and the
+  Google Drive, Blob, and SharePoint connectors.
 
   ### Smoother Chat Streaming
 
@@ -60,15 +57,12 @@ rss: true
 
   ### Authentication and Security
 
-  - reCAPTCHA verification added across login, registration, and the Google
-    OAuth callback.
   - Chat file downloads have hardened authorization.
   - New `USER_DIRECTORY_ADMIN_ONLY` flag to restrict non-admins from sharing
     agents with individual users.
 
   ### Indexing and Search
 
-  - User-uploaded images can now be edited.
   - Image extraction from PDF files.
   - Indexing is more resilient: staged-file handling, orphan file cleanup,
     and document processing that no longer dies mid-run on individual
@@ -100,7 +94,6 @@ rss: true
     limit, XLSM support, and several formatting issues.
   - Fixed the LLM selector to show each provider instance as its own group.
   - Fixed model reasoning fields unexpectedly returning `None`.
-  - Removed the Knowledge Graph admin page.
 
   ---
 
