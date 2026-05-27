@@ -114,9 +114,9 @@ rss: true
 
   ## v3.2.0
 
-  Multi-model chat lets you run a prompt across several models at once and pick
-  the best response, a generic OpenAI-compatible provider opens the door to any
-  LLM endpoint, the indexing pipeline gets a significant performance rework,
+  Multi-model chat lets you run a prompt across several models at once and pick the best response,
+  a generic OpenAI-compatible provider opens the door to any LLM endpoint,
+  the indexing pipeline gets a significant performance rework,
   and the Hook system matures with a second hook point and admin status views.
   Thank you to our contributors for helping make this release possible!
 
@@ -124,27 +124,24 @@ rss: true
 
   ### Multi-Model Chat
 
-  You can now send a single prompt to multiple models in parallel and compare
-  their responses side by side. Pick the response you like best to continue
-  the conversation with that model, or deselect to keep exploring. Multi-model
-  is wired through the chat UI and the Chrome extension.
+  You can now send a single prompt to multiple models in parallel and compare their responses side by side.
+  Pick the response you like best to continue the conversation with that model, or deselect to keep exploring.
+  Multi-model is wired through the chat UI and the Chrome extension.
 
   <img className="rounded-image" src="/assets/changelog/v3.2/multi_modal_chat.png" alt="Multi-Modal Chat"/>
 
   ### Generic OpenAI-Compatible Provider
 
-  Onyx now ships a generic "OpenAI Compatible" provider that lets you point at
-  any OpenAI-compatible endpoint — local inference servers, gateway proxies,
-  or self-hosted model runners — without needing a dedicated integration. The
-  Custom LLM provider configuration was also reworked to support this cleanly.
+  Onyx now ships a generic "OpenAI Compatible" provider that lets you point at any OpenAI-compatible endpoint — local
+  inference servers, gateway proxies, or self-hosted model runners — without needing a dedicated integration.
+  The Custom LLM provider configuration was also reworked to support this cleanly.
 
   ### Hooks: status, logs, and document ingestion
 
-  The Hook system introduced in v3.1.0 has matured. A new admin page lets you
-  create, edit, and monitor hooks with live status and logs, and a second
-  integration point — document ingestion — joins query processing in the set
-  of hookable lifecycle events. Connection-lost states surface clearly in the
-  UI when a hook becomes unreachable.
+  The Hook system introduced in v3.1.0 has matured. A new admin page lets you create, edit,
+  and monitor hooks with live status and logs,
+  and a second integration point — document ingestion — joins query processing in the set of hookable lifecycle events.
+  Connection-lost states surface clearly in the UI when a hook becomes unreachable.
 
   <img className="rounded-image" src="/assets/changelog/v3.2/hook_extensions_page.png" alt="Hook Extensions Page"/>
 
@@ -194,8 +191,7 @@ rss: true
     eliminating duplicate fetches and stabilizing revalidation behavior
   - Removed unnecessary user-memory eager loads from auth paths
   - Indexing pipeline streams chunks through a unified iterable-based
-    abstraction with batched processing, improving memory usage and throughput
-    on large corpora
+    abstraction with batched processing, improving memory usage and throughput on large corpora
 
   ### Deployment and Observability
 
@@ -219,8 +215,7 @@ rss: true
 
   ---
 
-  Our [GitHub
-  Releases](https://github.com/onyx-dot-app/onyx/releases?utm_source=docs&utm_content=changelog)
+  Our [GitHub Releases](https://github.com/onyx-dot-app/onyx/releases?utm_source=docs&utm_content=changelog)
   page has the full list of changes and bug fixes for each release.
 
 </Update>
