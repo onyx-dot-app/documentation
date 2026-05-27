@@ -10,38 +10,32 @@ rss: true
 
   ## v3.3.0
 
-  Spreadsheets and CSVs become first-class searchable content, and a substantial
-  round of observability, hardening, and polish. Thank you to our contributors
-  for helping make this release possible!
+  Spreadsheets and CSVs become first-class searchable content, and a substantial round of observability, hardening,
+  and polish. Thank you to our contributors for helping make this release possible!
 
   ## [Update] Defaults that Changed
 
-  A few defaults changed in v3.3.0 that operators should be aware of before
-  upgrading:
+  A few defaults changed in v3.3.0 that operators should be aware of before upgrading:
 
   - **`DANSWER_RUNNING_IN_DOCKER` was renamed to `ONYX_RUNNING_IN_DOCKER`.** If
     you set this environment variable explicitly, update it.
   - **`POSTGRES_POOL_PRE_PING` now defaults to `true`.** This makes database
-    connection handling more resilient by default; set it to `false` to restore
-    the previous behavior.
+    connection handling more resilient by default; set it to `false` to restore the previous behavior.
 
   ## Key Improvements
 
   ### Tabular File Indexing
 
-  Spreadsheets and CSVs are now indexed as structured tabular content rather
-  than flattened text. A new section-based chunking pipeline emits field-value
-  chunks, per-sheet descriptors, and whole-file summary chunks, so questions
-  more accurately choose the right XLSX or CSV document, which the llm can then
-  interpret. Tabular files are supported across the file upload path and the
-  Google Drive, Blob, and SharePoint connectors.
+  Spreadsheets and CSVs are now indexed as structured tabular content rather than flattened text.
+  A new section-based chunking pipeline emits field-value chunks, per-sheet descriptors, and whole-file summary chunks,
+  so questions more accurately choose the right XLSX or CSV document, which the llm can then interpret.
+  Tabular files are supported across the file upload path and the Google Drive, Blob, and SharePoint connectors.
 
   ### Smoother Chat Streaming
 
-  Chat responses now stream at the character level for a noticeably smoother
-  reading experience, with live LaTeX rendering as math streams in. If you
-  prefer the previous behavior, smooth streaming can be turned off in chat
-  preferences.
+  Chat responses now stream at the character level for a noticeably smoother reading experience,
+  with live LaTeX rendering as math streams in. If you prefer the previous behavior,
+  smooth streaming can be turned off in chat preferences.
 
   ## Contributor Highlights
 
@@ -50,8 +44,7 @@ rss: true
   - [@aserafin-mtt](https://github.com/aserafin-mtt) fixed MCP Langfuse
     tracing and Jira ADF parsing!
   - [@Mberga14](https://github.com/Mberga14) fixed a `Button`/`button`
-    case-split that broke Linux builds and added support for extra manifests
-    in the Helm chart!
+    case-split that broke Linux builds and added support for extra manifests in the Helm chart!
 
   ## Additional Improvements
 
@@ -65,8 +58,7 @@ rss: true
 
   - Image extraction from PDF files.
   - Indexing is more resilient: staged-file handling, orphan file cleanup,
-    and document processing that no longer dies mid-run on individual
-    failures.
+    and document processing that no longer dies mid-run on individual failures.
   - Option to run Onyx with OpenSearch only, fully disabling Vespa.
 
   ### Chat
@@ -97,8 +89,7 @@ rss: true
 
   ---
 
-  Our [GitHub
-  Releases](https://github.com/onyx-dot-app/onyx/releases?utm_source=docs&utm_content=changelog)
+  Our [GitHub Releases](https://github.com/onyx-dot-app/onyx/releases?utm_source=docs&utm_content=changelog)
   page has the full list of changes and bug fixes for each release.
 
 </Update>
