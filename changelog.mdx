@@ -6,13 +6,117 @@ mode: "wide"
 rss: true
 ---
 
+<Update label="v3.3.0" description="May 4th, 2026" tags={["New Features", "Bug Fixes", "Performance"]}>
+
+  ## v3.3.0
+
+  Spreadsheets and CSVs become first-class searchable content, and a substantial
+  round of observability, hardening, and polish. Thank you to our contributors
+  for helping make this release possible!
+
+  ## [Update] Defaults that Changed
+
+  A few defaults changed in v3.3.0 that operators should be aware of before
+  upgrading:
+
+  - **`DANSWER_RUNNING_IN_DOCKER` was renamed to `ONYX_RUNNING_IN_DOCKER`.** If
+    you set this environment variable explicitly, update it.
+  - **`POSTGRES_POOL_PRE_PING` now defaults to `true`.** This makes database
+    connection handling more resilient by default; set it to `false` to restore
+    the previous behavior.
+  - **The default connector pruning frequency is now 25 days**, and the backend
+    is now the source of truth for this value. A migration updates existing
+    connectors.
+
+  ## Key Improvements
+
+  ### Tabular File Indexing
+
+  Spreadsheets and CSVs are now indexed as structured tabular content rather
+  than flattened text. A new section-based chunking pipeline emits field-value
+  chunks, per-sheet descriptors, and whole-file summary chunks, so questions
+  about the data in an XLSX or CSV return meaningful results. Tabular files are
+  supported across the file upload path and the Google Drive, Blob, and
+  SharePoint connectors.
+
+  ### Smoother Chat Streaming
+
+  Chat responses now stream at the character level for a noticeably smoother
+  reading experience, with live LaTeX rendering as math streams in. If you
+  prefer the previous behavior, smooth streaming can be turned off in chat
+  preferences.
+
+  ## Contributor Highlights
+
+  - [@jaffarkeikei](https://github.com/jaffarkeikei) fixed inverted
+    `already_existed` logic in the ingestion API response!
+  - [@aserafin-mtt](https://github.com/aserafin-mtt) fixed MCP Langfuse
+    tracing and Jira ADF parsing!
+  - [@Mberga14](https://github.com/Mberga14) fixed a `Button`/`button`
+    case-split that broke Linux builds and added support for extra manifests
+    in the Helm chart!
+
+  ## Additional Improvements
+
+  ### Authentication and Security
+
+  - reCAPTCHA verification added across login, registration, and the Google
+    OAuth callback.
+  - Chat file downloads have hardened authorization.
+  - New `USER_DIRECTORY_ADMIN_ONLY` flag to restrict non-admins from sharing
+    agents with individual users.
+
+  ### Indexing and Search
+
+  - User-uploaded images can now be edited.
+  - Image extraction from PDF files.
+  - Indexing is more resilient: staged-file handling, orphan file cleanup,
+    and document processing that no longer dies mid-run on individual
+    failures.
+  - Option to run Onyx with OpenSearch only, fully disabling Vespa.
+
+  ### Chat
+
+  - Queued messages — send a follow-up while a response is still generating.
+  - Multi-model chat refinements: inline citation chips in panels, isolated
+    streaming errors per panel, and numerous UI polish fixes.
+  - Scrollable tables with an overflow fade in chat responses.
+  - GPT Image 2 support for image generation.
+  - Anthropic Opus 4.7 added to the recommended models.
+
+  ### Connectors
+
+  - Gong connector converted from polling to checkpointed indexing.
+  - HubSpot connector made significantly more efficient with fewer API calls.
+  - Confluence: 504 retry with smaller page size, plus `/Date` macro and
+    Cyrillic encoding fixes.
+  - Google Drive: handles refresh errors for removed Workspace users and skips
+    redundant folder walks during pruning.
+  - SharePoint: several pruning crash and permission-validation fixes.
+
+  ### Notable Bug Fixes
+
+  - Fixed XLSX handling: streaming extraction to reduce peak memory, a hard cell
+    limit, XLSM support, and several formatting issues.
+  - Fixed the LLM selector to show each provider instance as its own group.
+  - Fixed model reasoning fields unexpectedly returning `None`.
+  - Removed the Knowledge Graph admin page.
+
+  ---
+
+  Our [GitHub
+  Releases](https://github.com/onyx-dot-app/onyx/releases?utm_source=docs&utm_content=changelog)
+  page has the full list of changes and bug fixes for each release.
+
+</Update>
+
 <Update label="v3.2.0" description="April 9th, 2026" tags={["New Features", "Performance", "Bug Fixes"]}>
 
   ## v3.2.0
 
-  Multi-model chat lets you run a prompt across several models at once and pick the best response,
-  a generic OpenAI-compatible provider opens the door to any LLM endpoint,
-  the indexing pipeline gets a significant performance rework,
+  Multi-model chat lets you run a prompt across several models at once and pick
+  the best response, a generic OpenAI-compatible provider opens the door to any
+  LLM endpoint, the indexing pipeline gets a significant performance rework,
   and the Hook system matures with a second hook point and admin status views.
   Thank you to our contributors for helping make this release possible!
 
@@ -20,24 +124,27 @@ rss: true
 
   ### Multi-Model Chat
 
-  You can now send a single prompt to multiple models in parallel and compare their responses side by side.
-  Pick the response you like best to continue the conversation with that model, or deselect to keep exploring.
-  Multi-model is wired through the chat UI and the Chrome extension.
+  You can now send a single prompt to multiple models in parallel and compare
+  their responses side by side. Pick the response you like best to continue
+  the conversation with that model, or deselect to keep exploring. Multi-model
+  is wired through the chat UI and the Chrome extension.
 
   <img className="rounded-image" src="/assets/changelog/v3.2/multi_modal_chat.png" alt="Multi-Modal Chat"/>
 
   ### Generic OpenAI-Compatible Provider
 
-  Onyx now ships a generic "OpenAI Compatible" provider that lets you point at any OpenAI-compatible endpoint — local
-  inference servers, gateway proxies, or self-hosted model runners — without needing a dedicated integration.
-  The Custom LLM provider configuration was also reworked to support this cleanly.
+  Onyx now ships a generic "OpenAI Compatible" provider that lets you point at
+  any OpenAI-compatible endpoint — local inference servers, gateway proxies,
+  or self-hosted model runners — without needing a dedicated integration. The
+  Custom LLM provider configuration was also reworked to support this cleanly.
 
   ### Hooks: status, logs, and document ingestion
 
-  The Hook system introduced in v3.1.0 has matured. A new admin page lets you create, edit,
-  and monitor hooks with live status and logs,
-  and a second integration point — document ingestion — joins query processing in the set of hookable lifecycle events.
-  Connection-lost states surface clearly in the UI when a hook becomes unreachable.
+  The Hook system introduced in v3.1.0 has matured. A new admin page lets you
+  create, edit, and monitor hooks with live status and logs, and a second
+  integration point — document ingestion — joins query processing in the set
+  of hookable lifecycle events. Connection-lost states surface clearly in the
+  UI when a hook becomes unreachable.
 
   <img className="rounded-image" src="/assets/changelog/v3.2/hook_extensions_page.png" alt="Hook Extensions Page"/>
 
@@ -87,7 +194,8 @@ rss: true
     eliminating duplicate fetches and stabilizing revalidation behavior
   - Removed unnecessary user-memory eager loads from auth paths
   - Indexing pipeline streams chunks through a unified iterable-based
-    abstraction with batched processing, improving memory usage and throughput on large corpora
+    abstraction with batched processing, improving memory usage and throughput
+    on large corpora
 
   ### Deployment and Observability
 
@@ -111,7 +219,8 @@ rss: true
 
   ---
 
-  Our [GitHub Releases](https://github.com/onyx-dot-app/onyx/releases?utm_source=docs&utm_content=changelog)
+  Our [GitHub
+  Releases](https://github.com/onyx-dot-app/onyx/releases?utm_source=docs&utm_content=changelog)
   page has the full list of changes and bug fixes for each release.
 
 </Update>
