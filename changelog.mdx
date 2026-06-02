@@ -10,26 +10,23 @@ rss: true
 
   ## v4.0.0
 
-  Vespa is gone, OpenSearch is now the only document index. We're shipping an
-  opt-in Coding Agent, end-to-end visibility into indexing failures, permission
-  sync inspection tooling, a public Search API, and Slack Enterprise Grid
-  support.
+  Vespa is gone, OpenSearch is now the only document index. We're shipping an opt-in Coding Agent,
+  end-to-end visibility into indexing failures, permission sync inspection tooling, a public Search API,
+  and Slack Enterprise Grid support.
 
   Thank you to our contributors for helping make this release possible!
 
   ## [Breaking] Vespa is Removed
 
   <Warning>
-    **Do not upgrade to this release if you want to preserve your existing
-    indexed documents but have not yet run the document index migration, which
-    can be done from any version v3.x.** Vespa has been removed entirely in
-    v4.0.0 and upgrading without first migrating will result in the loss of
-    indexed documents and Project files, for which the only solution is
-    re-indexing.
+    **Do not upgrade to this release if you want to preserve your existing indexed documents but have not yet run the
+    document index migration,
+    which can be done from any version v3.x.** Vespa has been removed entirely in v4.0.0 and upgrading without first
+    migrating will result in the loss of indexed documents and Project files,
+    for which the only solution is re-indexing.
 
-    If you are still on Vespa, upgrade to a v3.x release first, run the
-    migration to completion, and then upgrade to v4. The full walkthrough
-    remains in the [Vespa to OpenSearch migration
+    If you are still on Vespa, upgrade to a v3.x release first, run the migration to completion, and then upgrade to v4.
+    The full walkthrough remains in the [Vespa to OpenSearch migration
     guide](https://docs.onyx.app/admins/advanced_configs/opensearch_document_index_migration).
   </Warning>
 
@@ -44,42 +41,38 @@ rss: true
 
   ### Coding Agent (opt-in)
 
-  v4.0.0 introduces a new Coding Agent — a sandboxed agent with file download
-  and bash tool access, available as a standalone agent and as a tool that the
-  regular chat agent can invoke. The Coding Agent ships **disabled by default**;
+  v4.0.0 introduces a new Coding Agent — a sandboxed agent with file download and bash tool access,
+  available as a standalone agent and as a tool that the regular chat agent can invoke.
+  The Coding Agent ships **disabled by default**;
   admins can enable and configure it from a new section of the Admin Panel.
 
   ### End-to-End Indexing Visibility
 
-  Admins can now see exactly what failed during indexing and resolve it without
-  rerunning entire connectors. Failed documents are surfaced with the underlying
-  error, individual documents have a "Resolve" button that triggers a targeted
-  reindex for just that document, and a "Resolve All" action handles bulk
-  recovery. Indexing metrics are now always visible rather than gated, and the
-  indexing errors modal supports pagination through large failure lists.
+  Admins can now see exactly what failed during indexing and resolve it without rerunning entire connectors.
+  Failed documents are surfaced with the underlying error,
+  individual documents have a "Resolve" button that triggers a targeted reindex for just that document,
+  and a "Resolve All" action handles bulk recovery. Indexing metrics are now always visible rather than gated,
+  and the indexing errors modal supports pagination through large failure lists.
 
   ### Permission Sync Visibility
 
-  Permission sync now has dedicated admin tooling. Admins can see the state of
-  each sync, inspect what was synced and what failed, and capture exception
-  traces when syncs error.
+  Permission sync now has dedicated admin tooling. Admins can see the state of each sync,
+  inspect what was synced and what failed, and capture exception traces when syncs error.
 
   ### Slack Enterprise Grid
 
-  The Slack connector now supports Slack Enterprise Grid, including
-  cross-workspace indexing.
+  The Slack connector now supports Slack Enterprise Grid, including cross-workspace indexing.
 
   ### Public Search API
 
-  A new public `POST /api/search` endpoint and `onyx-cli agentic search` command
-  let external systems and command-line workflows run searches against Onyx
-  programmatically.
+  A new public `POST /api/search` endpoint and `onyx-cli agentic search` command let external systems and command-line
+  workflows run searches against Onyx programmatically.
 
   ## Contributor Highlights
 
   - [@beraterkanelcelik](https://github.com/beraterkanelcelik) made
-    `MAX_LLM_CYCLES` environment-configurable and fixed OIDC token refresh so it
-    works for any OIDC provider, not just Google!
+    `MAX_LLM_CYCLES` environment-configurable and fixed OIDC token refresh so it works for any OIDC provider,
+    not just Google!
   - [@mikew](https://github.com/mikew) expanded LiteLLM capability support and
     added reasoning flow support for models that expose it!
   - [@k-kasajima](https://github.com/k-kasajima) fixed the LiteLLM
@@ -149,8 +142,7 @@ rss: true
 
   ---
 
-  Our [GitHub
-  Releases](https://github.com/onyx-dot-app/onyx/releases?utm_source=docs&utm_content=changelog)
+  Our [GitHub Releases](https://github.com/onyx-dot-app/onyx/releases?utm_source=docs&utm_content=changelog)
   page has the full list of changes and bug fixes for each release.
 
 </Update>
