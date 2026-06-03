@@ -22,9 +22,17 @@ clones the repository into an isolated sandbox, explores the code with shell com
 
 When invoked, the Coding Agent:
 
-1. **Clones the target GitHub repository** into an isolated sandbox.
-2. **Runs an iterative investigation loop** powered by an LLM, executing shell commands to explore the code.
-3. **Returns a final answer** based on its findings.
+<Steps>
+  <Step title="Clones the repository">
+    The target GitHub repository is cloned into an isolated sandbox.
+  </Step>
+  <Step title="Investigates the code">
+    An iterative loop powered by an LLM executes shell commands to explore the codebase.
+  </Step>
+  <Step title="Returns an answer">
+    A final answer is produced based on its findings.
+  </Step>
+</Steps>
 
 The Coding Agent runs in the same sandboxed environment as the
 [Code Interpreter](/admins/actions/code_interpreter), so it requires a connected code execution (bash) server.

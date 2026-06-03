@@ -32,9 +32,17 @@ This unlocks workflows such as:
 
 When the Coding Agent is invoked, it:
 
-1. **Clones the repository** into an isolated sandbox environment.
-2. **Runs an iterative investigation loop** powered by an LLM, executing shell commands to explore the code.
-3. **Returns a final, written answer** based on what it found.
+<Steps>
+  <Step title="Clones the repository">
+    The target GitHub repository is cloned into an isolated sandbox environment.
+  </Step>
+  <Step title="Investigates the code">
+    An iterative loop powered by an LLM executes shell commands to explore the codebase.
+  </Step>
+  <Step title="Returns an answer">
+    A final, written answer is produced based on what it found.
+  </Step>
+</Steps>
 
 The Coding Agent runs in the same sandboxed environment as the [Code Interpreter](/overview/core_features/code_interpreter),
 so it requires a connected bash/code execution server.
