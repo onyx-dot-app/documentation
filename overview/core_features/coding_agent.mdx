@@ -1,0 +1,54 @@
+---
+title: "Coding Agent"
+description: "Investigate and answer questions about a GitHub codebase"
+icon: "code-branch"
+---
+
+<Note>
+  The Coding Agent is a **beta** feature. It is disabled by default and currently supports **public** GitHub
+  repositories. See [Configuration](#configuration) below to enable it.
+</Note>
+
+## Overview
+
+The Coding Agent gives Onyx the ability to investigate a GitHub repository and answer questions about its codebase.
+Given a repository and a question, it clones the repo into an isolated sandbox and explores the code with shell
+commands before returning a written answer.
+
+This unlocks workflows such as:
+
+- **Understanding a codebase**: Ask how a feature is implemented or where a piece of logic lives.
+- **Onboarding**: Get a high-level explanation of a project's structure and key modules.
+- **Code investigation**: Trace how data flows through the application or how two components interact.
+- **Answering "where / how / why" questions**: Locate relevant files and summarize what the code does.
+
+<Info>
+  The LLM determines when to use the Coding Agent based on the user's query. Like other Actions, it can be attached to
+  custom [Agents](/admins/agents/overview), giving the LLM the option to use it as needed. Be explicit in your prompt
+  about the repository you want analyzed.
+</Info>
+
+## How It Works
+
+When the Coding Agent is invoked, it:
+
+1. **Clones the repository** into an isolated sandbox environment.
+2. **Runs an iterative investigation loop** powered by an LLM, executing shell commands to explore the code.
+3. **Returns a final, written answer** based on what it found.
+
+The Coding Agent runs in the same sandboxed environment as the [Code Interpreter](/overview/core_features/code_interpreter),
+so it requires a connected bash/code execution server.
+
+## Configuration
+
+Because the Coding Agent is a beta Action, it is **disabled by default**. An admin can enable it from the **Actions**
+tab of the Admin Panel, and then attach it to the relevant [Agents](/admins/agents/overview).
+
+To learn more about enabling and managing the Coding Agent, see the
+[admin configuration guide](/admins/actions/coding_agent).
+
+## Limitations
+
+- **Public repositories only**: Private repositories are not yet supported and will fail to clone. Support for private
+  repositories is planned.
+- **Beta**: Behavior and configuration may change as the feature matures.
