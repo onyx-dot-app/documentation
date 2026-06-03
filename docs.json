@@ -34,7 +34,8 @@
               "overview/core_features/code_interpreter",
               "overview/core_features/image_generation",
               "overview/core_features/voice_mode",
-              "overview/core_features/craft"
+              "overview/core_features/craft",
+              "overview/core_features/coding_agent"
             ]
           },
           {
@@ -275,7 +276,8 @@
               "admins/actions/web_search",
               "admins/actions/code_interpreter",
               "admins/actions/image_generation",
-              "admins/actions/voice_mode"
+              "admins/actions/voice_mode",
+              "admins/actions/coding_agent"
             ]
           },
           {
