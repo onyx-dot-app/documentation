@@ -1,19 +1,21 @@
 ---
 title: "Coding Agent"
+sidebarTitle: "Coding Agent (beta)"
 description: "Investigate and answer questions about a GitHub codebase"
 icon: "code-branch"
 ---
 
 <Note>
-  The Coding Agent is a **beta** feature. It is disabled by default and currently supports **public** GitHub
-  repositories. See [Configuration](#configuration) below to enable it.
+  The Coding Agent is a **beta** feature.
+  It is disabled by default and currently supports **public** GitHub repositories. See [Configuration](#configuration)
+  below to enable it.
 </Note>
 
 ## Overview
 
 The Coding Agent gives Onyx the ability to investigate a GitHub repository and answer questions about its codebase.
-Given a repository and a question, it clones the repo into an isolated sandbox and explores the code with shell
-commands before returning a written answer.
+Given a repository and a question,
+it clones the repo into an isolated sandbox and explores the code with shell commands before returning a written answer.
 
 This unlocks workflows such as:
 
@@ -23,9 +25,9 @@ This unlocks workflows such as:
 - **Answering "where / how / why" questions**: Locate relevant files and summarize what the code does.
 
 <Info>
-  The LLM determines when to use the Coding Agent based on the user's query. Like other Actions, it can be attached to
-  custom [Agents](/admins/agents/overview), giving the LLM the option to use it as needed. Be explicit in your prompt
-  about the repository you want analyzed.
+  The LLM determines when to use the Coding Agent based on the user's query. Like other Actions,
+  it can be attached to custom [Agents](/admins/agents/overview), giving the LLM the option to use it as needed.
+  Be explicit in your prompt about the repository you want analyzed.
 </Info>
 
 ## How It Works
@@ -36,24 +38,27 @@ When the Coding Agent is invoked, it:
   <Step title="Clones the repository">
     The target GitHub repository is cloned into an isolated sandbox environment.
   </Step>
+
   <Step title="Investigates the code">
     An iterative loop powered by an LLM executes shell commands to explore the codebase.
   </Step>
+
   <Step title="Returns an answer">
     A final, written answer is produced based on what it found.
   </Step>
 </Steps>
 
-The Coding Agent runs in the same sandboxed environment as the [Code Interpreter](/overview/core_features/code_interpreter),
-so it requires a connected bash/code execution server.
+The Coding Agent runs in the same sandboxed environment as the [Code
+Interpreter](/overview/core_features/code_interpreter), so it requires a connected bash/code execution server.
 
 ## Configuration
 
-Because the Coding Agent is a beta Action, it is **disabled by default**. An admin can enable it from the **Actions**
-tab of the Admin Panel, and then attach it to the relevant [Agents](/admins/agents/overview).
+Because the Coding Agent is a beta Action, it is **disabled by default**.
+An admin can enable it from the **Actions** tab of the Admin Panel,
+and then attach it to the relevant [Agents](/admins/agents/overview).
 
-To learn more about enabling and managing the Coding Agent, see the
-[admin configuration guide](/admins/actions/coding_agent).
+To learn more about enabling and managing the Coding Agent,
+see the [admin configuration guide](/admins/actions/coding_agent).
 
 ## Limitations
 

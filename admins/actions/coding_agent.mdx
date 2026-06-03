@@ -5,12 +5,12 @@ icon: "code-branch"
 ---
 
 <Note>
-  The Coding Agent is a **beta** Action. It is disabled by default and currently supports **public** GitHub
-  repositories only.
+  The Coding Agent is a **beta** Action.
+  It is disabled by default and currently supports **public** GitHub repositories only.
 </Note>
 
-The Coding Agent action lets your Agents investigate a GitHub repository and answer questions about its codebase. It
-clones the repository into an isolated sandbox, explores the code with shell commands, and returns a written answer.
+The Coding Agent action lets your Agents investigate a GitHub repository and answer questions about its codebase.
+It clones the repository into an isolated sandbox, explores the code with shell commands, and returns a written answer.
 
 ## Capabilities
 
@@ -26,16 +26,18 @@ When invoked, the Coding Agent:
   <Step title="Clones the repository">
     The target GitHub repository is cloned into an isolated sandbox.
   </Step>
+
   <Step title="Investigates the code">
     An iterative loop powered by an LLM executes shell commands to explore the codebase.
   </Step>
+
   <Step title="Returns an answer">
     A final answer is produced based on its findings.
   </Step>
 </Steps>
 
-The Coding Agent runs in the same sandboxed environment as the
-[Code Interpreter](/admins/actions/code_interpreter), so it requires a connected code execution (bash) server.
+The Coding Agent runs in the same sandboxed environment as the [Code Interpreter](/admins/actions/code_interpreter),
+so it requires a connected code execution (bash) server.
 
 ## Configuration
 
@@ -47,24 +49,24 @@ The Coding Agent is a built-in Action, but because it is in beta it is **disable
   </Step>
 
   <Step title="Confirm the code execution server is connected">
-    The Coding Agent relies on the same sandboxed bash environment as the Code Interpreter. Make sure the code
-    execution server is connected and healthy from the Admin Panel.
+    The Coding Agent relies on the same sandboxed bash environment as the Code Interpreter.
+    Make sure the code execution server is connected and healthy from the Admin Panel.
   </Step>
 
   <Step title="Attach it to an Agent">
-    Enable the **Coding Agent** action on the [Agents](/admins/agents/overview) that should be able to use it. Once
-    enabled, the LLM automatically decides when to invoke it.
+    Enable the **Coding Agent** action on the [Agents](/admins/agents/overview) that should be able to use it.
+    Once enabled, the LLM automatically decides when to invoke it.
   </Step>
 </Steps>
 
 ## Using the Coding Agent
 
-Once enabled and attached to an Agent, the LLM decides when to invoke the Coding Agent based on the user's query — no
-explicit invocation is needed.
+Once enabled and attached to an Agent,
+the LLM decides when to invoke the Coding Agent based on the user's query — no explicit invocation is needed.
 
 <Tip>
-  Be explicit about which repository you want analyzed. For example: *"Using the repository at
-  https://github.com/onyx-dot-app/onyx, explain how the connector indexing pipeline works."*
+  Be explicit about which repository you want analyzed. For example:
+  *"Using the repository at https://github.com/onyx-dot-app/onyx, explain how the connector indexing pipeline works."*
 </Tip>
 
 ## Limitations
