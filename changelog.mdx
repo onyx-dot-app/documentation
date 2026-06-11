@@ -10,65 +10,55 @@ rss: true
 
   ## v4.1.0
 
-  Personal Access Tokens gain user-selectable scopes, MCP servers from known
-  providers can be connected via OAuth, voice moves to OpenAI's GA Realtime
-  API, and six new community contributors land improvements across
-  connectors, auth, and LLM providers. Thank you to our contributors for
-  helping make this release possible!
+  Personal Access Tokens gain user-selectable scopes, MCP servers from known providers can be connected via OAuth,
+  voice moves to OpenAI's GA Realtime API, and six new community contributors land improvements across connectors, auth,
+  and LLM providers. Thank you to our contributors for helping make this release possible!
 
   ## [Update] Deployment Changes
 
   - **The backend image has been upgraded from Python 3.11 to Python 3.13.**
-    If you build custom images or install additional packages on top of the
-    Onyx image, verify compatibility before upgrading.
+    If you build custom images or install additional packages on top of the Onyx image,
+    verify compatibility before upgrading.
   - **The Helm chart now fails fast on 0.4.x → 0.5.x upgrades that would
-    lose Vespa data**, protecting deployments that haven't completed the
-    OpenSearch migration from accidental data loss.
+    lose Vespa data**, protecting deployments that haven't completed the OpenSearch migration from accidental data loss.
 
   ## Key Improvements
 
   ### Scoped Personal Access Tokens
 
-  Personal Access Tokens now support permission scopes. Tokens can be
-  restricted to coarse API surfaces — including `read:chat`, `write:chat`,
-  and `read:search` — and users select scopes when creating a token from
-  the settings UI. Existing tokens continue to work unchanged.
+  Personal Access Tokens now support permission scopes.
+  Tokens can be restricted to coarse API surfaces — including `read:chat`, `write:chat`,
+  and `read:search` — and users select scopes when creating a token from the settings UI.
+  Existing tokens continue to work unchanged.
 
   ### OAuth for Known MCP Providers
 
-  MCP servers from known providers can now be connected via OAuth directly
-  from the authentication modal, with a guided connect-and-callback flow
-  instead of manual credential entry.
+  MCP servers from known providers can now be connected via OAuth directly from the authentication modal,
+  with a guided connect-and-callback flow instead of manual credential entry.
 
   ### Voice on the GA Realtime API
 
-  OpenAI streaming speech-to-text has been migrated from the deprecated
-  Realtime Beta API to the GA Realtime API, putting voice mode on a
-  supported foundation going forward.
+  OpenAI streaming speech-to-text has been migrated from the deprecated Realtime Beta API to the GA Realtime API,
+  putting voice mode on a supported foundation going forward.
 
   ## Contributor Highlights
 
   This release includes six first-time contributors!
 
   - [@ppomes](https://github.com/ppomes) fixed the ingestion API overriding
-    document sources, corrected default temperature selection for the
-    search tool, and optimized Google Drive indexing to skip unnecessary
-    shared-drive lookups!
+    document sources, corrected default temperature selection for the search tool,
+    and optimized Google Drive indexing to skip unnecessary shared-drive lookups!
   - [@fejesd](https://github.com/fejesd) enabled prompt caching and sticky
-    routing for OpenRouter and wired user identifiers into OpenRouter
-    activity tracking!
+    routing for OpenRouter and wired user identifiers into OpenRouter activity tracking!
   - [@amanda-nathan](https://github.com/amanda-nathan) added support for
     unauthenticated SMTP relays!
   - [@dimanjet](https://github.com/dimanjet) and
-    [@mjakubowskimtt](https://github.com/mjakubowskimtt) both fixed ClickUp
-    connector API URL handling!
+    [@mjakubowskimtt](https://github.com/mjakubowskimtt) both fixed ClickUp connector API URL handling!
   - [@psyray](https://github.com/psyray) fixed an nginx config typo in the
     no-letsencrypt compose file!
 
-  And returning contributor
-  [@beraterkanelcelik](https://github.com/beraterkanelcelik) made job
-  timeouts, per-call MCP tool timeouts, and admin query-history visibility
-  configurable via environment variables!
+  And returning contributor [@beraterkanelcelik](https://github.com/beraterkanelcelik) made job timeouts,
+  per-call MCP tool timeouts, and admin query-history visibility configurable via environment variables!
 
   ## Additional Improvements
 
