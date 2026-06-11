@@ -126,8 +126,151 @@ rss: true
 
   ---
 
-  Our [GitHub
-  Releases](https://github.com/onyx-dot-app/onyx/releases?utm_source=docs&utm_content=changelog)
+  Our [GitHub Releases](https://github.com/onyx-dot-app/onyx/releases?utm_source=docs&utm_content=changelog)
+  page has the full list of changes and bug fixes for each release.
+
+</Update>
+
+<Update label="v4.0.0" description="May 26th, 2026" tags={["New Features", "Breaking Changes", "Performance", "Deployment Changes", "Bug Fixes"]}>
+
+  ## v4.0.0
+
+  Vespa is gone, OpenSearch is now the only document index. We're shipping an opt-in Coding Agent,
+  end-to-end visibility into indexing failures, permission sync inspection tooling, a public Search API,
+  and Slack Enterprise Grid support.
+
+  Thank you to our contributors for helping make this release possible!
+
+  ## [Breaking] Vespa is Removed
+
+  <Warning>
+    **Do not upgrade to this release if you want to preserve your existing indexed documents but have not yet run the
+    document index migration,
+    which can be done from any version v3.x.** Vespa has been removed entirely in v4.0.0 and upgrading without first
+    migrating will result in the loss of indexed documents and Project files,
+    for which the only solution is re-indexing.
+
+    If you are still on Vespa, upgrade to a v3.x release first, run the migration to completion, and then upgrade to v4.
+    The full walkthrough remains in the [Vespa to OpenSearch migration
+    guide](https://docs.onyx.app/admins/advanced_configs/opensearch_document_index_migration).
+  </Warning>
+
+  ## [Update] Defaults that Changed
+
+  - **DALL·E 3 has been dropped as an image generation provider.** Move to GPT
+    Image 2 (added in v3.3.0) or another configured provider.
+  - **Search-time image processing has been removed.** Image processing now
+    happens at indexing time only.
+
+  ## Key Improvements
+
+  ### Coding Agent (opt-in)
+
+  v4.0.0 introduces a new Coding Agent — a sandboxed agent with file download and bash tool access,
+  available as a standalone agent and as a tool that the regular chat agent can invoke.
+  The Coding Agent ships **disabled by default**;
+  admins can enable and configure it from a new section of the Admin Panel.
+  [More information can be found in our documentation](https://docs.onyx.app/admins/actions/coding_agent#coding-agent).
+
+  ### End-to-End Indexing Visibility
+
+  Admins can now see exactly what failed during indexing and resolve it without rerunning entire connectors.
+  Failed documents are surfaced with the underlying error,
+  individual documents have a "Resolve" button that triggers a targeted reindex for just that document,
+  and a "Resolve All" action handles bulk recovery. Indexing metrics are now always visible rather than gated,
+  and the indexing errors modal supports pagination through large failure lists.
+
+  <img className="rounded-image" src="/assets/changelog/v4.0/index_stage_metrics.png" alt="Hook Extensions Page"/>
+
+  ### Permission Sync Visibility
+
+  Permission sync now has dedicated admin tooling. Admins can see the state of each sync,
+  inspect what was synced and what failed, and capture exception traces when syncs error.
+
+  ### Slack Enterprise Grid
+
+  The Slack connector now supports Slack Enterprise Grid, including cross-workspace indexing.
+
+  ### Public Search API
+
+  A new public `POST /api/search` endpoint and `onyx-cli agentic search` command let external systems and command-line
+  workflows run searches against Onyx programmatically.
+
+  ## Contributor Highlights
+
+  - [@beraterkanelcelik](https://github.com/beraterkanelcelik) made
+    `MAX_LLM_CYCLES` environment-configurable and fixed OIDC token refresh so it works for any OIDC provider,
+    not just Google!
+  - [@mikew](https://github.com/mikew) expanded LiteLLM capability support and
+    added reasoning flow support for models that expose it!
+  - [@k-kasajima](https://github.com/k-kasajima) fixed the LiteLLM
+    embedding test model name payload!
+
+  ## Additional Improvements
+
+  ### Indexing and Search
+
+  - Documents whose content hasn't changed since the last indexing run are no
+    longer re-indexed.
+  - Cohere `embed-v4.0` and Gemini `embedding-2-preview` are supported as
+    embedding providers.
+  - Query embeddings are cached for repeated queries.
+  - OpenSearch bulk updates are used on the indexing hot path with
+    retry-on-transient-failure semantics.
+  - Oversized documents now surface a clear error instead of silently failing,
+    and the `MAX_DOCUMENT_CHARS` limit has been raised.
+  - Image processing has moved entirely to index time.
+
+  ### Chat
+
+  - The chat input bar is now `contentEditable` and supports paste-as-tile for
+    attachments.
+  - Queued messages now wait until the previous answer has fully rendered before
+    submitting.
+  - Typewriter streaming finishes faster after the LLM stream completes.
+  - Tool calls can now access a `bash` tool (used by the Coding Agent).
+  - All CSVs are passed to Code Interpreter for analysis.
+
+  ### Connectors
+
+  - **Slack Enterprise Grid** support.
+  - HubSpot: search API for incremental polls and `batch_read` to eliminate N+1
+    association fetches.
+  - Confluence: Data Center websudo support, REST space permissions for 9.1,
+    attachment downloads with non-scoped tokens, and pagination fixes.
+  - Freshdesk: handle null `due_by` and paginate past 300 pages.
+  - GitLab: fall back to username when GitLab masks the author name.
+  - Asana: stop dropping teamless projects from explicit allowlists.
+  - Jira: permission sync support for Data Center v10.
+
+  ### Auth, Security, and Licensing
+
+  - OIDC access tokens now refresh on every authenticated request, for any OIDC
+    provider (not just Google).
+  - New Business tier with unified gating middleware.
+  - `OPEN_URL_VALIDATE_SSRF` opt-out flag for trusted networks.
+
+  ### LLM Providers
+
+  - LiteLLM capability expansion and reasoning-flow support.
+  - Custom LLM providers can have optional display names and be renamed.
+  - Vertex AI can use Application Default Credentials via LiteLLM.
+  - GCS storage supports Workload Identity.
+
+  ### Notable Bug Fixes
+
+  - Fixed a tabular chunker crash on Google Sheets with multi-line cells.
+  - Fixed the indexing pipeline not stopping after a document raised an error.
+  - Fixed several DB-session-held-too-long issues in chat, indexing, deletion,
+    and embedding paths.
+  - Fixed asyncpg `statement_cache_size` regressions with pgbouncer and similar
+    pool managers.
+  - Fixed MCP per-user multi-header handling and OAuth token refresh.
+  - Multiple Helm, OpenSearch, and tier-management fixes.
+
+  ---
+
+  Our [GitHub Releases](https://github.com/onyx-dot-app/onyx/releases?utm_source=docs&utm_content=changelog)
   page has the full list of changes and bug fixes for each release.
 
 </Update>
