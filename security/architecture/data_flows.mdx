@@ -9,15 +9,14 @@ icon: "arrows-split-up-and-left"
 Documents from connectors and user uploads are processed by the Onyx indexing pipeline.
 With default configurations no data ever leaves the deployment.
 
-The general processing outline goes as follows:
-- Documents, metadata, and access permissions are pulled in from connectors
-- Documents are processed into text through document parsing utilities
-- The texts are chunked and passed through deep learning (embedding) models
-- These representations are stored in the vector database
-- Optionally (default off), an LLM can be used to extract entities and relations from the documents
-  and represent them as a graph within Postgres
-
 <img className="rounded-image" src="/assets/security/OnyxIndexingFlow.png" alt="Onyx Indexing Flow"/>
+
+<Note>
+  The LLM-based contextual retrieval and the informativeness model are not enabled by default.
+</Note>
+
+Not shown in the diagram, MinIO (which runs locally) acts as an intermediate store for the document
+before the downstream processing steps like chunking.
 
 Onyx does also allow configuring the following options:
 
@@ -28,10 +27,11 @@ Onyx does also allow configuring the following options:
 
 - API based embedding model. Teams may choose to do this instead of choosing between running their
   own GPUs, using a less capable embedding model, or accepting a slower initial indexing.
-- Third party document-to-text service. Some third party services provide better processing using
-  large vision models and other approaches. This can yield better extraction of text from your documents.
-- Connecting an LLM for the generation of the knowledge graph. The knowledge graph provides an
-  additional representation of the connected knowledge and can be used to answer more abstract type questions.
+- Image captioning service. Connecting a vision-capable model lets files with embedded images, as
+  well as standalone image files, be captioned into text so they can be represented for retrieval.
+- Connecting an LLM for contextual retrieval. This uses the LLM to prepend a short, document-aware
+  summary to each chunk so it carries the surrounding context, which improves retrieval accuracy for
+  chunks that would otherwise be ambiguous on their own.
 
 ## Query Flow
 
@@ -39,8 +39,8 @@ Onyx does also allow configuring the following options:
 
 When users query Onyx, the LLM determines if the system should fetch additional context or respond to the user directly.
 
-If additional context is needed, the system can choose between available options including: ingested knowledge,
-web search (if configured), built-in actions (like code execution), or additional user configured actions.
+If additional context is needed, the system can run an internal search (outlined above), invoke a built-in
+action (such as code execution or web search), or call an action configured by your admins.
 
 By default, the system does not communicate data to any external systems outside of the admin configured LLM.
 
