@@ -15,8 +15,8 @@ With default configurations no data ever leaves the deployment.
   The LLM-based contextual retrieval and the informativeness model are not enabled by default.
 </Note>
 
-Not shown in the diagram, MinIO (which runs locally) acts as an intermediate store for the document
-before the downstream processing steps like chunking.
+Not shown in the diagram, MinIO (which runs locally)
+acts as an intermediate store for the document before the downstream processing steps like chunking.
 
 Onyx does also allow configuring the following options:
 
@@ -30,8 +30,8 @@ Onyx does also allow configuring the following options:
 - Image captioning service. Connecting a vision-capable model lets files with embedded images, as
   well as standalone image files, be captioned into text so they can be represented for retrieval.
 - Connecting an LLM for contextual retrieval. This uses the LLM to prepend a short, document-aware
-  summary to each chunk so it carries the surrounding context, which improves retrieval accuracy for
-  chunks that would otherwise be ambiguous on their own.
+  summary to each chunk so it carries the surrounding context,
+  which improves retrieval accuracy for chunks that would otherwise be ambiguous on their own.
 
 ## Query Flow
 
@@ -39,8 +39,8 @@ Onyx does also allow configuring the following options:
 
 When users query Onyx, the LLM determines if the system should fetch additional context or respond to the user directly.
 
-If additional context is needed, the system can run an internal search (outlined above), invoke a built-in
-action (such as code execution or web search), or call an action configured by your admins.
+If additional context is needed, the system can run an internal search (outlined above),
+invoke a built-in action (such as code execution or web search), or call an action configured by your admins.
 
 By default, the system does not communicate data to any external systems outside of the admin configured LLM.
 
