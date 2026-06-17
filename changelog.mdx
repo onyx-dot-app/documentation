@@ -6,6 +6,53 @@ mode: "wide"
 rss: true
 ---
 
+<Update label="v4.1.1" description="June 12th, 2026" tags={["Security", "Deployment Changes", "Bug Fixes"]}>
+
+  ## v4.1.1
+
+  A focused security-hardening release. Several defaults are now stricter,
+  and some existing self-hosted deployments will require configuration changes before upgrading.
+
+  ## [Update] Action May Be Required
+
+  ### `USER_AUTH_SECRET` is now required
+
+  <Warning>
+    On non-development deployments, the API server now **refuses to start** when `USER_AUTH_SECRET` is empty;
+    previously this condition only produced a warning.
+    Generate a value with `openssl rand -hex 32` and set it before upgrading.
+    Fresh installs performed through `install.sh` generate one automatically.
+  </Warning>
+
+  ### Hardened default object-storage credentials
+
+  Self-hosted MinIO/S3 no longer ships with the well-known `minioadmin` default.
+  New installs through `install.sh` now generate random credentials,
+  and the backend logs a warning on startup when the default is still in use. If you maintain your `.env` manually,
+  set strong,
+  unique values for `MINIO_ROOT_USER`/`MINIO_ROOT_PASSWORD` and the matching
+  `S3_AWS_ACCESS_KEY_ID`/`S3_AWS_SECRET_ACCESS_KEY` before deploying to production.
+
+  ### SSRF protection moved to the Security & Hardening admin page
+
+  SSRF protection for outbound requests is now consolidated into a single **SSRF Protection** control on the **Security
+  & Hardening** admin page (single-tenant deployments).
+  It replaces the per-path environment variables `OPEN_URL_VALIDATE_SSRF`, `MCP_SERVER_ALLOW_PRIVATE_NETWORK`,
+  `MCP_SERVER_ALLOW_LOOPBACK`, and `WEB_CONNECTOR_VALIDATE_URLS`.
+  Deployments that already set any of these variables retain their behavior,
+  as the setting is initialized from the matching level.
+  Deployments running on the defaults move to the strictest level, Validate All, which validates every outbound path,
+  including web connectors. Because web connectors were not validated by default previously,
+  a connector that reached an internal or private host may now be blocked;
+  select a less restrictive level on the admin page to restore that access.
+
+  ---
+
+  Our [GitHub Releases](https://github.com/onyx-dot-app/onyx/releases?utm_source=docs&utm_content=changelog)
+  page has the full list of changes and bug fixes for each release.
+
+</Update>
+
 <Update label="v4.1.0" description="June 11th, 2026" tags={["New Features", "Bug Fixes", "Performance"]}>
 
   ## v4.1.0
