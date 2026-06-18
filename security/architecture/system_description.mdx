@@ -27,11 +27,19 @@ The Onyx application is a set of Docker Containers which can be deployed on any 
 - **API Server**: Python FastAPI web server to handle business logic and requests
 - **Background Workers**: Python workers to handle async jobs like fetching document updates, etc.
 
+### Model Servers
+
+- **Inference Model Server**: Serves the embedding and reranking models used at query time to
+  retrieve and order context
+- **Indexing Model Server**: A dedicated model server that handles embedding of documents during
+  indexing, isolating heavy indexing workloads from live query traffic
+
 ### Data Layer
 
 - **Relational Database**: Postgres database to store application data, user sessions, and system
   state
-- **Vector Database**: Vespa keyword search engine + vector store for retrieving context for queries
+- **Search Engine**: OpenSearch providing keyword (BM25) search + vector store for retrieving
+  context for queries
 - **In Memory Cache**: Redis, used to optimize performance
 - **File Store**: MinIO blob store for user uploaded files and documents pulled from connectors
 
@@ -53,8 +61,9 @@ Other in-memory caches could work but would require code changes.
 It is much more challenging and not advised to switch to a different relational DB due to language specific features and
 optimizations.
 
-**Vespa** can be replaced with multi-node Vespa deployment (typically not necessary) or Vespa Cloud.
-Vespa is tightly integrated with the context retrieval functionalities and replacing it would require significant
-development effort to maintain the same functionality.
+**OpenSearch** can be replaced with a multi-node OpenSearch cluster (typically not necessary)
+or a managed OpenSearch service such as AWS OpenSearch Service.
+OpenSearch is tightly integrated with the context retrieval functionalities and switching to a different search engine
+would require significant development effort to maintain the same functionality.
 
 **Nginx** can be removed and replaced with your own routing proxy.
