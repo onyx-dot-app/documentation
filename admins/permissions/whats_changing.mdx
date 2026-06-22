@@ -21,6 +21,9 @@ Each group can have a specific set of permissions, and users inherit the permiss
 This enables granular delegation. For example,
 giving a team lead access to manage connectors without granting them full admin or curator powers.
 
+It also preserves the **per-group scoping** Curators relied on — through **Group Managers** — so you get both
+finer-grained permission types and the ability to delegate a single group's management. The next sections explain each.
+
 ## What's Being Removed
 
 <Warning>
@@ -32,12 +35,32 @@ giving a team lead access to manage connectors without granting them full admin 
 - **Global Curator role**: Removed
 - **`CURATORS_CANNOT_VIEW_OR_EDIT_NON_OWNED_ASSISTANTS`** environment variable: Removed
 
+<Note>
+  The Curator *roles* go away, but the *capability* they provided — scoped, per-group management — is preserved through
+  **Group Managers** (see [Group Managers](#group-managers) below).
+</Note>
+
 ## What Replaces It
 
-Instead of assigning roles to individual users, you assign **permissions to groups**.
-Any member of a group automatically inherits that group's permissions.
+The new system is built from two pieces that work together:
 
-This is more flexible than the old Curator model:
+<Columns cols={2}>
+  <Card title="Group permission" icon="users">
+    Granted to a **group** and applies organization-wide. Every member of the group manages **all** resources of that type.
+  </Card>
+
+  <Card title="Group Manager" icon="user-shield">
+    Granted to a **person** for a **single group**. They manage only that group's resources and members — see
+    [Group Managers](#group-managers).
+  </Card>
+</Columns>
+
+<Info>
+  Configurable group permissions and Group Managers rely on custom groups, which are an **Enterprise Edition** feature.
+  Community Edition keeps the two default groups, Basic and Admins (see the [FAQ](#frequently-asked-questions)).
+</Info>
+
+Group permissions are more flexible than the old Curator model:
 - You can grant **Manage Connectors & Document Sets** without granting agent management
 - You can grant **View Agent Analytics** or **View Query History** without any management permissions
 - You can create purpose-specific groups like "Content Managers" or "Analytics Viewers"
@@ -60,37 +83,74 @@ The following permissions can be assigned to any group:
 | View Query History | View query history of everyone in the organization. |
 | Create User Access Token | Add and update the user's personal access tokens. |
 
+Some of these permissions can also be granted as *scoped* permissions to make someone a **Group Manager** of a single
+group — see [Which permissions can be scoped](#which-permissions-can-be-scoped) below.
+
+## Group Managers
+
+A **Group Manager** is a member of a group who has been given management access to **a single group** — its resources and
+its members — without organization-wide powers. Access is granted per user, per permission, per group.
+
+For example: *Alice can manage connectors, but only for the connectors shared with the Engineering group.* Alice does not
+become an organization-wide connector admin; her management access stops at Engineering's resources.
+
+### What a Group Manager can do
+
+Scoped to the group(s) they manage, a Group Manager can:
+
+- **View, edit, and remove** the **connectors**, **agents**, and **document sets** shared with the group.
+- **Add and remove members** of the group.
+- **Create** connectors, agents, and document sets — as long as each is shared with a group they manage.
+
+A Group Manager **cannot**:
+
+- Manage resources that aren't shared with a group they manage.
+- Extend a resource's access beyond the groups they manage.
+- Grant organization-wide permissions to anyone.
+
+### Which permissions can be scoped
+
+| Permission | Can be scoped to a group? |
+|---|---|
+| Manage Connectors & Document Sets | Yes |
+| Manage Agents | Yes |
+| Create Agents | Yes |
+| All others (Manage LLMs, Manage Actions, Manage Groups, View Agent Analytics, View Query History, Manage Service Accounts, Manage Slack/Discord Bots, Create User Access Token) | No — organization-wide only |
+
+When scoped, **Create Agents** lets the manager create agents shared with their group. Managing the **members and shared
+resources of a group you're assigned to** comes with being its Group Manager — it does not require the organization-wide
+**Manage Groups** permission, which administers *all* groups.
+
+<Note>
+  There's no risk of lockout. An Admin can always view and reset a group's managers. Removing a user from a group revokes
+  their scoped permissions for that group, and deleting a group removes any Group Manager grants tied to it.
+</Note>
+
 ## Before and After
 
 | Old (Current System) | New (Group-Based Permissions) |
 |---|---|
 | Admin role | Member of **Admins** group (full access) |
 | Basic role | Member of **Basic** group (chat, search, personal agents) |
-| Curator role (per-group) | No direct single equivalent. See below. |
-| Global Curator role | No direct single equivalent. See below. |
+| Curator role (per-group) | **Group Manager** of their group(s) — scoped management of that group's connectors, document sets, agents, and members |
+| Global Curator role | **Group Manager** in each group they manage, or group-wide Manage permissions when organization-wide access is intended |
 
 ### What changes for Curators
 
-In the old system, a **Curator** could manage resources (connectors, agents, document sets)
-and users **scoped to the specific group(s)** they curated.
-A **Global Curator** had the same powers across all groups they belonged to.
+In the old system, a **Curator** could manage resources (connectors, agents, document sets) and members **scoped to the
+specific group(s)** they curated. A **Global Curator** had the same powers across all groups they belonged to.
 
-In the new system, these capabilities are split into separate permissions:
+That single role is now split into separate, individually grantable permissions, and you choose the scope for each (see
+[What Replaces It](#what-replaces-it)):
 
-- **Managing group membership and resources within a group** (adding connectors, agents, document sets,
-  and users to a group) is controlled by the "Manage Groups" permission.
-- **Creating and editing connectors, agents,
-  or document sets themselves** is controlled by separate permissions like "Manage Connectors & Document Sets" and
-  "Manage Agents."
+- For the **same per-group scoping** a Curator had, make the user a **Group Manager** of their group(s) — see
+  [Group Managers](#group-managers).
+- For **organization-wide** management, grant the permission to a group instead.
 
-A key difference: in the old system, a Curator's powers were scoped to their specific group. In the new system,
-each permission grants access to **all** resources of that type. For example,
-"Manage Connectors & Document Sets" gives access to all connectors and document sets,
-"Manage Agents" gives access to all agents, and "Manage Groups" gives access to all groups.
-There is no way to scope a permission to a specific group's resources.
-
-If you previously relied on Curators having different levels of access across different groups,
-you may need to restructure your groups or consolidate management responsibilities.
+You don't have to do this by hand for existing groups: during the upgrade, former Curators and Global Curators are
+**automatically converted** to Group Managers of the groups they managed (see
+[What Happens Automatically During Upgrade](#what-happens-automatically-during-upgrade)). You assign managers manually only
+for groups you create afterward.
 
 ## What Happens Automatically During Upgrade
 
@@ -105,13 +165,14 @@ The upgrade migration handles the following automatically:
     All users with the **Basic** role are auto-joined to the **Basic** group. Their capabilities are unchanged.
   </Step>
 
-  <Step title="Curator and Global Curator users">
-    All users with **Curator** or **Global Curator** roles are auto-joined to the **Basic** group only.
+  <Step title="Curators and Global Curators">
+    Existing **Curators** and **Global Curators** are automatically converted to **Group Managers** of the groups they
+    curated. Their per-group management carries over — there is no lockout, and no manual reassignment for existing groups.
 
-    <Warning>
-      Curator privileges are not automatically migrated. These users will have Basic-level access after the upgrade.
-      You must manually assign permissions to their groups after upgrading.
-    </Warning>
+    <Note>
+      This automatic conversion covers only the groups that exist at upgrade time. For any **new** group you create
+      afterward, assign its Group Managers manually.
+    </Note>
   </Step>
 
   <Step title="Default groups created">
@@ -135,25 +196,25 @@ The upgrade migration handles the following automatically:
 ## What You Need to Do
 
 <Info>
-  The most important action is **re-assigning permissions to groups** for any workflows that previously relied on
-  Curator or Global Curator roles.
+  Existing Curators and Global Curators are migrated to **Group Managers** automatically, so most setups need little
+  manual work. Your main job is to verify the result and decide how new groups are managed going forward.
 </Info>
 
 ### Before Upgrading
 
-1. **Audit your Curator assignments**:
-   Identify all users with Curator or Global Curator roles and note which groups they manage and what actions they
-   perform.
+1. **Review your Curator assignments**: Note which users are Curators or Global Curators and which groups they manage, so
+   you can confirm the conversion afterward.
 
-2. **Plan your permission assignments**: For each Curator,
-   determine what capabilities their groups should have in the new system.
+2. **Decide where you want organization-wide management**: If a team should manage *all* resources of a type rather than a
+   single group's, plan to grant that permission to a group instead.
 
 ### After Upgrading
 
-3. **Assign permissions to groups**:
-   Navigate to the group settings page and enable the appropriate permissions for each group.
+3. **Verify the converted Group Managers**: Confirm former Curators can still manage their groups' connectors, document
+   sets, and agents.
 
-4. **Verify access**: Confirm that users who previously had Curator access can still perform their required tasks.
+4. **Handle new groups going forward**: The migration only covers groups that existed at upgrade. For new groups, grant
+   group permissions and assign **Group Managers** manually.
 
 ## Timeline
 
@@ -176,17 +237,20 @@ This page will be updated as the release schedule is confirmed. Here is the plan
   </Accordion>
 
   <Accordion title="What happens to resources that my Curators created?">
-    All resources (connectors, document sets, agents) are preserved with their original ownership.
-    The creator remains the owner. However,
-    users will only be able to access and manage these resources once they are granted the appropriate permissions.
-    Until then, the resources exist but are not accessible to former Curators.
+    All resources (connectors, document sets, agents) are preserved with their original ownership, and the creator remains
+    the owner. Because former Curators become Group Managers of their groups during the migration, they keep the ability to
+    manage the resources shared with those groups.
   </Accordion>
 
   <Accordion title="Can I recreate Curator-like behavior in the new system?">
-    Not exactly. The old Curator role allowed scoped management within a specific group.
-    The new system grants permissions globally, so a user with "manage connectors" can manage all connectors,
-    not just those in a specific group.
-    This is a trade-off for the added flexibility and granularity of the new permission system.
+    Yes. Assign the user as a **Group Manager** of the relevant group — they'll manage only that group's resources and
+    members, the same per-group scoping the old Curator role provided. See [Group Managers](#group-managers).
+  </Accordion>
+
+  <Accordion title="Can a Group Manager share a connector with another team?">
+    No. A Group Manager can only manage resources within the group(s) they manage. They can't widen a resource's sharing
+    to a group they don't manage, and they can't remove a resource from its last group (which would leave it orphaned).
+    This keeps a manager's reach contained to their own group.
   </Accordion>
 
   <Accordion title="Is this a breaking change for Community Edition (CE) users?">
