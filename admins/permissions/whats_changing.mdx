@@ -36,8 +36,8 @@ finer-grained permission types and the ability to delegate a single group's mana
 - **`CURATORS_CANNOT_VIEW_OR_EDIT_NON_OWNED_ASSISTANTS`** environment variable: Removed
 
 <Note>
-  The Curator *roles* go away, but the *capability* they provided — scoped, per-group management — is preserved through
-  **Group Managers** (see [Group Managers](#group-managers) below).
+  The Curator *roles* go away, but the *capability* they provided — scoped,
+  per-group management — is preserved through **Group Managers** (see [Group Managers](#group-managers) below).
 </Note>
 
 ## What Replaces It
@@ -46,12 +46,13 @@ The new system is built from two pieces that work together:
 
 <Columns cols={2}>
   <Card title="Group permission" icon="users">
-    Granted to a **group** and applies organization-wide. Every member of the group manages **all** resources of that type.
+    Granted to a **group** and applies organization-wide.
+    Every member of the group manages **all** resources of that type.
   </Card>
 
   <Card title="Group Manager" icon="user-shield">
-    Granted to a **person** for a **single group**. They manage only that group's resources and members — see
-    [Group Managers](#group-managers).
+    Granted to a **person** for a **single group**.
+    They manage only that group's resources and members — see [Group Managers](#group-managers).
   </Card>
 </Columns>
 
@@ -88,11 +89,12 @@ group — see [Which permissions can be scoped](#which-permissions-can-be-scoped
 
 ## Group Managers
 
-A **Group Manager** is a member of a group who has been given management access to **a single group** — its resources and
-its members — without organization-wide powers. Access is granted per user, per permission, per group.
+A **Group Manager** is a member of a group who has been given management access to **a single group** — its resources
+and its members — without organization-wide powers. Access is granted per user, per permission, per group.
 
-For example: *Alice can manage connectors, but only for the connectors shared with the Engineering group.* Alice does not
-become an organization-wide connector admin; her management access stops at Engineering's resources.
+For example: *Alice can manage connectors,
+but only for the connectors shared with the Engineering group.* Alice does not become an organization-wide connector
+admin; her management access stops at Engineering's resources.
 
 ### What a Group Manager can do
 
@@ -109,9 +111,9 @@ A Group Manager **cannot**:
 - Grant organization-wide permissions to anyone.
 
 <Note>
-  Credentials stay private. A Group Manager can see **which** credential a connector uses, but can't view its secret
-  values or reuse a credential they don't have access to when creating their own connectors. (Unchanged by this
-  migration.)
+  Credentials stay private. A Group Manager can see **which** credential a connector uses,
+  but can't view its secret values or reuse a credential they don't have access to when creating their own connectors.
+  (Unchanged by this migration.)
 </Note>
 
 ### Which permissions can be scoped
@@ -123,13 +125,14 @@ A Group Manager **cannot**:
 | Create Agents | Yes |
 | All others (Manage LLMs, Manage Actions, Manage Groups, View Agent Analytics, View Query History, Manage Service Accounts, Manage Slack/Discord Bots, Create User Access Token) | No — organization-wide only |
 
-When scoped, **Create Agents** lets the manager create agents shared with their group. Managing the **members and shared
-resources of a group you're assigned to** comes with being its Group Manager — it does not require the organization-wide
-**Manage Groups** permission, which administers *all* groups.
+When scoped, **Create Agents** lets the manager create agents shared with their group.
+Managing the **members and shared resources of a group you're assigned to** comes with being its Group Manager — it does
+not require the organization-wide **Manage Groups** permission, which administers *all* groups.
 
 <Note>
-  There's no risk of lockout. An Admin can always view and reset a group's managers. Removing a user from a group revokes
-  their scoped permissions for that group, and deleting a group removes any Group Manager grants tied to it.
+  There's no risk of lockout. An Admin can always view and reset a group's managers.
+  Removing a user from a group revokes their scoped permissions for that group,
+  and deleting a group removes any Group Manager grants tied to it.
 </Note>
 
 ## Before and After
@@ -143,20 +146,21 @@ resources of a group you're assigned to** comes with being its Group Manager —
 
 ### What changes for Curators
 
-In the old system, a **Curator** could manage resources (connectors, agents, document sets) and members **scoped to the
-specific group(s)** they curated. A **Global Curator** had the same powers across all groups they belonged to.
+In the old system, a **Curator** could manage resources (connectors, agents, document sets)
+and members **scoped to the specific group(s)** they curated.
+A **Global Curator** had the same powers across all groups they belonged to.
 
-That single role is now split into separate, individually grantable permissions, and you choose the scope for each (see
-[What Replaces It](#what-replaces-it)):
+That single role is now split into separate, individually grantable permissions,
+and you choose the scope for each (see [What Replaces It](#what-replaces-it)):
 
 - For the **same per-group scoping** a Curator had, make the user a **Group Manager** of their group(s) — see
   [Group Managers](#group-managers).
 - For **organization-wide** management, grant the permission to a group instead.
 
-You don't have to do this by hand for existing groups: during the upgrade, former Curators and Global Curators are
-**automatically converted** to Group Managers of the groups they managed (see
-[What Happens Automatically During Upgrade](#what-happens-automatically-during-upgrade)). You assign managers manually only
-for groups you create afterward.
+You don't have to do this by hand for existing groups: during the upgrade,
+former Curators and Global Curators are **automatically converted** to Group Managers of the groups they managed (see
+[What Happens Automatically During Upgrade](#what-happens-automatically-during-upgrade)).
+You assign managers manually only for groups you create afterward.
 
 ## What Happens Automatically During Upgrade
 
@@ -173,11 +177,12 @@ The upgrade migration handles the following automatically:
 
   <Step title="Curators and Global Curators">
     Existing **Curators** and **Global Curators** are automatically converted to **Group Managers** of the groups they
-    curated. Their per-group management carries over — there is no lockout, and no manual reassignment for existing groups.
+    curated. Their per-group management carries over — there is no lockout,
+    and no manual reassignment for existing groups.
 
     <Note>
-      This automatic conversion covers only the groups that exist at upgrade time. For any **new** group you create
-      afterward, assign its Group Managers manually.
+      This automatic conversion covers only the groups that exist at upgrade time.
+      For any **new** group you create afterward, assign its Group Managers manually.
     </Note>
   </Step>
 
@@ -202,17 +207,19 @@ The upgrade migration handles the following automatically:
 ## What You Need to Do
 
 <Info>
-  Existing Curators and Global Curators are migrated to **Group Managers** automatically, so most setups need little
-  manual work. Your main job is to verify the result and decide how new groups are managed going forward.
+  Existing Curators and Global Curators are migrated to **Group Managers** automatically,
+  so most setups need little manual work.
+  Your main job is to verify the result and decide how new groups are managed going forward.
 </Info>
 
 ### Before Upgrading
 
-1. **Review your Curator assignments**: Note which users are Curators or Global Curators and which groups they manage, so
-   you can confirm the conversion afterward.
+1. **Review your Curator assignments**: Note which users are Curators or Global Curators and which groups they manage,
+   so you can confirm the conversion afterward.
 
-2. **Decide where you want organization-wide management**: If a team should manage *all* resources of a type rather than a
-   single group's, plan to grant that permission to a group instead.
+2. **Decide where you want organization-wide management**:
+   If a team should manage *all* resources of a type rather than a single group's,
+   plan to grant that permission to a group instead.
 
 ### After Upgrading
 
@@ -243,19 +250,22 @@ This page will be updated as the release schedule is confirmed. Here is the plan
   </Accordion>
 
   <Accordion title="What happens to resources that my Curators created?">
-    All resources (connectors, document sets, agents) are preserved with their original ownership, and the creator remains
-    the owner. Because former Curators become Group Managers of their groups during the migration, they keep the ability to
-    manage the resources shared with those groups.
+    All resources (connectors, document sets, agents) are preserved with their original ownership,
+    and the creator remains the owner.
+    Because former Curators become Group Managers of their groups during the migration,
+    they keep the ability to manage the resources shared with those groups.
   </Accordion>
 
   <Accordion title="Can I recreate Curator-like behavior in the new system?">
-    Yes. Assign the user as a **Group Manager** of the relevant group — they'll manage only that group's resources and
+    Yes.
+    Assign the user as a **Group Manager** of the relevant group — they'll manage only that group's resources and
     members, the same per-group scoping the old Curator role provided. See [Group Managers](#group-managers).
   </Accordion>
 
   <Accordion title="Can a Group Manager share a connector with another team?">
-    No. A Group Manager can only manage resources within the group(s) they manage. They can't widen a resource's sharing
-    to a group they don't manage, and they can't remove a resource from its last group (which would leave it orphaned).
+    No. A Group Manager can only manage resources within the group(s) they manage.
+    They can't widen a resource's sharing to a group they don't manage,
+    and they can't remove a resource from its last group (which would leave it orphaned).
     This keeps a manager's reach contained to their own group.
   </Accordion>
 
