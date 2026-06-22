@@ -108,6 +108,12 @@ A Group Manager **cannot**:
 - Extend a resource's access beyond the groups they manage.
 - Grant organization-wide permissions to anyone.
 
+<Note>
+  Credentials stay private. A Group Manager can see **which** credential a connector uses, but can't view its secret
+  values or reuse a credential they don't have access to when creating their own connectors. (Unchanged by this
+  migration.)
+</Note>
+
 ### Which permissions can be scoped
 
 | Permission | Can be scoped to a group? |
