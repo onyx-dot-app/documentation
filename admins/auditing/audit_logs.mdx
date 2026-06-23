@@ -168,6 +168,59 @@ source = '. = parse_json!(.message)'
   destinations.
 </Info>
 
+## Event reference
+
+Every `action` value, what triggers it, and the fields most useful for building
+SIEM detection rules. `actor`, `tenant_id`, `request_id`, `endpoint`,
+`source_ip`, and `outcome` are present on every event (see [Event schema](#event-schema))
+and are omitted from the tables below.
+
+### Authentication
+
+`ocsf_class: authentication`
+
+| `action` | Triggered when | Notes |
+|---|---|---|
+| `auth.login` | A user successfully signs in | |
+| `auth.login_failure` | A sign-in attempt fails | `outcome` is `failure`, or `denied` for a non-interactive login |
+| `auth.logout` | A user signs out | |
+| `auth.register` | A new account is registered (self-signup) | |
+| `auth.password_forgot` | A password-reset email is requested | |
+| `auth.password_reset` | A password reset is completed | |
+| `auth.email_verify` | An email-verification email is requested | |
+
+### User & access management
+
+`ocsf_class: account_change` — `resource_type` is `user` (or `user_group`).
+
+| `action` | Triggered when | `resource_id` | Key `extra` fields |
+|---|---|---|---|
+| `user.create` | An admin invites new users | — | `invited_emails` |
+| `user.delete` | A user is deleted | user id | `target_email` |
+| `user.deactivate` | A user is deactivated | user id | `target_email` |
+| `user.reactivate` | A user is reactivated | user id | `target_email` |
+| `user.role_change` | A user's role is changed | user id | `target_email`, `old_role`, `new_role` |
+| `user.group_change` | A user group's membership changes | user-group id | `added_user_ids`, `removed_user_ids` |
+
+### Configuration & resources
+
+`ocsf_class: api_activity`
+
+| `action` | Triggered when | `resource_type` | `resource_id` | Key `extra` fields |
+|---|---|---|---|---|
+| `llm_provider.create` / `.update` / `.delete` | An LLM provider is created, updated, or deleted | `llm_provider` | provider id | |
+| `connector.create` / `.update` / `.delete` | A connector is created, updated, or deleted | `connector` | connector id | `source` (on create) |
+| `cc_pair.create` / `.update` / `.delete` | A connector is linked to a credential, its status changes, or it is unlinked | `cc_pair` | connector-credential-pair id | `connector_id`, `credential_id`; `status` (on update) |
+| `api_key.create` / `.regenerate` / `.delete` | An API key is created, regenerated, or revoked | `api_key` | API-key id | |
+| `credential.create` / `.update` / `.delete` | A stored credential is created, updated, or deleted | `credential` | credential id | `source` (on create) |
+| `credential.access` | A stored credential is decrypted for use | — | — | Uses a legacy field set — see [Notes](#notes) |
+
+<Tip>
+  The taxonomy is **append-only**: new `action` values may be added in future
+  releases, but existing ones never change meaning — so detection rules and
+  dashboards built against these values keep working across upgrades.
+</Tip>
+
 ## Notes
 
 - **Secrets are never logged.** Actor objects and `extra` context are scrubbed
