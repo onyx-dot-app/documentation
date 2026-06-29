@@ -75,9 +75,8 @@ If the user doesn't answer before the approval window expires, the request fails
 
 ## Network isolation
 
-Inside each sandbox,
-a firewall drops all outbound traffic except to the sandbox proxy. The proxy is the **exclusive** egress path,
-not just an interceptor sitting alongside open internet access.
+Inside each sandbox, a firewall drops all outbound traffic except to the sandbox proxy.
+The proxy is the **exclusive** egress path, not just an interceptor sitting alongside open internet access.
 
 - **Kubernetes** sandboxes run as dedicated pods. Use the chart's sandbox namespace, RBAC, proxy, and network policies
   as the baseline rather than exposing core Onyx services to sandbox pods.
@@ -88,11 +87,11 @@ not just an interceptor sitting alongside open internet access.
 ## Webapp proxy and sharing
 
 Generated web apps are previewed and shared through Onyx, never exposed directly from the sandbox.
-The webapp proxy strips viewer authentication on the way in (cookies, `authorization`, CSRF,
-and identity headers) and strips `set-cookie` from responses on the way out, before forwarding traffic.
+The webapp proxy strips viewer authentication on the way in (cookies, `authorization`, CSRF, and identity headers)
+and strips `set-cookie` from responses on the way out, before forwarding traffic.
 
-Current sharing scopes are **Private** and **Organization**.
-Sharing controls access to the generated web app only, not the Craft chat or the rest of the session files.
+Current sharing scopes are **Private** and **Organization**. Sharing controls access to the generated web app only,
+not the Craft chat or the rest of the session files.
 
 ## State, logs, and retention
 

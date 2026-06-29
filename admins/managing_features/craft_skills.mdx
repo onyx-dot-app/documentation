@@ -4,10 +4,10 @@ description: "Publish, govern, and audit Craft skills for your organization"
 icon: "wand-magic-sparkles"
 ---
 
-Skills are reusable instruction bundles that turn a one-off prompt into a repeatable capability, like building a
-branded deck or pulling a weekly report the same way every time. An organization skill runs on shared work and
-can carry scripts the agent follows, so publishing one is a governance decision and keeping what's live audited
-is an ongoing job.
+Skills are reusable instruction bundles that turn a one-off prompt into a repeatable capability,
+like building a branded deck or pulling a weekly report the same way every time.
+An organization skill runs on shared work and can carry scripts the agent follows,
+so publishing one is a governance decision and keeping what's live audited is an ongoing job.
 
 Manage organization skills from **`/craft/v1/skills/manage`**.
 
@@ -19,9 +19,9 @@ Manage organization skills from **`/craft/v1/skills/manage`**.
 | Organization | Admins | Shared with everyone or with selected groups. |
 | Personal | Individual users | Visible only to the uploader. |
 
-Built-in skills are company search, slide generation, and image generation. Some need a configured provider
-(image generation needs an image model) and appear only once it's in place. The exact set changes as Onyx adds
-or removes built-in capabilities.
+Built-in skills are company search, slide generation, and image generation.
+Some need a configured provider (image generation needs an image model) and appear only once it's in place.
+The exact set changes as Onyx adds or removes built-in capabilities.
 
 ## Anatomy of a skill bundle
 
@@ -43,15 +43,15 @@ weekly-sales-report.zip
 | Total bundle size | 100 MB |
 | Personal skills per user | 50 |
 
-A bundle is rejected if it omits root `SKILL.md`, has invalid frontmatter, includes unsafe paths, collides with
-a built-in slug, or exceeds a limit. Limits are operator-configurable on self-hosted deployments.
+A bundle is rejected if it omits root `SKILL.md`, has invalid frontmatter, includes unsafe paths,
+collides with a built-in slug, or exceeds a limit. Limits are operator-configurable on self-hosted deployments.
 
 ## Publish an organization skill
 
 <Steps>
   <Step title="Inspect the bundle">
-    Read `SKILL.md` and every example, template, script, and included file. Confirm it has a clear purpose and
-    passes the [review checklist](#review-before-sharing).
+    Read `SKILL.md` and every example, template, script, and included file.
+    Confirm it has a clear purpose and passes the [review checklist](#review-before-sharing).
   </Step>
 
   <Step title="Upload and share">
@@ -78,8 +78,9 @@ Confirm the bundle:
 Enable, disable, replace, or delete organization skills at any time.
 
 <Note>
-  Changes take effect on the next session or turn. A running sandbox keeps its current skill set until it
-  restarts or the user starts a new session, so availability and group changes won't appear mid-session.
+  Changes take effect on the next session or turn.
+  A running sandbox keeps its current skill set until it restarts or the user starts a new session,
+  so availability and group changes won't appear mid-session.
 </Note>
 
 Treat the skill library as something you maintain, not a set-and-forget list:
