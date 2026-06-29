@@ -1,0 +1,94 @@
+---
+title: "Managing Craft Skills"
+description: "Configure built-in, organization, and personal Craft skills"
+icon: "wand-magic-sparkles"
+---
+
+Skills are reusable instruction bundles Craft can load into a session.
+They let teams standardize recurring workflows and give the agent supporting files, examples, scripts, and instructions.
+
+Manage organization skills from **`/craft/v1/skills/manage`**.
+
+## Skill types
+
+| Type | Owner | Visibility |
+| --- | --- | --- |
+| Built-in | Onyx | Available when enabled and their dependencies are met. |
+| Organization | Admins | Shared with everyone or with selected groups. |
+| Personal | Individual users | Visible only to the user who uploaded them. |
+
+Built-in examples include company knowledge search, presentations, and image generation.
+Some built-ins depend on a configured provider (for example, image generation needs an image model)
+and only appear once that dependency is in place. The exact set changes as Onyx adds or removes built-in capabilities.
+
+## Add an organization skill
+
+<Steps>
+  <Step title="Review the workflow">
+    Confirm the skill has a clear purpose, audience, expected inputs, and safe boundaries.
+  </Step>
+
+  <Step title="Inspect the bundle">
+    Check `SKILL.md`, examples, templates, scripts, and any included files before sharing.
+  </Step>
+
+  <Step title="Upload and share">
+    Upload the skill bundle, then share it with everyone or with selected groups.
+  </Step>
+
+  <Step title="Test as a pilot user">
+    Start a Craft session as a user who should have access and confirm the skill behaves as expected.
+  </Step>
+
+  <Step title="Maintain it">
+    Replace, disable, or delete skills when their instructions go stale or the underlying workflow changes.
+  </Step>
+</Steps>
+
+## Custom skill bundles
+
+A custom skill is uploaded as a zip bundle with `SKILL.md` at the root.
+The `SKILL.md` frontmatter must include a non-empty `name` and `description`. The zip filename becomes the skill slug,
+so use stable, lowercase, hyphenated names.
+
+```text
+weekly-sales-report.zip
+  SKILL.md
+  examples/
+    output.md
+  templates/
+    report.md
+```
+
+Default validation limits (operator-configurable on self-hosted deployments):
+
+| Limit | Default |
+| --- | --- |
+| Per-file size in a bundle | 25 MB |
+| Total bundle size | 100 MB |
+| Personal skills per user | 50 |
+
+A bundle is rejected when it omits root `SKILL.md`, uses invalid frontmatter, includes unsafe paths,
+conflicts with a reserved built-in slug, or exceeds the limits.
+
+## Sharing and lifecycle
+
+Admins can upload, share, enable, disable, replace, or delete organization skills.
+
+<Note>
+  Skill changes take effect on the next session or turn.
+  A running sandbox keeps its current skill set until it restarts or the user starts a new session — so group-membership
+  and availability changes won't appear instantly in an active session.
+</Note>
+
+## Review checklist
+
+Before sharing a skill broadly, confirm it:
+
+- Contains no secrets, private tokens, or production credentials.
+- Gives clear instructions without overriding organization policy.
+- Reaches external services only through configured Craft [apps](/admins/managing_features/craft_apps).
+- Tells Craft when to ask the user before sensitive or irreversible actions.
+- Includes examples that match the output quality you expect.
+
+Users can learn how skills surface in a session in [Skills and Apps](/overview/core_features/craft_skills_and_apps).

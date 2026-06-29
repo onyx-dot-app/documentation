@@ -1,0 +1,110 @@
+---
+title: "Skills and Apps"
+description: "Give Craft specialized methods with skills, connect external services with apps, and approve actions safely"
+icon: "plug"
+---
+
+Skills and apps extend what Craft can do. **Skills** teach Craft a repeatable method or specialized capability.
+**Apps** let Craft read from and act in external services your organization has connected.
+
+## Skills
+
+A skill is a reusable bundle of instructions and supporting files that teaches Craft how to do a specific kind of work —
+searching your company knowledge, building a slide deck, or generating an image, for example.
+
+<img className="rounded-image" src="/assets/overview/core_features/craft_skills.png" alt="The Craft Skills page listing available built-in skills"/>
+
+You don't have to pick a skill manually. **Craft chooses the relevant skills for your request automatically**,
+based on what each skill is for. If you want to steer it toward a particular skill,
+open the **+** menu and choose **Skills**, or type **/** in the input to search by name.
+This surfaces the skill for the current request — Craft still decides how to apply it.
+
+Skills come from a few places:
+
+- **Built-in skills** — shipped with Onyx, such as company knowledge search, presentations, and image generation.
+- **Organization skills** — uploaded by your admins and shared with everyone or with specific groups.
+- **Personal skills** — uploaded by you and visible only to you.
+
+Which skills you see depends on your workspace configuration and what your admin has enabled.
+
+<Note>
+  Some built-in skills depend on a configured provider. For example,
+  image generation is only available when an admin has set up an image model. If a skill you expect is missing,
+  see [why a skill or app may not appear](#why-something-may-not-appear).
+</Note>
+
+## Apps
+
+Connect an app when Craft needs to read from or act in an external service. Built-in app types include **Slack,
+Google Calendar, Google Drive, Gmail, Linear, and GitHub**.
+Your organization may also add custom apps for internal systems.
+
+<img className="rounded-image" src="/assets/overview/core_features/craft_apps.png" alt="The Craft Apps page showing connected apps and apps available to connect"/>
+
+Open the **Apps** page from the Craft sidebar (or `/craft/v1/apps`) to connect one:
+
+- **Built-in apps** connect through OAuth — you'll sign in to the service and grant access.
+- **Custom apps** may ask for credential fields defined by your admin.
+
+Once an app is connected, Craft can use it. Surface a specific app for a request from the **+** menu under **Apps**,
+or just describe the task ("post the summary to the #launch Slack channel").
+
+<Info>
+  Your app credentials never enter Craft's sandbox. When Craft makes a request,
+  Onyx injects the real credential into the approved outbound call on your behalf.
+  See [Craft Architecture](/security/architecture/craft) for the full security model.
+</Info>
+
+## Approvals
+
+Some app actions need your approval before Craft can continue — typically anything that sends, creates, edits,
+or deletes. When that happens, an approval card appears in the chat showing the app, the action,
+and the request details Craft wants to send.
+
+<img className="rounded-image" src="/assets/overview/core_features/craft_approval_card.png" alt="A Craft approval card requesting approval to post a message in Slack, with Approve once, Approve for session, and Reject buttons"/>
+
+| Choice | Use it when |
+| --- | --- |
+| **Approve once** | You trust this exact action but don't want to allow similar ones automatically. |
+| **Approve for session** | Craft needs to repeat this kind of action in the current session and the scope is clear. |
+| **Reject** | The action is wrong, unexpected, too broad, or shouldn't run. |
+
+A few things to know:
+
+- **Approvals expire.** If you don't respond in time, the action fails closed (it does not run).
+- **Approvals are scoped to the session.** *Approve for session* does not change your organization's app policy or
+  create a lasting permission.
+
+### Approve safely
+
+Before approving, check:
+
+- Which app Craft is using.
+- Whether the action only reads, or changes something.
+- Which message, issue, event, file, or endpoint is involved.
+- Whether it matches what you actually asked for.
+
+Prefer **Approve once** for sends, deletes, edits, calendar changes, or anything that touches a customer-facing system.
+
+## Skills and apps in Scheduled Tasks
+
+A [Scheduled Task](/overview/core_features/craft_scheduled_tasks) runs without you watching the chat,
+so a live approval prompt would stall it. When a task needs an app,
+**pre-approve that app** in the task configuration so it can act unattended.
+
+Pre-approve only narrowly scoped tasks, and avoid pre-approving apps that can send, delete, or change sensitive records.
+If a scheduled run hits an action that still needs approval,
+the run stops in an *awaiting approval* state instead of completing.
+
+## Why something may not appear
+
+A skill or app might be missing because:
+
+- An admin hasn't enabled it.
+- It's shared only with a different group.
+- You haven't connected the app yet.
+- The app is enabled but its OAuth or credential setup is incomplete.
+- A personal skill failed validation when it was uploaded.
+
+Admins manage organization skills, apps, and approval policies from the Craft admin pages.
+See [Managing Craft](/admins/managing_features/craft).

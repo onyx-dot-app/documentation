@@ -68,4 +68,39 @@ By default, persistent volumes will be created for stateful services (e.g. Postg
 See the [Helm chart README](https://github.com/onyx-dot-app/onyx/tree/main/deployment/helm)
 for advanced options such as running as non-root and testing with Kind.
 
+## Enabling Onyx Craft
+
+[Onyx Craft](/overview/core_features/craft) can run on Helm deployments with the Kubernetes sandbox backend.
+
+Requirements:
+
+- Kubernetes `>=1.33`.
+- `configMap.ENABLE_CRAFT=true`.
+- `configMap.SANDBOX_API_SERVER_URL` set to a URL reachable from sandbox pods.
+- `configMap.SANDBOX_BACKEND=kubernetes` or left unset so the backend default remains Kubernetes.
+- `auth.sandboxPushSecret.enabled=true`.
+- A supported LLM provider: Anthropic, OpenAI, or OpenRouter.
+
+Example values:
+
+```yaml
+configMap:
+  ENABLE_CRAFT: "true"
+  SANDBOX_BACKEND: "kubernetes"
+  SANDBOX_API_SERVER_URL: "https://onyx.your-org.example"
+
+auth:
+  sandboxPushSecret:
+    enabled: true
+```
+
+The Helm chart also renders the sandbox namespace, sandbox RBAC, sandbox pod template, sandbox proxy,
+and scheduled-task worker configuration used by Craft.
+
+<Warning>
+  The Helm chart does not support the Docker sandbox backend. Docker sandboxes are for Docker Compose deployments.
+</Warning>
+
+Read the [Craft deployment guide](/deployment/local/craft) for the full operator checklist.
+
 <DeploymentNextSteps />
