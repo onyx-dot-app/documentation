@@ -1,11 +1,13 @@
 ---
 title: "Managing Craft Skills"
-description: "Configure built-in, organization, and personal Craft skills"
+description: "Publish, govern, and audit Craft skills for your organization"
 icon: "wand-magic-sparkles"
 ---
 
-Skills are reusable instruction bundles Craft can load into a session.
-They let teams standardize recurring workflows and give the agent supporting files, examples, scripts, and instructions.
+Skills are reusable instruction bundles that turn a one-off prompt into a repeatable capability, like building a
+branded deck or pulling a weekly report the same way every time. An organization skill runs on shared work and
+can carry scripts the agent follows, so publishing one is a governance decision and keeping what's live audited
+is an ongoing job.
 
 Manage organization skills from **`/craft/v1/skills/manage`**.
 
@@ -13,43 +15,18 @@ Manage organization skills from **`/craft/v1/skills/manage`**.
 
 | Type | Owner | Visibility |
 | --- | --- | --- |
-| Built-in | Onyx | Available when enabled and their dependencies are met. |
+| Built-in | Onyx | On when enabled and dependencies are met. |
 | Organization | Admins | Shared with everyone or with selected groups. |
-| Personal | Individual users | Visible only to the user who uploaded them. |
+| Personal | Individual users | Visible only to the uploader. |
 
-Built-in examples include company knowledge search, presentations, and image generation.
-Some built-ins depend on a configured provider (for example, image generation needs an image model)
-and only appear once that dependency is in place. The exact set changes as Onyx adds or removes built-in capabilities.
+Built-in skills are company search, slide generation, and image generation. Some need a configured provider
+(image generation needs an image model) and appear only once it's in place. The exact set changes as Onyx adds
+or removes built-in capabilities.
 
-## Add an organization skill
+## Anatomy of a skill bundle
 
-<Steps>
-  <Step title="Review the workflow">
-    Confirm the skill has a clear purpose, audience, expected inputs, and safe boundaries.
-  </Step>
-
-  <Step title="Inspect the bundle">
-    Check `SKILL.md`, examples, templates, scripts, and any included files before sharing.
-  </Step>
-
-  <Step title="Upload and share">
-    Upload the skill bundle, then share it with everyone or with selected groups.
-  </Step>
-
-  <Step title="Test as a pilot user">
-    Start a Craft session as a user who should have access and confirm the skill behaves as expected.
-  </Step>
-
-  <Step title="Maintain it">
-    Replace, disable, or delete skills when their instructions go stale or the underlying workflow changes.
-  </Step>
-</Steps>
-
-## Custom skill bundles
-
-A custom skill is uploaded as a zip bundle with `SKILL.md` at the root.
-The `SKILL.md` frontmatter must include a non-empty `name` and `description`. The zip filename becomes the skill slug,
-so use stable, lowercase, hyphenated names.
+A custom skill is a zip with `SKILL.md` at the root. The frontmatter needs a non-empty `name` and `description`,
+and the zip filename becomes the skill slug, so use stable, lowercase, hyphenated names.
 
 ```text
 weekly-sales-report.zip
@@ -60,35 +37,57 @@ weekly-sales-report.zip
     report.md
 ```
 
-Default validation limits (operator-configurable on self-hosted deployments):
-
 | Limit | Default |
 | --- | --- |
 | Per-file size in a bundle | 25 MB |
 | Total bundle size | 100 MB |
 | Personal skills per user | 50 |
 
-A bundle is rejected when it omits root `SKILL.md`, uses invalid frontmatter, includes unsafe paths,
-conflicts with a reserved built-in slug, or exceeds the limits.
+A bundle is rejected if it omits root `SKILL.md`, has invalid frontmatter, includes unsafe paths, collides with
+a built-in slug, or exceeds a limit. Limits are operator-configurable on self-hosted deployments.
 
-## Sharing and lifecycle
+## Publish an organization skill
 
-Admins can upload, share, enable, disable, replace, or delete organization skills.
+<Steps>
+  <Step title="Inspect the bundle">
+    Read `SKILL.md` and every example, template, script, and included file. Confirm it has a clear purpose and
+    passes the [review checklist](#review-before-sharing).
+  </Step>
 
-<Note>
-  Skill changes take effect on the next session or turn.
-  A running sandbox keeps its current skill set until it restarts or the user starts a new session — so group-membership
-  and availability changes won't appear instantly in an active session.
-</Note>
+  <Step title="Upload and share">
+    Upload the zip, then share it with everyone or with selected groups.
+  </Step>
 
-## Review checklist
+  <Step title="Test as a pilot user">
+    Start a session as someone who should have access and confirm the skill behaves as expected.
+  </Step>
+</Steps>
 
-Before sharing a skill broadly, confirm it:
+### Review before sharing
 
-- Contains no secrets, private tokens, or production credentials.
+Confirm the bundle:
+
+- Contains no secrets, tokens, or production credentials.
 - Gives clear instructions without overriding organization policy.
-- Reaches external services only through configured Craft [apps](/admins/managing_features/craft_apps).
-- Tells Craft when to ask the user before sensitive or irreversible actions.
+- Reaches external services only through configured [apps](/admins/managing_features/craft_apps).
+- Tells Craft when to ask before sensitive or irreversible actions.
 - Includes examples that match the output quality you expect.
 
-Users can learn how skills surface in a session in [Skills and Apps](/overview/core_features/craft_skills_and_apps).
+## Govern over time
+
+Enable, disable, replace, or delete organization skills at any time.
+
+<Note>
+  Changes take effect on the next session or turn. A running sandbox keeps its current skill set until it
+  restarts or the user starts a new session, so availability and group changes won't appear mid-session.
+</Note>
+
+Treat the skill library as something you maintain, not a set-and-forget list:
+
+- **Know what's live.** Confirm each shared skill still has a clear owner and purpose.
+- **Re-audit on a cadence.** Re-read published bundles and retire ones that no longer match how the work is done.
+- **Re-check custom bundles** for secrets, policy overrides, and external calls that bypass configured apps.
+- **Account for personal skills.** They're user-owned and outside org review, so use apps and action policies to
+  bound what any skill can do.
+
+Users can see how skills surface in a session in [Skills and Apps](/overview/core_features/craft_skills_and_apps).
