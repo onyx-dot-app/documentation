@@ -68,24 +68,25 @@ Group permissions are more flexible than the old Curator model:
 
 ### Group permission vs. Group Manager
 
-The two mechanisms can grant the **same permission name** — *Manage Connectors & Document Sets*,
-*Manage Agents*, *Manage Actions* — but their reach is very different. This is the most important distinction to get right.
+The two mechanisms can grant the **same permission name** — *Manage Connectors & Document Sets*, *Manage Agents*,
+*Manage Actions* — but their reach is very different. This is the most important distinction to get right.
 
 <Warning>
-  Enabling a **Manage X** permission *on a group* gives **every member** the **full, organization-wide** ability to
-  manage **all** resources of that type — not just the group's own resources. It is **not** a way to scope management
-  to a single group. To let someone manage only one group's resources, make them a **Group Manager** of that group
-  instead — don't grant the group-wide permission.
+  Enabling a **Manage X** permission *on a group* gives **every member** the **full,
+  organization-wide** ability to manage **all** resources of that type — not just the group's own resources.
+  It is **not** a way to scope management to a single group. To let someone manage only one group's resources,
+  make them a **Group Manager** of that group instead — don't grant the group-wide permission.
 </Warning>
 
 | Permission | As a **group permission** (granted to the group) | As a **Group Manager** (assigned per person, per group) |
 |---|---|---|
-| Manage Connectors & Document Sets | Every member can create and edit **any** connector and document set, organization-wide | Manages only connectors and document sets that stay **private** to the group(s) they manage |
+| Manage Connectors & Document Sets | Every member can create and edit **any** connector and document set, organization-wide | Manages only connectors and document sets shared **solely** within the group(s) they manage — and can't make them public |
 | Manage Agents | Every member can create and edit **any** agent, organization-wide | Manages only agents shared **solely** within the group(s) they manage — and can't make them public |
 | Manage Actions | Every member can create and edit **any** custom tool / MCP server, organization-wide | Manages the actions used by their managed group's agents — actions are scoped **through agents**, since tools and MCP servers have no direct group association |
 
-A Group Manager can never make a resource public or attach it to a group they don't manage; a group-wide **Manage X**
-permission has no such limits.
+In other words, a Group Manager can only act on a resource that lives **entirely** within the group(s)
+they manage and stays **private** — visible only to those groups. They can't make a resource public, share it org-wide,
+or attach it to a group they don't manage. A group-wide **Manage X** permission has none of these limits.
 
 ### Available Permissions
 
@@ -150,8 +151,8 @@ A Group Manager **cannot**:
 
 <Note>
   **Manage Actions** has no direct group association — custom tools and MCP servers aren't attached to groups directly.
-  A Group Manager's scoped action management is therefore derived from the **agents** in the group(s) they manage
-  (which *are* shared to groups), rather than from a tool-to-group link.
+  A Group Manager's scoped action management is therefore derived from the **agents** in the group(s)
+  they manage (which *are* shared to groups), rather than from a tool-to-group link.
 </Note>
 
 When scoped, **Create Agents** lets the manager create agents shared with their group.
