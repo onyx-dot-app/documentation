@@ -4,23 +4,22 @@ description: "Connect external apps, control credentials, and govern which actio
 icon: "plug"
 ---
 
-Craft apps let sandboxes reach external services through the sandbox proxy. As an admin you decide which apps
-exist, how their credentials are supplied, which URLs they can reach, and which actions need approval before they
-run.
+Craft apps let sandboxes reach external services through the sandbox proxy. As an admin you decide which apps exist,
+how their credentials are supplied, which URLs they can reach, and which actions need approval before they run.
 
 Manage apps from **`/craft/v1/apps/manage`**.
 
 ## App types
 
-Built-in app types are **Slack, Google Calendar, Google Drive, Gmail, Linear, and GitHub**. You can also create
-**custom apps** for internal or third-party services.
+Built-in app types are **Slack, Google Calendar, Google Drive, Gmail, Linear, and GitHub**.
+You can also create **custom apps** for internal or third-party services.
 
 - **Built-in apps** ship with OAuth connection flows and a catalog of governable actions.
 - **Custom apps** define their own URL patterns, credential fields, and skill instructions.
 
 <Note>
-  On Onyx Cloud, built-in apps use Onyx's own OAuth credentials: you enable them and set policies but don't supply
-  client credentials. Self-hosted admins configure those themselves.
+  On Onyx Cloud, built-in apps use Onyx's own OAuth credentials:
+  you enable them and set policies but don't supply client credentials. Self-hosted admins configure those themselves.
 </Note>
 
 ## Add an app
@@ -31,13 +30,12 @@ Built-in app types are **Slack, Google Calendar, Google Drive, Gmail, Linear, an
   </Step>
 
   <Step title="Configure credentials">
-    Supply org-level OAuth or API settings where required, and decide which [credentials](#credentials) users
-    provide themselves.
+    Supply org-level OAuth or API settings where required, and decide which [credentials](#credentials)
+    users provide themselves.
   </Step>
 
   <Step title="Set action policies">
-    Start sensitive [actions](#action-policies) at **Ask** or **Deny**, and reserve **Auto-approve** for low-risk
-    reads.
+    Start sensitive [actions](#action-policies) at **Ask** or **Deny**, and reserve **Auto-approve** for low-risk reads.
   </Step>
 
   <Step title="Test as a pilot user">
@@ -53,8 +51,9 @@ Built-in app types are **Slack, Google Calendar, Google Drive, Gmail, Linear, an
 | User credentials | Per-user OAuth tokens, API tokens, or account-specific values. |
 
 <Info>
-  Craft sandboxes never receive raw credentials. The sandbox sends placeholder values; the sandbox proxy injects
-  the real credential only into an approved outbound request. See [Craft Architecture](/security/architecture/craft).
+  Craft sandboxes never receive raw credentials. The sandbox sends placeholder values;
+  the sandbox proxy injects the real credential only into an approved outbound request.
+  See [Craft Architecture](/security/architecture/craft).
 </Info>
 
 ## Custom apps
@@ -84,17 +83,17 @@ Set a default policy per app and override individual actions.
 When a request matches several actions, the **strictest policy wins**: Deny, then Ask, then Auto-approve.
 
 On **Ask**, the user gets an approval card and decides whether the action runs. The choices (*Approve once*,
-*Approve for session*, *Reject*) and how approvals expire are covered in
-[Skills and Apps](/overview/core_features/craft_skills_and_apps#approvals). *Approve for session* is scoped to
-that session and matching action types, not a permanent policy change.
+*Approve for session*, *Reject*)
+and how approvals expire are covered in [Skills and Apps](/overview/core_features/craft_skills_and_apps#approvals).
+*Approve for session* is scoped to that session and matching action types, not a permanent policy change.
 
 ## Scheduled tasks and pre-approval
 
-A [Scheduled Task](/overview/core_features/craft_scheduled_tasks) can store pre-approved app IDs so selected apps
-act during unattended runs. A **Deny** policy still overrides a pre-approval, and the approval is recorded as
-decided via pre-approval. Recommend it only when the prompt is narrow and the policy is already safe for
-unattended use. A run that hits an action still needing approval enters an *awaiting approval* state instead of
-completing.
+A [Scheduled Task](/overview/core_features/craft_scheduled_tasks)
+can store pre-approved app IDs so selected apps act during unattended runs.
+A **Deny** policy still overrides a pre-approval, and the approval is recorded as decided via pre-approval.
+Recommend it only when the prompt is narrow and the policy is already safe for unattended use.
+A run that hits an action still needing approval enters an *awaiting approval* state instead of completing.
 
 ## Rotation and revocation
 

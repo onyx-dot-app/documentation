@@ -4,10 +4,10 @@ description: "Enable and govern Onyx Craft for your organization"
 icon: "hammer"
 ---
 
-Craft lets users turn a prompt into finished work (web apps, documents, reports, slides, automations) with a
-free-form AI agent in an isolated sandbox. Because it reads company data, acts in connected apps, and runs shared
-skills on everyone's behalf, you govern the surface area: who can use it, which models, skills, and apps they
-reach, and which actions need approval.
+Craft lets users turn a prompt into finished work (web apps, documents, reports, slides, automations)
+with a free-form AI agent in an isolated sandbox. Because it reads company data, acts in connected apps,
+and runs shared skills on everyone's behalf, you govern the surface area: who can use it, which models, skills,
+and apps they reach, and which actions need approval.
 
 For self-hosted setup, see the [Craft deployment guide](/deployment/local/craft).
 
@@ -39,28 +39,28 @@ Craft requires:
 
 <Steps>
   <Step title="Confirm prerequisites">
-    Check the [requirements](#prerequisites) above. On self-hosted, confirm the sandbox backend, proxy, file
-    storage, and scheduled-task workers are ready.
+    Check the [requirements](#prerequisites) above. On self-hosted, confirm the sandbox backend, proxy, file storage,
+    and scheduled-task workers are ready.
   </Step>
 
   <Step title="Pilot with a few users">
-    Start with users who have concrete artifact workflows: recurring reports, dashboards, presentations, or
-    app-backed summaries.
+    Start with users who have concrete artifact workflows: recurring reports, dashboards, presentations,
+    or app-backed summaries.
   </Step>
 
   <Step title="Publish only the skills they need">
-    Enable built-in skills deliberately and review custom bundles before sharing. See
-    [Managing Skills](/admins/managing_features/craft_skills).
+    Enable built-in skills deliberately and review custom bundles before sharing.
+    See [Managing Skills](/admins/managing_features/craft_skills).
   </Step>
 
   <Step title="Enable apps with conservative policies">
-    Start sensitive actions at **Ask** or **Deny**, and reserve **Auto-approve** for low-risk reads. See
-    [Managing Apps](/admins/managing_features/craft_apps).
+    Start sensitive actions at **Ask** or **Deny**, and reserve **Auto-approve** for low-risk reads.
+    See [Managing Apps](/admins/managing_features/craft_apps).
   </Step>
 
   <Step title="Review, then expand">
-    Confirm users get the artifacts they need, approvals read clearly, and scheduled tasks complete without
-    avoidable failures.
+    Confirm users get the artifacts they need, approvals read clearly,
+    and scheduled tasks complete without avoidable failures.
   </Step>
 </Steps>
 
@@ -73,13 +73,13 @@ Governance is ongoing, not a one-time rollout. On a regular cadence:
 - **Apps**: revisit action policies, pull back anything that crept to Auto-approve, and rotate credentials. See
   [Managing Apps](/admins/managing_features/craft_apps).
 - **Scheduled tasks**: these run on the creator's permissions and pre-approved apps, so confirm
-  [pre-approvals](/admins/managing_features/craft_apps#scheduled-tasks-and-pre-approval) still match narrow, safe
-  workflows.
+  [pre-approvals](/admins/managing_features/craft_apps#scheduled-tasks-and-pre-approval) still match narrow,
+  safe workflows.
 
 ## Data access
 
-Craft acts as the signed-in user. When it searches company knowledge, Onyx's access controls apply: Craft only
-returns documents that user is already permitted to see.
+Craft acts as the signed-in user. When it searches company knowledge, Onyx's access controls apply:
+Craft only returns documents that user is already permitted to see.
 
 Craft's working files are separate from your indexed connector data:
 

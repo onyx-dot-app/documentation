@@ -95,9 +95,7 @@
           {
             "group": "Craft",
             "icon": "hammer",
-            "pages": [
-              "deployment/local/craft"
-            ]
+            "pages": ["deployment/local/craft"]
           },
           {
             "group": "Onyx Anywhere",

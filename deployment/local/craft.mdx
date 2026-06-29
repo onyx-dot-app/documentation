@@ -39,8 +39,8 @@ Requirements:
 - Sandbox proxy enabled.
 
 The Helm chart validates these when Craft is enabled and will fail the install if they're wrong. In particular,
-the chart rejects any `SANDBOX_BACKEND` other than `kubernetes`; the Docker backend is not available in Helm
-deployments.
+the chart rejects any `SANDBOX_BACKEND` other than `kubernetes`;
+the Docker backend is not available in Helm deployments.
 
 ```yaml
 configMap:
@@ -113,9 +113,8 @@ so sandboxes can't reach the internet or your internal network except through th
 <Warning>
   Blocking access to cloud instance metadata is the operator's responsibility. On EC2,
   require IMDSv2 (`HttpTokens=required`) so a sandbox can't pull IAM credentials from `169.254.169.254`.
-  The install script prints a reminder,
-  but it does **not** install a host-level `DOCKER-USER` iptables rule for you, so add one yourself if your host exposes
-  instance metadata.
+  The install script prints a reminder, but it does **not** install a host-level `DOCKER-USER` iptables rule for you,
+  so add one yourself if your host exposes instance metadata.
 </Warning>
 
 ## Scheduled Tasks
@@ -145,8 +144,8 @@ for upload limits and additional supported Craft configuration.
 
 <Note>
   Normal deployments should not set a separate sandbox image variable. Docker Compose Craft follows `IMAGE_TAG`,
-  and Helm Craft follows the chart/app version. Override only when intentionally testing a custom sandbox image with
-  support guidance.
+  and Helm Craft follows the chart/app version.
+  Override only when intentionally testing a custom sandbox image with support guidance.
 </Note>
 
 ## Related pages

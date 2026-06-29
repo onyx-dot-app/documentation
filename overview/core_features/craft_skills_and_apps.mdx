@@ -10,20 +10,20 @@ Skills and apps are how Craft's agent loop reaches beyond plain text generation.
   your company knowledge.
 - **Apps** connect external services so Craft can read from and act in the tools your team already uses.
 
-Together they turn a single prompt into real work. The all-hands deck builds on the `pptx` skill to format
-slides and the `company-search` skill to ground them in real numbers. A customer report reads HubSpot, Slack,
-and Zendesk through connected apps before it writes a word.
+Together they turn a single prompt into real work.
+The all-hands deck builds on the `pptx` skill to format slides and the `company-search` skill to ground them in real
+numbers. A customer report reads HubSpot, Slack, and Zendesk through connected apps before it writes a word.
 
 ## Skills
 
-A skill is a reusable bundle of instructions and supporting files that teaches Craft how to do a specific kind
-of work: searching company knowledge, building a deck, or generating an image, for example.
+A skill is a reusable bundle of instructions and supporting files that teaches Craft how to do a specific kind of work:
+searching company knowledge, building a deck, or generating an image, for example.
 
 <img className="rounded-image" src="/assets/overview/core_features/craft_skills.png" alt="The Craft Skills page listing available built-in and personal skills"/>
 
-You don't pick skills manually. **Craft selects the skills a request needs on its own**, based on what each one
-is for. To steer it toward a particular skill, open the **+** menu and choose **Skills**, or type **/** to
-search by name. That surfaces the skill for the current request; Craft still decides how to apply it.
+You don't pick skills manually. **Craft selects the skills a request needs on its own**, based on what each one is for.
+To steer it toward a particular skill, open the **+** menu and choose **Skills**, or type **/** to search by name.
+That surfaces the skill for the current request; Craft still decides how to apply it.
 
 Skills come from three places:
 
@@ -34,15 +34,16 @@ Skills come from three places:
 What you see depends on your workspace configuration and what your admin has enabled.
 
 <Note>
-  Some built-in skills depend on a configured provider. Image generation, for example, needs an admin to set up
-  an image model. If a skill you expect is missing, see [why a skill or app may not appear](#why-something-may-not-appear).
+  Some built-in skills depend on a configured provider. Image generation, for example,
+  needs an admin to set up an image model. If a skill you expect is missing,
+  see [why a skill or app may not appear](#why-something-may-not-appear).
 </Note>
 
 ## Apps
 
-Connect an app when Craft needs to read from or act in an external service. Built-in app types include
-**Slack, Google Calendar, Google Drive, Gmail, Linear, and GitHub**, and your organization can add custom apps
-for internal systems.
+Connect an app when Craft needs to read from or act in an external service. Built-in app types include **Slack,
+Google Calendar, Google Drive, Gmail, Linear, and GitHub**,
+and your organization can add custom apps for internal systems.
 
 <img className="rounded-image" src="/assets/overview/core_features/craft_apps.png" alt="The Craft Apps page showing connected apps and apps available to connect"/>
 
@@ -51,20 +52,20 @@ Open the **Apps** page from the Craft sidebar (or `/craft/v1/apps`) to connect o
 - **Built-in apps** connect through OAuth. You sign in to the service and grant access.
 - **Custom apps** may ask for credential fields defined by your admin.
 
-Once connected, Craft can use the app on any request. Point it at a specific app from the **+** menu under
-**Apps**, or just describe the task ("post the summary to the #launch Slack channel").
+Once connected, Craft can use the app on any request. Point it at a specific app from the **+** menu under **Apps**,
+or just describe the task ("post the summary to the #launch Slack channel").
 
 <Info>
-  Your app credentials never enter Craft's sandbox. When Craft makes a request, Onyx injects the real
-  credential into the approved outbound call on your behalf. See
-  [Craft Architecture](/security/architecture/craft) for the full security model.
+  Your app credentials never enter Craft's sandbox. When Craft makes a request,
+  Onyx injects the real credential into the approved outbound call on your behalf.
+  See [Craft Architecture](/security/architecture/craft) for the full security model.
 </Info>
 
 ## Approvals
 
 Reading is one thing; acting is another. Some app actions need your approval before Craft can continue,
-typically anything that sends, creates, edits, or deletes. When that happens, an approval card appears in the
-chat with the app, the action, and the exact request Craft wants to send.
+typically anything that sends, creates, edits, or deletes. When that happens,
+an approval card appears in the chat with the app, the action, and the exact request Craft wants to send.
 
 <img className="rounded-image" src="/assets/overview/core_features/craft_approval_card.png" alt="A Craft approval card requesting approval to post a message in Slack, with Approve once, Approve for session, and Reject buttons"/>
 
@@ -89,16 +90,15 @@ Before you approve, check:
 - Which message, issue, event, file, or endpoint is involved.
 - Whether it matches what you asked for.
 
-Prefer **Approve once** for sends, deletes, edits, calendar changes, or anything that touches a customer-facing
-system.
+Prefer **Approve once** for sends, deletes, edits, calendar changes, or anything that touches a customer-facing system.
 
 ## Skills and apps in Scheduled Tasks
 
-A [Scheduled Task](/overview/core_features/craft_scheduled_tasks) runs unattended, so a live approval prompt
-would stall it. When a task needs an app, **pre-approve that app** in the task configuration so it can act on
-its own. Keep pre-approval to narrowly scoped tasks, and avoid pre-approving apps that can send, delete, or
-change sensitive records. If a run hits an action that still needs approval, it stops in an *awaiting approval*
-state instead of finishing.
+A [Scheduled Task](/overview/core_features/craft_scheduled_tasks) runs unattended,
+so a live approval prompt would stall it. When a task needs an app,
+**pre-approve that app** in the task configuration so it can act on its own. Keep pre-approval to narrowly scoped tasks,
+and avoid pre-approving apps that can send, delete, or change sensitive records.
+If a run hits an action that still needs approval, it stops in an *awaiting approval* state instead of finishing.
 
 ## Why something may not appear
 
@@ -110,5 +110,5 @@ A skill or app might be missing because:
 - The app is connected but its OAuth or credential setup is incomplete.
 - A personal skill failed validation when it was uploaded.
 
-Admins manage organization skills, apps, and approval policies from the Craft admin pages. See
-[Managing Craft](/admins/managing_features/craft).
+Admins manage organization skills, apps, and approval policies from the Craft admin pages.
+See [Managing Craft](/admins/managing_features/craft).
