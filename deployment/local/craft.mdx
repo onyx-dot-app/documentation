@@ -1,6 +1,6 @@
 ---
 title: "Deploying Craft"
-description: "Configure Craft sandboxes for Docker Compose and Kubernetes deployments"
+description: "Configure Craft sandboxes for Kubernetes and Docker Compose deployments"
 icon: "hammer"
 ---
 
@@ -9,12 +9,8 @@ run the sandbox proxy, and give sandboxes a URL they can use to reach the Onyx A
 
 | Backend | Use for | Notes |
 | --- | --- | --- |
-| `docker` | Docker Compose deployments | One sandbox container per user, managed through the host Docker socket. |
 | `kubernetes` | Helm deployments | One sandbox pod per user, with a sandbox namespace, RBAC, proxy, and snapshot support. |
-
-<Warning>
-  `local` is not a supported Craft sandbox backend. Use `docker` or `kubernetes`.
-</Warning>
+| `docker` | Docker Compose deployments | One sandbox container per user, managed through the host Docker socket. |
 
 ## Requirements
 
@@ -27,6 +23,38 @@ Craft requires:
 - `SANDBOX_API_SERVER_URL` set to an Onyx base URL reachable from inside sandbox containers or pods.
 - The sandbox proxy running.
 - Enough CPU, memory, and ephemeral storage for generated apps and file operations.
+
+## Kubernetes and Helm
+
+Use the Kubernetes backend for production-scale self-hosted deployments.
+
+Requirements:
+
+- Kubernetes `>=1.33`.
+- Helm chart deployment.
+- `configMap.ENABLE_CRAFT=true`.
+- `configMap.SANDBOX_BACKEND=kubernetes` (or unset, since the default backend is Kubernetes).
+- `configMap.SANDBOX_API_SERVER_URL` set.
+- `auth.sandboxPushSecret.enabled=true`.
+- Sandbox proxy enabled.
+
+The Helm chart validates these when Craft is enabled and will fail the install if they're wrong. In particular,
+the chart rejects any `SANDBOX_BACKEND` other than `kubernetes`; the Docker backend is not available in Helm
+deployments.
+
+```yaml
+configMap:
+  ENABLE_CRAFT: "true"
+  SANDBOX_BACKEND: "kubernetes"
+  SANDBOX_API_SERVER_URL: "https://onyx.your-org.example"
+
+auth:
+  sandboxPushSecret:
+    enabled: true
+```
+
+Sandbox pod resources are controlled by the chart's sandbox pod settings and the `SANDBOX_*` values.
+The default model is one sandbox pod per user.
 
 ## Docker Compose
 
@@ -62,7 +90,7 @@ Do not use internal Compose hostnames such as `http://api_server:8080`.
 
 ### Manual Docker checklist
 
-Manual setup is easy to get wrong — prefer `./install.sh --include-craft`. If you manage compose files yourself,
+Manual setup is error-prone. Prefer `./install.sh --include-craft`. If you manage compose files yourself,
 include `docker-compose.craft.yml` and create the external resources it references:
 
 ```bash
@@ -77,7 +105,7 @@ MinIO, or the API server by Compose DNS name.
 ### Docker security notes
 
 The Docker backend needs Docker socket access so Onyx can create and control sandbox containers.
-**Treat this as root-equivalent access to the Docker host** — run it only on hosts you trust and control.
+**Treat this as root-equivalent access to the Docker host.** Run it only on hosts you trust and control.
 
 Inside each sandbox, a firewall locks all outbound traffic to the sandbox proxy,
 so sandboxes can't reach the internet or your internal network except through the proxy.
@@ -86,41 +114,9 @@ so sandboxes can't reach the internet or your internal network except through th
   Blocking access to cloud instance metadata is the operator's responsibility. On EC2,
   require IMDSv2 (`HttpTokens=required`) so a sandbox can't pull IAM credentials from `169.254.169.254`.
   The install script prints a reminder,
-  but it does **not** install a host-level `DOCKER-USER` iptables rule for you — add one yourself if your host exposes
+  but it does **not** install a host-level `DOCKER-USER` iptables rule for you, so add one yourself if your host exposes
   instance metadata.
 </Warning>
-
-## Kubernetes and Helm
-
-Use the Kubernetes backend for production-scale self-hosted deployments.
-
-Requirements:
-
-- Kubernetes `>=1.33`.
-- Helm chart deployment.
-- `configMap.ENABLE_CRAFT=true`.
-- `configMap.SANDBOX_BACKEND=kubernetes` (or unset, since the default backend is Kubernetes).
-- `configMap.SANDBOX_API_SERVER_URL` set.
-- `auth.sandboxPushSecret.enabled=true`.
-- Sandbox proxy enabled.
-
-The Helm chart validates these when Craft is enabled and will fail the install if they're wrong. In particular,
-the chart rejects any `SANDBOX_BACKEND` other than `kubernetes` — the Docker backend is not available in Helm
-deployments.
-
-```yaml
-configMap:
-  ENABLE_CRAFT: "true"
-  SANDBOX_BACKEND: "kubernetes"
-  SANDBOX_API_SERVER_URL: "https://onyx.your-org.example"
-
-auth:
-  sandboxPushSecret:
-    enabled: true
-```
-
-Sandbox pod resources are controlled by the chart's sandbox pod settings and the `SANDBOX_*` values.
-The default model is one sandbox pod per user.
 
 ## Scheduled Tasks
 
@@ -149,7 +145,7 @@ for upload limits and additional supported Craft configuration.
 
 <Note>
   Normal deployments should not set a separate sandbox image variable. Docker Compose Craft follows `IMAGE_TAG`,
-  and Helm Craft follows the chart/app version — override only when intentionally testing a custom sandbox image with
+  and Helm Craft follows the chart/app version. Override only when intentionally testing a custom sandbox image with
   support guidance.
 </Note>
 

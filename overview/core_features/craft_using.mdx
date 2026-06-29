@@ -1,58 +1,91 @@
 ---
 title: "Using Craft"
-description: ""Run a Craft"
-session: "add context, read the output panel, share web apps, and iterate""
+description: "Drive Craft's agent loop from a first prompt to a finished, shareable artifact"
 icon: "comments"
 ---
 
-A Craft **session** is your workspace for one piece of work. It holds the conversation, the files you bring in,
-the files Craft creates as it works, and the finished artifacts.
-This page walks through a session from first prompt to shareable result.
+Craft is a free-form agent loop in a secure sandbox: you describe an outcome, and Craft plans the work, pulls
+in context from your knowledge and connected tools, writes and runs code, and iterates until it's done. Think
+of a coding agent like Claude Code or Codex, pointed at decks, reports, web apps, and documents.
 
-<img className="rounded-image" src="/assets/overview/core_features/craft_workspace.png" alt="A Craft session: sidebar, chat panel, and the Output panel previewing a generated web app"/>
+Each piece of work is a **session**: the chat and agent loop in the center, the Output panel (preview, files,
+artifacts) on the right.
 
-## The session workspace
+<img className="rounded-image" src="/assets/overview/core_features/craft_workspace_clean.png" alt="A Craft session with the agent loop on the left and a live dashboard preview on the right"/>
 
-A Craft session has three areas:
+## What a session looks like
 
-- **Sidebar** (left) — your session history and links to Scheduled Tasks, Skills, and Apps. Start a new session with
-  **Start Crafting**.
-- **Chat panel** (center) — where you talk to Craft, watch it work, and respond to approval prompts.
-- **Output panel** (right) — where you preview web apps, browse files, and download artifacts. Toggle it with the
-  panel button in the session header.
+Ask Craft to build an all-hands deck:
+
+> Build an all-hands slide deck on Q2. Pull the wins from Slack and Linear, use the numbers in the Q2 board
+> doc on Drive, and match our existing deck template.
+
+In one unattended run, Craft reads those Slack channels, Linear issues, and the Drive doc through connected
+apps, loads the `pptx` skill, and writes the deck, spawning subagents to build slides in parallel.
+
+<img className="rounded-image" src="/assets/overview/core_features/craft_agent_loop.png" alt="A Craft session building a pitch deck, delegating individual slides to parallel subagents in the agent loop"/>
+
+A report or web app works the same way: name the sources and the output, and Craft assembles it for you to
+review and refine.
 
 ## Write a strong first prompt
 
-Before you send your first message, pick a model if your workspace offers more than one.
-The model is **locked once the session has messages**, so choose before you begin.
+Every session begins from the Craft home: pick a model, describe what you want, and connect the data sources
+Craft should draw on.
 
-Craft does its best work when your first prompt covers:
+<img className="rounded-image" src="/assets/overview/core_features/craft_start.png" alt="The Craft home screen with the prompt box, model selector, and links to connect data sources"/>
 
-- **The artifact** — a web app, report, deck, brief, data explorer, or export file.
-- **The audience and purpose** — who will use it and what for.
-- **The source material** — Onyx knowledge, attached files, User Library files, or a connected app.
-- **The requirements that matter** — sections, tone, charts, filters, tables, file names, or output format.
+Pick a model first if your workspace offers more than one. The model is **locked once the session has
+messages**, so choose before you send.
+
+Craft does its best work when the first prompt covers:
+
+- **The artifact**: a web app, report, deck, brief, data explorer, or export file.
+- **Audience and purpose**: who it is for and what they need from it.
+- **Source material**: Onyx knowledge, attached files, User Library files, or a connected app.
+- **The requirements that matter**: sections, tone, charts, filters, tables, file names, or output format.
 
 <Tip>
-  Craft generally won't stop to ask clarifying questions — it makes reasonable assumptions and keeps going.
-  Front-load the details you care about, then refine from there.
+  Craft rarely stops to ask clarifying questions. It makes reasonable assumptions and keeps moving,
+  so front-load the details you care about and refine from there.
 </Tip>
 
-## Add context
+## Watch the agent loop
 
-Use the **+** button in the input bar (**Add files or skills**) or type **/** to bring in context.
-Craft can combine several sources in one session.
+As Craft runs, the chat panel streams the loop in real time:
+
+- **Tasks**: the plan Craft is working through, checked off as it goes.
+- **Thinking**: how it is reasoning about the next step.
+- **Working**: tool calls, such as searching company knowledge or reading a file in a connected app.
+- **Running**: shell commands in the sandbox, like writing code, installing packages, or starting a dev server.
+- **Subagents**: for larger jobs, Craft spawns focused subagents (for example, one per slide or per section)
+  and runs them in parallel. Open a subagent from the header dropdown to read its transcript; your replies
+  still go to the main session.
+
+A status indicator in the header shows the sandbox state, such as *Initializing sandbox*, *Sandbox running*,
+or *Restoring sandbox*.
+
+You stay in control while it works:
+
+- **Queue a follow-up**: send another message during a run and Craft picks it up after the current turn.
+- **Interrupt**: press **`Esc`** to stop a run heading the wrong way. Your messages and files are kept,
+  so you can redirect and continue.
+
+## Bring in context
+
+Craft starts from your prompt, but most real work needs source material. Use the **+** button
+(**Add files or skills**) or type **/** to add context, and combine as many sources as you need in one session.
 
 | Source | Use it for |
 | --- | --- |
 | Onyx knowledge | Company documents and connector data you already have permission to access. |
-| Session attachments | Files that only matter for this session — a CSV, PDF, notes doc, or image. |
-| User Library | Reusable files you want available across many sessions, like templates or datasets. |
-| Skills | A specific method or capability, such as building a deck or searching company knowledge. |
+| Session attachments | Files that only matter for this session, like a CSV, PDF, notes doc, or image. |
+| User Library | Reusable files you want across sessions, like templates or datasets. |
+| Skills | A method or capability, such as building a deck or searching company knowledge. |
 | Apps | External services such as Slack, Google Drive, Gmail, Linear, or GitHub. |
 
-Session attachments are tied to one session. User Library files are durable and reusable.
-You can also drag and drop files directly onto the chat.
+Session attachments stay with one session. User Library files are durable and reusable across sessions. You
+can also drag and drop files onto the chat.
 
 <Accordion title="File and storage limits">
   These are the default limits. Your admin can adjust them for self-hosted deployments.
@@ -77,67 +110,50 @@ You can also drag and drop files directly onto the chat.
 </Accordion>
 
 <Warning>
-  Don't upload secrets, private tokens, or production credentials as files. To let Craft reach an external service,
-  connect it as an [app](/overview/core_features/craft_skills_and_apps#apps)
-  instead — credentials are injected securely and never stored in the sandbox.
+  Don't upload secrets, private tokens, or production credentials as files. To let Craft reach an external
+  service, connect it as an [app](/overview/core_features/craft_skills_and_apps#apps) instead. Credentials are
+  injected securely and never stored in the sandbox.
 </Warning>
 
-## While Craft works
-
-As Craft runs, the chat panel streams progress: task lists, generated files, tool results, approval prompts,
-and any errors. A status indicator in the header shows the sandbox state (for example, *Initializing sandbox…*,
-*Sandbox running*, or *Restoring sandbox…*).
-
-- **Queue a follow-up** — type and send another message while a run is active. Craft picks it up after the current
-  turn finishes.
-- **Interrupt** — press **`Esc`** to stop a run that's going the wrong way. Your messages and files are kept, and you
-  can send a new prompt right after.
-- **Subagents** — for complex work, Craft may spin up subagents for focused subtasks. Switch to a subagent from the
-  header dropdown to read its transcript; your replies still go to the main session.
-
-## The Output panel
+## Read the output
 
 The Output panel has three tabs:
 
 | Tab | Shows |
 | --- | --- |
-| **Preview** | Your live web app. Ask Craft for changes and the preview updates as the files change. |
-| **Files** | The full session workspace — source code, data, and intermediate work. |
+| **Preview** | A live, running web app. Ask for changes and the preview updates as the files change. |
+| **Files** | The full session workspace: source code, data, and intermediate work. |
 | **Artifacts** | Finished outputs meant for download or sharing, usually written to `outputs/`. |
 
 <img className="rounded-image" src="/assets/overview/core_features/craft_files.png" alt="The Output panel showing the Preview, Files, and Artifacts tabs with the session workspace files"/>
 
-From here you can:
-
-- Download an individual file, or a directory or web app as a zip.
-- Export a Markdown file to **.docx**.
-- Preview supported images, PDFs, presentations, and text files.
-- Share a generated web app (see below).
+From here you can download a single file, or a directory or web app as a zip, export a Markdown file to
+**.docx**, and preview images, PDFs, presentations, and text files.
 
 ## Share a web app
 
-Generated web apps are previewed and shared through Onyx, not exposed directly from the sandbox.
-Use the **Share** button on the Preview tab to choose a scope:
+Web apps run in the sandbox and are previewed and shared through Onyx, never exposed directly. Use **Share**
+on the Preview tab to pick a scope:
 
-- **Private** — only you can view the app.
-- **Organization** — anyone logged into your Onyx can view it.
+- **Private**: only you can open it.
+- **Organization**: anyone signed into your Onyx can open it.
 
-Sharing covers only the generated web app. It does **not** share the conversation or the rest of your session files.
+Sharing covers the generated web app only. It does not share the conversation or the rest of your session files.
 
 ## Iterate
 
-Craft is built for back-and-forth. Once you have a first draft, refine it in plain language:
+Craft is built for back-and-forth. Once you have a draft, refine it in plain language:
 
 - "Add a filter for the last 30 days and move the summary cards to the top."
 - "Rewrite the executive summary for a non-technical audience and cut it to three sentences."
-- "Export the final report to DOCX and put it in `outputs/`."
+- "Add a one-paragraph summary at the top of the report and save it to `outputs/`."
 
 ## Troubleshooting
 
 | Issue | What to try |
 | --- | --- |
 | Craft isn't in my sidebar | Ask an admin whether Craft is enabled and a supported model provider is configured. |
-| Craft can't read a file | Check the [file limits](#add-context), try a simpler format, or move reusable files to the User Library. |
+| Craft can't read a file | Check the [file limits](#bring-in-context), try a simpler format, or move reusable files to the User Library. |
 | Preview is blank or broken | Ask Craft to inspect the app error. If the sandbox is restoring, wait a moment and retry. |
 | A run is stuck or off track | Press **`Esc`** to interrupt, then send a more specific prompt. |
 | An action is waiting for approval | Review the [approval card](/overview/core_features/craft_skills_and_apps#approvals) and approve only if it matches your intent. Approvals expire if left unanswered. |

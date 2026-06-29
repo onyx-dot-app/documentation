@@ -39,11 +39,11 @@ generated code, attachments, outputs, managed skills, and the user's mounted Use
 
 Self-hosted deployments use one of two backends:
 
-- **`docker`** — one sandbox container per user, managed through the host Docker socket.
-- **`kubernetes`** — one sandbox pod per user, with a sandbox namespace, RBAC, proxy, and snapshot support.
+- **`kubernetes`**: one sandbox pod per user, with a sandbox namespace, RBAC, proxy, and snapshot support.
+- **`docker`**: one sandbox container per user, managed through the host Docker socket.
 
-The Docker backend depends on host Docker socket access, which is root-equivalent to the host.
 The Kubernetes backend uses RBAC and network policies to narrow sandbox management and push paths.
+The Docker backend depends on host Docker socket access, which is root-equivalent to the host.
 
 ## Search and knowledge access
 
@@ -76,23 +76,23 @@ If the user doesn't answer before the approval window expires, the request fails
 ## Network isolation
 
 Inside each sandbox,
-a firewall drops all outbound traffic except to the sandbox proxy — the proxy is the **exclusive** egress path,
+a firewall drops all outbound traffic except to the sandbox proxy. The proxy is the **exclusive** egress path,
 not just an interceptor sitting alongside open internet access.
 
+- **Kubernetes** sandboxes run as dedicated pods. Use the chart's sandbox namespace, RBAC, proxy, and network policies
+  as the baseline rather than exposing core Onyx services to sandbox pods.
 - **Docker** sandboxes join the dedicated `onyx_craft_sandbox` bridge network instead of the default Compose network,
   so they can't reach Compose services by name.
   Operators should also block cloud instance metadata access from sandbox traffic.
-- **Kubernetes** sandboxes run as dedicated pods. Use the chart's sandbox namespace, RBAC, proxy, and network policies
-  as the baseline rather than exposing core Onyx services to sandbox pods.
 
 ## Webapp proxy and sharing
 
 Generated web apps are previewed and shared through Onyx, never exposed directly from the sandbox.
-The webapp proxy strips viewer authentication on the way in — cookies, `authorization`, CSRF,
-and identity headers — and strips `set-cookie` from responses on the way out, before forwarding traffic.
+The webapp proxy strips viewer authentication on the way in (cookies, `authorization`, CSRF,
+and identity headers) and strips `set-cookie` from responses on the way out, before forwarding traffic.
 
 Current sharing scopes are **Private** and **Organization**.
-Sharing controls access to the generated web app only — not the Craft chat or the rest of the session files.
+Sharing controls access to the generated web app only, not the Craft chat or the rest of the session files.
 
 ## State, logs, and retention
 
@@ -109,7 +109,7 @@ Snapshots are internal sleep-and-restore archives, not user-facing version histo
 ## Residual risks
 
 - Generated code can behave unexpectedly. Keep sandbox network access narrow and don't upload secrets as files.
-- Docker socket access is high-risk — use the Docker backend only on hosts you trust and control.
+- Docker socket access is high-risk; use the Docker backend only on hosts you trust and control.
 - App approvals reduce risk but still depend on users understanding the action they approve.
 - Organization web app sharing can expose generated app content to other users in the workspace.
 - LLM providers receive the prompts and context Craft sends, per the model/provider configuration in Onyx.

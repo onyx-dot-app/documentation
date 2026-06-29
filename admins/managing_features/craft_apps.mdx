@@ -1,67 +1,60 @@
 ---
 title: "Managing Craft Apps and Approvals"
-description: "Configure external apps, credentials, and action policies for Craft"
+description: "Connect external apps, control credentials, and govern which actions Craft can take"
 icon: "plug"
 ---
 
-Craft apps let sandboxes interact with external services through the sandbox proxy. As an admin,
-you decide which apps exist, how credentials are supplied, which URLs they can reach,
-and which actions require approval.
+Craft apps let sandboxes reach external services through the sandbox proxy. As an admin you decide which apps
+exist, how their credentials are supplied, which URLs they can reach, and which actions need approval before they
+run.
 
 Manage apps from **`/craft/v1/apps/manage`**.
 
 ## App types
 
-Built-in app types include **Slack, Google Calendar, Google Drive, Gmail, Linear, and GitHub**.
-You can also create **custom apps** for internal or third-party services.
+Built-in app types are **Slack, Google Calendar, Google Drive, Gmail, Linear, and GitHub**. You can also create
+**custom apps** for internal or third-party services.
 
-- **Built-in apps** provide OAuth-based connection flows and a catalog of governable actions.
+- **Built-in apps** ship with OAuth connection flows and a catalog of governable actions.
 - **Custom apps** define their own URL patterns, credential fields, and skill instructions.
 
 <Note>
-  On Onyx Cloud, built-in apps are provisioned by Onyx with Onyx's own OAuth credentials.
-  You enable or disable them and set action policies, but you don't supply their OAuth client credentials.
-  Self-hosted admins configure those credentials themselves.
+  On Onyx Cloud, built-in apps use Onyx's own OAuth credentials: you enable them and set policies but don't supply
+  client credentials. Self-hosted admins configure those themselves.
 </Note>
 
 ## Add an app
 
 <Steps>
-  <Step title="Choose the app">
-    Decide whether a built-in app covers the need, or whether you need a custom app for an internal system.
+  <Step title="Choose built-in or custom">
+    Use a built-in app where one fits, or build a [custom app](#custom-apps) for an internal system.
   </Step>
 
   <Step title="Configure credentials">
-    Provide organization-level OAuth or API settings where required,
-    and decide which credentials users must supply themselves.
-  </Step>
-
-  <Step title="Define reachable URLs">
-    For custom apps, keep the upstream URL patterns as narrow as the workflow allows.
+    Supply org-level OAuth or API settings where required, and decide which [credentials](#credentials) users
+    provide themselves.
   </Step>
 
   <Step title="Set action policies">
-    Start sensitive actions at **Ask** or **Deny**.
-    Use **Auto-approve** only for low-risk reads and well-understood workflows.
+    Start sensitive [actions](#action-policies) at **Ask** or **Deny**, and reserve **Auto-approve** for low-risk
+    reads.
   </Step>
 
   <Step title="Test as a pilot user">
-    Connect the app as a pilot user, run a small Craft session,
-    and confirm approval cards show the detail users need to decide.
+    Connect as a pilot user, run a small session, and confirm approval cards carry enough detail to decide.
   </Step>
 </Steps>
 
 ## Credentials
 
-| Credential type | Used for |
+| Type | Used for |
 | --- | --- |
-| Organization credentials | Shared configuration such as OAuth client settings or service details. |
+| Organization credentials | Shared config such as OAuth client settings or service details. |
 | User credentials | Per-user OAuth tokens, API tokens, or account-specific values. |
 
 <Info>
-  Craft sandboxes never receive raw app credentials. The sandbox sends placeholder values;
-  the sandbox proxy injects the real credential only into an approved outbound request.
-  See [Craft Architecture](/security/architecture/craft) for details.
+  Craft sandboxes never receive raw credentials. The sandbox sends placeholder values; the sandbox proxy injects
+  the real credential only into an approved outbound request. See [Craft Architecture](/security/architecture/craft).
 </Info>
 
 ## Custom apps
@@ -71,13 +64,12 @@ A custom app defines:
 | Field | Purpose |
 | --- | --- |
 | Name and description | What users see in the Apps page and picker. |
-| Upstream URL patterns | Which outbound URLs the sandbox proxy recognizes for the app. |
+| Upstream URL patterns | Which outbound URLs the proxy recognizes for the app. Keep them as narrow as the workflow allows. |
 | Auth template | How credentials are inserted into matching outbound requests. |
-| Organization credentials | Shared credential values supplied by admins. |
-| User credentials | Per-user values each user supplies when connecting. |
+| Organization and user credentials | Shared values admins supply, plus per-user values each user provides when connecting. |
 | Skill bundle | Instructions and helper files Craft uses to call the app correctly. |
 
-Use custom apps for internal HTTP APIs, private SaaS deployments, or services not covered by a built-in app.
+Use custom apps for internal HTTP APIs, private SaaS, or anything no built-in app covers.
 
 ## Action policies
 
@@ -86,34 +78,32 @@ Set a default policy per app and override individual actions.
 | Policy | Effect | Good default for |
 | --- | --- | --- |
 | Auto-approve | Runs without prompting the user. | Low-risk reads and narrow internal lookups. |
-| Ask | Pauses and asks the user before the request is sent. | Sends, edits, creates, calendar changes, and broad reads. |
+| Ask | Pauses for the user before the request is sent. | Sends, edits, creates, calendar changes, and broad reads. |
 | Deny | Blocks the action. | Deletes, sensitive systems, or unsupported workflows. |
 
-When one outbound request matches several actions, the **strictest policy wins**: Deny, then Ask, then Auto-approve.
+When a request matches several actions, the **strictest policy wins**: Deny, then Ask, then Auto-approve.
 
-When a policy is **Ask**, the user sees an approval card in the session and decides whether the action runs.
-The user-facing choices (*Approve once*, *Approve for session*, *Reject*)
-and how approvals expire are covered in [Skills and Apps](/overview/core_features/craft_skills_and_apps#approvals).
-*Approve for session* is scoped to that session and matching action types — it is not a permanent policy change.
+On **Ask**, the user gets an approval card and decides whether the action runs. The choices (*Approve once*,
+*Approve for session*, *Reject*) and how approvals expire are covered in
+[Skills and Apps](/overview/core_features/craft_skills_and_apps#approvals). *Approve for session* is scoped to
+that session and matching action types, not a permanent policy change.
 
 ## Scheduled tasks and pre-approval
 
-A [Scheduled Task](/overview/core_features/craft_scheduled_tasks)
-can store pre-approved app IDs so selected apps act during unattended runs.
-A **Deny** policy still overrides a pre-approval.
-
-Pre-approval is auditable — the approval is recorded as having been decided via pre-approval.
-Recommend it only when the task prompt is narrow and the app policy is already safe for unattended use.
-A run that hits an action still requiring approval enters an *awaiting approval* state instead of completing.
+A [Scheduled Task](/overview/core_features/craft_scheduled_tasks) can store pre-approved app IDs so selected apps
+act during unattended runs. A **Deny** policy still overrides a pre-approval, and the approval is recorded as
+decided via pre-approval. Recommend it only when the prompt is narrow and the policy is already safe for
+unattended use. A run that hits an action still needing approval enters an *awaiting approval* state instead of
+completing.
 
 ## Rotation and revocation
 
-When an app credential changes:
+When a credential changes:
 
 - Rotate organization credentials in the app configuration.
 - Ask affected users to reconnect user-owned OAuth or credential fields.
-- Re-test representative Craft sessions and scheduled tasks.
-- Tighten action policies while you investigate any unexpected app behavior.
+- Re-test representative sessions and scheduled tasks.
+- Tighten action policies while you investigate unexpected behavior.
 
 ## Troubleshooting
 

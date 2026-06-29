@@ -34,12 +34,12 @@ Onyx Lite retains the following capabilities:
 ### What's Removed
 
 To reduce resource requirements, Onyx Lite disables:
-- **Vespa** (vector database) — no document indexing or RAG search
-- **Redis** — PostgreSQL is used for caching and session management instead
-- **Model servers** — no local embedding models (LLM inference is handled by your configured provider)
-- **Celery background workers** — the API server handles background work directly
-- **MinIO / S3 file storage** — PostgreSQL is used for file storage instead
-- **Connectors** — all data source connectors are disabled
+- **Vespa** (vector database): no document indexing or RAG search
+- **Redis**: PostgreSQL handles caching and session management instead
+- **Model servers**: no local embedding models (LLM inference is handled by your configured provider)
+- **Celery background workers**: the API server handles background work directly
+- **MinIO / S3 file storage**: PostgreSQL handles file storage instead
+- **Connectors**: all data source connectors are disabled
 
 ### How It Works
 
@@ -128,7 +128,7 @@ the vector database. The key environment variables that drive this are:
     <Note>
       The .env file setup is the same as a standard Docker deployment.
       Lite-specific environment variables (DISABLE_VECTOR_DB, CACHE_BACKEND, AUTH_BACKEND, FILE_STORE_BACKEND)
-      are set automatically by the override file — you do not need to add them to your .env.
+      are set automatically by the override file, so you do not need to add them to your .env.
     </Note>
   </Accordion>
 
