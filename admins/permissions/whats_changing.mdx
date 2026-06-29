@@ -66,6 +66,28 @@ Group permissions are more flexible than the old Curator model:
 - You can grant **View Agent Analytics** or **View Query History** without any management permissions
 - You can create purpose-specific groups like "Content Managers" or "Analytics Viewers"
 
+### Group permission vs. Group Manager
+
+The two mechanisms can grant the **same permission name** — *Manage Connectors & Document Sets*, *Manage Agents*,
+*Manage Actions* — but their reach is very different. This is the most important distinction to get right.
+
+<Warning>
+  Enabling a **Manage X** permission *on a group* gives **every member** the **full,
+  organization-wide** ability to manage **all** resources of that type — not just the group's own resources.
+  It is **not** a way to scope management to a single group. To let someone manage only one group's resources,
+  make them a **Group Manager** of that group instead — don't grant the group-wide permission.
+</Warning>
+
+| Permission | As a **group permission** (granted to the group) | As a **Group Manager** (assigned per person, per group) |
+|---|---|---|
+| Manage Connectors & Document Sets | Every member can create and edit **any** connector and document set, organization-wide | Manages only connectors and document sets shared **solely** within the group(s) they manage — and can't make them public |
+| Manage Agents | Every member can create and edit **any** agent, organization-wide | Manages only agents shared **solely** within the group(s) they manage — and can't make them public |
+| Manage Actions | Every member can create and edit **any** custom tool / MCP server, organization-wide | Manages the actions used by their managed group's agents — actions are scoped **through agents**, since tools and MCP servers have no direct group association |
+
+In other words, a Group Manager can only act on a resource that lives **entirely** within the group(s)
+they manage and stays **private** — visible only to those groups. They can't make a resource public, share it org-wide,
+or attach it to a group they don't manage. A group-wide **Manage X** permission has none of these limits.
+
 ### Available Permissions
 
 The following permissions can be assigned to any group:
@@ -101,13 +123,14 @@ admin; her management access stops at Engineering's resources.
 Scoped to the group(s) they manage, a Group Manager can:
 
 - **View, edit, and remove** the **connectors**, **agents**, and **document sets** shared with the group.
+- **Manage the actions** (custom tools and MCP servers) used by their group's agents.
 - **Add and remove members** of the group.
 - **Create** connectors, agents, and document sets — as long as each is shared with a group they manage.
 
 A Group Manager **cannot**:
 
 - Manage resources that aren't shared with a group they manage.
-- Extend a resource's access beyond the groups they manage.
+- **Make a resource public**, or extend its access beyond the groups they manage.
 - Grant organization-wide permissions to anyone.
 
 <Note>
@@ -123,7 +146,14 @@ A Group Manager **cannot**:
 | Manage Connectors & Document Sets | Yes |
 | Manage Agents | Yes |
 | Create Agents | Yes |
-| All others (Manage LLMs, Manage Actions, Manage Groups, View Agent Analytics, View Query History, Manage Service Accounts, Manage Slack/Discord Bots, Create User Access Token) | No — organization-wide only |
+| Manage Actions | Yes — scoped through the managed group's agents |
+| All others (Manage LLMs, Manage Groups, View Agent Analytics, View Query History, Manage Service Accounts, Manage Slack/Discord Bots, Create User Access Token) | No — organization-wide only |
+
+<Note>
+  **Manage Actions** has no direct group association — custom tools and MCP servers aren't attached to groups directly.
+  A Group Manager's scoped action management is therefore derived from the **agents** in the group(s)
+  they manage (which *are* shared to groups), rather than from a tool-to-group link.
+</Note>
 
 When scoped, **Create Agents** lets the manager create agents shared with their group.
 Managing the **members and shared resources of a group you're assigned to** comes with being its Group Manager — it does
