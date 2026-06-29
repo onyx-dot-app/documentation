@@ -1,0 +1,99 @@
+---
+title: "Scheduled Tasks"
+description: "Run a Craft prompt automatically on a recurring schedule"
+icon: "calendar-clock"
+---
+
+A Scheduled Task saves a Craft prompt and runs it on a timer. Each time it fires,
+Craft creates a fresh background session, runs the prompt,
+and records the result in run history — no need to be watching.
+
+Open **Scheduled Tasks** from the Craft sidebar, or go to `/craft/v1/tasks`.
+
+{/* TODO: screenshot of the Scheduled Tasks list with a few populated rows (Name, Schedule, Status, Last run, Next run).
+The list was empty when captured. */}
+
+## Good uses
+
+Scheduled Tasks are ideal for recurring work, such as:
+
+- Weekly status reports or leadership briefs.
+- Daily summaries from connected apps.
+- Regular dashboards or data exports.
+- Periodic document transformations.
+
+<Tip>
+  Get the prompt right in a normal Craft session first. Once it reliably produces what you want,
+  save it as a scheduled task.
+</Tip>
+
+## Create a task
+
+<Steps>
+  <Step title="Write the name and prompt">
+    Give the task a clear **Name**, then write the **Prompt** that Craft will receive on every run.
+    Include the output format, source material, audience, and any skills or apps it should use.
+  </Step>
+
+  <Step title="Choose a schedule">
+    Pick **Interval** (every N minutes or hours) or **Daily / Weekly** (a time of day on selected days).
+    Daily and weekly times use your browser's local time.
+  </Step>
+
+  <Step title="Pre-approve expected apps">
+    Under **Pre-approved apps**, select the apps the task may use unattended.
+    An app you don't pre-approve will pause mid-run to ask for approval, which can stall the run.
+    Avoid pre-approving apps that can send, delete, or change sensitive records unless the task is tightly scoped.
+  </Step>
+
+  <Step title="Save, or save and run now">
+    Choose **Save** to wait for the next scheduled run,
+    or **Save and run now** to run it immediately and check the result.
+  </Step>
+</Steps>
+
+<img className="rounded-image" src="/assets/overview/core_features/craft_scheduled_task_new.png" alt="The New Scheduled Task form showing the name, prompt, schedule, and pre-approved apps fields"/>
+
+## Ownership and permissions
+
+A scheduled task belongs to the person who created it. Every run executes with **the creator's** Onyx permissions,
+connected apps, and skills — subject to the app policies your admins have set.
+
+If a task relies on an app connection, keep that connection active. If the credentials expire or are revoked,
+future runs fail until the app is reconnected.
+
+## Run history
+
+The task detail page lists every run with its **Started** time, **Status**, **Duration**, **Summary**,
+and **Trigger** (*Run Now* or *Schedule*). Each row links to the session that run created,
+so you can open it and inspect the messages, files, previews, and artifacts.
+
+Run statuses are:
+
+| Status | Meaning |
+| --- | --- |
+| Queued | Waiting to start. |
+| Running | In progress. |
+| Succeeded | Completed normally. |
+| Failed | Hit an error. Open the session to see what happened. |
+| Skipped | The previous run was still going when this one was due. |
+| Awaiting approval | Reached an app action that still needs approval. |
+
+## Manage a task
+
+From the task detail page you can **Run now**, **Pause** / **Resume**, **Edit** the prompt, schedule,
+or pre-approved apps, and **Delete** the task.
+
+- **Pausing** stops future runs without deleting history.
+- **Deleting** stops future runs. Past run sessions and history are preserved for review.
+
+## When a run needs attention
+
+Scheduled tasks shouldn't depend on a live approval prompt. If a run reaches an app action that still requires approval,
+it moves to **awaiting approval** rather than completing. Pre-approve the relevant apps to avoid this.
+
+<Warning>
+  Failed runs are not retried automatically. When a run fails,
+  open the generated session to inspect the error and any partial output, confirm the required files, skills,
+  and app connections still exist, narrow the prompt if Craft went out of scope, and then **Run now** to try again.
+</Warning>

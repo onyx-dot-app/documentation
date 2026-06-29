@@ -34,7 +34,16 @@
               "overview/core_features/code_interpreter",
               "overview/core_features/image_generation",
               "overview/core_features/voice_mode",
-              "overview/core_features/craft",
+              {
+                "group": "Craft",
+                "icon": "hammer",
+                "pages": [
+                  "overview/core_features/craft",
+                  "overview/core_features/craft_using",
+                  "overview/core_features/craft_skills_and_apps",
+                  "overview/core_features/craft_scheduled_tasks"
+                ]
+              },
               "overview/core_features/coding_agent"
             ]
           },
@@ -81,6 +90,13 @@
               "deployment/local/kubernetes",
               "deployment/local/terraform",
               "deployment/local/opensearch"
+            ]
+          },
+          {
+            "group": "Craft",
+            "icon": "hammer",
+            "pages": [
+              "deployment/local/craft"
             ]
           },
           {
@@ -277,6 +293,15 @@
               "admins/actions/code_interpreter",
               "admins/actions/image_generation",
               "admins/actions/voice_mode",
+              {
+                "group": "Craft",
+                "icon": "hammer",
+                "pages": [
+                  "admins/managing_features/craft",
+                  "admins/managing_features/craft_skills",
+                  "admins/managing_features/craft_apps"
+                ]
+              },
               "admins/actions/coding_agent"
             ]
           },
@@ -533,6 +558,7 @@
             "group": "Architecture",
             "pages": [
               "security/architecture/system_description",
+              "security/architecture/craft",
               "security/architecture/data_flows",
               "security/architecture/data_storage",
               "security/architecture/access_controls",
