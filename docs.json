@@ -303,6 +303,7 @@
           {
             "group": "Auditing",
             "pages": [
+              "admins/auditing/audit_logs",
               "admins/analytics/overview",
               "admins/analytics/query_history",
               "admins/analytics/custom_analytics"
