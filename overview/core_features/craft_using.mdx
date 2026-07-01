@@ -1,0 +1,162 @@
+---
+title: "Using Craft"
+description: "Drive Craft's agent loop from a first prompt to a finished, shareable artifact"
+icon: "comments"
+---
+
+Craft is an AI co-worker that knows your company. Describe an outcome and it plans the work,
+pulls context from your knowledge and connected tools, writes and runs code in a secure sandbox,
+and keeps going until there's a finished artifact to hand back. It's a free-form agent loop,
+like a coding agent such as Claude Code or Codex, pointed at almost anything your team builds: decks, reports,
+dashboards, web apps, and documents.
+
+Each piece of work is a **session**: the chat and agent loop in the center, the Output panel (preview, files, artifacts)
+on the right.
+
+<img className="rounded-image" src="/assets/overview/core_features/craft_workspace_clean.png" alt="A Craft session with the agent loop on the left and a live dashboard preview on the right"/>
+
+## What a session looks like
+
+Ask Craft to build an all-hands deck:
+
+> Build an all-hands slide deck on Q2. Pull the wins from Slack and Linear, use the numbers in the Q2 board
+> doc on Drive, and match our existing deck template.
+
+In one unattended run, Craft reads those Slack channels, Linear issues, and the Drive doc through connected apps,
+loads the `pptx` skill, and writes the deck, spawning subagents to build slides in parallel.
+
+<img className="rounded-image" src="/assets/overview/core_features/craft_agent_loop.png" alt="A Craft session building a pitch deck, delegating individual slides to parallel subagents in the agent loop"/>
+
+The same loop builds a report: ask for a customer summary and Craft reads your HubSpot records,
+cross-references Slack and Zendesk, and drafts it in your writing style, ready for you to review and refine.
+
+## Write a strong first prompt
+
+Every session begins from the Craft home: pick a model, describe what you want,
+and connect the data sources Craft should draw on.
+
+<img className="rounded-image" src="/assets/overview/core_features/craft_start.png" alt="The Craft home screen with the prompt box, model selector, and links to connect data sources"/>
+
+Pick a model first if your workspace offers more than one. The model is **locked once the session has messages**,
+so choose before you send.
+
+Craft does its best work when the first prompt covers:
+
+- **The artifact**: a web app, report, deck, brief, data explorer, or export file.
+- **Audience and purpose**: who it is for and what they need from it.
+- **Source material**: Onyx knowledge, attached files, User Library files, or a connected app.
+- **The requirements that matter**: sections, tone, charts, filters, tables, file names, or output format.
+
+<Tip>
+  Craft rarely stops to ask clarifying questions. It makes reasonable assumptions and keeps moving,
+  so front-load the details you care about and refine from there.
+</Tip>
+
+## Watch the agent loop
+
+As Craft runs, the chat panel streams the loop in real time:
+
+- **Tasks**: the plan Craft is working through, checked off as it goes.
+- **Thinking**: how it is reasoning about the next step.
+- **Working**: tool calls, such as searching company knowledge or reading a file in a connected app.
+- **Running**: shell commands in the sandbox, like writing code, installing packages, or starting a dev server.
+- **Subagents**: for larger jobs, Craft spawns focused subagents (for example, one per slide or per section)
+  and runs them in parallel. Open a subagent from the header dropdown to read its transcript;
+  your replies still go to the main session.
+
+A status indicator in the header shows the sandbox state, such as *Initializing sandbox*, *Sandbox running*,
+or *Restoring sandbox*.
+
+You stay in control while it works:
+
+- **Queue a follow-up**: send another message during a run and Craft picks it up after the current turn.
+- **Interrupt**: press **`Esc`** to stop a run heading the wrong way. Your messages and files are kept,
+  so you can redirect and continue.
+
+## Bring in context
+
+Craft starts from your prompt, but most real work needs source material. Use the **+** button (**Add files or skills**)
+or type **/** to add context, and combine as many sources as you need in one session.
+
+| Source | Use it for |
+| --- | --- |
+| Onyx knowledge | Company documents and connector data you already have permission to access. |
+| Session attachments | Files that only matter for this session, like a CSV, PDF, notes doc, or image. |
+| User Library | Reusable files you want across sessions, like templates or datasets. |
+| Skills | A method or capability, such as building a deck or searching company knowledge. |
+| Apps | External services such as Slack, Google Drive, Gmail, Linear, or GitHub. |
+
+Session attachments stay with one session. User Library files are durable and reusable across sessions.
+You can also drag and drop files onto the chat.
+
+<Accordion title="File and storage limits">
+  These are the default limits. Your admin can adjust them for self-hosted deployments.
+
+  **Session attachments**
+
+  | Limit | Default |
+  | --- | --- |
+  | Maximum file size | 50 MB |
+  | Maximum files per session | 20 |
+  | Maximum total size per session | 200 MB |
+
+  **User Library**
+
+  | Limit | Default |
+  | --- | --- |
+  | Maximum file size | 500 MB |
+  | Maximum files per upload | 100 |
+  | Maximum total storage | 10 GB |
+
+  The User Library accepts regular files and zip uploads. Zips are extracted so Craft can work with the files inside.
+</Accordion>
+
+<Warning>
+  Don't upload secrets, private tokens, or production credentials as files. To let Craft reach an external service,
+  connect it as an [app](/overview/core_features/craft_skills_and_apps#apps) instead.
+  Credentials are injected securely and never stored in the sandbox.
+</Warning>
+
+## Read the output
+
+The Output panel has three tabs:
+
+| Tab | Shows |
+| --- | --- |
+| **Preview** | A live, running web app. Ask for changes and the preview updates as the files change. |
+| **Files** | The full session workspace: source code, data, and intermediate work. |
+| **Artifacts** | Finished outputs meant for download or sharing, usually written to `outputs/`. |
+
+<img className="rounded-image" src="/assets/overview/core_features/craft_files.png" alt="The Output panel showing the Preview, Files, and Artifacts tabs with the session workspace files"/>
+
+From here you can download a single file, or a directory or web app as a zip, export a Markdown file to **.docx**,
+and preview images, PDFs, presentations, and text files.
+
+## Share a web app
+
+Web apps run in the sandbox and are previewed and shared through Onyx, never exposed directly.
+Use **Share** on the Preview tab to pick a scope:
+
+- **Private**: only you can open it.
+- **Organization**: anyone signed into your Onyx can open it.
+
+Sharing covers the generated web app only. It does not share the conversation or the rest of your session files.
+
+## Iterate
+
+Craft is built for back-and-forth. Once you have a draft, refine it in plain language:
+
+- "Add a filter for the last 30 days and move the summary cards to the top."
+- "Rewrite the executive summary for a non-technical audience and cut it to three sentences."
+- "Add a one-paragraph summary at the top of the report and save it to `outputs/`."
+
+## Troubleshooting
+
+| Issue | What to try |
+| --- | --- |
+| Craft isn't in my sidebar | Ask an admin whether Craft is enabled and a supported model provider is configured. |
+| Craft can't read a file | Check the [file limits](#bring-in-context), try a simpler format, or move reusable files to the User Library. |
+| Preview is blank or broken | Ask Craft to inspect the app error. If the sandbox is restoring, wait a moment and retry. |
+| A run is stuck or off track | Press **`Esc`** to interrupt, then send a more specific prompt. |
+| An action is waiting for approval | Review the [approval card](/overview/core_features/craft_skills_and_apps#approvals) and approve only if it matches your intent. Approvals expire if left unanswered. |
+| I can't find a generated file | Ask Craft to place final files in `outputs/` with clear names. |

@@ -1,0 +1,155 @@
+---
+title: "Deploying Craft"
+description: "Configure Craft sandboxes for Kubernetes and Docker Compose deployments"
+icon: "hammer"
+---
+
+Craft runs generated code in isolated sandboxes. A self-hosted deployment must choose a sandbox backend,
+run the sandbox proxy, and give sandboxes a URL they can use to reach the Onyx API.
+
+| Backend | Use for | Notes |
+| --- | --- | --- |
+| `kubernetes` | Helm deployments | One sandbox pod per user, with a sandbox namespace, RBAC, proxy, and snapshot support. |
+| `docker` | Docker Compose deployments | One sandbox container per user, managed through the host Docker socket. |
+
+## Requirements
+
+Craft requires:
+
+- A full Onyx deployment. Craft is **not** compatible with Onyx Lite, and it will refuse to start if the vector
+  database is disabled (`DISABLE_VECTOR_DB=true`).
+- `ENABLE_CRAFT=true`.
+- A supported LLM provider: **Anthropic, OpenAI, or OpenRouter**.
+- `SANDBOX_API_SERVER_URL` set to an Onyx base URL reachable from inside sandbox containers or pods.
+- The sandbox proxy running.
+- Enough CPU, memory, and ephemeral storage for generated apps and file operations.
+
+## Kubernetes and Helm
+
+Use the Kubernetes backend for production-scale self-hosted deployments.
+
+Requirements:
+
+- Kubernetes `>=1.33`.
+- Helm chart deployment.
+- `configMap.ENABLE_CRAFT=true`.
+- `configMap.SANDBOX_BACKEND=kubernetes` (or unset, since the default backend is Kubernetes).
+- `configMap.SANDBOX_API_SERVER_URL` set.
+- `auth.sandboxPushSecret.enabled=true`.
+- Sandbox proxy enabled.
+
+The Helm chart validates these when Craft is enabled and will fail the install if they're wrong. In particular,
+the chart rejects any `SANDBOX_BACKEND` other than `kubernetes`;
+the Docker backend is not available in Helm deployments.
+
+```yaml
+configMap:
+  ENABLE_CRAFT: "true"
+  SANDBOX_BACKEND: "kubernetes"
+  SANDBOX_API_SERVER_URL: "https://onyx.your-org.example"
+
+auth:
+  sandboxPushSecret:
+    enabled: true
+```
+
+Sandbox pod resources are controlled by the chart's sandbox pod settings and the `SANDBOX_*` values.
+The default model is one sandbox pod per user.
+
+## Docker Compose
+
+Use the Docker Compose backend for local or single-host self-hosted deployments.
+
+### New deployment
+
+Run the install script with Craft enabled:
+
+```bash
+cd onyx/deployment/docker_compose
+./install.sh --include-craft
+cd onyx_data/deployment
+docker compose up -d
+```
+
+The install script applies the Craft compose overlay, enables Craft, creates the required Docker resources,
+and configures the sandbox proxy.
+
+### Existing deployment
+
+Re-run the install script with `--include-craft` so the generated deployment includes the Craft overlay and its external
+Docker resources. Then confirm these values in the generated `.env`:
+
+```bash
+ENABLE_CRAFT=true
+SANDBOX_BACKEND=docker
+SANDBOX_API_SERVER_URL=https://onyx.your-org.example
+```
+
+`SANDBOX_API_SERVER_URL` must be reachable from sandbox containers the same way a browser reaches Onyx.
+Do not use internal Compose hostnames such as `http://api_server:8080`.
+
+### Manual Docker checklist
+
+Manual setup is error-prone. Prefer `./install.sh --include-craft`. If you manage compose files yourself,
+include `docker-compose.craft.yml` and create the external resources it references:
+
+```bash
+docker network create onyx_craft_sandbox
+docker volume create sandbox_proxy_ca
+```
+
+The overlay pins Docker sandboxes to the `onyx_craft_sandbox` bridge network.
+Sandboxes do not join the default Compose network, so they cannot resolve or reach services such as Postgres, Redis,
+MinIO, or the API server by Compose DNS name.
+
+### Docker security notes
+
+The Docker backend needs Docker socket access so Onyx can create and control sandbox containers.
+**Treat this as root-equivalent access to the Docker host.** Run it only on hosts you trust and control.
+
+Inside each sandbox, a firewall locks all outbound traffic to the sandbox proxy,
+so sandboxes can't reach the internet or your internal network except through the proxy.
+
+<Warning>
+  Blocking access to cloud instance metadata is the operator's responsibility. On EC2,
+  require IMDSv2 (`HttpTokens=required`) so a sandbox can't pull IAM credentials from `169.254.169.254`.
+  The install script prints a reminder, but it does **not** install a host-level `DOCKER-USER` iptables rule for you,
+  so add one yourself if your host exposes instance metadata.
+</Warning>
+
+## Scheduled Tasks
+
+Scheduled Tasks need the scheduled-task queue and worker. In Helm deployments,
+use the dedicated scheduled-task worker configuration. In Docker Compose deployments,
+make sure the background worker and beat scheduler from your selected compose files are running.
+
+## Supported operator configuration
+
+These are the knobs operators commonly need. Do not set sandbox proxy internals, sandbox image overrides,
+debugging toggles, or push-key internals unless Onyx support or the Helm chart explicitly instructs you to.
+
+| Variable | Purpose | Default |
+| --- | --- | --- |
+| `ENABLE_CRAFT` | Enables Craft APIs and UI. | `false` |
+| `SANDBOX_BACKEND` | Sandbox backend: `docker` or `kubernetes`. | `kubernetes` |
+| `SANDBOX_API_SERVER_URL` | Public or sandbox-reachable Onyx base URL. Required for Craft. | empty |
+| `SANDBOX_IDLE_TIMEOUT_SECONDS` | Idle time before a sandbox sleeps or is cleaned up. | `3600` |
+| `SANDBOX_MAX_CONCURRENT_PER_ORG` | Concurrent sandbox limit per organization. | `10` |
+| `SANDBOX_DOCKER_MEMORY_LIMIT` | Docker sandbox memory limit. | `2g` |
+| `SANDBOX_DOCKER_CPU_LIMIT` | Docker sandbox CPU limit. | `1.0` |
+| `SANDBOX_TURN_TIMEOUT_SECONDS` | Wall-clock budget for one Craft turn. | `900` |
+
+See [Configure Onyx](/deployment/configuration/configuration)
+for upload limits and additional supported Craft configuration.
+
+<Note>
+  Normal deployments should not set a separate sandbox image variable. Docker Compose Craft follows `IMAGE_TAG`,
+  and Helm Craft follows the chart/app version.
+  Override only when intentionally testing a custom sandbox image with support guidance.
+</Note>
+
+## Related pages
+
+- [Craft overview](/overview/core_features/craft)
+- [Managing Craft](/admins/managing_features/craft)
+- [Craft architecture](/security/architecture/craft)

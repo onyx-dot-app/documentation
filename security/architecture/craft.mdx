@@ -1,0 +1,117 @@
+---
+title: "Craft Architecture"
+description: "How Craft sandboxes, proxying, search, apps, approvals, and generated web apps work"
+icon: "hammer"
+---
+
+Craft extends Onyx with a sandboxed agent runtime for building artifacts. The browser stays connected to the Onyx API,
+while generated code and tool execution run in a per-user sandbox that has no direct path to your data or the internet.
+
+<img className="rounded-image" src="/assets/security/OnyxCraftArchitecture.png" alt="Onyx Craft Architecture"/>
+
+## Runtime flow
+
+1. **The user sends work to Craft.** The browser sends a prompt, files,
+   and any selected skills and apps to the Onyx API.
+2. **Onyx prepares the sandbox.** The Craft session manager creates or reuses the user's sandbox and sets up a
+   per-session workspace.
+3. **The runner drives the agent.** The session runner drives the agent in the sandbox and streams events back to the
+   browser.
+4. **The sandbox writes outputs.** Generated files, web apps, and artifacts are written into the session workspace.
+5. **Onyx previews and downloads outputs.** The Output panel previews web apps through the Onyx webapp proxy and
+   downloads artifacts through the API.
+
+## Trust boundaries
+
+| Boundary | What it protects |
+| --- | --- |
+| Browser → Onyx API | Authentication, session ownership, permissions, and artifact download authorization. |
+| Onyx API → sandbox | Sandbox lifecycle, workspace setup, skill sync, and agent execution control. |
+| Sandbox → Onyx APIs | Scoped Craft API access for search, files, event streaming, and state persistence. |
+| Sandbox → external apps | Outbound traffic, credential injection, URL matching, and approval enforcement. |
+| Webapp proxy → viewer | Authentication and sharing checks for web app previews and organization sharing. |
+| File store and Postgres | Session metadata, run state, snapshots, attachments, User Library files, and artifacts. |
+
+## Sandbox model
+
+Craft keeps one sandbox per user and creates a separate workspace for each session. The sandbox holds the agent runtime,
+generated code, attachments, outputs, managed skills, and the user's mounted User Library files.
+
+Self-hosted deployments use one of two backends:
+
+- **`kubernetes`**: one sandbox pod per user, with a sandbox namespace, RBAC, proxy, and snapshot support.
+- **`docker`**: one sandbox container per user, managed through the host Docker socket.
+
+The Kubernetes backend uses RBAC and network policies to narrow sandbox management and push paths.
+The Docker backend depends on host Docker socket access, which is root-equivalent to the host.
+
+## Search and knowledge access
+
+Craft searches indexed Onyx knowledge through Onyx APIs. The API enforces the signed-in user's document permissions,
+so search returns only documents that user can already access. The sandbox uses scoped Craft credentials for this path,
+and the sandbox proxy injects the real credential into the outbound request rather than storing it in the workspace.
+
+## External apps and credentials
+
+Craft apps route through the sandbox proxy. The sandbox sends placeholder credential values;
+the proxy matches the outbound request to a configured app, checks the action policy, injects the real credential,
+and forwards the request only if policy allows.
+
+This keeps raw external credentials out of the sandbox workspace.
+The credentials still live in Onyx-controlled storage and proxy memory,
+so rotate credentials and revoke user app connections through the app management flow when access changes.
+
+## Approval enforcement
+
+For app actions with an **Ask** policy:
+
+1. The proxy parks the outbound request before credentials are injected.
+2. Onyx records an approval request tied to the session and action.
+3. The browser receives an approval card in the Craft stream.
+4. The user approves once, approves for the session, or rejects.
+5. The proxy either forwards the request with credentials or fails it closed.
+
+If the user doesn't answer before the approval window expires, the request fails closed.
+
+## Network isolation
+
+Inside each sandbox, a firewall drops all outbound traffic except to the sandbox proxy.
+The proxy is the **exclusive** egress path, not just an interceptor sitting alongside open internet access.
+
+- **Kubernetes** sandboxes run as dedicated pods. Use the chart's sandbox namespace, RBAC, proxy, and network policies
+  as the baseline rather than exposing core Onyx services to sandbox pods.
+- **Docker** sandboxes join the dedicated `onyx_craft_sandbox` bridge network instead of the default Compose network,
+  so they can't reach Compose services by name.
+  Operators should also block cloud instance metadata access from sandbox traffic.
+
+## Webapp proxy and sharing
+
+Generated web apps are previewed and shared through Onyx, never exposed directly from the sandbox.
+The webapp proxy strips viewer authentication on the way in (cookies, `authorization`, CSRF, and identity headers)
+and strips `set-cookie` from responses on the way out, before forwarding traffic.
+
+Current sharing scopes are **Private** and **Organization**. Sharing controls access to the generated web app only,
+not the Craft chat or the rest of the session files.
+
+## State, logs, and retention
+
+Craft stores metadata in Postgres, active turn state in Redis, and larger session state, snapshots, attachments,
+User Library files, and generated artifacts in the configured file store.
+
+Snapshots are internal sleep-and-restore archives, not user-facing version history.
+
+<Warning>
+  Treat Craft logs as potentially sensitive. Depending on logging configuration, prompts, file names, tool results,
+  URLs, and approval metadata can appear in operational traces.
+</Warning>
+
+## Residual risks
+
+- Generated code can behave unexpectedly. Keep sandbox network access narrow and don't upload secrets as files.
+- Docker socket access is high-risk; use the Docker backend only on hosts you trust and control.
+- App approvals reduce risk but still depend on users understanding the action they approve.
+- Organization web app sharing can expose generated app content to other users in the workspace.
+- LLM providers receive the prompts and context Craft sends, per the model/provider configuration in Onyx.
+
+See [Deploying Craft](/deployment/local/craft) and [Managing Craft](/admins/managing_features/craft)
+for setup and governance.

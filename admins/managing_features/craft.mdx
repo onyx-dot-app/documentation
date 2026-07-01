@@ -1,9 +1,108 @@
 ---
-title: "Craft (Beta)"
-description: "Managing Craft"
+title: "Managing Craft"
+description: "Enable and govern Onyx Craft for your organization"
 icon: "hammer"
 ---
 
-<Note>
-  This page is a work in progress.
-</Note>
+Craft lets users turn a prompt into finished work (web apps, documents, reports, slides, automations)
+with a free-form AI agent in an isolated sandbox. Because it reads company data, acts in connected apps,
+and runs shared skills on everyone's behalf, you govern the surface area: who can use it, which models, skills,
+and apps they reach, and which actions need approval.
+
+For self-hosted setup, see the [Craft deployment guide](/deployment/local/craft).
+
+## Prerequisites
+
+Craft requires:
+
+- Craft enabled for the workspace (`ENABLE_CRAFT=true` on self-hosted deployments).
+- A full Onyx deployment (Craft is not compatible with Onyx Lite or with the vector database disabled).
+- A supported model provider available to Craft users: **Anthropic, OpenAI, or OpenRouter**.
+- Admin access to manage skills, apps, and action policies.
+
+<Warning>
+  Craft runs generated code in isolated sandboxes. If you self-host, review the [deployment](/deployment/local/craft)
+  and [security](/security/architecture/craft) guidance before enabling Craft broadly.
+</Warning>
+
+## What you control
+
+| Area | What you decide |
+| --- | --- |
+| User access | Which users or groups can reach the models and features Craft needs. |
+| Model providers | Which supported providers and models are available. |
+| Skills | Which built-in skills are active, plus organization and group-shared custom skills. |
+| Apps | Which apps exist, how credentials are supplied, and how users connect them. |
+| Approvals | Whether each app action is auto-approved, asks the user, or is denied. |
+
+## Roll out Craft
+
+<Steps>
+  <Step title="Confirm prerequisites">
+    Check the [requirements](#prerequisites) above. On self-hosted, confirm the sandbox backend, proxy, file storage,
+    and scheduled-task workers are ready.
+  </Step>
+
+  <Step title="Pilot with a few users">
+    Start with users who have concrete artifact workflows: recurring reports, dashboards, presentations,
+    or app-backed summaries.
+  </Step>
+
+  <Step title="Publish only the skills they need">
+    Enable built-in skills deliberately and review custom bundles before sharing.
+    See [Managing Skills](/admins/managing_features/craft_skills).
+  </Step>
+
+  <Step title="Enable apps with conservative policies">
+    Start sensitive actions at **Ask** or **Deny**, and reserve **Auto-approve** for low-risk reads.
+    See [Managing Apps](/admins/managing_features/craft_apps).
+  </Step>
+
+  <Step title="Review, then expand">
+    Confirm users get the artifacts they need, approvals read clearly,
+    and scheduled tasks complete without avoidable failures.
+  </Step>
+</Steps>
+
+## Govern over time
+
+Governance is ongoing, not a one-time rollout. On a regular cadence:
+
+- **Skills**: re-read published org skills and retire stale ones. Personal skills are user-owned and sit outside
+  org review. See [Managing Skills](/admins/managing_features/craft_skills).
+- **Apps**: revisit action policies, pull back anything that crept to Auto-approve, and rotate credentials. See
+  [Managing Apps](/admins/managing_features/craft_apps).
+- **Scheduled tasks**: these run on the creator's permissions and pre-approved apps, so confirm
+  [pre-approvals](/admins/managing_features/craft_apps#scheduled-tasks-and-pre-approval) still match narrow,
+  safe workflows.
+
+## Data access
+
+Craft acts as the signed-in user. When it searches company knowledge, Onyx's access controls apply:
+Craft only returns documents that user is already permitted to see.
+
+Craft's working files are separate from your indexed connector data:
+
+- **Session attachments** belong to a single Craft session.
+- **User Library files** are reusable files owned by a user.
+- **Generated artifacts** belong to the session that produced them.
+
+## Where to go next
+
+<CardGroup cols={2}>
+  <Card title="Managing Skills" icon="wand-magic-sparkles" href="/admins/managing_features/craft_skills">
+    Publish, govern, and audit built-in, organization, and personal skills.
+  </Card>
+
+  <Card title="Managing Apps" icon="plug" href="/admins/managing_features/craft_apps">
+    Connect apps, control credentials, and set action policies.
+  </Card>
+
+  <Card title="Deployment" icon="server" href="/deployment/local/craft">
+    Configure Kubernetes or Docker Compose sandboxes for self-hosted Craft.
+  </Card>
+
+  <Card title="Architecture" icon="diagram-project" href="/security/architecture/craft">
+    Review the sandbox, proxy, search, credential, and sharing boundaries.
+  </Card>
+</CardGroup>
