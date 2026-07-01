@@ -152,6 +152,7 @@
                   "admins/ai_models/anthropic",
                   "admins/ai_models/ollama",
                   "admins/ai_models/lm_studio",
+                  "admins/ai_models/atomic_chat",
                   "admins/ai_models/azure_openai",
                   "admins/ai_models/bedrock",
                   "admins/ai_models/google_ai",
