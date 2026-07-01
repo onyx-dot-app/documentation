@@ -56,8 +56,15 @@ log format.
 
 Emission is **fail-safe**: it never interrupts a user request or a connector
 run, even if context gathering or logging fails. High-volume event classes are
-de-duplicated within a short window, and an audit event is never silently
-dropped due to infrastructure trouble.
+de-duplicated within a short (10-minute) window using Redis. De-duplication is
+**fail-open** — if Redis is unavailable, the dedup check is skipped and the
+event is still emitted, so an audit event is never silently dropped due to
+infrastructure trouble (you may just see a duplicate).
+
+The subsystem is **always on** — there is no enable/disable flag, output-format,
+or destination setting, and the de-duplication window is fixed. The only related
+knob is `LOG_FORMAT` (below), which shapes the *surrounding* log records; the
+audit JSON body itself is identical either way.
 
 <Tip>
   Run Onyx with `LOG_FORMAT=json` so that *all* log records — not just audit
@@ -213,7 +220,32 @@ and are omitted from the tables below.
 | `cc_pair.create` / `.update` / `.delete` | A connector is linked to a credential, its status changes, or it is unlinked | `cc_pair` | connector-credential-pair id | `connector_id`, `credential_id`; `status` (on update) |
 | `api_key.create` / `.regenerate` / `.delete` | An API key is created, regenerated, or revoked | `api_key` | API-key id | |
 | `credential.create` / `.update` / `.delete` | A stored credential is created, updated, or deleted | `credential` | credential id | `source` (on create) |
-| `credential.access` | A stored credential is decrypted for use | — | — | Uses a legacy field set — see [Notes](#notes) |
+| `credential.access` | A stored credential is decrypted for use | — | — | Emitted on a **different schema** — see [Credential access](#credential-access) below |
+
+### Credential access
+
+`onyx.audit.credential_access`
+
+Credential-decrypt events predate the generalized schema and are emitted on a
+**flat, legacy field set** for backward compatibility. They share the
+`onyx.audit` logger tree and the same fail-safe / fail-open behavior, but do
+**not** carry the generalized fields — there is no `action`, `ocsf_class`,
+`outcome`, `resource_type`/`resource_id`, `extra`, or nested `actor` object, and
+the client IP is `client_ip` (not `source_ip`). Parse this stream separately;
+detection rules written against the generalized schema will not match it.
+
+| Field | Type | Description |
+|---|---|---|
+| `ts` | number | Event time, epoch seconds. |
+| `tenant_id` | string \| null | Tenant the decrypt occurred in. |
+| `credential_type` | string | Coarse category, e.g. `llm_provider` or `connector`. |
+| `provider` | string \| null | Provider / source name if known (e.g. `openai`, `google_drive`). |
+| `row_id` | number \| null | DB row id of the credential / LLM provider. |
+| `user_id` | string \| null | Acting user id, if available (may be null for background jobs). |
+| `auth_type` | string \| null | How the actor authenticated, if known. |
+| `request_id` | string \| null | Correlates with the rest of that request's logs. |
+| `endpoint` | string \| null | Route that produced the event. |
+| `client_ip` | string \| null | Client IP (from `X-Forwarded-For`). |
 
 <Tip>
   The taxonomy is **append-only**: new `action` values may be added in future
@@ -225,9 +257,10 @@ and are omitted from the tables below.
 
 - **Secrets are never logged.** Actor objects and `extra` context are scrubbed
   of credential values by design.
-- **Credential-access events** (`onyx.audit.credential_access`) use a slightly
-  different field set than the generalized schema for backward compatibility,
-  but share the same logger tree and fail-safe behavior.
+- **Credential-access events** (`onyx.audit.credential_access`) use a separate,
+  flat field set than the generalized schema for backward compatibility — see
+  [Credential access](#credential-access) for the full field list. They share
+  the same logger tree and fail-safe behavior.
 - For **Onyx Cloud** (multi-tenant) deployments, audit-log forwarding is handled
   differently since you don't control the log pipeline — [contact us](/security/contact_us)
   to discuss SIEM delivery options.
