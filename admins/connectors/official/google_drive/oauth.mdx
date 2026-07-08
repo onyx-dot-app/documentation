@@ -103,8 +103,9 @@ checkout the section [here](./service_account).
 
 First, navigate to the Admin Panel and select the Google Drive connector.
 
-Then, create a new credential and click **Authenticate with Google Drive**, then continue with the
-account you want to use to index Google Drive.
+Then, click **Create New**. Under **Option 1: OAuth app**, upload (or paste) the OAuth app JSON
+you downloaded in the final step above, then click **Authenticate with Google Drive** and continue
+with the account you want to use to index Google Drive.
 
 <img className="rounded-image" src="/assets/admins/connectors/google_drive/OAuthCredential.png" alt="Onyx Google Drive connector showing OAuth credential selection"/>
 {/* TODO: re-screenshot for the new credential-create flow */}
@@ -112,10 +113,10 @@ account you want to use to index Google Drive.
 Once complete, select the newly created credential, and click the **Continue** button to configure the connector!
 
 <Note>
-  The OAuth app JSON you downloaded in the final step is normally uploaded once as the instance
-  default and reused for every OAuth credential, so you can leave it empty here. To use a different
-  OAuth app for this specific connector, upload its JSON at the authenticate step instead of the
-  instance default.
+  The app JSON is stored on the credential it creates, so each OAuth credential carries its own
+  app. To add more connectors for the same account, select the existing credential from the list
+  instead of creating a new one. An instance can hold multiple Google Drive credentials, including
+  ones using different OAuth apps or different Google Workspaces.
 </Note>
 
 <Note>
