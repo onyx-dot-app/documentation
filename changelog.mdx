@@ -6,6 +6,138 @@ mode: "wide"
 rss: true
 ---
 
+<Update label="v4.3.0" description="July 6th, 2026" tags={["New Features", "Security", "Bug Fixes"]}>
+
+  ## v4.3.0
+
+  SIEM-exportable audit logging, TLS and mutual TLS across the entire data plane, conversation-aware search scoping,
+  hardened indexing for large files,
+  and two new providers — Tavily and Nebius Token Factory — both from a first-time community contributor.
+  Thank you to our contributors for helping make this release possible!
+
+  ## Key Improvements
+
+  ### Audit Logging
+
+  Onyx now emits a normalized, SIEM-exportable audit-event stream — Splunk, Sentinel, Elastic, Chronicle,
+  and AWS Security Lake can ingest it with no per-SIEM integration. Coverage spans authentication (login, logout,
+  register, password reset, verification), admin configuration (LLM providers, connectors, credentials, API keys),
+  access control (roles, user creation, group membership), and impersonation.
+  Events are OCSF-shaped and emitted fail-safe, so audit logging can never take down a request path.
+
+  ### TLS Across the Data Plane
+
+  Every backend connection can now be encrypted and authenticated. Postgres:
+  server certificate verification (`POSTGRES_SSLMODE` / `POSTGRES_SSLROOTCERT`)
+  and mutual TLS (`POSTGRES_SSLCERT` / `POSTGRES_SSLKEY`). Redis:
+  mutual TLS (`REDIS_SSL_CERTFILE` / `REDIS_SSL_KEYFILE`), covering the Celery workers too. OpenSearch:
+  opt-in server certificate verification (`OPENSEARCH_VERIFY_CERTS` / `OPENSEARCH_CA_CERTS`), mutual TLS,
+  and IAM (AWS SigV4) authentication. Redis Sentinel is also now supported for highly-available Redis.
+
+  ### Conversation-Aware Search Scoping
+
+  Internal search now decides, per call,
+  which connected sources to cover based on the agent's routing instructions and the current request.
+  Tell an agent "check Zendesk first, then Confluence" and the search walks those sources in order,
+  falling back to everything if needed. Scoped searches show it in the timeline:
+  "Searching Zendesk" instead of "Searching internal documents."
+
+  ### Hardened Indexing for Large Files
+
+  Large spreadsheets are now streamed row-by-row through a file-backed pipeline instead of being rendered into memory,
+  so an oversized workbook can no longer OOM an indexing worker. PDF text extraction runs in an isolated subprocess,
+  so a pathological PDF can't take the worker down with it.
+
+  ### New Providers: Tavily and Nebius Token Factory
+
+  [Tavily](https://tavily.com) joins the web-search providers as both a search and content-extraction provider.
+  [Nebius Token Factory](https://tokenfactory.nebius.com)
+  joins the built-in LLM providers with automatic model-catalog fetching.
+  Both contributed by first-time contributor [@siriusfreak](https://github.com/siriusfreak)!
+
+  ## Contributor Highlights
+
+  - [@siriusfreak](https://github.com/siriusfreak) added both the Tavily
+    and Nebius Token Factory providers in their first contributions!
+  - [@greymoth-jp](https://github.com/greymoth-jp) fixed Enter during IME
+    composition submitting list inputs — a long-standing annoyance for Japanese, Chinese, and Korean text entry!
+
+  ## Additional Improvements
+
+  ### Security and Hardening
+
+  - Connector read endpoints are restricted to curators and admins;
+    previously any authenticated user could read connector configs.
+  - Persona owner emails and internal MCP server URLs are hidden from
+    basic users.
+  - Curator group writes are scoped to the groups they actually curate.
+  - Optional strict CSP directives behind `WEB_STRICT_CSP_ENABLED`.
+  - Helm no longer defaults the model servers and Celery workers to
+    `privileged: true`.
+
+  ### Chat and Web
+
+  - Full-width chat mode: a per-browser toggle so messages use the whole
+    window instead of the fixed reading column.
+  - Chat and new-agent text bars save per-session drafts, so navigating
+    away no longer loses in-progress text.
+  - Code blocks highlight the full highlight.js language set, not just the
+    37 most common languages.
+  - Knowledge hierarchy items have copyable links, disambiguating entries
+    with identical titles.
+
+  ### Indexing and Connectors
+
+  - A failed prune no longer re-fires on the scheduler and floods the
+    cleanup queue.
+  - Repeated-error connector notifications reach every active admin
+    instead of a single system inbox.
+  - The admin stage-metrics view covers previously untimed pipeline
+    stages, exposing lock-wait and contention.
+  - Jira connectors without permission sync no longer require
+    permission-reading credential scopes.
+  - Notion hierarchies parent correctly when children index before their
+    parents; standalone databases are no longer orphaned.
+  - GitHub connector setup surfaces the actual validation error instead of
+    a generic failure.
+  - SCIM group-membership removals from Microsoft Entra ID now sync
+    correctly.
+
+  ### Deployment
+
+  - API-server workers, connection limit, and threadpool size are
+    configurable in Helm enabling concurrency headroom for clusters that lean on long-running agent features.
+  - Model-server torch threads are capped to the cgroup CPU quota,
+    eliminating CFS throttling on large hosts.
+  - New Celery `clear_revoked` control command wipes the fleet-wide
+    revoked-task set without restarts.
+
+  ### Notable Bug Fixes
+
+  - Chat retention (enterprise TTL) keys off the last message time, so
+    active old sessions are no longer auto-deleted.
+  - Fixed files accumulating in Code Interpreter sessions.
+  - Fixed identically-named MCP tools colliding.
+  - Fixed Confluence group sync not receiving scoped tokens.
+  - Fixed custom branding not applying to the browser tab title and
+    favicon on hard refresh.
+  - DOCX files are no longer duplicated as plaintext now that the frontend
+    renders DOCX natively.
+  - Fixed the agent claiming it lacks tools after web search when Open URL
+    is disabled.
+  - Fixed desktop app content rendering under the macOS title bar.
+  - License expiry banner dismissals persist server-side, surviving
+    cleared browser storage.
+  - Secondary LLM flows are bounded by a configurable timeout, so a
+    stalled provider can't hang workers.
+
+  ---
+
+  Our [GitHub Releases](https://github.com/onyx-dot-app/onyx/releases?utm_source=docs&utm_content=changelog)
+  page has the full list of changes and bug fixes for each release.
+
+</Update>
+
 <Update label="v4.2.0" description="June 26nd, 2026" tags={["New Features", "Security", "Bug Fixes"]}>
 
   ## v4.2.0
