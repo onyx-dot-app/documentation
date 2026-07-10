@@ -1,0 +1,71 @@
+---
+title: "SSO Providers"
+description: "Manage multiple SSO providers from the admin panel"
+icon: "users-gear"
+---
+
+Onyx supports configuring SSO providers directly from the admin panel. Google, OIDC,
+and SAML providers are stored as rows you can add, edit,
+and enable without touching environment variables or restarting Onyx. Users pick their provider on the login page,
+so one Onyx instance can serve teams on different identity providers.
+
+<Note>
+  Available starting in `v4.4.0`. Legacy environment-based configuration (`AUTH_TYPE=google_oauth`, `AUTH_TYPE=oidc`,
+  or `AUTH_TYPE=saml`) is migrated to an SSO provider entry automatically when you upgrade to `v4.4.0` or later,
+  and existing logins keep working. Keep the legacy configuration in place through the upgrade (the migration reads it),
+  then remove it after the provider appears in the admin panel.
+</Note>
+
+## Managing Providers
+
+Navigate to **Admin Panel** → **Organization** → **SSO Providers**.
+
+<img className="rounded-image" src="/assets/deployment/sso_providers_page.png" alt="SSO Providers admin page"/>
+
+<Steps>
+  <Step title="Add a Provider">
+    Click **Add Provider** and pick the provider type: **Google**, **OIDC**, or **SAML**.
+
+    Give the provider a **Name** (a lowercase slug used in the login URL, it cannot be changed later)
+    and a **Display Name** (the label users see on the sign-in button).
+
+    <img className="rounded-image" src="/assets/deployment/sso_providers_modal.png" alt="Add SSO Provider modal"/>
+  </Step>
+
+  <Step title="Fill in the Provider Configuration">
+    Each provider type asks for its own credentials:
+
+    - **Google**: Client ID and Client Secret from your Google Cloud console.
+    - **OIDC**: Client ID, Client Secret, and the OpenID configuration URL
+    (the `.well-known/openid-configuration` endpoint).
+    - **SAML**: IdP entity ID, IdP SSO URL, the IdP x509 certificate, and
+    the SP entity ID. The SP certificate, private key, and email attribute are optional depending on your IdP.
+
+    Optionally restrict the provider to specific **email domains**.
+    Users outside those domains cannot sign in through it.
+  </Step>
+
+  <Step title="Register the Callback with your Identity Provider">
+    After saving, the provider row shows its **Redirect URI** (OIDC and Google) or **ACS URL** (SAML).
+    Copy it into your identity provider's console as the allowed callback for the application.
+  </Step>
+
+  <Step title="Verify the Sign-In Option">
+    New providers are enabled on creation and appear as sign-in options on the login page.
+    Use the toggle on the provider row to disable or re-enable it later.
+  </Step>
+</Steps>
+
+## Plan Availability
+
+Configuring a single SSO provider is available on every plan.
+Enabling more than one provider at the same time requires the **Business** plan or above.
+
+## Notes
+
+- Secrets are write-only. After saving, credentials are shown masked and are
+  never returned in full by the API.
+- Provider **type** and **name** are fixed after creation. To change them,
+  add a new provider and disable the old one.
+- Providers are disabled rather than deleted, so accounts that signed in
+  through a provider survive a disable and re-enable.
