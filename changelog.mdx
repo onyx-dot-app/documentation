@@ -6,6 +6,122 @@ mode: "wide"
 rss: true
 ---
 
+<Update label="v4.2.0" description="June 26nd, 2026" tags={["New Features", "Security", "Bug Fixes"]}>
+
+  ## v4.2.0
+
+  Chat runs are now durable — close the tab mid-answer and reconnect to the live stream — agent sharing gets per-share
+  permissions and ownership transfer, security settings move into a runtime-configurable admin page,
+  and a large indexing-memory hardening effort lands.
+  Thank you to our contributors for helping make this release possible!
+
+  ## [Update] Defaults that Changed
+
+  - **The API docs and OpenAPI schema are no longer publicly served.** Set
+    `ENABLE_PUBLIC_DOCS=true` to restore the previous behavior.
+  - **`USER_AUTH_SECRET` is now required on non-dev deployments** instead
+    of silently falling back to a default.
+  - **Default MinIO/S3 object-storage credentials have been hardened** —
+    set explicit credentials if you relied on the previous defaults.
+
+  ## Key Improvements
+
+  ### Durable Chat Runs
+
+  A chat or Deep Research run no longer lives and dies with your browser connection.
+  Runs now execute to completion on the server regardless of client disconnects,
+  and the stream records itself as it goes — reopen the chat from any tab and it replays what you missed,
+  then continues live until the answer finishes.
+  Works on both Redis and [Lite Mode](https://docs.onyx.app/deployment/getting_started/resourcing#onyx-lite)'s Postgres
+  cache.
+
+  ### Granular Agent Sharing
+
+  Agent sharing has been rebuilt around per-share permissions. Agents now have explicit owners,
+  ownership can be transferred, shares carry their own permission level,
+  and editors are guarded from attaching knowledge they can't access. The share dialog was redesigned to match.
+
+  ### Runtime Security Settings
+
+  Security controls are moving out of environment variables and into a new admin Security page,
+  backed by runtime-configurable settings. The first controls to land: **Sync Session Expiry with Identity Provider**,
+  which ties session lifetime to your IdP, and **Full User Directory Visibility**,
+  which controls whether non-admins can see the user directory — previously only configurable via environment variable.
+
+  ### Flexible Chat Retention
+
+  Chat history retention now supports a 60-day preset and a fully custom duration in days,
+  so admins can match any org retention policy instead of choosing from fixed presets.
+
+  ## Additional Improvements
+
+  ### Security and Hardening
+
+  - Web connector URL validation applied across all fetch paths.
+  - DOCX preview output is sanitized in the file preview modal.
+
+  ### Indexing Memory and Reliability
+
+  - PDF text extraction switched to pypdfium2 (with pypdf fallback),
+    eliminating heartbeat-timeout deaths on large PDFs.
+  - Google Doc parsing is size-bounded, fixing OOM crash-loops on tenants
+    with very large docs.
+  - Google Drive streams documents in sub-batches to bound connector
+    memory, and indexing worker memory is capped.
+
+  ### Connectors
+
+  - New Braintrust connector.
+  - Google Drive follows shortcuts during indexing.
+  - SharePoint supports targeted reindex of individual failed documents.
+  - Slack: channel exclude list with optional regex, and permission sync
+    scoped to configured channel filters.
+  - Gong: configurable API base URL for non-US data residency.
+  - Fireflies re-scans an overlap window so late transcripts aren't
+    dropped.
+  - Salesforce retries connections closed due to inactivity.
+  - Confluence attachment links anchor to the web UI instead of a raw
+    download path.
+  - Notion traversal is iterative, preventing RecursionError on deeply
+    nested pages.
+
+  ### Chat and Web
+
+  - The browser tab shows the active conversation name.
+  - Context-window overflows on long threads surface a clear error
+    instead of a generic failure, with a token safety margin to prevent them.
+  - Pre-tool narration and tool calls render in their correct places when
+    emitted in the same LLM cycle.
+  - The file "Processing…" indicator stays until uploaded files finish
+    indexing.
+  - Chats inside a Project search only that Project's files.
+  - Deleted files referenced in chat history no longer break the session.
+  - Voice: markdown is stripped before TTS on the backend, and Azure STT
+    failures are properly logged.
+
+  ### Admin and Operations
+
+  - Custom CA certificates can be mounted on all outbound-TLS pods in Helm.
+  - API startup migrations can be disabled in Helm for coordinated deploys.
+  - Background tabs stop polling the API forever; several admin pages
+    poll only while relevant work is active.
+
+  ### Notable Bug Fixes
+
+  - Fixed unreachable Ollama and OpenAI-compatible model servers returning
+    502 instead of a clear 400.
+  - Fixed vision support detection for Bifrost, LiteLLM Proxy, and other
+    dynamic providers, with a clearer error on oversized images.
+  - Fixed Claude Fable 5 / Mythos 5 routing through adaptive thinking.
+  - Fixed the model selector being clickable when no models exist.
+
+  ---
+
+  Our [GitHub Releases](https://github.com/onyx-dot-app/onyx/releases?utm_source=docs&utm_content=changelog)
+  page has the full list of changes and bug fixes for each release.
+
+</Update>
+
 <Update label="v4.1.1" description="June 12th, 2026" tags={["Security", "Deployment Changes", "Bug Fixes"]}>
 
   ## v4.1.1
