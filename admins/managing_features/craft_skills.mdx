@@ -8,8 +8,8 @@ Skills package reusable instructions and supporting files that teach Craft how t
 Open **Craft → Skills** to review, upload, share, and manage Skills.
 
 <Note>
-  Curators can also upload Skills and manage Skills they own or can edit.
-  Admins can inspect and manage all custom Skills, including private personal Skills.
+  Curators can also upload Skills and manage Skills they own or can edit. Admins
+  can inspect and manage all custom Skills, including private personal Skills.
 </Note>
 
 ## Understand the Skills library
@@ -35,17 +35,21 @@ Configure the missing dependency rather than uploading a custom Skill with the s
 
 ## Prepare a custom Skill
 
-A custom Skill is a ZIP archive with `SKILL.md` at its root. The ZIP filename becomes the permanent slug,
-so choose a stable lowercase, hyphenated filename.
+Upload `SKILL.md` directly when the Skill does not need supporting files.
+For a Skill with scripts, examples, or other supporting files, create a folder with `SKILL.md` at its top level.
+Drag the folder into Onyx, or upload it as a ZIP.
 
 <Info>
-  Onyx removes `.zip` from the filename and uses the remaining text as the Skill slug. Skill slugs must be unique.
-  If an existing Skill already uses that slug, the upload fails. Rename the ZIP to create a separate Skill,
-  or replace the files on the existing Skill.
+  For a standalone `SKILL.md`, the frontmatter `name` becomes the Skill slug.
+  For a folder, the folder name becomes the slug. For a ZIP, the filename
+  without `.zip` becomes the slug. Slugs must start with a lowercase letter,
+  contain only lowercase letters, numbers, and hyphens, and be no more than 64
+  characters. They must also be unique. If an existing Skill already uses the
+  slug, replace that Skill's files or change the slug source before uploading.
 </Info>
 
 ```text
-weekly-customer-update.zip
+weekly-customer-update/
 ├── SKILL.md
 ├── examples/
 │   └── finished-update.md
@@ -55,12 +59,16 @@ weekly-customer-update.zip
     └── validate.py
 ```
 
+For a ZIP upload, put `SKILL.md` at the archive root or directly inside one enclosing folder.
+When you use an enclosing folder, keep every Skill file inside it.
+Upload only one Skill at a time.
+
 `SKILL.md` must begin with YAML frontmatter containing a non-empty name and description.
 The description should state when Craft should choose the Skill.
 
 ```md
 ---
-name: Weekly customer update
+name: weekly-customer-update
 description: Create a weekly customer update from account activity and meeting notes.
 ---
 
@@ -75,18 +83,19 @@ description: Create a weekly customer update from account activity and meeting n
 
 ### Bundle requirements
 
-| Requirement         | Default                                                                                                            |
-| ------------------- | ------------------------------------------------------------------------------------------------------------------ |
-| Slug                | ZIP filename without `.zip`; lowercase letters, numbers, and hyphens; starts with a letter; maximum 64 characters. |
-| Root instructions   | One UTF-8 `SKILL.md` file with valid YAML frontmatter.                                                             |
-| Maximum file size   | 25 MB per file in the extracted bundle.                                                                            |
-| Maximum bundle size | 100 MB total.                                                                                                      |
+| Requirement         | Default                                                                                                                                     |
+| ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| Slug                | Standalone frontmatter `name`, folder name, or ZIP filename without `.zip`; lowercase letters, numbers, and hyphens; maximum 64 characters. |
+| Root instructions   | One UTF-8 `SKILL.md` with valid YAML frontmatter at the Skill root.                                                                         |
+| Skills per upload   | One.                                                                                                                                        |
+| Maximum file size   | 25 MB per file in the extracted bundle.                                                                                                     |
+| Maximum bundle size | 100 MB total.                                                                                                                               |
 
 Self-hosted operators can change the size limits with `SKILL_BUNDLE_PER_FILE_MAX_BYTES` and
 `SKILL_BUNDLE_TOTAL_MAX_BYTES`.
 
-The upload is rejected when the archive has unsafe paths, symbolic links, files ending in `.template`,
-missing or invalid frontmatter, an invalid filename, a duplicate Skill slug,
+The upload is rejected when the bundle has unsafe paths, symbolic links, files ending in `.template`,
+missing or invalid frontmatter, an invalid slug source, a duplicate Skill slug,
 or a slug reserved by a built-in Skill or App.
 
 ## Review a Skill before publishing
@@ -104,28 +113,32 @@ Craft can follow scripts and commands included in the archive.
 | **Output handling**        | The Skill names the expected format and writes finished deliverables to a clear location such as `outputs/`.       |
 
 <Warning>
-  Never publish a bundle containing passwords, API keys, OAuth tokens, private certificates, or production credentials.
-  Skill files are copied into the sandboxes of users who can access the Skill.
-  Use [Apps](/admins/managing_features/craft_apps) for authenticated external access.
+  Never publish a bundle containing passwords, API keys, OAuth tokens, private
+  certificates, or production credentials. Skill files are copied into the
+  sandboxes of users who can access the Skill. Use
+  [Apps](/admins/managing_features/craft_apps) for authenticated external
+  access.
 </Warning>
 
 ## Publish a Skill
 
 <Steps>
   <Step title="Upload the bundle">
-    Open **Craft → Skills**, select **Create skill**, choose the ZIP archive, and upload it.
+    Open **Craft → Skills** and select **Create skill**. Click the upload area to select `SKILL.md` or a ZIP,
+    or drag `SKILL.md`, a Skill folder, or a ZIP into it. Then select **Create**.
     The new Skill starts private and is owned by the uploader.
   </Step>
 
-  <Step title="Review the rendered instructions">
-    The editor shows the Skill's name, description, and `SKILL.md` instructions.
-    Switch between raw Markdown and preview to catch formatting or content issues.
-  </Step>
+<Step title="Review the rendered instructions">
+  The editor shows the Skill's name, description, and `SKILL.md` instructions.
+  Switch between raw Markdown and preview to catch formatting or content issues.
+</Step>
 
-  <Step title="Choose who can use it">
-    Select **Edit sharing** and grant Viewer access to specific users, groups, or the organization.
-    Use Editor access only for people responsible for maintaining it.
-  </Step>
+<Step title="Choose who can use it">
+  Select **Edit sharing** and grant Viewer access to specific users, groups, or
+  the organization. Use Editor access only for people responsible for
+  maintaining it.
+</Step>
 
   <Step title="Test with the intended audience">
     Start a Craft session as a user in the target audience, select the Skill, and test representative inputs,
@@ -146,22 +159,23 @@ and delete it. Only the owner can transfer ownership;
 an Admin can transfer ownership after the existing owner becomes inactive or is otherwise vacant.
 
 <Tip>
-  Prefer organization-wide **Viewer** access with a small maintainer group as **Editors**.
-  This keeps the Skill broadly usable without making its behavior broadly editable.
+  Prefer organization-wide **Viewer** access with a small maintainer group as
+  **Editors**. This keeps the Skill broadly usable without making its behavior
+  broadly editable.
 </Tip>
 
 ## Maintain a Skill
 
 Open a custom Skill to manage its lifecycle:
 
-| Action                 | Effect                                                                                                          |
-| ---------------------- | --------------------------------------------------------------------------------------------------------------- |
-| **Edit details**       | Updates the name, description, or Markdown instructions and rewrites `SKILL.md` in the stored bundle.           |
-| **Replace files**      | Replaces the complete ZIP. The slug stays the same; metadata and instructions are read from the new `SKILL.md`. |
-| **Disable**            | Prevents Craft from using the Skill without deleting its configuration or sharing.                              |
-| **Edit sharing**       | Changes who can view or maintain the Skill.                                                                     |
-| **Transfer ownership** | Assigns responsibility to another active standard user.                                                         |
-| **Delete**             | Permanently removes the Skill and its stored bundle.                                                            |
+| Action                 | Effect                                                                                                                             |
+| ---------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
+| **Edit details**       | Updates the name, description, or Markdown instructions and rewrites `SKILL.md` in the stored bundle.                              |
+| **Replace files**      | Replaces the complete bundle from `SKILL.md`, a ZIP, or a folder. The slug stays the same; metadata comes from the new `SKILL.md`. |
+| **Disable**            | Prevents Craft from using the Skill without deleting its configuration or sharing.                                                 |
+| **Edit sharing**       | Changes who can view or maintain the Skill.                                                                                        |
+| **Transfer ownership** | Assigns responsibility to another active standard user.                                                                            |
+| **Delete**             | Permanently removes the Skill and its stored bundle.                                                                               |
 
 Changes are synchronized to affected running sandboxes.
 A turn already in progress may have loaded the previous instructions,
@@ -177,27 +191,32 @@ Do not transfer ownership to bots, service accounts, limited accounts, or inacti
 ## Troubleshooting
 
 <AccordionGroup>
-  <Accordion title="A ZIP will not upload">
-    Confirm that `SKILL.md` is at the archive root, uses UTF-8,
-    and begins with valid YAML containing non-empty `name` and `description` fields.
-    Check the filename and bundle limits, and remove symbolic links or unsafe archive paths.
+  <Accordion title="A Skill bundle will not upload">
+    Confirm that the upload contains one Skill. `SKILL.md` must be at the top level of a folder. In a ZIP,
+    place it at the archive root or directly inside one enclosing folder.
+    Check that it uses UTF-8 and begins with valid YAML containing non-empty `name` and `description` fields.
+    For a standalone `SKILL.md`, make sure `name` is a valid Skill slug. Otherwise, check the folder or ZIP name.
+    Check the bundle limits, and remove symbolic links or unsafe paths.
   </Accordion>
 
-  <Accordion title="A built-in Skill is unavailable">
-    Open its preview to read the unavailable reason. Configure Image Generation for the image Skill,
-    or ask the deployment operator to verify the browser runtime for the Browser Skill.
-    Built-in Skills cannot be replaced or enabled from the Skills editor.
-  </Accordion>
+<Accordion title="A built-in Skill is unavailable">
+  Open its preview to read the unavailable reason. Configure Image Generation
+  for the image Skill, or ask the deployment operator to verify the browser
+  runtime for the Browser Skill. Built-in Skills cannot be replaced or enabled
+  from the Skills editor.
+</Accordion>
 
-  <Accordion title="Users cannot find a shared Skill">
-    Confirm that the Skill is enabled and that the user or one of their groups has Viewer or Editor access.
-    If it was shared during an active session, start a new turn or session and check the picker again.
-  </Accordion>
+<Accordion title="Users cannot find a shared Skill">
+  Confirm that the Skill is enabled and that the user or one of their groups has
+  Viewer or Editor access. If it was shared during an active session, start a
+  new turn or session and check the picker again.
+</Accordion>
 
-  <Accordion title="Craft does not choose the Skill automatically">
-    Rewrite its description to name the covered tasks and outputs more concretely. Test again,
-    and have users select it explicitly when the workflow must be followed.
-  </Accordion>
+<Accordion title="Craft does not choose the Skill automatically">
+  Rewrite its description to name the covered tasks and outputs more concretely.
+  Test again, and have users select it explicitly when the workflow must be
+  followed.
+</Accordion>
 
   <Accordion title="A former employee still owns a Skill">
     After the account is inactive, an Admin can open the Skill, select **Edit sharing**,
