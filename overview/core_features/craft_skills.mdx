@@ -1,0 +1,156 @@
+---
+title: "Skills"
+description: "Give Craft reusable instructions, examples, and files for repeatable work"
+icon: "wand-magic-sparkles"
+---
+
+Skills teach Craft **how to do a kind of work**. A skill can provide a workflow, quality standards, examples, templates,
+scripts, and other supporting files that Craft can reuse across sessions.
+
+For example, a slide skill can tell Craft how to choose layouts, apply a template, validate the finished deck,
+and save the presentation in the right format. You provide the goal and source material; the skill provides the method.
+
+<Note>
+  Skills do not connect external accounts or hold credentials. To let Craft read from or act in tools like Slack, Gmail,
+  or GitHub, connect an [App](/overview/core_features/craft_apps).
+</Note>
+
+<img className="rounded-image" src="/assets/overview/core_features/craft_skills.png" alt="The Craft Skills page showing built-in skills and controls for browsing and creating skills"/>
+
+## How Craft uses skills
+
+Craft can choose an available skill automatically when your request matches its description.
+You can also select one explicitly when you want Craft to follow a particular workflow.
+
+<Steps>
+  <Step title="Choose a skill">
+    In a Craft session, select **+**, then **Skills**, and choose a skill.
+    You can also type **/** followed by the skill name. The selected skill appears as a chip above the input.
+  </Step>
+
+  <Step title="Describe the result">
+    Tell Craft what to produce and provide the audience, source material, and requirements that matter.
+    Selecting a skill does not replace a clear prompt.
+  </Step>
+
+  <Step title="Review and refine">
+    Craft reads the skill instructions before doing covered work. Review the result,
+    then ask for changes in plain language.
+  </Step>
+</Steps>
+
+| Goal                            | How to use a Skill                                                                                                                         |
+| ------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
+| **Build a presentation**        | Select the `pptx` Skill, attach a company deck as a template, and ask Craft to build a presentation from your source material.             |
+| **Search company knowledge**    | Ask a company-specific question and let the `company-search` Skill retrieve information you already have permission to access.             |
+| **Navigate a website**          | Select the Browser Skill and ask Craft to open a site, follow links, interact with pages, or take screenshots.                             |
+| **Generate a visual**           | Select the image generation Skill and describe the subject, composition, style, aspect ratio, and where the visual will be used.           |
+| **Standardize repeatable work** | Use a custom Skill to capture your team's process for reports, briefs, reviews, or another workflow you want Craft to repeat consistently. |
+
+## Browse and inspect skills
+
+Open **Skills** from the Craft sidebar to search everything available to you.
+Select a skill card to preview its instructions before using it.
+
+| Label           | What it means                                                                                |
+| --------------- | -------------------------------------------------------------------------------------------- |
+| **Built-in**    | Maintained by Onyx. Availability can depend on your deployment and configured providers.     |
+| **Custom**      | Created in your organization and shared with you, your group, or everyone.                   |
+| **Personal**    | Created and owned by you. It starts private, but you can share it if your permissions allow. |
+| **Unavailable** | Visible for reference, but Craft cannot use it until its dependency is configured.           |
+
+Built-in skills currently cover presentations, company search, image generation, and website navigation.
+The exact list you see depends on what your organization has enabled.
+
+<Tip>
+  A skill's description tells Craft when to use it. If Craft repeatedly misses a custom skill,
+  make the description concrete about the tasks it covers, or select the skill explicitly in your prompt.
+</Tip>
+
+## Create a personal skill
+
+Create a personal skill when you have instructions or reference files you want to reuse across sessions.
+A skill is a ZIP bundle with a `SKILL.md` file at its root.
+
+```text
+weekly-customer-update.zip
+├── SKILL.md
+├── examples/
+│   └── finished-update.md
+└── templates/
+    └── update-template.md
+```
+
+At minimum, `SKILL.md` needs a name and description in YAML frontmatter, followed by the instructions Craft should use:
+
+```md
+---
+name: Weekly customer update
+description: Create a concise weekly customer update from meeting notes and account activity.
+---
+
+# Weekly customer update
+
+1. Summarize material changes since the previous update.
+2. Separate customer decisions, open risks, and next steps.
+3. Name an owner and due date for every next step.
+4. Follow the format in `templates/update-template.md`.
+```
+
+<Steps>
+  <Step title="Prepare the bundle">
+    Use a lowercase, hyphenated ZIP filename such as `weekly-customer-update.zip`.
+    Put `SKILL.md` at the root of the ZIP and add any examples, templates, or helper files it needs.
+  </Step>
+
+  <Step title="Upload it">
+    Open **Skills**, select **Create skill**, choose the ZIP, and select **Create**.
+    Your new skill is private by default.
+  </Step>
+
+  <Step title="Review the instructions">
+    Open the skill to edit its name, description, or instructions.
+    You can switch between the raw Markdown and rendered preview.
+  </Step>
+
+  <Step title="Manage its lifecycle">
+    From the skill editor, you can replace the bundle, disable the skill without deleting it,
+    share it with people or groups, transfer ownership, or delete it.
+  </Step>
+</Steps>
+
+<Warning>
+  Never put passwords, API keys, tokens, or production credentials in a skill bundle.
+  Use [Apps](/overview/core_features/craft_apps) for authenticated access to external services.
+  Review every script and file before uploading a bundle you did not create.
+</Warning>
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="A skill is missing from the picker">
+    Confirm the skill is enabled and shared with you. Unavailable built-in skills do not appear in the session picker.
+    If the skill depends on a model or deployment feature, ask an admin to configure that dependency.
+  </Accordion>
+
+<Accordion title="Craft did not use the skill I expected">
+  Select the skill from **+** > **Skills** or type **/** and choose it before sending your prompt.
+  Also name the desired output and important constraints; a skill supplies a method, not the goal itself.
+</Accordion>
+
+  <Accordion title="My ZIP will not upload">
+    Check that the filename is lowercase and hyphenated, `SKILL.md` is at the root of the ZIP,
+    its frontmatter contains non-empty `name` and `description` fields,
+    and the bundle does not use a reserved built-in name.
+  </Accordion>
+</AccordionGroup>
+
+<CardGroup cols={2}>
+  <Card title="For admins" icon="user-shield" href="/admins/managing_features/craft_skills">
+    Publish organization skills, configure availability, and review custom bundles.
+  </Card>
+
+  <Card title="Connect Apps" icon="plug" href="/overview/core_features/craft_apps">
+    Give Craft controlled access to external tools and approve actions safely.
+  </Card>
+</CardGroup>

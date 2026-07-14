@@ -1,0 +1,319 @@
+<svg
+  width="2400"
+  height="1500"
+  viewBox="0 0 2400 1500"
+  fill="none"
+  xmlns="http://www.w3.org/2000/svg"
+>
+  <defs>
+    <linearGradient
+      id="bg"
+      x1="0"
+      y1="0"
+      x2="2400"
+      y2="1500"
+      gradientUnits="userSpaceOnUse"
+    >
+      <stop stop-color="#080C14" />
+      <stop offset="1" stop-color="#111827" />
+    </linearGradient>
+    <radialGradient
+      id="glow"
+      cx="0"
+      cy="0"
+      r="1"
+      gradientUnits="userSpaceOnUse"
+      gradientTransform="translate(1850 235) rotate(120) scale(760 520)"
+    >
+      <stop stop-color="#1D4ED8" stop-opacity="0.26" />
+      <stop offset="1" stop-color="#1D4ED8" stop-opacity="0" />
+    </radialGradient>
+    <filter
+      id="shadow"
+      x="-20%"
+      y="-20%"
+      width="140%"
+      height="150%"
+      color-interpolation-filters="sRGB"
+    >
+      <feDropShadow
+        dx="0"
+        dy="18"
+        stdDeviation="18"
+        flood-color="#000000"
+        flood-opacity="0.32"
+      />
+    </filter>
+    <marker
+      id="arrow"
+      markerWidth="18"
+      markerHeight="18"
+      refX="14"
+      refY="9"
+      orient="auto"
+      markerUnits="strokeWidth"
+    >
+      <path
+        d="M3 3L15 9L3 15"
+        stroke="#9CA3AF"
+        stroke-width="2.2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+    </marker>
+    <marker
+      id="arrowBlue"
+      markerWidth="18"
+      markerHeight="18"
+      refX="14"
+      refY="9"
+      orient="auto"
+      markerUnits="strokeWidth"
+    >
+      <path
+        d="M3 3L15 9L3 15"
+        stroke="#60A5FA"
+        stroke-width="2.4"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+    </marker>
+    <style>
+      .title {
+        font:
+          700 54px Inter,
+          Arial,
+          sans-serif;
+        fill: #f9fafb;
+      }
+      .subtitle {
+        font:
+          400 25px Inter,
+          Arial,
+          sans-serif;
+        fill: #cbd5e1;
+      }
+      .label {
+        font:
+          700 28px Inter,
+          Arial,
+          sans-serif;
+        fill: #f9fafb;
+      }
+      .small {
+        font:
+          400 21px Inter,
+          Arial,
+          sans-serif;
+        fill: #d1d5db;
+      }
+      .tiny {
+        font:
+          400 18px Inter,
+          Arial,
+          sans-serif;
+        fill: #aeb7c4;
+      }
+      .boundary {
+        fill: rgba(15, 23, 42, 0.58);
+        stroke: #4b5563;
+        stroke-width: 2;
+        stroke-dasharray: 14 12;
+      }
+      .box {
+        fill: #151d2c;
+        stroke: #475569;
+        stroke-width: 2;
+        filter: url(#shadow);
+      }
+      .boxBlue {
+        fill: #10233d;
+        stroke: #2563eb;
+        stroke-width: 2.4;
+        filter: url(#shadow);
+      }
+      .boxGreen {
+        fill: #10271e;
+        stroke: #2e8b57;
+        stroke-width: 2.2;
+        filter: url(#shadow);
+      }
+      .boxAmber {
+        fill: #2a2010;
+        stroke: #b7791f;
+        stroke-width: 2.2;
+        filter: url(#shadow);
+      }
+      .chip {
+        fill: #0f172a;
+        stroke: #334155;
+        stroke-width: 1.6;
+      }
+      .arrow {
+        stroke: #9ca3af;
+        stroke-width: 3;
+        marker-end: url(#arrow);
+      }
+      .arrowBlue {
+        stroke: #60a5fa;
+        stroke-width: 3.2;
+        marker-end: url(#arrowBlue);
+      }
+      .arrowDashed {
+        stroke: #9ca3af;
+        stroke-width: 3;
+        stroke-dasharray: 12 12;
+        marker-end: url(#arrow);
+      }
+      .caption {
+        font:
+          600 20px Inter,
+          Arial,
+          sans-serif;
+        fill: #93c5fd;
+      }
+    </style>
+  </defs>
+
+  <rect width="2400" height="1500" fill="url(#bg)" />
+  <rect width="2400" height="1500" fill="url(#glow)" />
+
+  <text x="90" y="90" class="title">Craft Runtime Architecture</text>
+  <text x="92" y="132" class="subtitle">
+    How the browser, Onyx services, user sandbox, proxy, search, and external
+    apps interact.
+  </text>
+
+  <rect x="60" y="190" width="395" height="330" rx="28" class="boxBlue" />
+  <text x="105" y="255" class="label">User Browser</text>
+  <text x="105" y="300" class="small">/craft/v1</text>
+  <rect x="105" y="335" width="295" height="52" rx="16" class="chip" />
+  <text x="130" y="369" class="tiny">Chat stream and approvals</text>
+  <rect x="105" y="402" width="295" height="52" rx="16" class="chip" />
+  <text x="130" y="436" class="tiny">Preview, Files, Artifacts</text>
+  <rect x="105" y="469" width="295" height="52" rx="16" class="chip" />
+  <text x="130" y="503" class="tiny">Skills, Apps, Tasks</text>
+
+  <rect x="545" y="180" width="710" height="490" rx="34" class="boundary" />
+  <text x="590" y="235" class="caption">Onyx control plane</text>
+
+  <rect x="590" y="275" width="280" height="150" rx="24" class="box" />
+  <text x="625" y="330" class="label">Web / API</text>
+  <text x="625" y="369" class="small">/api/build</text>
+  <text x="625" y="400" class="tiny">auth, routing, SSE</text>
+
+  <rect x="925" y="275" width="280" height="150" rx="24" class="box" />
+  <text x="960" y="330" class="label">Session Runner</text>
+  <text x="960" y="369" class="small">turns and schedules</text>
+  <text x="960" y="400" class="tiny">opencode client</text>
+
+  <rect x="590" y="475" width="280" height="135" rx="24" class="box" />
+  <text x="625" y="530" class="label">Storage</text>
+  <text x="625" y="569" class="small">Postgres, Redis</text>
+  <text x="625" y="598" class="tiny">FileStore snapshots</text>
+
+  <rect x="925" y="475" width="280" height="135" rx="24" class="box" />
+  <text x="960" y="530" class="label">Webapp Proxy</text>
+  <text x="960" y="569" class="small">preview and share</text>
+  <text x="960" y="598" class="tiny">strips viewer auth</text>
+
+  <rect x="545" y="785" width="710" height="560" rx="34" class="boundary" />
+  <text x="590" y="840" class="caption">Per-user sandbox boundary</text>
+
+  <rect x="600" y="895" width="590" height="350" rx="28" class="boxGreen" />
+  <text x="645" y="958" class="label">User Sandbox</text>
+  <text x="645" y="1000" class="small">opencode serve</text>
+  <rect x="645" y="1034" width="225" height="52" rx="16" class="chip" />
+  <text x="668" y="1068" class="tiny">session workspace</text>
+  <rect x="900" y="1034" width="225" height="52" rx="16" class="chip" />
+  <text x="932" y="1068" class="tiny">attachments</text>
+  <rect x="645" y="1103" width="225" height="52" rx="16" class="chip" />
+  <text x="693" y="1137" class="tiny">outputs</text>
+  <rect x="900" y="1103" width="225" height="52" rx="16" class="chip" />
+  <text x="932" y="1137" class="tiny">generated app</text>
+  <rect x="645" y="1172" width="225" height="52" rx="16" class="chip" />
+  <text x="680" y="1206" class="tiny">managed skills</text>
+  <rect x="900" y="1172" width="225" height="52" rx="16" class="chip" />
+  <text x="934" y="1206" class="tiny">User Library</text>
+
+  <rect x="1360" y="520" width="390" height="250" rx="28" class="boxAmber" />
+  <text x="1405" y="582" class="label">Sandbox Proxy</text>
+  <text x="1405" y="625" class="small">all sandbox egress</text>
+  <text x="1405" y="664" class="tiny">credential injection</text>
+  <text x="1405" y="696" class="tiny">app policy enforcement</text>
+  <text x="1405" y="728" class="tiny">approval parking</text>
+
+  <rect x="1885" y="210" width="390" height="160" rx="24" class="box" />
+  <text x="1930" y="270" class="label">LLM Providers</text>
+  <text x="1930" y="313" class="small">Anthropic, OpenAI</text>
+  <text x="1930" y="344" class="tiny">OpenRouter</text>
+
+  <rect x="1885" y="430" width="390" height="170" rx="24" class="box" />
+  <text x="1930" y="490" class="label">Onyx Search</text>
+  <text x="1930" y="533" class="small">permissioned knowledge</text>
+  <text x="1930" y="565" class="tiny">connectors and files</text>
+
+  <rect x="1885" y="660" width="390" height="195" rx="24" class="box" />
+  <text x="1930" y="720" class="label">External Apps</text>
+  <text x="1930" y="763" class="small">Slack, Gmail, Drive</text>
+  <text x="1930" y="795" class="tiny">GitHub, Linear, custom</text>
+  <text x="1930" y="827" class="tiny">OAuth or user credentials</text>
+
+  <rect x="1885" y="980" width="390" height="150" rx="24" class="box" />
+  <text x="1930" y="1040" class="label">Generated App</text>
+  <text x="1930" y="1083" class="small">proxied preview</text>
+  <text x="1930" y="1115" class="tiny">private or organization</text>
+
+  <path d="M455 330H575" class="arrowBlue" />
+  <text x="472" y="300" class="tiny">messages</text>
+  <text x="472" y="326" class="tiny">files</text>
+
+  <path d="M870 350H925" class="arrow" />
+  <path d="M1065 425V475" class="arrow" />
+  <path d="M730 425V475" class="arrow" />
+  <path d="M1055 610C1055 700 1010 790 975 885" class="arrowBlue" />
+  <text x="1042" y="725" class="tiny">drive agent</text>
+
+  <path d="M610 895C560 800 590 595 650 425" class="arrowDashed" />
+  <text x="505" y="725" class="tiny">restore state</text>
+
+  <path d="M1190 1050H1350" class="arrowBlue" />
+  <text x="1215" y="1020" class="tiny">outbound HTTPS</text>
+
+  <path d="M1750 585C1810 480 1840 345 1885 290" class="arrow" />
+  <text x="1770" y="445" class="tiny">model calls</text>
+
+  <path d="M1750 635C1820 610 1835 540 1885 515" class="arrow" />
+  <text x="1775" y="590" class="tiny">search</text>
+
+  <path d="M1750 700H1885" class="arrow" />
+  <text x="1782" y="675" class="tiny">app calls</text>
+
+  <path d="M1555 520C1520 405 1375 350 1210 350" class="arrowDashed" />
+  <text x="1340" y="370" class="tiny">approval request</text>
+
+  <path d="M590 395C520 425 495 455 455 455" class="arrowBlue" />
+  <text x="300" y="565" class="tiny">SSE stream</text>
+  <text x="300" y="591" class="tiny">approval cards</text>
+
+  <path d="M1205 540C1395 880 1660 1010 1885 1050" class="arrowBlue" />
+  <text x="1395" y="940" class="tiny">preview route</text>
+
+  <path d="M1885 1050C1645 1090 1395 1120 1190 1120" class="arrowDashed" />
+  <text x="1460" y="1150" class="tiny">sandbox app port</text>
+
+  <rect
+    x="70"
+    y="1340"
+    width="2250"
+    height="86"
+    rx="24"
+    fill="#0F172A"
+    stroke="#334155"
+    stroke-width="2"
+  />
+  <text x="110" y="1394" class="small">
+    Security posture: sandboxes receive placeholders, not raw external
+    credentials. The proxy injects credentials after matching app policy.
+  </text>
+</svg>

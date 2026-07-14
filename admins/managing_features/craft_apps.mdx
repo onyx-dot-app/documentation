@@ -1,0 +1,353 @@
+---
+title: "Apps"
+description: "Configure external services, credentials, and action policies for Craft"
+icon: "plug"
+---
+
+Apps give Craft controlled, authenticated access to external services.
+Admins configure Apps under **Admin Panel → Craft → Apps**. Users connect their accounts under **Craft → Apps**.
+
+<Note>
+  Craft Apps are different from Onyx connectors. A connector indexes shared content into Onyx knowledge.
+  An App retrieves live information from a user's external account and can take actions in that service.
+</Note>
+
+## Choose the setup path
+
+| App type                         | Organization configuration                                                                             | User connection                                                     |
+| -------------------------------- | ------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------- |
+| **Built-in on Onyx Cloud**       | Onyx manages the OAuth client. Admins enable the App and set action policies.                          | Each user completes the provider's OAuth flow.                      |
+| **Built-in on self-hosted Onyx** | An admin creates an OAuth application with the provider, then enters its client ID and secret in Onyx. | Each user completes the provider's OAuth flow.                      |
+| **Custom App**                   | An admin defines public URL patterns, authentication headers, credentials, and an instruction bundle.  | Users enter any credential values not supplied by the organization. |
+
+Onyx currently provides built-in Apps for Slack, Google Calendar, Google Drive, Gmail, Linear, GitHub, HubSpot,
+and Notion. One organization-level instance of each built-in provider can be configured.
+You can create multiple custom Apps with different slugs and URL patterns.
+
+## Configure a built-in App
+
+On Onyx Cloud, built-in Apps are provided by Onyx. Select **Edit** to configure permissions,
+then enable the App from its card.
+
+For self-hosted Onyx, first create an OAuth application with the external provider. Use this exact redirect URI,
+replacing the host with your Onyx domain:
+
+```text
+https://onyx.example.com/craft/v1/apps/oauth/callback
+```
+
+The scheme, host, and path must match exactly in the provider and Onyx.
+The App management form asks for the OAuth client ID and client secret;
+it does not ask for an individual user's access token.
+
+<Note>
+  On self-hosted Onyx, the callback host comes from `WEB_DOMAIN`.
+  Confirm that setting uses the public domain registered with the provider before users connect.
+</Note>
+
+<AccordionGroup>
+  <Accordion title="Slack">
+    Create a Slack app and add the Onyx redirect URI under **OAuth & Permissions**. Add these **User Token Scopes**:
+
+    ```text
+    channels:history
+    channels:read
+    chat:write
+    files:write
+    groups:history
+    groups:read
+    im:history
+    im:read
+    im:write
+    search:read
+    users:read
+    ```
+
+    Craft acts with a user token; no bot user is required.
+    Copy the Client ID and Client Secret from the Slack app's basic information.
+  </Accordion>
+
+  <Accordion title="Google Calendar">
+    In Google Cloud Console, create or select a project, enable the **Google Calendar API**,
+    configure the OAuth consent screen, and create an OAuth 2.0 Client ID of type **Web application**.
+    Add the Onyx redirect URI under **Authorized redirect URIs**. Craft requests full Google Calendar access.
+  </Accordion>
+
+  <Accordion title="Google Drive">
+    In Google Cloud Console, enable both the **Google Drive API** and **Google Docs API**,
+    configure the OAuth consent screen, and create an OAuth 2.0 Web application client with the Onyx redirect URI.
+    Craft requests the full Drive scope so it can read, create, edit, and delete files;
+    action policies govern those operations inside Craft.
+  </Accordion>
+
+  <Accordion title="Gmail">
+    In Google Cloud Console, enable the **Gmail API**, configure the OAuth consent screen,
+    and create an OAuth 2.0 Web application client with the Onyx redirect URI. Craft requests `gmail.modify`,
+    which covers reading, labels, drafts, trash, and sending but not permanent message deletion.
+  </Accordion>
+
+  <Accordion title="Linear">
+    In Linear, open **Settings → API → OAuth applications**, create an OAuth application,
+    and add the Onyx redirect URI to its callback URLs. Craft requests user-acting read and write access for issues,
+    projects, and comments.
+  </Accordion>
+
+  <Accordion title="GitHub">
+    In GitHub, open **Settings → Developer settings → OAuth Apps**, create an OAuth App,
+    and use the Onyx redirect URI as its authorization callback URL. Craft requests `repo`, `read:org`, and `read:user`;
+    the `repo` scope includes repositories the connecting user can access, including private repositories.
+  </Accordion>
+
+  <Accordion title="HubSpot">
+    From a HubSpot developer account, create an app and add the Onyx redirect URI on its **Auth** tab.
+    Configure read access for owners, contacts, companies, and deals. Contact, company,
+    and deal write scopes are optional so read-only HubSpot accounts can still connect.
+  </Accordion>
+
+  <Accordion title="Notion">
+    Create a **Public** integration from Notion's integrations settings and add the Onyx redirect URI under **OAuth
+    Domain & URIs**. Choose the integration's read and write capabilities in Notion;
+    Notion controls capabilities there rather than through OAuth scopes.
+  </Accordion>
+</AccordionGroup>
+
+### Add and test the App
+
+<Steps>
+  <Step title="Open App management">
+    Go to **Admin Panel → Craft → Apps**. Select a provider under **Available apps** or **Add another**. On Onyx Cloud,
+    open the App configured by Onyx.
+  </Step>
+
+  <Step title="Enter organization credentials">
+    On self-hosted Onyx, enter the OAuth client ID and client secret from the provider. On Onyx Cloud,
+    these fields are managed by Onyx and are not shown.
+  </Step>
+
+  <Step title="Review permissions">
+    Choose a policy for all actions, or open **Advanced** and set policies action by action. Review every write, send,
+    delete, and publish action.
+  </Step>
+
+  <Step title="Enable the App">
+    Save the configuration and confirm the App card says **Enabled**.
+    Disabled Apps do not appear to users and cannot inject credentials.
+  </Step>
+
+  <Step title="Test as a user">
+    Connect a pilot user's account from **Craft → Apps**. Test a read and a representative write,
+    confirm the approval card is understandable, and verify the result in the external service.
+  </Step>
+</Steps>
+
+## Set action policies
+
+Built-in Apps define a catalog of recognizable actions. Each action has one organization-wide policy:
+
+| Policy           | Runtime behavior                                                     | Typical use                                               |
+| ---------------- | -------------------------------------------------------------------- | --------------------------------------------------------- |
+| **Auto-approve** | Craft performs the action without pausing for the user.              | Narrow, low-risk reads and non-consequential preparation. |
+| **Ask**          | Craft pauses before the request and shows the user an approval card. | Sends, creates, edits, broad reads, and other changes.    |
+| **Deny**         | The proxy blocks the action. The user cannot override it.            | Destructive, unsupported, or prohibited operations.       |
+
+The built-in catalog starts with curated defaults: many reads are Auto-approved,
+while consequential changes generally use Ask. Do not assume the default is right for your organization;
+review the action list when enabling each App.
+
+The main permissions selector applies **Auto-approve** or **Ask** to every action.
+Open **Advanced** to create a mixed policy or choose **Deny** for individual actions.
+
+<Info>
+  If one outbound request matches more than one action, the strictest matching policy wins: **Deny**, then **Ask**,
+  then **Auto-approve**. A request to a built-in App that does not match a cataloged action falls back to **Ask**.
+</Info>
+
+An in-session **Approve for session** decision applies only to matching actions in that session.
+It does not change the admin policy and cannot override Deny.
+
+### Scheduled Tasks and pre-approval
+
+A [Scheduled Task](/overview/core_features/craft_scheduled_tasks) runs without a user present.
+Its owner can select required Apps under **Pre-approved Apps**. For that task's running sessions,
+the selection allows Ask actions from the entire App to proceed without a live approval.
+
+Pre-approval does not override Deny. Because it applies to the App rather than one action,
+keep both the task prompt and its App list narrow.
+Onyx creates a notification when a Scheduled Task uses a pre-approved action.
+
+## Create a custom App
+
+Use a custom App for a publicly reachable HTTP API that is not covered by a built-in provider.
+A custom App combines proxy configuration with a ZIP bundle that teaches Craft how to call the API.
+
+| Field                         | Purpose                                                                                                 |
+| ----------------------------- | ------------------------------------------------------------------------------------------------------- |
+| **Name and description**      | Identifies the App to users and explains when it should be used.                                        |
+| **Upstream URL patterns**     | Limits which outbound request URLs belong to the App.                                                   |
+| **Header credential pattern** | Defines headers the proxy injects, with placeholders such as `{api_key}`.                               |
+| **Organization credentials**  | Supplies placeholder values shared by every user. Values left unspecified must be entered by each user. |
+| **Bundle**                    | Provides `SKILL.md` instructions, examples, scripts, and helper files for calling the API.              |
+
+For example:
+
+| Setting                 | Value                                                                                  |
+| ----------------------- | -------------------------------------------------------------------------------------- |
+| Upstream URL pattern    | `https://api.example.com/v1/*`                                                         |
+| Header                  | `Authorization`                                                                        |
+| Header value            | `Bearer {api_key}`                                                                     |
+| Organization credential | `api_key` = a shared service token, or leave it blank for users to supply individually |
+
+### Define URL patterns narrowly
+
+Custom Apps use URL globs. Each pattern must start with `http://` or `https://`, and its host must be literal.
+Wildcards are allowed only after the host.
+
+```text
+# Recommended: one HTTPS host and a narrow path
+https://api.example.com/v1/reports/*
+
+# Too broad: every path on the host
+https://api.example.com/*
+
+# Invalid: wildcard in the host
+https://*.example.com/*
+```
+
+<Warning>
+  Custom Apps cannot be used to reach private, loopback, link-local, cloud metadata,
+  or other non-public network addresses.
+  The sandbox proxy blocks internal destinations even when a URL pattern includes them.
+  Expose only a deliberately secured, publicly routable HTTPS endpoint if Craft must call a custom service.
+</Warning>
+
+Avoid overlapping URL patterns between Apps. When more than one App claims the same URL,
+the lowest-ID App—usually the earliest created—is selected first.
+A disabled App can still claim the match before credential availability is checked,
+so do not rely on enablement to disambiguate overlapping patterns.
+
+### Configure credentials
+
+In a header value, write each credential as a named placeholder:
+
+```text
+Authorization: Bearer {api_key}
+X-Workspace-ID: {workspace_id}
+```
+
+Add a value under **Organization credentials** when every user should use the same service identity.
+Leave a placeholder without an organization value when each user should enter their own value on the Apps page.
+You can also leave the header pattern empty for a public API that requires no credential.
+
+Raw organization and user credentials are encrypted in Onyx-controlled storage.
+They are not copied into the custom bundle or sandbox workspace. After a request passes its gate,
+the sandbox proxy injects the rendered headers on the way out.
+
+### Prepare the instruction bundle
+
+The bundle uses the same structure and validation rules as a custom Skill:
+
+```text
+example-api.zip
+├── SKILL.md
+├── examples/
+│   └── request.json
+└── scripts/
+    └── example_api.py
+```
+
+The ZIP filename becomes the App slug. Put a valid `SKILL.md` at the root and review every included file.
+The default limits are 25 MB per extracted file and 100 MB for the complete bundle.
+See [Managing Craft Skills](/admins/managing_features/craft_skills#prepare-a-custom-skill)
+for the bundle format and review checklist.
+
+<Warning>
+  Custom Apps do not have a per-action catalog. For a connected custom App,
+  every request matching an upstream URL pattern is treated as an unspecified **Ask** action.
+  Admins cannot Auto-approve or Deny individual custom App operations. Disable the App to stop its use,
+  and be especially cautious when users pre-approve it for a Scheduled Task.
+</Warning>
+
+## Manage credentials and lifecycle
+
+| Action      | Effect                                                                                                                      |
+| ----------- | --------------------------------------------------------------------------------------------------------------------------- |
+| **Edit**    | Updates policies or, when admin-managed, the name, OAuth credentials, custom URL patterns, headers, credentials, or bundle. |
+| **Disable** | Hides the App from users and stops credential injection while retaining its configuration and user connections.             |
+| **Enable**  | Makes the App available again. Existing user grants are reused if they remain valid.                                        |
+| **Delete**  | Permanently removes the App configuration, user credential records, policies, and Scheduled Task pre-approval references.   |
+
+Onyx-managed Cloud Apps cannot be deleted and their OAuth configuration cannot be edited by Admins.
+Disable them when they should not be available.
+
+### Rotate OAuth credentials or scopes
+
+<Steps>
+  <Step title="Prepare the provider change">
+    Create or rotate the secret in the external provider without immediately revoking the old value when the provider
+    supports an overlap period.
+  </Step>
+
+  <Step title="Update Onyx">
+    Edit the App and replace the organization credential. If you are changing scopes,
+    update the provider configuration as well.
+  </Step>
+
+  <Step title="Test connection and refresh">
+    Connect a new pilot account, then test an existing connection. Existing access tokens may work until refresh;
+    an invalid refresh grant requires the affected user to reconnect.
+  </Step>
+
+  <Step title="Finish the rotation">
+    Revoke the superseded secret or grants in the provider after the new path is verified.
+    Users must reconnect to grant newly added OAuth scopes.
+  </Step>
+</Steps>
+
+During an incident, disable the App first to stop credential injection,
+then rotate credentials and investigate before re-enabling it.
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="A built-in App connection fails">
+    Confirm the OAuth client ID and secret, the exact redirect URI, the enabled API or integration capabilities,
+    and the required scopes.
+    Check whether the provider's consent screen is limited to approved test users or workspace members.
+  </Accordion>
+
+  <Accordion title="An enabled App does not appear to users">
+    Confirm that its card says **Enabled** and that the user has Craft access. Refresh the Apps page. For a custom App,
+    confirm its bundle and configuration saved successfully.
+  </Accordion>
+
+  <Accordion title="A user connected successfully but an action is blocked">
+    Check the action's admin policy and the scopes or capabilities granted by the external account.
+    A Deny policy cannot be overridden. An Ask request can also fail if the user rejects it or the approval expires.
+  </Accordion>
+
+  <Accordion title="A custom App prompts for every request">
+    This is expected. Custom Apps use one synthesized Ask action for every request matching their URL patterns.
+    They do not currently support per-action policies.
+  </Accordion>
+
+  <Accordion title="A custom App calls the wrong service or uses the wrong credential">
+    Check for overlapping URL patterns. Make every host and path as specific as possible.
+    The lowest-ID App wins when multiple Apps match the same URL, including when that first App is disabled.
+  </Accordion>
+
+  <Accordion title="A Scheduled Task is awaiting approval">
+    Confirm that the task owner is still connected to the App and selected it under **Pre-approved Apps**.
+    Then check for a Deny policy or a different App than the prompt was expected to use.
+    Correct the task and use **Run now**; the blocked run does not resume automatically.
+  </Accordion>
+</AccordionGroup>
+
+<CardGroup cols={2}>
+  <Card title="Apps for users" icon="plug" href="/overview/core_features/craft_apps">
+    Show users how to connect accounts, guide Craft, and review approvals.
+  </Card>
+
+  <Card title="Craft Architecture" icon="diagram-project" href="/security/architecture/craft">
+    Review egress controls, credential injection, and approval enforcement.
+  </Card>
+</CardGroup>
