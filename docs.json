@@ -176,6 +176,7 @@
                   "admins/ai_models/openrouter",
                   "admins/ai_models/bifrost",
                   "admins/ai_models/litellm_proxy",
+                  "admins/ai_models/daoxe",
                   "admins/ai_models/custom_inference_provider"
                 ]
               }
