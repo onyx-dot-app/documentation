@@ -279,33 +279,6 @@ for the bundle format and review checklist.
 Onyx-managed Cloud Apps cannot be deleted and their OAuth configuration cannot be edited by Admins.
 Disable them when they should not be available.
 
-### Rotate OAuth credentials or scopes
-
-<Steps>
-  <Step title="Prepare the provider change">
-    Create or rotate the secret in the external provider without immediately revoking the old value when the provider
-    supports an overlap period.
-  </Step>
-
-  <Step title="Update Onyx">
-    Edit the App and replace the organization credential. If you are changing scopes,
-    update the provider configuration as well.
-  </Step>
-
-  <Step title="Test connection and refresh">
-    Connect a new pilot account, then test an existing connection. Existing access tokens may work until refresh;
-    an invalid refresh grant requires the affected user to reconnect.
-  </Step>
-
-  <Step title="Finish the rotation">
-    Revoke the superseded secret or grants in the provider after the new path is verified.
-    Users must reconnect to grant newly added OAuth scopes.
-  </Step>
-</Steps>
-
-During an incident, disable the App first to stop credential injection,
-then rotate credentials and investigate before re-enabling it.
-
 ## Troubleshooting
 
 <AccordionGroup>
