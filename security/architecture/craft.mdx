@@ -59,6 +59,7 @@ Craft maintains one sandbox per user and a separate workspace for each session. 
 generated code, intermediate files, outputs, and the session's agent instructions.
 
 Skills and User Library files are synchronized into a managed area of the sandbox and linked into each session.
+Attachments belong only to their session, while User Library files remain available across the user's sessions.
 Skill bundles can contain executable scripts, so they should be reviewed as code before being shared.
 
 When a sandbox becomes idle, Onyx snapshots its session state to the configured file store and stops the runtime.
