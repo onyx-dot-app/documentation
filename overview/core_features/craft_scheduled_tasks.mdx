@@ -1,97 +1,207 @@
 ---
 title: "Scheduled Tasks"
-description: "Put a working Craft prompt on a timer and let the agent loop run unattended"
+description: "Run a Craft prompt automatically on a recurring schedule"
 icon: "calendar-clock"
 ---
 
-A Scheduled Task takes a Craft prompt that works once and runs it on a timer. Each time it fires,
-Craft opens a fresh background session, runs the same agent loop, and records the result in run history.
-Nothing needs to be open and nobody needs to be watching.
+A Scheduled Task runs a Craft prompt for you on a recurring schedule.
+Each run starts a fresh Craft session in the background, records its result in run history,
+and continues whether or not you have Onyx open.
 
-Anything you'd otherwise check or rebuild on a regular cadence is a good fit. Get the prompt right in a normal session,
-then schedule it:
+Use Scheduled Tasks for work that has a predictable cadence and a clear definition of done.
 
-- Every morning, send me a Slack message with everything that needs my attention.
-- Every morning at 8am, send an update on the World Cup games I should watch that day.
-- Every hour, monitor my email and ping me in Slack about anything actually worth responding to.
-
-Open **Scheduled Tasks** from the Craft sidebar, or go to `/craft/v1/tasks`.
-
-{/* TODO: screenshot of the Scheduled Tasks list with a few populated rows (Name, Schedule, Status, Last run, Next run).
-The list was empty when captured. */}
+| Use case                     | Example                                                                                                      |
+| ---------------------------- | ------------------------------------------------------------------------------------------------------------ |
+| **Send a daily briefing**    | Summarize new customer escalations every morning and send the important items to a Slack channel.            |
+| **Monitor for changes**      | Check an inbox, project, or data source regularly and report only material changes that need attention.      |
+| **Build a recurring report** | Gather the latest numbers each week, update a standard report, and save it to the right destination.         |
+| **Maintain a workflow**      | Review open work on a schedule, identify stale items, and add an approved comment or follow-up where needed. |
 
 <Tip>
-  Get the prompt working in a normal Craft session first. Once it reliably produces what you want,
-  save it as a scheduled task.
+  Test the prompt in a normal Craft session first. Schedule it only after it reliably finds the right information,
+  produces the intended output, and handles missing data safely.
 </Tip>
 
-## Create a task
+## What each run can access
+
+Scheduled Tasks run as the person who created them. Each run uses that person's current:
+
+- Onyx permissions and company knowledge access.
+- Connected Apps and external-account permissions.
+- Available Skills.
+- User Library files.
+
+A run starts in a new session,
+so it does **not** inherit the conversation or attachments from the session where you tested the prompt.
+Move reusable reference files to your User Library, or point the prompt to company knowledge or a connected App.
+
+<Note>
+  A Scheduled Task does not automatically send you its result. If the output should go to Slack, Gmail, Google Drive,
+  or another destination, say so in the prompt and configure that App for unattended use. Otherwise,
+  review the output from the task's run history.
+</Note>
+
+## Create a Scheduled Task
+
+Open **Scheduled Tasks** from the Craft sidebar, then select **New Scheduled Task**.
 
 <Steps>
-  <Step title="Write the name and prompt">
-    Give the task a clear **Name**, then write the **Prompt** that Craft receives on every run.
-    Include the output format, source material, audience, and any skills or apps it should use.
+  <Step title="Name the task">
+    Use a name that makes the cadence and result easy to recognize, such as “Weekday customer escalations digest.”
+  </Step>
+
+  <Step title="Write a self-contained prompt">
+    Describe what Craft should inspect, the time window, what qualifies for inclusion, the desired output,
+    and where to deliver it. Type **/** to select a specific Skill or connected App from the prompt picker.
   </Step>
 
   <Step title="Choose a schedule">
-    Pick **Interval** (every N minutes or hours) or **Daily / Weekly** (a time of day on selected days).
-    Daily and weekly times use your browser's local time.
+    Use **Interval** to run every set number of minutes or hours. Use **Daily / Weekly** to choose a time and,
+    optionally, specific days of the week.
   </Step>
 
-  <Step title="Pre-approve expected apps">
-    Under **Pre-approved apps**, select the apps the task may use unattended.
-    An app you don't pre-approve will pause mid-run to ask for approval, which stalls the run.
-    Avoid pre-approving apps that can send, delete, or change sensitive records unless the task is tightly scoped.
+  <Step title="Review pre-approved Apps">
+    Select only the Apps the task must use without you present. Connect required Apps before creating the task.
   </Step>
 
-  <Step title="Save, or save and run now">
-    Choose **Save** to wait for the next scheduled run,
-    or **Save and run now** to run it immediately and check the result.
+  <Step title="Save and test">
+    Select **Save** to wait for the next scheduled time, or **Save and run now** to queue the first run immediately.
   </Step>
 </Steps>
 
-<img className="rounded-image" src="/assets/overview/core_features/craft_scheduled_task_new.png" alt="The New Scheduled Task form showing the name, prompt, schedule, and pre-approved apps fields"/>
+<img className="rounded-image" src="/assets/overview/core_features/craft_scheduled_task_new.png" alt="The New Scheduled Task form with name, prompt, schedule, and pre-approved Apps"/>
 
-## Ownership and permissions
+### Write a prompt that can run unattended
 
-A scheduled task belongs to the person who created it. Every run executes with **the creator's** Onyx permissions,
-connected apps, and skills, subject to the app policies your admins have set.
+Craft cannot ask you a useful follow-up while a Scheduled Task runs in the background.
+Front-load the decisions it would otherwise need from you:
 
-If a task relies on an app connection, keep that connection active. When credentials expire or are revoked,
-future runs fail until the app is reconnected.
+| Include                | Example                                                                                  |
+| ---------------------- | ---------------------------------------------------------------------------------------- |
+| **Scope**              | “Review messages in `#customer-escalations` and open P1 issues in Linear.”               |
+| **Time window**        | “Include activity from the last 24 hours.”                                               |
+| **Selection criteria** | “Include only items that are blocked, overdue, or need an executive decision.”           |
+| **Output**             | “Use a table with account, owner, issue, impact, and next step.”                         |
+| **Destination**        | “Post the final digest to `#support-leads` in Slack.”                                    |
+| **Fallback**           | “If there are no qualifying items, post ‘No new escalations’ and do not invent content.” |
 
-## Run history
+For example:
 
-The task detail page lists every run with its **Started** time, **Status**, **Duration**, **Summary**,
-and **Trigger** (*Run Now* or *Schedule*). Each row links to the session that run created,
-so you can open it and inspect the messages, files, previews, and artifacts.
+> Review the `#customer-escalations` Slack channel and open P1 issues in Linear for activity from the last 24 hours.
+> Include only items that are blocked, overdue, or need an executive decision. Group them by account and list the owner,
+> impact, and next step. Post the final digest to `#support-leads`. If nothing qualifies, post “No new escalations.”
 
-Run statuses are:
+<Tip>
+  Use a relative time window that matches the cadence, such as “during the last 24 hours” for a daily task.
+  Fixed dates quickly become stale in a recurring prompt.
+</Tip>
 
-| Status | Meaning |
-| --- | --- |
-| Queued | Waiting to start. |
-| Running | In progress. |
-| Succeeded | Completed normally. |
-| Failed | Hit an error. Open the session to see what happened. |
-| Skipped | The previous run was still going when this one was due. |
-| Awaiting approval | Reached an app action that still needs approval. |
+### Understand schedule timing
+
+Daily and weekly times are interpreted using your browser's local time when you save the task.
+Interval schedules run on repeating clock boundaries rather than a fixed delay after the previous run finishes.
+
+<Note>
+  The saved schedule does not automatically adjust when your UTC offset changes.
+  Review and resave time-based tasks after traveling, changing time zones, or a daylight-saving transition.
+</Note>
+
+## Pre-approve Apps carefully
+
+App actions configured as **Ask** normally pause for your approval. Because a Scheduled Task runs unattended,
+selecting an App under **Pre-approved Apps** allows the task to perform those actions without asking during the run.
+
+| App policy       | During a Scheduled Task                                                                 |
+| ---------------- | --------------------------------------------------------------------------------------- |
+| **Auto-approve** | The action runs without prompting, whether or not the App is selected for pre-approval. |
+| **Ask**          | The action runs unattended only when that App is pre-approved for the task.             |
+| **Deny**         | The action remains blocked. Pre-approval cannot override a Deny policy.                 |
+
+Pre-approval applies to the **App**, not to one specific action. If you pre-approve Slack, for example,
+any Slack action governed by **Ask** can run when it matches the task prompt and the connected account's access.
+
+<Warning>
+  Keep the prompt and pre-approved App list as narrow as possible.
+  Be especially cautious with Apps that can send messages, modify customer data, delete content, or publish externally.
+  Onyx records a notification when a Scheduled Task uses a pre-approved App action.
+</Warning>
+
+For more about connections and action policies, see [Apps](/overview/core_features/craft_apps).
+
+## Review run history
+
+Open a task to see its pre-approved Apps and run history. The table shows when each run started,
+its status and duration, a short summary, and whether it came from the schedule or **Run now**.
+
+Select a run after it creates a session to inspect its messages, files, previews, and artifacts.
+Queued runs do not have a session yet, and skipped runs never create one, so those rows cannot be opened.
+
+| Status                | Meaning                                                                                                                 |
+| --------------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| **Queued**            | Waiting for a worker to start the run.                                                                                  |
+| **Running**           | Craft is actively working in the generated session.                                                                     |
+| **Succeeded**         | Craft completed the run normally.                                                                                       |
+| **Failed**            | The run hit an error or exceeded its execution window. Open its session when available to investigate.                  |
+| **Skipped**           | The run did not start, usually because a previous run was still queued or running, or Craft was disabled for the owner. |
+| **Awaiting approval** | The run reached an App action that required approval but was not pre-approved. It will not resume automatically.        |
+
+Watch for Onyx notifications when a run fails or reaches **Awaiting approval**.
+Failed and approval-blocked runs are not retried automatically.
+
+<Warning>
+  For an **Awaiting approval** run, open the generated session to see which action stopped it.
+  Then edit the task's pre-approved Apps—or narrow the prompt so it avoids that action—and use **Run now** to try again.
+</Warning>
 
 ## Manage a task
 
-From the task detail page you can **Run now**, **Pause** / **Resume**, **Edit** the prompt, schedule,
-or pre-approved apps, and **Delete** the task.
+From the task detail page, you can:
 
-- **Pausing** stops future runs without deleting history.
-- **Deleting** stops future runs. Past run sessions and history are preserved for review.
+| Action      | What it does                                                                                            |
+| ----------- | ------------------------------------------------------------------------------------------------------- |
+| **Run now** | Queues a one-off run without changing the recurring schedule. This also works while the task is paused. |
+| **Pause**   | Stops future scheduled runs. It does not cancel a run that is already queued or running.                |
+| **Resume**  | Reactivates the schedule and computes the next run from the current time.                               |
+| **Edit**    | Changes the name, prompt, schedule, or pre-approved Apps for future runs.                               |
+| **Delete**  | Removes the task and stops future runs. Sessions created by previous runs remain in your Craft history. |
 
-## When a run needs attention
+Deleting a task does not cancel a run that is already queued or running.
+If you only need to stop future runs temporarily, pause it instead.
 
-Scheduled tasks shouldn't depend on a live approval prompt. If a run reaches an app action that still requires approval,
-it moves to **awaiting approval** rather than completing. Pre-approve the relevant apps to avoid this.
+## Troubleshooting
 
-<Warning>
-  Failed runs are not retried automatically. When a run fails,
-  open the generated session to inspect the error and any partial output, confirm the required files, skills,
-  and app connections still exist, narrow the prompt if Craft went out of scope, and then **Run now** to try again.
-</Warning>
+<AccordionGroup>
+  <Accordion title="A run succeeded, but I did not receive anything">
+    Open the run session from history and inspect its output. If the task should deliver somewhere else,
+    add an explicit destination to the prompt, connect that App,
+    and pre-approve it when the delivery action uses **Ask**.
+  </Accordion>
+
+<Accordion title="A run was skipped">
+  Check the row summary. If the previous run was still queued or running,
+  make the prompt smaller or use a less frequent schedule.
+  A run can also be skipped when Craft is disabled for the task owner.
+</Accordion>
+
+<Accordion title="A run failed">
+  Open the generated session when available. Confirm required Apps are still connected,
+  Skills and User Library files still exist, and the prompt can finish within one run. After correcting the task,
+  select **Run now**.
+</Accordion>
+
+  <Accordion title="The task ran at an unexpected time">
+    Daily and weekly schedules use the browser's local time at save time.
+    Edit and resave the task after a time-zone or daylight-saving change. For an interval schedule,
+    remember that runs align to repeating clock boundaries.
+  </Accordion>
+</AccordionGroup>
+
+<CardGroup cols={2}>
+  <Card title="Connect Apps" icon="plug" href="/overview/core_features/craft_apps">
+    Connect delivery destinations and understand approvals before running work unattended.
+  </Card>
+
+  <Card title="For admins" icon="user-shield" href="/admins/managing_features/craft">
+    Enable Craft and review the deployment, worker, App, and governance requirements.
+  </Card>
+</CardGroup>

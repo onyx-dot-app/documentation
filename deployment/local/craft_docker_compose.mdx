@@ -1,0 +1,192 @@
+---
+title: "Docker Compose"
+description: "Deploy Craft sandboxes on a trusted Docker host"
+icon: "docker"
+---
+
+Docker Compose runs one sandbox container per active Craft user. Use this path for a small,
+single-host Onyx deployment that you trust and control.
+
+<Tip>
+  If more than a few people will use Craft, especially concurrently,
+  deploy Craft on [Kubernetes](/deployment/local/craft_kubernetes) instead.
+</Tip>
+
+<Warning>
+  Craft gives the API server and background container read-write access to the Docker socket.
+  This read-write access is effectively root access to the host. The sandbox proxy receives read-only socket access.
+</Warning>
+
+## Requirements
+
+- A full Docker Compose deployment of Onyx 4.0.6 or later
+- Docker Engine with Compose
+- A host with capacity for the Onyx stack and active sandbox containers
+- An Onyx URL reachable through the sandbox proxy
+
+Craft does not run with the Onyx Lite Compose overlay.
+
+## New deployment
+
+Run the installer with the Craft overlay:
+
+```bash
+cd onyx/deployment/docker_compose
+./install.sh --include-craft
+```
+
+The installer downloads `docker-compose.craft.yml`, enables Craft, selects the Docker sandbox backend,
+creates the sandbox bridge network and proxy CA volume, and starts the deployment.
+
+Open `onyx_data/deployment/.env` and set the Onyx URL:
+
+```dotenv
+SANDBOX_API_SERVER_URL=https://onyx.example.com
+```
+
+Then recreate the affected services with both Compose files:
+
+```bash
+cd onyx_data/deployment
+docker compose \
+  -f docker-compose.yml \
+  -f docker-compose.craft.yml \
+  up -d --force-recreate
+```
+
+## Existing deployment
+
+Set `SANDBOX_API_SERVER_URL` in the existing `onyx_data/deployment/.env`, then rerun the installer:
+
+```bash
+cd onyx/deployment/docker_compose
+./install.sh --include-craft
+```
+
+The installer adds the Craft overlay and updates the existing `.env` with:
+
+```dotenv
+ENABLE_CRAFT=true
+SANDBOX_BACKEND=docker
+```
+
+Setting `ENABLE_CRAFT=true` without the overlay is not sufficient. The overlay mounts the Docker socket,
+starts the sandbox proxy, and attaches the API server and background worker to the sandbox network.
+
+## Set the Onyx URL
+
+For production, use the public HTTPS URL users use to reach Onyx:
+
+```dotenv
+SANDBOX_API_SERVER_URL=https://onyx.example.com
+```
+
+For local Docker Desktop on macOS or Windows, use the host port selected by the installer:
+
+```dotenv
+SANDBOX_API_SERVER_URL=http://host.docker.internal:3000
+```
+
+On Linux, use a hostname or host address reachable from Docker containers.
+Compose service names such as `api_server` and `nginx` do not resolve from the isolated sandbox bridge.
+
+## Plan host capacity
+
+Docker sandboxes default to one CPU and 2 GB of memory each:
+
+```dotenv
+SANDBOX_DOCKER_CPU_LIMIT=1.0
+SANDBOX_DOCKER_MEMORY_LIMIT=2g
+```
+
+Budget for the base Onyx services plus the number of users who may run Craft concurrently.
+An idle sandbox is snapshotted and stopped after 3,600 seconds by default;
+change this with `SANDBOX_IDLE_TIMEOUT_SECONDS` when faster cleanup or longer-lived sandboxes are required.
+
+The sandbox image follows `IMAGE_TAG`. Keep the Onyx backend and sandbox on the same release.
+Normal deployments should not set `SANDBOX_CONTAINER_IMAGE` separately.
+
+## Verify the deployment
+
+Confirm the core services and proxy are running:
+
+```bash
+cd onyx_data/deployment
+docker compose \
+  -f docker-compose.yml \
+  -f docker-compose.craft.yml \
+  ps api_server background sandbox-proxy
+```
+
+After configuring a model and user access, send a prompt in Craft. A sandbox container should appear:
+
+```bash
+docker ps --filter label=onyx.app/component=craft-sandbox
+```
+
+The `background` service includes the worker used for Scheduled Task runs; no separate Compose service is required.
+
+## Network and host security
+
+Sandbox containers join only the external `onyx_craft_sandbox` bridge. They cannot resolve PostgreSQL, Redis,
+object storage, or the API server by Compose service name.
+Their outbound HTTP and HTTPS traffic passes through `sandbox-proxy`,
+which enforces App policies and injects credentials after a request is approved.
+
+<Warning>
+  On cloud VMs, block sandbox access to the instance metadata service at the host or platform level. On EC2,
+  require IMDSv2 with `HttpTokens=required` and apply a host firewall rule that blocks Docker bridge traffic to
+  `169.254.169.254`.
+</Warning>
+
+See [Craft Architecture](/security/architecture/craft) for the complete trust and network model.
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="Craft does not appear after changing the environment">
+    Confirm `ENABLE_CRAFT=true` and `SANDBOX_BACKEND=docker`, then recreate the API server and web application.
+    Include both `docker-compose.yml` and `docker-compose.craft.yml` in the Compose command.
+  </Accordion>
+
+  <Accordion title="Sandbox provisioning reports that SANDBOX_API_SERVER_URL is missing">
+    Set the value in `onyx_data/deployment/.env` and recreate the API server, background worker,
+    and sandbox proxy with the Craft overlay.
+  </Accordion>
+
+  <Accordion title="The configured Onyx URL uses a Compose hostname">
+    Replace `api_server`, `nginx`,
+    or another Compose-only hostname with the public Onyx URL or a host address reachable from Docker containers.
+  </Accordion>
+
+  <Accordion title="The sandbox proxy is unhealthy">
+    Run `docker compose -f docker-compose.yml -f docker-compose.craft.yml logs sandbox-proxy`.
+    Check `SANDBOX_API_SERVER_URL`, PostgreSQL and Redis availability, the `sandbox_proxy_ca` volume,
+    and access to the Docker socket.
+  </Accordion>
+
+  <Accordion title="The sandbox network or CA volume is missing">
+    Rerun `install.sh --include-craft`. If automatic creation fails, create the resources and restart the deployment:
+
+    ```bash
+    docker network create onyx_craft_sandbox
+    docker volume create sandbox_proxy_ca
+    ```
+  </Accordion>
+
+  <Accordion title="A sandbox exits or is killed during larger jobs">
+    Inspect the sandbox container logs and host memory pressure.
+    Increase `SANDBOX_DOCKER_MEMORY_LIMIT` or `SANDBOX_DOCKER_CPU_LIMIT` only when the host has enough capacity for
+    every concurrent sandbox.
+  </Accordion>
+</AccordionGroup>
+
+<CardGroup cols={2}>
+  <Card title="Craft deployment overview" icon="hammer" href="/deployment/local/craft">
+    Compare the Docker Compose and Kubernetes paths.
+  </Card>
+
+  <Card title="Managing Craft" icon="sliders" href="/admins/managing_features/craft">
+    Configure models and user access after deployment.
+  </Card>
+</CardGroup>

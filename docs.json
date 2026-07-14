@@ -39,8 +39,8 @@
                 "icon": "hammer",
                 "pages": [
                   "overview/core_features/craft",
-                  "overview/core_features/craft_using",
-                  "overview/core_features/craft_skills_and_apps",
+                  "overview/core_features/craft_skills",
+                  "overview/core_features/craft_apps",
                   "overview/core_features/craft_scheduled_tasks"
                 ]
               },
@@ -95,7 +95,11 @@
           {
             "group": "Craft",
             "icon": "hammer",
-            "pages": ["deployment/local/craft"]
+            "pages": [
+              "deployment/local/craft",
+              "deployment/local/craft_kubernetes",
+              "deployment/local/craft_docker_compose"
+            ]
           },
           {
             "group": "Onyx Anywhere",

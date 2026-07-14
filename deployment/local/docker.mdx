@@ -60,33 +60,11 @@ the system needs to go through an initialization process after which you can acc
 
 ## Enabling Onyx Craft
 
-To enable [Onyx Craft](/overview/core_features/craft), use the installation script with the `--include-craft` flag:
+Craft adds isolated sandbox containers and an egress proxy to the Docker Compose deployment.
+Use the dedicated guide for both new and existing installations.
 
-```bash
-cd onyx/deployment/docker_compose
-./install.sh --include-craft
-```
-
-Then start the generated deployment:
-
-```bash
-cd onyx_data/deployment
-docker compose up -d
-```
-
-The install script adds the Craft compose overlay, enables `ENABLE_CRAFT=true`, creates the sandbox bridge network,
-and configures the sandbox proxy.
-
-<Warning>
-  Docker Compose Craft uses the Docker sandbox backend. The API server, background worker,
-  and sandbox proxy need access to the host Docker socket to provision and manage sandbox containers.
-  Treat this as root-equivalent access to the host.
-</Warning>
-
-For existing deployments, enabling Craft is more than setting `ENABLE_CRAFT=true`.
-You must also run the Craft compose overlay and set a `SANDBOX_API_SERVER_URL` that sandbox containers can reach.
-
-Read the [Craft deployment guide](/deployment/local/craft)
-before enabling Craft on an existing Docker Compose deployment.
+<Card title="Deploy Craft on Docker Compose" icon="docker" href="/deployment/local/craft_docker_compose">
+  Install the Craft overlay, configure the sandbox API URL, plan host capacity, and verify the runtime.
+</Card>
 
 <DeploymentNextSteps />
