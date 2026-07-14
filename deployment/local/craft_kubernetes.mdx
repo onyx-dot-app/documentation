@@ -61,9 +61,11 @@ sandboxes are recreated.
 
 ## Configure Helm
 
-Create a values file for Craft:
+Add the following settings to the values file used by your existing Onyx deployment.
+If `configMap` or `auth` is already present,
+merge these entries under the existing keys rather than adding a second block.
 
-```yaml craft-values.yaml
+```yaml values.yaml
 configMap:
   ENABLE_CRAFT: "true"
   SANDBOX_BACKEND: "kubernetes"
@@ -78,12 +80,25 @@ auth:
 `SANDBOX_API_SERVER_URL` can be the public Onyx URL or a cluster-internal URL.
 Use a scheme and hostname that resolve from the sandbox proxy and route to the Onyx API.
 
-Install or upgrade Onyx:
+Install or upgrade Onyx with your complete deployment values:
 
 ```bash
 helm upgrade --install onyx onyx/onyx \
   --namespace onyx \
   --create-namespace \
+  --values onyx-values.yaml
+```
+
+Replace `onyx-values.yaml` with the path to the values file used by your deployment.
+
+Alternatively, save only the Craft settings in a separate `craft-values.yaml` overlay.
+Pass your existing deployment values first and the Craft overlay second so Helm combines them:
+
+```bash
+helm upgrade --install onyx onyx/onyx \
+  --namespace onyx \
+  --create-namespace \
+  --values onyx-values.yaml \
   --values craft-values.yaml
 ```
 
@@ -98,7 +113,7 @@ Each active user receives a sandbox pod. The main sandbox container has these de
 | Ephemeral storage | `5Gi` | `20Gi` |
 
 The pod also includes initialization and sidecar containers for network setup, file transfer, snapshots, and restore.
-Set the main container resources through these `configMap` values:
+To change the main container resources, merge these `configMap` entries into your deployment values or Craft overlay:
 
 ```yaml
 configMap:
