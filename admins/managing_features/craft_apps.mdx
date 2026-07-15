@@ -67,42 +67,42 @@ it does not ask for an individual user's access token.
     Copy the Client ID and Client Secret from the Slack app's basic information.
   </Accordion>
 
-  <Accordion title="Google Calendar">
-    In Google Cloud Console, create or select a project, enable the **Google Calendar API**,
-    configure the OAuth consent screen, and create an OAuth 2.0 Client ID of type **Web application**.
-    Add the Onyx redirect URI under **Authorized redirect URIs**. Craft requests full Google Calendar access.
-  </Accordion>
+<Accordion title="Google Calendar">
+  In Google Cloud Console, create or select a project, enable the **Google Calendar API**,
+  configure the OAuth consent screen, and create an OAuth 2.0 Client ID of type **Web application**.
+  Add the Onyx redirect URI under **Authorized redirect URIs**. Craft requests full Google Calendar access.
+</Accordion>
 
-  <Accordion title="Google Drive">
-    In Google Cloud Console, enable both the **Google Drive API** and **Google Docs API**,
-    configure the OAuth consent screen, and create an OAuth 2.0 Web application client with the Onyx redirect URI.
-    Craft requests the full Drive scope so it can read, create, edit, and delete files;
-    action policies govern those operations inside Craft.
-  </Accordion>
+<Accordion title="Google Drive">
+  In Google Cloud Console, enable both the **Google Drive API** and **Google Docs API**,
+  configure the OAuth consent screen, and create an OAuth 2.0 Web application client with the Onyx redirect URI.
+  Craft requests the full Drive scope so it can read, create, edit, and delete files;
+  action policies govern those operations inside Craft.
+</Accordion>
 
-  <Accordion title="Gmail">
-    In Google Cloud Console, enable the **Gmail API**, configure the OAuth consent screen,
-    and create an OAuth 2.0 Web application client with the Onyx redirect URI. Craft requests `gmail.modify`,
-    which covers reading, labels, drafts, trash, and sending but not permanent message deletion.
-  </Accordion>
+<Accordion title="Gmail">
+  In Google Cloud Console, enable the **Gmail API**, configure the OAuth consent screen,
+  and create an OAuth 2.0 Web application client with the Onyx redirect URI. Craft requests `gmail.modify`,
+  which covers reading, labels, drafts, trash, and sending but not permanent message deletion.
+</Accordion>
 
-  <Accordion title="Linear">
-    In Linear, open **Settings → API → OAuth applications**, create an OAuth application,
-    and add the Onyx redirect URI to its callback URLs. Craft requests user-acting read and write access for issues,
-    projects, and comments.
-  </Accordion>
+<Accordion title="Linear">
+  In Linear, open **Settings → API → OAuth applications**, create an OAuth application,
+  and add the Onyx redirect URI to its callback URLs. Craft requests user-acting read and write access for issues,
+  projects, and comments.
+</Accordion>
 
-  <Accordion title="GitHub">
-    In GitHub, open **Settings → Developer settings → OAuth Apps**, create an OAuth App,
-    and use the Onyx redirect URI as its authorization callback URL. Craft requests `repo`, `read:org`, and `read:user`;
-    the `repo` scope includes repositories the connecting user can access, including private repositories.
-  </Accordion>
+<Accordion title="GitHub">
+  In GitHub, open **Settings → Developer settings → OAuth Apps**, create an OAuth App,
+  and use the Onyx redirect URI as its authorization callback URL. Craft requests `repo`, `read:org`, and `read:user`;
+  the `repo` scope includes repositories the connecting user can access, including private repositories.
+</Accordion>
 
-  <Accordion title="HubSpot">
-    From a HubSpot developer account, create an app and add the Onyx redirect URI on its **Auth** tab.
-    Configure read access for owners, contacts, companies, and deals. Contact, company,
-    and deal write scopes are optional so read-only HubSpot accounts can still connect.
-  </Accordion>
+<Accordion title="HubSpot">
+  From a HubSpot developer account, create an app and add the Onyx redirect URI on its **Auth** tab.
+  Configure read access for owners, contacts, companies, and deals. Contact, company,
+  and deal write scopes are optional so read-only HubSpot accounts can still connect.
+</Accordion>
 
   <Accordion title="Notion">
     Create a **Public** integration from Notion's integrations settings and add the Onyx redirect URI under **OAuth
@@ -255,7 +255,9 @@ example-api.zip
     └── example_api.py
 ```
 
-The ZIP filename becomes the App slug. Put a valid `SKILL.md` at the root and review every included file.
+The ZIP filename becomes the App slug.
+Put a valid `SKILL.md` at the archive root or directly inside one enclosing folder, and review every included file.
+When you use an enclosing folder, keep every App file inside it.
 The default limits are 25 MB per extracted file and 100 MB for the complete bundle.
 See [Managing Craft Skills](/admins/managing_features/craft_skills#prepare-a-custom-skill)
 for the bundle format and review checklist.
