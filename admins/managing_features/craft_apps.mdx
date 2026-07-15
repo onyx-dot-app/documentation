@@ -290,25 +290,25 @@ Disable them when they should not be available.
     Check whether the provider's consent screen is limited to approved test users or workspace members.
   </Accordion>
 
-<Accordion title="An enabled App does not appear to users">
-  Confirm that its card says **Enabled** and that the user has Craft access. Refresh the Apps page. For a custom App,
-  confirm its bundle and configuration saved successfully.
-</Accordion>
+  <Accordion title="An enabled App does not appear to users">
+    Confirm that its card says **Enabled** and that the user has Craft access. Refresh the Apps page. For a custom App,
+    confirm its bundle and configuration saved successfully.
+  </Accordion>
 
-<Accordion title="A user connected successfully but an action is blocked">
-  Check the action's admin policy and the scopes or capabilities granted by the external account.
-  A Deny policy cannot be overridden. An Ask request can also fail if the user rejects it or the approval expires.
-</Accordion>
+  <Accordion title="A user connected successfully but an action is blocked">
+    Check the action's admin policy and the scopes or capabilities granted by the external account.
+    A Deny policy cannot be overridden. An Ask request can also fail if the user rejects it or the approval expires.
+  </Accordion>
 
-<Accordion title="A custom App prompts for every request">
-  This is expected. Custom Apps use one synthesized Ask action for every request matching their URL patterns.
-  They do not currently support per-action policies.
-</Accordion>
+  <Accordion title="A custom App prompts for every request">
+    This is expected. Custom Apps use one synthesized Ask action for every request matching their URL patterns.
+    They do not currently support per-action policies.
+  </Accordion>
 
-<Accordion title="A custom App calls the wrong service or uses the wrong credential">
-  Check for overlapping URL patterns. Make every host and path as specific as possible.
-  The lowest-ID App wins when multiple Apps match the same URL, including when that first App is disabled.
-</Accordion>
+  <Accordion title="A custom App calls the wrong service or uses the wrong credential">
+    Check for overlapping URL patterns. Make every host and path as specific as possible.
+    The lowest-ID App wins when multiple Apps match the same URL, including when that first App is disabled.
+  </Accordion>
 
   <Accordion title="A Scheduled Task is awaiting approval">
     Confirm that the task owner is still connected to the App and selected it under **Pre-approved Apps**.
