@@ -8,9 +8,8 @@ Apps give Craft controlled, authenticated access to external services.
 Admins configure Apps under **Admin Panel → Craft → Apps**. Users connect their accounts under **Craft → Apps**.
 
 <Note>
-  Craft Apps are different from Onyx connectors. A connector indexes shared
-  content into Onyx knowledge. An App retrieves live information from a user's
-  external account and can take actions in that service.
+  Craft Apps are different from Onyx connectors. A connector indexes shared content into Onyx knowledge.
+  An App retrieves live information from a user's external account and can take actions in that service.
 </Note>
 
 ## Choose the setup path
@@ -42,9 +41,8 @@ The App management form asks for the OAuth client ID and client secret;
 it does not ask for an individual user's access token.
 
 <Note>
-  On self-hosted Onyx, the callback host comes from `WEB_DOMAIN`. Confirm that
-  setting uses the public domain registered with the provider before users
-  connect.
+  On self-hosted Onyx, the callback host comes from `WEB_DOMAIN`.
+  Confirm that setting uses the public domain registered with the provider before users connect.
 </Note>
 
 <AccordionGroup>
@@ -67,49 +65,43 @@ it does not ask for an individual user's access token.
 
     Craft acts with a user token; no bot user is required.
     Copy the Client ID and Client Secret from the Slack app's basic information.
-
   </Accordion>
 
 <Accordion title="Google Calendar">
-  In Google Cloud Console, create or select a project, enable the **Google
-  Calendar API**, configure the OAuth consent screen, and create an OAuth 2.0
-  Client ID of type **Web application**. Add the Onyx redirect URI under
-  **Authorized redirect URIs**. Craft requests full Google Calendar access.
+  In Google Cloud Console, create or select a project, enable the **Google Calendar API**,
+  configure the OAuth consent screen, and create an OAuth 2.0 Client ID of type **Web application**.
+  Add the Onyx redirect URI under **Authorized redirect URIs**. Craft requests full Google Calendar access.
 </Accordion>
 
 <Accordion title="Google Drive">
-  In Google Cloud Console, enable both the **Google Drive API** and **Google
-  Docs API**, configure the OAuth consent screen, and create an OAuth 2.0 Web
-  application client with the Onyx redirect URI. Craft requests the full Drive
-  scope so it can read, create, edit, and delete files; action policies govern
-  those operations inside Craft.
+  In Google Cloud Console, enable both the **Google Drive API** and **Google Docs API**,
+  configure the OAuth consent screen, and create an OAuth 2.0 Web application client with the Onyx redirect URI.
+  Craft requests the full Drive scope so it can read, create, edit, and delete files;
+  action policies govern those operations inside Craft.
 </Accordion>
 
 <Accordion title="Gmail">
-  In Google Cloud Console, enable the **Gmail API**, configure the OAuth consent
-  screen, and create an OAuth 2.0 Web application client with the Onyx redirect
-  URI. Craft requests `gmail.modify`, which covers reading, labels, drafts,
-  trash, and sending but not permanent message deletion.
+  In Google Cloud Console, enable the **Gmail API**, configure the OAuth consent screen,
+  and create an OAuth 2.0 Web application client with the Onyx redirect URI. Craft requests `gmail.modify`,
+  which covers reading, labels, drafts, trash, and sending but not permanent message deletion.
 </Accordion>
 
 <Accordion title="Linear">
-  In Linear, open **Settings → API → OAuth applications**, create an OAuth
-  application, and add the Onyx redirect URI to its callback URLs. Craft
-  requests user-acting read and write access for issues, projects, and comments.
+  In Linear, open **Settings → API → OAuth applications**, create an OAuth application,
+  and add the Onyx redirect URI to its callback URLs. Craft requests user-acting read and write access for issues,
+  projects, and comments.
 </Accordion>
 
 <Accordion title="GitHub">
-  In GitHub, open **Settings → Developer settings → OAuth Apps**, create an
-  OAuth App, and use the Onyx redirect URI as its authorization callback URL.
-  Craft requests `repo`, `read:org`, and `read:user`; the `repo` scope includes
-  repositories the connecting user can access, including private repositories.
+  In GitHub, open **Settings → Developer settings → OAuth Apps**, create an OAuth App,
+  and use the Onyx redirect URI as its authorization callback URL. Craft requests `repo`, `read:org`, and `read:user`;
+  the `repo` scope includes repositories the connecting user can access, including private repositories.
 </Accordion>
 
 <Accordion title="HubSpot">
-  From a HubSpot developer account, create an app and add the Onyx redirect URI
-  on its **Auth** tab. Configure read access for owners, contacts, companies,
-  and deals. Contact, company, and deal write scopes are optional so read-only
-  HubSpot accounts can still connect.
+  From a HubSpot developer account, create an app and add the Onyx redirect URI on its **Auth** tab.
+  Configure read access for owners, contacts, companies, and deals. Contact, company,
+  and deal write scopes are optional so read-only HubSpot accounts can still connect.
 </Accordion>
 
   <Accordion title="Notion">
@@ -127,20 +119,20 @@ it does not ask for an individual user's access token.
     open the App configured by Onyx.
   </Step>
 
-<Step title="Enter organization credentials">
-  On self-hosted Onyx, enter the OAuth client ID and client secret from the
-  provider. On Onyx Cloud, these fields are managed by Onyx and are not shown.
-</Step>
+  <Step title="Enter organization credentials">
+    On self-hosted Onyx, enter the OAuth client ID and client secret from the provider. On Onyx Cloud,
+    these fields are managed by Onyx and are not shown.
+  </Step>
 
-<Step title="Review permissions">
-  Choose a policy for all actions, or open **Advanced** and set policies action
-  by action. Review every write, send, delete, and publish action.
-</Step>
+  <Step title="Review permissions">
+    Choose a policy for all actions, or open **Advanced** and set policies action by action. Review every write, send,
+    delete, and publish action.
+  </Step>
 
-<Step title="Enable the App">
-  Save the configuration and confirm the App card says **Enabled**. Disabled
-  Apps do not appear to users and cannot inject credentials.
-</Step>
+  <Step title="Enable the App">
+    Save the configuration and confirm the App card says **Enabled**.
+    Disabled Apps do not appear to users and cannot inject credentials.
+  </Step>
 
   <Step title="Test as a user">
     Connect a pilot user's account from **Craft → Apps**. Test a read and a representative write,
@@ -166,9 +158,8 @@ The main permissions selector applies **Auto-approve** or **Ask** to every actio
 Open **Advanced** to create a mixed policy or choose **Deny** for individual actions.
 
 <Info>
-  If one outbound request matches more than one action, the strictest matching
-  policy wins: **Deny**, then **Ask**, then **Auto-approve**. A request to a
-  built-in App that does not match a cataloged action falls back to **Ask**.
+  If one outbound request matches more than one action, the strictest matching policy wins: **Deny**, then **Ask**,
+  then **Auto-approve**. A request to a built-in App that does not match a cataloged action falls back to **Ask**.
 </Info>
 
 An in-session **Approve for session** decision applies only to matching actions in that session.
@@ -223,11 +214,10 @@ https://*.example.com/*
 ```
 
 <Warning>
-  Custom Apps cannot be used to reach private, loopback, link-local, cloud
-  metadata, or other non-public network addresses. The sandbox proxy blocks
-  internal destinations even when a URL pattern includes them. Expose only a
-  deliberately secured, publicly routable HTTPS endpoint if Craft must call a
-  custom service.
+  Custom Apps cannot be used to reach private, loopback, link-local, cloud metadata,
+  or other non-public network addresses.
+  The sandbox proxy blocks internal destinations even when a URL pattern includes them.
+  Expose only a deliberately secured, publicly routable HTTPS endpoint if Craft must call a custom service.
 </Warning>
 
 Avoid overlapping URL patterns between Apps. When more than one App claims the same URL,
@@ -274,10 +264,9 @@ for the bundle format and review checklist.
 
 <Warning>
   Custom Apps do not have a per-action catalog. For a connected custom App,
-  every request matching an upstream URL pattern is treated as an unspecified
-  **Ask** action. Admins cannot Auto-approve or Deny individual custom App
-  operations. Disable the App to stop its use, and be especially cautious when
-  users pre-approve it for a Scheduled Task.
+  every request matching an upstream URL pattern is treated as an unspecified **Ask** action.
+  Admins cannot Auto-approve or Deny individual custom App operations. Disable the App to stop its use,
+  and be especially cautious when users pre-approve it for a Scheduled Task.
 </Warning>
 
 ## Manage credentials and lifecycle
@@ -302,27 +291,23 @@ Disable them when they should not be available.
   </Accordion>
 
 <Accordion title="An enabled App does not appear to users">
-  Confirm that its card says **Enabled** and that the user has Craft access.
-  Refresh the Apps page. For a custom App, confirm its bundle and configuration
-  saved successfully.
+  Confirm that its card says **Enabled** and that the user has Craft access. Refresh the Apps page. For a custom App,
+  confirm its bundle and configuration saved successfully.
 </Accordion>
 
 <Accordion title="A user connected successfully but an action is blocked">
-  Check the action's admin policy and the scopes or capabilities granted by the
-  external account. A Deny policy cannot be overridden. An Ask request can also
-  fail if the user rejects it or the approval expires.
+  Check the action's admin policy and the scopes or capabilities granted by the external account.
+  A Deny policy cannot be overridden. An Ask request can also fail if the user rejects it or the approval expires.
 </Accordion>
 
 <Accordion title="A custom App prompts for every request">
-  This is expected. Custom Apps use one synthesized Ask action for every request
-  matching their URL patterns. They do not currently support per-action
-  policies.
+  This is expected. Custom Apps use one synthesized Ask action for every request matching their URL patterns.
+  They do not currently support per-action policies.
 </Accordion>
 
 <Accordion title="A custom App calls the wrong service or uses the wrong credential">
-  Check for overlapping URL patterns. Make every host and path as specific as
-  possible. The lowest-ID App wins when multiple Apps match the same URL,
-  including when that first App is disabled.
+  Check for overlapping URL patterns. Make every host and path as specific as possible.
+  The lowest-ID App wins when multiple Apps match the same URL, including when that first App is disabled.
 </Accordion>
 
   <Accordion title="A Scheduled Task is awaiting approval">
