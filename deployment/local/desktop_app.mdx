@@ -62,7 +62,8 @@ The Server URL can be changed at any time from the **Settings** screen (`⌘ ,` 
 
 For organizations rolling out the desktop app at scale, you can pre-configure the Server URL (and other options)
 so users skip the first-launch **Settings** prompt entirely.
-Place a `config.json` file on each machine before the user first opens the app.
+Place a `config.json` file on each machine — creating any missing parent folders — before the user first opens the app.
+On launch, Onyx reads the file and connects to your instance directly; users only need to sign in.
 
 ### Configuration File Location
 
@@ -114,30 +115,6 @@ Example `config.json`:
 
 The file also accepts `show_menu_bar` (boolean, default `true`) and `hide_window_decorations` (boolean,
 default `false`), which are normally toggled from the app menu rather than pre-configured.
-
-### Pre-Provisioning for Users
-
-<Steps>
-  <Step title="Create the config file">
-    On each machine, create `config.json` at the [path for the operating system](#configuration-file-location),
-    creating any missing parent folders. Do this before the user first opens the app.
-  </Step>
-
-  <Step title="Set the Server URL">
-    Add at least `server_url` pointing at your Onyx instance. Include `window_title` and any other options as needed.
-
-    ```json
-    {
-      "server_url": "https://onyx.yourcompany.com"
-    }
-    ```
-  </Step>
-
-  <Step title="Launch the app">
-    When the user opens Onyx, it reads `config.json` and connects to your instance directly — no Server URL prompt.
-    Users only need to sign in.
-  </Step>
-</Steps>
 
 <Tip>
   To change the configuration after first launch, edit `config.json` and restart the app,
