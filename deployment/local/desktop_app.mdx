@@ -85,13 +85,11 @@ The app reads its settings from a `config.json` file at the following location:
   <Tab title="Linux">
     ```
     ~/.config/onyx-desktop/config.json
+    # or, if $XDG_CONFIG_HOME is set:
+    $XDG_CONFIG_HOME/onyx-desktop/config.json
     ```
   </Tab>
 </Tabs>
-
-<Note>
-  On Linux, if `$XDG_CONFIG_HOME` is set, the file lives at `$XDG_CONFIG_HOME/onyx-desktop/config.json` instead.
-</Note>
 
 Example `config.json`:
 
