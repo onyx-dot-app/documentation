@@ -43,25 +43,111 @@ Download the latest Onyx Desktop App for your platform:
   are available on the [GitHub Releases page](https://github.com/onyx-dot-app/onyx/releases/latest).
 </Tip>
 
-## Installation Options
+## First Launch
 
-**Self-hosted users**: On first launch, users will need to configure the connection to your Onyx instance:
+**Self-hosted users**: On first launch,
+the app opens a **Settings** screen to configure the connection to your Onyx instance:
 
 - **Server URL**: Your Onyx instance URL (e.g., `https://onyx.yourcompany.com`)
 - **Authentication**: Sign in with your configured authentication method
 
+The Server URL can be changed at any time from the **Settings** screen (`⌘ ,` on macOS, `Ctrl ,` on Windows and Linux).
+
 <Note>
-  The desktop app will remember the server URL after initial configuration.
-  Users only need to authenticate on subsequent launches if their session expires.
+  The desktop app remembers the Server URL after initial configuration.
+  Users only need to authenticate again on subsequent launches if their session expires.
 </Note>
 
 ## Enterprise Deployment
 
-For organizations deploying the desktop app at scale, you can pre-configure the connection settings.
+For organizations rolling out the desktop app at scale, you can pre-configure the Server URL (and other options)
+so users skip the first-launch **Settings** prompt entirely.
+Place a `config.json` file on each machine before the user first opens the app.
+
+<Warning>
+  The Server URL is a **client-side** setting that the app reads *before* it connects to any backend,
+  so it cannot be pushed from the Onyx server.
+  It also cannot be set through installer properties or environment variables — for example,
+  `msiexec` properties such as `msiexec /i Onyx_x64.msi SERVER_URL=...` have no effect.
+  Use the `config.json` file described below.
+</Warning>
+
+### Configuration File Location
+
+The app reads its settings from a `config.json` file at the following location:
+
+<Tabs>
+  <Tab title="Windows">
+    ```
+    %APPDATA%\onyx\onyx-desktop\config\config.json
+    ```
+  </Tab>
+
+  <Tab title="macOS">
+    ```
+    ~/Library/Application Support/app.onyx.onyx-desktop/config.json
+    ```
+  </Tab>
+
+  <Tab title="Linux">
+    ```
+    ~/.config/onyx-desktop/config.json
+    ```
+  </Tab>
+</Tabs>
+
+<Note>
+  On Linux, if `$XDG_CONFIG_HOME` is set, the file lives at `$XDG_CONFIG_HOME/onyx-desktop/config.json` instead.
+</Note>
+
+Example `config.json`:
+
+```json
+{
+  "server_url": "https://onyx.yourcompany.com",
+  "window_title": "Onyx"
+}
+```
 
 ## Configuration Options
 
-| Option | Description |
-|--------|-------------|
-| `server_url` | Your Onyx instance URL |
-| `window_title` | Custom window title |
+<ParamField path="server_url" type="string" default="https://cloud.onyx.app">
+  Your Onyx instance URL. Must start with `http://` or `https://` (a trailing slash is ignored).
+  This field is required for the app to skip the first-launch prompt.
+</ParamField>
+
+<ParamField path="window_title" type="string" default="Onyx">
+  Custom title shown in the application window.
+</ParamField>
+
+The file also accepts `show_menu_bar` (boolean, default `true`) and `hide_window_decorations` (boolean,
+default `false`), which are normally toggled from the app menu rather than pre-configured.
+
+### Pre-Provisioning for Users
+
+<Steps>
+  <Step title="Create the config file">
+    On each machine, create `config.json` at the [path for the operating system](#configuration-file-location),
+    creating any missing parent folders. Do this before the user first opens the app.
+  </Step>
+
+  <Step title="Set the Server URL">
+    Add at least `server_url` pointing at your Onyx instance. Include `window_title` and any other options as needed.
+
+    ```json
+    {
+      "server_url": "https://onyx.yourcompany.com"
+    }
+    ```
+  </Step>
+
+  <Step title="Launch the app">
+    When the user opens Onyx, it reads `config.json` and connects to your instance directly — no Server URL prompt.
+    Users only need to sign in.
+  </Step>
+</Steps>
+
+<Tip>
+  To change the configuration after first launch, edit `config.json` and restart the app,
+  or update the Server URL from the in-app **Settings** screen.
+</Tip>
