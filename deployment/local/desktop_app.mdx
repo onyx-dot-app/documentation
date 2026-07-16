@@ -43,25 +43,73 @@ Download the latest Onyx Desktop App for your platform:
   are available on the [GitHub Releases page](https://github.com/onyx-dot-app/onyx/releases/latest).
 </Tip>
 
-## Installation Options
+## First Launch
 
-**Self-hosted users**: On first launch, users will need to configure the connection to your Onyx instance:
+**Self-hosted users**: On first launch,
+the app opens a **Settings** screen to configure the connection to your Onyx instance:
 
 - **Server URL**: Your Onyx instance URL (e.g., `https://onyx.yourcompany.com`)
 - **Authentication**: Sign in with your configured authentication method
 
-<Note>
-  The desktop app will remember the server URL after initial configuration.
-  Users only need to authenticate on subsequent launches if their session expires.
-</Note>
+The Server URL can be changed at any time from the **Settings** screen (`⌘ ,` on macOS, `Ctrl ,` on Windows and Linux).
 
 ## Enterprise Deployment
 
-For organizations deploying the desktop app at scale, you can pre-configure the connection settings.
+For organizations rolling out the desktop app at scale, you can pre-configure the Server URL (and other options)
+so users skip the first-launch **Settings** prompt entirely.
+Place a `config.json` file on each machine before the user first opens the app. On launch,
+Onyx reads the file and connects to your instance directly; users only need to sign in.
+
+### Configuration File Location
+
+The app reads its settings from a `config.json` file at the following location:
+
+<Tabs>
+  <Tab title="Windows">
+    ```
+    %APPDATA%\onyx\onyx-desktop\config\config.json
+    ```
+  </Tab>
+
+  <Tab title="macOS">
+    ```
+    ~/Library/Application Support/app.onyx.onyx-desktop/config.json
+    ```
+  </Tab>
+
+  <Tab title="Linux">
+    ```
+    ~/.config/onyx-desktop/config.json
+    # or, if $XDG_CONFIG_HOME is set:
+    $XDG_CONFIG_HOME/onyx-desktop/config.json
+    ```
+  </Tab>
+</Tabs>
+
+Example `config.json`:
+
+```json
+{
+  "server_url": "https://onyx.yourcompany.com",
+  "window_title": "Onyx"
+}
+```
 
 ## Configuration Options
 
-| Option | Description |
-|--------|-------------|
-| `server_url` | Your Onyx instance URL |
-| `window_title` | Custom window title |
+<ParamField path="server_url" type="string" default="https://cloud.onyx.app">
+  Your Onyx instance URL. Must start with `http://` or `https://` (a trailing slash is ignored).
+  This field is required for the app to skip the first-launch prompt.
+</ParamField>
+
+<ParamField path="window_title" type="string" default="Onyx">
+  Custom title shown in the application window.
+</ParamField>
+
+The file also accepts `show_menu_bar` (boolean, default `true`) and `hide_window_decorations` (boolean,
+default `false`), which are normally toggled from the app menu rather than pre-configured.
+
+<Tip>
+  To change the configuration after first launch, edit `config.json` and restart the app,
+  or update the Server URL from the in-app **Settings** screen.
+</Tip>
