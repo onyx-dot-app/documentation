@@ -64,14 +64,6 @@ For organizations rolling out the desktop app at scale, you can pre-configure th
 so users skip the first-launch **Settings** prompt entirely.
 Place a `config.json` file on each machine before the user first opens the app.
 
-<Warning>
-  The Server URL is a **client-side** setting that the app reads *before* it connects to any backend,
-  so it cannot be pushed from the Onyx server.
-  It also cannot be set through installer properties or environment variables — for example,
-  `msiexec` properties such as `msiexec /i Onyx_x64.msi SERVER_URL=...` have no effect.
-  Use the `config.json` file described below.
-</Warning>
-
 ### Configuration File Location
 
 The app reads its settings from a `config.json` file at the following location:
