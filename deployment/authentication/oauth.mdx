@@ -9,7 +9,8 @@ providing a seamless login experience through existing Google accounts.
 
 Google providers are managed from the admin panel at **Admin Panel** → **Organization** → [SSO
 Providers](/deployment/authentication/sso_providers). No environment variables or restarts are needed,
-and you can configure more than one provider.
+and you can configure more than one provider (more than one simultaneously enabled provider requires the Business
+plan, see [Plan Availability](/deployment/authentication/sso_providers#plan-availability)).
 
 **Prerequisites:**
 - [Google Cloud Console](https://console.cloud.google.com/) access
@@ -161,7 +162,7 @@ This flow uses the redirect URI `https://YOUR_ONYX_DOMAIN.com/auth/oauth/callbac
   auth:
     secrets:
       OAUTH_CLIENT_ID: <CLIENT_ID_FROM_GOOGLE>
-      OAUTH_CLIENT_SECRET:<CLIENT_SECRET_FROM_GOOGLE>
+      OAUTH_CLIENT_SECRET: <CLIENT_SECRET_FROM_GOOGLE>
   configMap:
     AUTH_TYPE: google_oauth
   ```

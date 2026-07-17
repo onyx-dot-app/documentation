@@ -8,7 +8,9 @@ Configure Onyx with SAML authentication.
 
 SAML providers are managed from the admin panel at **Admin Panel** → **Organization** → [SSO
 Providers](/deployment/authentication/sso_providers). No configuration files or restarts are needed,
-and you can configure more than one provider. SAML works on the standard Onyx images.
+and you can configure more than one provider (more than one simultaneously enabled provider requires the Business
+plan, see [Plan Availability](/deployment/authentication/sso_providers#plan-availability)). SAML works on the standard
+Onyx images.
 
 This guide walks through the setup for Okta. Other identity providers follow a similar process.
 Please contact us if you need help with a different identity provider.
@@ -34,7 +36,7 @@ Please contact us if you need help with a different identity provider.
     Add a **Single sign-on URL** (the ACS URL, shared by every SAML provider on the instance):
 
       ```
-      https://YOUR_ONYX_DOMAIN.com/api/auth/saml/callback
+      https://YOUR_ONYX_DOMAIN.com/auth/saml/callback
       ```
 
     Add an **Audience URI (SP Entity ID)**. Any stable identifier works,
@@ -100,7 +102,7 @@ Please contact us if you need help with a different identity provider.
     Navigate to **Admin Panel** → **Organization** → [SSO Providers](/deployment/authentication/sso_providers)
     and click **Add Provider**.
 
-    Select the **SAML** provider type, enter the **Name** you used in the single sign-on URL,
+    Select the **SAML** provider type, give the provider a **Name** (a lowercase slug, e.g. `okta`),
     and paste the **IdP entity ID**, **IdP SSO URL**, **IdP x509 certificate**,
     and the **SP entity ID** from the Okta application.
 
@@ -122,18 +124,20 @@ Please contact us if you need help with a different identity provider.
 
 ## Legacy Configuration
 
-Versions before `v4.4.0` configure a single SAML provider through a `settings.yaml` file and require building Onyx
-images from source. That flow uses the ACS URL `https://YOUR_ONYX_DOMAIN.com/auth/saml/callback`.
+Versions before `v4.4.0` configure a single SAML provider through a `settings.json` file placed in the SAML config
+directory (`SAML_CONF_DIR`, default `/app/onyx/configs/saml_config`). That flow uses the same ACS URL as above.
 
 <Note>
-  A legacy `settings.yaml` configuration is imported as an SSO provider entry automatically when the upgraded api server
+  A legacy `settings.json` configuration is imported as an SSO provider entry automatically when the upgraded api server
   first starts on `v4.4.0` or later, and existing logins keep working. The migrated provider keeps using the ACS URL
   already registered with your IdP, so nothing changes on the IdP side.
-  Keep the configuration mounted through the upgrade, then remove it after the provider appears in the admin panel.
+  Keep the settings file mounted and `AUTH_TYPE=saml` set through the upgrade, then remove both after the provider
+  appears in the admin panel.
 </Note>
 
 To configure the legacy flow,
-copy `onyx/backend/ee/onyx/configs/saml_config/template_settings.yaml` to `settings.yaml` in the same directory,
+copy `onyx/backend/onyx/configs/saml_config/template.settings.json` to `settings.json` in the same directory
+(the api server reads `settings.json` from `SAML_CONF_DIR`, which defaults to that directory),
 fill in the same IdP and SP values described above, and set:
 
   ```bash .env
