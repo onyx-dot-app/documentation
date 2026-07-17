@@ -97,19 +97,14 @@ Example `config.json`:
 
 ## Configuration Options
 
-<ParamField path="server_url" type="string" default="https://cloud.onyx.app">
-  Your Onyx instance URL. Must start with `http://` or `https://` (a trailing slash is ignored).
-  This field is required for the app to skip the first-launch prompt.
-</ParamField>
+| Option | Values | Platforms | Description |
+|--------|--------|-----------|-------------|
+| `server_url` | string<br />(default: `"https://cloud.onyx.app"`) | Windows, macOS, Linux | The Onyx instance the app connects to. Required for the app to skip the first-launch **Settings** prompt. A trailing slash is ignored. |
+| `window_title` | string<br />(default: `"Onyx"`) | Windows, macOS, Linux | Custom title shown in the application window. |
+| `show_menu_bar` | boolean<br />(default: `true`) | Windows, Linux | Whether the application menu bar is shown. Normally toggled from **Window → Show Menu Bar** rather than pre-configured. Ignored on macOS, where the menu bar is managed by the operating system. |
+| `hide_window_decorations` | boolean<br />(default: `false`) | Linux | Hides the window's title bar and borders. Normally toggled from **Window → Hide Window Decorations**. |
 
-<ParamField path="window_title" type="string" default="Onyx">
-  Custom title shown in the application window.
-</ParamField>
-
-The file also accepts `show_menu_bar` (boolean, default `true`) and `hide_window_decorations` (boolean,
-default `false`), which are normally toggled from the app menu rather than pre-configured.
-
-<Tip>
-  To change the configuration after first launch, edit `config.json` and restart the app,
-  or update the Server URL from the in-app **Settings** screen.
-</Tip>
+<Warning>
+  `config.json` must be valid JSON with values of the correct type.
+  A single invalid entry causes the app to discard the **entire** file and fall back to the default settings.
+</Warning>
