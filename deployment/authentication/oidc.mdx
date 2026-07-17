@@ -111,7 +111,8 @@ This flow uses the redirect URI `https://YOUR_ONYX_DOMAIN.com/auth/oidc/callback
 
 <Note>
   An environment-based configuration is migrated to an SSO provider entry automatically when you upgrade to `v4.4.0` or
-  later, and existing logins keep working. Keep the configuration below in place through the upgrade,
+  later, and existing logins keep working. The migrated provider keeps using the redirect URI already registered with
+  your IdP, so nothing changes on the IdP side. Keep the configuration below in place through the upgrade,
   then remove it after the provider appears in the admin panel.
 </Note>
 

@@ -31,10 +31,10 @@ Please contact us if you need help with a different identity provider.
       If you are white-labeling Onyx, you can freely name your application and upload your own logo.
     </Tip>
 
-    Add a **Single sign-on URL** using the name you will give the provider in Onyx (a lowercase slug, e.g. `okta`):
+    Add a **Single sign-on URL** (the ACS URL, shared by every SAML provider on the instance):
 
       ```
-      https://YOUR_ONYX_DOMAIN.com/api/auth/saml/YOUR_PROVIDER_NAME/callback
+      https://YOUR_ONYX_DOMAIN.com/api/auth/saml/callback
       ```
 
     Add an **Audience URI (SP Entity ID)**. Any stable identifier works,
@@ -127,7 +127,8 @@ images from source. That flow uses the ACS URL `https://YOUR_ONYX_DOMAIN.com/aut
 
 <Note>
   A legacy `settings.yaml` configuration is imported as an SSO provider entry automatically when the upgraded api server
-  first starts on `v4.4.0` or later, and existing logins keep working.
+  first starts on `v4.4.0` or later, and existing logins keep working. The migrated provider keeps using the ACS URL
+  already registered with your IdP, so nothing changes on the IdP side.
   Keep the configuration mounted through the upgrade, then remove it after the provider appears in the admin panel.
 </Note>
 

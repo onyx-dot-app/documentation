@@ -143,7 +143,8 @@ This flow uses the redirect URI `https://YOUR_ONYX_DOMAIN.com/auth/oauth/callbac
 
 <Note>
   An environment-based configuration is migrated to an SSO provider entry automatically when you upgrade to `v4.4.0` or
-  later, and existing logins keep working. Keep the configuration below in place through the upgrade,
+  later, and existing logins keep working. The migrated provider keeps using the redirect URI already registered in the
+  Google Cloud console, so nothing changes on the Google side. Keep the configuration below in place through the upgrade,
   then remove it after the provider appears in the admin panel.
 </Note>
 
