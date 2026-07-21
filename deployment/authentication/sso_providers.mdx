@@ -72,3 +72,11 @@ Enabling more than one provider at the same time requires the **Business** plan 
   add a new provider and disable the old one.
 - Providers are disabled rather than deleted, so accounts that signed in
   through a provider survive a disable and re-enable.
+- Accounts do not link across providers. A user account belongs to the sign-in
+  method it first used. Signing in through a different provider with the same
+  email fails with an error instead of merging the accounts. To move a user to
+  a new provider, have an admin deactivate and then delete the account so the
+  user can sign up fresh through it.
+- If open sign-up is restricted (**Admin Panel** → **Users** → **Restrict Open
+  Sign-Up**), SSO sign-ups are gated too. New users who have not been invited
+  are rejected at sign-in until an admin invites their email address.
