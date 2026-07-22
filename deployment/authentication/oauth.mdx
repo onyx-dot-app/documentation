@@ -7,6 +7,11 @@ icon: "key"
 Configure Onyx to use Google OAuth for user authentication,
 providing a seamless login experience through existing Google accounts.
 
+Google providers are managed at **Admin Panel** → **Organization** → [SSO
+Providers](/deployment/authentication/sso_providers). No environment variables or restarts are needed,
+and you can configure multiple providers (enabling more than one at the same time requires the Business plan,
+see [Plan Availability](/deployment/authentication/sso_providers#plan-availability)).
+
 **Prerequisites:**
 - [Google Cloud Console](https://console.cloud.google.com/) access
 - Administrative permissions to configure OAuth applications
@@ -62,20 +67,22 @@ providing a seamless login experience through existing Google accounts.
   <Step title="Configure OAuth Client">
     **Name:** `Onyx`
 
-    **Authorized JavaScript origins** and **Authorized redirect URIs** depend on your deployment environment.
+    Add your Onyx origin under **Authorized JavaScript origins**,
+    and add an **Authorized redirect URI** using the name you will give the provider in Onyx (a lowercase slug, e.g.
+    `google`):
 
     If hosting Onyx locally use:
 
     ```
     http://localhost:3000
-    http://localhost:3000/auth/oauth/callback
+    http://localhost:3000/api/auth/oidc/YOUR_PROVIDER_NAME/callback
     ```
 
     If hosting Onyx on a custom domain use:
 
     ```
     https://YOUR_ONYX_DOMAIN.com
-    https://YOUR_ONYX_DOMAIN.com/auth/oauth/callback
+    https://YOUR_ONYX_DOMAIN.com/api/auth/oidc/YOUR_PROVIDER_NAME/callback
     ```
 
     <img className="rounded-image" src="/assets/deployment/gcc_oauth_client_details.png" alt="Google Cloud Console OAuth Client Creation Page"/>
@@ -90,32 +97,15 @@ providing a seamless login experience through existing Google accounts.
     save the **Client ID** and **Client Secret** to a password or secrets manager.
   </Step>
 
-  <Step title="Configure Onyx">
-    Configure Onyx with the following environment variables in your `.env` or `values.yaml` file (Docker and Kubernetes,
-    respectively).
+  <Step title="Add the Provider in Onyx">
+    Navigate to **Admin Panel** → **Organization** → [SSO Providers](/deployment/authentication/sso_providers)
+    and click **Add Provider**.
 
-    ```bash .env
-    AUTH_TYPE=google_oauth
-    OAUTH_CLIENT_ID=YOUR_CLIENT_ID
-    OAUTH_CLIENT_SECRET=YOUR_CLIENT_SECRET
+    Select the **Google** provider type, enter the **Name** you used in the redirect URI,
+    and paste the **Client ID** and **Client Secret**.
 
-    # If you are deploying to a custom domain, you will need to set the `WEB_DOMAIN` environment variable.
-    WEB_DOMAIN=https://YOUR_ONYX_DOMAIN.com
-    ```
-
-    <Note>
-      If you're using Docker but don't have a `.env` file,
-      copy `onyx/deployment/docker_compose/env.prod.template` to a new `.env` file in the same directory.
-    </Note>
-
-    ```bash values.yaml
-    auth:
-      secrets:
-        OAUTH_CLIENT_ID: <CLIENT_ID_FROM_GOOGLE>
-        OAUTH_CLIENT_SECRET:<CLIENT_SECRET_FROM_GOOGLE>
-    configMap:
-      AUTH_TYPE: google_oauth
-    ```
+    After creating the provider, its row shows the exact **Redirect URI**.
+    Confirm it matches what you registered on the OAuth client, then sign in through the new option on the login page.
   </Step>
 </Steps>
 
@@ -146,3 +136,39 @@ GOOGLE_OAUTH_SCOPE_OVERRIDE=openid,email,profile,https://www.googleapis.com/auth
   These scopes apply only to the **app login** and pass-through OAuth flows.
   The Google Drive and Gmail **connectors** use their own scopes and OAuth flow, which are not affected by this setting.
 </Note>
+
+## Upgrading from v4.3 or Earlier
+
+Versions before `v4.4.0` configured a single Google provider through environment variables,
+using the redirect URI `https://YOUR_ONYX_DOMAIN.com/auth/oauth/callback` on the OAuth client.
+On `v4.4.0` and later these variables no longer enable Google login, and they are planned for full removal in `v4.5`.
+New installs must use the admin panel flow above.
+
+<Note>
+  When you upgrade an existing deployment,
+  its environment-based configuration is imported into an SSO provider entry automatically,
+  and existing logins keep working. The import runs once, when the upgrade first runs against your existing database,
+  so keep the configuration in place through the upgrade.
+  The migrated provider keeps using the redirect URI already registered in the Google Cloud Console,
+  so nothing changes on the Google side. Remove the variables after the provider appears in the admin panel.
+</Note>
+
+For reference, a pre-`v4.4.0` configuration looks like:
+
+  ```bash .env
+  AUTH_TYPE=google_oauth
+  OAUTH_CLIENT_ID=YOUR_CLIENT_ID
+  OAUTH_CLIENT_SECRET=YOUR_CLIENT_SECRET
+
+  # If you are deploying to a custom domain, you will need to set the `WEB_DOMAIN` environment variable.
+  WEB_DOMAIN=https://YOUR_ONYX_DOMAIN.com
+  ```
+
+  ```bash values.yaml
+  auth:
+    secrets:
+      OAUTH_CLIENT_ID: <CLIENT_ID_FROM_GOOGLE>
+      OAUTH_CLIENT_SECRET: <CLIENT_SECRET_FROM_GOOGLE>
+  configMap:
+    AUTH_TYPE: google_oauth
+  ```
