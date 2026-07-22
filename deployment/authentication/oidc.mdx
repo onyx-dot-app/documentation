@@ -105,18 +105,23 @@ PKCE is disabled by default to preserve backwards compatibility with existing OI
 OIDC_PKCE_ENABLED=true
 ```
 
-## Legacy Environment Configuration
+## Upgrading from v4.3 or Earlier
 
-Versions before `v4.4.0` configure a single OIDC provider through environment variables.
-This flow uses the redirect URI `https://YOUR_ONYX_DOMAIN.com/auth/oidc/callback`.
+Versions before `v4.4.0` configured a single OIDC provider through environment variables,
+using the redirect URI `https://YOUR_ONYX_DOMAIN.com/auth/oidc/callback`.
+On `v4.4.0` and later these variables no longer enable OIDC login, and they are planned for full removal in `v4.5`.
+New installs must use the admin panel flow above.
 
 <Note>
-  An environment-based configuration is migrated to an SSO provider entry automatically when you upgrade to `v4.4.0` or
-  later, and existing logins keep working.
+  When you upgrade an existing deployment,
+  its environment-based configuration is imported into an SSO provider entry automatically,
+  and existing logins keep working. The import runs once, when the upgrade first runs against your existing database,
+  so keep the configuration in place through the upgrade.
   The migrated provider keeps using the redirect URI already registered with your IdP,
-  so nothing changes on the IdP side. Keep the configuration below in place through the upgrade,
-  then remove it after the provider appears in the admin panel.
+  so nothing changes on the IdP side. Remove the variables after the provider appears in the admin panel.
 </Note>
+
+For reference, a pre-`v4.4.0` configuration looks like:
 
   ```bash .env
   AUTH_TYPE=oidc
@@ -134,8 +139,3 @@ This flow uses the redirect URI `https://YOUR_ONYX_DOMAIN.com/auth/oidc/callback
      AUTH_TYPE: oidc
      OPENID_CONFIG_URL: https://<YOUR_OKTA_BASE_URL>/.well-known/openid-configuration
   ```
-
-<Note>
-  If you're using Docker but don't have a `.env` file,
-  copy `onyx/deployment/docker_compose/env.prod.template` to a new `.env` file in the same directory.
-</Note>

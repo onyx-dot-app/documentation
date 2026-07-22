@@ -122,29 +122,18 @@ Please contact us if you need help with a different identity provider.
   </Step>
 </Steps>
 
-## Legacy Configuration
+## Upgrading from v4.3 or Earlier
 
-Versions before `v4.4.0` configure a single SAML provider through a `settings.json` file placed in the SAML config
-directory (`SAML_CONF_DIR`, default `/app/onyx/configs/saml_config`). That flow uses the same ACS URL as above.
+Versions before `v4.4.0` configured a single SAML provider through a `settings.json` file placed in the SAML config
+directory (`SAML_CONF_DIR`, default `/app/onyx/configs/saml_config`), with `AUTH_TYPE=saml` set.
+That flow uses the same ACS URL as above. On `v4.4.0` and later this configuration no longer enables SAML login,
+and `AUTH_TYPE` is planned for full removal in `v4.5`. New installs must use the admin panel flow above.
 
 <Note>
-  A legacy `settings.json` configuration is imported as an SSO provider entry automatically when the upgraded api server
-  first starts on `v4.4.0` or later, and existing logins keep working.
+  When you upgrade an existing deployment,
+  its `settings.json` is imported as an SSO provider entry automatically when the upgraded api server starts,
+  and existing logins keep working.
+  Keep the settings file mounted and `AUTH_TYPE=saml` set through the upgrade (the import reads both).
   The migrated provider keeps using the ACS URL already registered with your IdP, so nothing changes on the IdP side.
-  Keep the settings file mounted and `AUTH_TYPE=saml` set through the upgrade,
-  then remove both after the provider appears in the admin panel.
+  Remove both after the provider appears in the admin panel.
 </Note>
-
-To configure the legacy flow,
-copy `onyx/backend/onyx/configs/saml_config/template.settings.json` to `settings.json` in the same directory (which
-ships in the backend image at the default `SAML_CONF_DIR` above), fill in the same IdP and SP values described above,
-and set:
-
-  ```bash .env
-  AUTH_TYPE=saml
-  ```
-
-  ```bash values.yaml
-  configMap:
-    AUTH_TYPE: saml
-  ```
