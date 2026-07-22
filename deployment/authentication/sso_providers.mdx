@@ -24,7 +24,10 @@ so one Onyx instance can serve teams on different identity providers.
   The import runs once, when the upgrade first runs against your existing database,
   so keep the legacy configuration in place through the upgrade.
   Migrated providers keep using the redirect URIs and ACS URLs already registered with your identity provider,
-  so nothing changes on the IdP side. Remove the legacy variables after the provider appears in the admin panel.
+  so nothing changes on the IdP side. For Google and OIDC,
+  keep the OAuth credential variables in place after the upgrade too,
+  since the token-refresh path for signed-in users still reads them until their planned removal in `v4.5`.
+  `AUTH_TYPE` and, for SAML, the settings file can be removed once the provider appears in the admin panel.
 </Note>
 
 ## Managing Providers

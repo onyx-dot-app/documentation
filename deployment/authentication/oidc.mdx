@@ -118,7 +118,10 @@ New installs must use the admin panel flow above.
   and existing logins keep working. The import runs once, when the upgrade first runs against your existing database,
   so keep the configuration in place through the upgrade.
   The migrated provider keeps using the redirect URI already registered with your IdP,
-  so nothing changes on the IdP side. Remove the variables after the provider appears in the admin panel.
+  so nothing changes on the IdP side. Keep `OAUTH_CLIENT_ID`, `OAUTH_CLIENT_SECRET`,
+  and `OPENID_CONFIG_URL` in place after the upgrade too:
+  the token-refresh path for signed-in users still reads them until their planned removal in `v4.5`.
+  `AUTH_TYPE` itself can be removed once the provider appears in the admin panel.
 </Note>
 
 For reference, a pre-`v4.4.0` configuration looks like:
