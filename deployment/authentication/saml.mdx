@@ -6,9 +6,9 @@ icon: "sitemap"
 
 Configure Onyx with SAML authentication.
 
-SAML providers are managed from the admin panel at **Admin Panel** → **Organization** → [SSO
+SAML providers are managed at **Admin Panel** → **Organization** → [SSO
 Providers](/deployment/authentication/sso_providers). No configuration files or restarts are needed,
-and you can configure more than one provider (more than one simultaneously enabled provider requires the Business plan,
+and you can configure multiple providers (enabling more than one at the same time requires the Business plan,
 see [Plan Availability](/deployment/authentication/sso_providers#plan-availability)).
 SAML works on the standard Onyx images.
 
@@ -136,9 +136,9 @@ directory (`SAML_CONF_DIR`, default `/app/onyx/configs/saml_config`). That flow 
 </Note>
 
 To configure the legacy flow,
-copy `onyx/backend/onyx/configs/saml_config/template.settings.json` to `settings.json` in the same directory (the api
-server reads `settings.json` from `SAML_CONF_DIR`, which defaults to that directory),
-fill in the same IdP and SP values described above, and set:
+copy `onyx/backend/onyx/configs/saml_config/template.settings.json` to `settings.json` in the same directory (which
+ships in the backend image at the default `SAML_CONF_DIR` above), fill in the same IdP and SP values described above,
+and set:
 
   ```bash .env
   AUTH_TYPE=saml

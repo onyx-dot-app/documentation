@@ -31,7 +31,7 @@ Navigate to **Admin Panel** → **Organization** → **SSO Providers**.
   <Step title="Add a Provider">
     Click **Add Provider** and pick the provider type: **Google**, **OIDC**, or **SAML**.
 
-    Give the provider a **Name** (a lowercase slug used in the login URL, it cannot be changed later)
+    Give the provider a **Name** (a lowercase slug used in the login URL)
     and a **Display Name** (the label users see on the sign-in button).
 
     <img className="rounded-image" src="/assets/deployment/sso_providers_modal.png" alt="Add SSO Provider modal"/>
@@ -40,7 +40,7 @@ Navigate to **Admin Panel** → **Organization** → **SSO Providers**.
   <Step title="Fill in the Provider Configuration">
     Each provider type asks for its own credentials:
 
-    - **Google**: Client ID and Client Secret from your Google Cloud console.
+    - **Google**: Client ID and Client Secret from your Google Cloud Console.
     - **OIDC**: Client ID, Client Secret, and the OpenID configuration URL
     (the `.well-known/openid-configuration` endpoint).
     - **SAML**: IdP entity ID, IdP SSO URL, the IdP x509 certificate, and
@@ -74,11 +74,10 @@ Enabling more than one provider at the same time requires the **Business** plan 
   add a new provider and disable the old one.
 - Providers are disabled rather than deleted, so accounts that signed in
   through a provider survive a disable and re-enable.
-- Accounts do not link across providers. A user account belongs to the sign-in
-  method it first used.
-  Signing in through a different provider with the same email fails with an error instead of merging the accounts.
-  To move a user to a new provider,
+- Google and OIDC sign-ins do not attach to an existing account with the same email.
+  The sign-in fails with an error instead of merging the accounts. To move a user to a Google or OIDC provider,
   have an admin deactivate and then delete the account so the user can sign up fresh through it.
-- If open sign-up is restricted (**Admin Panel** → **Users** → **Restrict Open
-  Sign-Up**), SSO sign-ups are gated too.
+  SAML sign-ins match users by email, so an existing account can sign in through a new SAML provider directly.
+- If open sign-up is restricted (the **Restrict Open Sign-Up** setting on
+  **Admin Panel** → **Permissions** → **Users**), SSO sign-ups are gated too.
   New users who have not been invited are rejected at sign-in until an admin invites their email address.

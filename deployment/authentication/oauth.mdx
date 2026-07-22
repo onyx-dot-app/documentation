@@ -7,9 +7,9 @@ icon: "key"
 Configure Onyx to use Google OAuth for user authentication,
 providing a seamless login experience through existing Google accounts.
 
-Google providers are managed from the admin panel at **Admin Panel** → **Organization** → [SSO
+Google providers are managed at **Admin Panel** → **Organization** → [SSO
 Providers](/deployment/authentication/sso_providers). No environment variables or restarts are needed,
-and you can configure more than one provider (more than one simultaneously enabled provider requires the Business plan,
+and you can configure multiple providers (enabling more than one at the same time requires the Business plan,
 see [Plan Availability](/deployment/authentication/sso_providers#plan-availability)).
 
 **Prerequisites:**
@@ -145,7 +145,7 @@ This flow uses the redirect URI `https://YOUR_ONYX_DOMAIN.com/auth/oauth/callbac
 <Note>
   An environment-based configuration is migrated to an SSO provider entry automatically when you upgrade to `v4.4.0` or
   later, and existing logins keep working.
-  The migrated provider keeps using the redirect URI already registered in the Google Cloud console,
+  The migrated provider keeps using the redirect URI already registered in the Google Cloud Console,
   so nothing changes on the Google side. Keep the configuration below in place through the upgrade,
   then remove it after the provider appears in the admin panel.
 </Note>
