@@ -8,9 +8,9 @@ Configure Onyx with SAML authentication.
 
 SAML providers are managed from the admin panel at **Admin Panel** → **Organization** → [SSO
 Providers](/deployment/authentication/sso_providers). No configuration files or restarts are needed,
-and you can configure more than one provider (more than one simultaneously enabled provider requires the Business
-plan, see [Plan Availability](/deployment/authentication/sso_providers#plan-availability)). SAML works on the standard
-Onyx images.
+and you can configure more than one provider (more than one simultaneously enabled provider requires the Business plan,
+see [Plan Availability](/deployment/authentication/sso_providers#plan-availability)).
+SAML works on the standard Onyx images.
 
 This guide walks through the setup for Okta. Other identity providers follow a similar process.
 Please contact us if you need help with a different identity provider.
@@ -129,15 +129,15 @@ directory (`SAML_CONF_DIR`, default `/app/onyx/configs/saml_config`). That flow 
 
 <Note>
   A legacy `settings.json` configuration is imported as an SSO provider entry automatically when the upgraded api server
-  first starts on `v4.4.0` or later, and existing logins keep working. The migrated provider keeps using the ACS URL
-  already registered with your IdP, so nothing changes on the IdP side.
-  Keep the settings file mounted and `AUTH_TYPE=saml` set through the upgrade, then remove both after the provider
-  appears in the admin panel.
+  first starts on `v4.4.0` or later, and existing logins keep working.
+  The migrated provider keeps using the ACS URL already registered with your IdP, so nothing changes on the IdP side.
+  Keep the settings file mounted and `AUTH_TYPE=saml` set through the upgrade,
+  then remove both after the provider appears in the admin panel.
 </Note>
 
 To configure the legacy flow,
-copy `onyx/backend/onyx/configs/saml_config/template.settings.json` to `settings.json` in the same directory
-(the api server reads `settings.json` from `SAML_CONF_DIR`, which defaults to that directory),
+copy `onyx/backend/onyx/configs/saml_config/template.settings.json` to `settings.json` in the same directory (the api
+server reads `settings.json` from `SAML_CONF_DIR`, which defaults to that directory),
 fill in the same IdP and SP values described above, and set:
 
   ```bash .env

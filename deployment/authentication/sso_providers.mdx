@@ -12,11 +12,13 @@ so one Onyx instance can serve teams on different identity providers.
 <Note>
   Available starting in `v4.4.0`. Legacy environment-based configuration (`AUTH_TYPE=google_oauth`, `AUTH_TYPE=oidc`,
   or `AUTH_TYPE=saml`) is migrated to an SSO provider entry automatically when you upgrade to `v4.4.0` or later,
-  and existing logins keep working. Migrated providers keep using the redirect URIs and ACS URLs already registered
-  with your identity provider, so nothing changes on the IdP side. Keep the legacy configuration in place through the
-  upgrade (the migration reads it), then remove it after the provider appears in the admin panel. From `v4.4.0` on,
-  `AUTH_TYPE` no longer controls how Onyx authenticates and Onyx logs a warning while it is still set. Remove it along
-  with the rest of the legacy variables once the provider row exists.
+  and existing logins keep working.
+  Migrated providers keep using the redirect URIs and ACS URLs already registered with your identity provider,
+  so nothing changes on the IdP side.
+  Keep the legacy configuration in place through the upgrade (the migration reads it),
+  then remove it after the provider appears in the admin panel. From `v4.4.0` on,
+  `AUTH_TYPE` no longer controls how Onyx authenticates and Onyx logs a warning while it is still set.
+  Remove it along with the rest of the legacy variables once the provider row exists.
 </Note>
 
 ## Managing Providers
@@ -73,10 +75,10 @@ Enabling more than one provider at the same time requires the **Business** plan 
 - Providers are disabled rather than deleted, so accounts that signed in
   through a provider survive a disable and re-enable.
 - Accounts do not link across providers. A user account belongs to the sign-in
-  method it first used. Signing in through a different provider with the same
-  email fails with an error instead of merging the accounts. To move a user to
-  a new provider, have an admin deactivate and then delete the account so the
-  user can sign up fresh through it.
+  method it first used.
+  Signing in through a different provider with the same email fails with an error instead of merging the accounts.
+  To move a user to a new provider,
+  have an admin deactivate and then delete the account so the user can sign up fresh through it.
 - If open sign-up is restricted (**Admin Panel** → **Users** → **Restrict Open
-  Sign-Up**), SSO sign-ups are gated too. New users who have not been invited
-  are rejected at sign-in until an admin invites their email address.
+  Sign-Up**), SSO sign-ups are gated too.
+  New users who have not been invited are rejected at sign-in until an admin invites their email address.
