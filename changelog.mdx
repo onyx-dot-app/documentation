@@ -59,7 +59,6 @@ rss: true
     The API server and background containers are unchanged (they still read `/etc/ssl/certs/custom-ca.crt`).
   - **Shell-wrapped overrides on the web container.** Because the web image has
     no shell, a `command:` / `entrypoint:` override that wraps startup in `/bin/sh -c` no longer runs.
-    If you patched a value such as `HOSTNAME` that way, set it as a plain container environment variable instead.
 
   ### Customized Docker Compose files
 
