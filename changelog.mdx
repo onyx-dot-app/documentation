@@ -50,19 +50,17 @@ rss: true
   </Note>
 
   - **Drop `command:` / `entrypoint:` overrides for these two images.** Both the web and model-server images now bake
-    in their own entrypoint and — having no shell — can no longer run a `command:` / `entrypoint:` that wraps startup in
-    `/bin/sh -c`. Remove any such override from your customized files so the image's own entrypoint runs;
+    in their own entrypoint and can no longer run a `command:` / `entrypoint:` that wraps startup in `/bin/sh -c`.
+    Remove any such override from your customized files so the image's own entrypoint runs;
     this includes the old model-server `DISABLE_MODEL_SERVER` gate, now handled inside the image.
-    If you used a shell wrapper only to set an environment variable — for example forcing the web server's `HOSTNAME` —
-    set it as a plain container environment variable instead.
-    (The API server and background images are not hardened and still rely on their stock `/bin/sh -c` commands — leave
-    those as-is.)
+      - The API server and background images are not hardened and still rely on their stock `/bin/sh -c` commands — leave
+        those as-is.
   - **Custom CA roots on the model server.** The old shell `update-ca-certificates` step is gone. Mount your
     certificates into a directory and set `ONYX_CUSTOM_CA_CERTS_DIR` to that path (files must end in `.crt` or `.pem`);
     they are merged on top of the public roots when the model server starts. On Helm, upgrade the chart (≥ `0.7.0`)
     and the image **together** — the chart mounts the certs and sets the variable for you. After upgrading,
     confirm the `Trusting N custom CA file(s)` line in the model-server logs.
-    The API server and background containers are unchanged (they still read `/etc/ssl/certs/custom-ca.crt`).
+      - The API server and background containers are unchanged (they still read `/etc/ssl/certs/custom-ca.crt`).
 
   ## Key Improvements
 
