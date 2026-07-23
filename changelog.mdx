@@ -6,6 +6,149 @@ mode: "wide"
 rss: true
 ---
 
+<Update label="v4.4.0" description="July 21st, 2026" tags={["New Features", "Deployment Changes", "Bug Fixes"]}>
+
+  ## v4.4.0
+
+  Multi-provider SSO lands — Google, OIDC,
+  and SAML configured from the admin UI and served side by side on the login page — search gains time-based filtering,
+  admins get broadcast announcements,
+  and Google Drive and Gmail support multiple connectors with independent credentials.
+  Thank you to our contributors for helping make this release possible!
+
+  ## [Update] Deployment Changes
+
+  - **`AUTH_TYPE` has been removed.** SSO providers are now rows managed
+    from the admin UI. On upgrade,
+    your existing env-based SSO config is automatically seeded into provider rows that keep sending the exact redirect
+    URIs your IdP already allowlists — no OAuth client changes are needed.
+    Legacy `AUTH_TYPE` values are ignored with a startup warning.
+  - **The model server and web frontend now build on hardened distroless
+    images.** Custom CA certificates are merged in the entrypoint; if you mount custom roots,
+    verify them after upgrading.
+
+  ## Key Improvements
+
+  ### Multi-Provider SSO
+
+  [SSO configuration](https://docs.onyx.app/deployment/authentication/sso_providers)
+  has been rebuilt from the ground up. Google, OIDC, and SAML providers are managed from a new admin page — create,
+  edit, and enable them without redeploying,
+  with each provider showing the redirect/ACS URL to paste into your IdP console.
+  The login page offers every enabled provider,
+  and the OIDC client is hardened to require verified emails and issuer-owned discovery.
+  A single enabled provider is available on every tier, including Community;
+  running multiple providers simultaneously requires Business or above.
+
+  ### Time-Based Search Filtering
+
+  LLM search can now filter by time — both when a document was created and when it was last updated,
+  with either bound open. Documents carry a new `created_at` field populated by connectors,
+  and the filter is surfaced in the search UI alongside the source filters from v4.3.0.
+
+  ### System Announcements
+
+  Admins can broadcast an announcement to every user from a new System Announcement section under Appearance & Theming —
+  a markdown notice with an optional pop-up on first visit. All banners (announcements, license expiry, trial notices)
+  now queue in a single bottom-left stack instead of competing for space.
+
+  ### Multiple Google Drive and Gmail Connectors
+
+  Google service-account keys and OAuth app credentials are now stored per credential rather than per deployment,
+  so you can run multiple Google Drive and Gmail connectors with independent credentials — for example,
+  separate connectors per Workspace domain.
+
+  ## Contributor Highlights
+
+  - [@siriusfreak](https://github.com/siriusfreak) — after adding Tavily
+    and Nebius Token Factory in v4.3.0 — contributed a full **LumApps connector** with checkpointed incremental indexing
+    of published intranet content!
+  - [@jack-watroba](https://github.com/jack-watroba) fixed MCP OAuth
+    public-client PKCE registration in their first contribution!
+
+  ## Additional Improvements
+
+  ### Auth and Sessions
+
+  - Session tokens now embed issue and expiry timestamps, so rejections
+    are classified and the logout modal can tell you why you were signed out instead of failing generically.
+  - Service-account API keys no longer 500 on `/me`, and LIMITED keys
+    regain chat access.
+
+  ### Search and Indexing
+
+  - Indexing resumes on graceful worker shutdown — rolling deploys and
+    scale-downs mark the attempt resumable instead of failed.
+  - Connector creation rolls back cleanly on validation failure.
+
+  ### Connectors
+
+  - New LumApps connector.
+  - New Canvas connector with permission sync.
+  - Google Drive: domain-wide shares are scoped to a domain group
+    instead of instance-public, and group sync streams folders to bound memory.
+  - SharePoint: fixed group permissions and localized role names on
+    non-English tenants.
+  - GitHub: empty repositories no longer raise.
+
+  ### MCP
+
+  - Group and public access control for MCP servers — users only see and
+    attach tools from servers they can access.
+  - OAuth tokens refresh proactively on SSE transport, preventing
+    tool-call failures on expired tokens.
+
+  ### LLM Providers
+
+  - Providers are grouped into labeled sections in the admin UI.
+  - Claude Sonnet 5 support with adaptive thinking; Fable 5 and Sonnet 5
+    join the recommended models.
+  - Vision and reasoning support for dynamic providers resolves from the
+    LiteLLM cost map instead of hardcoded lists.
+  - Recommended model lists update automatically from the OpenRouter
+    catalog.
+  - Gemini `embedding-2` (GA) available for cloud embedding.
+  - Image generation supports Vertex AI Workload Identity auth.
+
+  ### Chat and Web
+
+  - Export any chat as text or markdown from its menu.
+  - Shared chats render the full multi-model comparison.
+  - XLSX chat attachments render through the backend-parsed spreadsheet
+    preview.
+  - Voice: silent audio is gated out of chunked STT, eliminating
+    hallucinated transcripts.
+  - `open_url` resolves pasted Google Drive links to their indexed
+    documents instead of re-crawling them from the web.
+  - Dark mode persists across reloads.
+  - Onyx Lite gains the Open URL tool.
+
+  ### Desktop and Deployment
+
+  - Windows ARM64 desktop builds, a `--version` flag, configurable
+    window title, and correct sizing and title-bar behavior per platform.
+  - External CloudNativePG operators supported via
+    `postgresqlOperator.enabled`.
+  - Worker `/metrics` serves on a dual-stack socket.
+
+  ### Notable Bug Fixes
+
+  - Fixed the Code Interpreter tool name colliding with OpenAI's
+    reserved "python" function name.
+  - Fixed the model selector losing selection across identically-named
+    models and the default chip not rendering.
+  - Fixed the agent editor keeping rejected file uploads in state.
+  - Fixed the empty OAuth credential modal for zero-kwargs OAuth
+    connectors.
+  - Fixed onboarding not scrolling at small viewports.
+
+  ---
+
+  Our [GitHub Releases](https://github.com/onyx-dot-app/onyx/releases?utm_source=docs&utm_content=changelog)
+  page has the full list of changes and bug fixes for each release.
+
+</Update>
+
 <Update label="v4.3.0" description="July 6th, 2026" tags={["New Features", "Security", "Bug Fixes"]}>
 
   ## v4.3.0
