@@ -18,12 +18,6 @@ rss: true
 
   ## [Update] Deployment Changes
 
-  <Note>
-    The stock Docker Compose and Helm files already carry every change below,
-    so pulling the latest and redeploying picks them up.
-    Read this section closely if you maintain a customized copy of those files, run SSO, or mount custom CA roots.
-  </Note>
-
   ### `AUTH_TYPE` has been removed — SSO moves to the admin panel
 
   SSO is now configured from **Admin Panel → Organization → [SSO
@@ -48,24 +42,27 @@ rss: true
   ### Hardened, non-root model server and web images
 
   The model server and web frontend now build on distroless, hardened images: no shell or package manager,
-  and they run as a non-root user. Default deployments need no changes, but two customizations are affected:
+  and they run as a non-root user.
 
-  - **Custom CA roots on the model server.** The old shell `update-ca-certificates`
-    step is gone.
-    Mount your certificates into a directory and set `ONYX_CUSTOM_CA_CERTS_DIR` to that path (files must end in `.crt`
-    or `.pem`); they are merged on top of the public roots when the model server starts. On Helm,
-    upgrade the chart (≥ `0.7.0`) and the image **together** — the chart mounts the certs and sets the variable for you.
-    After upgrading, confirm the `Trusting N custom CA file(s)` line in the model-server logs.
+  <Note>
+    Upgrading the stock Helm chart (≥ `0.7.0`) or Docker Compose files carries these changes for you.
+    You only need the steps below if you maintain a customized copy of those files or mount custom CA roots.
+  </Note>
+
+  - **Drop `command:` / `entrypoint:` overrides for these two images.** Both the web and model-server images now bake
+    in their own entrypoint and — having no shell — can no longer run a `command:` / `entrypoint:` that wraps startup in
+    `/bin/sh -c`. Remove any such override from your customized files so the image's own entrypoint runs;
+    this includes the old model-server `DISABLE_MODEL_SERVER` gate, now handled inside the image.
+    If you used a shell wrapper only to set an environment variable — for example forcing the web server's `HOSTNAME` —
+    set it as a plain container environment variable instead.
+    (The API server and background images are not hardened and still rely on their stock `/bin/sh -c` commands — leave
+    those as-is.)
+  - **Custom CA roots on the model server.** The old shell `update-ca-certificates` step is gone. Mount your
+    certificates into a directory and set `ONYX_CUSTOM_CA_CERTS_DIR` to that path (files must end in `.crt` or `.pem`);
+    they are merged on top of the public roots when the model server starts. On Helm, upgrade the chart (≥ `0.7.0`)
+    and the image **together** — the chart mounts the certs and sets the variable for you. After upgrading,
+    confirm the `Trusting N custom CA file(s)` line in the model-server logs.
     The API server and background containers are unchanged (they still read `/etc/ssl/certs/custom-ca.crt`).
-  - **Shell-wrapped overrides on the web container.** Because the web image has
-    no shell, a `command:` / `entrypoint:` override that wraps startup in `/bin/sh -c` no longer runs.
-
-  ### Customized Docker Compose files
-
-  If you fork the Compose files,
-  note that the `inference_model_server` and `indexing_model_server` services no longer take a `/bin/sh -c` command to
-  gate `DISABLE_MODEL_SERVER` — that logic moved into the image, which (being distroless) has no shell to run it.
-  Remove the stale `command:` from your copy so it falls back to the image default.
 
   ## Key Improvements
 
