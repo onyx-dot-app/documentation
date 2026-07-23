@@ -7,7 +7,12 @@ icon: "id-card"
 Configure Onyx with OpenID Connect (OIDC) authentication.
 Available with common identity providers such as Okta and Microsoft Entra ID (Azure AD).
 
-This guide will walk you through the setup process for Okta. Other identity providers will have a similar process.
+OIDC providers are managed at **Admin Panel** → **Organization** → [SSO
+Providers](/deployment/authentication/sso_providers). No environment variables or restarts are needed,
+and you can configure multiple providers (enabling more than one at the same time requires the Business plan,
+see [Plan Availability](/deployment/authentication/sso_providers#plan-availability)).
+
+This guide walks through the setup for Okta. Other identity providers follow a similar process.
 Please contact us if you need help with a different identity provider.
 
 ## Guide
@@ -28,10 +33,10 @@ Please contact us if you need help with a different identity provider.
       If you are white-labeling Onyx, you can freely name your application.
     </Tip>
 
-    Add a **Sign-in redirect URI**
+    Add a **Sign-in redirect URI** using the name you will give the provider in Onyx (a lowercase slug, e.g. `okta`):
 
       ```
-      https://YOUR_ONYX_DOMAIN.com/auth/oidc/callback
+      https://YOUR_ONYX_DOMAIN.com/api/auth/oidc/YOUR_PROVIDER_NAME/callback
       ```
 
     Determine whether all users or select groups may access Onyx or skip this step and assign users later.
@@ -52,31 +57,19 @@ Please contact us if you need help with a different identity provider.
     </Note>
   </Step>
 
-  <Step title="Configure Onyx for OIDC">
-    Configure Onyx with the following environment variables in your `.env` or `values.yaml` file (Docker and Kubernetes,
-    respectively).
+  <Step title="Add the Provider in Onyx">
+    Navigate to **Admin Panel** → **Organization** → [SSO Providers](/deployment/authentication/sso_providers)
+    and click **Add Provider**.
 
-      ```bash .env
-      AUTH_TYPE=oidc
-      OAUTH_CLIENT_ID=<CLIENT_ID_FROM_OKTA>
-      OAUTH_CLIENT_SECRET=<CLIENT_SECRET_FROM_OKTA>
-      OPENID_CONFIG_URL=https://<YOUR_OKTA_BASE_URL>/.well-known/openid-configuration
+    Select the **OIDC** provider type, enter the **Name** you used in the redirect URI, and paste the **Client ID**,
+    **Client Secret**, and the OpenID configuration URL:
+
+      ```
+      https://<YOUR_OKTA_BASE_URL>/.well-known/openid-configuration
       ```
 
-    <Note>
-      If you're using Docker but don't have a `.env` file,
-      copy `onyx/deployment/docker_compose/env.prod.template` to a new `.env` file in the same directory.
-    </Note>
-
-      ```bash values.yaml
-      auth:
-         secrets:
-            OAUTH_CLIENT_ID: <CLIENT_ID_FROM_OKTA>
-            OAUTH_CLIENT_SECRET:<CLIENT_SECRET_FROM_OKTA>
-      configMap:
-         AUTH_TYPE: oidc
-         OPENID_CONFIG_URL: https://<YOUR_OKTA_BASE_URL>/.well-known/openid-configuration
-      ```
+    After creating the provider, its row shows the exact **Redirect URI**.
+    Confirm it matches what you registered in Okta, then sign in through the new option on the login page.
   </Step>
 </Steps>
 
@@ -111,3 +104,38 @@ PKCE is disabled by default to preserve backwards compatibility with existing OI
 ```bash .env
 OIDC_PKCE_ENABLED=true
 ```
+
+## Upgrading from v4.3 or Earlier
+
+Versions before `v4.4.0` configured a single OIDC provider through environment variables,
+using the redirect URI `https://YOUR_ONYX_DOMAIN.com/auth/oidc/callback`.
+On `v4.4.0` and later these variables no longer enable OIDC login, and they are planned for full removal in `v4.5`.
+New installs must use the admin panel flow above.
+
+<Note>
+  When you upgrade an existing deployment,
+  its environment-based configuration is imported into an SSO provider entry automatically,
+  and existing logins keep working. The import runs once, when the upgrade first runs against your existing database,
+  so keep the configuration in place through the upgrade.
+  The migrated provider keeps using the redirect URI already registered with your IdP,
+  so nothing changes on the IdP side. Remove the variables after the provider appears in the admin panel.
+</Note>
+
+For reference, a pre-`v4.4.0` configuration looks like:
+
+  ```bash .env
+  AUTH_TYPE=oidc
+  OAUTH_CLIENT_ID=<CLIENT_ID_FROM_OKTA>
+  OAUTH_CLIENT_SECRET=<CLIENT_SECRET_FROM_OKTA>
+  OPENID_CONFIG_URL=https://<YOUR_OKTA_BASE_URL>/.well-known/openid-configuration
+  ```
+
+  ```bash values.yaml
+  auth:
+     secrets:
+        OAUTH_CLIENT_ID: <CLIENT_ID_FROM_OKTA>
+        OAUTH_CLIENT_SECRET: <CLIENT_SECRET_FROM_OKTA>
+  configMap:
+     AUTH_TYPE: oidc
+     OPENID_CONFIG_URL: https://<YOUR_OKTA_BASE_URL>/.well-known/openid-configuration
+  ```

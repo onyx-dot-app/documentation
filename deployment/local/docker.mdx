@@ -60,34 +60,11 @@ the system needs to go through an initialization process after which you can acc
 
 ## Enabling Onyx Craft
 
-To enable [Onyx Craft](/overview/core_features/craft) (AI-powered artifact builder for web apps, documents, and slides):
+Craft adds isolated sandbox containers and an egress proxy to the Docker Compose deployment.
+Use the dedicated guide for both new and existing installations.
 
-### Option 1: Use the installation script (Recommended)
-
-Run the installation script with the `--include-craft` flag:
-
-```bash
-cd onyx/deployment/docker_compose
-./install.sh --include-craft
-```
-
-Then start the services:
-
-```bash
-cd onyx_data/deployment
-docker compose up -d
-```
-
-### Option 2: Existing deployments
-
-If you've already set up Onyx, you can enable Craft by running:
-
-```bash
-ENABLE_CRAFT=true IMAGE_TAG=craft-latest docker compose up -d
-```
-
-<Tip>
-  See the [Craft documentation](/overview/core_features/craft) for full details on capabilities and configuration.
-</Tip>
+<Card title="Deploy Craft on Docker Compose" icon="docker" href="/deployment/local/craft_docker_compose">
+  Install the Craft overlay, configure the sandbox API URL, plan host capacity, and verify the runtime.
+</Card>
 
 <DeploymentNextSteps />
