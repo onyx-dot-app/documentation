@@ -45,8 +45,8 @@ rss: true
   and they run as a non-root user.
 
   <Note>
-    Upgrading the stock Helm chart (≥ `0.7.0`) or Docker Compose files carries these changes for you.
-    You only need the steps below if you maintain a customized copy of those files or mount custom CA roots.
+    The latest versions of the Docker Compose files and Helm chart (≥ `0.7.0`) include these changes and can be used instead of migrating.
+    The steps below can be used to update legacy deployments in-place.
   </Note>
 
   - **Drop `command:` / `entrypoint:` overrides for these two images.** Both the web and model-server images now bake
