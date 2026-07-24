@@ -16,16 +16,52 @@ rss: true
   and Google Drive and Gmail support multiple connectors with independent credentials.
   Thank you to our contributors for helping make this release possible!
 
-  ## [Update] Deployment Changes
+  ## [Update] Action May Be Required
 
-  - **`AUTH_TYPE` has been removed.** SSO providers are now rows managed
-    from the admin UI. On upgrade,
-    your existing env-based SSO config is automatically seeded into provider rows that keep sending the exact redirect
-    URIs your IdP already allowlists — no OAuth client changes are needed.
-    Legacy `AUTH_TYPE` values are ignored with a startup warning.
-  - **The model server and web frontend now build on hardened distroless
-    images.** Custom CA certificates are merged in the entrypoint; if you mount custom roots,
-    verify them after upgrading.
+  ### `AUTH_TYPE` has been removed — SSO moves to the admin panel
+
+  SSO is now configured from **Admin Panel → Organization → [SSO
+  Providers](https://docs.onyx.app/deployment/authentication/sso_providers)** instead of environment variables.
+  On the first upgraded startup,
+  a one-time migration seeds your existing `AUTH_TYPE` / OAuth / OIDC configuration into a provider row that keeps the
+  exact redirect and ACS URLs your identity provider already allowlists — no OAuth client changes are needed.
+  **Keep the legacy variables in place through the upgrade** so the migration can read them.
+
+  After upgrading, confirm the provider appears under **SSO Providers** and that logins still work,
+  then remove `AUTH_TYPE` and the legacy SSO variables — they are now inert and only emit a startup warning (the value
+  still shipped in `env.template` is likewise inert).
+  See the [OIDC upgrade notes](https://docs.onyx.app/deployment/authentication/oidc) for a full before/after.
+
+  <Warning>
+    If you previously ran SSO-only, the login page now also renders an email/password form alongside your SSO button(s).
+    To stop un-invited people from registering,
+    enable **Restrict Open Sign-Up** under **Admin Panel → Permissions → Users** — un-invited emails are then rejected
+    at sign-in until an admin invites them.
+  </Warning>
+
+  ### Hardened, non-root model server and web images
+
+  The model server and web frontend now build on distroless, hardened images: no shell or package manager,
+  and they run as a non-root user.
+
+  <Note>
+    The latest versions of the Docker Compose files and Helm chart (≥ `0.7.0`)
+    include these changes and can be used instead of migrating.
+    The steps below can be used to update legacy deployments in place.
+  </Note>
+
+  - **Drop `command:` / `entrypoint:` overrides for these two images.** Both the web and model-server images now bake
+    in their own entrypoint and can no longer run a `command:` / `entrypoint:` that wraps startup in `/bin/sh -c`.
+    Remove any such override from your customized files so the image's own entrypoint runs;
+    this includes the old model-server `DISABLE_MODEL_SERVER` gate, now handled inside the image.
+    The API server and background images are not hardened and still rely on their stock `/bin/sh -c` commands — leave
+    those as-is.
+  - **Custom CA roots on the model server.** The old shell `update-ca-certificates` step is gone. Mount your
+    certificates into a directory and set `ONYX_CUSTOM_CA_CERTS_DIR` to that path (files must end in `.crt` or `.pem`);
+    they are merged on top of the public roots when the model server starts. On Helm, upgrade the chart (≥ `0.7.0`)
+    and the image **together** — the chart mounts the certs and sets the variable for you. After upgrading,
+    confirm the `Trusting N custom CA file(s)` line in the model-server logs.
+    The API server and background containers are unchanged (they still read `/etc/ssl/certs/custom-ca.crt`).
 
   ## Key Improvements
 
