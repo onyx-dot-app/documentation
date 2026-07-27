@@ -309,7 +309,8 @@ Read [Deploying Craft](/deployment/local/craft) before enabling Craft in self-ho
   </Accordion>
 
   <Accordion title="Authentication & Security">
-    `AUTH_TYPE`: Authentication type (disabled, basic, oauth, etc.)
+    `AUTH_TYPE`: Legacy (pre-`v4.4.0`). Authentication is always enabled and SSO is configured in the admin panel,
+    so the variable is inert. Planned for full removal in `v4.5`.
 
     `PASSWORD_MIN_LENGTH`: For basic auth. The minimum password length requirement
 
@@ -347,13 +348,13 @@ Read [Deploying Craft](/deployment/local/craft) before enabling Craft in self-ho
 
     `OPENID_CONFIG_URL`: For OIDC.
 
-    `GOOGLE_OAUTH_SCOPE_OVERRIDE`: For Google OAuth login (`AUTH_TYPE=google_oauth` or `cloud`).
+    `GOOGLE_OAUTH_SCOPE_OVERRIDE`: For Google login.
     Comma-separated list of scopes to request from Google instead of the defaults (`openid,email,profile`).
     Useful when the access token from login needs to be passed through to tool calls that require additional Google API
     scopes (i.e. when using Pass-Through OAuth for an MCP server).
     Any scopes added here must also be enabled on the OAuth client in Google Cloud Console.
 
-    `OIDC_SCOPE_OVERRIDE`: For OIDC login (`AUTH_TYPE=oidc`).
+    `OIDC_SCOPE_OVERRIDE`: For OIDC login.
     Comma-separated list of scopes to request from the OIDC provider instead of the defaults.
     Same use case as `GOOGLE_OAUTH_SCOPE_OVERRIDE`.
 

@@ -1,11 +1,21 @@
 ---
 title: "Basic Auth"
-description: "Set up Onyx with basic username/password authentication"
+description: "Email and password authentication in Onyx"
 icon: "user-lock"
 ---
 
-Basic Auth is the easiest way to get started with Onyx. However, we recommend using Google OAuth, OIDC,
-or SAML for production deployments.
+Email/password authentication is always enabled and works out of the box, with no configuration needed.
+The first user to sign up becomes an admin.
+
+We recommend adding [Google OAuth](/deployment/authentication/oauth), [OIDC](/deployment/authentication/oidc),
+or [SAML](/deployment/authentication/saml) for production deployments. Once SSO works,
+password login and sign-up can be [turned off
+entirely](/deployment/authentication/sso_providers#turning-off-password-login).
+
+<Note>
+  Versions before `v4.4.0` required `AUTH_TYPE=basic`.
+  Since `v4.4.0` the variable is inert and it is planned for full removal in `v4.5`.
+</Note>
 
 <Tip>
   If you have questions about which authentication approach is best for your organization,
@@ -13,39 +23,12 @@ or SAML for production deployments.
   - we're happy to help you choose the right solution.
 </Tip>
 
-## Basic Setup
+## Password Requirements
 
-**Using Docker:**
+Passwords must be 8 to 64 characters by default. The length limits and character-class requirements (uppercase,
+lowercase, number, special character) are configurable at **Admin Panel** → **Organization** → **Security & Hardening**.
 
-In your `.env` file, set:
-
-```bash
-AUTH_TYPE=basic
-```
-
-**Using Helm:**
-
-In your `values.yaml` file, set:
-
-```yaml
-configMap:
-  AUTH_TYPE: basic
-```
-
-If you don't need email verification, you're done!
-
-Restart Onyx to apply the changes and the next time you visit the site,
-you'll be prompted to create an account and set a password.
-
-<Accordion title="Password Requirements">
-  - 12+ characters
-  - 1 number
-  - 1 special character
-  - 1 uppercase letter
-  - 1 lowercase letter
-</Accordion>
-
-## Basic Auth with Email Verification
+## Email Verification
 
 Enabling email verification blocks your users from signing in until they click their verification email.
 
@@ -54,8 +37,6 @@ Enabling email verification blocks your users from signing in until they click t
 Set the following in your `.env` file:
 
 ```bash
-AUTH_TYPE=basic
-
 # Enable email verification
 REQUIRE_EMAIL_VERIFICATION=true
 
@@ -77,8 +58,6 @@ auth:
   secrets:
       smpt_pass: <PASSWORD_FOR_THE_SMTP_USER>
 configMap:
-  AUTH_TYPE: basic
-
   REQUIRE_EMAIL_VERIFICATION: true
   SMTP_USER: <EMAIL_TO_SEND_VERIFICATION_EMAILS_FROM>
 
