@@ -76,13 +76,12 @@ Please contact us if you need help with a different identity provider.
 ## Customizing requested scopes
 
 By default, Onyx uses the standard OIDC base scopes when redirecting users to the identity provider.
-Overriding the list is primarily useful when the access token issued at login should be passed through
-to tool calls that need additional scopes from the identity provider.
+Overriding the list is primarily useful when the access token issued at login should be passed through to tool calls
+that need additional scopes from the identity provider.
 
-Starting in `v4.5`, set **Scopes** on the provider entry
-(**Admin Panel** → **Organization** → **SSO Providers**) to override the list per provider.
-A provider's **Scopes** take precedence. When left empty, the deployment-wide
-environment variable applies, then the built-in defaults.
+Starting in `v4.5`, set **Scopes** on the provider entry (**Admin Panel** → **Organization** → **SSO Providers**)
+to override the list per provider. A provider's **Scopes** take precedence. When left empty,
+the deployment-wide environment variable applies, then the built-in defaults.
 
 On `v4.4.x`, the only override is the deployment-wide `OIDC_SCOPE_OVERRIDE` environment variable,
 a comma-separated list that applies to every OIDC provider:
@@ -108,8 +107,8 @@ Onyx will always also request `offline_access` so refresh tokens are issued, eve
 
 PKCE is disabled by default to preserve backwards compatibility with existing OIDC deployments.
 
-Starting in `v4.5`, turn on **Enable PKCE** on the provider entry
-(**Admin Panel** → **Organization** → **SSO Providers**).
+Starting in `v4.5`,
+turn on **Enable PKCE** on the provider entry (**Admin Panel** → **Organization** → **SSO Providers**).
 
 On `v4.4.x`, the deployment-wide `OIDC_PKCE_ENABLED` environment variable enables it for all providers:
 
@@ -118,9 +117,8 @@ OIDC_PKCE_ENABLED=true
 ```
 
 <Warning>
-  `OIDC_PKCE_ENABLED=true` forces PKCE on for every provider, including
-  providers whose **Enable PKCE** toggle is off. Unset it if you want the
-  per-provider toggles to be the source of truth.
+  `OIDC_PKCE_ENABLED=true` forces PKCE on for every provider, including providers whose **Enable PKCE** toggle is off.
+  Unset it if you want the per-provider toggles to be the source of truth.
 </Warning>
 
 ## Upgrading from v4.3 or Earlier
@@ -137,8 +135,8 @@ New installs must use the admin panel flow above.
   so keep the configuration in place through the upgrade.
   The migrated provider keeps using the redirect URI already registered with your IdP,
   so nothing changes on the IdP side. Once the migrated provider appears in the admin panel,
-  sign-ins and token refresh use the provider entry's credentials, and `AUTH_TYPE`,
-  `OAUTH_CLIENT_ID`, `OAUTH_CLIENT_SECRET`, and `OPENID_CONFIG_URL` can be removed.
+  sign-ins and token refresh use the provider entry's credentials, and `AUTH_TYPE`, `OAUTH_CLIENT_ID`,
+  `OAUTH_CLIENT_SECRET`, and `OPENID_CONFIG_URL` can be removed.
   The variables only act as a fallback for login accounts that no provider entry matches,
   such as after deleting or renaming the migrated provider.
 </Note>

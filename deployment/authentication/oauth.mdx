@@ -113,13 +113,12 @@ see [Plan Availability](/deployment/authentication/sso_providers#plan-availabili
 
 By default, Onyx requests `openid`, `email`,
 and `profile` from Google during login — the minimum needed to identify the user.
-Overriding the list is primarily useful when the access token issued at login should be passed through
-to tool calls that need additional Google API access.
+Overriding the list is primarily useful when the access token issued at login should be passed through to tool calls
+that need additional Google API access.
 
-Starting in `v4.5`, set **Scopes** on the provider entry
-(**Admin Panel** → **Organization** → **SSO Providers**) to override the list per provider.
-A provider's **Scopes** take precedence. When left empty, the deployment-wide
-environment variable applies, then the built-in defaults.
+Starting in `v4.5`, set **Scopes** on the provider entry (**Admin Panel** → **Organization** → **SSO Providers**)
+to override the list per provider. A provider's **Scopes** take precedence. When left empty,
+the deployment-wide environment variable applies, then the built-in defaults.
 
 On `v4.4.x`, the only override is the deployment-wide `GOOGLE_OAUTH_SCOPE_OVERRIDE` environment variable,
 a comma-separated list:
@@ -148,20 +147,19 @@ GOOGLE_OAUTH_SCOPE_OVERRIDE=openid,email,profile,https://www.googleapis.com/auth
 
 PKCE is disabled by default.
 
-Starting in `v4.5`, turn on **Enable PKCE** on the provider entry
-(**Admin Panel** → **Organization** → **SSO Providers**).
+Starting in `v4.5`,
+turn on **Enable PKCE** on the provider entry (**Admin Panel** → **Organization** → **SSO Providers**).
 
-On `v4.4.x`, the deployment-wide `OIDC_PKCE_ENABLED` environment variable enables it for all
-providers. Google login shares the OIDC login route, so the OIDC-named variable applies here too:
+On `v4.4.x`, the deployment-wide `OIDC_PKCE_ENABLED` environment variable enables it for all providers.
+Google login shares the OIDC login route, so the OIDC-named variable applies here too:
 
 ```bash .env
 OIDC_PKCE_ENABLED=true
 ```
 
 <Warning>
-  `OIDC_PKCE_ENABLED=true` forces PKCE on for every provider, including
-  providers whose **Enable PKCE** toggle is off. Unset it if you want the
-  per-provider toggles to be the source of truth.
+  `OIDC_PKCE_ENABLED=true` forces PKCE on for every provider, including providers whose **Enable PKCE** toggle is off.
+  Unset it if you want the per-provider toggles to be the source of truth.
 </Warning>
 
 ## Upgrading from v4.3 or Earlier
@@ -178,8 +176,8 @@ New installs must use the admin panel flow above.
   so keep the configuration in place through the upgrade.
   The migrated provider keeps using the redirect URI already registered in the Google Cloud Console,
   so nothing changes on the Google side. Once the migrated provider appears in the admin panel,
-  sign-ins and token refresh use the provider entry's credentials, and `AUTH_TYPE`,
-  `OAUTH_CLIENT_ID`, and `OAUTH_CLIENT_SECRET` can be removed.
+  sign-ins and token refresh use the provider entry's credentials, and `AUTH_TYPE`, `OAUTH_CLIENT_ID`,
+  and `OAUTH_CLIENT_SECRET` can be removed.
   The variables only act as a fallback for login accounts that no provider entry matches,
   such as after deleting or renaming the migrated provider.
 </Note>
