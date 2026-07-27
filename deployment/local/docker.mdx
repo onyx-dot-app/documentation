@@ -45,14 +45,6 @@ import DeploymentNextSteps from "/snippets/deployment-next-steps.mdx"
     docker compose up -d --build --force-recreate
     ```
 
-    <Note>
-      When Craft is enabled, this command does not build the sandbox image.
-      Follow [Build Craft from source](/deployment/local/craft_docker_compose#build-craft-from-source)
-      to build and select the separate sandbox image.
-      If your deployment directory does not include the source checkout referenced by the Compose build contexts,
-      use published images with `--no-build`.
-    </Note>
-
     <Warning>
       If you've previously launched Onyx with the old `onyx-stack` service name,
       you'll need to add `-p onyx-stack` to your launch command.
