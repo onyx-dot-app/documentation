@@ -4,8 +4,6 @@ description: "Deploy Craft sandboxes on a trusted Docker host"
 icon: "docker"
 ---
 
-<!-- cspell:ignore onyxdotapp reprovisioned -->
-
 Docker Compose runs one sandbox container per active Craft user. Use this path for a small,
 single-host Onyx deployment that you trust and control.
 
@@ -110,8 +108,9 @@ Normal deployments should not set `SANDBOX_CONTAINER_IMAGE` separately.
 
 ## Build Craft from source
 
-`docker compose up --build` builds the Onyx services declared in the Compose files. It does not build the Craft
-sandbox image because sandboxes are created dynamically by the API server rather than running as a Compose service.
+`docker compose up --build` builds the Onyx services declared in the Compose files.
+It does not build the Craft sandbox image because sandboxes are created dynamically by the API server rather than
+running as a Compose service.
 
 From the root of an Onyx source checkout, build the sandbox image separately with a local, non-mutable tag:
 
@@ -139,18 +138,21 @@ docker compose \
 ```
 
 <Warning>
-  Do not use `latest`, `edge`, or `beta` for a locally built sandbox image. The API server treats these tags as
-  mutable and attempts to refresh them from the registry before provisioning. Use a tag such as `local-source`.
+  Do not use `latest`, `edge`, or `beta` for a locally built sandbox image.
+  The API server treats these tags as mutable and attempts to refresh them from the registry before provisioning.
+  Use a tag such as `local-source`.
 </Warning>
 
-Setting `IMAGE_TAG` does not build the corresponding `onyxdotapp/sandbox:${IMAGE_TAG}` image. Either build that
-sandbox tag separately or set `SANDBOX_CONTAINER_IMAGE` explicitly. Recreate `api_server` and `background` after
-changing the setting. Existing `sandbox-*` containers continue using the image with which they were created and must
-be terminated and reprovisioned to use the new image.
+Setting `IMAGE_TAG` does not build the corresponding `onyxdotapp/sandbox:${IMAGE_TAG}` image.
+Either build that sandbox tag separately or set `SANDBOX_CONTAINER_IMAGE` explicitly.
+Recreate `api_server` and `background` after changing the setting.
+Existing `sandbox-*` containers continue using the image with which they were created and must be terminated and
+provisioned again to use the new image.
 
-If you instead launch from a staged directory such as `onyx_data/deployment`, copy the setting into that directory's
-`.env`. Staged deployment directories do not contain the source checkout expected by the Compose build contexts, so
-use already-built or published images with `--no-build`.
+If you instead launch from a staged directory such as `onyx_data/deployment`,
+copy the setting into that directory's `.env`.
+Staged deployment directories do not contain the source checkout expected by the Compose build contexts,
+so use already-built or published images with `--no-build`.
 
 ## Verify the deployment
 
@@ -206,9 +208,8 @@ See [Craft Architecture](/security/architecture/craft) for the complete trust an
   </Accordion>
 
   <Accordion title="The sandbox proxy is unhealthy">
-    Run `docker compose -f docker-compose.yml -f docker-compose.craft.yml logs sandbox-proxy`.
-    Check `ONYX_SERVER_URL`, PostgreSQL and Redis availability, the `sandbox_proxy_ca` volume,
-    and access to the Docker socket.
+    Run `docker compose -f docker-compose.yml -f docker-compose.craft.yml logs sandbox-proxy`. Check `ONYX_SERVER_URL`,
+    PostgreSQL and Redis availability, the `sandbox_proxy_ca` volume, and access to the Docker socket.
   </Accordion>
 
   <Accordion title="The sandbox network or CA volume is missing">
