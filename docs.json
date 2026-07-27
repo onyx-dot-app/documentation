@@ -194,6 +194,7 @@
                   "admins/connectors/official/asana",
                   "admins/connectors/official/bitbucket",
                   "admins/connectors/official/bookstack",
+                  "admins/connectors/official/box",
                   "admins/connectors/official/clickup",
                   "admins/connectors/official/confluence",
                   "admins/connectors/official/discord",
