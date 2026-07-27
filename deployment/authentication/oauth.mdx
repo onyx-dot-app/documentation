@@ -113,9 +113,15 @@ see [Plan Availability](/deployment/authentication/sso_providers#plan-availabili
 
 By default, Onyx requests `openid`, `email`,
 and `profile` from Google during login — the minimum needed to identify the user.
-You can override this list with `GOOGLE_OAUTH_SCOPE_OVERRIDE`, a comma-separated list of scopes to request instead.
 This is primarily useful when the access token issued at login should be passed through to tool calls that need
 additional Google API access.
+
+Starting in `v4.5`, set **Scopes** on the provider entry
+(**Admin Panel** → **Organization** → **SSO Providers**) to override the list per provider.
+The provider entry also offers an **Enable PKCE** toggle from `v4.5`.
+
+On `v4.4.x`, the override is the deployment-wide `GOOGLE_OAUTH_SCOPE_OVERRIDE` environment variable,
+a comma-separated list. It is planned for removal in `v4.5` in favor of the per-provider setting.
 
 ```bash .env
 GOOGLE_OAUTH_SCOPE_OVERRIDE=openid,email,profile,https://www.googleapis.com/auth/drive.readonly

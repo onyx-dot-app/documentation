@@ -76,9 +76,15 @@ Please contact us if you need help with a different identity provider.
 ## Customizing requested scopes
 
 By default, Onyx uses the standard OIDC base scopes when redirecting users to the identity provider.
-You can override this list with `OIDC_SCOPE_OVERRIDE`, a comma-separated list of scopes to request instead.
 This is primarily useful when the access token issued at login should be passed through to tool calls that need
 additional scopes from the identity provider.
+
+Starting in `v4.5`, set **Scopes** on the provider entry
+(**Admin Panel** → **Organization** → **SSO Providers**) to override the list per provider.
+
+On `v4.4.x`, the override is the deployment-wide `OIDC_SCOPE_OVERRIDE` environment variable,
+a comma-separated list that applies to every OIDC provider.
+It is planned for removal in `v4.5` in favor of the per-provider setting.
 
 ```bash .env
 OIDC_SCOPE_OVERRIDE=openid,email,profile,groups
@@ -99,7 +105,13 @@ Onyx will always also request `offline_access` so refresh tokens are issued, eve
 
 ## Enabling PKCE
 
-PKCE is disabled by default to preserve backwards compatibility with existing OIDC deployments. To enable it, set:
+PKCE is disabled by default to preserve backwards compatibility with existing OIDC deployments.
+
+Starting in `v4.5`, turn on **Enable PKCE** on the provider entry
+(**Admin Panel** → **Organization** → **SSO Providers**).
+
+On `v4.4.x`, the deployment-wide environment variable enables it for all providers.
+It is planned for removal in `v4.5` in favor of the per-provider setting.
 
 ```bash .env
 OIDC_PKCE_ENABLED=true
