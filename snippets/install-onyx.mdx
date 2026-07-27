@@ -17,10 +17,10 @@
     # If your email is something like "chris@onyx.app", then this should be "onyx.app"
     # This prevents people outside your company from creating an account
     VALID_EMAIL_DOMAINS=<YOUR_COMPANIES_EMAIL_DOMAIN>
-
-    # See our auth guides for options here
-    AUTH_TYPE=
     ```
+
+    Email/password login works out of the box, and SSO (Google / OIDC / SAML) is configured later from the admin panel.
+    See our [auth guides](/deployment/authentication/basic) for details.
 
     ```bash .env.nginx
     DOMAIN=<YOUR_DOMAIN>  # Something like "onyx.app"
