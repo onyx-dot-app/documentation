@@ -4,6 +4,8 @@ description: "Deploy Craft sandboxes on a trusted Docker host"
 icon: "docker"
 ---
 
+<!-- cspell:ignore onyxdotapp reprovisioned -->
+
 Docker Compose runs one sandbox container per active Craft user. Use this path for a small,
 single-host Onyx deployment that you trust and control.
 
@@ -41,7 +43,7 @@ creates the sandbox bridge network and proxy CA volume, and starts the deploymen
 Open `onyx_data/deployment/.env` and set the Onyx URL:
 
 ```dotenv
-SANDBOX_API_SERVER_URL=https://onyx.example.com
+ONYX_SERVER_URL=https://onyx.example.com
 ```
 
 Then recreate the affected services with both Compose files:
@@ -56,7 +58,7 @@ docker compose \
 
 ## Existing deployment
 
-Set `SANDBOX_API_SERVER_URL` in the existing `onyx_data/deployment/.env`, then rerun the installer:
+Set `ONYX_SERVER_URL` in the existing `onyx_data/deployment/.env`, then rerun the installer:
 
 ```bash
 cd onyx/deployment/docker_compose
@@ -78,13 +80,13 @@ starts the sandbox proxy, and attaches the API server and background worker to t
 For production, use the public HTTPS URL users use to reach Onyx:
 
 ```dotenv
-SANDBOX_API_SERVER_URL=https://onyx.example.com
+ONYX_SERVER_URL=https://onyx.example.com
 ```
 
 For local Docker Desktop on macOS or Windows, use the host port selected by the installer:
 
 ```dotenv
-SANDBOX_API_SERVER_URL=http://host.docker.internal:3000
+ONYX_SERVER_URL=http://host.docker.internal:3000
 ```
 
 On Linux, use a hostname or host address reachable from Docker containers.
@@ -105,6 +107,50 @@ change this with `SANDBOX_IDLE_TIMEOUT_SECONDS` when faster cleanup or longer-li
 
 The sandbox image follows `IMAGE_TAG`. Keep the Onyx backend and sandbox on the same release.
 Normal deployments should not set `SANDBOX_CONTAINER_IMAGE` separately.
+
+## Build Craft from source
+
+`docker compose up --build` builds the Onyx services declared in the Compose files. It does not build the Craft
+sandbox image because sandboxes are created dynamically by the API server rather than running as a Compose service.
+
+From the root of an Onyx source checkout, build the sandbox image separately with a local, non-mutable tag:
+
+```bash
+docker build \
+  -t onyxdotapp/sandbox:local-source \
+  -f backend/onyx/server/features/build/sandbox/image/Dockerfile \
+  backend/onyx/server/features/build/sandbox/image
+```
+
+Set the image in the `.env` used by your source checkout:
+
+```dotenv
+SANDBOX_CONTAINER_IMAGE=onyxdotapp/sandbox:local-source
+```
+
+Then build and recreate the Onyx services with the Craft overlay:
+
+```bash
+cd deployment/docker_compose
+docker compose \
+  -f docker-compose.yml \
+  -f docker-compose.craft.yml \
+  up -d --build --force-recreate
+```
+
+<Warning>
+  Do not use `latest`, `edge`, or `beta` for a locally built sandbox image. The API server treats these tags as
+  mutable and attempts to refresh them from the registry before provisioning. Use a tag such as `local-source`.
+</Warning>
+
+Setting `IMAGE_TAG` does not build the corresponding `onyxdotapp/sandbox:${IMAGE_TAG}` image. Either build that
+sandbox tag separately or set `SANDBOX_CONTAINER_IMAGE` explicitly. Recreate `api_server` and `background` after
+changing the setting. Existing `sandbox-*` containers continue using the image with which they were created and must
+be terminated and reprovisioned to use the new image.
+
+If you instead launch from a staged directory such as `onyx_data/deployment`, copy the setting into that directory's
+`.env`. Staged deployment directories do not contain the source checkout expected by the Compose build contexts, so
+use already-built or published images with `--no-build`.
 
 ## Verify the deployment
 
@@ -149,7 +195,7 @@ See [Craft Architecture](/security/architecture/craft) for the complete trust an
     Include both `docker-compose.yml` and `docker-compose.craft.yml` in the Compose command.
   </Accordion>
 
-  <Accordion title="Sandbox provisioning reports that SANDBOX_API_SERVER_URL is missing">
+  <Accordion title="Sandbox provisioning reports that ONYX_SERVER_URL is missing">
     Set the value in `onyx_data/deployment/.env` and recreate the API server, background worker,
     and sandbox proxy with the Craft overlay.
   </Accordion>
@@ -161,7 +207,7 @@ See [Craft Architecture](/security/architecture/craft) for the complete trust an
 
   <Accordion title="The sandbox proxy is unhealthy">
     Run `docker compose -f docker-compose.yml -f docker-compose.craft.yml logs sandbox-proxy`.
-    Check `SANDBOX_API_SERVER_URL`, PostgreSQL and Redis availability, the `sandbox_proxy_ca` volume,
+    Check `ONYX_SERVER_URL`, PostgreSQL and Redis availability, the `sandbox_proxy_ca` volume,
     and access to the Docker socket.
   </Accordion>
 
