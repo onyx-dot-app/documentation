@@ -596,6 +596,37 @@
         "tab": "Changelog",
         "icon": "clock-rotate-left",
         "pages": ["changelog"]
+      },
+      {
+        "tab": "Agent Wiki",
+        "icon": "book",
+        "hidden": true,
+        "pages": [
+          {
+            "group": "Getting Started",
+            "pages": ["agent-wiki/welcome", "agent-wiki/quickstart"]
+          },
+          {
+            "group": "Core",
+            "pages": [
+              "agent-wiki/home",
+              "agent-wiki/editor",
+              "agent-wiki/analytics"
+            ]
+          },
+          {
+            "group": "Automate",
+            "pages": [
+              "agent-wiki/workflows",
+              "agent-wiki/agent",
+              "agent-wiki/assistant"
+            ]
+          },
+          {
+            "group": "Admin",
+            "pages": ["agent-wiki/mcp", "agent-wiki/settings"]
+          }
+        ]
       }
     ],
     "global": {
