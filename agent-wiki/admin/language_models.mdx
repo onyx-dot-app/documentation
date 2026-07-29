@@ -1,9 +1,28 @@
 ---
 title: "Language Models"
-description: "Configure the LLM provider powering the wiki"
+description: "Provider credentials and the model agents use"
 icon: "microchip"
 ---
 
-<Note>
-  This page is a stub. Document language model configuration here.
-</Note>
+Agent Wiki needs a language model provider. Until one is configured, agents, triggers,
+and Auto Organize sit idle — there's no error, they simply never do anything.
+
+Go to **Admin → Language Models** to manage provider credentials and set the model agents use.
+
+## What the model does here
+
+The model is doing more work than a chat box. It:
+
+- Evaluates [trigger](/agent-wiki/automate/triggers) conditions written in plain English, on every relevant change
+- Writes the notification text a trigger sends, grounded in what actually changed
+- Applies natural-language document updates, including the ones agents request over MCP
+- Merges concurrent edits when two writers touch the same page
+- Judges and applies [Auto Organize](/agent-wiki/automate/auto_organize) proposals
+
+So provider choice and rate limits affect the responsiveness of the whole product, not one feature.
+
+## Per-user overrides
+
+Users can pick a different model for their own chats under **Settings**.
+The admin setting is the default and the model everything automated uses;
+the override only affects that person's interactive sessions.
