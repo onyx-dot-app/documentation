@@ -26,7 +26,7 @@ Self-hosted deployments can run these sandboxes in Kubernetes or Docker.
 | --- | --- | --- |
 | Sandbox runtime | One pod per active user | One container per active user |
 | Recommended for | Production and multi-node deployments | Single-host self-hosted deployments |
-| Provisioning | Onyx Helm chart | `install.sh --include-craft` |
+| Provisioning | Onyx Helm chart | `onyx-cli deploy install --include-craft` |
 | Host access | Kubernetes API through scoped RBAC | Docker socket access on the host |
 
 ## Requirements

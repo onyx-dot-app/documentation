@@ -10,10 +10,9 @@ The [Onyx CLI](/overview/onyx_anywhere/cli)
 includes a `deploy` command group that installs and manages a self-hosted Docker Compose deployment:
 a guided installer plus lifecycle commands for upgrading, inspecting, stopping, and removing the deployment.
 
-It is a cross-platform (Linux, macOS, Windows)
-implementation of the same guided install provided by the [installation
-scripts](/deployment/getting_started/quickstart), and it understands deployments created by those scripts.
-The scripts remain supported; the CLI will eventually replace them once it stabilizes.
+It is the recommended way to set up and manage a self-hosted deployment on Linux, macOS, and Windows,
+replacing the legacy `install.sh` / `install.ps1` [installation scripts](/deployment/getting_started/quickstart).
+Deployments created by those scripts are detected and [managed in place](#migrating-an-existing-deployment).
 
 | Command | Description |
 |---------|-------------|
@@ -180,10 +179,13 @@ Removes the Onyx containers, volumes, and the deployment directory.
   non-interactive runs require `--force`.
 </Warning>
 
-## Migrating from install.sh
+## Migrating an existing deployment
 
-Existing `install.sh` deployments are managed in place — just run the CLI from the directory containing `onyx_data` (or
-point `--dir` at it). The script's mode flags map to dedicated commands:
+### From install.sh
+
+Deployments created by the legacy `install.sh` script are managed in place — run the CLI from the directory containing
+`onyx_data` (or point `--dir` at it) and it takes over, no migration required.
+The script's mode flags map to dedicated commands:
 
 | install.sh | Onyx CLI |
 |------------|----------|
@@ -191,5 +193,58 @@ point `--dir` at it). The script's mode flags map to dedicated commands:
 | Re-run and type `update` | `onyx-cli deploy upgrade` |
 | `./install.sh --shutdown` | `onyx-cli deploy stop` |
 | `./install.sh --delete-data` | `onyx-cli deploy uninstall` |
+
+### Moving to ~/.config/onyx
+
+A legacy `onyx_data` install can also be relocated to the recommended `~/.config/onyx` location.
+Only configuration moves: chats, users,
+and documents live in named Docker volumes keyed by the compose project name (`onyx`), which stays the same,
+so the relocated deployment adopts them automatically.
+The one file that must be carried over is `.env` — it holds the secrets the database and object-store volumes were
+initialized with.
+
+```bash
+# From the directory containing onyx_data
+onyx-cli deploy stop
+mkdir -p ~/.config/onyx/deployment
+cp onyx_data/deployment/.env ~/.config/onyx/deployment/
+onyx-cli deploy install --dir ~/.config/onyx
+```
+
+Choose **Restart** to come back up on the version already pinned in `.env`, or **Upgrade** to move to a newer one.
+The compose files are downloaded fresh, so re-apply any hand edits you made to them.
+Once `onyx-cli deploy status` reports healthy, delete the old directory — it only holds configuration:
+
+```bash
+rm -rf onyx_data
+```
+
+<Note>
+  Deleting the old directory matters: when `onyx_data` exists in the working directory,
+  the CLI prefers it over `~/.config/onyx`. Once it is gone,
+  plain `onyx-cli deploy` commands find the new location without `--dir`.
+</Note>
+
+### From a manual docker compose setup
+
+A deployment you started by hand from the repo's `deployment/docker_compose` directory can be adopted the same way,
+as long as it uses the default compose project name (`onyx`, pinned in `docker-compose.yml`):
+
+```bash
+# From the directory with your docker-compose.yml
+docker compose down   # keeps the data volumes — do NOT pass -v
+mkdir -p ~/.config/onyx/deployment
+cp .env ~/.config/onyx/deployment/
+onyx-cli deploy install
+```
+
+The installer detects the copied `.env` as an existing deployment, downloads the managed compose files,
+and brings the stack back up on the existing volumes.
+
+<Warning>
+  Deployments launched under a different project name — the old `onyx-stack` name,
+  or any custom `-p` value — store their volumes under that prefix and are **not** adopted automatically.
+  Keep managing those with `docker compose` directly, or migrate the volume data manually before switching.
+</Warning>
 
 <DeploymentNextSteps />
