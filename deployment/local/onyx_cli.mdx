@@ -29,6 +29,12 @@ The scripts remain supported; the CLI will eventually replace them once it stabi
 Install the CLI from PyPI:
 
 ```shell
+uv tool install onyx-cli
+```
+
+Or with pip:
+
+```shell
 pip install onyx-cli
 ```
 
@@ -46,8 +52,8 @@ not an Onyx server.
 onyx-cli deploy install
 ```
 
-The interactive installer asks two questions — the deployment mode (**Lite**, **Standard**, or **Standard + Craft**)
-and the version to deploy, prefilled with the latest release — while environment checks run in the background. It then:
+The interactive installer asks two questions — the deployment mode (**Lite** or **Standard**) and the version to deploy,
+prefilled with the latest release — while environment checks run in the background. It then:
 
 - Checks system resources (RAM, disk) and scans for a free host port
 - Installs Docker Engine and the compose plugin on Linux after confirmation;
@@ -63,7 +69,7 @@ Re-running `deploy install` on an existing deployment asks a single question:
 | Flag | Description |
 |------|-------------|
 | `--lite` | Deploy Onyx Lite (no OpenSearch, Redis, or model servers) |
-| `--include-craft` | Enable [Onyx Craft](/deployment/local/craft_docker_compose) |
+| `--include-craft` | Enable [Onyx Craft](/deployment/local/craft_docker_compose) — Craft is opt-in via this flag only and is not offered by the interactive prompt |
 | `--tag <version>` | Image tag to deploy (default: the latest Onyx release) |
 | `--dir <path>` | Deployment directory (default: `~/.config/onyx`, or an existing `./onyx_data`) |
 | `--no-prompt` | Run non-interactively with defaults applied to every prompt (for CI/automation) |
