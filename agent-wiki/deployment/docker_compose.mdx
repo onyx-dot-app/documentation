@@ -11,18 +11,36 @@ and OpenSearch for the data plane, then the backend, two worker processes, the f
 
 - Docker with Compose v2 (`docker compose version`)
 - `git` and `openssl`
-- **8 GB of RAM recommended**, 4 GB minimum
+- **4 GB of RAM** to run the stack, **8 GB** if you build the images on the same host
 
-Memory is the constraint worth checking before you start. The app containers are capped at 1 GB (backend),
-1 GB per worker group, and 512 MB (frontend);
-OpenSearch runs with a 512 MB JVM heap and wants roughly double that in practice.
-Steady-state usage sits well below the sum of those ceilings,
-but the frontend's production build is the peak — if the first build dies without an obvious error,
-it ran out of memory.
+### Memory footprint
+
+Measured on an idle stack, all eight containers running:
+
+| Container | Memory |
+| --- | --- |
+| `opensearch` | 1.32 GB |
+| `backend` | 490 MB |
+| `worker-heavy` | 196 MB |
+| `worker-light` | 197 MB |
+| `postgres` | 186 MB |
+| `frontend` | 51 MB |
+| `redis` | 13 MB |
+| `nginx` | 12 MB |
+| **Total** | **~2.4 GB** |
+
+Agent Wiki's own processes account for under 1 GB of that.
+**OpenSearch is the majority of the footprint** — it runs with a 512 MB JVM heap,
+and the rest is JVM overhead and file cache. It is a required dependency, not an optional one.
+
+Expect the app processes to grow above these idle figures under real use:
+the backend and workers do LLM calls and git operations, and the workers add roughly 15 MB per active thread.
 
 <Note>
-  On Docker Desktop, the limit that matters is the VM's memory allocation, not the host's.
-  Raise it under **Settings → Resources** if the default is below 8 GB.
+  The peak is the **frontend production build**, not the running stack — that is what the 8 GB figure covers.
+  If the first build dies without an obvious error, it ran out of memory.
+  On Docker Desktop the binding limit is the VM's memory allocation rather than host RAM;
+  raise it under **Settings → Resources**.
 </Note>
 
 ## Install
