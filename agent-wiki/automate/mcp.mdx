@@ -1,6 +1,6 @@
 ---
 title: "Connect an Agent (MCP)"
-description: "Connect Claude Code, Cursor, Codex, or Onyx to your wiki over MCP"
+description: "Connect Claude Code, Cursor, Codex, or Onyx Craft to your wiki over MCP"
 icon: "plug"
 ---
 
@@ -94,15 +94,43 @@ Open **Agents & Actions** in the left sidebar.
     ```
   </Tab>
 
-  <Tab title="Onyx">
-    Using an account with `manage:actions`,
-    go to **Settings → MCP Actions → Add MCP Server** and enter the wiki's MCP URL.
+  <Tab title="Onyx Craft">
+    In Onyx, the agent that works with MCP servers is **Craft**. Connecting takes two parts:
+    an admin registers the wiki once for the organization, then each person connects their own key.
 
-    Choose **API Key** authentication with either a **Shared Key** configured as `Authorization: Bearer mcp_…`,
-    or an **Individual Key** so each user supplies their own credential from the chat Actions popover.
-    Individual keys keep per-user wiki permissions intact, which is usually what you want.
+    **Admin — register the wiki (once)**
 
-    Onyx then lists the server's tools and lets you expose the ones you choose to your Agents.
+    <Steps>
+      <Step title="Add the MCP server">
+        In the Admin Panel, open **MCP Actions → Add MCP Server** and enter your wiki's MCP URL.
+        See [MCP Actions](/admins/actions/mcp) for the full field reference.
+      </Step>
+
+      <Step title="Choose API Key authentication">
+        Pick **Individual Key** so each person supplies their own `mcp_…` key — that keeps each user's agent inside
+        their own wiki permissions. A **Shared Key** gives everyone the access of whichever account minted it.
+      </Step>
+
+      <Step title="Select the tools to expose">
+        Onyx lists the wiki's tools and lets you choose which are available to agents across the organization.
+      </Step>
+
+      <Step title="Turn it on for Craft">
+        Go to **Admin Panel → Craft → Apps** and enable the wiki.
+        The card should read "Available to the Craft agent — tool calls follow their approval policies".
+        Until this is on, Craft cannot see the wiki at all.
+      </Step>
+    </Steps>
+
+    **Each user — connect (once)**
+
+    Open **Craft → Apps**, find the wiki, click **Connect**, and paste your API key from **Agents & Actions**.
+    The credential is shared across surfaces: connect in Craft and you are connected in chat too, and vice versa.
+
+    <Note>
+      Craft tool calls are gated per tool at the sandbox boundary. By default the agent asks before each call;
+      admins can set a tool to always-allow or deny from the MCP admin page.
+    </Note>
   </Tab>
 
   <Tab title="Claude Desktop">
