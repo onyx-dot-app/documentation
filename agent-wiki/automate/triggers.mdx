@@ -144,10 +144,14 @@ An admin has to save Slack app credentials first ([Notifications](/agent-wiki/ad
   Test one before attaching a trigger:
 
   ```bash
+  export SLACK_WEBHOOK_URL='…'   # the URL Slack gave you
+
   curl -X POST -H 'Content-type: application/json' \
     --data '{"text":"hello from agent wiki"}' \
-    'https://hooks.slack.com/services/T0XXXXXXX/B0XXXXXXX/aBcDeF1234...'
+    "$SLACK_WEBHOOK_URL"
   ```
+
+  A `ok` response and the line appearing in the channel means the webhook works.
 </Accordion>
 
 ## Good to know

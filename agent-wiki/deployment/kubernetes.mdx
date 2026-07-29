@@ -40,10 +40,12 @@ self-managed, whatever you already operate.
 
   <Step title="Install the chart">
     ```bash
+    export DATABASE_URL='postgresql://…'   # your Postgres connection string
+
     helm upgrade --install agent-wiki ./deploy/helm/agent-workspace \
       --namespace agent-wiki --create-namespace \
       --set secretKey="$(openssl rand -hex 32)" \
-      --set databaseUrl="postgresql://USER:PASSWORD@HOST:5432/DBNAME" \
+      --set databaseUrl="$DATABASE_URL" \
       --set image.backend.tag=v0.0.1 \
       --set image.frontend.tag=v0.0.1 \
       --set ingress.host=<your-host> \
@@ -53,6 +55,9 @@ self-managed, whatever you already operate.
 
     Image repositories default to `onyxdotapp/agent-wiki-{backend,frontend}`, so only the tag needs overriding.
     For anything beyond a trial, keep a `values.yaml` per environment and use `-f`.
+
+    Passing the connection string through a variable keeps the database password out of your shell history and out of
+    the process list — `--set` arguments are visible to anyone who can run `ps` on that host.
   </Step>
 
   <Step title="Sign in and configure">
