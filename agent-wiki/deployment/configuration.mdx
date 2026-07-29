@@ -33,8 +33,9 @@ so if it's wrong those are all wrong in the same way. On Kubernetes the chart de
 | `OPENSEARCH_INDEX` | `wiki-docs` |
 | `WIKI_DIR` | Where the git working tree lives |
 
-Postgres must have `pg_textsearch` and `pgmq` available — see [Kubernetes](/agent-wiki/deployment/kubernetes)
-for the extension requirements, which are stricter than they look.
+A stock Postgres 17 is fine — no extensions or server-parameter tuning are needed.
+Search is served by OpenSearch and the task queues by Redis,
+so managed database offerings work without special configuration.
 
 ## Authentication
 
