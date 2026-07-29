@@ -87,6 +87,7 @@ onyx-cli validate-config
 | `onyx-cli agents` | List available agents |
 | `onyx-cli configure` | Configure server URL and API key |
 | `onyx-cli validate-config` | Validate configuration and test connection |
+| `onyx-cli deploy` | Install and manage a self-hosted Onyx deployment |
 
 ### Interactive Chat
 
@@ -129,6 +130,19 @@ onyx-cli agents --json
 ```
 
 Prints a table of available agent IDs, names, and descriptions.
+
+### Self-Hosted Deployment
+
+The `deploy` command group installs and manages a self-hosted Docker Compose deployment of Onyx — a guided installer
+plus `upgrade`, `status`, `logs`, `stop`, and `uninstall` commands:
+
+```shell
+onyx-cli deploy install
+```
+
+<Card title="Deploy with the Onyx CLI" icon="server" href="/deployment/local/onyx_cli">
+  Full documentation for `onyx-cli deploy` and its lifecycle commands.
+</Card>
 
 ## Slash Commands (Interactive TUI)
 

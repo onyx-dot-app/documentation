@@ -46,6 +46,22 @@ The script will do the following:
   information.
 </Info>
 
+## Onyx CLI (alternative)
+
+The same guided install also ships inside the [Onyx CLI](/overview/onyx_anywhere/cli)
+and will eventually replace the installation scripts:
+
+```bash
+pip install onyx-cli && onyx-cli deploy install
+```
+
+It detects existing script-based installs and manages them in place, and adds lifecycle commands for upgrading,
+checking health, viewing logs, stopping, and uninstalling the deployment.
+
+<Card title="Deploy with the Onyx CLI" icon="terminal" href="/deployment/local/onyx_cli">
+  Full documentation for `onyx-cli deploy` and its lifecycle commands.
+</Card>
+
 ## Next Steps
 
 <CardGroup cols={2}>

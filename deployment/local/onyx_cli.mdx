@@ -1,0 +1,189 @@
+---
+title: "Onyx CLI"
+description: "Install and manage a Docker Compose deployment with onyx-cli deploy"
+icon: "terminal"
+---
+
+import DeploymentNextSteps from "/snippets/deployment-next-steps.mdx"
+
+The [Onyx CLI](/overview/onyx_anywhere/cli)
+includes a `deploy` command group that installs and manages a self-hosted Docker Compose deployment:
+a guided installer plus lifecycle commands for upgrading, inspecting, stopping, and removing the deployment.
+
+It is a cross-platform (Linux, macOS, Windows)
+implementation of the same guided install provided by the [installation
+scripts](/deployment/getting_started/quickstart), and it understands deployments created by those scripts.
+The scripts remain supported; the CLI will eventually replace them once it stabilizes.
+
+| Command | Description |
+|---------|-------------|
+| `onyx-cli deploy install` | Install a new deployment, or restart / update an existing one |
+| `onyx-cli deploy upgrade` | Upgrade an existing deployment to a newer version |
+| `onyx-cli deploy status` | Show versions, containers, and health |
+| `onyx-cli deploy stop` | Stop the containers without removing any data |
+| `onyx-cli deploy logs` | Show service logs |
+| `onyx-cli deploy uninstall` | Permanently delete the deployment and all its data |
+
+## Prerequisites
+
+Install the CLI from PyPI:
+
+```shell
+pip install onyx-cli
+```
+
+See the [CLI overview](/overview/onyx_anywhere/cli) for other installation methods.
+No `onyx-cli configure` step is needed — the `deploy` commands work directly against your local Docker,
+not an Onyx server.
+
+<Tip>
+  Check out the [Resourcing Guide](/deployment/getting_started/resourcing) before getting started.
+</Tip>
+
+## Install
+
+```shell
+onyx-cli deploy install
+```
+
+The interactive installer asks two questions — the deployment mode (**Lite**, **Standard**, or **Standard + Craft**)
+and the version to deploy, prefilled with the latest release — while environment checks run in the background. It then:
+
+- Checks system resources (RAM, disk) and scans for a free host port
+- Installs Docker Engine and the compose plugin on Linux after confirmation;
+  starts Docker Desktop and waits for it on macOS; detects Docker and provides instructions on Windows
+- Creates a `.env` file from the template with randomly generated secrets
+- Pulls the Onyx images and starts the containers, waiting until every service reports healthy
+
+Re-running `deploy install` on an existing deployment asks a single question:
+**Restart** it as-is or **Upgrade** it to a newer version.
+
+### Flags
+
+| Flag | Description |
+|------|-------------|
+| `--lite` | Deploy Onyx Lite (no OpenSearch, Redis, or model servers) |
+| `--include-craft` | Enable [Onyx Craft](/deployment/local/craft_docker_compose) |
+| `--tag <version>` | Image tag to deploy (default: the latest Onyx release) |
+| `--dir <path>` | Deployment directory (default: `~/.config/onyx`, or an existing `./onyx_data`) |
+| `--no-prompt` | Run non-interactively with defaults applied to every prompt (for CI/automation) |
+| `--local` | Use existing config files on disk instead of downloading |
+| `--offline` | Deploy from images already on the host without any network access (implies `--local`) |
+| `--no-wait` | Return as soon as containers are started instead of waiting for health |
+| `--dry-run` | Show what would be done without making changes |
+| `--force` | Overwrite hand-edited managed files (a backup is kept) and recreate running services |
+| `--verbose` | Show detailed output for debugging |
+
+For example, a fully non-interactive install pinned to a specific version:
+
+```shell
+onyx-cli deploy install --tag v4.4.6 --no-prompt
+```
+
+<Note>
+  `onyx-cli install-onyx` is a top-level alias for `onyx-cli deploy install`.
+</Note>
+
+### Deployment directory
+
+New installs live in `~/.config/onyx` (XDG-aware).
+Deployments created by the legacy `install.sh` script in `./onyx_data` are detected automatically and managed **in
+place** — no migration needed.
+Pass `--dir` or set the `ONYX_DEPLOYMENT_DIR` environment variable to target a specific location.
+
+The directory holds the compose files, `.env`, and an `install-state.json` manifest recording the deployment mode,
+version, and a checksum of each managed file. No application data lives there — chats, users,
+and documents are stored in named Docker volumes.
+
+## Upgrade
+
+```shell
+onyx-cli deploy upgrade
+```
+
+Upgrades an existing deployment to the latest release, or to a specific version with `--tag`:
+
+```shell
+onyx-cli deploy upgrade --tag v4.4.6
+```
+
+The upgrade is designed to preserve your customizations:
+
+- Only the `IMAGE_TAG` line in `.env` is rewritten (plus `SANDBOX_BACKEND` when Craft is enabled) —
+  every other setting, including your edits, is kept.
+- Managed files (compose files, overlays, nginx config) are refreshed to match the target version.
+  Files you hand-edited are detected via the manifest, backed up,
+  and only overwritten after you confirm (or with `--force`).
+- Downgrades to an older version warn and require confirmation or `--force`.
+
+The running services keep serving while the new images download and are then recreated on the new version.
+`upgrade` accepts the same `--dir`, `--no-prompt`, `--local`, `--offline`, `--no-wait`, `--dry-run`,
+and `--verbose` flags as `install`.
+
+## Status
+
+```shell
+onyx-cli deploy status
+```
+
+Shows the installed version as recorded by the CLI, by `.env`,
+and by the running containers (drift between them is flagged), plus per-container status and health, the published port,
+and — for a service that is down — why (restarts, exit code, OOM, last failing health probe).
+
+`status` is read-only and works as a health probe: use `--json` for machine-readable output, and check the exit code.
+
+| Exit code | Meaning |
+|-----------|---------|
+| `0` | Everything is up and healthy |
+| `1` | Stopped or degraded |
+| `9` | No installation found |
+
+## Logs
+
+```shell
+onyx-cli deploy logs api_server
+```
+
+Shows service logs without needing to locate the deployment directory or remember which compose overlays it uses.
+Name one or more services to narrow the output, or pass none for all services.
+
+| Flag | Description |
+|------|-------------|
+| `-f`, `--follow` | Keep printing new log lines |
+| `--tail <n>` | Lines to show from the end of each log (default `200`, `all` for everything) |
+| `--since <time>` | Only logs since this point (e.g. `10m`, `2h`, or a timestamp) |
+
+## Stop
+
+```shell
+onyx-cli deploy stop
+```
+
+Stops the containers without removing them or any data. Start the deployment again with `onyx-cli deploy install`.
+
+## Uninstall
+
+```shell
+onyx-cli deploy uninstall
+```
+
+Removes the Onyx containers, volumes, and the deployment directory.
+
+<Warning>
+  This permanently deletes all user data and documents. Interactive runs must type `DELETE` to confirm;
+  non-interactive runs require `--force`.
+</Warning>
+
+## Migrating from install.sh
+
+Existing `install.sh` deployments are managed in place — just run the CLI from the directory containing `onyx_data` (or
+point `--dir` at it). The script's mode flags map to dedicated commands:
+
+| install.sh | Onyx CLI |
+|------------|----------|
+| `./install.sh` | `onyx-cli deploy install` |
+| Re-run and type `update` | `onyx-cli deploy upgrade` |
+| `./install.sh --shutdown` | `onyx-cli deploy stop` |
+| `./install.sh --delete-data` | `onyx-cli deploy uninstall` |
+
+<DeploymentNextSteps />
