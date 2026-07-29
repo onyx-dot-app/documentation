@@ -14,17 +14,11 @@ don't have one. It's a starting point to copy into your own repo and customize, 
 
 - `kubectl` and `helm` 3.13 or newer
 - A DNS zone where you can point a record at the ingress load balancer
-- **Postgres 17 with the `pg_textsearch` and `pgmq` extensions**, reachable over `DATABASE_URL`
+- **Postgres 17**, reachable over `DATABASE_URL`
 - Redis and OpenSearch, also reachable from the cluster
 
-<Warning>
-  `pg_textsearch` must be loaded through `shared_preload_libraries` — a server parameter that requires a Postgres
-  restart. `CREATE EXTENSION` alone is not enough.
-  `pgmq` is an ordinary extension and only needs `CREATE EXTENSION pgmq`.
-
-  On RDS or Cloud SQL this means a parameter-group change.
-  `deploy/postgres/Dockerfile` and the Compose file show the exact wiring for a self-managed instance.
-</Warning>
+A stock Postgres is all you need — no extensions and no `shared_preload_libraries` tuning.
+Search runs on OpenSearch and the task queues on Redis, so a managed instance works as-is.
 
 The chart deliberately does **not** provision Postgres, Redis, or object storage. Bring your own — RDS, Cloud SQL,
 self-managed, whatever you already operate.
