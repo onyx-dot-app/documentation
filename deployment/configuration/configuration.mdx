@@ -269,6 +269,11 @@ Read [Deploying Craft](/deployment/local/craft) before enabling Craft in self-ho
 
     `DISABLE_GENERATIVE_AI`: Disable generative AI features.
 
+    `CHAT_SESSION_NAMING_MODEL_PROVIDER` / `CHAT_SESSION_NAMING_MODEL`: Pin chat session auto-naming to a
+    dedicated model (provider name as configured in the admin panel + model name; both must be set).
+    When unset, naming uses the session's model. Useful when the session model is a local single-stream
+    model that concurrent naming calls would block.
+
     `DISABLE_USER_KNOWLEDGE`: Controls whether users can use the My Documents feature with assistants.
 
     `ONYX_QUERY_HISTORY_TYPE`: Controls query history reports (show user emails, anonymous, no queries)
