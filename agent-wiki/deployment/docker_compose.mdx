@@ -4,14 +4,26 @@ description: "Run Agent Wiki on a single host with Docker Compose"
 icon: "docker"
 ---
 
-Docker Compose is the fastest way to run Agent Wiki. It brings up Postgres, the backend, the workers, the frontend,
-and nginx on one host.
+Docker Compose is the fastest way to run Agent Wiki. It brings up the whole stack on one host: Postgres, Redis,
+and OpenSearch for the data plane, then the backend, two worker processes, the frontend, and nginx for the app plane.
 
 ## Requirements
 
 - Docker with Compose v2 (`docker compose version`)
 - `git` and `openssl`
-- ~4 GB of free memory for the first build
+- **8 GB of RAM recommended**, 4 GB minimum
+
+Memory is the constraint worth checking before you start. The app containers are capped at 1 GB (backend),
+1 GB per worker group, and 512 MB (frontend);
+OpenSearch runs with a 512 MB JVM heap and wants roughly double that in practice.
+Steady-state usage sits well below the sum of those ceilings,
+but the frontend's production build is the peak — if the first build dies without an obvious error,
+it ran out of memory.
+
+<Note>
+  On Docker Desktop, the limit that matters is the VM's memory allocation, not the host's.
+  Raise it under **Settings → Resources** if the default is below 8 GB.
+</Note>
 
 ## Install
 
