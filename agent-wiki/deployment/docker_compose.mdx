@@ -11,7 +11,7 @@ and OpenSearch for the data plane, then the backend, two worker processes, the f
 
 - Docker with Compose v2 (`docker compose version`)
 - `git` and `openssl`
-- **8 GB of RAM** — the images are built on your machine during install
+- **4 GB of RAM** — the running stack uses about 2.5 GB
 
 ## Install
 
@@ -131,8 +131,8 @@ git pull && docker compose --profile app up -d --build
     The `--profile app` flag was omitted. Without it Compose starts the data plane only.
   </Accordion>
 
-  <Accordion title="The build stops partway with no clear error">
-    It most likely ran out of memory. On Docker Desktop,
+  <Accordion title="The first install stops partway with no clear error">
+    Building the images needs more headroom than running them. On Docker Desktop,
     raise the VM's memory allocation under **Settings → Resources** — the host having enough RAM is not enough on its
     own.
   </Accordion>
