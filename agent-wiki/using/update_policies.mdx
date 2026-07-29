@@ -1,9 +1,69 @@
 ---
 title: "Update Policies"
-description: "Controlling how agents update a page or folder"
+description: "Decide which pages AI may edit, and how"
 icon: "sliders"
 ---
 
+Not every page should be rewritten automatically.
+A **release runbook** you want kept current from your connected sources is very different from a **meeting record** that
+should never change after the fact.
+
+Update policies are how you draw that line. Any page — or a whole folder — carries a policy,
+edited from its **Update Policy** panel.
+
+## The two switches
+
+Both live under **AI Auto-Edits** in the panel, and they control genuinely different things:
+
+| Switch | What it governs |
+| --- | --- |
+| **Update** | Whether ingestion may periodically scan your connected data sources and add relevant new information to this page |
+| **Organize** | Whether [Auto Organize](/agent-wiki/automate/auto_organize) may reorganize, move, or merge this page or folder |
+
+Turning **Update** off freezes the content against ingestion pushes.
+Turning **Organize** off keeps the structural cleanups away from the scope.
+A page can perfectly well have one on and the other off — an append-only log you want fed by ingestion but never merged
+into a neighbor, for instance.
+
 <Note>
-  This page is a stub. Document update policies here.
+  Neither switch affects what *you* or an agent acting on your behalf can do. They gate unsolicited,
+  AI-initiated changes — a person or an agent you asked to edit the page still edits it normally.
 </Note>
+
+## Page instructions
+
+Below the switches, **Page Instructions** is free text the updater agent honors whenever it does edit:
+
+- *"Keep entries terse — one line each."*
+- *"Never touch the SLA table."*
+- *"Newest entries at the top."*
+
+This is guidance for the writer, not a filter on what may be written.
+It's the right place for house style and for the one rule about this page that an agent would otherwise get wrong.
+
+## Inheritance
+
+Policies are stored per-path, and they inherit down the tree:
+
+- A setting on a folder applies to every page beneath it.
+- A more specific page or subfolder overrides its parent.
+- Clearing a setting returns it to whatever the parent says.
+
+So the usual pattern is to set the intent once on a folder — *"nothing under `decisions/` gets reorganized"* — and
+override only the exceptions.
+
+Because policies live per-path rather than in the page body, none of this guidance leaks into the content itself,
+and it survives edits by anyone.
+
+## Setting policies from an agent
+
+Agents connected over [MCP](/agent-wiki/automate/mcp) can read and set policies with `set_update_policy`,
+so you can say "stop auto-updating this folder" in conversation rather than opening the panel. The agent acts as you,
+so it can only change policies on paths you could change yourself.
+
+## Good to know
+
+- **Moves carry the policy with them.** Renaming or moving a page keeps its policy attached, so a reorganization
+  doesn't silently re-open a page to automatic edits.
+- **Templates can carry defaults.** An admin can set a starter policy on a [template](/agent-wiki/admin/templates), so
+  pages created from it begin with the right posture instead of needing a follow-up edit.
