@@ -13,36 +13,6 @@ and OpenSearch for the data plane, then the backend, two worker processes, the f
 - `git` and `openssl`
 - **4 GB of RAM** to run the stack, **8 GB** if you build the images on the same host
 
-### Memory footprint
-
-Measured on an idle stack, all eight containers running:
-
-| Container | Memory |
-| --- | --- |
-| `opensearch` | 1.32 GB |
-| `backend` | 490 MB |
-| `worker-heavy` | 196 MB |
-| `worker-light` | 197 MB |
-| `postgres` | 186 MB |
-| `frontend` | 51 MB |
-| `redis` | 13 MB |
-| `nginx` | 12 MB |
-| **Total** | **~2.4 GB** |
-
-Agent Wiki's own processes account for under 1 GB of that.
-**OpenSearch is the majority of the footprint** — it runs with a 512 MB JVM heap,
-and the rest is JVM overhead and file cache. It is a required dependency, not an optional one.
-
-Expect the app processes to grow above these idle figures under real use:
-the backend and workers do LLM calls and git operations, and the workers add roughly 15 MB per active thread.
-
-<Note>
-  The peak is the **frontend production build**, not the running stack — that is what the 8 GB figure covers.
-  If the first build dies without an obvious error, it ran out of memory.
-  On Docker Desktop the binding limit is the VM's memory allocation rather than host RAM;
-  raise it under **Settings → Resources**.
-</Note>
-
 ## Install
 
 The installer clones the repository, generates a `.env`, builds the images, and starts the stack:
@@ -159,6 +129,12 @@ git pull && docker compose --profile app up -d --build
 
   <Accordion title="Only Postgres and Redis started">
     The `--profile app` flag was omitted. Without it Compose starts the data plane only.
+  </Accordion>
+
+  <Accordion title="The build stops partway with no clear error">
+    It most likely ran out of memory. On Docker Desktop,
+    raise the VM's memory allocation under **Settings → Resources** — the host having enough RAM is not enough on its
+    own.
   </Accordion>
 
   <Accordion title="Links point at localhost from another machine">
