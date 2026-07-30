@@ -18,16 +18,16 @@ place](#migrating-an-existing-deployment).
 
 Compared to managing the [Docker Compose files](/deployment/local/docker) by hand, the CLI:
 
-- **Keeps the compose files in sync automatically** — `deploy upgrade` refreshes the compose files, overlays,
+- **Keeps the compose files in sync automatically**: `deploy upgrade` refreshes the compose files, overlays,
   and nginx config to match the target version, so you never diff them against the repo yourself.
-- **Protects your customizations** — hand-edited files are detected via a checksum manifest and backed up before
+- **Protects your customizations**: hand-edited files are detected via a checksum manifest and backed up before
   they are ever overwritten, and your `.env` settings survive every upgrade.
-- **Steers debugging** — `deploy status` flags version drift and explains *why* a service is down
+- **Steers debugging**: `deploy status` flags version drift and explains *why* a service is down
   (restarts, exit code, OOM, last failing health probe),
   and `deploy logs` finds the right compose files and overlays for you.
-- **Handles the environment** — it checks RAM, disk, and ports, installs Docker on Linux,
+- **Handles the environment**: it checks RAM, disk, and ports, installs Docker on Linux,
   and generates secrets, instead of leaving prerequisites to a README.
-- **Has a convenient, discoverable interface** — guided prompts with sensible defaults, `--help` on every command,
+- **Has a convenient, discoverable interface**: guided prompts with sensible defaults, `--help` on every command,
   and clear error messages, with `--no-prompt` and `--json` for automation.
 
 | Command | Description |
