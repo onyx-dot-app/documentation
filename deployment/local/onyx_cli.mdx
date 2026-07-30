@@ -119,8 +119,11 @@ and documents are stored in named Docker volumes.
 ### Offline install
 
 `--offline` deploys entirely from what is already on the host — no release lookup, no config download,
-and no image pull. It implies `--local`, so both the images and the deployment directory must be staged in advance,
-and Docker must already be installed (the installer cannot install it without a network).
+and no image pull. The images must be loaded in advance,
+and Docker must already be installed (the installer cannot install it without a network). It implies `--local`:
+config files already on disk are used as-is, and any that are missing are written from copies bundled with the CLI.
+Staging the deployment directory from a connected install (below)
+is still recommended — the bundled copies match the CLI's own version, not necessarily the Onyx version being deployed.
 
 On a machine with internet access, install the target version with the same mode flags,
 then export the images the deployment resolved to:
