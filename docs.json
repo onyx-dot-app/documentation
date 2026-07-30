@@ -195,6 +195,7 @@
                   "admins/connectors/official/asana",
                   "admins/connectors/official/bitbucket",
                   "admins/connectors/official/bookstack",
+                  "admins/connectors/official/box",
                   "admins/connectors/official/clickup",
                   "admins/connectors/official/confluence",
                   "admins/connectors/official/discord",
@@ -596,6 +597,57 @@
         "tab": "Changelog",
         "icon": "clock-rotate-left",
         "pages": ["changelog"]
+      },
+      {
+        "tab": "Agent Wiki",
+        "icon": "book",
+        "hidden": true,
+        "pages": [
+          {
+            "group": "Getting Started",
+            "pages": ["agent-wiki/welcome", "agent-wiki/quickstart"]
+          },
+          {
+            "group": "Using Agent Wiki",
+            "pages": [
+              "agent-wiki/using/wiki",
+              "agent-wiki/using/editor",
+              "agent-wiki/using/update_policies",
+              "agent-wiki/using/trash",
+              "agent-wiki/using/account_settings"
+            ]
+          },
+          {
+            "group": "Automate",
+            "pages": [
+              "agent-wiki/automate/mcp",
+              "agent-wiki/automate/agents_and_actions",
+              "agent-wiki/automate/triggers",
+              "agent-wiki/automate/chats",
+              "agent-wiki/automate/auto_organize"
+            ]
+          },
+          {
+            "group": "Deployment",
+            "pages": [
+              "agent-wiki/deployment/docker_compose",
+              "agent-wiki/deployment/kubernetes",
+              "agent-wiki/deployment/configuration"
+            ]
+          },
+          {
+            "group": "Admin",
+            "pages": [
+              "agent-wiki/admin/overview",
+              "agent-wiki/admin/language_models",
+              "agent-wiki/admin/templates",
+              "agent-wiki/admin/users_and_groups",
+              "agent-wiki/admin/onyx_integration",
+              "agent-wiki/admin/notifications",
+              "agent-wiki/admin/status"
+            ]
+          }
+        ]
       }
     ],
     "global": {

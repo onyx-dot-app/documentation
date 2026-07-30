@@ -24,7 +24,11 @@ so one Onyx instance can serve teams on different identity providers.
   The import runs once, when the upgrade first runs against your existing database,
   so keep the legacy configuration in place through the upgrade.
   Migrated providers keep using the redirect URIs and ACS URLs already registered with your identity provider,
-  so nothing changes on the IdP side. Remove the legacy variables after the provider appears in the admin panel.
+  so nothing changes on the IdP side. Once the migrated provider appears in the admin panel,
+  sign-ins and token refresh use the provider entry's credentials, and the legacy variables (`AUTH_TYPE`,
+  the OAuth credential variables, and for SAML the settings file) can be removed.
+  The variables only act as a fallback for login accounts that no provider entry matches,
+  such as after deleting or renaming the migrated provider.
 </Note>
 
 ## Managing Providers
@@ -54,6 +58,12 @@ Navigate to **Admin Panel** → **Organization** → **SSO Providers**.
 
     Optionally restrict the provider to specific **email domains**.
     Users outside those domains cannot sign in through it.
+
+    OIDC entries also expose a **Require Verified Email Claim** toggle for IdPs that send the optional `email_verified`
+    claim. Starting in `v4.5`,
+    Google and OIDC entries additionally offer **Enable PKCE** and a per-provider **Scopes** override,
+    taking precedence over the deployment-wide environment variables.
+    See [Customizing requested scopes](/deployment/authentication/oidc#customizing-requested-scopes) for the details.
   </Step>
 
   <Step title="Register the Callback with your Identity Provider">
@@ -66,6 +76,22 @@ Navigate to **Admin Panel** → **Organization** → **SSO Providers**.
     Use the toggle on the provider row to disable or re-enable it later.
   </Step>
 </Steps>
+
+## Turning Off Password Login
+
+<Note>
+  Available in `v4.5` and in `v4.4` patch releases after `v4.4.5`.
+</Note>
+
+Once SSO works, you can close password login and sign-up entirely so your identity provider is the only way in.
+Go to **Admin Panel** → **Organization** → **Security & Hardening** and turn on **Disable Password Login & Signup**.
+
+- The save is refused unless at least one SSO provider is enabled, so you
+  cannot lock yourself out.
+- With the switch on, the login page shows only the SSO sign-in options,
+  the sign-up page redirects to login, and password sign-in is refused by the backend regardless of how it is called.
+- Disabling the last enabled SSO provider is refused while the switch is on.
+- Self-hosted (single-tenant) deployments only.
 
 ## Plan Availability
 
