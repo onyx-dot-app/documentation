@@ -172,9 +172,11 @@ and an admin must reauthorize the app after adding those scopes.
 
 <AccordionGroup>
   <Accordion title="The app is unauthorized or the credentials are rejected">
-    Confirm that the Client ID, Client Secret, and Enterprise ID belong to the same Platform App.
-    Verify that a Box Admin or Co-Admin authorized the app. If any app setting changed,
-    reauthorize it in the Box Admin Console.
+    An error such as `unauthorized_client:
+    The "box_subject_type" value is unauthorized for this client_id` means the app is not authorized for enterprise
+    access: set **App Access Level** to **App + Enterprise Access** and have a Box Admin or Co-Admin authorize the app.
+    Also confirm that the Client ID, Client Secret, and Enterprise ID belong to the same Platform App.
+    If any app setting changed, reauthorize it in the Box Admin Console.
   </Accordion>
 
   <Accordion title="The managed user cannot be found or authenticated">
