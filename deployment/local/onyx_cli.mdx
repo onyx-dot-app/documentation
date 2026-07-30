@@ -116,6 +116,37 @@ The directory holds the compose files, `.env`, and an `install-state.json` manif
 version, and a checksum of each managed file. No application data lives there — chats, users,
 and documents are stored in named Docker volumes.
 
+### Offline install
+
+`--offline` deploys entirely from what is already on the host — no release lookup, no config download,
+and no image pull. It implies `--local`, so both the images and the deployment directory must be staged in advance,
+and Docker must already be installed (the installer cannot install it without a network).
+
+On a machine with internet access, install the target version with the same mode flags,
+then export the images the deployment resolved to:
+
+```bash
+onyx-cli deploy install --tag v4.4.6
+cd ~/.config/onyx/deployment
+docker save -o onyx-images.tar $(docker compose config --images)
+```
+
+Copy `onyx-images.tar` and the `~/.config/onyx` directory to the offline host, then:
+
+```bash
+docker load -i onyx-images.tar
+onyx-cli deploy install --offline --tag v4.4.6
+```
+
+Before starting anything,
+the installer verifies every image the deployment needs and names each one that is missing — load those with `docker
+load` and re-run.
+
+<Note>
+  Without `--tag`, an offline install offers the newest released version whose images are already on the host.
+  `deploy upgrade --offline` works the same way for moving an air-gapped deployment to a newer staged version.
+</Note>
+
 ## Upgrade
 
 ```shell
