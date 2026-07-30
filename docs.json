@@ -86,6 +86,7 @@
           {
             "group": "Deploy Locally",
             "pages": [
+              "deployment/local/onyx_cli",
               "deployment/local/docker",
               "deployment/local/kubernetes",
               "deployment/local/terraform",

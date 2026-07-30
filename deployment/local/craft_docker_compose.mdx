@@ -28,17 +28,22 @@ Craft does not run with the Onyx Lite Compose overlay.
 
 ## New deployment
 
-Run the installer with the Craft overlay:
+Run the [Onyx CLI](/deployment/local/onyx_cli) installer with the Craft overlay:
 
 ```bash
-cd onyx/deployment/docker_compose
-./install.sh --include-craft
+onyx-cli deploy install --include-craft
 ```
 
 The installer downloads `docker-compose.craft.yml`, enables Craft, selects the Docker sandbox backend,
 creates the sandbox bridge network and proxy CA volume, and starts the deployment.
 
-Open `onyx_data/deployment/.env` and set the Onyx URL:
+<Note>
+  The examples below use the CLI's default deployment directory.
+  For a deployment created by an older version of the `install.sh` script,
+  replace `~/.config/onyx` with your `onyx_data` directory (e.g. `onyx_data/deployment/.env`).
+</Note>
+
+Open `~/.config/onyx/deployment/.env` and set the Onyx URL:
 
 ```dotenv
 ONYX_SERVER_URL=https://onyx.example.com
@@ -47,7 +52,7 @@ ONYX_SERVER_URL=https://onyx.example.com
 Then recreate the affected services with both Compose files:
 
 ```bash
-cd onyx_data/deployment
+cd ~/.config/onyx/deployment
 docker compose \
   -f docker-compose.yml \
   -f docker-compose.craft.yml \
@@ -56,11 +61,10 @@ docker compose \
 
 ## Existing deployment
 
-Set `ONYX_SERVER_URL` in the existing `onyx_data/deployment/.env`, then rerun the installer:
+Set `ONYX_SERVER_URL` in the existing deployment's `.env`, then rerun the installer:
 
 ```bash
-cd onyx/deployment/docker_compose
-./install.sh --include-craft
+onyx-cli deploy install --include-craft
 ```
 
 The installer adds the Craft overlay and updates the existing `.env` with:
@@ -159,7 +163,7 @@ so use already-built or published images with `--no-build`.
 Confirm the core services and proxy are running:
 
 ```bash
-cd onyx_data/deployment
+cd ~/.config/onyx/deployment
 docker compose \
   -f docker-compose.yml \
   -f docker-compose.craft.yml \
@@ -198,7 +202,7 @@ See [Craft Architecture](/security/architecture/craft) for the complete trust an
   </Accordion>
 
   <Accordion title="Sandbox provisioning reports that ONYX_SERVER_URL is missing">
-    Set the value in `onyx_data/deployment/.env` and recreate the API server, background worker,
+    Set the value in the deployment directory's `.env` and recreate the API server, background worker,
     and sandbox proxy with the Craft overlay.
   </Accordion>
 
@@ -213,7 +217,8 @@ See [Craft Architecture](/security/architecture/craft) for the complete trust an
   </Accordion>
 
   <Accordion title="The sandbox network or CA volume is missing">
-    Rerun `install.sh --include-craft`. If automatic creation fails, create the resources and restart the deployment:
+    Rerun `onyx-cli deploy install --include-craft`. If automatic creation fails,
+    create the resources and restart the deployment:
 
     ```bash
     docker network create onyx_craft_sandbox

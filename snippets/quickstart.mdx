@@ -1,7 +1,31 @@
+## Onyx CLI
+
+The recommended way to install Onyx is the guided installer built into the [Onyx CLI](/overview/onyx_anywhere/cli):
+
+```bash
+uv tool install onyx-cli && onyx-cli deploy install
+```
+
+The installer will:
+
+- Check your system resources and requirements (installing Docker on Linux if needed)
+- Let you choose between **Lite** and **Standard** deployment modes
+- Prompt for the version of Onyx to deploy
+- Set up the deployment configuration in `~/.config/onyx`
+- Pull the Onyx containers, start them, and wait until every service is healthy
+
+After installation, the same command group manages the deployment: `onyx-cli deploy upgrade`, `status`, `logs`, `stop`,
+and `uninstall`.
+
+<Card title="Deploy with the Onyx CLI" icon="terminal" href="/deployment/local/onyx_cli">
+  Full documentation for `onyx-cli deploy` and its lifecycle commands.
+</Card>
+
 ## Installation Scripts
 
-The scripts provide a guided installation in Docker Compose and will let you select between Lite and Standard during
-setup.
+The installation scripts are thin wrappers around the CLI:
+they install `onyx-cli` if needed and run `onyx-cli deploy install`, producing the same deployment as the command above.
+Use them when you want a single copy-paste one-liner:
 
 <Tabs>
   <Tab title="Linux / macOS">
@@ -29,21 +53,10 @@ Or download the script and run it manually:
   </Card>
 </CardGroup>
 
-<Note>
-  The install script can also be used to **upgrade** an existing deployment.
-  Re-running the script will detect your current installation and prompt you to update to the latest version.
-</Note>
-
-The script will do the following:
-- Check your system resources and requirements
-- Let you choose between **Lite** and **Standard** deployment modes
-- Pull the necessary deployment and configuration files
-- Prompt for the version of Onyx to deploy and other basic configuration
-- Pull the Onyx containers and start them in Docker
-
 <Info>
-  The script will create a directory called **onyx_data** and there will also be a README in there with additional
-  information.
+  Older versions of the scripts were standalone and installed into a directory called **onyx_data**.
+  The Onyx CLI detects those deployments and manages them in place — see [migrating an existing
+  deployment](/deployment/local/onyx_cli#migrating-an-existing-deployment).
 </Info>
 
 ## Next Steps
