@@ -125,11 +125,12 @@ config files already on disk are used as-is, and any that are missing are writte
 Staging the deployment directory from a connected install (below)
 is still recommended — the bundled copies match the CLI's own version, not necessarily the Onyx version being deployed.
 
-On a machine with internet access, install the target version with the same mode flags,
+On a machine with internet access,
+install the latest release with the same mode flags (or pin a specific version with `--tag`),
 then export the images the deployment resolved to:
 
 ```bash
-onyx-cli deploy install --tag v4.4.6
+onyx-cli deploy install
 cd ~/.config/onyx/deployment
 docker save -o onyx-images.tar $(docker compose config --images)
 ```
@@ -138,15 +139,16 @@ Copy `onyx-images.tar` and the `~/.config/onyx` directory to the offline host, t
 
 ```bash
 docker load -i onyx-images.tar
-onyx-cli deploy install --offline --tag v4.4.6
+onyx-cli deploy install --offline
 ```
 
+Without `--tag`,
+an offline install offers the newest released version whose images are already on the host — the one just loaded.
 Before starting anything,
 the installer verifies every image the deployment needs and names each one that is missing — load those with `docker
 load` and re-run.
 
 <Note>
-  Without `--tag`, an offline install offers the newest released version whose images are already on the host.
   `deploy upgrade --offline` works the same way for moving an air-gapped deployment to a newer staged version.
 </Note>
 
