@@ -21,9 +21,11 @@ and `uninstall`.
   Full documentation for `onyx-cli deploy` and its lifecycle commands.
 </Card>
 
-## Installation Scripts (legacy)
+## Installation Scripts
 
-The installation scripts provide the same guided install and remain available:
+The installation scripts are thin wrappers around the CLI:
+they install `onyx-cli` if needed and run `onyx-cli deploy install`, producing the same deployment as the command above.
+Use them when you want a single copy-paste one-liner:
 
 <Tabs>
   <Tab title="Linux / macOS">
@@ -52,8 +54,8 @@ Or download the script and run it manually:
 </CardGroup>
 
 <Info>
-  The script will create a directory called **onyx_data** with a README containing additional information.
-  The Onyx CLI detects deployments created by the scripts and manages them in place — see [migrating an existing
+  Older versions of the scripts were standalone and installed into a directory called **onyx_data**.
+  The Onyx CLI detects those deployments and manages them in place — see [migrating an existing
   deployment](/deployment/local/onyx_cli#migrating-an-existing-deployment).
 </Info>
 

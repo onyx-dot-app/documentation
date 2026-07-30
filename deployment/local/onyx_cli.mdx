@@ -10,9 +10,25 @@ The [Onyx CLI](/overview/onyx_anywhere/cli)
 includes a `deploy` command group that installs and manages a self-hosted Docker Compose deployment:
 a guided installer plus lifecycle commands for upgrading, inspecting, stopping, and removing the deployment.
 
-It is the recommended way to set up and manage a self-hosted deployment on Linux, macOS, and Windows,
-replacing the legacy `install.sh` / `install.ps1` [installation scripts](/deployment/getting_started/quickstart).
-Deployments created by those scripts are detected and [managed in place](#migrating-an-existing-deployment).
+It is the recommended way to set up and manage a self-hosted deployment on Linux, macOS, and Windows.
+The `install.sh` / `install.ps1` [installation scripts](/deployment/getting_started/quickstart)
+are thin wrappers that install the CLI and run `onyx-cli deploy install`, so both paths produce the same deployment.
+Deployments created by older versions of the scripts are detected and [managed in
+place](#migrating-an-existing-deployment).
+
+Compared to managing the [Docker Compose files](/deployment/local/docker) by hand, the CLI:
+
+- **Keeps the compose files in sync automatically** — `deploy upgrade` refreshes the compose files, overlays,
+  and nginx config to match the target version, so you never diff them against the repo yourself.
+- **Protects your customizations** — hand-edited files are detected via a checksum manifest and backed up before
+  they are ever overwritten, and your `.env` settings survive every upgrade.
+- **Steers debugging** — `deploy status` flags version drift and explains *why* a service is down
+  (restarts, exit code, OOM, last failing health probe),
+  and `deploy logs` finds the right compose files and overlays for you.
+- **Handles the environment** — it checks RAM, disk, and ports, installs Docker on Linux,
+  and generates secrets, instead of leaving prerequisites to a README.
+- **Has a convenient, discoverable interface** — guided prompts with sensible defaults, `--help` on every command,
+  and clear error messages, with `--no-prompt` and `--json` for automation.
 
 | Command | Description |
 |---------|-------------|
@@ -92,8 +108,8 @@ onyx-cli deploy install --tag v4.4.6 --no-prompt
 ### Deployment directory
 
 New installs live in `~/.config/onyx` (XDG-aware).
-Deployments created by the legacy `install.sh` script in `./onyx_data` are detected automatically and managed **in
-place** — no migration needed.
+Deployments created by older versions of the `install.sh` script in `./onyx_data` are detected automatically and managed
+**in place** — no migration needed.
 Pass `--dir` or set the `ONYX_DEPLOYMENT_DIR` environment variable to target a specific location.
 
 The directory holds the compose files, `.env`, and an `install-state.json` manifest recording the deployment mode,
@@ -181,11 +197,11 @@ Removes the Onyx containers, volumes, and the deployment directory.
 
 ## Migrating an existing deployment
 
-### From install.sh
+### From an older install.sh deployment
 
-Deployments created by the legacy `install.sh` script are managed in place — run the CLI from the directory containing
-`onyx_data` (or point `--dir` at it) and it takes over, no migration required.
-The script's mode flags map to dedicated commands:
+Today's `install.sh` runs the CLI, but older versions were standalone and installed into an `onyx_data` directory.
+Those deployments are managed in place — run the CLI from the directory containing `onyx_data` (or point `--dir` at it)
+and it takes over, no migration required. The old script's mode flags map to dedicated commands:
 
 | install.sh | Onyx CLI |
 |------------|----------|
