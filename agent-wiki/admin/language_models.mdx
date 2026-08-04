@@ -21,6 +21,20 @@ The model is doing more work than a chat box. It:
 
 So provider choice and rate limits affect the responsiveness of the whole product, not one feature.
 
+<Note>
+  **Choosing a model.** A capable model is worth it here — it's behind chat, trigger evaluation,
+  and every automated edit. Cost stays reasonable because the one genuinely high-volume job, ingestion,
+  can run on its own cheaper model (below).
+</Note>
+
+## A cheaper model for ingestion
+
+Ingestion generates more model calls than everything else combined,
+and its work — matching pushed documents to pages and merging them in — doesn't need your strongest model.
+On the [Onyx Integration](/agent-wiki/admin/onyx_integration)
+page you can select a separate model just for the ingestion pipeline; pick a cheap, fast one (e.g. Luna)
+and keep the more capable default for daily usage. The ingestion model has to come from the providers enabled here.
+
 ## Per-user overrides
 
 Users can pick a different model for their own chats under **Settings**.

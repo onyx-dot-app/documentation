@@ -19,9 +19,11 @@ Admins bypass page-level permission checks, so keep the admin set small.
 ## Groups and page permissions
 
 Groups are how you grant access to parts of the wiki without naming individuals on every page.
-Permissions are stored per path and inherit down the tree,
-the same way [update policies](/agent-wiki/using/update_policies)
-do — grant on a folder and everything beneath it follows, override on a specific page or subfolder.
+Permissions are stored per path, and a grant on a folder cascades to everything beneath it.
+But unlike [update policies](/agent-wiki/using/update_policies), grants are **additive, with no deny**:
+a more specific grant can open up extra access on one page,
+but you can't grant a folder and then carve a single page out of it. When part of a folder needs to stay restricted,
+grant at the narrower scopes from the start.
 
 ## Permissions reach further than the page
 
