@@ -6,6 +6,148 @@ mode: "wide"
 rss: true
 ---
 
+<Update label="v4.5.0" description="August 4th, 2026" tags={["New Features", "Deployment Changes", "Bug Fixes"]}>
+
+  ## v4.5.0
+
+  Multi-provider SSO matures — password login can now be disabled entirely for SSO-only deployments,
+  PKCE and scopes are configured per provider, and Microsoft Entra ID and Amazon Cognito work out of the box.
+  Chat gains per-session reasoning and temperature controls, Box joins the connector lineup with permission sync,
+  and the file store gains a native Azure Blob Storage backend.
+  Thank you to our contributors for helping make this release possible!
+
+  ## [Update] Deployment Changes
+
+  - **The default backend image no longer includes interactive debug tools.** `vim`, `curl`, `psql`, and `ps` are removed from `onyxdotapp/onyx-backend`; every backend tag now has a `-dev` twin (`v4.5.0-dev`, `latest-dev`) that restores them for container debugging.
+  - **Helm chart 0.8.x retunes resource defaults from production fleet evidence.** API server, model server, and heavy worker requests and limits change on upgrade, the OpenSearch PVC default grows to 64Gi (existing PVCs are not resized), and the previously ignored `codeInterpreter:` resource values now live under `code-interpreter:`. A new SIZING.md documents small/medium/large tuning. Chart 0.7.0 pairs the model server with the distroless image from v4.4.0 — upgrade the image and chart together.
+  - **The AWS Terraform module gains t-shirt sizing.** A `size` input (small/medium/large) sets fleet-calibrated defaults for EKS, RDS, Redis, and OpenSearch. The default medium tier keeps today's node shapes, but the new OpenSearch default is a single-node domain — applying it to an existing stack replaces the domain and its index data unless you pin the old shape — and RDS storage defaults change to gp3.
+  - **Token rate limits are now enforced in whole UTC days.** Existing hour-based windows are automatically rounded up,
+    and enforcement is backed by per-user daily accounting instead of scanning chat history.
+  - **Self-hosted instances report a daily version heartbeat.** The existing `DISABLE_TELEMETRY` opt-out applies.
+
+  ## Key Improvements
+
+  ### SSO-Only Login
+
+  Password authentication can now be disabled entirely for SSO-only deployments.
+  A new toggle under Security Hardening removes the email/password form and signup links from the login page while SSO
+  login and provisioning continue, with lockout guards: enabling it requires an enabled SSO provider,
+  and the last enabled provider can't be disabled while password auth is off.
+  PKCE and OAuth scope overrides also move from deployment-wide env vars onto each SSO provider row,
+  and OIDC now works out of the box with Microsoft Entra ID (a missing `email_verified` claim is tolerated,
+  with a per-provider strict opt-in)
+  and Amazon Cognito (`offline_access` is only auto-requested when the IdP advertises it).
+
+  ### Reasoning and Temperature, Per Chat
+
+  The model selector now exposes per-model controls:
+  a reasoning-effort slider (off up to extra-high where the model supports it), a temperature slider,
+  and a context-window gauge. Choices persist per chat session. If a provider rejects a tuning parameter,
+  Onyx retries the request without it instead of failing the chat.
+
+  ### Box Connector
+
+  A new [Box connector](https://docs.onyx.app/admins/connectors/official/box) indexes files, web links,
+  and folder hierarchy, authenticating via Client Credentials Grant with optional user impersonation.
+  Permission sync mirrors Box collaborations and shared links into document ACLs, alongside enterprise group sync.
+
+  ### Native Azure Blob Storage File Store
+
+  The file store gains a first-class Azure Blob Storage backend (`FILE_STORE_BACKEND=azure`),
+  so pure-Azure deployments no longer need MinIO or an S3 translation proxy.
+  Authentication resolves from a connection string, an account name and key,
+  or `DefaultAzureCredential` — covering AKS Workload Identity and managed identities — and all file paths (user
+  uploads, connector document batches, generated files) go through it.
+
+  ## Contributor Highlights
+
+  - [@Oht8wooWi8yait9n](https://github.com/Oht8wooWi8yait9n) extended the **SharePoint connector to OneDrive for Business and personal sites**!
+  - [@markk-ns](https://github.com/markk-ns) landed two long-standing fixes: BookStack documents updated the same day now index, and the citation processor no longer corrupts code fences in streamed answers.
+  - [@swissmike-zh](https://github.com/swissmike-zh) made XLSX files index their calculated cell values instead of raw formula strings.
+  - [@CE11-Kishan](https://github.com/CE11-Kishan) made SharePoint indexing retry transient Graph API responses instead of aborting the attempt.
+  - [@juliennonin](https://github.com/juliennonin) fixed the selected agent resetting after a page refresh.
+  - [@mvanhorn](https://github.com/mvanhorn) fixed embedding models with uppercase names failing OpenSearch index creation.
+
+  ## Additional Improvements
+
+  ### Auth and SSO
+
+  - IdP directory-profile enrichment extends to SAML attributes and multi-tenant deployments,
+    and logins through multiple IdPs merge per-provider claim snapshots instead of overwriting each other.
+
+  ### Connectors
+
+  - Confluence: a per-connector toggle skips attachment indexing,
+    and attachment links are fixed on Data Center instances.
+  - GitHub: documents can be indexed from a specific branch (for example `gh-pages`).
+  - Google Drive:
+    fixed a checkpoint bug that could loop initial indexing forever (already-corrupted checkpoints self-heal on
+    upgrade),
+    and permission sync falls back to impersonating the retrieving user when the file owner can't be impersonated.
+  - Notion: pruning streams document IDs instead of materializing the whole workspace,
+    bounding worker memory on large workspaces.
+  - SharePoint and OneDrive, BookStack, and XLSX parsing fixes — see Contributor Highlights above.
+
+  ### LLM Providers
+
+  - Portkey joins as a built-in provider with three API modes (Chat Completions, Responses, Messages);
+    Bifrost providers gain the same mode selector,
+    and the responses bridge is hardened against real-world gateway streaming variants.
+  - Model refusals surface as "Model Declined to Respond" with the provider's reason instead of a generic empty-response
+    error.
+
+  ### MCP
+
+  - Shared API keys support custom header templates (defaulting to `Authorization: Bearer {api_key}`).
+  - Per-user OAuth "connected" status now requires stored tokens,
+    token refresh is single-flighted so concurrent callers can't invalidate each other's rotating refresh tokens,
+    and form-encoded token responses are accepted.
+  - Servers with zero discovered tools no longer render as empty cards in the agent editor.
+
+  ### Chat and Web
+
+  - Disabling web search now also puts `open_url` in indexed-only mode — pasted links still resolve against connected knowledge, but nothing is fetched from the live internet.
+  - Attachments with no extractable text (such as scanned PDFs)
+    are explained to the model instead of handed over silently empty.
+  - Chat auto-naming uses the session's model instead of the global default.
+  - Slack bot answers render links, email addresses, inline code, and ordered lists correctly.
+
+  ### Search and Indexing
+
+  - Re-indexing shows a live progress banner with per-connector failure details;
+    units that fail repeatedly auto-pause and can be resumed by an operator.
+  - Documents and hierarchy nodes from private connectors now appear in the knowledge pane for users with access through
+    ownership or groups.
+
+  ### Observability and Deployment
+
+  - Admins on Enterprise self-hosted deployments can download a zip of API server logs from the new Export Logs page.
+
+  ### Security
+
+  - Hook endpoint validation now follows the SSRF Protection setting,
+    so hooks can target private-network services when the level allows it.
+  - LLM and image-generation test-endpoint errors redact credentials.
+
+  ### Performance
+
+  - Opening a chat and listing chat history are backed by new database indexes,
+    improving load times for large deployments.
+  - The admin user list loads much faster, and chat-history search no longer blocks the event loop — under load,
+    first-token latency for concurrent chats dropped from ~354ms to ~54ms in benchmarks.
+
+  ### Notable Bug Fixes
+
+  - Fixed a raw "Loading..." flash in the connector access selector.
+  - Fixed the Linux desktop Alt-menu toggle and the missing icon in the Linux About dialog.
+
+  ---
+
+  Our [GitHub Releases](https://github.com/onyx-dot-app/onyx/releases?utm_source=docs&utm_content=changelog)
+  page has the full list of changes and bug fixes for each release.
+
+</Update>
+
 <Update label="v4.4.0" description="July 21st, 2026" tags={["New Features", "Deployment Changes", "Bug Fixes"]}>
 
   ## v4.4.0
