@@ -8,9 +8,12 @@ Two pages under **Admin → Statistics**.
 
 ## Status
 
-**Admin → Status** reports the health of the system's moving parts.
+**Admin → Status** reports backend liveness and the depth of every background work queue, refreshing every few seconds.
+Background work is split across dedicated queues — document reconciliation, trigger evaluations, co-edit checkpointing,
+the two Auto Organize lanes, and lightweight maintenance — so one backlog can't starve the others.
+Each queue shows its pending work against a capacity limit, broken down into ready, scheduled, and in-flight counts.
 
-The one worth understanding is the **background workers**, because their failures are silent rather than loud.
+The queues are worth watching because **background worker failures are silent rather than loud**.
 If workers aren't running, the application still serves pages normally while a surprising amount stops happening:
 
 - Triggers never fire, on updates or on a schedule
