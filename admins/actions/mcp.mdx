@@ -81,22 +81,23 @@ You can configure Onyx to be an MCP client and allow your Agents to retrieve dat
     This is most often useful if your organization hosts its own MCP servers and would rather not require users to
     authenticate again after already going through the OAuth flow to log in to Onyx.
 
-    Many MCP servers require scopes that Onyx does not request by default during login. Check the MCP server's
-    documentation for the exact scopes it requires, then add them to the comma-separated scope override for your
-    authentication type:
+    Many MCP servers require scopes that Onyx does not request by default during login.
+    Check the MCP server's documentation for the exact scopes it requires,
+    then add them to the comma-separated scope override for your authentication type:
 
     - **Google OAuth:** `GOOGLE_OAUTH_SCOPE_OVERRIDE`
     - **OIDC:** `OIDC_SCOPE_OVERRIDE`
 
-    These settings replace the default scopes, so retain `openid`, `email`, and `profile` alongside the additional
-    scopes. See [Google OAuth scope configuration](/deployment/authentication/oauth#customizing-requested-scopes) or
-    [OIDC scope configuration](/deployment/authentication/oidc#customizing-requested-scopes) for examples.
+    These settings replace the default scopes, so retain `openid`, `email`,
+    and `profile` alongside the additional scopes.
+    See [Google OAuth scope configuration](/deployment/authentication/oauth#customizing-requested-scopes)
+    or [OIDC scope configuration](/deployment/authentication/oidc#customizing-requested-scopes) for examples.
 
     <Note>
-      Requesting a scope in Onyx does not guarantee that the identity provider will grant it. The scope must also be
-      exposed and permitted for the Onyx OAuth/OIDC client in the identity provider, and some providers require an
-      administrator to grant consent. The exact configuration varies by provider. The issued access token must include
-      both the required scopes and an audience accepted by the MCP server.
+      Requesting a scope in Onyx does not guarantee that the identity provider will grant it.
+      The scope must also be exposed and permitted for the Onyx OAuth/OIDC client in the identity provider,
+      and some providers require an administrator to grant consent. The exact configuration varies by provider.
+      The issued access token must include both the required scopes and an audience accepted by the MCP server.
     </Note>
 
     ---
