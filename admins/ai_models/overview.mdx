@@ -34,7 +34,8 @@ which models are visible, and which models should be the default or fast option 
     These providers expose language models through a broader cloud or routing layer.
 
     Common choices include **Azure OpenAI**, **Amazon Bedrock**, **Google Vertex AI**, **OpenRouter**,
-    **LiteLLM Proxy**, and **Bifrost**. They are useful when you need enterprise controls, cloud alignment,
+    **LiteLLM Proxy**, **Bifrost**, and hosted multi-model gateways such as **DaoXE** (via the
+    OpenAI-Compatible provider). They are useful when you need enterprise controls, cloud alignment,
     regional hosting options, or access to multiple model families from one integration point.
   </Accordion>
 
@@ -65,8 +66,9 @@ which models are visible, and which models should be the default or fast option 
 - Start with one primary provider for most users.
 - Use a recent **GPT**, **Claude**,
   or **Gemini** family model as your default if you want the strongest out-of-the-box experience.
-- Use **Bedrock**, **Vertex AI**, **Azure OpenAI**, **OpenRouter**, **LiteLLM Proxy**, or **Bifrost** when procurement,
-  routing, or cloud alignment matters more than a direct vendor integration.
+- Use **Bedrock**, **Vertex AI**, **Azure OpenAI**, **OpenRouter**, **LiteLLM Proxy**, **Bifrost**, or an
+  OpenAI-compatible gateway such as [DaoXE](/admins/ai_models/daoxe) when procurement, routing, or cloud
+  alignment matters more than a direct vendor integration.
 - Use open-weight families such as **Llama**, **Qwen**, **DeepSeek**, or **gpt-oss** if you are self-hosting.
 - Keep the visible model list short so users are choosing between a few intentional options instead of every possible
   version.
@@ -94,6 +96,8 @@ which models are visible, and which models should be the default or fast option 
   <Card title="Bifrost" icon="server" href="/admins/ai_models/bifrost"/>
 
   <Card title="LiteLLM Proxy" icon="server" href="/admins/ai_models/litellm_proxy"/>
+
+  <Card title="DaoXE" icon="server" href="/admins/ai_models/daoxe"/>
 
   <Card title="Ollama" icon="robot" href="/admins/ai_models/ollama"/>
 

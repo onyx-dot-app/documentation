@@ -1,0 +1,89 @@
+---
+title: "DaoXE"
+description: "Configure DaoXE as an OpenAI-compatible multi-model gateway for Onyx"
+icon: "server"
+---
+
+import NavigateToAiModels from "/snippets/navigate-to-ai-models.mdx";
+import StandardAiModelConfigs from "/snippets/standard-ai-model-configs.mdx";
+
+## Guide
+
+Configure Onyx to use models served through [DaoXE](https://daoxe.com), a multi-model,
+multi-protocol API gateway.
+
+Onyx talks to DaoXE over the **OpenAI-compatible** path (Chat Completions and
+`/v1/models`). DaoXE also exposes other client protocols outside Onyx — including
+OpenAI Responses and Anthropic Messages — so the same account can serve different
+tools; this page only covers the Onyx admin setup.
+
+<Note>
+  DaoXE model IDs are **account-scoped** and change over time. Prefer **Fetch Available
+  Models** in the Onyx UI (or copy IDs from your DaoXE account catalog). Do not hardcode a
+  static public model list.
+</Note>
+
+<Tip>
+  DaoXE is not a built-in Onyx provider card. Use **OpenAI-Compatible** under
+  **Self-hosted & Custom** and point the API base at DaoXE.
+</Tip>
+
+<Steps>
+  <Step title="Create a DaoXE API key">
+    Sign in at [daoxe.com](https://daoxe.com) and create an API key for your workspace.
+
+    Confirm which chat models are visible in your account catalog. Those model IDs are
+    what Onyx will call after import.
+
+    <Note>
+      DaoXE does not serve mainland China. If `https://daoxe.com` is unreachable from your
+      network, use the regional endpoint documented on the DaoXE site rather than guessing
+      an alternate host.
+    </Note>
+  </Step>
+
+  <NavigateToAiModels />
+
+  <Step title="Add DaoXE as OpenAI-Compatible">
+    Under **Self-hosted & Custom**, select **OpenAI-Compatible**.
+
+    Give the provider a **Display Name** (for example, `DaoXE`).
+
+    Set **API Base URL** to:
+
+    ```text
+    https://daoxe.com/v1
+    ```
+
+    Paste your DaoXE **API Key**.
+
+    Click **Fetch Available Models** so Onyx can load the language models currently
+    exposed by your DaoXE account.
+  </Step>
+
+  <Step title="Review imported model IDs">
+    Onyx stores the model IDs returned by DaoXE's OpenAI-compatible `/v1/models` endpoint
+    and makes those models available to users you grant access to.
+
+    Keep the visible set small: pick the chat models you actually want for agents and
+    RAG rather than every ID in the catalog.
+
+    <Info>
+      For graph extraction, tool calling, or long agent loops, prefer higher-capability
+      chat models from your DaoXE catalog. Smaller models may work for simple chat but can
+      be less reliable on structured outputs.
+    </Info>
+  </Step>
+
+  <StandardAiModelConfigs />
+</Steps>
+
+## Notes
+
+- **Base URL:** use `https://daoxe.com/v1` (include the `/v1` suffix).
+- **Auth:** `Authorization: Bearer <DAOXE_API_KEY>`.
+- **Protocols:** Onyx uses OpenAI-compatible Chat Completions through this integration.
+  DaoXE separately supports OpenAI Responses and Anthropic Messages for other clients;
+  configure those outside Onyx when needed.
+- **Examples:** OpenAI SDK samples for DaoXE live at
+  [seven7763/DaoXE-AI](https://github.com/seven7763/DaoXE-AI).
