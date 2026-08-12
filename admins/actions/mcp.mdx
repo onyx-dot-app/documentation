@@ -68,11 +68,26 @@ You can configure Onyx to be an MCP client and allow your Agents to retrieve dat
     Many modern MCP servers support OAuth authentication to give users access to tools and data using the same login
     flow they use when manually accessing the service.
 
-    Most OAuth-enabled MCP servers also support DCR (Dynamic Client Registration). If yours doesn't,
-    you will need to create an OAuth App in the IdP (Identity Provider)
-    the MCP server uses and provide Onyx with the generated **Client ID** and **Client Secret**. When DCR is supported,
-    no further configuration is necessary — clicking **Connect** will send the admin through the OAuth flow to confirm
-    that the server connection works.
+    Many OAuth-enabled MCP servers support [Client ID Metadata Documents
+    (CIMD)](https://datatracker.ietf.org/doc/draft-ietf-oauth-client-id-metadata-document/)
+    or [Dynamic Client Registration (DCR)](https://datatracker.ietf.org/doc/html/rfc7591).
+    These standards let Onyx connect without a manually configured **Client ID** or **Client Secret**. In most cases,
+    you can simply click **Connect** and complete the OAuth flow.
+
+    If the MCP server's documentation requires you to register an OAuth app:
+
+    1. Create an OAuth app in the IdP (Identity Provider) used by the MCP server.
+    2. Add the following Onyx callback URL to the app:
+
+    `https://<your-onyx-host>/mcp/oauth/callback`
+
+    3. Enter the generated **Client ID** and **Client Secret** in Onyx, then click **Connect**.
+
+    <Note>
+      On HTTPS deployments, Onyx automatically publishes and uses a deployment-level,
+      Onyx-branded CIMD at `https://<your-onyx-host>/api/mcp/oauth/client-metadata` when the authorization server
+      supports it. HTTP local development uses DCR instead.
+    </Note>
 
 ### Pass-Through OAuth
 
