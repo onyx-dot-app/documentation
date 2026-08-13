@@ -17,9 +17,9 @@ or coding tool to use organization-approved models without storing a separate pr
 
 ## What the gateway provides
 
-- An OpenAI-compatible Chat Completions endpoint.
-- An OpenAI Responses endpoint.
-- An Anthropic Messages endpoint and token-count endpoint.
+- An [OpenAI-compatible Chat Completions endpoint](https://platform.openai.com/docs/api-reference/chat/completions).
+- An [OpenAI Responses endpoint](https://platform.openai.com/docs/api-reference/responses).
+- An [Anthropic Messages endpoint](https://platform.claude.com/docs/en/api/messages) and [token-count endpoint](https://platform.claude.com/docs/en/api/messages/count_tokens).
 - A model catalog limited to the models that your Onyx identity can access.
 - Usage attribution through the existing Onyx usage views.
 - The same model access controls and token limits that apply in Onyx.
@@ -38,8 +38,8 @@ You need all of the following:
 - Your Onyx account has access to that model.
 - A Personal Access Token (PAT) with the **LLM Gateway** scope.
 
-Create a PAT from **Settings** > **Accounts & Access**. Choose **Limited access** and select **LLM Gateway**.
-Treat the token as a password. Onyx shows it only once.
+Create a [Personal Access Token](/developers/overview#personal-access-tokens) from **Settings** > **Accounts & Access**.
+Choose **Limited access** and select **LLM Gateway**. Treat the token as a password. Onyx shows it only once.
 
 <Tip>
   Use a scoped PAT for an application or local development.
