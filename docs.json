@@ -56,6 +56,7 @@
               "overview/onyx_anywhere/slack",
               "overview/onyx_anywhere/discord_bot",
               "overview/onyx_anywhere/mcp_server",
+              "developers/guides/llm_gateway",
               "overview/onyx_anywhere/cli",
               "overview/onyx_anywhere/mobile_app"
             ]
@@ -368,6 +369,7 @@
             "icon": "book-open",
             "pages": [
               "developers/guides/chat_new_guide",
+              "developers/guides/llm_gateway",
               "developers/guides/index_files_ingestion_api",
               "developers/guides/create_connector"
             ]
