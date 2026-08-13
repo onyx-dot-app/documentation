@@ -7,6 +7,9 @@ icon: "docker"
 Docker Compose is the fastest way to run Agent Wiki. It brings up the whole stack on one host: Postgres, Redis,
 and OpenSearch for the data plane, then the backend, two worker processes, the frontend, and nginx for the app plane.
 
+Postgres, Redis, OpenSearch, and nginx are stock public images and are pulled. Only the backend, the two workers,
+and the frontend are built from source on first install.
+
 ## Requirements
 
 - Docker with Compose v2 (`docker compose version`)

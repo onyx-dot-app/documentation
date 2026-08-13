@@ -640,6 +640,7 @@
             "pages": [
               "agent-wiki/admin/overview",
               "agent-wiki/admin/language_models",
+              "agent-wiki/admin/web_search",
               "agent-wiki/admin/templates",
               "agent-wiki/admin/users_and_groups",
               "agent-wiki/admin/onyx_integration",
