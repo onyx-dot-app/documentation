@@ -20,7 +20,7 @@ or coding tool to use organization-approved models without storing a separate pr
 - An [OpenAI-compatible Chat Completions endpoint](https://platform.openai.com/docs/api-reference/chat/completions).
 - An [OpenAI Responses endpoint](https://platform.openai.com/docs/api-reference/responses).
 - An [Anthropic Messages endpoint](https://platform.claude.com/docs/en/api/messages) and [token-count endpoint](https://platform.claude.com/docs/en/api/messages/count_tokens).
-- A model catalog limited to the models that your Onyx identity can access.
+- The models that your Onyx identity can access.
 - Usage attribution through the existing Onyx usage views.
 - The same model access controls and token limits that apply in Onyx.
 
@@ -66,24 +66,26 @@ export ONYX_GATEWAY_API_KEY="onyx_pat_..."
 
 ## Find an available model
 
-Call `GET /models` before you configure a client.
-The response contains only models that are visible and accessible to your account.
+The easiest way to find a model ID is in **Settings** > **Accounts & Access** > **LLM Gateway**.
+The section appears only when at least one model is visible and accessible to your account.
 
-```bash
-curl "$ONYX_GATEWAY_URL/models" \
-  -H "Authorization: Bearer $ONYX_GATEWAY_API_KEY"
-```
+Open a provider, then copy the ID beside the model that you want to use.
+The copied value already has the required format:
 
-Use the returned `id` exactly as the `model` value. Gateway model IDs use this format:
+<img className="rounded-image" src="/assets/developers/llm_gateway_available_models.png" alt="Onyx LLM Gateway settings with an expanded provider and model IDs"/>
 
 ```text
 <provider-id>/<model-name>
 ```
 
-For example: `12/gpt-5-mini`.
+For example, `12/gpt-5-mini` means:
 
-The catalog also reports each model's input modalities, reasoning support,
-and input and output token limits when Onyx knows them.
+- `12` is the Onyx ID for the configured provider.
+- `gpt-5-mini` is the model name configured for that provider.
+
+Use the copied value exactly as the `model` value in your client. Do not replace the provider ID with the provider name.
+
+Use **Settings** to find a model ID for each client configuration.
 
 ## OpenAI Chat Completions
 
@@ -154,7 +156,7 @@ usage attribution, and token limits as other gateway traffic.
 
 ### Claude Code
 
-Set the gateway's parent endpoint as the Anthropic base URL, then use a Claude model ID returned by `GET /models`:
+Set the gateway's parent endpoint as the Anthropic base URL, then use a Claude model ID from **Settings**:
 
 ```bash
 export ANTHROPIC_BASE_URL="https://your-onyx-domain.com/api/gateway"
@@ -166,7 +168,7 @@ claude
 ```
 
 Claude Code appends `/v1/messages`, which resolves to the gateway's Anthropic Messages endpoint.
-Use model IDs from your own catalog; provider IDs differ by deployment.
+Use a model ID from your own Settings page. Provider IDs differ by deployment.
 
 ### Codex
 
@@ -190,7 +192,7 @@ export ONYX_GATEWAY_API_KEY="onyx_pat_..."
 codex -p onyx
 ```
 
-The configured model must be an OpenAI-compatible model ID returned by `GET /models`.
+The configured model must be an OpenAI-compatible model ID from **Settings**.
 
 ### OpenCode
 
@@ -226,7 +228,7 @@ opencode
 ```
 
 The `@ai-sdk/openai-compatible` provider uses the gateway's Chat Completions endpoint.
-Replace the example model with one from your gateway catalog.
+Replace the example model with one from your Gateway Settings.
 
 ## Usage and limits
 
@@ -244,7 +246,7 @@ Those limits apply before the gateway sends a generation request to a model prov
 | Error | What to check |
 | --- | --- |
 | `401` or `403` | Use a valid PAT with the LLM Gateway scope. Check that the user still has model access. |
-| Model not found | Call `GET /models` and use a returned model ID exactly. The provider ID is part of the identifier. |
+| Model not found | Copy the model ID again from Gateway Settings. The provider ID is part of the identifier. |
 | Rate limited | Ask an administrator to review the user, group, or workspace token limit. |
 | Model unavailable | Ask an administrator to configure the provider or make the model visible in Language Models. |
 
