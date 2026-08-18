@@ -57,7 +57,8 @@ Navigate to **Admin Panel** → **Organization** → **SSO Providers**.
     the SP entity ID. The SP certificate, private key, and email attribute are optional depending on your IdP.
 
     Optionally restrict the provider to specific **email domains**.
-    Users outside those domains cannot sign in through it.
+    Users outside those domains cannot sign in through it. (On Onyx Cloud this list is required.
+    See [Onyx Cloud](#onyx-cloud) below.)
 
     OIDC entries also expose a **Require Verified Email Claim** toggle for IdPs that send the optional `email_verified`
     claim. Starting in `v4.5`,
@@ -83,43 +84,44 @@ Onyx Cloud is multi-tenant: many workspaces share one login page,
 so provider configuration and sign-in work a little differently than self-hosted.
 
 - The provider type picker offers **Google** and **OIDC** only. SAML is not available on Onyx Cloud.
-- **Email Domains** are required, not optional. An empty list would let the provider admit anyone your identity
-  provider is willing to assert, and every admission uses a seat.
-- The login page shows a single **Sign in with SSO** button. A visitor enters their email first, Onyx resolves
-  which workspace they belong to (or, for a first-time employee, which workspace their domain belongs to),
-  and shows that workspace's provider button next.
+- **Email Domains** are required, not optional. Without them the provider would admit every account your identity
+  provider authenticates, and each one consumes a seat.
+- The login page shows a single **Sign in with SSO** button. A visitor enters their email first, and Onyx resolves
+  which workspace they belong to (or, for a first-time employee, which workspace their domain belongs to)
+  and shows that workspace's sign-in options next.
 
 ### Domain Verification
 
 Because Onyx Cloud serves many companies from one instance,
-a domain only routes sign-ins once your workspace proves it controls that domain.
-Listing a domain on a provider claims it;
-a first-time employee on that domain cannot sign in and be provisioned automatically until the claim is verified.
-Existing members can always sign in through the provider regardless of verification status.
+a domain only routes sign-ins once your workspace proves it controls that domain:
+listing a domain on a provider claims it,
+but a first-time employee on that domain cannot sign in and be provisioned automatically until the claim is verified.
+Users already provisioned in the workspace can always sign in through the provider regardless of verification status.
 
 <Steps>
   <Step title="Save the Provider">
     Add or update the provider with the domain listed under **Email Domains**, then save.
-    Verification is unavailable until the domain is saved on a provider.
   </Step>
 
   <Step title="Publish the DNS Record">
-    Reopen the provider and find the domain under **Domain Verification**. Add the shown **TXT** record,
-    using its **Name** and **Value**, at your DNS provider.
+    Reopen the provider and find the domain under **Domain Verification**.
+    Copy the shown **Name** and **Value** into a new **TXT** record at your DNS provider.
   </Step>
 
-  <Step title="Verify">
+  <Step title="Verify the Domain">
     Click **Verify Domain**. Onyx resolves the record and, on a match, marks the domain verified.
     DNS changes can take up to an hour to propagate, so if verification fails right away, wait and try again.
   </Step>
 </Steps>
 
-Onyx periodically re-checks every verified domain's TXT record. If the record is removed or changed,
-the domain stops routing new sign-ins. A temporary DNS lookup failure does not drop verification.
+Onyx re-checks each verified domain's TXT record on an ongoing schedule (about every six hours).
+If the record is removed or changed, the domain stops routing new sign-ins.
+A temporary DNS lookup failure does not drop verification.
 
 <Note>
-  Google sign-in is exempt from domain verification. It is a first-party sign-in button,
-  not a workspace-configured identity provider, so it works the same regardless of any domain's verification status.
+  Domain verification does not apply to Google. List your email domains as usual,
+  but a first-time employee on a Google Workspace domain can sign in and be provisioned without a DNS TXT record,
+  since their Google sign-in already proves they control an address on that domain.
 </Note>
 
 ## Turning Off Password Login
