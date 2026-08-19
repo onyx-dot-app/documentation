@@ -362,6 +362,12 @@ Read [Deploying Craft](/deployment/local/craft) before enabling Craft in self-ho
     Disabled by default for backwards compatibility.
   </Accordion>
 
+  <Accordion title="JWT Header Auth">
+    `JWT_PUBLIC_KEY_URL`: URL that serves the public key material (JWKS or PEM) for an external token issuer. When set,
+    Onyx accepts an RS256 JWT in the `Authorization: Bearer` header and resolves the user from the token's email claim.
+    See [JWT Header Auth](/deployment/authentication/jwt) for the full behavior.
+  </Accordion>
+
   <Accordion title="Email Configuration">
     <Info>
 
