@@ -16,7 +16,8 @@ Authorization: Bearer <JWT>
 ```
 
 <Note>
-  This is a supported configuration. See [Support and stability](#support-and-stability) below.
+  This option is part of Onyx Community Edition. It needs no Enterprise license,
+  and it works the same way in both editions. See [Support and stability](#support-and-stability) below.
 </Note>
 
 ## Setup
@@ -103,9 +104,17 @@ A request authenticated by JWT is treated like any other logged-in user.
 - **Session expiry.** With `TRACK_EXTERNAL_IDP_EXPIRY=true`, Onyx stores the token's `exp` as the
   user's external IdP expiry.
 
-A newly provisioned user has no elevated permissions.
-Grant admin or curator access from the **Admin Panel → Users** page,
-or manage access through [SCIM](/deployment/authentication/scim).
+A user provisioned this way gets no elevated permissions, with one exception:
+the **first** user on an empty instance becomes an admin, whichever login path creates them.
+Grant admin or curator access to anyone else from the **Admin Panel → Users** page.
+
+<Info>
+  Enterprise Edition adds two behaviors on this path. Emails in the default-admin list are made admins at creation.
+  Provisioning a new user also consumes a license seat,
+  so a login for an unknown user fails once the workspace reaches its seat limit.
+  Community Edition applies no seat limit.
+  Enterprise Edition can also manage access through [SCIM](/deployment/authentication/scim).
+</Info>
 
 ## Precedence
 
