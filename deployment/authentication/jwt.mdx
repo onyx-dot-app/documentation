@@ -1,0 +1,151 @@
+---
+title: "JWT Header Auth"
+description: "Authenticate API requests with JWTs minted by your own identity provider"
+icon: "key"
+---
+
+Onyx can accept a JWT that your identity provider or API gateway mints, and use it to authenticate a request.
+This is useful when another system already holds the user's identity and calls Onyx on their behalf — for example an API
+gateway, a portal, or a service that fronts Onyx for its own users.
+
+Set `JWT_PUBLIC_KEY_URL` to a URL that serves the public key material for your token issuer. When the variable is set,
+Onyx accepts a signed JWT in the `Authorization` header:
+
+```
+Authorization: Bearer <JWT>
+```
+
+<Note>
+  This is a supported configuration. See [Support and stability](#support-and-stability) below.
+</Note>
+
+## Setup
+
+<Steps>
+  <Step title="Publish your public key">
+    Your identity provider must serve the verification key at a URL that the Onyx API server can reach.
+    Onyx accepts two formats:
+
+    - **JWKS** — a JSON document with a `keys` array. This is what Microsoft Entra ID, Okta, Auth0,
+    and most other providers publish at their `jwks_uri`.
+    - **PEM** — a single PEM-encoded RSA public key.
+
+    Onyx picks the format from the response. A response with `Content-Type: application/json`,
+    or a body that starts with `{`, is read as JWKS. Any other body is read as PEM.
+
+    <Tip>
+      Most identity providers list the JWKS URL in their OIDC discovery document at
+      `https://<YOUR_IDP>/.well-known/openid-configuration`, under the `jwks_uri` field.
+    </Tip>
+  </Step>
+
+  <Step title="Configure Onyx">
+    Set the variable in your `.env` or `values.yaml` file (Docker and Kubernetes, respectively).
+
+      ```bash .env
+      JWT_PUBLIC_KEY_URL=https://<YOUR_IDP>/.well-known/jwks.json
+      ```
+
+      ```yaml values.yaml
+      configMap:
+        JWT_PUBLIC_KEY_URL: https://<YOUR_IDP>/.well-known/jwks.json
+      ```
+
+    Restart the API server to apply the change.
+  </Step>
+
+  <Step title="Send a request">
+    Put the token in the `Authorization` header of any Onyx API call. `GET /api/me` returns the user that Onyx resolved,
+    so it is a good first check.
+
+      ```bash
+      curl https://<YOUR_ONYX_DOMAIN>/api/me \
+        -H "Authorization: Bearer <JWT>"
+      ```
+  </Step>
+</Steps>
+
+## Token requirements
+
+| Requirement    | Value                                                                        |
+| -------------- | ---------------------------------------------------------------------------- |
+| Signature      | RS256                                                                        |
+| Identity claim | The first valid email address in `email`, `preferred_username`, then `upn`   |
+| Expiry         | `exp` is enforced. Expired tokens are rejected                                |
+| Audience       | `aud` and `iss` are **not** checked                                          |
+
+The address in the identity claim is normalized and lowercased. It becomes the Onyx user's email.
+
+<Warning>
+  Onyx does not check the `aud` or `iss` claims. Any token that your configured key signs is accepted,
+  even if it was minted for a different application. Publish a key that only signs tokens for Onyx,
+  or make sure every consumer of that key is equally trusted.
+</Warning>
+
+### Key selection and rotation
+
+When the URL serves JWKS, Onyx selects the key by the token header `kid`, then by `x5t`.
+If neither matches and the document holds exactly one key, Onyx uses that key.
+
+Onyx caches the fetched key material. If verification fails, Onyx clears the cache, fetches the URL again,
+and retries once. Routine key rotation therefore needs no restart.
+
+## User handling
+
+A request authenticated by JWT is treated like any other logged-in user.
+
+- **Just-in-time provisioning.** If no Onyx user has that email, Onyx creates one. The account is
+  marked verified and gets a random password it never uses.
+- **Existing users.** If the email belongs to an existing user, that user is returned. Deactivated
+  users are rejected. Accounts that are not web-login accounts are rejected.
+- **Access policies still apply.** The email must satisfy the same invite allowlist and
+  `VALID_EMAIL_DOMAINS` rules as every other login path.
+- **Session expiry.** With `TRACK_EXTERNAL_IDP_EXPIRY=true`, Onyx stores the token's `exp` as the
+  user's external IdP expiry.
+
+A newly provisioned user has no elevated permissions.
+Grant admin or curator access from the **Admin Panel → Users** page,
+or manage access through [SCIM](/deployment/authentication/scim).
+
+## Precedence
+
+A valid Onyx session cookie takes priority. Onyx reads the `Authorization` header only when the request has no session.
+
+API keys and personal access tokens use the same header. Onyx tries the JWT path first,
+and a value that is not a valid RS256 JWT falls through to the API key and personal access token paths.
+Those credentials keep working unchanged when `JWT_PUBLIC_KEY_URL` is set.
+
+## Support and stability
+
+`JWT_PUBLIC_KEY_URL` is a documented and supported configuration option.
+Onyx treats it like every other published setting on this page:
+
+- The variable name, the `Authorization: Bearer` header, the RS256 requirement, the accepted key
+  formats, and the identity claim order are part of the documented interface.
+- Automated tests cover the behavior described above — existing-user login, just-in-time
+  provisioning, rejection of tokens signed by an unknown key, rejection of expired tokens,
+  and key rotation without a restart.
+- If a future release changes or replaces this option, the change is called out in the release
+  notes for that release, together with the mechanism that replaces it.
+
+<Note>
+  If you plan to build an integration on this option, [contact us](/deployment/miscellaneous/contact_us).
+  We are happy to review your design and tell you about anything on the roadmap that touches it.
+</Note>
+
+## Troubleshooting
+
+Onyx logs every verification failure on the API server. Check `api_server` logs for these messages:
+
+| Log message                                        | Cause                                                              |
+| -------------------------------------------------- | ------------------------------------------------------------------ |
+| `JWT_PUBLIC_KEY_URL is not set`                    | The variable is missing or empty                                   |
+| `Failed to fetch JWT public key`                   | Onyx cannot reach the URL. Check egress rules and TLS              |
+| `JWT public key URL returned invalid JSON`         | The response looks like JSON but does not parse                    |
+| `no JWKS 'keys' field was found`                   | The JSON response is not a JWKS document                           |
+| `No matching JWK found for token header`           | The token `kid` is absent from the JWKS document                   |
+| `Invalid JWT token`                                | Bad signature, expired token, or an algorithm other than RS256     |
+| `no email claim found`                             | None of `email`, `preferred_username`, or `upn` holds a valid email |
+
+A request that fails JWT verification is not rejected outright. It continues as an unauthenticated request,
+and the endpoint returns `401` if it needs a user.
