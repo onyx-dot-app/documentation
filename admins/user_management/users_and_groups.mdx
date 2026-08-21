@@ -1,50 +1,91 @@
 ---
 title: "Users and Groups"
-description: "Manage users, roles, groups, and invitations in Onyx"
+description: "Manage users, account types, groups, and invitations in Onyx"
 icon: "users"
 ---
 
 ## Overview
 
-Onyx allows you to manage users, roles, groups,
+<Info>
+  This page applies to Onyx **v4.7 and later**. For older versions,
+  see [Users and Groups before v4.7](/admins/user_management/users_and_groups_legacy).
+</Info>
+
+Onyx allows you to manage users, account types, groups,
 and invitations in your workspace from the Users and Groups pages in the Admin Panel.
 
 ### Users
 
-As users join your workspace, they will appear in the Users page.
-You can promote users to Admins and Curators through the Role dropdown.
-
-You can also deactivate and delete users through this page.
+As users join your workspace, they will appear in the Users page. Each row shows the account's group membership,
+account type, status, and when it was last updated. You can filter the list by account type, group, or status,
+and you can invite, deactivate, reactivate, and delete users from this page.
 
 <Tip>
   Unable to delete a User? They may have a Document Set or Agent still associated with their profile.
 </Tip>
 
-<img className="rounded-image" src="/assets/admins/user_management/user_management.png" alt="Users management page"/>
+<img className="rounded-image" src="/assets/admins/user_management/manage_users.png" alt="Users page listing accounts with their groups, account type, and status"/>
+
+### Account Types
+
+Account type tells you what kind of account Onyx is showing. It is different from permissions:
+permissions come from group membership, while account type explains whether the account is a normal user,
+service account, or system-managed account.
+
+| Account type | Meaning |
+|---|---|
+| Standard | A normal user account. Standard users can be assigned to groups and receive group permissions. |
+| Service Account | An API key or service account. Service accounts get their access from the groups you pick when creating the key, exactly like a user. |
+| Slack Bot | A bot-created account used for Slack interactions. These accounts are system-managed. |
+| External User | A placeholder account discovered through external permission sync before the person logs in. These accounts are system-managed. |
+| Anonymous | A temporary anonymous account when anonymous access is enabled. These accounts are system-managed. |
+
+Most day-to-day user management happens with **Standard** users.
+Use groups to control what Standard users and Service Accounts can access or manage. Slack Bot, External User,
+and Anonymous accounts are created by system workflows and are not usually edited directly.
+
+Because all access comes from groups, an account that belongs to no group has no permissions.
+A service account with no group is the one exception: it can still post to chat, but it cannot search.
+See [Understanding Permissions](/admins/permissions/understanding_permissions) for the full model.
 
 ### Inviting Users
 
-You may use the **Invite Users** button to send an email invitation to join your workspace.
+Use the **Invite Users** button to send an email invitation to join your workspace.
+Inviting someone does not by itself change who is allowed to join.
 
-<Warning>
-  Inviting Users will disallow new users from automatically joining your workspace!
-  You will need to invite all users or none.
-</Warning>
+### Restricting Who Can Join
 
-<img className="rounded-image" src="/assets/admins/user_management/invite_users_warning.png" alt="Invite users warning"/>
+By default, anyone who can reach your Onyx deployment can create an account. To require an invitation instead,
+turn on **Restrict Open Sign-Up** on the Users page. While it is on, only people you have invited can join.
+
+<Note>
+  **Restrict Open Sign-Up** appears on self-hosted deployments when SCIM is not enabled.
+  If you turn on [SCIM](/deployment/authentication/scim),
+  the SCIM status replaces it on the Users page and your identity provider controls membership instead.
+</Note>
 
 ## Groups
 
-You can organize your Users into Groups to manage their access controls at the same time.
+You can organize users and service accounts into groups to manage access at the same time.
 
 Specifically, you can attach private Connectors, Document Sets, and Agents to a Group,
 granting all users in the Group access to these resources.
 
 Additionally, you can impose token rate limits on a Group to monitor and control AI model usage.
 
-<img className="rounded-image" src="/assets/admins/user_management/group_overview.png" alt="Group overview page"/>
+Groups also power Onyx's permission system. To learn how group permissions and Group Managers work,
+see [Understanding Permissions](/admins/permissions/understanding_permissions).
 
-<img className="rounded-image" src="/assets/admins/user_management/group_management.png" alt="Group management page"/>
+The Groups page lists every group in your workspace with its member count.
+The built-in **Admin** and **Basic** groups are marked **Default**. Use **New Group** to create a custom group.
+
+<img className="rounded-image" src="/assets/admins/user_management/manage_groups.png" alt="Groups page showing the default Admin and Basic groups alongside a custom group"/>
+
+Selecting a group opens its detail page. From here you manage the group's members, its permissions, the connectors,
+document sets, and agents shared with it, and its token rate limits.
+Members who manage the group are marked with a **Manager** badge.
+
+<img className="rounded-image" src="/assets/admins/user_management/group_detail.png" alt="Edit Group page showing members, group permissions, shared resources, and token rate limits"/>
 
 <Tip>
   Want to automate user and group provisioning? Set up [SCIM](/deployment/authentication/scim)

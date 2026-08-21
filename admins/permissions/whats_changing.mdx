@@ -1,312 +1,134 @@
 ---
 title: "What's Changing in Permissions"
-description: "Onyx is moving to group-based permissions. Here's what's changing, what's being removed, and what you need to do."
+description: "Migration guide for the move from Curator roles to group-based permissions in Onyx"
 icon: "arrow-right-arrow-left"
 ---
 
-<Warning>
-  This page describes an upcoming migration that will take effect in a future release. No action is required yet.
-  We are publishing this guide early so you can plan ahead.
-</Warning>
+Onyx permissions now use groups instead of the old Curator role model.
+This page is for customers migrating from **Curator** and **Global Curator** roles.
 
-## Why We're Changing
+<Info>
+  These changes apply when upgrading to Onyx **v4.7 or later**. For older versions,
+  see [Users and Groups before v4.7](/admins/user_management/users_and_groups_legacy).
+</Info>
 
-Onyx's current permission system offers limited flexibility. You can make someone an **Admin** (full access),
-a **Basic** user (no management access), or a **Curator** (management access scoped to specific groups).
-There's nothing in between. If you want someone to manage connectors but not agents,
-or view analytics without any management access, the current system can't do that.
-
-The new **group-based permission system** solves this by assigning permissions directly to groups.
-Each group can have a specific set of permissions, and users inherit the permissions of every group they belong to.
-This enables granular delegation. For example,
-giving a team lead access to manage connectors without granting them full admin or curator powers.
-
-It also preserves the **per-group scoping** Curators relied on — through **Group Managers** — so you get both
-finer-grained permission types and the ability to delegate a single group's management. The next sections explain each.
+For the day-to-day permission model, see [Understanding Permissions](/admins/permissions/understanding_permissions).
 
 ## What's Being Removed
 
-<Warning>
-  The following roles and features will be permanently removed in an upcoming release.
-  Please review your current setup and plan ahead.
-</Warning>
+The following legacy roles and settings are removed:
 
-- **Curator role**: Removed
-- **Global Curator role**: Removed
-- **`CURATORS_CANNOT_VIEW_OR_EDIT_NON_OWNED_ASSISTANTS`** environment variable: Removed
+- **Curator role**
+- **Global Curator role**
+- **`CURATORS_CANNOT_VIEW_OR_EDIT_NON_OWNED_ASSISTANTS`** environment variable
 
-<Note>
-  The Curator *roles* go away, but the *capability* they provided — scoped,
-  per-group management — is preserved through **Group Managers** (see [Group Managers](#group-managers) below).
-</Note>
+The Curator roles are removed,
+but the scoped management capability they provided is preserved through **Group Managers**.
 
-## What Replaces It
+## What Replaces Curators
 
-The new system is built from two pieces that work together:
+The new system uses two mechanisms:
 
 <Columns cols={2}>
-  <Card title="Group permission" icon="users">
-    Granted to a **group** and applies organization-wide.
-    Every member of the group manages **all** resources of that type.
+  <Card title="Group permissions" icon="users">
+    Permissions granted to a group. These apply organization-wide to every member of that group.
   </Card>
 
-  <Card title="Group Manager" icon="user-shield">
-    Granted to a **person** for a **single group**.
-    They manage only that group's resources and members — see [Group Managers](#group-managers).
+  <Card title="Group Managers" icon="user-shield">
+    Management access granted to a specific user from a group detail page. This is scoped to that one group.
   </Card>
 </Columns>
 
-<Info>
-  Configurable group permissions and Group Managers rely on custom groups, which are an **Enterprise Edition** feature.
-  Community Edition keeps the two default groups, Basic and Admins (see the [FAQ](#frequently-asked-questions)).
-</Info>
-
-Group permissions are more flexible than the old Curator model:
-- You can grant **Manage Connectors & Document Sets** without granting agent management
-- You can grant **View Agent Analytics** or **View Query History** without any management permissions
-- You can create purpose-specific groups like "Content Managers" or "Analytics Viewers"
-
-### Group permission vs. Group Manager
-
-The two mechanisms can grant the **same permission name** — *Manage Connectors & Document Sets*, *Manage Agents*,
-*Manage Actions* — but their reach is very different. This is the most important distinction to get right.
-
 <Warning>
-  Enabling a **Manage X** permission *on a group* gives **every member** the **full,
-  organization-wide** ability to manage **all** resources of that type — not just the group's own resources.
-  It is **not** a way to scope management to a single group. To let someone manage only one group's resources,
-  make them a **Group Manager** of that group instead — don't grant the group-wide permission.
+  Group permissions are organization-wide. If you want one person to manage only one group's resources,
+  make that person a **Group Manager** on the group detail page instead of granting a group-wide manage permission.
 </Warning>
-
-| Permission | As a **group permission** (granted to the group) | As a **Group Manager** (assigned per person, per group) |
-|---|---|---|
-| Manage Connectors & Document Sets | Every member can create and edit **any** connector and document set, organization-wide | Manages only connectors and document sets shared **solely** within the group(s) they manage — and can't make them public |
-| Manage Agents | Every member can create and edit **any** agent, organization-wide | Manages only agents shared **solely** within the group(s) they manage — and can't make them public |
-| Manage Actions | Every member can create and edit **any** custom tool / MCP server, organization-wide | Manages the actions used by their managed group's agents — actions are scoped **through agents**, since tools and MCP servers have no direct group association |
-
-In other words, a Group Manager can only act on a resource that lives **entirely** within the group(s)
-they manage and stays **private** — visible only to those groups. They can't make a resource public, share it org-wide,
-or attach it to a group they don't manage. A group-wide **Manage X** permission has none of these limits.
-
-### Available Permissions
-
-The following permissions can be assigned to any group:
-
-| Permission | Description |
-|---|---|
-| Manage LLMs | Add and update configurations for language models (LLMs). |
-| Manage Connectors & Document Sets | Add and update connectors and document sets. |
-| Manage Actions | Add and update custom tools and MCP/OpenAPI actions. |
-| Manage Groups | Add and update user groups. |
-| Manage Service Accounts | Add and update service accounts and their API keys. |
-| Manage Slack/Discord Bots | Add and update Onyx integrations with Slack or Discord. |
-| Create Agents | Create and edit the user's own agents. |
-| Manage Agents | View and update all public and shared agents in the organization. |
-| View Agent Analytics | View analytics for agents the group can manage. |
-| View Query History | View query history of everyone in the organization. |
-| Create User Access Token | Add and update the user's personal access tokens. |
-
-Some of these permissions can also be granted as *scoped* permissions to make someone a **Group Manager** of a single
-group — see [Which permissions can be scoped](#which-permissions-can-be-scoped) below.
-
-## Group Managers
-
-A **Group Manager** is a member of a group who has been given management access to **a single group** — its resources
-and its members — without organization-wide powers. Access is granted per user, per permission, per group.
-
-For example: *Alice can manage connectors,
-but only for the connectors shared with the Engineering group.* Alice does not become an organization-wide connector
-admin; her management access stops at Engineering's resources.
-
-### What a Group Manager can do
-
-Scoped to the group(s) they manage, a Group Manager can:
-
-- **View, edit, and remove** the **connectors**, **agents**, and **document sets** shared with the group.
-- **Manage the actions** (custom tools and MCP servers) used by their group's agents.
-- **Add and remove members** of the group.
-- **Create** connectors, agents, and document sets — as long as each is shared with a group they manage.
-
-A Group Manager **cannot**:
-
-- Manage resources that aren't shared with a group they manage.
-- **Make a resource public**, or extend its access beyond the groups they manage.
-- Grant organization-wide permissions to anyone.
-
-<Note>
-  Credentials stay private. A Group Manager can see **which** credential a connector uses,
-  but can't view its secret values or reuse a credential they don't have access to when creating their own connectors.
-  (Unchanged by this migration.)
-</Note>
-
-### Which permissions can be scoped
-
-| Permission | Can be scoped to a group? |
-|---|---|
-| Manage Connectors & Document Sets | Yes |
-| Manage Agents | Yes |
-| Create Agents | Yes |
-| Manage Actions | Yes — scoped through the managed group's agents |
-| All others (Manage LLMs, Manage Groups, View Agent Analytics, View Query History, Manage Service Accounts, Manage Slack/Discord Bots, Create User Access Token) | No — organization-wide only |
-
-<Note>
-  **Manage Actions** has no direct group association — custom tools and MCP servers aren't attached to groups directly.
-  A Group Manager's scoped action management is therefore derived from the **agents** in the group(s)
-  they manage (which *are* shared to groups), rather than from a tool-to-group link.
-</Note>
-
-When scoped, **Create Agents** lets the manager create agents shared with their group.
-Managing the **members and shared resources of a group you're assigned to** comes with being its Group Manager — it does
-not require the organization-wide **Manage Groups** permission, which administers *all* groups.
-
-<Note>
-  There's no risk of lockout. An Admin can always view and reset a group's managers.
-  Removing a user from a group revokes their scoped permissions for that group,
-  and deleting a group removes any Group Manager grants tied to it.
-</Note>
 
 ## Before and After
 
-| Old (Current System) | New (Group-Based Permissions) |
+| Old system | New system |
 |---|---|
-| Admin role | Member of **Admins** group (full access) |
-| Basic role | Member of **Basic** group (chat, search, personal agents) |
-| Curator role (per-group) | **Group Manager** of their group(s) — scoped management of that group's connectors, document sets, agents, and members |
-| Global Curator role | **Group Manager** in each group they manage, or group-wide Manage permissions when organization-wide access is intended |
+| Admin role | Member of the **Admin** group. |
+| Basic role | Member of the **Basic** group. |
+| Curator role | **Group Manager** of the groups they curated. |
+| Global Curator role | **Group Manager** in each group they managed, or a group with organization-wide permissions if broad access is intended. |
 
-### What changes for Curators
+The only default groups are **Basic** and **Admin**.
+Custom groups can be created when you need additional permission sets.
 
-In the old system, a **Curator** could manage resources (connectors, agents, document sets)
-and members **scoped to the specific group(s)** they curated.
-A **Global Curator** had the same powers across all groups they belonged to.
+<Info>
+  Custom groups and configurable group permissions are an Enterprise Edition feature.
+</Info>
 
-That single role is now split into separate, individually grantable permissions,
-and you choose the scope for each (see [What Replaces It](#what-replaces-it)):
+## What Happens During Upgrade
 
-- For the **same per-group scoping** a Curator had, make the user a **Group Manager** of their group(s) — see
-  [Group Managers](#group-managers).
-- For **organization-wide** management, grant the permission to a group instead.
-
-You don't have to do this by hand for existing groups: during the upgrade,
-former Curators and Global Curators are **automatically converted** to Group Managers of the groups they managed (see
-[What Happens Automatically During Upgrade](#what-happens-automatically-during-upgrade)).
-You assign managers manually only for groups you create afterward.
-
-## What Happens Automatically During Upgrade
-
-The upgrade migration handles the following automatically:
+The migration handles the core role conversion automatically:
 
 <Steps>
-  <Step title="Admin users">
-    All users with the **Admin** role are auto-joined to the **Admins** group. They retain full system access.
+  <Step title="Admins move to the Admin group">
+    Users with the legacy **Admin** role are added to the **Admin** group and keep full workspace access.
   </Step>
 
-  <Step title="Basic users">
-    All users with the **Basic** role are auto-joined to the **Basic** group. Their capabilities are unchanged.
+  <Step title="Basic users move to Basic">
+    Users with the legacy **Basic** role are added to the **Basic** group and keep core workspace access.
   </Step>
 
-  <Step title="Curators and Global Curators">
-    Existing **Curators** and **Global Curators** are automatically converted to **Group Managers** of the groups they
-    curated. Their per-group management carries over — there is no lockout,
-    and no manual reassignment for existing groups.
-
-    <Note>
-      This automatic conversion covers only the groups that exist at upgrade time.
-      For any **new** group you create afterward, assign its Group Managers manually.
-    </Note>
+  <Step title="Curators become Group Managers">
+    Existing **Curators** and **Global Curators** are converted to **Group Managers** for the groups they managed.
+    Their scoped management access carries over.
   </Step>
 
-  <Step title="Default groups created">
-    Two protected groups are automatically created:
-    - **Basic**: All users are auto-joined. Grants core platform access (chat, search, personal agents).
-    - **Admins**: All former Admin users are auto-joined. Grants full system access.
+  <Step title="Existing groups are preserved">
+    Existing custom groups, group memberships, connectors, document sets, and agents are preserved.
   </Step>
 
-  <Step title="Existing groups preserved">
-    All your existing custom groups and their resource associations (connectors, document sets, agents) are preserved.
-    No group memberships are lost. You can then assign permissions to these groups after upgrading.
-  </Step>
-
-  <Step title="Document access unchanged">
-    How documents appear in search results is not affected by this change.
-    Document-level access is still controlled by connector access types (Public, Private, Synced)
-    and group-to-resource associations, which remain the same.
+  <Step title="Document access is unchanged">
+    Search visibility continues to follow connector access settings: **Private**, **Public**,
+    and **Auto Sync Permissions**.
   </Step>
 </Steps>
 
-## What You Need to Do
+<Note>
+  The automatic Curator conversion applies to groups that exist at upgrade time. For groups created later,
+  assign Group Managers manually from the group detail page.
+</Note>
 
-<Info>
-  Existing Curators and Global Curators are migrated to **Group Managers** automatically,
-  so most setups need little manual work.
-  Your main job is to verify the result and decide how new groups are managed going forward.
-</Info>
+## What You Need to Check
 
-### Before Upgrading
+After upgrading, review the following:
 
-1. **Review your Curator assignments**: Note which users are Curators or Global Curators and which groups they manage,
-   so you can confirm the conversion afterward.
+- Former Curators and Global Curators are Group Managers of the expected groups.
+- Users who need full administration are in **Admin**.
+- Regular users are in **Basic**.
+- Organization-wide permissions are granted only to groups that should have workspace-wide access.
+- New groups have Group Managers assigned manually when scoped management is needed.
 
-2. **Decide where you want organization-wide management**:
-   If a team should manage *all* resources of a type rather than a single group's,
-   plan to grant that permission to a group instead.
-
-### After Upgrading
-
-3. **Verify the converted Group Managers**: Confirm former Curators can still manage their groups' connectors, document
-   sets, and agents.
-
-4. **Handle new groups going forward**: The migration only covers groups that existed at upgrade. For new groups, grant
-   group permissions and assign **Group Managers** manually.
-
-## Timeline
-
-Specific version numbers and dates have not been finalized yet.
-This page will be updated as the release schedule is confirmed. Here is the planned rollout sequence:
-
-1. **Now**: This documentation is published so you can understand the upcoming changes and start planning.
-2. **Before the release**: Deprecation banners will appear in the Admin UI on the Users and Groups pages,
-   warning that Curator and Global Curator roles will be removed.
-3. **On release**: The new group-based permission system ships.
-   Curator and Global Curator roles are permanently removed. Migration runs automatically on upgrade.
-
-## Frequently Asked Questions
+## Common Migration Questions
 
 <AccordionGroup>
-  <Accordion title="What if I'm not using Curators today?">
-    If you only use Admin and Basic roles, this change requires no action from you. Your users, groups,
-    and resources will continue to work exactly as they do today.
-    The new permission system gives you additional flexibility if you need it in the future.
+  <Accordion title="What if we were not using Curators?">
+    If you only used Admin and Basic roles, there is little to review. Admin users move to **Admin**,
+    and Basic users move to **Basic**.
   </Accordion>
 
-  <Accordion title="What happens to resources that my Curators created?">
-    All resources (connectors, document sets, agents) are preserved with their original ownership,
-    and the creator remains the owner.
-    Because former Curators become Group Managers of their groups during the migration,
-    they keep the ability to manage the resources shared with those groups.
+  <Accordion title="Do existing groups and resources change?">
+    Existing groups, memberships, connectors, document sets, and agents are preserved.
+    The migration changes how management permissions are represented, not the resources themselves.
   </Accordion>
 
-  <Accordion title="Can I recreate Curator-like behavior in the new system?">
-    Yes.
-    Assign the user as a **Group Manager** of the relevant group — they'll manage only that group's resources and
-    members, the same per-group scoping the old Curator role provided. See [Group Managers](#group-managers).
+  <Accordion title="Can we recreate Curator-like behavior?">
+    Yes. Make the user a **Group Manager** of the relevant group.
+    This gives scoped management over that group's members and resources.
   </Accordion>
 
-  <Accordion title="Can a Group Manager share a connector with another team?">
-    No. A Group Manager can only manage resources within the group(s) they manage.
-    They can't widen a resource's sharing to a group they don't manage,
-    and they can't remove a resource from its last group (which would leave it orphaned).
-    This keeps a manager's reach contained to their own group.
+  <Accordion title="When should we use group permissions instead?">
+    Use group permissions when the access should be organization-wide. For example,
+    grant **Manage Connectors & Document Sets** to an IT group only if that group should manage connectors and document
+    sets across the workspace.
   </Accordion>
 
-  <Accordion title="Is this a breaking change for Community Edition (CE) users?">
-    No. CE behavior is identical to today. CE has two default groups (Basic and Admins)
-    that mirror the current Admin/Basic role split.
-    Custom groups with configurable permissions are an Enterprise Edition feature.
-  </Accordion>
-
-  <Accordion title="What about API keys and service accounts?">
-    Existing Admin API keys are placed in the Admins group. Basic API keys are placed in the Basic group.
-    After upgrading, you can assign service accounts to specific groups for more granular access.
+  <Accordion title="What happens to API keys and service accounts?">
+    Existing Admin API keys move with Admin access, and Basic API keys move with Basic access. After upgrading,
+    you can assign service accounts to groups for more granular access.
   </Accordion>
 </AccordionGroup>
