@@ -1,0 +1,122 @@
+---
+title: "Deep Research"
+description: "Agentic multi-step research for complex questions"
+icon: "hourglass"
+---
+
+## Overview
+
+<img className="rounded-image" src="/assets/overview/core_features/deep_research.png" alt="Deep Research"/>
+
+Deep Research is an agentic feature that enables Onyx to perform multi-step research for complex questions. Unlike standard chat interactions, Deep Research runs multiple cycles of thinking, research, and actions to produce comprehensive, well-sourced answers.
+
+Use Deep Research when you need to:
+- Synthesize information from many sources
+- Answer questions requiring significant reasoning
+- Research topics that span multiple knowledge domains
+- Generate comprehensive reports on complex subjects
+
+<Note>
+  Deep Research may take up to several minutes and could cost many times (>10x) the token cost of a normal inference.
+</Note>
+
+## How it works
+
+Deep Research follows a four-phase process to deliver thorough, accurate results:
+
+### 1. Clarification
+
+The system analyzes your question to understand the full scope of what you're asking. If needed, it may ask clarifying questions to ensure the research covers exactly what you need.
+
+### 2. Planning
+
+Based on your question, the system creates a research plan that breaks down the query into sub-questions and identifies:
+- Which knowledge sources to search
+- What actions or tools to use
+- The order of research steps
+
+### 3. Orchestrated research
+
+The system executes the research plan, running multiple cycles of:
+- **Searching** internal knowledge via [Connectors](/overview/core_features/connectors)
+- **Web searching** for external information (if enabled)
+- **Reasoning** through intermediate findings
+- **Iterating** based on what it discovers
+
+Each cycle builds on previous findings, allowing the system to follow leads, fill gaps, and cross-reference sources automatically.
+
+### 4. Report generation
+
+After completing research, the system synthesizes all findings into a comprehensive response with:
+- Clear conclusions and insights
+- Citations from all sources used
+- Structured formatting for readability
+
+## Usage
+
+### Enabling Deep Research
+
+Toggle Deep Research using the hourglass icon in the input bar before sending your message.
+
+<img className="rounded-image" src="/assets/overview/core_features/deep_research.png" alt="Deep Research Toggle"/>
+
+### When to use Deep Research
+
+| Use Case | Example |
+|----------|---------|
+| Multi-source synthesis | "Summarize our Q3 performance across all department reports" |
+| Complex analysis | "What are the competitive advantages and risks of our new product line?" |
+| Research reports | "Create a market analysis for expanding into the healthcare sector" |
+| Cross-domain questions | "How do our engineering practices compare to industry standards?" |
+
+### When standard chat is sufficient
+
+- Quick factual lookups
+- Simple questions with single-source answers
+- Conversational follow-ups
+- Tasks that don't require extensive research
+
+## Admin configuration
+
+Deep Research is available by default when enabled by your Onyx administrator.
+
+### Requirements
+
+- An LLM provider configured in [AI Models](/admins/ai_models/overview)
+- Sufficient token limits for extended research sessions
+- Optionally, [Web Search](/admins/actions/web_search) for external research
+
+### Token considerations
+
+Deep Research uses significantly more tokens than standard chat. Administrators can manage costs by:
+- Setting appropriate [rate limits](/admins/advanced_configs/rate_limits)
+- Configuring token limits per user or group
+- Monitoring usage via [Analytics](/admins/analytics/overview)
+
+## Best practices
+
+<Tip>
+  Frame your question with context about what you're trying to accomplish. The more specific your question, the more targeted the research.
+</Tip>
+
+### Writing effective queries
+
+**Good query:**
+> "Analyze our customer support ticket trends over the past 6 months and identify the top 3 areas where we could improve response times, based on our internal documentation and industry benchmarks."
+
+**Less effective:**
+> "How can we improve customer support?"
+
+### Tips for best results
+
+1. **Be specific** - Include relevant timeframes, departments, or constraints
+2. **State your goal** - Explain what you'll do with the information
+3. **Mention key sources** - Reference specific documents or systems if relevant
+4. **Set scope boundaries** - Clarify what should or shouldn't be included
+
+### Working with results
+
+- Review the citations in the right sidebar to verify sources
+- Use follow-up questions to drill deeper into specific findings
+- Share research sessions with teammates using the share button
+- Export or copy findings for use in other documents
