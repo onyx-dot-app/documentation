@@ -73,15 +73,43 @@ Authorization: Bearer <JWT>
 | Signature      | RS256                                                                        |
 | Identity claim | The first valid email address in `email`, `preferred_username`, then `upn`   |
 | Expiry         | `exp` is enforced. Expired tokens are rejected                                |
-| Audience       | `aud` and `iss` are **not** checked                                          |
+| Audience       | `aud` and `iss` are checked when an expected value is configured (`v4.7.0+`), and unchecked otherwise |
 
 The address in the identity claim is normalized and lowercased. It becomes the Onyx user's email.
 
 <Warning>
-  Onyx does not check the `aud` or `iss` claims. Any token that your configured key signs is accepted,
-  even if it was minted for a different application. Publish a key that only signs tokens for Onyx,
-  or make sure every consumer of that key is equally trusted.
+  With no expected audience configured, any token that your configured key signs is accepted,
+  even if it was minted for a different application. If the signing key is shared across several applications,
+  set an expected audience so only tokens minted for Onyx authenticate.
 </Warning>
+
+## Audience and issuer enforcement
+
+Starting in `v4.7.0`, Onyx can enforce the `aud` and `iss` claims. When an expected value is set,
+a token whose claim does not match is rejected, and a token missing the claim is rejected too (the check fails closed).
+Both the string and array forms of `aud` are accepted, and an array containing the expected audience matches.
+
+Configure the values at **Admin Panel** → **Security & Hardening** → **External JWT Authentication**,
+or with environment variables:
+
+| Setting | Environment variable |
+| --- | --- |
+| Public Key URL | `JWT_PUBLIC_KEY_URL` |
+| Expected Audience | `JWT_EXPECTED_AUDIENCE` |
+| Expected Issuer | `JWT_EXPECTED_ISSUER` |
+
+A setting whose environment variable is set is **pinned**:
+the environment value wins over anything saved in the admin panel, and the field displays as read-only text.
+This keeps auth-gating configuration as reviewable config-as-code that cannot be changed from inside the application,
+even by an admin account. With the variable unset, the value saved in the admin panel applies. On startup,
+Onyx mirrors set environment values into the database,
+so removing a variable later keeps its last pinned value in effect.
+
+A Public Key URL saved through the admin panel must use `https` and is validated against the deployment's SSRF
+Protection level, at save time and on every fetch, with redirects held to the same rules.
+A URL pinned by the environment variable is trusted as operator configuration and skips these checks,
+so internal endpoints stay usable when the operator configures them.
+Changes made from the admin panel are recorded in the audit log with the acting user and the old and new values.
 
 ### Key selection and rotation
 
