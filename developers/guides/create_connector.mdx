@@ -17,7 +17,10 @@ Skip to the [Full Code](#full-code) section if you don't want the step-by-step g
 
 In this example, we'll automate creating Jira Connectors for a selection of projects.
 
-**You will need an Admin API key to follow this guide.**
+**You will need an API key that can manage connectors.** Its service account must be in the Admin group,
+or in a group granting **Manage Connectors & Document Sets**.
+Every request in this guide is gated on `manage:connectors`.
+See [Understanding Permissions](/admins/permissions/understanding_permissions).
 
 <Steps>
   <Step title="Prepare your request">

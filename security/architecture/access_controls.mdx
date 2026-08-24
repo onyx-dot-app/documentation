@@ -29,8 +29,15 @@ The two ways of gating access to documents are:
 - Directly assigning access to users or groups of users. Often less convenient but requires less
   calls to external APIs which may be preferred in certain deployments.
 
-## User Roles
+## Permissions
 
-- **Admin**: Full system access, audit, and configuration capabilities
-- **Curator**: Document management and content curation (only available on Enterprise Edition)
-- **User**: Standard access to chat and search functionality
+Permissions are granted to groups, and a user receives the permissions of every group they belong to.
+
+- **Basic**: the default group every user joins. Standard access to chat, search, and personal resources
+- **Admin**: the group that grants full system access, audit, and configuration capabilities
+- **Custom groups**: grant specific capabilities, such as managing connectors, agents, or query history
+  (only available on Enterprise Edition)
+- **Group Manager**: a user who manages one group's members and resources, without any
+  organization-wide permissions
+
+For the full model, see [Understanding Permissions](/admins/permissions/understanding_permissions).
