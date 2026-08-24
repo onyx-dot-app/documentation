@@ -339,6 +339,13 @@ Read [Deploying Craft](/deployment/local/craft) before enabling Craft in self-ho
 
     `TRACK_EXTERNAL_IDP_EXPIRY`: Honor the `expires_at` field returned by the external identity provider.
     Disabled be default because many auth providers have very short expiry times.
+
+    `JWT_PUBLIC_KEY_URL`: JWKS or PEM endpoint for verifying API bearer JWTs.
+    See [JWT Header Auth](/deployment/authentication/jwt).
+
+    `JWT_EXPECTED_AUDIENCE`: Reject bearer JWTs whose `aud` claim does not match. Empty disables the check.
+
+    `JWT_EXPECTED_ISSUER`: Reject bearer JWTs whose `iss` claim does not match. Empty disables the check.
   </Accordion>
 
   <Accordion title="OAuth & OIDC Configuration">
