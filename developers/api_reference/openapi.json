@@ -5046,6 +5046,82 @@
           }
         }
       }
+    },
+    "/me/permissions": {
+      "get": {
+        "tags": ["public"],
+        "summary": "Get Current User Permissions",
+        "operationId": "get_current_user_permissions",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserPermissionsResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/manage/admin/users/admin-access": {
+      "patch": {
+        "tags": ["public"],
+        "summary": "Set User Admin Access Endpoint",
+        "operationId": "set_user_admin_access_endpoint",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserAdminAccessUpdateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -11837,6 +11913,46 @@
         "type": "object",
         "required": ["emails"],
         "title": "Body_bulk_invite_users_manage_admin_users_put"
+      },
+      "UserAdminAccessUpdateRequest": {
+        "properties": {
+          "user_email": {
+            "type": "string",
+            "title": "User Email"
+          },
+          "is_admin": {
+            "type": "boolean",
+            "title": "Is Admin"
+          }
+        },
+        "type": "object",
+        "required": ["user_email", "is_admin"],
+        "title": "UserAdminAccessUpdateRequest"
+      },
+      "UserPermissionsResponse": {
+        "properties": {
+          "permissions": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Permissions"
+          },
+          "is_manager": {
+            "type": "boolean",
+            "title": "Is Manager"
+          },
+          "managed_group_ids": {
+            "items": {
+              "type": "integer"
+            },
+            "type": "array",
+            "title": "Managed Group Ids"
+          }
+        },
+        "type": "object",
+        "required": ["permissions", "is_manager", "managed_group_ids"],
+        "title": "UserPermissionsResponse"
       }
     },
     "securitySchemes": {
