@@ -4,76 +4,89 @@ description: "Create and manage service accounts for programmatic access"
 icon: "key"
 ---
 
-API Keys provide programmatic access to Onyx APIs, enabling you to build custom applications,
-integrate with external systems, and automate workflows.
+A service account is a non-human user that exists only to call the Onyx API. Creating one gives you an API key,
+which lets you build custom applications, integrate with external systems, and automate workflows.
+
+<Info>
+  This page applies to Onyx **v4.7 and later**. For older versions,
+  see [Service Accounts before v4.7](/admins/user_management/api_keys_legacy).
+</Info>
 
 <Note>
-  API Keys exist as distinct users in Onyx, allowing you to trace activity and manage permissions at the key level.
+  A service account is a distinct user in Onyx, so you can trace its activity, keep its chat sessions private,
+  and scope resources to it.
 </Note>
 
-## API Key Types
+## How a Service Account Gets Its Access
 
-There are three types of API keys:
+A service account has no permissions of its own.
+Its access is the combination of the permissions of every **group** you assign it, exactly like a person's access.
 
-<AccordionGroup>
-  <Accordion title="Admin API Keys" icon="shield-check">
-    Can access all endpoints, including those pre-fixed with `admin/`.
+| Groups assigned | What the key can do |
+|---|---|
+| None | Chat only. It can create sessions and send messages, but it cannot search and cannot reach any admin endpoint. |
+| Basic | Chat, search, projects, and its own agents. |
+| Admin | Everything, including every `admin/` endpoint. |
+| A custom group | Whatever that group grants. A group with **Manage Connectors & Document Sets**, for example, lets the key manage connectors. |
 
-    **Use cases:**
-    - Full system administration
-    - User management operations
-    - Data management and analytics
-    - Complete access to all Onyx features
-
-    **⚠️ Use with caution:** Admin keys have unrestricted access to your Onyx instance.
-  </Accordion>
-
-  <Accordion title="Basic API Keys" icon="key">
-    Can access the non-admin endpoints like Search, Chat, Agents, and Actions.
-
-    **Use cases:**
-    - Building chat applications
-    - Implementing search functionality
-    - Creating and managing agents
-    - Running actions and workflows
-
-    **✅ Recommended:** Most users should use Basic API Keys for application development.
-  </Accordion>
-
-  <Accordion title="Limited API Keys" icon="lock">
-    Read-only Agent access. Can post messages to Chat endpoints, but cannot read chat history.
-
-    **Use cases:**
-    - Highly restricted environments
-    - Specific use cases requiring minimal permissions
-    - Testing with limited scope
-  </Accordion>
-</AccordionGroup>
+Assigning several groups adds their permissions together.
 
 <Tip>
-  Looking for user-scoped tokens?
-  Any user can create a [Personal Access Token](/developers/overview#personal-access-tokens)
-  from **Settings** > **Accounts & Access** to authenticate API requests as themselves.
+  If a key can chat but search returns nothing, check whether its service account is in a group.
 </Tip>
 
-## Creating API Keys
+For how groups and permissions fit together,
+see [Understanding Permissions](/admins/permissions/understanding_permissions).
+
+## Who Can Manage Service Accounts
+
+Managing service accounts requires the **Manage Service Accounts** permission, which an admin grants to a group.
+Admins always have it.
+
+<Warning>
+  Granting **Manage Service Accounts** is equivalent to granting Admin. The group selector is deliberately uncapped,
+  so anyone who can create a service account can put it in the Admin group and then use its key.
+</Warning>
+
+## Creating a Service Account
 
 <Steps>
-  <Step title="Navigate to API Keys">
-    In the Admin Panel, go to **API Keys**.
+  <Step title="Navigate to Service Accounts">
+    In the Admin Panel, go to **Service Accounts** under **Integrations**.
   </Step>
 
-  <Step title="Create New API Key">
-    Click **Create New API Key** and select the appropriate key type for your use case.
-
-    <img className="rounded-image" src="/assets/admins/user_management/create_api_key.png" alt="Create API Key interface"/>
+  <Step title="Create the account">
+    Click **New Service Account**, give it a name, and select the groups it should belong to. You can change both later.
   </Step>
 
-  <Step title="Save and Copy Key">
-    After creation, immediately copy and securely store the API key.
+  <Step title="Save and copy the key">
+    Copy or download the key before closing the dialog. Onyx shows it only once.
   </Step>
 </Steps>
 
-You will see your new API key along with all of your existing keys on the API Keys page.
+<Note>
+  On Onyx Cloud, service accounts require a paid plan. Trial workspaces cannot create API keys.
+</Note>
 
-From this page, you can regenerate, rename, or delete your API keys.
+## Managing Service Accounts
+
+The Service Accounts page lists each account with its name, masked key, and groups. For each account you can:
+
+| Action | What it does |
+|---|---|
+| Regenerate | Issues a new key and revokes the current one. |
+| Groups | Adds the account to groups or removes it from them, which changes what its key can do. |
+| Edit Account | Renames the account or changes its groups. |
+| Delete Account | Removes the account and its key. |
+
+<Warning>
+  Regenerating or deleting a key breaks any application still using the old one.
+</Warning>
+
+## Personal Access Tokens
+
+Service accounts are for applications. When you want a token that acts as a **person**,
+use a Personal Access Token instead.
+Any user with the **Create User Access Token** permission can create one from **Settings** > **Accounts & Access**.
+
+See [Overview & Auth](/developers/overview#personal-access-tokens) for token scopes and usage.

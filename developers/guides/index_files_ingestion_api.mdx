@@ -30,6 +30,12 @@ In this example, we'll index local files with the Ingestion API.
   The Ingestion API base URL is `https://cloud.onyx.app/api/onyx-api/ingestion` or your own domain.
 </Note>
 
+<Info>
+  **Required permission:** Manage Connectors & Document Sets (`manage:connectors`), or Admin (`admin`).
+  A **Group Manager** can ingest into connector-credential pairs in the groups they manage,
+  but not into the default pair, which is public.
+</Info>
+
 <Steps>
   <Step title="Prepare your Connector">
     Since we want these files to appear in the Connectors page, we'll need to first create a Connector.

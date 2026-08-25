@@ -385,7 +385,6 @@
                 "pages": [
                   "developers/api_reference/chat/create_new_chat_session",
                   "developers/api_reference/chat/handle_send_chat_message",
-                  "developers/api_reference/chat/seed_chat",
                   "developers/api_reference/chat/stop_chat_session",
                   "developers/api_reference/chat/search_chats",
                   "developers/api_reference/chat/get_chat_session",
@@ -399,7 +398,6 @@
                 "group": "Search",
                 "icon": "magnifying-glass",
                 "pages": [
-                  "developers/api_reference/search/handle_search_request",
                   "developers/api_reference/search/execute_web_search",
                   "developers/api_reference/search/execute_web_search_lite",
                   "developers/api_reference/search/execute_open_urls"
@@ -521,7 +519,9 @@
                 "pages": [
                   "developers/api_reference/user_management/get_auth_type",
                   "developers/api_reference/user_management/verify_user_logged_in",
+                  "developers/api_reference/user_management/get_current_user_permissions",
                   "developers/api_reference/user_management/get_user_role",
+                  "developers/api_reference/user_management/set_user_admin_access",
                   "developers/api_reference/user_management/set_user_role",
                   "developers/api_reference/user_management/list_all_users_basic_info",
                   "developers/api_reference/user_management/list_all_users",
@@ -670,6 +670,24 @@
       ]
     }
   },
+  "redirects": [
+    {
+      "source": "/developers/api_reference/chat/seed_chat",
+      "destination": "/developers/api_reference/chat/handle_send_chat_message"
+    },
+    {
+      "source": "/developers/api_reference/chat/handle_new_chat_message",
+      "destination": "/developers/api_reference/chat/handle_send_chat_message"
+    },
+    {
+      "source": "/developers/api_reference/search/handle_search_request",
+      "destination": "/developers/api_reference/search/execute_web_search"
+    },
+    {
+      "source": "/developers/api_reference/search/document_search",
+      "destination": "/developers/api_reference/search/execute_web_search"
+    }
+  ],
   "logo": {
     "light": "/assets/logo/onyx_logo.svg",
     "dark": "/assets/logo/onyx_logo_inverted.svg",
