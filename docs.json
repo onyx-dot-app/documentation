@@ -34,6 +34,7 @@
               "overview/core_features/code_interpreter",
               "overview/core_features/image_generation",
               "overview/core_features/voice_mode",
+              "overview/core_features/general_settings",
               {
                 "group": "Craft",
                 "icon": "hammer",
