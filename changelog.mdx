@@ -6,6 +6,188 @@ mode: "wide"
 rss: true
 ---
 
+<Update label="v4.6.0" description="August 20th, 2026" tags={["New Features", "Deployment Changes", "Bug Fixes"]}>
+
+  ## v4.6.0
+
+  Onyx becomes an LLM gateway — point Claude Code, Codex CLI,
+  or any OpenAI-compatible tool at your deployment and route them through your centrally managed provider credentials.
+  Usage and cost management lands with per-user spend reporting, workspace and group budgets, and priced exports,
+  incognito chat keeps sensitive conversations out of every record,
+  and the guided installer graduates into `onyx-cli deploy`.
+  Thank you to our contributors for helping make this release possible!
+
+  ## [Update] Deployment Changes
+
+  - **The guided installer is now `onyx-cli deploy`.** `install.sh` has become a thin bootstrap that downloads
+    `onyx-cli` and hands over to `onyx-cli deploy install` — all existing flags keep working.
+    Deployments gain first-class lifecycle verbs (`deploy upgrade`, `stop`, `status`, `logs`, `uninstall`)
+    that replace re-running the script and the old `--shutdown` / `--delete-data` flags,
+    and production compose deployments (`docker-compose.prod.yml` with TLS and real domains)
+    can be adopted with `--prod` and upgraded with `deploy upgrade` instead of hand-rolled compose scripting.
+  - **Redis Sentinel now works for Celery beat and the result backend.** Sentinel deployments previously
+    failed on every beat tick and silently shared one keyspace across broker, results, and application data. On upgrade,
+    the broker and result backend move from db 0 to their intended dbs 15 and 14 — queued Celery messages left in db 0
+    are dropped, so drain them first or accept the loss of in-flight background tasks.
+  - **Helm chart 0.8.x fixes:** `MODEL_SERVER_HOST` / `INDEXING_MODEL_SERVER_HOST` can be overridden through
+    `configMap` to point at external model servers (0.8.10),
+    `/scim` is routed to the API server in ingress mode — SCIM provisioning previously never worked there (0.8.13),
+    and all child resource names truncate to the 63-character Kubernetes limit,
+    so long release names no longer fail the install (0.8.15).
+  - **Building images from source no longer requires Docker Hardened Image access.** The web and model-server
+    Dockerfiles default to public, digest-pinned base images; released images still ship on the same DHI bases.
+  - **Enterprise license renewals deliver themselves.** A renewed license is re-fetched automatically instead of
+    requiring a manual `.lic` upload, and expiry warnings only appear when there is something for the admin to do.
+
+  ## Key Improvements
+
+  ### Onyx as an LLM Gateway
+
+  The LLM gateway now serves external tools (Enterprise tier).
+  Developers mint a personal access token with the new LLM Gateway scope, and `/gateway/v1` speaks three protocols:
+  OpenAI Chat Completions, the OpenAI Responses API (what Codex CLI requires),
+  and the Anthropic Messages API (point Claude Code at Onyx via `ANTHROPIC_BASE_URL`).
+  Requests resolving to Anthropic or true OpenAI models are proxied natively, so hosted tools, extended thinking,
+  and fine-grained streaming survive intact; other providers go through translation.
+  Extended thinking round-trips across tool-use turns, named tools can be forced via `tool_choice`,
+  and parameters the gateway cannot honor are refused loudly instead of silently dropped.
+  All gateway traffic is metered under its own usage flow and counts against token rate limits.
+
+  ### Usage and Cost Management
+
+  The admin Usage page is rebuilt around spend: workspace totals,
+  a searchable per-user spend table with a per-user detail modal (daily spend, breakdown by model and flow),
+  and usage limits managed in place. Budgets can combine token and dollar-cost ceilings at workspace, per-user,
+  or user-group scope, with a reset-aware limit banner in chat when one is hit (cost budgets are Enterprise tier).
+  Model pricing supports per-provider negotiated rate overrides,
+  and every user gets a self-service Usage settings page showing their costs, remaining budget, and model pricing.
+  A new Workspace Analytics admin page consolidates the usage, feedback, Slack,
+  and agent charts with the usage-report generator, and report exports add a per-user attribution CSV (one row per user,
+  day, model, flow, and provider) plus a PDF review pack. Spend history now survives user and API-key deletion.
+
+  ### Incognito Chat
+
+  A new incognito mode keeps conversations out of durable records. It is off by default;
+  admins enable it for everyone or for designated groups under Security settings, and choose what the workspace keeps:
+  usage-only records (message rows keep their structure and token counts but no content) or full history.
+  The live conversation is held in Redis with a one-hour TTL, and ending the session tears down the context,
+  streamed chunks, and tool-generated files.
+  Uploads made in an incognito session never reach the search index and are deleted with the session,
+  projects can be read for context but are never written into, and where a provider or gateway supports it,
+  Onyx sends per-request retention suppression (Bifrost, Portkey, LiteLLM proxy, OpenAI/Azure `store: false`,
+  OpenRouter). Usage is still metered in every mode, so incognito cannot bypass budgets.
+
+  ### Account Continuity Across Email Changes
+
+  An identity-provider email rename no longer strands users. Onyx adopts the provider's new address at login,
+  logins resolve by the stable IdP subject rather than only the email,
+  and prior addresses keep matching indexed document ACLs,
+  so nobody is locked out of their own documents while connectors re-sync. SCIM hardening rounds this out:
+  SCIM-provisioned users can now complete their first SSO login,
+  Entra ID soft-delete tombstones no longer corrupt user emails, rename collisions heal themselves,
+  and privileged accounts can never be claimed through a rename.
+
+  ## Contributor Highlights
+
+  - [@siriusfreak](https://github.com/siriusfreak) added **URL rewrite rules to the web connector** —
+    crawl a site through a mirror, staging host, or pre-rendering proxy while storing the canonical public links,
+    so citations point users at the real site.
+  - [@ArslanRasheed60](https://github.com/ArslanRasheed60) fixed editing an Azure OpenAI provider with per-model
+    deployment routing silently breaking every model on the provider.
+  - [@shivanij1203](https://github.com/shivanij1203) contributed the investigation behind the fix for Mistral-family
+    tool calling on vLLM and other OpenAI-compatible endpoints.
+
+  ## Additional Improvements
+
+  ### Chat
+
+  - Long chats and model switches got an accounting overhaul: images in history are replayed as text markers for
+    non-vision models instead of failing the turn, the context gauge follows the selected model,
+    and history compression no longer stalls in very long sessions.
+  - The input bar has proper undo/redo — Cmd+Z no longer eats drafts that contain pastes or tiles.
+  - Admins can designate a dedicated model for chat auto-naming,
+    keeping naming calls off single-stream local models.
+  - Model selection routes by configuration id, so same-named provider entries no longer collide.
+  - Reasoning controls: the picker and the actual request now agree on which levels a model supports
+    (including behind gateways and deployment aliases), admins can turn the reasoning control off workspace-wide,
+    and reasoning parameters reach Anthropic models on Vertex and OpenAI-compatible gateways instead of being dropped.
+  - The Deep Research toggle no longer appears inside project chats, where selecting it always failed —
+    deep research isn't supported in project chats,
+    and the guard meant to hide it was checking a URL parameter that is dropped when navigating into a chat.
+  - Slack bot answers are grounded in document search again — a v2.10 regression had let the bot answer without
+    searching, leaving citation-required channels unable to answer at all.
+
+  ### MCP
+
+  - All server types support custom connection headers.
+  - OAuth got a round of fixes: servers that only demand auth at tool execution (such as BigQuery) now discover
+    consent correctly, Onyx publishes client metadata (CIMD) so supporting servers skip dynamic client registration,
+    and Google-hosted servers request offline access — connections no longer die after one hour,
+    and dead grants surface as "reconnect needed" instead of failing silently.
+  - Scheduled tasks can pre-approve MCP tools, so scheduled runs stop blocking on approval prompts.
+
+  ### Connectors
+
+  - Slack: creating a connector no longer times out while another Slack connector is indexing on the same
+    credential.
+  - SharePoint: hierarchy nodes now get permissions synced, and permission-synced indexing is significantly faster
+    through cached group expansions and batched list-item lookups.
+  - Confluence Data Center: intermittent attachment-pagination 400s no longer abort the entire index attempt.
+  - GitBook: never-edited pages — and their whole subtrees — are indexed.
+  - Jira: poll windows use absolute timestamps, so accounts in non-UTC timezones stop skipping recent updates.
+  - Google Drive: duplicate group-sync crawls no longer stack up and OOM the worker.
+  - Box: wrong app credentials produce a specific, actionable error instead of a generic validation failure.
+  - HTML parsing preserves table and link boundaries, fixing run-on formatting in indexed pages.
+  - The Contextual Retrieval model can be updated forward-only — new and updated documents use the new model
+    without forcing a full re-index.
+
+  ### Search and Indexing
+
+  - Image-summarization and contextual-RAG LLM calls are time-capped, so a stalled provider stream can no longer
+    wedge indexing workers for days.
+  - Chromium helper processes from web crawls are reaped instead of accumulating as zombie processes.
+  - An OpenSearch disk-full write block no longer crash-loops the API server on startup —
+    search stays up and indexing resumes once the block clears.
+  - `read:search`-scoped access tokens can use the full search surface, including web search endpoints,
+    without carrying their owner's full authority.
+
+  ### LLM Providers
+
+  - Models behind OpenAI-compatible gateways in Responses mode stream natively again — responses were being
+    buffered whole, pinning API-server resources for the full generation.
+  - LM Studio: newer servers report capabilities as option objects, which now parse — model listing works again.
+  - Every self-hosted provider form shows the `host.docker.internal` note when Onyx runs in a container.
+
+  ### Admin, Desktop, and Web
+
+  - Log export now collects from every worker, not just the API server, runs asynchronously,
+    and a page refresh mid-export re-attaches instead of orphaning it.
+  - The desktop app gains a global summon shortcut (Cmd+Shift+Space on macOS, Ctrl+Alt+Space elsewhere)
+    that toggles Onyx into and out of focus, plus View-menu navigation accelerators;
+    `window.open` links open in the system browser again, and Windows builds compile again.
+  - The Azure voice provider supports non-English speech, with configurable recognition languages and
+    multilingual voices.
+  - Third-party DEBUG log noise is capped, making `LOG_LEVEL=DEBUG` viable on busy workers
+    (`LOG_THIRD_PARTY_DEBUG=true` opts back in).
+  - Mobile web: chat is full-width on small screens, hover-revealed buttons are reachable on touch devices,
+    and the collapsed sidebar logo opens the sidebar by tap or keyboard.
+  - Fixed "Anonymous" flashing in the sidebar while the session loads, and made notification creation race-safe.
+
+  ### Performance
+
+  - File sizes are now stored on file records, so the admin file-connector page resolves its listing in a single
+    batched query instead of one object-store lookup per file — large file connectors load in milliseconds and put far
+    less load on the API server.
+  - The LLM provider listing cache holds for ten minutes with explicit invalidation on edits,
+    cutting multi-second rebuilds from chat page loads.
+
+  ---
+
+  Our [GitHub Releases](https://github.com/onyx-dot-app/onyx/releases?utm_source=docs&utm_content=changelog)
+  page has the full list of changes and bug fixes for each release.
+
+</Update>
+
 <Update label="v4.5.0" description="August 4th, 2026" tags={["New Features", "Deployment Changes", "Bug Fixes"]}>
 
   ## v4.5.0
