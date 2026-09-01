@@ -241,6 +241,19 @@ Those limits apply before the gateway sends a generation request to a model prov
 
 <img className="rounded-image" src="/assets/developers/llm_gateway_spending_limits.png" alt="Onyx Admin Panel controls for global, user, and group spending limits"/>
 
+## Native passthrough
+
+Requests that resolve to an Anthropic provider or a true OpenAI model are proxied natively to the provider.
+Hosted and server tools, extended thinking, and fine-grained streaming pass through unchanged.
+Requests for other providers are translated through the OpenAI-compatible path.
+
+Self-hosted administrators can turn passthrough off with these environment variables on the API server:
+
+- `ANTHROPIC_GATEWAY_PASSTHROUGH_ENABLED=false`: send Anthropic-backed providers through the translation path.
+- `OPENAI_GATEWAY_PASSTHROUGH_ENABLED=false`: send true-OpenAI models through the translation path.
+
+Both default to on.
+
 ## Common errors
 
 | Error | What to check |

@@ -15,7 +15,7 @@ RBAC, egress proxy, NetworkPolicies, and Scheduled Task worker used by Craft.
 - A URL that sandbox pods can use to reach the Onyx API
 
 The chart fails the install or upgrade when Craft is enabled on an older Kubernetes version,
-when the sandbox backend is not `kubernetes`, when `SANDBOX_API_SERVER_URL` is empty,
+when the sandbox backend is not `kubernetes`, when `ONYX_SERVER_URL` is empty,
 or when sandbox push authentication is not configured.
 
 ## Prepare sandbox nodes
@@ -69,7 +69,7 @@ merge these entries under the existing keys rather than adding a second block.
 configMap:
   ENABLE_CRAFT: "true"
   SANDBOX_BACKEND: "kubernetes"
-  SANDBOX_API_SERVER_URL: "https://onyx.example.com"
+  ONYX_SERVER_URL: "https://onyx.example.com/api"
 
 auth:
   sandboxPushSecret:
@@ -77,8 +77,15 @@ auth:
     existingSecret: "onyx-sandbox-push-secret"
 ```
 
-`SANDBOX_API_SERVER_URL` can be the public Onyx URL or a cluster-internal URL.
+`ONYX_SERVER_URL` is the full API base URL, path prefix included.
+It can be the public Onyx URL through your proxy (`https://onyx.example.com/api`)
+or the cluster-internal API Service (`http://<release>-api-service.<namespace>.svc.cluster.local:8080`, no prefix).
 Use a scheme and hostname that resolve from the sandbox proxy and route to the Onyx API.
+A public URL without its `/api` prefix fails at sandbox provisioning with a corrected value.
+
+<Note>
+  Before `v4.5.0` this setting was named `SANDBOX_API_SERVER_URL`. Rename it in your values file when upgrading.
+</Note>
 
 Install or upgrade Onyx with your complete deployment values:
 
@@ -129,6 +136,23 @@ Use `sandboxPod.nodeSelector`, `sandboxPod.tolerations`, and `sandboxPod.affinit
 The proxy and Scheduled Task worker have separate resource settings under `sandboxProxy.resources` and
 `celery_worker_scheduled_tasks.resources`.
 
+### Pre-pull the sandbox image
+
+When Craft is enabled, the chart runs a DaemonSet (`sandboxImagePrepull`)
+that pulls the sandbox image onto every sandbox node ahead of time,
+so the first sandbox on a node does not wait for the image pull.
+It is on by default and uses about 3.3 GB of disk per sandbox node.
+
+```yaml
+sandboxImagePrepull:
+  enabled: true
+  priorityClassName: ""
+  updateMaxUnavailable: "25%"
+```
+
+Set `enabled: false` on nodes without that disk headroom. Pin `global.version` to an immutable tag when pre-pulling;
+a mutable tag such as `latest` stays at whichever digest the node pulled first.
+
 ## Verify the deployment
 
 Confirm the proxy, sandbox template, and Scheduled Task worker exist:
@@ -168,7 +192,7 @@ Most clusters work with the chart defaults. Two cluster layouts require addition
 <AccordionGroup>
   <Accordion title="Helm rejects the Craft configuration">
     Read the render error first. Confirm Kubernetes 1.33 or later, `SANDBOX_BACKEND: "kubernetes"`,
-    a non-empty `SANDBOX_API_SERVER_URL`, and `auth.sandboxPushSecret.enabled: true` with a populated Secret.
+    a non-empty `ONYX_SERVER_URL`, and `auth.sandboxPushSecret.enabled: true` with a populated Secret.
   </Accordion>
 
   <Accordion title="Sandbox pods remain Pending">
@@ -184,7 +208,7 @@ Most clusters work with the chart defaults. Two cluster layouts require addition
   </Accordion>
 
   <Accordion title="Craft cannot reach the Onyx API">
-    Verify `SANDBOX_API_SERVER_URL`, DNS, TLS trust, and routing from the proxy.
+    Verify `ONYX_SERVER_URL` (including the `/api` prefix on public URLs), DNS, TLS trust, and routing from the proxy.
     Do not point it at a Service name from another cluster or an address the proxy cannot resolve.
   </Accordion>
 
