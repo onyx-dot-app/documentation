@@ -35,7 +35,8 @@ Both deployment paths require:
 
 - A full Onyx deployment with the vector database and background workers. Craft does not run on Onyx Lite.
 - A supported Onyx release and matching application and sandbox image versions.
-- An Onyx URL that the sandbox runtime can reach, configured as `SANDBOX_API_SERVER_URL`.
+- An Onyx API URL that the sandbox runtime can reach, configured as `ONYX_SERVER_URL` (Docker Compose sets a
+  working default; Helm requires it).
 - Capacity for a sandbox per active Craft user.
 - An Anthropic, OpenAI, or OpenRouter provider configured after deployment.
 

@@ -145,6 +145,9 @@ the vector database. The key environment variables that drive this are:
     A subset of common configuration options are provided for you. You can add more environment variables (listed below)
     to these sections.
 
+    To use external model servers, set `MODEL_SERVER_HOST` and `INDEXING_MODEL_SERVER_HOST` in `configMap`.
+    The chart then skips its own defaults for those values (chart 0.8.10 or later).
+
 ### Deploying Onyx Lite with Helm
 
     Onyx Lite is deployed by providing the values-lite.yaml file when installing the Helm chart.
@@ -279,7 +282,11 @@ Read [Deploying Craft](/deployment/local/craft) before enabling Craft in self-ho
 
     `SANDBOX_BACKEND`: Craft sandbox backend. Valid values are `docker` and `kubernetes`. Defaults to `kubernetes`.
 
-    `SANDBOX_API_SERVER_URL`: Onyx base URL reachable from inside Craft sandboxes. Required for Craft deployments.
+    `ONYX_SERVER_URL`: Full Onyx API base URL reachable from inside Craft sandboxes,
+    including any `/api` path prefix (for example `https://onyx.example.com/api`,
+    or `http://<release>-api-service.<ns>.svc.cluster.local:8080` with no prefix). Required for Helm Craft deployments.
+    Docker Compose defaults it to the private `onyx-craft-api` alias.
+    Replaces `SANDBOX_API_SERVER_URL` (renamed in `v4.5.0`).
 
     `SANDBOX_IDLE_TIMEOUT_SECONDS`: Idle timeout before sandbox sleep or cleanup. Defaults to `3600`.
 
@@ -432,6 +439,21 @@ Read [Deploying Craft](/deployment/local/craft) before enabling Craft in self-ho
     `DB_READONLY_USER`: Read-only database user
 
     `DB_READONLY_PASSWORD`: Read-only database password
+
+    `POSTGRES_SSLMODE`: libpq SSL mode (`disable`, `allow`, `prefer`, `require`, `verify-ca`, `verify-full`).
+    Ignored when `USE_IAM_AUTH` is set.
+
+    `POSTGRES_SSLROOTCERT`: Path to the CA certificate used to verify the server (`verify-ca` / `verify-full`).
+
+    `POSTGRES_SSLCERT`: Path to the client certificate for mutual TLS
+
+    `POSTGRES_SSLKEY`: Path to the client private key for mutual TLS
+
+    `POSTGRES_SSLKEY_PASSWORD`: Passphrase for `POSTGRES_SSLKEY`, if encrypted
+
+    In Helm, set `postgresTls.enabled:
+    true` with `postgresTls.caSecretName` or `postgresTls.caConfigMapName` to mount a CA certificate and configure these
+    settings on every backend workload.
   </Accordion>
 
   <Accordion title="Redis Configuration">
@@ -458,6 +480,18 @@ Read [Deploying Craft](/deployment/local/craft) before enabling Craft in self-ho
     `REDIS_SSL_CERT_REQS`: SSL certificate requirements
 
     `REDIS_SSL_CA_CERTS`: SSL CA certificates
+
+    `REDIS_SSL_CERTFILE`: Client certificate for mutual TLS (set together with `REDIS_SSL_KEYFILE`)
+
+    `REDIS_SSL_KEYFILE`: Client private key for mutual TLS
+
+    `REDIS_SENTINEL_HOSTS`: Comma-separated `host:port` list of Redis Sentinel nodes. When set,
+    Onyx and Celery discover the current master through Sentinel instead of `REDIS_HOST` / `REDIS_PORT`.
+    Cannot be combined with `USE_REDIS_IAM_AUTH`.
+
+    `REDIS_SENTINEL_MASTER_NAME`: Sentinel master name. Defaults to `mymaster`.
+
+    `REDIS_SENTINEL_PASSWORD`: Password for the Sentinel nodes, if they require separate auth from the data nodes.
   </Accordion>
 
   <Accordion title="Vespa Configuration">
@@ -498,6 +532,9 @@ Read [Deploying Craft](/deployment/local/craft) before enabling Craft in self-ho
     `CELERY_WORKER_DOCFETCHING_CONCURRENCY`: Document fetching worker concurrency
 
     `CELERY_WORKER_KG_PROCESSING_CONCURRENCY`: Knowledge graph processing worker concurrency
+
+    `CELERY_EXTERNAL_GROUP_SYNC_LOCK_TIMEOUT`: Per-connector external group sync lock TTL in seconds. Defaults to `300`.
+    Raise it if group syncs run long, so periodic re-dispatches do not start duplicate syncs.
   </Accordion>
 
   <Accordion title="Rate Limiting">
@@ -650,6 +687,9 @@ Read [Deploying Craft](/deployment/local/craft) before enabling Craft in self-ho
     `LOG_POSTGRES_LATENCY`: Log PostgreSQL latency
 
     `LOG_POSTGRES_CONN_COUNTS`: Log PostgreSQL connection counts
+
+    `LOG_THIRD_PARTY_DEBUG`: Third-party libraries (LiteLLM, httpcore, botocore)
+    are capped at `INFO` even when `LOG_LEVEL=debug`. Set to `true` to let them log at `LOG_LEVEL`.
   </Accordion>
 
   <Accordion title="Image Processing Configuration">
@@ -674,6 +714,12 @@ Read [Deploying Craft](/deployment/local/craft) before enabling Craft in self-ho
     `IMAGE_SUMMARIZATION_SYSTEM_PROMPT`: System prompt for image summarization
 
     `IMAGE_SUMMARIZATION_USER_PROMPT`: User prompt for image summarization
+
+    `IMAGE_SUMMARIZATION_TIMEOUT`: Timeout in seconds for image summarization LLM calls during indexing.
+    Defaults to `300`.
+
+    `CONTEXTUAL_RAG_LLM_TIMEOUT`: Timeout in seconds for contextual RAG summary LLM calls during indexing.
+    Defaults to `180`.
   </Accordion>
 
   <Accordion title="File Storage Configuration">
