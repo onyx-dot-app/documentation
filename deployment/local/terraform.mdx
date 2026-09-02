@@ -30,7 +30,7 @@ You can also use them individually if you need more granular control.
 | Module        | Resource                                                                 |
 | ------------- | ------------------------------------------------------------------------ |
 | `vpc`         | VPC, public/private subnets across AZs, NAT, and an S3 gateway endpoint  |
-| `eks`         | EKS cluster, managed node groups (main + dedicated Vespa), addons, IRSA  |
+| `eks`         | EKS cluster, managed node groups (main + dedicated OpenSearch), addons, IRSA  |
 | `postgres`    | RDS for PostgreSQL with backups and CloudWatch alarms                    |
 | `redis`       | ElastiCache for Redis replication group with TLS in transit              |
 | `s3`          | S3 bucket for the Onyx file store, locked to the VPC's S3 endpoint       |
@@ -221,7 +221,7 @@ The composed `onyx` module exposes the inputs you'll most often want to tune.
 ### OpenSearch (optional)
 
 Managed OpenSearch is **off by default**.
-Enable it if you want a managed document index backend instead of the in-cluster Vespa node group.
+Enable it if you want a managed document index backend instead of the in-cluster OpenSearch node group.
 
 If provisioning a managed document index,
 you should disable starting an OpenSearch container in your relevant docker-compose/Helm as Onyx will not use this
@@ -426,9 +426,9 @@ while the same call in `dev` produces `onyx-dev` resources.
 - **First apply is infra-only.** EKS takes several minutes to become active.
   The `null_resource.wait_for_cluster` block in the quickstart blocks the Kubernetes/Helm providers until the API server
   is reachable.
-- **The Vespa node group is tainted.** The `eks` module provisions a
-  dedicated node group for Vespa with a `vespa-dedicated=true:NoSchedule` taint.
-  The Helm chart's Vespa pods tolerate it; everything else lands on the main node group.
+- **The OpenSearch node group is tainted.** The `eks` module provisions a
+  dedicated node group for OpenSearch with a `vespa-dedicated=true:NoSchedule` taint.
+  The Helm chart's OpenSearch pods tolerate it; everything else lands on the main node group.
 - **Reference, not a product.** The modules encode the choices we make for
   our own deployments. Read them, copy what's useful, and replace what isn't.
 
