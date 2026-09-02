@@ -4884,6 +4884,217 @@
         }
       }
     },
+    "/search": {
+      "post": {
+        "summary": "Search",
+        "operationId": "search",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SearchRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SearchResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["public"],
+        "description": "Run Onyx's internal search and get back ranked document sections, with no LLM answer generated.\n\nThis is the same multi-stage retrieval pipeline the chat Search action uses: query expansion, hybrid retrieval, reranking and section merging. Results are ordered most relevant first and are always filtered by the calling user's document permissions."
+      }
+    },
+    "/search/send-search-message": {
+      "post": {
+        "summary": "Handle Send Search Message",
+        "description": "Executes a search query with optional streaming.\n\nIf hybrid_alpha is unset and ONYX_SEARCH_UI_USES_OPENSEARCH_KEYWORD_SEARCH\nis True, executes pure keyword search.\n\nReturns:\n    StreamingResponse with SSE if stream=True, otherwise SearchFullResponse.",
+        "operationId": "handle_send_search_message",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SendSearchQueryRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "If `stream=true`, returns `text/event-stream`.\nIf `stream=false` (the default), returns `application/json` (SearchFullResponse).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SearchFullResponse"
+                }
+              },
+              "text/event-stream": {
+                "schema": {
+                  "type": "string"
+                },
+                "examples": {
+                  "stream": {
+                    "summary": "Stream of NDJSON search packets",
+                    "value": "string"
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["public"]
+      }
+    },
+    "/search/search-history": {
+      "get": {
+        "summary": "Get Search History",
+        "description": "Fetch past search queries for the authenticated user.\n\nArgs:\n    limit: Maximum number of queries to return (default 100)\n    filter_days: Only return queries from the last N days (optional)\n\nReturns:\n    SearchHistoryResponse with list of search queries, ordered by most recent first.",
+        "operationId": "get_search_history",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 100,
+              "title": "Limit"
+            },
+            "description": "Maximum number of queries to return, from 1 to 1000."
+          },
+          {
+            "name": "filter_days",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Filter Days"
+            },
+            "description": "Only return queries from the last N days. Omit for no time limit."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SearchHistoryResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["public"]
+      }
+    },
+    "/search/search-flow-classification": {
+      "post": {
+        "summary": "Search Flow Classification",
+        "operationId": "search_flow_classification",
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SearchFlowClassificationRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SearchFlowClassificationResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "tags": ["public"],
+        "description": "Classify whether a query should be answered by search or by chat. This powers the query bar in the Onyx Search UI.\n\nQueries longer than 200 characters are classified as a chat flow without calling an LLM. If classification fails, the endpoint falls back to `is_search_flow: false` rather than erroring."
+      }
+    },
     "/admin/token-rate-limits/global": {
       "get": {
         "tags": ["public"],
@@ -8421,8 +8632,8 @@
           "system",
           "user",
           "assistant",
-          "tool_call",
-          "tool_call_response"
+          "tool_call_response",
+          "user_reminder"
         ],
         "title": "MessageType"
       },
@@ -12258,6 +12469,612 @@
         "required": ["tool_name", "tool_arguments", "tool_result"],
         "title": "ToolCallResponse",
         "description": "Tool call with full details for non-streaming response."
+      },
+      "ChatMinimalTextMessage": {
+        "properties": {
+          "message": {
+            "type": "string",
+            "title": "Message"
+          },
+          "message_type": {
+            "$ref": "#/components/schemas/MessageType"
+          }
+        },
+        "type": "object",
+        "required": ["message", "message_type"],
+        "title": "ChatMinimalTextMessage"
+      },
+      "SearchDocWithContent": {
+        "properties": {
+          "document_id": {
+            "type": "string",
+            "title": "Document Id"
+          },
+          "chunk_ind": {
+            "type": "integer",
+            "title": "Chunk Ind"
+          },
+          "semantic_identifier": {
+            "type": "string",
+            "title": "Semantic Identifier"
+          },
+          "link": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Link"
+          },
+          "blurb": {
+            "type": "string",
+            "title": "Blurb"
+          },
+          "source_type": {
+            "$ref": "#/components/schemas/DocumentSource"
+          },
+          "boost": {
+            "type": "integer",
+            "title": "Boost"
+          },
+          "hidden": {
+            "type": "boolean",
+            "title": "Hidden"
+          },
+          "metadata": {
+            "additionalProperties": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
+                }
+              ]
+            },
+            "type": "object",
+            "title": "Metadata"
+          },
+          "score": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Score"
+          },
+          "is_relevant": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Is Relevant"
+          },
+          "relevance_explanation": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Relevance Explanation"
+          },
+          "match_highlights": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Match Highlights"
+          },
+          "updated_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Updated At"
+          },
+          "primary_owners": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Primary Owners"
+          },
+          "secondary_owners": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Secondary Owners"
+          },
+          "is_internet": {
+            "type": "boolean",
+            "title": "Is Internet",
+            "default": false
+          },
+          "file_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "File Id"
+          },
+          "content": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Content"
+          }
+        },
+        "type": "object",
+        "required": [
+          "document_id",
+          "chunk_ind",
+          "semantic_identifier",
+          "blurb",
+          "source_type",
+          "boost",
+          "hidden",
+          "metadata",
+          "match_highlights",
+          "content"
+        ],
+        "title": "SearchDocWithContent"
+      },
+      "SearchFlowClassificationRequest": {
+        "properties": {
+          "user_query": {
+            "type": "string",
+            "title": "User Query",
+            "description": "The query to classify."
+          }
+        },
+        "type": "object",
+        "required": ["user_query"],
+        "title": "SearchFlowClassificationRequest"
+      },
+      "SearchFlowClassificationResponse": {
+        "properties": {
+          "is_search_flow": {
+            "type": "boolean",
+            "title": "Is Search Flow",
+            "description": "True when the query looks like a search for documents, false when it should be sent to chat."
+          }
+        },
+        "type": "object",
+        "required": ["is_search_flow"],
+        "title": "SearchFlowClassificationResponse"
+      },
+      "SearchFullResponse": {
+        "properties": {
+          "all_executed_queries": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "All Executed Queries",
+            "description": "Every query that was run, starting with the original. Contains more than one entry only when `run_query_expansion` was set."
+          },
+          "search_docs": {
+            "items": {
+              "$ref": "#/components/schemas/SearchDocWithContent"
+            },
+            "type": "array",
+            "title": "Search Docs",
+            "description": "Matched sections, most relevant first."
+          },
+          "doc_selection_reasoning": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Doc Selection Reasoning",
+            "description": "Reserved for the LLM's document-selection reasoning. Not currently populated \u2014 always `null` on this endpoint."
+          },
+          "llm_selected_doc_ids": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Llm Selected Doc Ids",
+            "description": "Document ids the LLM picked out of `search_docs`. `null` when LLM selection was not requested or failed, an empty list when it ran and chose nothing."
+          },
+          "error": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Error",
+            "description": "Set when the search failed partway through; the other fields hold whatever was gathered before the failure."
+          }
+        },
+        "type": "object",
+        "required": ["all_executed_queries", "search_docs"],
+        "title": "SearchFullResponse"
+      },
+      "SearchHistoryResponse": {
+        "properties": {
+          "search_queries": {
+            "items": {
+              "$ref": "#/components/schemas/SearchQueryResponse"
+            },
+            "type": "array",
+            "title": "Search Queries"
+          }
+        },
+        "type": "object",
+        "required": ["search_queries"],
+        "title": "SearchHistoryResponse"
+      },
+      "SearchQueryResponse": {
+        "properties": {
+          "query": {
+            "type": "string",
+            "title": "Query",
+            "description": "The query as the user typed it."
+          },
+          "query_expansions": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Query Expansions",
+            "description": "Extra keyword queries generated for this search, or `null` when expansion was not run."
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At",
+            "description": "When the query was run."
+          }
+        },
+        "type": "object",
+        "required": ["query", "query_expansions", "created_at"],
+        "title": "SearchQueryResponse"
+      },
+      "SearchRequest": {
+        "properties": {
+          "query": {
+            "type": "string",
+            "maxLength": 2048,
+            "minLength": 1,
+            "title": "Query",
+            "description": "The query to search for."
+          },
+          "sources": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/DocumentSource"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Sources",
+            "description": "Restrict results to these connector source types."
+          },
+          "document_sets": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Document Sets",
+            "description": "Restrict results to documents in these document sets, by name."
+          },
+          "tags": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/Tag"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Tags",
+            "description": "Restrict results to documents carrying all of these metadata tags."
+          },
+          "time_cutoff": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Time Cutoff",
+            "description": "ISO 8601 timestamp. Only documents updated on or after this moment are returned. Timestamps without a timezone are treated as UTC."
+          },
+          "persona_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Persona Id",
+            "description": "Search as this Agent: its document sets, attached documents and search start date are applied on top of the other filters, and its LLM is used unless `provider`/`model` say otherwise."
+          },
+          "provider": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Provider",
+            "description": "Name of the LLM provider to use for query expansion and section selection. Must be sent together with `model`, and the caller must have access to the provider."
+          },
+          "model": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Model",
+            "description": "Model to use from `provider`. Must be sent together with `provider`."
+          },
+          "skip_query_expansion": {
+            "type": "boolean",
+            "title": "Skip Query Expansion",
+            "default": false,
+            "description": "When true, the query is run as written instead of being rewritten and expanded first."
+          },
+          "message_history": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/ChatMinimalTextMessage"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Message History",
+            "description": "Preceding conversation turns, used to interpret a query that depends on earlier context. Defaults to `query` on its own."
+          }
+        },
+        "type": "object",
+        "required": ["query"],
+        "title": "SearchRequest"
+      },
+      "SearchResponse": {
+        "properties": {
+          "results": {
+            "items": {
+              "$ref": "#/components/schemas/SearchResult"
+            },
+            "type": "array",
+            "title": "Results"
+          }
+        },
+        "type": "object",
+        "required": ["results"],
+        "title": "SearchResponse"
+      },
+      "SearchResult": {
+        "properties": {
+          "citation_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Citation Id",
+            "description": "1-based index of the source document. Several results share one `citation_id` when the search returned multiple non-overlapping sections of the same document."
+          },
+          "title": {
+            "type": "string",
+            "title": "Title",
+            "description": "Document title."
+          },
+          "content": {
+            "type": "string",
+            "title": "Content",
+            "description": "Full text of the matched section."
+          },
+          "link": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Link",
+            "description": "Link to the source document, when the connector provides one."
+          },
+          "source_type": {
+            "type": "string",
+            "title": "Source Type",
+            "description": "Connector source type the document came from."
+          },
+          "updated_at": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Updated At",
+            "description": "When the document was last updated, when the connector provides it."
+          }
+        },
+        "type": "object",
+        "required": [
+          "citation_id",
+          "title",
+          "content",
+          "link",
+          "source_type",
+          "updated_at"
+        ],
+        "title": "SearchResult"
+      },
+      "SendSearchQueryRequest": {
+        "properties": {
+          "search_query": {
+            "type": "string",
+            "title": "Search Query",
+            "description": "The query to search for."
+          },
+          "filters": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/BaseFilters"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Restrict which documents are searched. All fields are optional and combine with AND."
+          },
+          "num_docs_fed_to_llm_selection": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Num Docs Fed To Llm Selection",
+            "description": "When set to 1 or more, the top N merged sections are handed to an LLM that picks the most relevant ones, and their document ids come back in `llm_selected_doc_ids`. Omit it (or send `null`) to skip LLM selection and the extra LLM call it costs."
+          },
+          "run_query_expansion": {
+            "type": "boolean",
+            "title": "Run Query Expansion",
+            "default": false,
+            "description": "When true, an LLM generates extra keyword queries from `search_query`. Every query runs in parallel and the results are merged with weighted reciprocal-rank fusion, with the original query weighted twice as heavily as each expansion. The queries that actually ran come back in `all_executed_queries`. Expansion failures are non-fatal: the original query still runs on its own."
+          },
+          "num_hits": {
+            "type": "integer",
+            "title": "Num Hits",
+            "default": 30,
+            "description": "Maximum number of merged sections to return."
+          },
+          "hybrid_alpha": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Hybrid Alpha",
+            "description": "Balance between vector and keyword matching, from `0.0` (pure keyword) to `1.0` (pure vector). Leave unset to use the deployment's `HYBRID_ALPHA` (`0.5` by default) \u2014 except on deployments configured for OpenSearch keyword search, where leaving it unset runs a pure keyword search."
+          },
+          "include_content": {
+            "type": "boolean",
+            "title": "Include Content",
+            "default": false,
+            "description": "When true, each returned document carries the full text of the matched section in `content`. When false, `content` is `null` and only `blurb` is populated."
+          },
+          "stream": {
+            "type": "boolean",
+            "title": "Stream",
+            "default": false,
+            "description": "When true, responds with a stream of newline-delimited JSON packets. When false (the default), returns the aggregated `SearchFullResponse`."
+          }
+        },
+        "type": "object",
+        "required": ["search_query"],
+        "title": "SendSearchQueryRequest"
       }
     },
     "securitySchemes": {

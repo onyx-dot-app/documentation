@@ -371,6 +371,7 @@
             "icon": "book-open",
             "pages": [
               "developers/guides/chat_new_guide",
+              "developers/guides/search_api_guide",
               "developers/guides/llm_gateway",
               "developers/guides/index_files_ingestion_api",
               "developers/guides/create_connector"
@@ -398,6 +399,10 @@
                 "group": "Search",
                 "icon": "magnifying-glass",
                 "pages": [
+                  "developers/api_reference/search/search",
+                  "developers/api_reference/search/handle_send_search_message",
+                  "developers/api_reference/search/get_search_history",
+                  "developers/api_reference/search/search_flow_classification",
                   "developers/api_reference/search/execute_web_search",
                   "developers/api_reference/search/execute_web_search_lite",
                   "developers/api_reference/search/execute_open_urls"
