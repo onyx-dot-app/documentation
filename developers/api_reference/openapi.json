@@ -289,7 +289,7 @@
       "post": {
         "tags": ["public"],
         "summary": "Handle Send Chat Message",
-        "description": "This endpoint is used to send a new chat message.\n\nArgs:\n    chat_message_req (SendMessageRequest): Details about the new chat message.\n        - When stream=True (default): Returns StreamingResponse with SSE\n        - When stream=False: Returns ChatFullResponse with complete data\n    request (Request): The current HTTP request context.\n    user (User | None): The current user, obtained via dependency injection.\n    _ (None): Rate limit check is run if user/group/global rate limits are enabled.\n\nReturns:\n    StreamingResponse | ChatFullResponse: Either streams or returns complete response.",
+        "description": "This endpoint is used to send a new chat message.\n\nArgs:\n    chat_message_req (SendMessageRequest): Details about the new chat message.\n        - When stream=True (default): Returns StreamingResponse with SSE\n        - When stream=False: Returns ChatFullResponse with complete data\n    request (Request): The current HTTP request context.\n    user (User): The current user, obtained via dependency injection.\n    _ (None): Rate limit check is run if user/group/global rate limits are enabled.\n\nReturns:\n    StreamingResponse | ChatFullResponse: Either streams or returns complete response.",
         "operationId": "handle_send_chat_message",
         "security": [
           {
@@ -308,10 +308,23 @@
         },
         "responses": {
           "200": {
-            "description": "Successful Response",
+            "description": "If `stream=true`, returns `text/event-stream`.\nIf `stream=false`, returns `application/json` (ChatFullResponse).",
             "content": {
               "application/json": {
-                "schema": {}
+                "schema": {
+                  "$ref": "#/components/schemas/ChatFullResponse"
+                }
+              },
+              "text/event-stream": {
+                "schema": {
+                  "type": "string"
+                },
+                "examples": {
+                  "stream": {
+                    "summary": "Stream of NDJSON AnswerStreamPart's",
+                    "value": "string"
+                  }
+                }
               }
             }
           },
@@ -5375,17 +5388,25 @@
             ],
             "title": "Document Set"
           },
-          "time_cutoff": {
+          "created_at_range": {
             "anyOf": [
               {
-                "type": "string",
-                "format": "date-time"
+                "$ref": "#/components/schemas/TimeRange"
               },
               {
                 "type": "null"
               }
-            ],
-            "title": "Time Cutoff"
+            ]
+          },
+          "updated_at_range": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/TimeRange"
+              },
+              {
+                "type": "null"
+              }
+            ]
           },
           "tags": {
             "anyOf": [
@@ -5400,6 +5421,18 @@
               }
             ],
             "title": "Tags"
+          },
+          "time_cutoff": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Time Cutoff"
           }
         },
         "type": "object",
@@ -5472,7 +5505,6 @@
           "web",
           "google_drive",
           "gmail",
-          "requesttracker",
           "github",
           "gitbook",
           "gitlab",
@@ -5485,6 +5517,7 @@
           "productboard",
           "file",
           "coda",
+          "canvas",
           "notion",
           "zulip",
           "linear",
@@ -5494,6 +5527,7 @@
           "google_sites",
           "zendesk",
           "loopio",
+          "box",
           "dropbox",
           "sharepoint",
           "teams",
@@ -5520,8 +5554,11 @@
           "imap",
           "bitbucket",
           "testrail",
+          "braintrust",
+          "lumapps",
           "mock_connector",
-          "user_file"
+          "user_file",
+          "craft_file"
         ],
         "title": "DocumentSource"
       },
@@ -7711,6 +7748,17 @@
       },
       "LLMOverride": {
         "properties": {
+          "model_configuration_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Model Configuration Id"
+          },
           "model_provider": {
             "anyOf": [
               {
@@ -7743,10 +7791,22 @@
               }
             ],
             "title": "Temperature"
+          },
+          "display_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Display Name"
           }
         },
         "type": "object",
-        "title": "LLMOverride"
+        "title": "LLMOverride",
+        "description": "Per-request LLM settings that override persona defaults.\n\nAll fields are optional \u2014 only the fields that differ from the persona's\nconfigured LLM need to be supplied. Used both over the wire (API requests)\nand for multi-model comparison, where one override is supplied per model.\n\nAttributes:\n    model_configuration_id: Exact model configuration to use. Preferred\n        over the name-based fields \u2014 provider display names are not\n        unique, so only the id routes unambiguously.\n    model_provider: LLM provider display name. When ``None``, the\n        persona's default provider is used.\n    model_version: Specific model version string (e.g. ``\"gpt-4o\"``).\n        When ``None``, the persona's default model is used.\n    temperature: Sampling temperature in ``[0, 2]``. When ``None``, the\n        persona's default temperature is used.\n    display_name: Human-readable label shown in the UI for this model,\n        e.g. ``\"GPT-4 Turbo\"``. Optional; falls back to ``model_version``\n        when not set."
       },
       "PaginatedReturn_FullUserSnapshot_": {
         "properties": {
@@ -8389,6 +8449,13 @@
           "type": {
             "type": "string",
             "title": "Error Type"
+          },
+          "input": {
+            "title": "Input"
+          },
+          "ctx": {
+            "type": "object",
+            "title": "Context"
           }
         },
         "type": "object",
@@ -8849,6 +8916,8 @@
           "api",
           "slackbot",
           "widget",
+          "discordbot",
+          "mobile",
           "unknown",
           "unset"
         ],
@@ -9119,6 +9188,23 @@
               }
             ],
             "title": "Project Id"
+          },
+          "incognito": {
+            "type": "boolean",
+            "title": "Incognito",
+            "default": false
+          },
+          "incognito_session_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Incognito Session Id"
           }
         },
         "type": "object",
@@ -9482,6 +9568,21 @@
               }
             ]
           },
+          "llm_overrides": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/LLMOverride"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Llm Overrides",
+            "description": "Two or three LLM overrides to run in parallel (multi-model mode), one entry per model. Requires `stream=true`: a request carrying more than one entry with `stream=false` is rejected with a 400 `INVALID_INPUT` error. A list with a single entry is ignored \u2014 use `llm_override` to change the model for an ordinary single-model request."
+          },
           "allowed_tool_ids": {
             "anyOf": [
               {
@@ -9529,6 +9630,21 @@
             "type": "boolean",
             "title": "Deep Research",
             "default": false
+          },
+          "mcp_headers": {
+            "anyOf": [
+              {
+                "additionalProperties": {
+                  "type": "string"
+                },
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Mcp Headers",
+            "description": "Headers forwarded to MCP tool calls made while answering this message, e.g. `{\"Authorization\": \"Bearer <user_jwt>\", \"X-User-ID\": \"user123\"}`. Use this to pass end-user credentials through to MCP servers that require them."
           },
           "origin": {
             "$ref": "#/components/schemas/MessageOrigin",
@@ -10126,7 +10242,7 @@
       },
       "ChatFileType": {
         "type": "string",
-        "enum": ["image", "document", "plain_text", "csv"],
+        "enum": ["image", "document", "plain_text", "tabular"],
         "title": "ChatFileType"
       },
       "LlmWebSearchResult": {
@@ -11421,6 +11537,17 @@
             "type": "boolean",
             "title": "Is Internet",
             "default": false
+          },
+          "file_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "File Id"
           }
         },
         "type": "object",
@@ -11953,6 +12080,184 @@
         "type": "object",
         "required": ["permissions", "is_manager", "managed_group_ids"],
         "title": "UserPermissionsResponse"
+      },
+      "ChatFullResponse": {
+        "properties": {
+          "answer": {
+            "type": "string",
+            "title": "Answer"
+          },
+          "answer_citationless": {
+            "type": "string",
+            "title": "Answer Citationless"
+          },
+          "pre_answer_reasoning": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Pre Answer Reasoning"
+          },
+          "tool_calls": {
+            "items": {
+              "$ref": "#/components/schemas/ToolCallResponse"
+            },
+            "type": "array",
+            "title": "Tool Calls",
+            "default": []
+          },
+          "top_documents": {
+            "items": {
+              "$ref": "#/components/schemas/SearchDoc"
+            },
+            "type": "array",
+            "title": "Top Documents"
+          },
+          "citation_info": {
+            "items": {
+              "$ref": "#/components/schemas/CitationInfo"
+            },
+            "type": "array",
+            "title": "Citation Info"
+          },
+          "message_id": {
+            "type": "integer",
+            "title": "Message Id"
+          },
+          "chat_session_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Chat Session Id"
+          },
+          "incognito": {
+            "type": "boolean",
+            "title": "Incognito",
+            "default": false
+          },
+          "error_msg": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Error Msg"
+          }
+        },
+        "type": "object",
+        "required": [
+          "answer",
+          "answer_citationless",
+          "top_documents",
+          "citation_info",
+          "message_id"
+        ],
+        "title": "ChatFullResponse",
+        "description": "Complete non-streaming response with all available data."
+      },
+      "TimeRange": {
+        "properties": {
+          "start": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Start"
+          },
+          "end": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "End"
+          }
+        },
+        "type": "object",
+        "title": "TimeRange",
+        "description": "An inclusive [start, end] window; either bound may be None (open).\nNaive (timezone-less) bounds are treated as UTC."
+      },
+      "ToolCallResponse": {
+        "properties": {
+          "tool_name": {
+            "type": "string",
+            "title": "Tool Name"
+          },
+          "tool_arguments": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Tool Arguments"
+          },
+          "tool_result": {
+            "type": "string",
+            "title": "Tool Result"
+          },
+          "search_docs": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/SearchDoc"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Search Docs"
+          },
+          "generated_images": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/GeneratedImage"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Generated Images"
+          },
+          "pre_reasoning": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Pre Reasoning"
+          }
+        },
+        "type": "object",
+        "required": ["tool_name", "tool_arguments", "tool_result"],
+        "title": "ToolCallResponse",
+        "description": "Tool call with full details for non-streaming response."
       }
     },
     "securitySchemes": {
