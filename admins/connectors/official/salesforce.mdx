@@ -12,14 +12,99 @@ These documents organized around the **Objects** that you indicate. Examples are
 
 ### Authorization
 
+OAuth is the recommended authentication method for self hosted deployments (not yet supported on cloud).
+You can also use a Salesforce username, password, and security token.
+
+#### Configure OAuth for self-hosted Onyx
+
+<Info>
+  This section applies only to self-hosted deployments.
+  Onyx Cloud will have a Salesforce External Client App configured in the future (we're currently waiting on them).
+  Cloud users can skip to [Indexing](#indexing).
+</Info>
+
+Self-hosted deployments must create a Salesforce External Client App (ECA) and configure Onyx with its credentials.
+Before you begin:
+
+- Enable [My Domain](https://help.salesforce.com/s/articleView?id=xcloud.domain_name_overview.htm&type=5) for your
+  Salesforce organization.
+- Use a stable HTTPS URL for your Onyx `WEB_DOMAIN`.
+- Sign in to Salesforce as an administrator.
+
+<Steps>
+  <Step title="Create an External Client App">
+    In Salesforce Setup, open **External Client App Manager**, select **New External Client App**,
+    and set **Distribution State** to **Local**.
+  </Step>
+
+  <Step title="Configure OAuth">
+    Enable OAuth and set the callback URL to:
+
+    ```text
+    {WEB_DOMAIN}/connector/oauth/callback/salesforce
+    ```
+
+    The callback URL must exactly match your Onyx deployment's `WEB_DOMAIN`, including its scheme, host, base path,
+    and port.
+  </Step>
+
+  <Step title="Add OAuth scopes">
+    Add these scopes:
+
+    - **Manage user data via APIs** (`api`)
+    - **Perform requests at any time** (`refresh_token`)
+  </Step>
+
+  <Step title="Configure OAuth security">
+    Enable all of the following:
+
+    - Require a secret for the web server flow
+    - Require a secret for the refresh token flow
+    - Require PKCE for supported authorization flows
+    - Refresh token rotation
+
+    Onyx uses the OAuth 2.0 authorization code flow with S256 PKCE.
+  </Step>
+
+  <Step title="Save the app credentials">
+    Save the ECA, then copy its **Consumer Key** and **Consumer Secret**. Store the secret securely.
+
+    Salesforce can take several minutes to activate a new app or policy change.
+  </Step>
+
+  <Step title="Set permitted users">
+    Open the ECA's **Policies** tab and select a permitted-user policy.
+
+    For controlled deployments, select **Admin approved users are pre-authorized**,
+    then assign the ECA to the required profiles or permission sets.
+    Use **All users may self-authorize** only if your organization's policy permits it.
+
+    Each user who authorizes Onyx also needs access to the Salesforce objects and fields you want to index.
+  </Step>
+
+  <Step title="Configure Onyx">
+    Set both variables on the Onyx API server and all background workers:
+
+    ```bash
+    SALESFORCE_CLIENT_ID=<ECA consumer key>
+    SALESFORCE_CLIENT_SECRET=<ECA consumer secret>
+    ```
+
+    Restart the affected Onyx services. OAuth is unavailable if either variable is missing.
+  </Step>
+</Steps>
+
+#### Use manual credentials
+
+If you cannot use OAuth, authorize Onyx with a Salesforce username, password, and security token:
+
 <Steps>
   <Step title="Log in to Salesforce">
-    Log into Salesforce.
-    The Salesforce user must be an organization member or have admin access to the data you would like to index.
+    Log in to Salesforce as an organization member with access to the data you want to index.
   </Step>
 
   <Step title="Open Settings">
-    Click the profile avatar and choose Settings.
+    Select your profile avatar, then select **Settings**.
 
     <img className="rounded-image" src="/assets/admins/connectors/salesforce/salesforce_1.png" alt="Salesforce user menu showing path to Settings"/>
   </Step>
@@ -35,11 +120,6 @@ These documents organized around the **Objects** that you indicate. Examples are
 
     <img className="rounded-image" src="/assets/admins/connectors/salesforce/salesforce_3.png" alt="Email example showing Salesforce security token message"/>
   </Step>
-
-  <Step title="Use credentials in Onyx">
-    Once the token has been regenerated, you can use it (as well as your username and password)
-    to authorize your Onyx connector.
-  </Step>
 </Steps>
 
 ### Indexing
@@ -50,9 +130,17 @@ These documents organized around the **Objects** that you indicate. Examples are
   </Step>
 
   <Step title="Create a new credential">
-    Click on the **Create New** button and provide your **Username**,
-    **Password** and the **Security Token** received from the above steps.
+    Select **Create New**, then choose an authentication method:
 
+    - **Connect with Salesforce**: Enter your organization's HTTPS My Domain root, then complete the Salesforce OAuth
+    flow. For example, enter `https://company.my.salesforce.com` or, for a sandbox,
+    `https://company--dev.sandbox.my.salesforce.com`.
+    - **Enter credentials manually**: Enter your Salesforce **Username**, **Password**, and **Security Token**.
+
+    For OAuth, do not enter `login.salesforce.com`, a path, a query, or a custom port.
+  </Step>
+
+  <Step title="Select the credential">
     Select the new credential and click **Continue**.
   </Step>
 
