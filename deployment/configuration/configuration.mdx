@@ -496,6 +496,22 @@ Read [Deploying Craft](/deployment/local/craft) before enabling Craft in self-ho
     `OPENSEARCH_INDEX_NUM_SHARDS`: Number of primary shards per index
 
     `OPENSEARCH_INDEX_NUM_REPLICAS`: Number of replicas per index
+
+    `PIT_KEEP_ALIVE`: Point-in-time keep-alive used when scanning an index (default `5m`)
+
+    `OPENSEARCH_PROFILING_DISABLED`: Disable OpenSearch query profiling (default `true`)
+
+    `OPENSEARCH_MATCH_HIGHLIGHTS_DISABLED`: Disable match highlights in search results (default `true`)
+
+    `OPENSEARCH_EXPLAIN_ENABLED`: Return per-hit score breakdowns for relevance debugging (large performance cost)
+
+    `ONYX_SEARCH_UI_USES_OPENSEARCH_KEYWORD_SEARCH`: Use OpenSearch keyword search for the Search UI
+
+    `ENABLE_OPENSEARCH_INDEXING_FOR_ONYX`: Index documents into OpenSearch (default `true`)
+
+    `ONYX_DISABLE_VESPA`: Run without the legacy Vespa index (default `true`)
+
+    `DISABLE_OPENSEARCH_MIGRATION_TASK`: Disable the periodic Vespa to OpenSearch migration task
   </Accordion>
 
   <Accordion title="Celery Configuration">
