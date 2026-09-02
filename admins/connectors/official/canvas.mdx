@@ -1,0 +1,182 @@
+---
+title: "Canvas"
+description: "Index pages, assignments, and announcements from Canvas LMS"
+---
+
+The Canvas connector indexes course content that a Canvas access token can reach. Onyx indexes published pages,
+published assignments, and active announcements.
+
+## How it works
+
+| Content       | Behavior                                                                                                          |
+| ------------- | ----------------------------------------------------------------------------------------------------------------- |
+| Pages         | Onyx indexes the title and body of each published page, with a link back to the page in Canvas.                   |
+| Assignments   | Onyx indexes the name, description, and due date of each published assignment.                                    |
+| Announcements | Onyx indexes the title and message of each active announcement.                                                   |
+| Permissions   | Optional on Onyx Cloud and Enterprise Edition. Onyx can sync course, section, and group membership from Canvas.   |
+
+The connector lists the courses that the token owner can access, then indexes the three content types in each course.
+It only reads courses in the `available` state.
+
+<Note>
+  The connector indexes courses that the token owner can access. It does not crawl an entire Canvas account.
+  To cover every course in your institution, use a token whose owner can see every course.
+</Note>
+
+### What Onyx does not index
+
+The connector does not index quizzes, discussion topics, modules, the syllabus, files and attachments, submissions,
+rubrics, or calendar events. It also does not create a document for the course itself. Unpublished pages,
+unpublished assignments, and inactive announcements are skipped.
+
+## Before you begin
+
+You need:
+
+- The base URL of your Canvas instance, such as `https://school.instructure.com`
+- A Canvas account that can access the courses you want to index
+- An Onyx administrator account
+
+<Warning>
+  The Canvas base URL must use `https`. The connector rejects an `http` URL.
+</Warning>
+
+## Configure Canvas
+
+<Steps>
+  <Step title="Choose the Canvas account to index from">
+    The connector sees only what its token owner sees. A teacher account covers that teacher's courses.
+    An admin account covers every course the admin can open.
+
+    For permission sync, the token owner must be able to read course rosters, including email addresses. A teacher, TA,
+    or admin role meets this requirement. A student role does not.
+  </Step>
+
+  <Step title="Create an access token">
+    Sign in to Canvas as that user. Go to **Account → Settings**.
+
+    Scroll to **Approved Integrations** and select **+ New Access Token**. Enter a purpose, such as `Onyx Connector`.
+    Leave the expiry date blank so the token does not expire.
+  </Step>
+
+  <Step title="Copy the token">
+    Select **Generate Token** and copy the value.
+
+    Canvas shows the token only once. Treat it as sensitive and do not place it in source control.
+  </Step>
+</Steps>
+
+## Configure Onyx
+
+<Steps>
+  <Step title="Open the Canvas connector">
+    In Onyx, go to **Admin Panel → Add Connector** and select **Canvas**.
+  </Step>
+
+  <Step title="Enter the Canvas credential">
+    Create a credential and enter the token you copied:
+
+    | Onyx field | Value |
+    | --- | --- |
+    | **Canvas Access Token** | The access token generated in Canvas |
+  </Step>
+
+  <Step title="Enter the Canvas base URL">
+    Give the connector a name. In **Canvas Base URL**, enter the address of your Canvas instance,
+    such as `https://school.instructure.com`.
+
+    You can include or omit a trailing `/api/v1`. The connector normalizes either form.
+  </Step>
+
+  <Step title="Choose the access type">
+    Select the connector access type:
+
+    - **Public** makes all indexed Canvas content visible to every Onyx user.
+    - **Private** limits the entire connector to selected Onyx users and groups.
+    - **Auto Sync Permissions** mirrors Canvas course, section, and group access.
+    It is available on Onyx Cloud and Enterprise Edition.
+  </Step>
+
+  <Step title="Connect and verify">
+    Select **Connect**. Then open **Admin Panel → Existing Connectors**, select the connector,
+    and confirm its initial indexing attempt completes.
+  </Step>
+</Steps>
+
+## Auto Sync Permissions
+
+With **Auto Sync Permissions**, Onyx maps Canvas enrollments to Onyx access.
+Canvas users are matched to Onyx users by email address, so the two must match.
+
+Onyx applies these rules:
+
+- A page is available to the members of its course.
+- An assignment is available to the members of its course.
+If the assignment is restricted to overrides, Onyx instead grants access to the assigned sections, Canvas groups,
+and students, plus the course teachers, TAs, and designers.
+- An announcement is available to the members of its course.
+If the announcement is section specific, Onyx instead grants access to those sections, plus the course teachers, TAs,
+and designers.
+- Only active and invited enrollments grant access.
+
+A public Canvas course does not become public in Onyx. If the token can also list account users,
+Onyx widens a public course to all synced Canvas users instead.
+
+<Note>
+  Auto Sync Permissions requires Onyx Cloud or Enterprise Edition, and the Business tier.
+  Below that tier the option does not appear.
+</Note>
+
+<Warning>
+  Review the access type before connecting.
+  Choosing **Public** does not preserve Canvas permissions and can expose indexed content to every Onyx user.
+</Warning>
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="The credential is rejected or expires">
+    A `401` from Canvas means the token is invalid, revoked, or expired.
+    Generate a new access token in **Account → Settings → Approved Integrations** and update the credential in Onyx.
+    Leave the expiry date blank to stop the token from expiring.
+  </Accordion>
+
+  <Accordion title="The connector reports insufficient permissions">
+    A `403` from Canvas means the token owner cannot read the requested content.
+    Confirm the account holds a role that can open the courses you want to index.
+  </Accordion>
+
+  <Accordion title="The base URL is rejected">
+    The connector requires an `https` URL with a host, such as `https://school.instructure.com`.
+    An `http` URL or a value without a host fails validation.
+  </Accordion>
+
+  <Accordion title="Permission sync fails to set up">
+    Onyx checks that the token can read course users with email addresses. If that check fails,
+    reconnect with a teacher, TA, or admin token.
+    A student token cannot read rosters and cannot be used for permission sync.
+  </Accordion>
+
+  <Accordion title="Users cannot see content they can open in Canvas">
+    Onyx matches Canvas users to Onyx users by email address. Confirm the addresses match in both systems.
+    Also confirm the enrollment is active or invited, because concluded and inactive enrollments do not grant access.
+  </Accordion>
+
+  <Accordion title="A course indexes nothing">
+    Confirm the course is published and in the `available` state.
+    Confirm its pages and assignments are published and its announcements are active.
+    The connector skips unpublished and inactive content.
+  </Accordion>
+
+  <Accordion title="An announcement is missing or out of date">
+    Onyx skips an announcement that has no posted date.
+    Onyx also tracks an announcement by its posted date rather than its updated date,
+    so a later edit may not trigger reindexing.
+  </Accordion>
+
+  <Accordion title="Refreshes are slow or use many Canvas API calls">
+    Only announcements are filtered by date in Canvas. Pages stop early once the connector reaches older content.
+    Assignments support neither, so every assignment in every course is read on each refresh.
+    For a large Canvas instance, lower the refresh frequency.
+  </Accordion>
+</AccordionGroup>
