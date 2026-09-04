@@ -112,8 +112,8 @@ import DeploymentNextSteps from "/snippets/deployment-next-steps.mdx"
   </Step>
 
   <Step title="Install Onyx services">
-    The Onyx Helm chart packages all the required services (API, web, PostgreSQL, Vespa, etc.) into a single deployment.
-    By default, persistent volumes will be created for stateful services.
+    The Onyx Helm chart packages all the required services (API, web, PostgreSQL, OpenSearch, etc.)
+    into a single deployment. By default, persistent volumes will be created for stateful services.
 
     First, ensure the `gp2` storage class is set as the default storage class (required for PVCs):
 
@@ -188,11 +188,11 @@ To remove the Onyx services:
 helm uninstall onyx -n onyx
 ```
 
-Vespa, Postgres, and MinIO leave behind PVCs. To delete them:
+OpenSearch, Postgres, and MinIO leave behind PVCs. To delete them:
 
 ```bash
 kubectl -n onyx get pvc
-kubectl -n onyx delete pvc vespa-storage-da-vespa-0
+kubectl -n onyx delete pvc onyx-opensearch-master-onyx-opensearch-master-0
 kubectl -n onyx delete pvc onyx-minio
 kubectl -n onyx delete pvc data-onyx-postgresql-0
 ```
