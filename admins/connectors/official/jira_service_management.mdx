@@ -1,0 +1,63 @@
+---
+title: "Jira Service Management"
+description: "Index tickets from one Jira Service Management project"
+---
+
+## How it works
+
+Connect one service project with a Jira agent account. Onyx reads ticket titles, descriptions, metadata,
+and comments visible to that account. It checks the project type before indexing.
+Use the Jira connector for software or business projects.
+
+## Access
+
+This connector does not copy JSM customer portal permissions. Comments visible to the agent can include internal notes.
+Onyx controls access to indexed tickets. User groups require an Onyx plan that supports them.
+On deployments with only public connectors, all Onyx users can read the indexed tickets.
+
+## Credentials
+
+<Steps>
+  <Step title="Prepare a Jira account">
+    Use an account that can read the service project and its tickets. Note the account email, site URL,
+    and service project key.
+  </Step>
+
+  <Step title="Create an API token">
+    Follow Atlassian's [API token
+    guide](https://support.atlassian.com/atlassian-account/docs/manage-api-tokens-for-your-atlassian-account/).
+    Keep the token for the Onyx credential form. A token without scopes uses the standard site URL.
+    Select **Using scoped token** in Onyx only if you created a scoped token.
+  </Step>
+</Steps>
+
+## Connect the project
+
+<Steps>
+  <Step title="Open the connector">
+    Open **Admin > Add Connector** and select **Jira Service Management**.
+  </Step>
+
+  <Step title="Select credentials">
+    Select **Create New**. Enter a credential name, the Jira account email, and its API token. Save the credential,
+    select it, and choose **Continue**.
+  </Step>
+
+  <Step title="Configure the project">
+    Enter a **Connector Name**, **Jira Base URL**, and **Service Project Key**. For example,
+    use `https://your-site.atlassian.net` and `HELP`. The project key is required.
+    Use a separate connector for each service project.
+
+    To exclude comments by author, add their email addresses to **Comment Email Blacklist**.
+  </Step>
+
+  <Step title="Create the connector">
+    Review the access setting available in your Onyx plan. Select **Create Connector**.
+    Check the indexing status and search for a ticket after indexing completes.
+  </Step>
+</Steps>
+
+## Check updates
+
+Add a ticket to the service project and check the next sync. Change its description and verify the new text in search.
+Delete a test ticket and verify that a later pruning run removes it from Onyx.
