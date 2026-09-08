@@ -6,6 +6,232 @@ mode: "wide"
 rss: true
 ---
 
+<Update label="v4.7.0" description="September 4th, 2026" tags={["New Features", "Deployment Changes", "Bug Fixes"]}>
+
+  ## v4.7.0
+
+  The Onyx interface now speaks eight languages, permissions are managed entirely through groups,
+  and an entire deployment becomes expressible as code: a new Terraform provider configures the application itself,
+  alongside refreshed AWS modules and a brand-new Azure module set. Multi-model chat loses its friction,
+  Salesforce gains OAuth, and workspaces on Onyx Cloud can bring their own SSO.
+  Thank you to our contributors for helping make this release possible!
+
+  ## [Update] Deployment Changes
+
+  - **A real readiness probe.** The new `/health/ready` endpoint returns 503 once the API server's request
+    threadpool has been saturated for ten sustained seconds - previously the server reported healthy while unable to
+    serve a single request. `/health` remains the trivial always-200 liveness probe, so existing manifests keep working;
+    Helm chart 0.8.19 documents which path belongs on which probe.
+    If you briefly ran chart 0.8.18 (which repurposed `/health` and served liveness from `/health/live`),
+    point liveness back at `/health`.
+  - **Helm charts are published as GitHub release assets and to OCI.** Chart tarballs no longer accumulate on the
+    `gh-pages` branch; `helm repo add onyx https://onyx-dot-app.github.io/onyx` works unchanged,
+    and the same bytes are additionally available at `oci://ghcr.io/onyx-dot-app/charts` for GitOps and supply-chain
+    workflows. Chart 0.8.17 also gives code-interpreter executor pods owner references,
+    so leaked pods are garbage-collected and stop tripping "unowned pod" monitoring alerts.
+  - **The published Terraform modules are now the ones Onyx runs in production.** The AWS modules
+    (`vpc`, `waf`, `redis`, `s3`, `postgres`, `opensearch`, `eks`)
+    were replaced with the versions behind Onyx's managed deployments - upgrading self-hosters should read the README's
+    new Upgrading section,
+    since resource addresses were renamed and the modules now manage bucket versioning and encryption, VPC flow logs,
+    and CloudWatch alarms, and every module-created S3 bucket now rejects non-TLS access.
+    A complete Azure module set is new: virtual network, blob storage, PostgreSQL Flexible Server, Azure Managed Redis,
+    AKS with workload identity, a WAF policy, and an `onyx` composition with small/medium/large sizing.
+    Modules are consumable from other repositories by git ref under the `tf/vX.Y.Z` tag scheme.
+  - **The backend image lost weight.** Playwright now installs only the headless shell, saving 364 MB
+    uncompressed,
+    and dropping the `unstructured` package removed 27 transitive dependencies - document parsing through Unstructured
+    is unaffected, since only the API client was ever used.
+
+  ## Key Improvements
+
+  ### Onyx in Your Language
+
+  The web UI is now fully translated into Spanish, Portuguese, French, German, Japanese, Simplified Chinese, and Korean.
+  Everyone picks their own language under Settings (each language listed in its own name),
+  and the choice follows the account across browsers and devices. The translation surface is complete - chat, settings,
+  authentication,
+  and the entire admin panel - with strings that are not yet translated falling back to English rather than breaking.
+  CJK locales get correct system-font selection per language and proper line-breaking rules (kinsoku for Japanese and
+  Chinese, word-preserving breaks for Korean).
+
+  ### Fully Group-Based Permissions
+
+  Permissions now flow entirely from group membership.
+  The Create/Edit Group pages gain a Group Permissions section driven by a server-side permission registry,
+  saved as one desired state instead of one toggle at a time.
+  The seeded Admin and Basic groups are visible to full admins - admin access now literally means Admin group
+  membership, and Community deployments can promote and demote admins in place. Guardrails keep the model coherent:
+  the last admin can never be removed, self-demotion is refused, every standard user keeps at least one group,
+  and default groups only ever change membership. Group managers are tagged in member lists,
+  and the whole permission surface now emits audit events - group lifecycle, grants and revokes, manager assignment,
+  and SCIM group writes (tagged `source: scim`).
+  SIEM consumers should note that three existing user events moved to new OCSF classes; see `docs/AUDIT_LOGGING.md`.
+
+  ### Manage Onyx with Terraform
+
+  The new [Terraform provider](https://github.com/onyx-dot-app/onyx/tree/main/terraform-provider-onyx)
+  makes Onyx configuration declarative: workspace settings, LLM providers and the default model, the embedding provider,
+  API keys, credentials, connectors, connector-credential pairs, document sets, agents, custom tools, MCP servers,
+  and user groups are all expressible - an entire indexing and assistant setup can be reviewed, versioned, and applied.
+  Every secret can be supplied through write-only attributes that never land in Terraform state (Terraform 1.11+),
+  masked reads are handled correctly, and the client retries transient failures without ever replaying a create.
+  The provider ships with a day-one bootstrap example and an acceptance suite that runs against a real Onyx stack in CI.
+
+  ### Multi-Model Chat Without the Friction
+
+  Comparing models side by side no longer interrupts the conversation:
+  sending after a multi-model turn just works - an explicit response pick always wins,
+  otherwise the previous turn's model (or the first) carries the thread.
+  Narrow screens get a swipeable single-response carousel,
+  panel headers stay pinned with the model name while long responses scroll, the entire card is the selection target,
+  and the Retry button attributes each response to the model that actually produced it.
+  Admins gain per-model controls in the LLM provider modal - a reasoning-effort cap, a default reasoning level,
+  and a default temperature,
+  enforced at inference time on every path so no client can exceed the cap - and each user can set personal defaults for
+  temperature and reasoning under Settings -> Chat Preferences.
+  A new workspace setting can flatten the model selector into a single ungrouped list,
+  for deployments that route everything through a gateway.
+
+  ### Bring Your Own SSO on Onyx Cloud
+
+  Workspaces on Onyx Cloud can now configure their own Google or OIDC single sign-on.
+  Admins prove domain ownership with a DNS TXT record,
+  and verified domains route sign-ins from the shared cloud login page straight to the right workspace - including
+  first-time users, who are provisioned just in time on a verified domain. Allowed email domains are required,
+  so an IdP can never assert its way into unbilled seats.
+
+  ## Contributor Highlights
+
+  - [@sudoleg](https://github.com/sudoleg) taught `onyx-cli deploy` to recognize all four Docker Compose override
+    spellings (`compose.override.yml` and friends)
+    with Compose's own precedence - overrides on the newer naming convention were silently ignored.
+
+  ## Additional Improvements
+
+  ### Chat
+
+  - Pinned agents behave properly: deleted agents disappear from the sidebar instead of lingering, new users
+    start with the featured agents pinned,
+    and pinning your first agent no longer detaches you from the admin-curated featured list.
+  - Projects are reachable from a folded sidebar through a searchable popover, and opening a chat that lives in a
+    project now resolves its header actions, document title, and agent correctly.
+  - Renaming a chat from its sidebar overflow menu is back to working smoothly - the rename field could lose
+    focus the moment it opened, because the row's tooltip was re-mounting underneath it and stealing the cursor.
+  - A reasoning level picked before the first message of a new chat now actually applies to that message.
+  - The background sweep that deletes expired incognito uploads now completes reliably - previously it could
+    leave behind files that should have been removed.
+  - Rendering fixes: wide markdown tables scroll as one unit instead of pinning their first column, `.docx`
+    previews render on a white paper page so dark mode is readable, and custom tooltip content is legible in light mode.
+  - Every clickable surface is now keyboard-operable (211 accessibility fixes), and recent-chat rows lost their
+    phantom tab stop.
+  - Forced tool calls work on GLM models, which reject any `tool_choice` other than `auto`.
+  - Customizable chat footers grew from 200 to 500 characters.
+
+  ### Connectors
+
+  - **Salesforce supports OAuth.** Connector setup offers authorization-code OAuth with PKCE and validated
+    My Domain URLs, with locked refresh-token rotation, mid-run session recovery,
+    and permission syncing through the same refreshable credentials;
+    username/password/security-token setups keep working.
+  - **Failing connectors are loud now.** Repeated indexing failures and connectors invalidated by failing
+    credentials raise error banners for admins with a link to the connector,
+    instead of sitting silently in the notification bell; the alerts clear themselves on recovery.
+  - GitBook got an overhaul: the parser renders every block type recursively (nested and ordered lists, hints,
+    tabs, expandables, tables with rich cells) instead of silently dropping unknown blocks,
+    rate limits retry with `Retry-After`, per-page errors fail the run loudly rather than silently losing documents,
+    and page descriptions are indexed.
+  - Google Drive connectors using OAuth credentials with shared drive URLs now index the entire drive -
+    indexing previously stopped silently after roughly the first 200 files, with no error to notice.
+  - Every HubSpot SDK call now carries a timeout, so a dropped connection fails fast instead of pinning a worker
+    for half an hour.
+  - Document permission sync now succeeds on large connectors whose crawls run longer than 30 minutes.
+  - Ordinary PDFs no longer get rejected for having "more than 500 embedded images": the limit now counts each
+    real image once,
+    ignoring rendering artifacts like single-pixel strips and transparency masks that some PDF generators produce by the
+    thousands - and it is not applied at all when image extraction is turned off.
+
+  ### Authentication, Users, and SCIM
+
+  - OIDC logins on single-tenant deployments no longer freeze after the identity provider accepts them: the
+    callback could block itself in the database and never respond,
+    leaving the browser spinning until the reverse proxy gave up with a 504.
+  - Returning to Onyx after your IdP session expired could sign you out or claim "No models currently
+    configured": a page load fires several requests at once, and while one of them refreshed the expired token,
+    the others were rejected with "OIDC token has expired" - which the UI surfaced as a sign-out or an empty model list
+    depending on which request lost. Every request now picks up the refreshed token.
+  - When an SSO login fails at the token exchange, the log now records the IdP's actual rejection
+    (`invalid_grant`, a redirect URI mismatch, and so on) instead of a generic failure message.
+  - External JWT authentication moved into Security & Hardening: the public key URL is DB-configurable (env vars
+    still win and show as pinned), and new optional audience and issuer checks (`JWT_EXPECTED_AUDIENCE`,
+    `JWT_EXPECTED_ISSUER`) close off a shared IdP signing key acting as a master credential.
+    The invite-only sign-up toggle also moved to Security & Hardening, next to the other sign-up fencing controls.
+  - A new off-by-default security toggle relinks accounts in place when an IdP migration re-issues its subjects,
+    instead of failing logins with "account already exists under a different sign-in method."
+  - SCIM identity is decoupled from the login email: the IdP's `userName` matches a stored SCIM username, the
+    `emails` attribute drives the login email, and a `userName` rename no longer moves the account's email.
+    SCIM-adopted permission-sync shadow users are marked verified, so they stop bouncing to the verify-email page.
+    And SCIM provisioning now works on Onyx Cloud - the old tokens did not identify which workspace they belonged to,
+    so generate a fresh SCIM token before connecting your identity provider.
+  - The Slack bot honors invite-only sign-up: workspace members without an invite get a polite refusal instead of
+    silently consuming a paid seat.
+  - Whitelabeled deployments show their own logo and application name on the login page, plus a new configurable
+    login subtitle.
+    A side effect of this change had briefly shown Community Edition login pages a "We encountered an issue" error -
+    that's fixed.
+
+  ### MCP
+
+  - Connecting an MCP server through OAuth is more reliable: Onyx hands back the sign-in link immediately
+    instead of keeping a request open while you complete consent (which could time out),
+    the flow completes even when deployments run several API server replicas,
+    and connecting no longer lists every tool twice.
+  - MCP tool calls get their own timeout - 300 seconds by default instead of the shared client's 60, configurable
+    via `MCP_SERVER_API_REQUEST_TIMEOUT_SECONDS`.
+
+  ### LLM Providers and Gateway
+
+  - **The LLM Gateway is now included in the Business tier** (previously Enterprise), and a new Settings tab
+    shows each user their accessible gateway models with copyable gateway URL and model IDs,
+    and mints tokens with the gateway scope.
+  - Bedrock calls run on isolated HTTP clients - an abandoned stream could deadlock litellm's shared connection
+    pool and silently hang every sync endpoint on the server.
+  - Custom LLM providers no longer fill up with models you never added. They were being saved with automatic
+    model updates switched on,
+    so Onyx's recommended models for well-known providers got merged in - showing models your endpoint does not actually
+    serve, and re-adding them after deletion. Saving an affected provider again stops the merging,
+    but already-added phantom models need one manual cleanup.
+  - Editing an embedding provider through the API no longer risks the key: writing back the masked `api_key`
+    that reads return used to overwrite the real key with the mask, breaking every embedding call.
+    And reopening Index Settings with a saved LiteLLM or Azure provider no longer fails when re-indexing.
+  - Langfuse tracing migrated to the v4 SDK - research agents running in parallel threads keep their session and
+    user attribution (self-hosted Langfuse servers from 3.63.0 up keep working).
+
+  ### Admin
+
+  - Usage tracking accounts for prompt-cache writes: cache-write tokens are persisted, priced, and shown in both
+    the admin and self-service usage views.
+  - Cost budgets created before v4.6.0's period restrictions can no longer block chat for the whole workspace -
+    invalid periods are skipped and migrated to the nearest supported one.
+  - The `/admin/configuration/*` pages flattened to `/admin/*`; old bookmarks redirect permanently.
+  - The invite-users field now turns each pasted or typed address into its own removable entry - invalid
+    addresses warn and are skipped instead of blocking the whole batch.
+  - Document sets are readable by id via `GET /manage/admin/document-set/{id}`, replacing fetch-all-and-filter
+    for API clients.
+
+  ### CLI and Mobile
+
+  - The Onyx CLI gains a `/model` switcher with the current model in the status bar.
+  - The mobile app upgraded to Expo SDK 57, fixing a React Native bug that inflated Android memory usage by
+    roughly a quarter.
+
+  ---
+
+  Our [GitHub Releases](https://github.com/onyx-dot-app/onyx/releases?utm_source=docs&utm_content=changelog)
+  page has the full list of changes and bug fixes for each release.
+
+</Update>
+
 <Update label="v4.6.0" description="August 20th, 2026" tags={["New Features", "Deployment Changes", "Bug Fixes"]}>
 
   ## v4.6.0
