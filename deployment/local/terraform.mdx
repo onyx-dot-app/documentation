@@ -1,10 +1,19 @@
 ---
 title: "Terraform"
-description: "Provision Onyx infrastructure on AWS with Terraform"
+description: "Provision the AWS infrastructure Onyx runs on with Terraform modules"
 icon: "grid"
 ---
 
 import DeploymentNextSteps from "/snippets/deployment-next-steps.mdx"
+
+<Note>
+  This page covers the Terraform **modules** that provision the infrastructure Onyx runs on — VPC, EKS, RDS,
+  and the rest. They run before Onyx exists.
+
+  To configure a deployment that is already running — LLM providers, connectors, document sets,
+  agents — use the [Onyx Terraform provider](/admins/advanced_configs/terraform_provider) instead.
+  The two are separate and compose: modules build the infrastructure, the provider configures what runs inside it.
+</Note>
 
 <Tip>
   Check out the [Resourcing Guide](/deployment/getting_started/resourcing) before getting started.
@@ -431,5 +440,13 @@ while the same call in `dev` produces `onyx-dev` resources.
   The Helm chart's Vespa pods tolerate it; everything else lands on the main node group.
 - **Reference, not a product.** The modules encode the choices we make for
   our own deployments. Read them, copy what's useful, and replace what isn't.
+
+## Configure Onyx as code
+
+Once the deployment is up, you can keep managing it with Terraform — this time against Onyx itself rather than AWS.
+
+<Card title="Onyx Terraform Provider" icon="cubes" href="/admins/advanced_configs/terraform_provider">
+  Declare LLM providers, connectors, document sets, agents, and user groups in Terraform and apply them from CI.
+</Card>
 
 <DeploymentNextSteps />
