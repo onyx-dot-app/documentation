@@ -332,6 +332,7 @@
               "admins/advanced_configs/security_hardening",
               "admins/advanced_configs/hook_extensions",
               "admins/advanced_configs/tracing",
+              "admins/advanced_configs/terraform_provider",
               "admins/getting_started/slack_bot_setup",
               "admins/miscellaneous/discord_bot"
             ]
