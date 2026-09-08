@@ -11,9 +11,8 @@ rss: true
   ## v4.7.0
 
   The Onyx interface now speaks eight languages, permissions are managed entirely through groups,
-  and an entire deployment becomes expressible as code: a new Terraform provider configures the application itself,
-  alongside refreshed AWS modules and a brand-new Azure module set. Multi-model chat loses its friction,
-  Salesforce gains OAuth, and workspaces on Onyx Cloud can bring their own SSO.
+  and the Terraform modules behind Onyx's own production deployments are published for AWS and Azure.
+  Salesforce gains OAuth, and multi-model chat gets a round of polish.
   Thank you to our contributors for helping make this release possible!
 
   ## [Update] Deployment Changes
@@ -68,39 +67,6 @@ rss: true
   and SCIM group writes (tagged `source: scim`).
   SIEM consumers should note that three existing user events moved to new OCSF classes; see `docs/AUDIT_LOGGING.md`.
 
-  ### Manage Onyx with Terraform
-
-  The new [Terraform provider](https://github.com/onyx-dot-app/onyx/tree/main/terraform-provider-onyx)
-  makes Onyx configuration declarative: workspace settings, LLM providers and the default model, the embedding provider,
-  API keys, credentials, connectors, connector-credential pairs, document sets, agents, custom tools, MCP servers,
-  and user groups are all expressible - an entire indexing and assistant setup can be reviewed, versioned, and applied.
-  Every secret can be supplied through write-only attributes that never land in Terraform state (Terraform 1.11+),
-  masked reads are handled correctly, and the client retries transient failures without ever replaying a create.
-  The provider ships with a day-one bootstrap example and an acceptance suite that runs against a real Onyx stack in CI.
-
-  ### Multi-Model Chat Without the Friction
-
-  Comparing models side by side no longer interrupts the conversation:
-  sending after a multi-model turn just works - an explicit response pick always wins,
-  otherwise the previous turn's model (or the first) carries the thread.
-  Narrow screens get a swipeable single-response carousel,
-  panel headers stay pinned with the model name while long responses scroll, the entire card is the selection target,
-  and the Retry button attributes each response to the model that actually produced it.
-  Admins gain per-model controls in the LLM provider modal - a reasoning-effort cap, a default reasoning level,
-  and a default temperature,
-  enforced at inference time on every path so no client can exceed the cap - and each user can set personal defaults for
-  temperature and reasoning under Settings -> Chat Preferences.
-  A new workspace setting can flatten the model selector into a single ungrouped list,
-  for deployments that route everything through a gateway.
-
-  ### Bring Your Own SSO on Onyx Cloud
-
-  Workspaces on Onyx Cloud can now configure their own Google or OIDC single sign-on.
-  Admins prove domain ownership with a DNS TXT record,
-  and verified domains route sign-ins from the shared cloud login page straight to the right workspace - including
-  first-time users, who are provisioned just in time on a verified domain. Allowed email domains are required,
-  so an IdP can never assert its way into unbilled seats.
-
   ## Contributor Highlights
 
   - [@sudoleg](https://github.com/sudoleg) taught `onyx-cli deploy` to recognize all four Docker Compose override
@@ -111,6 +77,13 @@ rss: true
 
   ### Chat
 
+  - Comparing models side by side no longer interrupts the conversation: sending after a multi-model turn just
+    works - an explicit response pick wins, otherwise the previous turn's model (or the first) carries the
+    thread.
+  - Multi-model turns are easier to read and pick from: narrow screens get a swipeable single-response carousel,
+    panel headers stay pinned with the model name while long responses scroll, the whole card is the selection
+    target, and the Retry button attributes each response to the model that actually produced it.
+  - Everyone can set their own default temperature and reasoning level under Settings -> Chat Preferences.
   - Pinned agents behave properly: deleted agents disappear from the sidebar instead of lingering, new users
     start with the featured agents pinned,
     and pinning your first agent no longer detaches you from the admin-curated featured list.
@@ -194,6 +167,10 @@ rss: true
   - **The LLM Gateway is now included in the Business tier** (previously Enterprise), and a new Settings tab
     shows each user their accessible gateway models with copyable gateway URL and model IDs,
     and mints tokens with the gateway scope.
+  - Admins get per-model controls in the LLM provider modal - a reasoning-effort cap, a default reasoning level,
+    and a default temperature - enforced at inference time on every path, so no client can exceed the cap.
+  - A new workspace setting flattens the model selector into a single ungrouped list, for deployments that route
+    everything through a gateway.
   - Bedrock calls run on isolated HTTP clients - an abandoned stream could deadlock litellm's shared connection
     pool and silently hang every sync endpoint on the server.
   - Custom LLM providers no longer fill up with models you never added. They were being saved with automatic
