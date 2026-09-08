@@ -10,7 +10,7 @@ rss: true
 
   ## v4.6.0
 
-  Onyx becomes an LLM gateway — point Claude Code, Codex CLI,
+  Onyx becomes an LLM gateway - point Claude Code, Codex CLI,
   or any OpenAI-compatible tool at your deployment and route them through your centrally managed provider credentials.
   Usage and cost management lands with per-user spend reporting, workspace and group budgets, and priced exports,
   incognito chat keeps sensitive conversations out of every record,
@@ -20,18 +20,18 @@ rss: true
   ## [Update] Deployment Changes
 
   - **The guided installer is now `onyx-cli deploy`.** `install.sh` has become a thin bootstrap that downloads
-    `onyx-cli` and hands over to `onyx-cli deploy install` — all existing flags keep working.
+    `onyx-cli` and hands over to `onyx-cli deploy install` - all existing flags keep working.
     Deployments gain first-class lifecycle verbs (`deploy upgrade`, `stop`, `status`, `logs`, `uninstall`)
     that replace re-running the script and the old `--shutdown` / `--delete-data` flags,
     and production compose deployments (`docker-compose.prod.yml` with TLS and real domains)
     can be adopted with `--prod` and upgraded with `deploy upgrade` instead of hand-rolled compose scripting.
   - **Redis Sentinel now works for Celery beat and the result backend.** Sentinel deployments previously
     failed on every beat tick and silently shared one keyspace across broker, results, and application data. On upgrade,
-    the broker and result backend move from db 0 to their intended dbs 15 and 14 — queued Celery messages left in db 0
+    the broker and result backend move from db 0 to their intended dbs 15 and 14 - queued Celery messages left in db 0
     are dropped, so drain them first or accept the loss of in-flight background tasks.
   - **Helm chart 0.8.x fixes:** `MODEL_SERVER_HOST` / `INDEXING_MODEL_SERVER_HOST` can be overridden through
     `configMap` to point at external model servers (0.8.10),
-    `/scim` is routed to the API server in ingress mode — SCIM provisioning previously never worked there (0.8.13),
+    `/scim` is routed to the API server in ingress mode - SCIM provisioning previously never worked there (0.8.13),
     and all child resource names truncate to the 63-character Kubernetes limit,
     so long release names no longer fail the install (0.8.15).
   - **Building images from source no longer requires Docker Hardened Image access.** The web and model-server
@@ -89,7 +89,7 @@ rss: true
 
   ## Contributor Highlights
 
-  - [@siriusfreak](https://github.com/siriusfreak) added **URL rewrite rules to the web connector** —
+  - [@siriusfreak](https://github.com/siriusfreak) added **URL rewrite rules to the web connector** -
     crawl a site through a mirror, staging host, or pre-rendering proxy while storing the canonical public links,
     so citations point users at the real site.
   - [@ArslanRasheed60](https://github.com/ArslanRasheed60) fixed editing an Azure OpenAI provider with per-model
@@ -104,17 +104,17 @@ rss: true
   - Long chats and model switches got an accounting overhaul: images in history are replayed as text markers for
     non-vision models instead of failing the turn, the context gauge follows the selected model,
     and history compression no longer stalls in very long sessions.
-  - The input bar has proper undo/redo — Cmd+Z no longer eats drafts that contain pastes or tiles.
+  - The input bar has proper undo/redo - Cmd+Z no longer eats drafts that contain pastes or tiles.
   - Admins can designate a dedicated model for chat auto-naming,
     keeping naming calls off single-stream local models.
   - Model selection routes by configuration id, so same-named provider entries no longer collide.
   - Reasoning controls: the picker and the actual request now agree on which levels a model supports
     (including behind gateways and deployment aliases), admins can turn the reasoning control off workspace-wide,
     and reasoning parameters reach Anthropic models on Vertex and OpenAI-compatible gateways instead of being dropped.
-  - The Deep Research toggle no longer appears inside project chats, where selecting it always failed —
+  - The Deep Research toggle no longer appears inside project chats, where selecting it always failed -
     deep research isn't supported in project chats,
     and the guard meant to hide it was checking a URL parameter that is dropped when navigating into a chat.
-  - Slack bot answers are grounded in document search again — a v2.10 regression had let the bot answer without
+  - Slack bot answers are grounded in document search again - a v2.10 regression had let the bot answer without
     searching, leaving citation-required channels unable to answer at all.
 
   ### MCP
@@ -122,7 +122,7 @@ rss: true
   - All server types support custom connection headers.
   - OAuth got a round of fixes: servers that only demand auth at tool execution (such as BigQuery) now discover
     consent correctly, Onyx publishes client metadata (CIMD) so supporting servers skip dynamic client registration,
-    and Google-hosted servers request offline access — connections no longer die after one hour,
+    and Google-hosted servers request offline access - connections no longer die after one hour,
     and dead grants surface as "reconnect needed" instead of failing silently.
   - Scheduled tasks can pre-approve MCP tools, so scheduled runs stop blocking on approval prompts.
 
@@ -133,12 +133,12 @@ rss: true
   - SharePoint: hierarchy nodes now get permissions synced, and permission-synced indexing is significantly faster
     through cached group expansions and batched list-item lookups.
   - Confluence Data Center: intermittent attachment-pagination 400s no longer abort the entire index attempt.
-  - GitBook: never-edited pages — and their whole subtrees — are indexed.
+  - GitBook: never-edited pages - and their whole subtrees - are indexed.
   - Jira: poll windows use absolute timestamps, so accounts in non-UTC timezones stop skipping recent updates.
   - Google Drive: duplicate group-sync crawls no longer stack up and OOM the worker.
   - Box: wrong app credentials produce a specific, actionable error instead of a generic validation failure.
   - HTML parsing preserves table and link boundaries, fixing run-on formatting in indexed pages.
-  - The Contextual Retrieval model can be updated forward-only — new and updated documents use the new model
+  - The Contextual Retrieval model can be updated forward-only - new and updated documents use the new model
     without forcing a full re-index.
 
   ### Search and Indexing
@@ -146,16 +146,16 @@ rss: true
   - Image-summarization and contextual-RAG LLM calls are time-capped, so a stalled provider stream can no longer
     wedge indexing workers for days.
   - Chromium helper processes from web crawls are reaped instead of accumulating as zombie processes.
-  - An OpenSearch disk-full write block no longer crash-loops the API server on startup —
+  - An OpenSearch disk-full write block no longer crash-loops the API server on startup -
     search stays up and indexing resumes once the block clears.
   - `read:search`-scoped access tokens can use the full search surface, including web search endpoints,
     without carrying their owner's full authority.
 
   ### LLM Providers
 
-  - Models behind OpenAI-compatible gateways in Responses mode stream natively again — responses were being
+  - Models behind OpenAI-compatible gateways in Responses mode stream natively again - responses were being
     buffered whole, pinning API-server resources for the full generation.
-  - LM Studio: newer servers report capabilities as option objects, which now parse — model listing works again.
+  - LM Studio: newer servers report capabilities as option objects, which now parse - model listing works again.
   - Every self-hosted provider form shows the `host.docker.internal` note when Onyx runs in a container.
 
   ### Admin, Desktop, and Web
@@ -176,7 +176,7 @@ rss: true
   ### Performance
 
   - File sizes are now stored on file records, so the admin file-connector page resolves its listing in a single
-    batched query instead of one object-store lookup per file — large file connectors load in milliseconds and put far
+    batched query instead of one object-store lookup per file - large file connectors load in milliseconds and put far
     less load on the API server.
   - The LLM provider listing cache holds for ten minutes with explicit invalidation on edits,
     cutting multi-second rebuilds from chat page loads.
@@ -192,7 +192,7 @@ rss: true
 
   ## v4.5.0
 
-  Multi-provider SSO matures — password login can now be disabled entirely for SSO-only deployments,
+  Multi-provider SSO matures - password login can now be disabled entirely for SSO-only deployments,
   PKCE and scopes are configured per provider, and Microsoft Entra ID and Amazon Cognito work out of the box.
   Chat gains per-session reasoning and temperature controls, Box joins the connector lineup with permission sync,
   and the file store gains a native Azure Blob Storage backend.
@@ -201,8 +201,8 @@ rss: true
   ## [Update] Deployment Changes
 
   - **The default backend image no longer includes interactive debug tools.** `vim`, `curl`, `psql`, and `ps` are removed from `onyxdotapp/onyx-backend`; every backend tag now has a `-dev` twin (`v4.5.0-dev`, `latest-dev`) that restores them for container debugging.
-  - **Helm chart 0.8.x retunes resource defaults from production fleet evidence.** API server, model server, and heavy worker requests and limits change on upgrade, the OpenSearch PVC default grows to 64Gi (existing PVCs are not resized), and the previously ignored `codeInterpreter:` resource values now live under `code-interpreter:`. A new SIZING.md documents small/medium/large tuning. Chart 0.7.0 pairs the model server with the distroless image from v4.4.0 — upgrade the image and chart together.
-  - **The AWS Terraform module gains t-shirt sizing.** A `size` input (small/medium/large) sets fleet-calibrated defaults for EKS, RDS, Redis, and OpenSearch. The default medium tier keeps today's node shapes, but the new OpenSearch default is a single-node domain — applying it to an existing stack replaces the domain and its index data unless you pin the old shape — and RDS storage defaults change to gp3.
+  - **Helm chart 0.8.x retunes resource defaults from production fleet evidence.** API server, model server, and heavy worker requests and limits change on upgrade, the OpenSearch PVC default grows to 64Gi (existing PVCs are not resized), and the previously ignored `codeInterpreter:` resource values now live under `code-interpreter:`. A new SIZING.md documents small/medium/large tuning. Chart 0.7.0 pairs the model server with the distroless image from v4.4.0 - upgrade the image and chart together.
+  - **The AWS Terraform module gains t-shirt sizing.** A `size` input (small/medium/large) sets fleet-calibrated defaults for EKS, RDS, Redis, and OpenSearch. The default medium tier keeps today's node shapes, but the new OpenSearch default is a single-node domain - applying it to an existing stack replaces the domain and its index data unless you pin the old shape - and RDS storage defaults change to gp3.
   - **Token rate limits are now enforced in whole UTC days.** Existing hour-based windows are automatically rounded up,
     and enforcement is backed by per-user daily accounting instead of scanning chat history.
   - **Self-hosted instances report a daily version heartbeat.** The existing `DISABLE_TELEMETRY` opt-out applies.
@@ -238,7 +238,7 @@ rss: true
   The file store gains a first-class Azure Blob Storage backend (`FILE_STORE_BACKEND=azure`),
   so pure-Azure deployments no longer need MinIO or an S3 translation proxy.
   Authentication resolves from a connection string, an account name and key,
-  or `DefaultAzureCredential` — covering AKS Workload Identity and managed identities — and all file paths (user
+  or `DefaultAzureCredential` - covering AKS Workload Identity and managed identities - and all file paths (user
   uploads, connector document batches, generated files) go through it.
 
   ## Contributor Highlights
@@ -268,7 +268,7 @@ rss: true
     and permission sync falls back to impersonating the retrieving user when the file owner can't be impersonated.
   - Notion: pruning streams document IDs instead of materializing the whole workspace,
     bounding worker memory on large workspaces.
-  - SharePoint and OneDrive, BookStack, and XLSX parsing fixes — see Contributor Highlights above.
+  - SharePoint and OneDrive, BookStack, and XLSX parsing fixes - see Contributor Highlights above.
 
   ### LLM Providers
 
@@ -288,7 +288,7 @@ rss: true
 
   ### Chat and Web
 
-  - Disabling web search now also puts `open_url` in indexed-only mode — pasted links still resolve against connected knowledge, but nothing is fetched from the live internet.
+  - Disabling web search now also puts `open_url` in indexed-only mode - pasted links still resolve against connected knowledge, but nothing is fetched from the live internet.
   - Attachments with no extractable text (such as scanned PDFs)
     are explained to the model instead of handed over silently empty.
   - Chat auto-naming uses the session's model instead of the global default.
@@ -315,7 +315,7 @@ rss: true
 
   - Opening a chat and listing chat history are backed by new database indexes,
     improving load times for large deployments.
-  - The admin user list loads much faster, and chat-history search no longer blocks the event loop — under load,
+  - The admin user list loads much faster, and chat-history search no longer blocks the event loop - under load,
     first-token latency for concurrent chats dropped from ~354ms to ~54ms in benchmarks.
 
   ### Notable Bug Fixes
@@ -334,32 +334,32 @@ rss: true
 
   ## v4.4.0
 
-  Multi-provider SSO lands — Google, OIDC,
-  and SAML configured from the admin UI and served side by side on the login page — search gains time-based filtering,
+  Multi-provider SSO lands - Google, OIDC,
+  and SAML configured from the admin UI and served side by side on the login page - search gains time-based filtering,
   admins get broadcast announcements,
   and Google Drive and Gmail support multiple connectors with independent credentials.
   Thank you to our contributors for helping make this release possible!
 
   ## [Update] Action May Be Required
 
-  ### `AUTH_TYPE` has been removed — SSO moves to the admin panel
+  ### `AUTH_TYPE` has been removed - SSO moves to the admin panel
 
-  SSO is now configured from **Admin Panel → Organization → [SSO
+  SSO is now configured from **Admin Panel -> Organization -> [SSO
   Providers](https://docs.onyx.app/deployment/authentication/sso_providers)** instead of environment variables.
   On the first upgraded startup,
   a one-time migration seeds your existing `AUTH_TYPE` / OAuth / OIDC configuration into a provider row that keeps the
-  exact redirect and ACS URLs your identity provider already allowlists — no OAuth client changes are needed.
+  exact redirect and ACS URLs your identity provider already allowlists - no OAuth client changes are needed.
   **Keep the legacy variables in place through the upgrade** so the migration can read them.
 
   After upgrading, confirm the provider appears under **SSO Providers** and that logins still work,
-  then remove `AUTH_TYPE` and the legacy SSO variables — they are now inert and only emit a startup warning (the value
+  then remove `AUTH_TYPE` and the legacy SSO variables - they are now inert and only emit a startup warning (the value
   still shipped in `env.template` is likewise inert).
   See the [OIDC upgrade notes](https://docs.onyx.app/deployment/authentication/oidc) for a full before/after.
 
   <Warning>
     If you previously ran SSO-only, the login page now also renders an email/password form alongside your SSO button(s).
     To stop un-invited people from registering,
-    enable **Restrict Open Sign-Up** under **Admin Panel → Permissions → Users** — un-invited emails are then rejected
+    enable **Restrict Open Sign-Up** under **Admin Panel -> Permissions -> Users** - un-invited emails are then rejected
     at sign-in until an admin invites them.
   </Warning>
 
@@ -369,7 +369,7 @@ rss: true
   and they run as a non-root user.
 
   <Note>
-    The latest versions of the Docker Compose files and Helm chart (≥ `0.7.0`)
+    The latest versions of the Docker Compose files and Helm chart (>= `0.7.0`)
     include these changes and can be used instead of migrating.
     The steps below can be used to update legacy deployments in place.
   </Note>
@@ -378,12 +378,12 @@ rss: true
     in their own entrypoint and can no longer run a `command:` / `entrypoint:` that wraps startup in `/bin/sh -c`.
     Remove any such override from your customized files so the image's own entrypoint runs;
     this includes the old model-server `DISABLE_MODEL_SERVER` gate, now handled inside the image.
-    The API server and background images are not hardened and still rely on their stock `/bin/sh -c` commands — leave
+    The API server and background images are not hardened and still rely on their stock `/bin/sh -c` commands - leave
     those as-is.
   - **Custom CA roots on the model server.** The old shell `update-ca-certificates` step is gone. Mount your
     certificates into a directory and set `ONYX_CUSTOM_CA_CERTS_DIR` to that path (files must end in `.crt` or `.pem`);
-    they are merged on top of the public roots when the model server starts. On Helm, upgrade the chart (≥ `0.7.0`)
-    and the image **together** — the chart mounts the certs and sets the variable for you. After upgrading,
+    they are merged on top of the public roots when the model server starts. On Helm, upgrade the chart (>= `0.7.0`)
+    and the image **together** - the chart mounts the certs and sets the variable for you. After upgrading,
     confirm the `Trusting N custom CA file(s)` line in the model-server logs.
     The API server and background containers are unchanged (they still read `/etc/ssl/certs/custom-ca.crt`).
 
@@ -392,7 +392,7 @@ rss: true
   ### Multi-Provider SSO
 
   [SSO configuration](https://docs.onyx.app/deployment/authentication/sso_providers)
-  has been rebuilt from the ground up. Google, OIDC, and SAML providers are managed from a new admin page — create,
+  has been rebuilt from the ground up. Google, OIDC, and SAML providers are managed from a new admin page - create,
   edit, and enable them without redeploying,
   with each provider showing the redirect/ACS URL to paste into your IdP console.
   The login page offers every enabled provider,
@@ -402,26 +402,26 @@ rss: true
 
   ### Time-Based Search Filtering
 
-  LLM search can now filter by time — both when a document was created and when it was last updated,
+  LLM search can now filter by time - both when a document was created and when it was last updated,
   with either bound open. Documents carry a new `created_at` field populated by connectors,
   and the filter is surfaced in the search UI alongside the source filters from v4.3.0.
 
   ### System Announcements
 
-  Admins can broadcast an announcement to every user from a new System Announcement section under Appearance & Theming —
+  Admins can broadcast an announcement to every user from a new System Announcement section under Appearance & Theming -
   a markdown notice with an optional pop-up on first visit. All banners (announcements, license expiry, trial notices)
   now queue in a single bottom-left stack instead of competing for space.
 
   ### Multiple Google Drive and Gmail Connectors
 
   Google service-account keys and OAuth app credentials are now stored per credential rather than per deployment,
-  so you can run multiple Google Drive and Gmail connectors with independent credentials — for example,
+  so you can run multiple Google Drive and Gmail connectors with independent credentials - for example,
   separate connectors per Workspace domain.
 
   ## Contributor Highlights
 
-  - [@siriusfreak](https://github.com/siriusfreak) — after adding Tavily
-    and Nebius Token Factory in v4.3.0 — contributed a full **LumApps connector** with checkpointed incremental indexing
+  - [@siriusfreak](https://github.com/siriusfreak) - after adding Tavily
+    and Nebius Token Factory in v4.3.0 - contributed a full **LumApps connector** with checkpointed incremental indexing
     of published intranet content!
   - [@jack-watroba](https://github.com/jack-watroba) fixed MCP OAuth
     public-client PKCE registration in their first contribution!
@@ -437,7 +437,7 @@ rss: true
 
   ### Search and Indexing
 
-  - Indexing resumes on graceful worker shutdown — rolling deploys and
+  - Indexing resumes on graceful worker shutdown - rolling deploys and
     scale-downs mark the attempt resumable instead of failed.
   - Connector creation rolls back cleanly on validation failure.
 
@@ -453,7 +453,7 @@ rss: true
 
   ### MCP
 
-  - Group and public access control for MCP servers — users only see and
+  - Group and public access control for MCP servers - users only see and
     attach tools from servers they can access.
   - OAuth tokens refresh proactively on SSE transport, preventing
     tool-call failures on expired tokens.
@@ -515,14 +515,14 @@ rss: true
 
   SIEM-exportable audit logging, TLS and mutual TLS across the entire data plane, conversation-aware search scoping,
   hardened indexing for large files,
-  and two new providers — Tavily and Nebius Token Factory — both from a first-time community contributor.
+  and two new providers - Tavily and Nebius Token Factory - both from a first-time community contributor.
   Thank you to our contributors for helping make this release possible!
 
   ## Key Improvements
 
   ### Audit Logging
 
-  Onyx now emits a normalized, SIEM-exportable audit-event stream — Splunk, Sentinel, Elastic, Chronicle,
+  Onyx now emits a normalized, SIEM-exportable audit-event stream - Splunk, Sentinel, Elastic, Chronicle,
   and AWS Security Lake can ingest it with no per-SIEM integration. Coverage spans authentication (login, logout,
   register, password reset, verification), admin configuration (LLM providers, connectors, credentials, API keys),
   access control (roles, user creation, group membership), and impersonation.
@@ -563,7 +563,7 @@ rss: true
   - [@siriusfreak](https://github.com/siriusfreak) added both the Tavily
     and Nebius Token Factory providers in their first contributions!
   - [@greymoth-jp](https://github.com/greymoth-jp) fixed Enter during IME
-    composition submitting list inputs — a long-standing annoyance for Japanese, Chinese, and Korean text entry!
+    composition submitting list inputs - a long-standing annoyance for Japanese, Chinese, and Korean text entry!
 
   ## Additional Improvements
 
@@ -645,7 +645,7 @@ rss: true
 
   ## v4.2.0
 
-  Chat runs are now durable — close the tab mid-answer and reconnect to the live stream — agent sharing gets per-share
+  Chat runs are now durable - close the tab mid-answer and reconnect to the live stream - agent sharing gets per-share
   permissions and ownership transfer, security settings move into a runtime-configurable admin page,
   and a large indexing-memory hardening effort lands.
   Thank you to our contributors for helping make this release possible!
@@ -656,7 +656,7 @@ rss: true
     `ENABLE_PUBLIC_DOCS=true` to restore the previous behavior.
   - **`USER_AUTH_SECRET` is now required on non-dev deployments** instead
     of silently falling back to a default.
-  - **Default MinIO/S3 object-storage credentials have been hardened** —
+  - **Default MinIO/S3 object-storage credentials have been hardened** -
     set explicit credentials if you relied on the previous defaults.
 
   ## Key Improvements
@@ -665,7 +665,7 @@ rss: true
 
   A chat or Deep Research run no longer lives and dies with your browser connection.
   Runs now execute to completion on the server regardless of client disconnects,
-  and the stream records itself as it goes — reopen the chat from any tab and it replays what you missed,
+  and the stream records itself as it goes - reopen the chat from any tab and it replays what you missed,
   then continues live until the answer finishes.
   Works on both Redis and [Lite Mode](https://docs.onyx.app/deployment/getting_started/resourcing#onyx-lite)'s Postgres
   cache.
@@ -681,7 +681,7 @@ rss: true
   Security controls are moving out of environment variables and into a new admin Security page,
   backed by runtime-configurable settings. The first controls to land: **Sync Session Expiry with Identity Provider**,
   which ties session lifetime to your IdP, and **Full User Directory Visibility**,
-  which controls whether non-admins can see the user directory — previously only configurable via environment variable.
+  which controls whether non-admins can see the user directory - previously only configurable via environment variable.
 
   ### Flexible Chat Retention
 
@@ -727,7 +727,7 @@ rss: true
     instead of a generic failure, with a token safety margin to prevent them.
   - Pre-tool narration and tool calls render in their correct places when
     emitted in the same LLM cycle.
-  - The file "Processing…" indicator stays until uploaded files finish
+  - The file "Processing..." indicator stays until uploaded files finish
     indexing.
   - Chats inside a Project search only that Project's files.
   - Deleted files referenced in chat history no longer break the session.
@@ -817,7 +817,7 @@ rss: true
   - **The backend image has been upgraded from Python 3.11 to Python 3.13.**
     If you build custom images or install additional packages on top of the Onyx image,
     verify compatibility before upgrading.
-  - **The Helm chart now fails fast on 0.4.x → 0.5.x upgrades that would
+  - **The Helm chart now fails fast on 0.4.x -> 0.5.x upgrades that would
     lose Vespa data**, protecting deployments that haven't completed the OpenSearch migration from accidental data loss.
 
   ## Key Improvements
@@ -825,8 +825,8 @@ rss: true
   ### Scoped Personal Access Tokens
 
   Personal Access Tokens now support permission scopes.
-  Tokens can be restricted to coarse API surfaces — including `read:chat`, `write:chat`,
-  and `read:search` — and users select scopes when creating a token from the settings UI.
+  Tokens can be restricted to coarse API surfaces - including `read:chat`, `write:chat`,
+  and `read:search` - and users select scopes when creating a token from the settings UI.
   Existing tokens continue to work unchanged.
 
   ### OAuth for Known MCP Providers
@@ -945,7 +945,7 @@ rss: true
 
   ## [Update] Defaults that Changed
 
-  - **DALL·E 3 has been dropped as an image generation provider.** Move to GPT
+  - **DALL-E 3 has been dropped as an image generation provider.** Move to GPT
     Image 2 (added in v3.3.0) or another configured provider.
   - **Search-time image processing has been removed.** Image processing now
     happens at indexing time only.
@@ -954,7 +954,7 @@ rss: true
 
   ### Coding Agent (opt-in)
 
-  v4.0.0 introduces a new Coding Agent — a sandboxed agent with file download and bash tool access,
+  v4.0.0 introduces a new Coding Agent - a sandboxed agent with file download and bash tool access,
   available as a standalone agent and as a tool that the regular chat agent can invoke.
   The Coding Agent ships **disabled by default**;
   admins can enable and configure it from a new section of the Admin Panel.
@@ -1120,7 +1120,7 @@ rss: true
 
   ### Chat
 
-  - Queued messages — send a follow-up while a response is still generating.
+  - Queued messages - send a follow-up while a response is still generating.
   - Multi-model chat refinements: inline citation chips in panels, isolated
     streaming errors per panel, and numerous UI polish fixes.
   - Scrollable tables with an overflow fade in chat responses.
@@ -1173,15 +1173,15 @@ rss: true
 
   ### Generic OpenAI-Compatible Provider
 
-  Onyx now ships a generic "OpenAI Compatible" provider that lets you point at any OpenAI-compatible endpoint — local
-  inference servers, gateway proxies, or self-hosted model runners — without needing a dedicated integration.
+  Onyx now ships a generic "OpenAI Compatible" provider that lets you point at any OpenAI-compatible endpoint - local
+  inference servers, gateway proxies, or self-hosted model runners - without needing a dedicated integration.
   The Custom LLM provider configuration was also reworked to support this cleanly.
 
   ### Hooks: status, logs, and document ingestion
 
   The Hook system introduced in v3.1.0 has matured. A new admin page lets you create, edit,
   and monitor hooks with live status and logs,
-  and a second integration point — document ingestion — joins query processing in the set of hookable lifecycle events.
+  and a second integration point - document ingestion - joins query processing in the set of hookable lifecycle events.
   Connection-lost states surface clearly in the UI when a hook becomes unreachable.
 
   <img className="rounded-image" src="/assets/changelog/v3.2/hook_extensions_page.png" alt="Hook Extensions Page"/>
@@ -1422,7 +1422,7 @@ rss: true
   v3.0.0 starts the final stretch of the Vespa to OpenSearch migration.
   **Every deployment must run a v3.x.x release long enough for the migration to complete before upgrading to v4.x.x,
   where Vespa will be fully removed.** If you skip v3 entirely,
-  you will lose all of your indexed data and have to re-index from scratch — including re-uploading any Project files.
+  you will lose all of your indexed data and have to re-index from scratch - including re-uploading any Project files.
 
   ## Key Improvements
 
@@ -1442,7 +1442,7 @@ rss: true
 
   ### Code Interpreter, by default
 
-  Code Interpreter is now part of the default deployment for both Docker and Helm — no extra setup required.
+  Code Interpreter is now part of the default deployment for both Docker and Helm - no extra setup required.
   Sessions stream output as they run, accept file inputs, embed generated images directly into chat,
   and ship with rich preview modals for CSV, PDF, and DOCX outputs.
   The Python tool is also enabled by default on the default agent.
@@ -1664,10 +1664,10 @@ rss: true
 
   The Onyx Desktop App received several important updates in this release:
 
-  - **Domain configuration** — You can now configure which Onyx instance the desktop app connects to directly from the
+  - **Domain configuration** - You can now configure which Onyx instance the desktop app connects to directly from the
     app
-  - **Proper macOS code signing** — The Mac app is now properly signed, so you won't see Gatekeeper warnings on install
-  - **Light/dark mode** — The desktop app now correctly reflects your theme preference
+  - **Proper macOS code signing** - The Mac app is now properly signed, so you won't see Gatekeeper warnings on install
+  - **Light/dark mode** - The desktop app now correctly reflects your theme preference
 
   ## Contributor Highlights
 
