@@ -21,10 +21,15 @@ An API token does not give its owner additional Jira permissions.
 
 ### Authorization
 
+#### 1. Choose a connector account
+
 Use a dedicated Jira account for the connector.
 This makes its access easier to review and prevents a personal account change from stopping the connector.
 
-#### Indexing permissions
+Create the account or choose an existing account before you create the API token.
+Then grant the account the permissions for your connector type.
+
+##### Indexing without permission sync
 
 For indexing without permission sync, the Jira account needs:
 
@@ -36,16 +41,16 @@ For indexing without permission sync, the Jira account needs:
 Jira omits projects, issues, and comments that the account cannot access.
 A standard Jira user can run the connector if the user has all required access.
 
-#### Permission sync permissions
+##### Additional permissions for permission sync
 
 <Warning>
-  Onyx syncs project-level **Browse Projects** access.
+  Onyx treats everything inside a Jira project as accessible to everyone who can see the project.
   It does not sync Jira issue security levels or restricted comment visibility.
   Do not enable permission sync for projects that use these restrictions.
   You can instead exclude restricted issues with the connector's JQL query or skipped-label settings.
 </Warning>
 
-Permission sync requires all indexing permissions plus:
+For permission sync, grant the account all indexing permissions plus:
 
 - **Administer Jira** globally, or **Administer Projects** in every indexed project.
 - **Browse users and groups** globally, or **Administer Jira** globally.
@@ -59,14 +64,15 @@ The simplest reliable configuration is a dedicated account with **Administer Jir
   Confirm **Browse Projects** and issue security access separately.
 </Note>
 
-#### Check the Jira account's permissions
+#### 2. Check and grant the account's permissions
 
 Ask a Jira administrator to complete these checks while signed in to Jira:
 
 <Steps>
   <Step title="Check global permissions">
     Go to **Settings > System > Global permissions**. Confirm that the connector account, or one of its groups,
-    has **Administer Jira** and **Browse users and groups**.
+    has **Administer Jira** and **Browse users and groups**. If a permission is missing,
+    use **Grant permission** on the same page or add the account to a group that has it.
 
     Jira Data Center can use the names **Jira administrators** and **Browse users and groups**.
     See Atlassian's [Cloud global permission
@@ -81,6 +87,8 @@ Ask a Jira administrator to complete these checks while signed in to Jira:
 
     Check **Browse Projects** and **Administer Projects**.
     Repeat the check with a representative issue from each permission scheme and issue security level in use.
+    If a project permission is missing, grant it to the account, one of its groups,
+    or one of its project roles in the project's permission scheme.
     Atlassian provides separate
     [Cloud](https://support.atlassian.com/jira-cloud-administration/docs/check-a-users-access-from-a-work-item/)
     and [Data Center](https://confluence.atlassian.com/adminjiraserver/jira-admin-helper-938847791.html) instructions.
@@ -92,7 +100,7 @@ Ask a Jira administrator to complete these checks while signed in to Jira:
   </Step>
 </Steps>
 
-#### Create the token
+#### 3. Create the token
 
 <Steps>
   <Step title="Jira Cloud token">
@@ -100,10 +108,7 @@ Ask a Jira administrator to complete these checks while signed in to Jira:
     Follow Atlassian's [API token
     instructions](https://support.atlassian.com/atlassian-account/docs/manage-api-tokens-for-your-atlassian-account/).
 
-    For a token without scopes, Onyx uses your `https://<site>.atlassian.net` URL.
-
-    For a token with scopes, enable **Using scoped token** in Onyx.
-    Onyx then uses Atlassian's `https://api.atlassian.com/ex/jira/{cloudId}` API gateway.
+    If you create a token with scopes, enable **Using scoped token** when you configure the connector in Onyx.
 
     For indexing, grant the token the `read:jira-work` scope. Permission sync also reads permission schemes,
     project roles, users, groups, and group membership.
