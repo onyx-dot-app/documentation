@@ -47,17 +47,17 @@ A standard Jira user can run the connector if the user has all required access.
   Onyx treats everything inside a Jira project as accessible to everyone who can see the project.
   It does not sync Jira issue security levels or restricted comment visibility.
   Do not enable permission sync for projects that use these restrictions.
-  You can instead exclude restricted issues with the connector's JQL query or skipped-label settings.
 </Warning>
 
 For permission sync, grant the account all indexing permissions plus:
 
-- **Administer Jira** globally, or **Administer Projects** in every indexed project.
-- **Browse users and groups** globally, or **Administer Jira** globally.
+- **Jira Cloud:** **Administer Jira** globally, or **Administer Projects** in every indexed company-managed project.
+  Also grant **Browse users and groups** globally, unless the account has **Administer Jira**.
+- **Jira Data Center 9 through 11:** add the account to a group with the **Jira administrators** or
+  **Jira System administrators** global permission. Data Center requires this access to read group membership.
 
 Onyx uses these permissions to read each project's permission scheme, resolve project roles, and read group membership.
-The simplest reliable configuration is a dedicated account with **Administer Jira**,
-**Browse Projects** for all indexed projects, and access to all relevant issue security levels.
+The account also needs **Browse Projects** for all indexed projects.
 
 <Note>
   **Administer Jira** does not always grant access to issue content.
@@ -69,19 +69,23 @@ The simplest reliable configuration is a dedicated account with **Administer Jir
 Ask a Jira administrator to complete these checks while signed in to Jira:
 
 <Steps>
-  <Step title="Check global permissions">
-    Go to **Settings > System > Global permissions**. Confirm that the connector account, or one of its groups,
-    has **Administer Jira** and **Browse users and groups**. If a permission is missing,
-    use **Grant permission** on the same page or add the account to a group that has it.
-
-    Jira Data Center can use the names **Jira administrators** and **Browse users and groups**.
+  <Step title="Check global permissions in Jira Cloud">
+    Go to **Settings > System > Global permissions**. Confirm that the account has the Cloud permissions listed above,
+    either directly or through a group. If a permission is missing,
+    use **Grant permission** or add the account to a group that has it.
     See Atlassian's [Cloud global permission
-    instructions](https://support.atlassian.com/jira-cloud-administration/docs/view-grant-revoke-global-permissions-in-jira/)
-    or [Data Center global permission
+    instructions](https://support.atlassian.com/jira-cloud-administration/docs/view-grant-revoke-global-permissions-in-jira/).
+  </Step>
+
+  <Step title="Check global permissions in Jira Data Center">
+    Go to **Administration > System > Global permissions**.
+    Confirm that the account belongs to a group with **Jira administrators** or **Jira System administrators**.
+    Data Center grants global permissions to groups, not individual accounts.
+    See Atlassian's [Data Center global permission
     instructions](https://confluence.atlassian.com/adminjiraserver/managing-global-permissions-938847142.html).
   </Step>
 
-  <Step title="Check project and issue access">
+  <Step title="Check Cloud project and issue access">
     Go to **Settings > System > Admin Helper > Permission Helper**. Enter the connector account, a representative issue,
     and the permission to check.
 
@@ -89,9 +93,17 @@ Ask a Jira administrator to complete these checks while signed in to Jira:
     Repeat the check with a representative issue from each permission scheme and issue security level in use.
     If a project permission is missing, grant it to the account, one of its groups,
     or one of its project roles in the project's permission scheme.
-    Atlassian provides separate
-    [Cloud](https://support.atlassian.com/jira-cloud-administration/docs/check-a-users-access-from-a-work-item/)
-    and [Data Center](https://confluence.atlassian.com/adminjiraserver/jira-admin-helper-938847791.html) instructions.
+    The Permission Helper applies to company-managed projects.
+    See Atlassian's [Cloud Permission Helper
+    instructions](https://support.atlassian.com/jira-cloud-administration/docs/check-a-users-access-from-a-work-item/).
+  </Step>
+
+  <Step title="Check Data Center project and issue access">
+    Go to **Administration > System**, then select **Permission helper** in the left panel. Enter the connector account,
+    a representative issue, and **Browse Projects**.
+    Repeat the check with a representative issue from each permission scheme and issue security level in use.
+    See Atlassian's [Data Center Permission Helper
+    instructions](https://confluence.atlassian.com/adminjiraserver/jira-admin-helper-938847791.html).
   </Step>
 
   <Step title="Test representative restricted content">
@@ -123,7 +135,7 @@ Ask a Jira administrator to complete these checks while signed in to Jira:
     Token scopes limit the token. They do not replace the connector account permissions described above.
   </Step>
 
-  <Step title="Jira Server token">
+  <Step title="Jira Data Center token">
     Create a personal access token from the connector account.
     Follow Atlassian's [Jira Data Center token
     instructions](https://confluence.atlassian.com/enterprise/using-personal-access-tokens-1026032365.html).
@@ -138,15 +150,20 @@ Ask a Jira administrator to complete these checks while signed in to Jira:
 Review these limitations before you enable permission sync:
 
 - Onyx maps Jira users to Onyx users by email address. Jira Cloud profile visibility can hide `emailAddress`, even
-  from an administrator's API token. A hidden email prevents Onyx from mapping that user.
+  from an administrator's API token. Jira Data Center can also hide or mask user email addresses. A missing, hidden,
+  or masked email prevents Onyx from mapping that user.
   Review Atlassian's [profile visibility
-  documentation](https://developer.atlassian.com/cloud/jira/platform/profile-visibility/).
+  documentation](https://developer.atlassian.com/cloud/jira/platform/profile-visibility/)
+  and [Data Center email visibility
+  settings](https://confluence.atlassian.com/adminjiraserver0912/configuring-jira-application-options-1346048127.html).
 - Onyx supports static **Browse Projects** grants to users, groups, and project roles. Dynamic grants such as
   Reporter, Assignee, Project Lead, and custom user fields cannot map to a static Onyx access list.
-- Onyx treats Jira's **Anyone** and **Any logged in user/application role** grants as accessible to all Onyx users.
-- Permission sync reads all Jira groups visible to the connector account, not only groups used by the selected
-  projects.
-- Jira Cloud scoped tokens expire after 1 to 365 days. Rotate the token before it expires.
+- Onyx treats Jira's **Anyone** and **Application access** grants as accessible to all Onyx users.
+  Jira application access normally includes only licensed Jira users.
+  This mapping can give access to Onyx users who cannot access Jira.
+- Permission sync requests up to 9,999 Jira groups visible to the connector account.
+  Jira can apply a lower limit, so large sites might not sync every group.
+- Jira Cloud API tokens expire after 1 to 365 days. Rotate the token before it expires.
 
 ### Indexing
 
@@ -160,7 +177,7 @@ Review these limitations before you enable permission sync:
 
     <img className="rounded-image" src="/assets/admins/connectors/jira/JiraCloudAuth.png" alt="Onyx Jira Cloud connector authentication form"/>
 
-    For Jira Server or Data Center, enter the personal access token:
+    For Jira Data Center, enter the personal access token:
 
     <img className="rounded-image" src="/assets/admins/connectors/jira/JiraServerAuth.png" alt="Onyx Jira Server personal access token form"/>
   </Step>
