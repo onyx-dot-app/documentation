@@ -7,48 +7,157 @@ description: "Access issues and projects from Jira"
 
 The Jira connector pulls in all tickets from the specified projects every **10** minutes.
 
-For every jira issue this connector will pull:
+For every Jira issue, this connector pulls:
 
 - Title
 - Description
 - [Common fields](#indexed-metadata)
 - Comments
 
+The connector can index only the content that its Jira account can access.
+An API token does not give its owner additional Jira permissions.
+
 ## Setting up
 
 ### Authorization
 
+Use a dedicated Jira account for the connector.
+This makes its access easier to review and prevents a personal account change from stopping the connector.
+
+#### Indexing permissions
+
+For indexing without permission sync, the Jira account needs:
+
+- Jira product access.
+- **Browse Projects** for every project that you want to index.
+- Access to each issue security level used by the indexed issues.
+- Access to each restricted comment that you want to index.
+
+Jira omits projects, issues, and comments that the account cannot access.
+A standard Jira user can run the connector if the user has all required access.
+
+#### Permission sync permissions
+
+<Warning>
+  Onyx syncs project-level **Browse Projects** access.
+  It does not sync Jira issue security levels or restricted comment visibility.
+  Do not enable permission sync for projects that use these restrictions.
+  You can instead exclude restricted issues with the connector's JQL query or skipped-label settings.
+</Warning>
+
+Permission sync requires all indexing permissions plus:
+
+- **Administer Jira** globally, or **Administer Projects** in every indexed project.
+- **Browse users and groups** globally, or **Administer Jira** globally.
+
+Onyx uses these permissions to read each project's permission scheme, resolve project roles, and read group membership.
+The simplest reliable configuration is a dedicated account with **Administer Jira**,
+**Browse Projects** for all indexed projects, and access to all relevant issue security levels.
+
+<Note>
+  **Administer Jira** does not always grant access to issue content.
+  Confirm **Browse Projects** and issue security access separately.
+</Note>
+
+#### Check the Jira account's permissions
+
+Ask a Jira administrator to complete these checks while signed in to Jira:
+
+<Steps>
+  <Step title="Check global permissions">
+    Go to **Settings > System > Global permissions**. Confirm that the connector account, or one of its groups,
+    has **Administer Jira** and **Browse users and groups**.
+
+    Jira Data Center can use the names **Jira administrators** and **Browse users and groups**.
+    See Atlassian's [Cloud global permission
+    instructions](https://support.atlassian.com/jira-cloud-administration/docs/view-grant-revoke-global-permissions-in-jira/)
+    or [Data Center global permission
+    instructions](https://confluence.atlassian.com/adminjiraserver/managing-global-permissions-938847142.html).
+  </Step>
+
+  <Step title="Check project and issue access">
+    Go to **Settings > System > Admin Helper > Permission Helper**. Enter the connector account, a representative issue,
+    and the permission to check.
+
+    Check **Browse Projects** and **Administer Projects**.
+    Repeat the check with a representative issue from each permission scheme and issue security level in use.
+    Atlassian provides separate
+    [Cloud](https://support.atlassian.com/jira-cloud-administration/docs/check-a-users-access-from-a-work-item/)
+    and [Data Center](https://confluence.atlassian.com/adminjiraserver/jira-admin-helper-938847791.html) instructions.
+  </Step>
+
+  <Step title="Test representative restricted content">
+    Sign in as the connector account.
+    Confirm that it can open representative issues and comments from each restriction type that you intend to index.
+  </Step>
+</Steps>
+
+#### Create the token
+
 <Steps>
   <Step title="Jira Cloud token">
-    **Jira Cloud**:
-    follow the guide described
-    [here](https://docs.searchunify.com/Content/Content-Sources/Atlassian-Jira-Confluence-Authentication-Create-API-Token.htm)
-    to get an access token.
+    Create an API token from the connector account.
+    Follow Atlassian's [API token
+    instructions](https://support.atlassian.com/atlassian-account/docs/manage-api-tokens-for-your-atlassian-account/).
+
+    For a token without scopes, Onyx uses your `https://<site>.atlassian.net` URL.
+
+    For a token with scopes, enable **Using scoped token** in Onyx.
+    Onyx then uses Atlassian's `https://api.atlassian.com/ex/jira/{cloudId}` API gateway.
+
+    For indexing, grant the token the `read:jira-work` scope. Permission sync also reads permission schemes,
+    project roles, users, groups, and group membership.
+    Grant `read:jira-user` and `manage:jira-configuration` in addition to `read:jira-work`,
+    or grant the complete granular read scopes listed for these Jira APIs:
+
+    - [Issue search and fetch](https://developer.atlassian.com/cloud/jira/platform/rest/v3/api-group-issues/)
+    - [Project permission schemes](https://developer.atlassian.com/cloud/jira/platform/rest/v3/api-group-project-permission-schemes/)
+    - [Project roles](https://developer.atlassian.com/cloud/jira/platform/rest/v3/api-group-project-roles/)
+    - [Groups and group members](https://developer.atlassian.com/cloud/jira/platform/rest/v3/api-group-groups/)
+
+    Token scopes limit the token. They do not replace the connector account permissions described above.
   </Step>
 
   <Step title="Jira Server token">
-    **Jira Server**:
-    follow the guide described
-    [here](https://confluence.atlassian.com/enterprise/using-personal-access-tokens-1026032365.html)
-    to get a personal access token.
+    Create a personal access token from the connector account.
+    Follow Atlassian's [Jira Data Center token
+    instructions](https://confluence.atlassian.com/enterprise/using-personal-access-tokens-1026032365.html).
+
+    The token has the same access as its Jira account.
+    Jira Data Center personal access tokens do not use Jira Cloud API scopes.
   </Step>
 </Steps>
+
+### Permission sync limitations
+
+Review these limitations before you enable permission sync:
+
+- Onyx maps Jira users to Onyx users by email address. Jira Cloud profile visibility can hide `emailAddress`, even
+  from an administrator's API token. A hidden email prevents Onyx from mapping that user.
+  Review Atlassian's [profile visibility
+  documentation](https://developer.atlassian.com/cloud/jira/platform/profile-visibility/).
+- Onyx supports static **Browse Projects** grants to users, groups, and project roles. Dynamic grants such as
+  Reporter, Assignee, Project Lead, and custom user fields cannot map to a static Onyx access list.
+- Onyx treats Jira's **Anyone** and **Any logged in user/application role** grants as accessible to all Onyx users.
+- Permission sync reads all Jira groups visible to the connector account, not only groups used by the selected
+  projects.
+- Jira Cloud scoped tokens expire after 1 to 365 days. Rotate the token before it expires.
 
 ### Indexing
 
 <Steps>
   <Step title="Open Jira connector">
-    Navigate to the Admin Panel and select the **Jira** Connector
+    Go to the Admin Panel and select the **Jira** connector.
   </Step>
 
   <Step title="Provide credentials">
-    For Cloud, provide the **Access Token** and the **Username** it belongs to:
+    For Jira Cloud, enter the connector account's email address and API token:
 
     <img className="rounded-image" src="/assets/admins/connectors/jira/JiraCloudAuth.png" alt="Onyx Jira Cloud connector authentication form"/>
 
-    For Server, provide the **Personal Access Token**:
+    For Jira Server or Data Center, enter the personal access token:
 
-    <img className="rounded-image" src="/assets/admins/connectors/jira/JiraServerAuth.png" alt="Onyx Jira Server connector personal access token form"/>
+    <img className="rounded-image" src="/assets/admins/connectors/jira/JiraServerAuth.png" alt="Onyx Jira Server personal access token form"/>
   </Step>
 
   <Step title="Choose projects and filters">
@@ -59,7 +168,7 @@ For every jira issue this connector will pull:
   </Step>
 
   <Step title="Start indexing">
-    Click the `Connect` button! All your Jira tickets in that space will now be pulled into Onyx every **10** minutes.
+    Select **Connect**. Onyx pulls the Jira issues that the connector account can access every **10** minutes.
   </Step>
 </Steps>
 
