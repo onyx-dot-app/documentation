@@ -51,8 +51,10 @@ A standard Jira user can run the connector if the user has all required access.
 
 For permission sync, grant the account all indexing permissions plus:
 
-- **Jira Cloud:** **Administer Jira** globally, or **Administer Projects** in every indexed company-managed project.
-  Also grant **Browse users and groups** globally, unless the account has **Administer Jira**.
+- **Jira Cloud:** **Administer Jira** globally, or administrative access to every indexed project.
+  For company-managed projects, grant **Administer Projects**. For team-managed projects,
+  assign the **Administrator** role. Also grant **Browse users and groups** globally,
+  unless the account has **Administer Jira**.
 - **Jira Data Center 9 through 11:** add the account to a group with the **Jira administrators** or
   **Jira System administrators** global permission. Data Center requires this access to read group membership.
 
@@ -85,7 +87,7 @@ Ask a Jira administrator to complete these checks while signed in to Jira:
     instructions](https://confluence.atlassian.com/adminjiraserver/managing-global-permissions-938847142.html).
   </Step>
 
-  <Step title="Check Cloud project and issue access">
+  <Step title="Check Cloud company-managed project access">
     Go to **Settings > System > Admin Helper > Permission Helper**. Enter the connector account, a representative issue,
     and the permission to check.
 
@@ -96,6 +98,14 @@ Ask a Jira administrator to complete these checks while signed in to Jira:
     The Permission Helper applies to company-managed projects.
     See Atlassian's [Cloud Permission Helper
     instructions](https://support.atlassian.com/jira-cloud-administration/docs/check-a-users-access-from-a-work-item/).
+  </Step>
+
+  <Step title="Check Cloud team-managed project access">
+    In the project's sidebar, go to **Space settings > Access**.
+    Confirm that the connector account has the **Administrator** role.
+    Review the project's access level and each role that can view issues.
+    See Atlassian's [team-managed access
+    instructions](https://support.atlassian.com/jira-software-cloud/docs/manage-how-people-access-your-team-managed-project/).
   </Step>
 
   <Step title="Check Data Center project and issue access">
