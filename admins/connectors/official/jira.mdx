@@ -19,6 +19,9 @@ An API token does not give its owner additional Jira permissions.
 
 ## Jira Cloud setup
 
+Jira Cloud is hosted and updated by Atlassian. Its site URL usually ends in `atlassian.net`.
+If your organization manages its Jira deployment and version, use the [Jira Data Center setup](#jira-data-center-setup).
+
 ### 1. Choose a connector account
 
 Use a dedicated Jira account for the connector.
@@ -27,6 +30,9 @@ This makes its access easier to review and prevents a personal account change fr
 Create the account or choose an existing account before you grant access or create the API token.
 
 ### 2. Learn where to check and grant access
+
+The connector indexes only the projects, issues, and comments that its Jira account can access.
+Use the checks below to troubleshoot missing content or grant the permission sync access in step 4.
 
 Ask a Jira administrator to complete these steps while signed in to Jira:
 
@@ -92,7 +98,7 @@ Grant all indexing access from the previous step. Then grant one of these admini
 - **Administer Projects** in every indexed company-managed project and the **Administrator** role in every indexed
   team-managed project.
 
-Also grant **Browse users and groups** globally, unless the account has **Administer Jira**.
+If the account does not have **Administer Jira**, you must also grant the global **Browse users and groups** permission.
 Onyx uses this access to read permission schemes, project roles, users, groups, and group membership.
 
 <Note>
@@ -130,6 +136,9 @@ This makes its access easier to review and prevents a personal account change fr
 Create the account or choose an existing account before you grant access or create the personal access token.
 
 ### 2. Learn where to check and grant access
+
+The connector indexes only the projects, issues, and comments that its Jira account can access.
+Use the checks below to troubleshoot missing content or grant the permission sync access in step 4.
 
 Ask a Jira administrator to complete these steps while signed in to Jira:
 
