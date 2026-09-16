@@ -239,6 +239,7 @@
                   "admins/connectors/official/linear",
                   "admins/connectors/official/notion",
                   "admins/connectors/official/oci_storage",
+                  "admins/connectors/official/outlook",
                   "admins/connectors/official/productboard",
                   "admins/connectors/official/r2",
                   "admins/connectors/official/requesttracker",
