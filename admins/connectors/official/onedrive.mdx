@@ -1,0 +1,177 @@
+---
+title: "OneDrive"
+description: "Index OneDrive for Business files and synchronize their permissions"
+---
+
+The OneDrive connector indexes files from users' OneDrive for Business drives.
+It uses Microsoft Graph with application permissions.
+
+<Note>
+  Use the [SharePoint connector](/admins/connectors/official/sharepoint/sharepoint)
+  for team sites and document libraries. Use this connector for users' personal drives.
+</Note>
+
+## Before you start
+
+You need:
+
+- A Microsoft Entra administrator who can create an app registration and grant admin consent.
+- OneDrive for Business drives. A user must open OneDrive before Microsoft provisions the drive.
+- A client secret or a certificate in PKCS#12 (`.pfx`) format.
+
+## Create the app registration
+
+<Steps>
+  <Step title="Register an application">
+    In the [Microsoft Entra admin center](https://entra.microsoft.com/), open
+    **App registrations** and select **New registration**.
+  </Step>
+
+  <Step title="Save the application IDs">
+    Copy the **Application (client) ID** and **Directory (tenant) ID**.
+  </Step>
+
+  <Step title="Create a credential">
+    Create a client secret, or upload the public certificate that matches your
+    `.pfx` file.
+  </Step>
+</Steps>
+
+## Configure Microsoft Graph permissions
+
+Add these **Application** permissions and grant admin consent:
+
+| Permission | Required for |
+|---|---|
+| `User.Read.All` | Find configured users or enumerate enabled member users |
+| `Sites.Read.All` | Read all accessible personal sites, drives, files, and item permissions |
+| `GroupMember.ReadBasic.All` | List Entra groups and their transitive members for permission sync |
+| `Member.Read.Hidden` | Expand groups whose membership is hidden |
+
+`GroupMember.ReadBasic.All` is required only when you enable permission sync.
+`Member.Read.Hidden` is optional. Without it, files granted through a hidden-membership
+group remain restricted because Onyx cannot map that group to its users.
+
+### Limit access with Sites.Selected
+
+Use `Sites.Selected` instead of `Sites.Read.All` to limit the app to specified
+personal sites. You must then grant the app `read` access to each user's personal site.
+
+<Steps>
+  <Step title="Add Sites.Selected">
+    Add the Microsoft Graph **Application** permission `Sites.Selected`. Grant
+    admin consent.
+  </Step>
+
+  <Step title="Get the personal site ID">
+    Use Microsoft Graph with an administrator credential:
+
+    ```text
+    GET https://graph.microsoft.com/v1.0/sites/{tenant}-my.sharepoint.com:/personal/{user-path}
+    ```
+
+    Copy the returned `id`.
+  </Step>
+
+  <Step title="Grant the app read access">
+    Send this request with an administrator credential:
+
+    ```text
+    POST https://graph.microsoft.com/v1.0/sites/{site-id}/permissions
+    ```
+
+    ```json
+    {
+      "roles": ["read"],
+      "grantedToIdentitiesV2": [
+        {
+          "application": {
+            "id": "<Onyx app client ID>",
+            "displayName": "Onyx OneDrive Connector"
+          }
+        }
+      ]
+    }
+    ```
+  </Step>
+</Steps>
+
+Repeat the grant for each personal site that Onyx must index.
+
+When you select **General**, Onyx enumerates enabled member users and skips drives
+that the selected app cannot access. When you select **Specific**, an inaccessible
+configured user causes a connector failure.
+
+## Configure Onyx
+
+<Steps>
+  <Step title="Open the connector">
+    In the Onyx Admin Panel, select **OneDrive**.
+  </Step>
+
+  <Step title="Create a credential">
+    Select **Client Secret** or **Certificate**. Enter the application and
+    directory IDs.
+
+    For a client secret, enter its value. For a certificate, upload the `.pfx`
+    file and enter its export password.
+  </Step>
+
+  <Step title="Select the indexing scope">
+    Select **General** to index all eligible users. Select **Specific** to enter
+    one or more user principal names or primary email addresses.
+  </Step>
+
+  <Step title="Configure advanced options">
+    You can exclude paths with glob patterns.
+
+    Enable **Treat organization links as public** only if all Onyx users should
+    access files shared through organization-wide links.
+  </Step>
+
+  <Step title="Configure permission sync">
+    Select **Auto Sync Permissions** to mirror file, folder, link, and Entra
+    group access in Onyx. This option requires Onyx Cloud or Enterprise Edition.
+  </Step>
+
+  <Step title="Create the connector">
+    Enter a connector name and select **Create Connector**.
+  </Step>
+</Steps>
+
+## National cloud deployments
+
+The default hosts are:
+
+- Authority host: `https://login.microsoftonline.com`
+- Graph API host: `https://graph.microsoft.com`
+
+For GCC High or DoD, use the matching `.us` authority and Graph hosts in the
+advanced connector settings. The two hosts must belong to the same Microsoft cloud.
+
+## SharePoint overlap
+
+A personal OneDrive is backed by a SharePoint personal site. If you index the same
+file through both connectors, Onyx keeps one document with both source types when
+Microsoft Graph returns the same drive item ID.
+
+Avoid configuring personal-site URLs in the SharePoint connector unless you need
+this overlap. Microsoft can assign different item IDs to copies in different drives;
+Onyx indexes those copies as separate documents.
+
+## Troubleshooting
+
+### A configured user has no drive
+
+Ask the user to open OneDrive once. Microsoft provisions the personal site and
+drive on first use.
+
+### Some users are skipped with Sites.Selected
+
+Confirm that the app has a `read` grant on each personal site. General scope skips
+sites without a grant. Specific scope reports the inaccessible user.
+
+### Users cannot access files shared through a hidden group
+
+Grant and consent `Member.Read.Hidden`, then run permission sync again. Onyx does
+not make these files public when group expansion fails.

@@ -261,6 +261,7 @@
                       "admins/connectors/official/sharepoint/certificate"
                     ]
                   },
+                  "admins/connectors/official/onedrive",
                   {
                     "group": "Slack",
                     "pages": [
