@@ -17,7 +17,7 @@ The connector signs in to nothing. It reads only what a signed-out visitor can r
 | Links      | In **recursive** mode, Onyx follows the links it finds in each page it renders, and keeps following them until it runs out of pages that are in scope.                         |
 | Scope      | Only pages on the same site and under the same path as the base URL. See [Crawl scope](#crawl-scope).                                                                          |
 | Duplicates | Pages that produce the same title and text as a page already indexed this run are skipped. A URL that redirects is stored under the address it ends at.                        |
-| Permissions | Not available. A crawled page has no per-user access list, so the connector offers **Public** and **Private** only.                                                           |
+| Permissions | **Auto Sync Permissions** is not available for this connector. A crawled page carries no per-user access list, so the access type can only be **Public** or **Private**.       |
 
 Every refresh re-crawls the whole site; there is no incremental mode.
 Onyx deliberately ignores the `Last-Modified` header,
@@ -46,9 +46,9 @@ You need:
     In Onyx, go to **Admin Panel → Add Connector** and select **Web**.
   </Step>
 
-  <Step title="Enter the base URL">
-    In **Base URL**, enter the address to start from, for example `https://docs.onyx.app/`. If you leave off the scheme,
-    Onyx adds `https://`.
+  <Step title="Name the connector and enter the base URL">
+    Give the connector a descriptive **Connector Name**. In **Base URL**, enter the address to start from,
+    for example `https://docs.onyx.app/`. If you leave off the scheme, Onyx adds `https://`.
   </Step>
 
   <Step title="Choose the scrape method">
@@ -58,6 +58,8 @@ You need:
     - **single**: index the base URL only, and follow nothing.
     - **sitemap**: read a `sitemap.xml` and index every URL listed in it. If the address you give is not a
     sitemap, Onyx looks for one on that site.
+
+    <img className="rounded-image" src="/assets/admins/connectors/web/WebConnectorForm.png" alt="Onyx Web connector form with a base URL and the recursive scrape method"/>
   </Step>
 
   <Step title="Choose the access type">
@@ -85,6 +87,10 @@ You need:
 | --------------------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | Scroll before scraping | off     | Scroll to the bottom of each page before reading it, up to 20 times, stopping when the page stops growing. Turn this on for pages that load their content as you scroll.                              |
 | URL Rewrites          | empty   | Replace the start of each document's address before storing it. See [URL rewrites](#url-rewrites).                                                                                                    |
+
+Select **Advanced Options** on the connector form to reach both:
+
+<img className="rounded-image" src="/assets/admins/connectors/web/WebConnectorAdvanced.png" alt="Web connector advanced options with Scroll before scraping and URL Rewrites"/>
 
 ## Crawl scope
 
@@ -127,6 +133,22 @@ Hardening](/admins/advanced_configs/security_hardening) page. At that level,
 connectors an admin configured may reach private addresses, while fetches started by the LLM stay validated.
 
 Onyx Cloud cannot reach addresses inside your network at any setting.
+
+## Limits
+
+The connector has no file-size cap, unlike the SharePoint and Google Drive connectors. A linked PDF is downloaded whole.
+The limits that do apply are times and counts:
+
+| Limit                          | Value | Notes                                                                                                   |
+| ------------------------------ | ----- | --------------------------------------------------------------------------------------------------------- |
+| Page load                      | 30s   | A page that does not respond in time is retried, then skipped.                                          |
+| Render and bot-challenge wait  | 5s    | Time allowed after load for JavaScript content or a bot check to settle.                                 |
+| PDF download and content check | 60s   | Set `REQUEST_TIMEOUT_SECONDS` to change it. This is a global setting, not specific to this connector.    |
+| Retries per page               | 3     | Backed off between attempts, up to 10s.                                                                  |
+| Scroll attempts per page       | 20    | Only with **Scroll before scraping** on. Stops early once the page stops growing.                        |
+
+A slow page that exceeds the load timeout on all 3 attempts is dropped from the crawl and recorded as an error,
+rather than indexed with partial content.
 
 ## Troubleshooting
 
