@@ -75,6 +75,8 @@ and Canvas's [OAuth / access token documentation](https://canvas.instructure.com
 
   <Step title="Enter the Canvas access token">
     Create a credential and paste the token into **Canvas Access Token**.
+
+    <img className="rounded-image" src="/assets/admins/connectors/canvas/CanvasCredential.png" alt="Create a Canvas credential with a name and the Canvas access token"/>
   </Step>
 
   <Step title="Enter the Canvas base URL">
@@ -82,6 +84,8 @@ and Canvas's [OAuth / access token documentation](https://canvas.instructure.com
 
     Use `https`. Do not use `http`. You can omit a trailing slash and `/api/v1`;
     Onyx normalizes those if they are included.
+
+    <img className="rounded-image" src="/assets/admins/connectors/canvas/CanvasConnector.png" alt="Canvas connector form with a connector name and the Canvas base URL"/>
   </Step>
 
   <Step title="Choose access type">
@@ -123,6 +127,40 @@ Section-specific announcements and override-only assignments stay restricted eve
   Review the access type before connecting.
   Choosing **Public** does not preserve Canvas permissions and can expose indexed content to every Onyx user.
 </Warning>
+
+## Group sync
+
+With **Auto Sync Permissions**,
+Onyx also builds user groups from Canvas so that access survives roster changes without a re-index.
+It creates four kinds of group:
+
+| Onyx group           | Members                                                                                                                |
+| -------------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| `canvas-course-<id>` | Everyone on the course roster, from active and invited enrollments.                                                     |
+| `canvas-section-<id>` | The members of a course section.                                                                                       |
+| `canvas-group-<id>`  | The members of a Canvas group.                                                                                          |
+| `canvas-all-users`   | Every user on the Canvas account. Created only when at least one course is public, and only when the token can list account users. |
+
+Sections and Canvas groups are only created where something refers to them: a section enrollment,
+a section-targeted announcement, or an assignment override.
+A Canvas group that no assignment overrides to is not synced.
+
+Document permissions and groups both refresh every 30 minutes.
+Set `CANVAS_PERMISSION_DOC_SYNC_FREQUENCY` and `CANVAS_PERMISSION_GROUP_SYNC_FREQUENCY` (seconds) to change them.
+Permissions are attached during the initial index,
+so a new connector is searchable by the right people from its first indexing attempt.
+
+## Limits
+
+| Limit                  | Value  | Notes                                                                       |
+| ---------------------- | ------ | ----------------------------------------------------------------------------- |
+| Canvas API call        | 30s    | A Canvas request that does not answer in time fails the indexing attempt.    |
+| Results per API page   | 100    | Onyx pages through courses, rosters and account users at this size.          |
+| Permission sync        | 30 min | `CANVAS_PERMISSION_DOC_SYNC_FREQUENCY`                                       |
+| Group sync             | 30 min | `CANVAS_PERMISSION_GROUP_SYNC_FREQUENCY`                                     |
+
+The connector has no file-size cap because it indexes no files. It reads page,
+assignment and announcement text through the Canvas API and does not download course attachments.
 
 ## Troubleshooting
 
