@@ -34,7 +34,7 @@ Onyx Lite retains the following capabilities:
 ### What's Removed
 
 To reduce resource requirements, Onyx Lite disables:
-- **Vespa** (vector database): no document indexing or RAG search
+- **OpenSearch** (vector database): no document indexing or RAG search
 - **Redis**: PostgreSQL handles caching and session management instead
 - **Model servers**: no local embedding models (LLM inference is handled by your configured provider)
 - **Celery background workers**: the API server handles background work directly
@@ -49,7 +49,7 @@ the vector database. The key environment variables that drive this are:
 
 | Variable             | Lite Value   | Full Onyx Default | Purpose                                      |
 |----------------------|--------------|-------------------|----------------------------------------------|
-| `DISABLE_VECTOR_DB`  | `true`       | `false`           | Disables Vespa, connectors, and RAG search   |
+| `DISABLE_VECTOR_DB`  | `true`       | `false`           | Disables OpenSearch, connectors, and RAG search   |
 | `CACHE_BACKEND`      | `postgres`   | `redis`           | Uses PostgreSQL for caching instead of Redis |
 | `AUTH_BACKEND`       | `postgres`   | `redis`           | Uses PostgreSQL for sessions instead of Redis|
 | `FILE_STORE_BACKEND` | `postgres`   | `s3`              | Uses PostgreSQL for file storage instead of S3/MinIO |
@@ -84,7 +84,7 @@ the vector database. The key environment variables that drive this are:
 ### Deploying Onyx Lite with Docker Compose
 
     Onyx Lite is deployed using a Docker Compose override file that layers on top of your base Compose file.
-    The override moves non-essential services (Vespa, Redis, model servers, background workers)
+    The override moves non-essential services (OpenSearch, Redis, model servers, background workers)
     into Docker Compose [profiles](https://docs.docker.com/compose/how-tos/profiles/) so they do not start by default.
 
     **Quick start:**
@@ -113,7 +113,7 @@ the vector database. The key environment variables that drive this are:
     |--------------------------|----------------|-----------------------------------------|
     | background (Celery) | background | --profile background (also needs --profile redis) |
     | cache (Redis) | redis | --profile redis |
-    | index (Vespa) | vectordb | --profile vectordb |
+    | index (OpenSearch) | vectordb | --profile vectordb |
     | indexing_model_server | vectordb | --profile vectordb |
     | inference_model_server | inference | --profile inference |
     <Tip>
@@ -494,28 +494,58 @@ Read [Deploying Craft](/deployment/local/craft) before enabling Craft in self-ho
     `REDIS_SENTINEL_PASSWORD`: Password for the Sentinel nodes, if they require separate auth from the data nodes.
   </Accordion>
 
-  <Accordion title="Vespa Configuration">
-    `VESPA_HOST`: Vespa host
+  <Accordion title="OpenSearch Configuration">
+    `OPENSEARCH_HOST`: OpenSearch host
 
-    `VESPA_CONFIG_SERVER_HOST`: Vespa config server host
+    `OPENSEARCH_REST_API_PORT`: OpenSearch REST API port (default `9200`)
 
-    `VESPA_PORT`: Vespa port
+    `OPENSEARCH_ADMIN_USERNAME`: OpenSearch admin username
 
-    `VESPA_TENANT_PORT`: Vespa tenant port
+    `OPENSEARCH_ADMIN_PASSWORD`: OpenSearch admin password
 
-    `NUM_RETRIES_ON_STARTUP`: Startup connection attempts
+    `OPENSEARCH_USE_SSL`: Use TLS when connecting to OpenSearch (default `true`)
 
-    `VESPA_CLOUD_URL`: Vespa Cloud URL
+    `OPENSEARCH_VERIFY_CERTS`: Verify the OpenSearch server certificate
 
-    `VESPA_CLOUD_CERT_PATH`: Vespa Cloud certificate path
+    `OPENSEARCH_CA_CERTS`: CA bundle used to verify the server certificate
 
-    `VESPA_CLOUD_KEY_PATH`: Vespa Cloud key path
+    `OPENSEARCH_CLIENT_CERT`: Client certificate for mutual TLS
 
-    `MANAGED_VESPA`: Use managed Vespa (Vespa Cloud)
+    `OPENSEARCH_CLIENT_KEY`: Client key for mutual TLS
 
-    `VESPA_REQUEST_TIMEOUT`: Request timeout in seconds
+    `OPENSEARCH_AUTH_METHOD`: `basic` (default) or `iam` (AWS SigV4 signing for managed domains)
 
-    `VESPA_LANGUAGE_OVERRIDE`: Force Vespa language (en, de, etc.)
+    `OPENSEARCH_AWS_REGION`: AWS region of the managed OpenSearch domain (required for `iam`)
+
+    `OPENSEARCH_AWS_SERVICE`: SigV4 service name, `es` (default) or `aoss` for OpenSearch Serverless
+
+    `USING_AWS_MANAGED_OPENSEARCH`: Set to `true` when using an AWS managed OpenSearch domain
+
+    `DEFAULT_OPENSEARCH_CLIENT_TIMEOUT_S`: Client request timeout in seconds
+
+    `DEFAULT_OPENSEARCH_QUERY_TIMEOUT_S`: Query timeout in seconds
+
+    `OPENSEARCH_TEXT_ANALYZER`: Text analyzer for keyword search (default `english`)
+
+    `OPENSEARCH_INDEX_NUM_SHARDS`: Number of primary shards per index
+
+    `OPENSEARCH_INDEX_NUM_REPLICAS`: Number of replicas per index
+
+    `PIT_KEEP_ALIVE`: Point-in-time keep-alive used when scanning an index (default `5m`)
+
+    `OPENSEARCH_PROFILING_DISABLED`: Disable OpenSearch query profiling (default `true`)
+
+    `OPENSEARCH_MATCH_HIGHLIGHTS_DISABLED`: Disable match highlights in search results (default `true`)
+
+    `OPENSEARCH_EXPLAIN_ENABLED`: Return per-hit score breakdowns for relevance debugging (large performance cost)
+
+    `ONYX_SEARCH_UI_USES_OPENSEARCH_KEYWORD_SEARCH`: Use OpenSearch keyword search for the Search UI
+
+    `ENABLE_OPENSEARCH_INDEXING_FOR_ONYX`: Index documents into OpenSearch (default `true`)
+
+    `ONYX_DISABLE_VESPA`: Run without the legacy Vespa index (default `true`)
+
+    `DISABLE_OPENSEARCH_MIGRATION_TASK`: Disable the periodic Vespa to OpenSearch migration task
   </Accordion>
 
   <Accordion title="Celery Configuration">
@@ -680,7 +710,7 @@ Read [Deploying Craft](/deployment/local/craft) before enabling Craft in self-ho
   <Accordion title="Logging Configuration">
     `LOG_ONYX_MODEL_INTERACTIONS`: Log Onyx model interactions
 
-    `LOG_VESPA_TIMING_INFORMATION`: Log Vespa query performance
+    `LOG_VESPA_TIMING_INFORMATION`: Log document index query performance
 
     `LOG_ENDPOINT_LATENCY`: Log endpoint latency
 
