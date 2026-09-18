@@ -237,6 +237,7 @@
                   "admins/connectors/official/hubspot",
                   "admins/connectors/official/jira",
                   "admins/connectors/official/linear",
+                  "admins/connectors/official/lumapps",
                   "admins/connectors/official/notion",
                   "admins/connectors/official/oci_storage",
                   "admins/connectors/official/outlook",
