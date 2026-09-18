@@ -201,6 +201,7 @@
                   "admins/connectors/official/box",
                   "admins/connectors/official/canvas",
                   "admins/connectors/official/clickup",
+                  "admins/connectors/official/coda",
                   "admins/connectors/official/confluence",
                   "admins/connectors/official/discord",
                   "admins/connectors/official/discourse",
