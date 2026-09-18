@@ -197,6 +197,7 @@
                   "admins/connectors/official/asana",
                   "admins/connectors/official/bitbucket",
                   "admins/connectors/official/bookstack",
+                  "admins/connectors/official/braintrust",
                   "admins/connectors/official/box",
                   "admins/connectors/official/canvas",
                   "admins/connectors/official/clickup",
