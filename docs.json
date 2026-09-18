@@ -270,6 +270,7 @@
                   },
                   "admins/connectors/official/slab",
                   "admins/connectors/official/teams",
+                  "admins/connectors/official/testrail",
                   "admins/connectors/official/web",
                   "admins/connectors/official/xenforo",
                   "admins/connectors/official/zendesk",
