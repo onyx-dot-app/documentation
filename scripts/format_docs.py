@@ -1281,19 +1281,25 @@ def find_numbered_list_occurrences(path: str, text: str) -> List[tuple[int, str]
 
 
 def run_mintlify_broken_links(root: str) -> int:
-    """Attempt to run `mintlify broken-links` and print its output.
+    """Attempt to run `<cli> broken-links` and print its output.
+
+    `mint` is the current Mintlify CLI; `mintlify` is its former name. Both
+    expose `broken-links`, so prefer `mint` and fall back to `mintlify`.
 
     Returns the subprocess return code if executed, otherwise 0.
     """
-    mintlify = shutil.which("mintlify")
-    if not mintlify:
-        print("mintlify CLI not found. Skipping 'mintlify broken-links'.")
-        print("Install with: npm i -g mintlify")
+    for cli_name in ("mint", "mintlify"):
+        cli = shutil.which(cli_name)
+        if cli:
+            break
+    else:
+        print("Mintlify CLI not found. Skipping broken-links check.")
+        print("Install with: npm i -g mint")
         return 0
     try:
-        print("Running: mintlify broken-links")
+        print(f"Running: {cli_name} broken-links")
         proc = subprocess.run(
-            [mintlify, "broken-links"],
+            [cli, "broken-links"],
             cwd=root,
             capture_output=True,
             text=True,
@@ -1305,7 +1311,7 @@ def run_mintlify_broken_links(root: str) -> int:
             print(proc.stderr.rstrip(), file=sys.stderr)
         return proc.returncode
     except Exception as e:
-        print(f"Failed to run mintlify broken-links: {e}")
+        print(f"Failed to run {cli_name} broken-links: {e}")
         return 1
 
 
@@ -1431,10 +1437,10 @@ def main() -> int:
         for p in frontmatter_icon_warnings:
             print(f"  {p}")
 
-    # Always run link check via mintlify if available (no fallback)
+    # Always run link check via the Mintlify CLI if available (no fallback)
     rc = run_mintlify_broken_links(root)
     if rc != 0:
-        print(f"mintlify broken-links exited with code {rc}")
+        print(f"broken-links exited with code {rc}")
 
     if args.check:
         if changed:
