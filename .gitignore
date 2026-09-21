@@ -6,3 +6,10 @@ node_modules/
 .DS_store
 .mypy_cache/
 .vscode/
+
+# Certificate material (e.g. from following the SharePoint connector docs)
+*.key
+*.pfx
+*.crt
+*.cer
+*.pem
