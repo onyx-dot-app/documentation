@@ -15,18 +15,18 @@ To make changes, check out `docs.json`.
 
 ### Set up Mintlify
 
-Install the [Mintlify CLI](https://www.npmjs.com/package/mintlify) to preview the documentation changes locally.
+Install the [Mintlify CLI](https://www.npmjs.com/package/mint) to preview the documentation changes locally.
 
-To install, use the following command (requires node >= v19.0.0)
+To install, use the following command (requires node >= v18.0.0)
 
 ```
-npm i -g mintlify
+npm i -g mint
 ```
 
 Run the following command at the root of your documentation (where docs.json is)
 
 ```
-mintlify dev
+mint dev
 ```
 
 ### Publishing Changes
@@ -35,7 +35,7 @@ Changes are automatically deployed to production after merging to main.
 
 ### Troubleshooting
 
-- Mintlify dev isn't running - Run `mintlify install` to re-install dependencies.
+- Mint dev isn't running - Run `mint update` to pull the latest CLI and framework.
 - Page loads as a 404 - Make sure you are running in a folder with `docs.json`
 - Mintlify Docs - https://mintlify.com/docs/introduction
 
@@ -93,7 +93,7 @@ python scripts/format_docs.py --write --width 100
   - Reports numbered lists (suggests using `<Steps>/<Step>` instead)
   - Warns about missing spaces after list markers (`1.item` → `1. item`)
   - Warns if `icon:` field missing from frontmatter (except in excluded directories)
-- **Link validation:** Runs `mintlify broken-links` if available (install: `npm i -g mintlify`)
+- **Link validation:** Runs `broken-links` via the Mintlify CLI if available (install: `npm i -g mint`)
 
 ### TODOs and Enhancements
 
