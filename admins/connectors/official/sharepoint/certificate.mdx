@@ -216,7 +216,10 @@ and an Onyx user finds it in search only if they can open it in SharePoint.
   </Accordion>
 
   <Accordion title="Indexing worked, then stopped on a fixed date">
-    The certificate expired. See [Renewing the certificate](#renewing-the-certificate).
+    The certificate expired. Repeat [Create the certificate](#create-the-certificate),
+    upload the new public certificate to Entra alongside the old one,
+    then update the credential in Onyx with the new `.pfx` and its password.
+    Delete the expired certificate in Entra once an indexing attempt has succeeded.
   </Accordion>
 </AccordionGroup>
 
