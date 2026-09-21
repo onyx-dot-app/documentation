@@ -265,7 +265,7 @@
                     "group": "SharePoint",
                     "pages": [
                       "admins/connectors/official/sharepoint/sharepoint",
-                      "admins/connectors/official/sharepoint/client-secret",
+                      "admins/connectors/official/sharepoint/client-app-auth",
                       "admins/connectors/official/sharepoint/certificate"
                     ]
                   },
@@ -690,6 +690,10 @@
     }
   },
   "redirects": [
+    {
+      "source": "/admins/connectors/official/sharepoint/client-secret",
+      "destination": "/admins/connectors/official/sharepoint/client-app-auth"
+    },
     {
       "source": "/developers/api_reference/chat/seed_chat",
       "destination": "/developers/api_reference/chat/handle_send_chat_message"

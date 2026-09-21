@@ -1,78 +1,346 @@
 ---
 title: "Overview"
-description: "Access files and notes from your SharePoint Sites"
+description: "Index files and pages from the SharePoint sites in your Microsoft 365 tenant"
 ---
 
-## How it works
+## What gets indexed
 
-The SharePoint connector will go through all configured sites belonging to an organization and index all the documents
-attached to that site. Note, it currently does not parse the site page contents, only the attached files.
+You can configure Onyx to index your entire tenant or a specific list of sites. From each site, Onyx indexes:
 
-This includes:
+- **Files** in document libraries, including any images inside them.
+- **Pages** published on the site (`.aspx`).
 
-- Word Doc, Excel, PDF, PowerPoints, and all plaintext files like .txt, .mdx, etc.
+Onyx files each document under the site, library, and folder it came from, so you can browse or filter at any level.
+After the first run, each refresh picks up only what changed.
 
-## Setting up
+### What is not indexed
 
-### Authorization
+- SharePoint lists, their items, and their attachments
+- Personal OneDrive sites, unless you explicitly list `/personal/` URLs in **Sites**
+- Files with an unsupported extension, and files over the [size limit](#limits)
 
-We support two authorization methods—pick one that fits your environment:
+<Accordion title="Supported file types">
+  Onyx indexes files with the following extensions:
 
-- [Client Secret Authentication](/admins/connectors/official/sharepoint/client-secret)
-  - Uses traditional client
-  secret credentials
-- [Certificate-Based Authentication](/admins/connectors/official/sharepoint/certificate)
-  - Uses certificate-based
-  authentication (required for permission sync)
+  | Kind         | Extensions                                                                       |
+  | ------------ | -------------------------------------------------------------------------------- |
+  | Documents    | `.pdf`, `.docx`, `.pptx`, `.eml`, `.epub`, `.html`                               |
+  | Spreadsheets | `.xlsx`, `.xlsm`, `.csv`, `.tsv`                                                 |
+  | Text         | `.txt`, `.md`, `.mdx`, `.conf`, `.log`, `.json`, `.xml`, `.yml`, `.yaml`, `.sql` |
+  | Images       | `.png`, `.jpg`, `.jpeg`, `.webp`                                                 |
 
-**Note:** Permission sync is only available with certificate-based authentication.
+  The legacy Office formats `.doc`, `.xls`, and `.ppt` are **not** supported.
+  Convert older files in SharePoint if you need them indexed.
 
-### Indexing
+  Onyx also skips the image formats `.bmp`, `.tiff`, `.gif`, `.svg`, and `.avif`.
+</Accordion>
 
-Once you've set up your authorization method, follow these steps to index your SharePoint sites:
+## Before you begin
+
+You need:
+
+- A Microsoft 365 tenant with SharePoint Online
+- A Microsoft Entra user account holding the **Global Administrator** or **Privileged Role Administrator** role.
+  - The connector needs Microsoft Graph application permissions,
+  and only these two roles can consent to those on behalf of your organization.
+  **Application Administrator** and **Cloud Application Administrator** can register the app but cannot grant it
+  consent.
+- An Onyx administrator account
+- A decision on how the connector authenticates.
+  Changing it later means building a new credential and possibly re-indexing.
+
+## Choose an authentication method
+
+The connector can authenticate with either a client secret or a certificate.
+
+<Tip>
+  Use a certificate if you need permission sync, or if your organization does not permit client secrets.
+  Otherwise a client secret is quicker to set up.
+</Tip>
+
+|                          | [Client secret](/admins/connectors/official/sharepoint/client-app-auth) | [Certificate](/admins/connectors/official/sharepoint/certificate) |
+| ------------------------ | ------------------------------------------------------------------------ | ------------------------------------------------------------------- |
+| Indexing files and pages | Yes                                                                      | Yes                                                                 |
+| Permission sync          | **No**                                                                   | Yes                                                                 |
+| Setup effort             | Lower. The portal generates the secret for you.                          | Higher. You create a certificate and upload part of it to Microsoft. |
+
+## Configure the connector in Onyx
+
+Set up your Entra application first, following [client secret](/admins/connectors/official/sharepoint/client-app-auth)
+or [certificate](/admins/connectors/official/sharepoint/certificate). Then:
 
 <Steps>
-  <Step title="Open SharePoint connector">
-    Navigate to the Onyx Admin Panel and select the **SharePoint** Connector.
+  <Step title="Open the SharePoint connector">
+    In Onyx, go to **Admin Panel → Add Connector** and select **SharePoint**.
   </Step>
 
-  <Step title="Configure authorization">
-    In **Step 1**, configure your authorization:
-    - If you have existing credentials, select them from the list
-    - If you don't have existing credentials, click **Create New** to add new authorization:
-    - **Client Secret**: Enter your Application ID, Directory ID, and Client Secret
-    - **Certificate**: Upload your certificate file and enter Application/Directory IDs
+  <Step title="Select or create a credential">
+    Pick an existing credential from the list,
+    or select **Create New** and enter the details from your Entra app registration.
   </Step>
 
-  <Step title="Save configuration">
-    Click **Create** to save your configuration.
+  <Step title="Name the connector and choose sites">
+    Give the connector a descriptive **Connector Name**.
+
+    In **Sites**, add one entry per site you want indexed, such as `https://contoso.sharepoint.com/sites/support`.
+    Leave the list empty to index every site in the tenant.
   </Step>
 
-  <Step title="Continue with selected credential">
-    Ensure your chosen credential is selected, then click **Continue**
+  <Step title="Adjust the advanced settings">
+    Select **Advanced Options** to reach the content, exclusion,
+    and national cloud settings described in [Connector settings](#connector-settings). By default,
+    Onyx indexes both files and site pages from every site you listed.
   </Step>
 
-  <Step title="Specify SharePoint configuration">
-    In **Step 2**, specify your SharePoint configuration:
-    - **Connector Name**: Enter a name for the connector (e.g., "MySharePointConnector")
-    - **Sites**: Select a list of sites to pull from or leave blank to pull everything (Note:
-    this option only works for English, Spanish, and German Sharepoint instances.
-    Contact us if you require further language support)
-    - **Permission Sync** (Certificate auth only): Enable to sync SharePoint permissions with Onyx
+  <Step title="Choose the access type">
+    **Public** shows every indexed document to all Onyx users. **Private** limits them to selected Onyx user groups.
+
+    **Auto Sync Permissions** mirrors SharePoint's own permissions and needs a certificate credential.
+    See [Permission sync](#permission-sync).
+
+    See [Document Access Controls](/admins/connectors/overview#document-access-controls)
+    for what each access type means.
   </Step>
 
-  <Step title="Create connector">
-    Click **Create Connector** to begin indexing.
+  <Step title="Create and verify">
+    Select **Create Connector**. Onyx checks the credential and your site URLs when you save,
+    so most permission problems appear here rather than during indexing.
+
+    Then open **Admin Panel → Existing Connectors**, select the connector,
+    and confirm the first indexing attempt finishes with roughly the document count you expect.
   </Step>
 </Steps>
 
-The connector will start indexing your SharePoint sites and you can add more sites or modify settings as needed.
+## Connector settings
 
-## Understanding SharePoint Structure
+| Setting                       | Default                             | Purpose                                                                                                                                |
+| ----------------------------- | ----------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| Sites                         | empty                               | Sites to index. Empty means every site in the tenant. See [Scoping to sites, libraries, and folders](#scoping-to-sites-libraries-and-folders). |
+| Index Documents               | on                                  | Index the files in each site's document libraries.                                                                                      |
+| Index ASPX Sites              | on                                  | Index each site's `.aspx` pages, even when a site entry names a single library or folder.                                                |
+| Treat sharing links as public | off                                 | When on, Onyx treats a document reachable by an anonymous or organization-wide sharing link as public. When off, only the users and groups given explicit access can see it. Applies to permission sync only. |
+| Excluded Sites                | empty                               | Site URLs or glob patterns to skip, even when **Sites** names them. For example `*://*/sites/archive-*`.                                 |
+| Excluded Paths                | empty                               | Glob patterns for files to skip. Onyx matches them against the path within the library and against the filename alone. For example `*.tmp`, `~$*`, `Archive/*`. |
+| Authority Host                | `https://login.microsoftonline.com` | Microsoft identity host. Change only for a [national cloud](#national-clouds).                                                           |
+| Graph API Host                | `https://graph.microsoft.com`       | Microsoft Graph host. Change only for a [national cloud](#national-clouds).                                                              |
+| SharePoint Domain Suffix      | `sharepoint.com`                    | Domain your SharePoint sites live on. Change only for a [national cloud](#national-clouds).                                              |
 
-SharePoint organizes content into sites, which can contain document libraries, lists, and pages.
-Each site can contain an unlimited number of documents.
-The connector focuses on indexing documents stored in document libraries across your selected sites.
+### Scoping to sites, libraries, and folders
 
-For more information on SharePoint structure,
-visit the [Microsoft SharePoint documentation](https://docs.microsoft.com/en-us/sharepoint/).
+An entry in **Sites** can name a site, a library within it, or a folder within that library.
+Onyx reads the path after the site name as a library, and anything after that as a folder:
+
+| Entry                                                               | Indexed                                       |
+| ------------------------------------------------------------------- | --------------------------------------------- |
+| `https://contoso.sharepoint.com/sites/support`                      | Every library and every site page on the site |
+| `https://contoso.sharepoint.com/sites/support/Shared Documents`     | That one library, plus the site's pages       |
+| `https://contoso.sharepoint.com/sites/support/Shared Documents/FAQ` | That one folder, plus the site's pages        |
+
+Team sites (`/teams/…`) and personal OneDrive sites (`/personal/…`) work the same way.
+
+<Warning>
+  Naming a **library** in the URL works only on English, German, and Spanish tenants,
+  because Onyx has to match the library's display name (`Shared Documents`, `Freigegebene Dokumente`,
+  `Documentos compartidos`) against the name SharePoint reports. On a tenant in any other language,
+  enter the bare **site** URL instead. A site-level entry finds every library, whatever its name.
+  Contact the Onyx team if you need another language mapped.
+</Warning>
+
+### National clouds
+
+All three host settings must describe the same cloud. Onyx rejects a mismatched combination when you save.
+
+| Cloud                    | Authority Host                      | Graph API Host                            | Domain Suffix    |
+| ------------------------ | ----------------------------------- | ----------------------------------------- | ---------------- |
+| Commercial               | `https://login.microsoftonline.com` | `https://graph.microsoft.com`             | `sharepoint.com` |
+| US Government (GCC High) | `https://login.microsoftonline.us`  | `https://graph.microsoft.us`              | `sharepoint.us`  |
+| US Government (DoD)      | `https://login.microsoftonline.us`  | `https://dod-graph.microsoft.us`          | `sharepoint.us`  |
+| China (21Vianet)         | `https://login.chinacloudapi.cn`    | `https://microsoftgraph.chinacloudapi.cn` | `sharepoint.cn`  |
+| Germany                  | `https://login.microsoftonline.de`  | `https://graph.microsoft.de`              | `sharepoint.de`  |
+
+## Limiting the app to specific sites
+
+By default the app holds `Sites.Read.All`,
+which lets it read every site in the tenant even when **Sites** names only one. If that is too broad,
+grant `Sites.Selected` instead and authorize the app one site at a time. The app can read nothing until you do.
+This applies to both authentication methods.
+
+The role you grant depends on what the connector does:
+
+| Connector use                 | Role to grant | Entra permission also needed                                                  |
+| ----------------------------- | ------------- | ----------------------------------------------------------------------------- |
+| Indexing only                 | `read`        | Microsoft Graph → `Sites.Selected`                                            |
+| Indexing with permission sync | `fullcontrol` | Microsoft Graph → `Sites.Selected`, plus SharePoint → `Sites.FullControl.All` |
+
+Permission sync needs `fullcontrol` because SharePoint shows an item's access list only to an app that has full control
+of the site. Onyx never writes to SharePoint.
+
+<Warning>
+  With `Sites.Selected`, **Sites** cannot be empty. Onyx cannot list your tenant's sites under that permission,
+  so a connector with an empty **Sites** list indexes nothing.
+</Warning>
+
+<Accordion title="Granting a site to the app">
+  You need a Global Administrator or SharePoint Administrator account.
+  The steps below use [Microsoft Graph Explorer](https://developer.microsoft.com/en-us/graph/graph-explorer).
+  You can do the same with [PnP
+  PowerShell](https://pnp.github.io/powershell/cmdlets/Grant-PnPAzureADAppSitePermission.html)
+  (`Grant-PnPAzureADAppSitePermission`).
+
+  <Steps>
+    <Step title="Sign in and consent">
+      Sign in to Graph Explorer,
+      then select your profile icon → **Consent to permissions** and enable **Sites.FullControl.All**.
+      This lets Graph Explorer grant site permissions. It grants nothing to your Onyx application.
+    </Step>
+
+    <Step title="Find the site ID">
+      Run a **GET** request, substituting your tenant and site name:
+
+      ```
+      GET https://graph.microsoft.com/v1.0/sites/contoso.sharepoint.com:/sites/YourSiteName?$select=id
+      ```
+
+      Copy the `id` from the response. It is a three-part value such as `contoso.sharepoint.com,5a58bb09-…,9f2ec1da-…`.
+    </Step>
+
+    <Step title="Grant the role">
+      Change the method to **POST**, using the site ID you just copied:
+
+      ```
+      POST https://graph.microsoft.com/v1.0/sites/{site-id}/permissions
+      ```
+
+      Send this body. Set `roles` to `["read"]` for indexing only, or `["fullcontrol"]` for permission sync.
+      Set `id` to your Onyx application's **Application (client) ID**.
+
+      ```json
+      {
+        "roles": ["read"],
+        "grantedToIdentities": [
+          {
+            "application": {
+              "id": "00000000-0000-0000-0000-000000000000",
+              "displayName": "Onyx SharePoint Connector"
+            }
+          }
+        ]
+      }
+      ```
+
+      A successful grant returns `201 Created`.
+    </Step>
+
+    <Step title="Verify">
+      Change the method back to **GET** on the same URL,
+      and confirm the role you granted appears against your application.
+
+      ```
+      GET https://graph.microsoft.com/v1.0/sites/{site-id}/permissions
+      ```
+    </Step>
+  </Steps>
+
+  Repeat the last three steps for every site the connector indexes.
+</Accordion>
+
+## Permission sync
+
+With permission sync on, each document keeps its SharePoint access.
+An Onyx user finds a document in search only if they can open it in SharePoint.
+
+<Note>
+  Permission sync is a paid feature: Onyx Cloud, or the Enterprise Edition when self-hosted.
+  It also requires a [certificate credential](/admins/connectors/official/sharepoint/certificate).
+</Note>
+
+Onyx runs two syncs on their own schedules, separate from indexing:
+
+| Sync      | Every      | What it does                                                                                    |
+| --------- | ---------- | ------------------------------------------------------------------------------------------------- |
+| Documents | 30 minutes | Re-reads who has access to each site, library, folder, and document, and updates Onyx to match. |
+| Groups    | 5 minutes  | Re-reads SharePoint site groups and Entra ID groups, expanding nested groups down to individual members. |
+
+Both run once as soon as the first index finishes, so permissions are in place before anything becomes searchable.
+A user's access comes from their own account and from the groups they belong to,
+both SharePoint site groups and Entra ID security groups, including nested ones.
+
+Onyx treats items shared by link as private unless you turn on **Treat sharing links as public**.
+It ignores users and groups that hold only SharePoint's *Limited Access* role,
+because that role lets someone pass through a folder rather than open what is inside it.
+
+## Limits
+
+| Limit             | Value                       | Notes                                                                                                           |
+| ----------------- | --------------------------- | ----------------------------------------------------------------------------------------------------------------- |
+| File size         | 20 MB                       | Onyx skips larger files rather than indexing part of them. Self-hosted deployments can raise this limit.          |
+| Site page content | Text and standard web parts | Onyx does not read text from other web part types, such as embeds, lists, and third-party parts.                  |
+| Empty files       | Skipped                     | Onyx skips a file if it cannot read any text from it, unless the file is a PDF or an image.                      |
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="Unsupported app only token">
+    Permission sync is running on a client secret credential,
+    and SharePoint will not release permission data to an app that signed in with a secret.
+    Rebuild the credential with a [certificate](/admins/connectors/official/sharepoint/certificate).
+  </Accordion>
+
+  <Accordion title="missing the required SharePoint permission to read role assignments">
+    The app is missing `Sites.FullControl.All`,
+    or has not been given full control of the named sites under `Sites.Selected`.
+    Add the permission under **SharePoint**, not Microsoft Graph.
+  </Accordion>
+
+  <Accordion title="missing the required Microsoft Graph permission to enumerate Azure AD group members">
+    Add **Microsoft Graph → GroupMember.Read.All** as an application permission, then grant admin consent again.
+  </Accordion>
+
+  <Accordion title="Site URLs must be full Sharepoint/OneDrive URLs">
+    An entry in **Sites** is not a full `https://` URL containing `/sites/`, `/teams/`, or `/personal/`.
+  </Accordion>
+
+  <Accordion title="is not on this tenant's SharePoint host">
+    An entry in **Sites** points at a different tenant than the credential belongs to. One connector covers one tenant.
+  </Accordion>
+
+  <Accordion title="At least one content type must be enabled">
+    **Index Documents** and **Index ASPX Sites** are both off. Turn at least one back on.
+  </Accordion>
+
+  <Accordion title="Unsupported Microsoft Graph API host, or Authority host is inconsistent">
+    The three host settings describe different clouds. Match them to one row of [National clouds](#national-clouds).
+  </Accordion>
+
+  <Accordion title="Nothing is indexed, and Sites is empty">
+    Discovering sites tenant-wide needs `Sites.Read.All`. Under `Sites.Selected`, list your sites explicitly.
+  </Accordion>
+
+  <Accordion title="Nothing is indexed, and Sites is populated">
+    Under `Sites.Selected`, check that each site was granted to the app. Consent alone grants nothing.
+    See [Limiting the app to specific sites](#limiting-the-app-to-specific-sites).
+  </Accordion>
+
+  <Accordion title="Some sites are missing from an otherwise healthy run">
+    Onyx skips sites it cannot read, and sites that are locked or archived, so the rest of the tenant still indexes.
+    Check the connector's error list for the affected URLs.
+  </Accordion>
+
+  <Accordion title="A named library is not found">
+    Library names resolve only on English, German, and Spanish tenants. Use the bare site URL instead.
+    See [Scoping to sites, libraries, and folders](#scoping-to-sites-libraries-and-folders).
+  </Accordion>
+
+  <Accordion title="A site page is indexed with only its title">
+    The page's layout is corrupted, so SharePoint does not return its contents.
+    Onyx keeps the page rather than dropping it. Opening the page in SharePoint and re-saving it normally repairs this.
+  </Accordion>
+
+  <Accordion title="Large files are missing">
+    Onyx skips files over 20 MB. See [Limits](#limits).
+  </Accordion>
+
+  <Accordion title="Permission sync is not offered on the connector form">
+    The credential uses a client secret, or the deployment is not Onyx Cloud or Enterprise Edition.
+  </Accordion>
+</AccordionGroup>
