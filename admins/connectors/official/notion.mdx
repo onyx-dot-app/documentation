@@ -1,111 +1,180 @@
 ---
 title: "Notion"
-description: "Access pages and databases from Notion"
+description: "Connect Notion pages and databases to Onyx with an integration token"
 ---
 
 ## How it works
 
-The Notion connector uses the Notion search API to fetch all pages that the connector has access to within a workspace.
-For follow up indexing runs, the connector only retrieves pages that have been updated since the last indexing attempt.
-Indexing is configured to run every **10 minutes**, so page updates should appear within 10 minutes.
+Onyx reads pages and database content that you share with a Notion connection.
+Leave **Root Page ID** blank to index all accessible pages, or set it to index one page and its children.
 
-## Setting up
+Onyx checks for content changes on the connector's refresh schedule. The default refresh interval is **30 minutes**.
+Indexing time also depends on workspace size, API limits, and the indexing queue.
+A refresh interval does not guarantee that changes appear within that time. Without a root page,
+Onyx uses Notion's search API and fetches pages edited within each indexing window. With a root page configured,
+Onyx traverses that page and its children on each run.
 
-### Authorization
+## Before you begin
 
-In order to authorize Onyx to connect to your Notion workspace, you'll need to create a new integration in Notion,
-which will then provide you with a secret token.
+You need an Onyx administrator account and a Notion internal connection token. If you need a new connection,
+ask a Notion workspace owner to create it. You also need permission to share the target pages with that connection.
+Workspace members can share pages with an existing connection when their page permissions and workspace policies allow
+it. Enterprise workspace owners can restrict who manages connection access.
 
-These steps are pulled from [this Notion guide](https://developers.notion.com/docs/create-a-notion-integration)
-which you can also follow.
+<Note>
+  Notion now calls integrations **connections**. The current flow uses **New connection** and **Access token**.
+  The token may also be labeled **Installation access token** or **Internal Integration Secret**.
+</Note>
 
-#### Step 1: Create an integration
+## Get your Notion credentials
+
+### Create an internal connection
 
 <Steps>
-  <Step title="Visit integrations page">
-    Visit https://www.notion.com/my-integrations in your browser.
+  <Step title="Open Notion's developer portal">
+    Sign in to the [Notion developer portal](https://app.notion.com/developers/connections)
+    with your workspace owner account. Select **New connection**.
   </Step>
 
-  <Step title="Create new integration">
-    Click the + New integration button.
+  <Step title="Choose access-token authentication">
+    Enter a name such as `Onyx`. Select **Access token** as the authentication method,
+    then select **Create connection**. Choose the workspace you want Onyx to index during setup.
+
+    <img className="rounded-image" src="/assets/admins/connectors/notion/notion-create-connection.png" alt="Notion new connection dialog with Onyx as the name and Access token selected"/>
   </Step>
 
-  <Step title="Name the integration">
-    Name the integration (something like "Onyx" could work).
+  <Step title="Set read access">
+    Open the connection's capability settings. Enable **Read content** and save your changes.
+    Onyx does not need **Update content** or **Insert content** to index pages.
   </Step>
 
-  <Step title="Set capabilities">
-    Select "Read content" as the only capability required for Onyx.
-  </Step>
+  <Step title="Copy the access token">
+    Open **Configuration**. Under **Integration token**, copy the **Access token**.
+    Older screens call this **Internal Integration Secret**. This is the value you will paste into Onyx.
 
-  <Step title="Submit">
-    Click Submit to create the integration.
+    <img className="rounded-image" src="/assets/admins/connectors/notion/notion-token-location.png" alt="Notion Access token field with the token hidden and reveal, refresh, and copy controls"/>
+
+    Keep the token private. Do not include it in screenshots, source code, or support messages.
   </Step>
 </Steps>
 
-On the next page, you'll find your Notion integration token, also called an API key.
-You'll need this token to configure Onyx to index Notion, so make a copy of it.
+### Reuse an existing connection
 
-The integration has been added to the workspace, so any member can share pages and databases with it.
-There's no requirement to be an Admin to share information with an integration.
+In Notion, open your workspace menu and select **Settings → Connections → Manage → All connections**.
+Find the internal connection. Open its **•••** menu and select **Manage connection**. Under **Copy access token**,
+select **Copy**. You can also open **Developer portal** to view its configuration.
 
-<img className="rounded-image" src="/assets/admins/connectors/notion/NotionCreateIntegration.gif" alt="Creating a Notion internal integration in the Notion settings"/>
+Do not select **Refresh** to copy an existing token. Refresh generates a new token and can disrupt existing connectors.
 
-#### Step 2: Share pages/databases with your integration
+See Notion's [internal connection authorization
+guide](https://developers.notion.com/guides/get-started/authorization#internal-connection-auth-flow-set-up)
+for the token location and its [connection capability reference](https://developers.notion.com/reference/capabilities)
+for permission details.
 
-Now that you've created an integration, you need to grant it access to Notion pages/databases.
-To keep your information secure, integrations don't have access to any pages or databases in the workspace at first.
-You must share specific pages with an integration in order for Onyx to access those pages.
+### Give the connection access to pages
 
-To share a page/database with your integration:
+Creating a connection does not give it access to all workspace content. Share the pages and databases you want to index.
+You can also manage shared pages in the developer portal under **Content access → Edit access**.
 
 <Steps>
-  <Step title="Navigate to page">
-    Go to the page/database in your workspace.
+  <Step title="Open a page or database in Notion">
+    Open the original page or database that you want Onyx to read.
   </Step>
 
-  <Step title="Access page menu">
-    Click the `•••` on the top right corner of the page.
+  <Step title="Add the connection">
+    Open the **•••** menu at the top right. Under **Connections**, select **Add connections** or **+ Add connection**.
+    Search for the connection you created, select it, and confirm access.
   </Step>
 
-  <Step title="Add connections">
-    Scroll to the bottom of the pop-up and click Add connections.
-  </Step>
-
-  <Step title="Select integration">
-    Search for and select the new integration in the `Search for connections...` menu.
-  </Step>
-
-  <Step title="Note about child pages">
-    If you've added a page, all child pages also become accessible to Onyx.
+  <Step title="Check the content scope">
+    Access to a parent page includes its child pages. Repeat this process for other top-level pages you want to index.
+    For databases, share the source database, not only a page containing a linked view.
+    Sharing a database also gives the connection access to its row pages and their children.
+    Onyx indexes accessible content within the configured root-page scope, if one is set.
   </Step>
 </Steps>
 
-    If you've added a database, all rows (and their children) become accessible to Onyx.
+See Notion's [page connection instructions](https://www.notion.com/help/add-and-manage-connections-with-the-api).
 
-<img className="rounded-image" src="/assets/admins/connectors/notion/NotionAddConnector.png" alt="Adding the Onyx integration to a Notion workspace or page"/>
-
-Once you've granted access to a page/database, you can start configuring Onyx to index those databases.
-
-### Indexing
+## Add the credentials in Onyx
 
 <Steps>
-  <Step title="Open Notion connector">
-    Navigate to the Admin Panel and select the **Notion** connector.
+  <Step title="Open the Notion connector">
+    Open **Admin Panel → Add Connector** and select **Notion**.
   </Step>
 
-  <Step title="Enter Integration Token">
-    In **Step 1**, provide the **Integration Token Secret** you obtained in the "Authorization" steps above:
+  <Step title="Create a credential">
+    Under **Select a credential**, select **Create New**. Enter a descriptive credential name if prompted.
+    Paste your Notion token into **Notion Integration Token**, then select **Create**. Paste only the token,
+    without a `Bearer` prefix or quotation marks.
 
-    <img className="rounded-image" src="/assets/admins/connectors/notion/NotionAuth.png" alt="Onyx Notion connector authentication step to connect integration"/>
+    If you already saved a credential for this workspace, select it instead.
+
+    <img className="rounded-image" src="/assets/admins/connectors/notion/onyx-notion-credential.png" alt="Onyx Create a Notion credential dialog with Name and Notion Integration Token fields"/>
   </Step>
 
-  <Step title="Connect and index">
-    Click the `Connect` button! Your content will then be pulled into Onyx every **10** minutes.
+  <Step title="Configure the connector">
+    Select **Continue** to open the configuration step. Give the connector a name, such as `Notion Knowledge Base`.
+    Set **Root Page ID** only if you want to limit indexing to one page and its children.
 
-    <img className="rounded-image" src="/assets/admins/connectors/notion/NotionIndex.png" alt="Onyx Notion connector indexing options and selection screen"/>
+    | Root Page ID | Content indexed |
+    | --- | --- |
+    | Empty | All pages available to the Notion connection. |
+    | A page ID | That page and its accessible child pages. |
+
+    To find a page ID, copy its Notion link. Use the 32-character ID at the end of the URL path,
+    before any `?` query string. For example,
+    `https://www.notion.so/Team-Wiki-0123456789abcdef0123456789abcdef` has the page ID
+    `0123456789abcdef0123456789abcdef`. Enter the ID, not the full URL.
+
+    The root page must still be shared with the connection in Notion.
+  </Step>
+
+  <Step title="Review access and indexing options">
+    Review who can access the indexed content in Onyx. **Public** content is available to all Onyx users.
+    Use the available restricted-access options for content with a smaller audience.
+    Do not assume that sharing a page with the Notion connection preserves each user's Notion permissions in Onyx.
+
+    Select **Advanced** to review the refresh interval and pruning settings.
+    Select **Create Connector** to save the connector and start indexing.
   </Step>
 </Steps>
 
-Note - As mentioned, the Notion connector currently indexes everything it has access to.
-If you want to limit specific content being indexed, simply unshare the database from Notion with the integration.
+## Verify indexing and use your content
+
+<Steps>
+  <Step title="Check the indexing result">
+    Open **Admin Panel → Existing Connectors** and select your Notion connector. Wait for an indexing run to finish.
+    Check the document count and any reported errors.
+
+    <img className="rounded-image" src="/assets/admins/connectors/notion/onyx-notion-indexed.png" alt="Onyx connector indexing panel showing Indexed status and one document indexed"/>
+
+    If **Some documents failed to index** appears, open **View details** even when the status says **Indexed**.
+    After fixing the error, select **Manage → Re-Index** and choose the required update or complete re-index.
+  </Step>
+
+  <Step title="Find a known page">
+    Return to Onyx and search for a distinctive phrase from a shared Notion page.
+    Use an agent with access to the connector's documents. Check the source citation and open the linked Notion page.
+  </Step>
+
+  <Step title="Limit an agent to selected content">
+    To give an agent a specific collection, create a document set under **Admin Panel → Document Sets**.
+    Include the Notion connector and select that document set in the agent's knowledge settings.
+  </Step>
+</Steps>
+
+## Troubleshooting
+
+| Problem | What to check |
+| --- | --- |
+| Invalid or expired token (401) | Copy the token again from the correct Notion connection and update the saved Onyx credential. |
+| Insufficient permissions (403) | Check **Read content** and the connection's access to the target content. |
+| Resource not found (404) | Check the root page ID, workspace, and page sharing. Notion can return 404 for unshared content. |
+| No documents or missing pages | Share the original pages and databases with the connection. Check whether **Root Page ID** excludes them. |
+| Rate limit (429) | Allow time for Notion's rate limit to clear, then retry the indexing run. |
+| Content is indexed but absent from answers | Check the user's Onyx access and the agent's selected document sets. |
+
+To stop fetching a page, remove the connection's access in Notion or narrow the root-page scope.
+Previously indexed documents are not removed immediately when you change Notion access.
+Enable pruning and check that a pruning run succeeds to remove documents that are no longer accessible.
