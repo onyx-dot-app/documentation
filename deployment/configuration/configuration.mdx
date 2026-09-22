@@ -25,7 +25,7 @@ or use cases where you want to bring your own LLM and tools without ingesting ex
 
 Onyx Lite retains the following capabilities:
 - LLM chat conversations
-- Tools (including code interpreter in Docker deployments)
+- Tools (including code interpreter when its service is enabled)
 - User file uploads
 - Projects
 - Agent knowledge
@@ -33,23 +33,27 @@ Onyx Lite retains the following capabilities:
 
 ### What's Removed
 
-To reduce resource requirements, Onyx Lite disables:
-- **OpenSearch** (vector database): no document indexing or RAG search
+Onyx Lite disables or does not use:
+- **Vector indexing and RAG search**: `DISABLE_VECTOR_DB=true` prevents use of OpenSearch, even if it is running
 - **Redis**: PostgreSQL handles caching and session management instead
-- **Model servers**: no local embedding models (LLM inference is handled by your configured provider)
+- **Indexing model server**: no document embeddings; Docker Compose Lite also skips the inference model server
 - **Celery background workers**: the API server handles background work directly
-- **MinIO / S3 file storage**: PostgreSQL handles file storage instead
+- **MinIO / S3 file storage**: PostgreSQL handles file storage instead, even if MinIO is running
 - **Connectors**: all data source connectors are disabled
+
+Helm's Lite values leave the OpenSearch, MinIO, inference model server, code interpreter,
+and Slack bot workloads enabled by chart defaults.
+The unused OpenSearch and MinIO workloads do not enable indexing or S3 file storage.
 
 ### How It Works
 
-Onyx Lite is not a separate application.
-It uses the same Onyx images with a different configuration that consolidates all storage onto PostgreSQL and disables
-the vector database. The key environment variables that drive this are:
+Onyx Lite is not a separate application. It uses the same Onyx images with a configuration that stores files,
+cache data, and sessions in PostgreSQL and disables vector database access.
+The key environment variables that drive this are:
 
 | Variable             | Lite Value   | Full Onyx Default | Purpose                                      |
 |----------------------|--------------|-------------------|----------------------------------------------|
-| `DISABLE_VECTOR_DB`  | `true`       | `false`           | Disables OpenSearch, connectors, and RAG search   |
+| `DISABLE_VECTOR_DB`  | `true`       | `false`           | Disables vector indexing, connectors, and RAG search |
 | `CACHE_BACKEND`      | `postgres`   | `redis`           | Uses PostgreSQL for caching instead of Redis |
 | `AUTH_BACKEND`       | `postgres`   | `redis`           | Uses PostgreSQL for sessions instead of Redis|
 | `FILE_STORE_BACKEND` | `postgres`   | `s3`              | Uses PostgreSQL for file storage instead of S3/MinIO |
@@ -84,8 +88,8 @@ the vector database. The key environment variables that drive this are:
 ### Deploying Onyx Lite with Docker Compose
 
     Onyx Lite is deployed using a Docker Compose override file that layers on top of your base Compose file.
-    The override moves non-essential services (OpenSearch, Redis, model servers, background workers)
-    into Docker Compose [profiles](https://docs.docker.com/compose/how-tos/profiles/) so they do not start by default.
+    The override moves unused services into Docker Compose [profiles](https://docs.docker.com/compose/how-tos/profiles/)
+    so they do not start by default.
 
     **Quick start:**
 
@@ -108,26 +112,7 @@ the vector database. The key environment variables that drive this are:
     | web_server | Next.js frontend |
     | relational_db | PostgreSQL database |
     | nginx | Reverse proxy |
-    Services not started (moved to profiles):
-    | Service | Profile | Start container with |
-    |--------------------------|----------------|-----------------------------------------|
-    | background (Celery) | background | --profile background (also needs --profile redis) |
-    | cache (Redis) | redis | --profile redis |
-    | index (OpenSearch) | opensearch | --profile opensearch |
-    | indexing_model_server | vectordb | --profile vectordb |
-    | inference_model_server | inference | --profile inference |
-
-    Starting the OpenSearch or indexing model server containers does not enable indexing in Lite.
-    The API server still has `DISABLE_VECTOR_DB=true`; use a full Onyx deployment for indexing and RAG search.
-
-    <Tip>
-      You can selectively start containers by adding `--profile <name>` flags. For example, to run Lite with Redis:
-
-    ```bash
-    docker compose -f docker-compose.yml -f docker-compose.onyx-lite.yml \
-                --profile redis up -d
-    ```
-    </Tip>
+    | code-interpreter | Python tool service |
 
     <Note>
       The .env file setup is the same as a standard Docker deployment.
@@ -154,26 +139,37 @@ the vector database. The key environment variables that drive this are:
 
 ### Deploying Onyx Lite with Helm
 
-    Onyx Lite is deployed by providing the values-lite.yaml file when installing the Helm chart.
-    This values file disables the vector database, Redis, and all Celery workers, leaving only the API server,
-    web server, and PostgreSQL. Quick start:
+    The values-lite.yaml file disables vector database access, Redis, Celery workers, and the indexing model server.
+    Unlike the Docker Compose overlay, it does not disable OpenSearch, MinIO, the inference model server,
+    or the Slack bot. These workloads still start with the chart defaults. The code interpreter also remains enabled.
 
-    ```
+    For a minimal install that omits those unused workloads, add explicit overrides:
+
+    ```bash
     helm install onyx ./deployment/helm/charts/onyx \
-      -f ./deployment/helm/charts/onyx/values-lite.yaml
+      -f ./deployment/helm/charts/onyx/values-lite.yaml \
+      --set opensearch.enabled=false \
+      --set minio.enabled=false \
+      --set inferenceCapability.replicaCount=0 \
+      --set slackbot.enabled=false
     ```
 
     To merge with your own overrides (custom domain, auth, LLM config, etc.):
 
-    ```
-      helm install onyx ./deployment/helm/charts/onyx \
-    -f ./deployment/helm/charts/onyx/values-lite.yaml \
-    -f my-overrides.yaml
+    ```bash
+    helm install onyx ./deployment/helm/charts/onyx \
+      -f ./deployment/helm/charts/onyx/values-lite.yaml \
+      -f my-overrides.yaml \
+      --set opensearch.enabled=false \
+      --set minio.enabled=false \
+      --set inferenceCapability.replicaCount=0 \
+      --set slackbot.enabled=false
     ```
 
     <Tip>
-      You can always upgrade from Lite to a full deployment later by re-installing with the default values.yaml (without
-      values-lite.yaml). This will bring up Opensearch, Redis, and all background workers.
+      To upgrade from Lite to a full deployment,
+      use the chart defaults without values-lite.yaml or the minimal-install overrides. This enables vector indexing,
+      Redis, and background workers.
     </Tip>
   </Accordion>
 </AccordionGroup>

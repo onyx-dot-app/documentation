@@ -8,10 +8,11 @@ icon: "server"
 
 Onyx supports two deployment modes:
 
-**Onyx Lite** — A lightweight Chat UI that requires minimal resources (under 1GB of memory).
+**Onyx Lite** — A lightweight Chat UI that uses fewer resources than Onyx Standard.
 It is great for users who want to try Onyx quickly or teams only interested in Chat and Agents. Includes LLM chat,
-tools, file uploads, and Projects, but does not include the vector database, background workers,
-or model inference servers.
+tools, file uploads, and Projects, but does not use the vector database or background workers.
+Docker Compose Lite skips both model servers;
+Helm Lite still starts the inference model server unless you disable it explicitly.
 
 **Onyx Standard** — The full Onyx platform, recommended for serious users and larger teams.
 Includes everything in Lite plus:
