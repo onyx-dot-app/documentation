@@ -1,212 +1,333 @@
 ---
 title: "Salesforce"
-description: "Access CRM data from Salesforce"
+description: "Index the records in your Salesforce organization"
 ---
 
-## How it works
+## What gets indexed
 
-The Salesforce connector indexes documents from your Salesforce.
-These documents organized around the **Objects** that you indicate. Examples are below.
+You can configure the type of Salesforce **object** that is indexed, such as Account, Opportunity, or Case.
+Onyx creates one document for each record of that object. If you pick none, Onyx indexes **Account**.
 
-## Setting up
+A document contains the record's fields, plus the fields of the records directly related to it.
+So a document for an account also includes that account's contacts, opportunities, cases, and notes.
 
-### Authorization
+### What is not indexed
 
-OAuth is the recommended authentication method for self hosted deployments (not yet supported on cloud).
-You can also use a Salesforce username, password, and security token.
+- Files and attachments
+- Encrypted fields
+- Salesforce system objects, such as history, sharing, feed, and Chatter records
+- Record IDs and date fields
+- Records more than one step from the object you picked
+- Records the connector's credentials cannot access
 
-#### Configure OAuth for self-hosted Onyx
+## Before you begin
+
+You need:
+
+- An Onyx administrator account.
+- A Salesforce edition with API access: Enterprise, Unlimited, Performance, or
+  Developer editions.
+    - Professional Edition needs the Web Services API add-on.
+    - Group and Essentials editions cannot use the API and cannot set up the connector in Onyx.
+- A Salesforce user with the **API Enabled** permission who can see every record you want indexed.
+  Onyx indexes as this user, so a read-only integration user works well.
+
+Onyx signs in as that Salesforce user in one of two ways:
+
+<Columns cols={2}>
+  <Card title="OAuth (self-hosted Onyx only)" icon="key" href="#authenticate-with-oauth">
+    Recommended for most users.
+  </Card>
+
+  <Card title="Username, password, and security token" icon="lock" href="#authenticate-with-a-security-token">
+    Available on Onyx Cloud and self-hosted.
+  </Card>
+</Columns>
+
+## Authenticate with OAuth
 
 <Info>
-  This section applies only to self-hosted deployments.
-  Onyx Cloud will have a Salesforce External Client App configured in the future (we're currently waiting on them).
-  Cloud users can skip to [Indexing](#indexing).
+  If you plan to use a username and password,
+  skip to [Authenticate with a security token](#authenticate-with-a-security-token).
+  If an administrator has already configured OAuth for your deployment,
+  skip to [Configure the connector in Onyx](#configure-the-connector-in-onyx).
 </Info>
 
-Self-hosted deployments must create a Salesforce External Client App (ECA) and configure Onyx with its credentials.
-Before you begin:
-
-- Enable [My Domain](https://help.salesforce.com/s/articleView?id=xcloud.domain_name_overview.htm&type=5) for your
-  Salesforce organization.
-- Use a stable HTTPS URL for your Onyx `WEB_DOMAIN`.
-- Sign in to Salesforce as an administrator.
+First, make sure your Onyx deployment has a public HTTPS address, because Salesforce rejects plain HTTP callback URLs.
+Then [enable My Domain](https://help.salesforce.com/s/articleView?id=xcloud.domain_name_overview.htm&type=5)
+in Salesforce and sign in as an administrator.
 
 <Steps>
   <Step title="Create an External Client App">
-    In Salesforce Setup, open **External Client App Manager**, select **New External Client App**,
-    and set **Distribution State** to **Local**.
+    In Salesforce Setup, search for `External` in Quick Find,
+    then open **External Client Apps → External Client App Manager**.
+    Select **New External Client App** and set **Distribution State** to **Local**.
+
+    <img className="rounded-image" src="/assets/admins/connectors/salesforce/SalesforceExternalClientAppManager.png" alt="External Client App Manager in Salesforce Setup, reached by searching for External in Quick Find"/>
   </Step>
 
   <Step title="Configure OAuth">
-    Enable OAuth and set the callback URL to:
+    Turn on OAuth. Set the callback URL to your Onyx address followed by `/connector/oauth/callback/salesforce`:
 
     ```text
-    {WEB_DOMAIN}/connector/oauth/callback/salesforce
+    https://onyx.example.com/connector/oauth/callback/salesforce
     ```
 
-    The callback URL must exactly match your Onyx deployment's `WEB_DOMAIN`, including its scheme, host, base path,
-    and port.
+    The scheme, host, base path, and port must match your deployment exactly. If your Onyx address ever changes,
+    update this callback URL to match, or OAuth stops working.
   </Step>
 
   <Step title="Add OAuth scopes">
-    Add these scopes:
+    Add two scopes:
 
     - **Manage user data via APIs** (`api`)
     - **Perform requests at any time** (`refresh_token`)
   </Step>
 
   <Step title="Configure OAuth security">
-    Enable all of the following:
+    Turn on all four of these settings:
 
     - Require a secret for the web server flow
     - Require a secret for the refresh token flow
     - Require PKCE for supported authorization flows
     - Refresh token rotation
-
-    Onyx uses the OAuth 2.0 authorization code flow with S256 PKCE.
   </Step>
 
   <Step title="Save the app credentials">
-    Save the ECA, then copy its **Consumer Key** and **Consumer Secret**. Store the secret securely.
+    Save the app, then copy its **Consumer Key** and **Consumer Secret**. Store the secret somewhere safe.
 
-    Salesforce can take several minutes to activate a new app or policy change.
+    Salesforce takes a few minutes to activate a new app or a policy change.
   </Step>
 
   <Step title="Set permitted users">
-    Open the ECA's **Policies** tab and select a permitted-user policy.
+    Open the app's **Policies** tab and pick a permitted-user policy.
 
-    For controlled deployments, select **Admin approved users are pre-authorized**,
-    then assign the ECA to the required profiles or permission sets.
-    Use **All users may self-authorize** only if your organization's policy permits it.
+    **Admin approved users are pre-authorized** is the safer choice.
+    Assign the app to the profiles or permission sets that need it.
+    Pick **All users may self-authorize** only if your organization allows it.
 
-    Each user who authorizes Onyx also needs access to the Salesforce objects and fields you want to index.
+    Whoever authorizes Onyx also needs access to the records you want indexed.
   </Step>
 
   <Step title="Configure Onyx">
-    Set both variables on the Onyx API server and all background workers:
+    Add these two variables to your Onyx `.env` file, then restart Onyx.
+    See [Configuration](/deployment/configuration/configuration) for where that file lives in your deployment.
 
-    ```bash
-    SALESFORCE_CLIENT_ID=<ECA consumer key>
-    SALESFORCE_CLIENT_SECRET=<ECA consumer secret>
+    ```bash .env
+    SALESFORCE_CLIENT_ID=<consumer key>
+    SALESFORCE_CLIENT_SECRET=<consumer secret>
     ```
 
-    Restart the affected Onyx services. OAuth is unavailable if either variable is missing.
+    <Warning>
+      Onyx hides the OAuth option if either variable is missing.
+      If **Connect with Salesforce** does not appear when you create a credential, start here.
+    </Warning>
   </Step>
 </Steps>
 
-#### Use manual credentials
+## Authenticate with a security token
 
-If you cannot use OAuth, authorize Onyx with a Salesforce username, password, and security token:
+<Info>
+  Skip to [Configure the connector in Onyx](#configure-the-connector-in-onyx) if you are using OAuth.
+</Info>
+
+Sign in to Salesforce as the user Onyx will index with, then:
 
 <Steps>
-  <Step title="Log in to Salesforce">
-    Log in to Salesforce as an organization member with access to the data you want to index.
+  <Step title="Open personal settings">
+    Select your avatar, then **Settings**.
+
+    <img className="rounded-image" src="/assets/admins/connectors/salesforce/salesforce_1.png" alt="The Salesforce avatar menu, with Settings highlighted"/>
   </Step>
 
-  <Step title="Open Settings">
-    Select your profile avatar, then select **Settings**.
+  <Step title="Reset the security token">
+    Go to **My Personal Information → Reset My Security Token** and select **Reset Security Token**.
 
-    <img className="rounded-image" src="/assets/admins/connectors/salesforce/salesforce_1.png" alt="Salesforce user menu showing path to Settings"/>
+    <img className="rounded-image" src="/assets/admins/connectors/salesforce/salesforce_2.png" alt="The Reset My Security Token page in Salesforce personal settings"/>
   </Step>
 
-  <Step title="Reset security token">
-    Select **My Personal Information** → **Reset My Security Token**.
+  <Step title="Get the token from your email">
+    Salesforce emails the token to the address on the account. Salesforce never shows it again,
+    so save it somewhere safe.
 
-    <img className="rounded-image" src="/assets/admins/connectors/salesforce/salesforce_2.png" alt="Salesforce settings highlighting Reset My Security Token"/>
-  </Step>
-
-  <Step title="Check email for token">
-    Check your email for the security token.
-
-    <img className="rounded-image" src="/assets/admins/connectors/salesforce/salesforce_3.png" alt="Email example showing Salesforce security token message"/>
+    <img className="rounded-image" src="/assets/admins/connectors/salesforce/salesforce_3.png" alt="A Salesforce email containing a new security token"/>
   </Step>
 </Steps>
 
-### Indexing
+<Warning>
+  Resetting the token invalidates the old one, which breaks anything else that signs in with it.
+  Changing the account's password also resets the token. Indexing stops until you update the credential in Onyx.
+</Warning>
+
+## Configure the connector in Onyx
 
 <Steps>
-  <Step title="Create a new Salesforce Connector">
-    Navigate to the Admin Panel and select the **Salesforce** Connector Tile.
+  <Step title="Open the Salesforce connector">
+    In Onyx, go to **Admin Panel → Add Connector** and select **Salesforce**.
   </Step>
 
-  <Step title="Create a new credential">
-    Select **Create New**, then choose an authentication method:
+  <Step title="Create a credential">
+    Select **Create New**, then choose one of:
 
-    - **Connect with Salesforce**: Enter your organization's HTTPS My Domain root, then complete the Salesforce OAuth
-    flow. For example, enter `https://company.my.salesforce.com` or, for a sandbox,
-    `https://company--dev.sandbox.my.salesforce.com`.
-    - **Enter credentials manually**: Enter your Salesforce **Username**, **Password**, and **Security Token**.
+    - **Connect with Salesforce**: Enter your My Domain root, such as `https://company.my.salesforce.com`.
+    For a sandbox, use an address like `https://company--dev.sandbox.my.salesforce.com`. Then sign in to Salesforce.
+    - **Enter credentials manually**: Enter the **Username**, **Password**, and **Security Token**.
+    Turn on **Is Sandbox Environment** for a sandbox account.
 
-    For OAuth, do not enter `login.salesforce.com`, a path, a query, or a custom port.
+    <Tip>
+      For **Connect with Salesforce**, enter the root only. Onyx rejects `login.salesforce.com`, a path, a query,
+      or a custom port.
+    </Tip>
   </Step>
 
   <Step title="Select the credential">
-    Select the new credential and click **Continue**.
+    Select the credential you just created and continue.
   </Step>
 
-  <Step title="Define the Salesforce Object(s) you wish to index">
-    <Accordion title="Simple">
-      Enter the [Salesforce
-      Object(s)](https://developer.salesforce.com/docs/atlas.en-us.object_reference.meta/object_reference/sforce_api_objects_list.htm)
-      you wish to index and organize your Onyx documents by.
-      - Make sure to use the singular version of object name (e.g. Opportunity instead of
-      Opportunities)
-      - If no objects are indicated, it will default to indexing by **Account**
-      - Each Onyx Document extracted from Salesforce contains all fields and associations of each
-      object. For example,
-      when indexing each Account we include the fields of the AccountFeed and AccountShare objects as well (but not the
-      associations of those objects).
-      This can lead to bloated queries and memory intensive indexing in larger salesforce instances.
-
-      <Tip>
-        Use the Advanced mode to have finer grain control over what is indexed.
-      </Tip>
-    </Accordion>
-
-    <Accordion title="Advanced">
-      Specify which objects, fields, and associations get indexed with a json object.
-
-      Top level keys are Salesforce Objects, each value is a JSON object specifying:
-      - `fields`: a list of strings describing the fields of the object to index
-      - `associations`: a JSON object mapping a Salesforce Object associated with the parent object to a list of fields to be indexed for the child object
-
-    ```json Example
-    {
-      "Account": {
-        "fields": ["Id", "Name", "Industry", "CreatedDate", "lastModifiedDate"],
-        "associations": {
-            "Contact": ["Id", "FirstName", "LastName", "Email"],
-            "Opportunity": ["Id", "Name", "StageName", "Amount", "CloseDate"]
-        }
-      },
-      "Lead": {
-        "fields": ["Id", "FirstName", "LastName", "Company", "Status"],
-        "associations": {}
-      }
-    }
-    ```
-    </Accordion>
+  <Step title="Choose the objects to index">
+    Name the connector. Then list the objects you want under **Simple**, or describe them exactly under **Advanced**.
+    See [Choosing objects](#choosing-objects).
   </Step>
 
-  <Step title="Click on the **Connect** button.">
-    Click on the **Connect** button and your connector will be created.
-    Onyx will automatically begin indexing your Salesforce data.
+  <Step title="Choose the access type">
+    **Public** shows every indexed record to all Onyx users. **Private** limits them to selected Onyx user groups.
+    **Auto Sync Permissions** applies each searcher's own Salesforce access. See [Permission sync](#permission-sync).
+
+    See [Document Access Controls](/admins/connectors/overview#document-access-controls)
+    for what each access type means.
+  </Step>
+
+  <Step title="Create and verify">
+    Select **Connect**. Onyx checks the credential, then starts indexing.
+
+    Open **Admin Panel → Existing Connectors**, select the connector,
+    and check that the first indexing attempt finishes with about the number of documents you expect.
   </Step>
 </Steps>
 
-### An Example
+## Choosing objects
 
-You indicate you'd like to organize information by **Account** and click connect
+**Simple** takes a list of object names.
+**Advanced** takes JSON that names the exact fields and related objects to index.
 
-<img className="rounded-image" src="/assets/admins/connectors/salesforce/salesforce_4.png" alt="Onyx Salesforce connector example configuration using Account object"/>
+<Tip>
+  Use **Advanced** for finer control over what Onyx indexes.
+</Tip>
 
-Onyx will generate a document for every single **Account** in your Salesforce.
-Attached to each document will be all the information associated with that **Account**.
-This information would also include information from the **Account**'s children objects (E.g.
-all associated **Contacts**, **Notes**, etc.).
-This means indicating **Account** means that all **Contact**s that are attached to an account will also be grabbed
+### Simple
 
-If you want to index any **Contacts** that aren't attached to any **Accounts**, (as well as **Accounts**),
-you would indicate that like so:
+List the [Salesforce
+objects](https://developer.salesforce.com/docs/atlas.en-us.object_reference.meta/object_reference/sforce_api_objects_list.htm)
+you want a document for, one per entry. Use each object's singular API name,
+so `Opportunity` rather than `Opportunities`. Custom objects keep their `__c` suffix.
 
-<img className="rounded-image" src="/assets/admins/connectors/salesforce/salesforce_5.png" alt="Onyx Salesforce connector advanced JSON configuration for Account and Contact objects"/>
+Onyx then indexes every field on those records, and every field on the records related to them. On a large organization,
+that makes for long documents and a slow first index.
+
+### Advanced
+
+Write a JSON object. Each top-level key names an object you want a document for, and takes two settings:
+
+- `fields`: the fields to index on that object
+- `associations`: the related objects to include, each with its own list of fields
+
+Onyx matches names exactly, so use API names.
+Every object under `associations` must be a direct child of the object above it.
+
+```json Example
+{
+  "Account": {
+    "fields": ["Id", "Name", "Industry", "CreatedDate", "LastModifiedDate"],
+    "associations": {
+      "Contact": ["Id", "FirstName", "LastName", "Email"],
+      "Opportunity": ["Id", "Name", "StageName", "Amount", "CloseDate"]
+    }
+  },
+  "Lead": {
+    "fields": ["Id", "FirstName", "LastName", "Company", "Status"],
+    "associations": {}
+  }
+}
+```
+
+This example creates one document for each account, with the listed fields from its contacts and opportunities.
+It also creates one document for each lead, with nothing attached.
+
+## Permission sync
+
+Set the access type to **Auto Sync Permissions**,
+and an Onyx user sees only the Salesforce records they can read in Salesforce.
+
+- Onyx matches an Onyx user to a Salesforce user by email address.
+  It checks the Salesforce username first, then the Salesforce email field, and it matches active users only.
+  Someone with no match sees no Salesforce content.
+- A single result can come back partly redacted.
+  If you can read an account but not one of its opportunities, Onyx strips out the opportunity and keeps the rest.
+- Users who are not signed in see no Salesforce content at all.
+
+<Note>
+  Permission sync is a paid feature: the Business and Enterprise tiers on Onyx Cloud,
+  and the Enterprise Edition when self-hosted.
+</Note>
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="Failed to validate Salesforce credentials">
+    The username, password, or security token is wrong, or a password change reset the token.
+    Reset the token and update the credential in Onyx. If all three are correct,
+    check that the organization has API access and that the user has the **API Enabled** permission.
+  </Accordion>
+
+  <Accordion title="Reset My Security Token is missing from Salesforce settings">
+    The user's profile has **Login IP Ranges** set. That blocks logins from anywhere else,
+    so Salesforce hides the token option. Clear the ranges, or move the user to a profile without them.
+    Chatter External and Chatter Free users cannot reset a token either.
+  </Accordion>
+
+  <Accordion title="Nothing is indexed">
+    Check the object names. Use each object's singular API name, and keep the `__c` suffix on custom objects.
+    You also get no documents from an object the credential's user cannot see.
+  </Accordion>
+
+  <Accordion title="Associations not found in a parent object">
+    An object under `associations` is not a direct child of the object above it, the two are the wrong way around,
+    or the name is not the object's API name.
+  </Accordion>
+
+  <Accordion title="Indexing is slow or runs out of memory">
+    The first index downloads every record of the objects you picked and everything related to them.
+    Switch to [Advanced](#advanced) and name only the objects and fields you need.
+  </Accordion>
+
+  <Accordion title="REQUEST_LIMIT_EXCEEDED">
+    The organization has used its daily API allowance. Onyx retries,
+    but the run finishes sooner if you narrow the connector or schedule it away from your other integrations.
+  </Accordion>
+
+  <Accordion title="The OAuth option is missing from the credential form">
+    On Onyx Cloud, OAuth is not available yet. Use a username and password instead.
+
+    On a self-hosted deployment, `SALESFORCE_CLIENT_ID` and `SALESFORCE_CLIENT_SECRET` are missing. Set both,
+    then restart the API server and every background worker.
+  </Accordion>
+
+  <Accordion title="Salesforce rejects the My Domain URL">
+    Enter the HTTPS root of your My Domain and nothing else. Remove any path, query, fragment, or port.
+  </Accordion>
+
+  <Accordion title="The callback URL does not match">
+    Compare the External Client App's callback with your Onyx address character by character. Check the scheme, host,
+    base path, and port.
+  </Accordion>
+
+  <Accordion title="invalid_grant, or a user cannot authorize">
+    An authorization code works once and expires quickly, so start the sign-in again. If it still fails,
+    check the app's permitted-user policy,
+    and check that the app is assigned to the profile or permission set of whoever is authorizing.
+  </Accordion>
+
+  <Accordion title="A user sees no Salesforce results under permission sync">
+    Their Onyx email matches no active Salesforce user, by either username or email address.
+  </Accordion>
+</AccordionGroup>
