@@ -36,7 +36,8 @@ but the Onyx checkbox must match the token type.
     Sign in as the connector account and open [Atlassian account API
     tokens](https://id.atlassian.com/manage-profile/security/api-tokens).
 
-    ![The Atlassian API Tokens page shows separate buttons for standard and scoped tokens](/assets/admins/connectors/confluence/atlassian-api-tokens.jpg)
+    ![The Atlassian API Tokens page shows separate buttons for standard and scoped
+    tokens](/assets/admins/connectors/confluence/atlassian-api-tokens.jpg)
   </Step>
 
   <Step title="Create the token">
@@ -73,7 +74,8 @@ but the Onyx checkbox must match the token type.
     See Atlassian's [Confluence scope
     reference](https://developer.atlassian.com/cloud/confluence/scopes-for-oauth-2-3LO-and-forge-apps/).
 
-    ![Atlassian's Confluence scope picker filtered to read scopes](/assets/admins/connectors/confluence/atlassian-scopes.jpg)
+    ![Atlassian's Confluence scope picker filtered to read
+    scopes](/assets/admins/connectors/confluence/atlassian-scopes.jpg)
 
     The screenshot shows some read scopes. Select every scope in the list above.
   </Step>
@@ -94,8 +96,8 @@ Open **Admin Panel > Connectors > Confluence**, select **Create New**, and enter
 
 ![The Onyx Confluence credential dialog](/assets/admins/connectors/confluence/credential-form.jpg)
 
-For both token types, Onyx uses the account email and token as HTTP Basic authentication.
-With a scoped token, Onyx directs Confluence API requests through Atlassian's API gateway.
+For both token types, Onyx uses the account email and token as HTTP Basic authentication. With a scoped token,
+Onyx directs Confluence API requests through Atlassian's API gateway.
 
 ## Configure the Cloud connector
 
@@ -106,7 +108,8 @@ Select the credential, select **Continue**, and configure these fields:
 - Enable **Using scoped token** only when you created the token with scopes.
 - Choose the indexing scope and attachment setting described in the [Confluence overview](./confluence).
 
-![A Confluence Cloud connector configured in Onyx with an unscoped token](/assets/admins/connectors/confluence/connector-form-cloud.jpg)
+![A Confluence Cloud connector configured in Onyx with an unscoped
+token](/assets/admins/connectors/confluence/connector-form-cloud.jpg)
 
 This example uses an unscoped token. Enable **Using scoped token** if you created a scoped token.
 
