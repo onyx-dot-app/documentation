@@ -109,15 +109,19 @@ the vector database. The key environment variables that drive this are:
     | relational_db | PostgreSQL database |
     | nginx | Reverse proxy |
     Services not started (moved to profiles):
-    | Service | Profile | Bring back with |
+    | Service | Profile | Start container with |
     |--------------------------|----------------|-----------------------------------------|
     | background (Celery) | background | --profile background (also needs --profile redis) |
     | cache (Redis) | redis | --profile redis |
     | index (OpenSearch) | opensearch | --profile opensearch |
     | indexing_model_server | vectordb | --profile vectordb |
     | inference_model_server | inference | --profile inference |
+
+    Starting the OpenSearch or indexing model server containers does not enable indexing in Lite.
+    The API server still has `DISABLE_VECTOR_DB=true`; use a full Onyx deployment for indexing and RAG search.
+
     <Tip>
-      You can selectively bring services back by adding `--profile <name>` flags. For example, to run Lite with Redis:
+      You can selectively start containers by adding `--profile <name>` flags. For example, to run Lite with Redis:
 
     ```bash
     docker compose -f docker-compose.yml -f docker-compose.onyx-lite.yml \
