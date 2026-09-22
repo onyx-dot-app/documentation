@@ -6,7 +6,7 @@ description: "Index the records in your Salesforce organization"
 ## What gets indexed
 
 You can configure the type of Salesforce **object** that is indexed, such as Account, Opportunity, or Case.
-Onyx creates one document for each record of that boject. If you pick none, Onyx indexes **Account**.
+Onyx creates one document for each record of that object. If you pick none, Onyx indexes **Account**.
 
 A document contains the record's fields, plus the fields of the records directly related to it.
 So a document for an account also includes that account's contacts, opportunities, cases, and notes.
