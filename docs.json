@@ -203,7 +203,14 @@
                   "admins/connectors/official/canvas",
                   "admins/connectors/official/clickup",
                   "admins/connectors/official/coda",
-                  "admins/connectors/official/confluence",
+                  {
+                    "group": "Confluence",
+                    "pages": [
+                      "admins/connectors/official/confluence",
+                      "admins/connectors/official/confluence-cloud",
+                      "admins/connectors/official/confluence-data-center"
+                    ]
+                  },
                   "admins/connectors/official/discord",
                   "admins/connectors/official/discourse",
                   "admins/connectors/official/document360",
