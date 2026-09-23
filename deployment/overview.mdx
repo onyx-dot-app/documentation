@@ -15,10 +15,11 @@ Includes everything in Lite plus:
 - AI model inference servers for deep learning models used during indexing and inference
 - Performance optimizations via Redis and MinIO
 
-**Onyx Lite** — A lightweight Chat UI that requires minimal resources (under 1GB of memory).
+**Onyx Lite** — A lightweight Chat UI that uses fewer resources than Onyx Standard.
 It is great for users who want to try Onyx quickly or teams only interested in Chat and Agents. Includes LLM chat,
-tools, file uploads, and Projects, but does not include the vector database, background workers,
-or model inference servers.
+tools, file uploads, and Projects, but does not use the vector database or background workers.
+Docker Compose Lite skips both model servers;
+Helm Lite still starts the inference model server unless you disable it explicitly.
 
 <Note>
   Onyx Lite does not include indexing. Use Onyx Standard to index knowledge from connected applications.

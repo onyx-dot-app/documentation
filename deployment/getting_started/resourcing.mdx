@@ -65,7 +65,7 @@ All together, this comes out to a total available node size of at least ~12 CPU 
 
 ## Container-Specific Resourcing (Lite)
 
-Onyx Lite runs only four services. All storage is consolidated onto PostgreSQL.
+Docker Compose Lite starts five services. File storage, cache data, and sessions use PostgreSQL.
 
 | Component | CPU | Memory |
 | --- | --- | --- |
@@ -73,10 +73,13 @@ Onyx Lite runs only four services. All storage is consolidated onto PostgreSQL.
 | `web_server` | 250m (1/4) | 512 Mi |
 | `postgres` | 1 | 1 Gi |
 | `nginx` | 250m (1/4) | 128 Mi |
+| `code-interpreter` | 100m | 512 Mi |
 
 <Info>
   Memory usage in Lite mode scales with the number of user-uploaded files, since PostgreSQL handles file storage,
-  caching, and session management.
+  caching, and session management. The code interpreter can use additional resources when it runs code.
+  Helm Lite starts additional workloads unless you disable them explicitly;
+  see the [Helm Lite configuration](/deployment/configuration/configuration#deploying-onyx-lite-with-helm).
 </Info>
 
 ## How Resource Requirements Scale
