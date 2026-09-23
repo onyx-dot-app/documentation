@@ -25,9 +25,9 @@ This page lists them by option.
 | Permissions | Optional, on paid plans. Each item is visible to the people who can read it in Teams. See [Auto Sync Permissions](#auto-sync-permissions). |
 
 Each refresh asks every channel for the messages that changed since the last run and rebuilds each thread that changed.
-Every meeting chat with a message in the last six months is asked what changed, so an edit or a delete
-in a chat that has gone quiet is picked up at the next refresh. Pruning removes threads,
-files, transcripts and chat days that no longer exist, and transcripts and chat days older than six months.
+Every meeting chat with a message in the last six months is asked what changed,
+so an edit or a delete in a chat that has gone quiet is picked up at the next refresh. Pruning removes threads, files,
+transcripts and chat days that no longer exist, and transcripts and chat days older than six months.
 
 ## Before you begin
 
@@ -266,7 +266,8 @@ Both options walk meeting organizers, not teams: Microsoft lists transcripts and
   A first index, a prune and a permission sync read the full six months,
   roughly 10 to 15 seconds per organizer even when there is no transcript. Onyx reads eight organizers at a time.
   To keep a large tenant fast, list the organizers who record meetings.
-- An organizer Microsoft refuses, for example one who lost the application access policy, lists nothing, so their transcripts and chat days leave the index at the next prune. The other organizers are unaffected.
+- An organizer Microsoft refuses, for example one who lost the application access policy, lists nothing,
+  so their transcripts and chat days leave the index at the next prune. The other organizers are unaffected.
 - A meeting's chat is indexed through the meeting's organizer.
   The chat of a meeting that another organization set up is not served to apps in your tenant, so it is not indexed.
 
