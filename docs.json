@@ -25,9 +25,9 @@
           {
             "group": "Core Features",
             "pages": [
-              "overview/core_features/chat",
               "overview/core_features/internal_search",
               "overview/core_features/connectors",
+              "overview/core_features/chat",
               "overview/core_features/agents",
               "overview/core_features/actions",
               "overview/core_features/web_search",
@@ -298,7 +298,6 @@
           {
             "group": "Managing Features",
             "pages": [
-              "admins/managing_features/chat",
               {
                 "group": "RAG and Search",
                 "icon": "magnifying-glass",
@@ -309,6 +308,7 @@
                   "admins/advanced_configs/opensearch_document_index_migration"
                 ]
               },
+              "admins/managing_features/chat",
               "admins/agents/overview",
               {
                 "group": "Actions",
@@ -757,10 +757,10 @@
     }
   },
   "seo": {
-    "title": "Onyx AI - Open Source AI Platform for Work",
-    "description": "Onyx AI is the open source AI platform for generation, automation, and enterprise search \u2014 powered by your team's data.",
+    "title": "Onyx AI - Open Source Enterprise Search and AI Platform",
+    "description": "Onyx AI is the open source AI platform for enterprise search, generation, and automation \u2014 powered by your team's data.",
     "metatags": {
-      "keywords": "onyx ai, onyx, open source ai, enterprise ai, generative ai platform, enterprise search, ai assistant, knowledge management, danswer"
+      "keywords": "enterprise search, onyx ai, onyx, open source ai, enterprise ai, generative ai platform, ai assistant, knowledge management, danswer"
     }
   },
   "contextual": {
