@@ -99,6 +99,9 @@ Extension version 1.2 and later reads settings from Chrome managed storage.
 Use it to set the Onyx URL and the new tab behavior for all users.
 Settings set by policy are read-only in the extension UI and show a "managed by your organization" notice.
 
+The Chrome Web Store extension ID is `dacfbnglakogghooelgjflkhjcdbemia`. The examples below use this ID.
+If you self-host the extension, replace it with your own ID from `chrome://extensions`.
+
 | Key                          | Type    | Description                                           |
 | ---------------------------- | ------- | ----------------------------------------------------- |
 | `onyxExtensionDomain`        | string  | Root URL of your Onyx instance (trailing `/` removed) |
@@ -123,14 +126,15 @@ Settings set by policy are read-only in the extension UI and show a "managed by 
   </Tab>
 
   <Tab title="Windows / macOS / Linux policy">
-    Set the `3rdparty.extensions.<extension-id>` policy. Example for Linux,
-    `/etc/opt/chrome/policies/managed/onyx.json`:
+    Set the `3rdparty.extensions.<extension-id>` policy.
+
+    **Linux** – save as `/etc/opt/chrome/policies/managed/onyx.json`:
 
     ```json
     {
       "3rdparty": {
         "extensions": {
-          "<extension-id>": {
+          "dacfbnglakogghooelgjflkhjcdbemia": {
             "onyxExtensionDomain": "https://onyx.example.com",
             "onyxExtensionDefaultNewTab": false
           }
@@ -139,7 +143,16 @@ Settings set by policy are read-only in the extension UI and show a "managed by 
     }
     ```
 
-    On Windows, use the same keys under `Software\Policies\Google\Chrome\3rdparty\extensions\<extension-id>\policy`.
+    **Windows** – add string values via Group Policy, Intune, or a `.reg` file:
+
+    ```text
+    HKLM\Software\Policies\Google\Chrome\3rdparty\extensions\dacfbnglakogghooelgjflkhjcdbemia\policy
+      onyxExtensionDomain        = "https://onyx.example.com"
+      onyxExtensionDefaultNewTab = "false"
+    ```
+
+    **macOS** – deploy a configuration profile for the preference domain
+    `com.google.Chrome.extensions.dacfbnglakogghooelgjflkhjcdbemia` with the same keys.
   </Tab>
 </Tabs>
 
