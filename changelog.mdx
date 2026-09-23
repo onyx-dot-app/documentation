@@ -10,7 +10,8 @@ rss: true
 
   ## v4.8.0
 
-  Outlook joins the connector lineup with mail, calendar, attachments, and permission sync.
+  Outlook and Zoom join the connector lineup: Microsoft 365 mail and calendar on one side,
+  meeting and webinar transcripts on the other, both with permission sync.
   The Onyx Terraform provider arrives on the public Terraform Registry,
   Arabic becomes the ninth interface language and brings full right-to-left support with it,
   re-indexing completes its lifecycle by reclaiming the old index once the new one proves out,
@@ -24,13 +25,6 @@ rss: true
     The compose files now pull `quay.io/minio/minio`,
     pinned by digest to the last release published for both amd64 and arm64.
     Existing deployments with the image already present are unaffected until they pull.
-  - **`onyx-cli deploy upgrade` finishes the job it started.** The bundled nginx resolves each service address
-    once at startup,
-    so after an upgrade replaced the API server it kept proxying to the old container's address and served 502s until
-    its next restart (in practice, hours). Upgrades now reload the proxy after the new containers are up. Also fixed:
-    `--tag vX.Y.Z-dev` image tags fetched their compose configuration from a git ref that does not exist and silently
-    fell back to the files baked into the CLI binary; `-dev` tags now use their plain tag's configuration,
-    and an invalid tag fails before anything is written.
   - **The code-interpreter sandbox is pinned and health-checked.** Its image previously defaulted to `latest`,
     so every upgrade silently moved the sandbox to whatever was newest that day;
     it is now pinned to the version tested with the release (`CODE_INTERPRETER_IMAGE_TAG` still overrides).
@@ -58,10 +52,26 @@ rss: true
   capped at 20 MB per file (`OUTLOOK_CONNECTOR_ATTACHMENT_SIZE_THRESHOLD`), and calendar indexing (off by default,
   requires the `Calendars.Read` application permission) writes one document per event with organizer, attendees, time,
   and body, folding a recurring series into one document plus its diverged exceptions.
-  Cancelled and private/confidential events are never indexed. With permission sync enabled (Enterprise),
+  Cancelled and private/confidential events are never indexed. With permission sync enabled (Business/Enterprise),
   each mailbox's documents are readable by its owner and events also by their organizer and attendees;
   shared mailboxes stay hidden rather than guessing, and nothing is ever marked public.
   Credentials accept a client secret or a certificate (PFX bundle plus password).
+
+  ### The Zoom Connector
+
+  Onyx can also now index Zoom:
+  every cloud-recorded meeting and webinar becomes a searchable document built from its transcript,
+  with each occurrence of a recurring session indexed on its own. Indexing is scoped by meeting or webinar IDs,
+  by a host allowlist, or by a Zoom Group's members;
+  the host and group paths also reach recordings older than the fifteen-month history limit Zoom puts on ID lookups.
+  Access follows the session: with permission sync enabled,
+  a recording is searchable only by the people who were actually in it (participants, approved registrants, invitees,
+  or panelists), never by a group and never publicly,
+  and a session whose attendance Zoom can no longer report is not indexed at all.
+  Because Zoom rate limits the whole account rather than each app,
+  a first backfill paces itself so it does not starve the customer's other Zoom integrations (declaring your Zoom plan
+  speeds it up), a throttled crawl resumes from its checkpoint instead of skipping what Zoom rejected,
+  and individual recordings that failed to index can be retried without re-running the whole connector.
 
   ### Onyx on the Terraform Registry
 
@@ -78,6 +88,8 @@ rss: true
   and a group mid-sync says "retry later" (`RESOURCE_SYNCING`) instead of "not found".
   One rename before the interface freezes at 1.0: the `onyx_persona` resource is now `onyx_agent`,
   matching what the product calls them; existing users run `terraform state mv onyx_persona.name onyx_agent.name` once.
+  See the [Terraform provider guide](https://docs.onyx.app/admins/advanced_configs/terraform_provider)
+  for setup and the full resource reference.
 
   ### Arabic, and a Right-to-Left Interface
 
@@ -100,8 +112,8 @@ rss: true
   Before a re-index starts,
   a confirmation modal lists exactly which connectors' data will not carry over (paused or invalid ones,
   depending on the switchover mode) and requires acknowledgment, so nothing disappears unannounced.
-  After the switchover, the old index is held for a grace period while the new one proves healthy,
-  then is deleted automatically with the deletion verified against document counts,
+  After the switchover,
+  the old index is held for a grace period and deleted automatically once the new index proves healthy,
   freeing the storage that a retained index generation holds (on by default;
   `OLD_INDEX_RECLAIM_ENABLED=false` opts out).
   A re-index that runs into an index generation left over from before this release pulls it into the same reclamation.
