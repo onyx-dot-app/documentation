@@ -8,7 +8,8 @@ It reads channel conversations, and it can also read the files in each channel, 
 the transcripts of scheduled meetings and the chats of those meetings.
 It can mirror who may read each item with **Auto Sync Permissions**.
 
-The connector signs in as an app registration, not as a user.
+The connector signs in as an app registration set up in [Microsoft 365
+Setup](/admins/connectors/official/microsoft-365/setup).
 Each option beyond channel conversations needs its own grants on the Microsoft side,
 and meeting transcripts also need two Teams settings that only a Teams administrator can change.
 This page lists them by option.
@@ -31,99 +32,18 @@ transcripts and chat days that no longer exist, and transcripts and chat days ol
 
 ## Before you begin
 
-You need:
-
-- A Microsoft 365 tenant with Microsoft Teams
-- A role that can create an app registration in Microsoft Entra and grant tenant-wide admin consent for Microsoft Graph
-  application permissions, such as Privileged Role Administrator or Global Administrator
-- A Teams administrator, only for **Include Meeting Transcripts**
-- An Onyx administrator account
-
-What each option needs on the Microsoft side:
-
-| Option                          | Microsoft Graph application permissions                                           | Also needed                                                                                                                                                                              |
-| ------------------------------- | --------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Channel threads (always on)     | **Team.ReadBasic.All**, **Channel.ReadBasic.All**, **ChannelMessage.Read.All**    | Nothing                                                                                                                                                                                  |
-| **Auto Sync Permissions** | **ChannelMember.Read.All**, **User.Read.All** | Nothing |
-| **Include Attachments** | **Files.Read.All** or **Sites.Read.All**, **GroupMember.Read.All**, **User.Read.All** | A certificate credential, and **Sites.FullControl.All** on the **SharePoint** API |
-| **Include Inline Images**       | Nothing more                                                                      | Image extraction and analysis turned on in the Onyx search settings                                                                                                                      |
-| **Include Meeting Transcripts** | **OnlineMeetingTranscript.Read.All**, **OnlineMeetings.Read.All**, **User.Read.All** | The **Transcript API access** setting in the Teams admin center, and an application access policy granted to the meeting organizers. Both are in [Configure Microsoft Teams](#configure-microsoft-teams). |
-| **Include Meeting Chats**       | **Chat.Read.All**, **User.Read.All**                                              | Nothing                                                                                                                                                                                  |
-
-<Note>
-  Every permission on this page is an **Application** permission and read only.
-  The one exception is **Sites.FullControl.All** on the SharePoint API:
-  SharePoint serves the list of who may read a file to apps with full control only.
-  Onyx reads with it and writes nothing.
-</Note>
+You need a Microsoft 365 tenant with Microsoft Teams,
+the roles listed in [Microsoft 365 Setup](/admins/connectors/official/microsoft-365/setup#before-you-begin),
+and a Teams administrator for **Include Meeting Transcripts** only.
 
 ## Configure Microsoft Entra
 
-<Steps>
-  <Step title="Create an app registration">
-    Sign in to the [Microsoft Entra admin center](https://entra.microsoft.com)
-    (`https://entra.microsoft.us` for GCC High or DoD) and open **App registrations**. Select **New registration**,
-    name it something like `Onyx Teams Connector`, leave the other settings as they are, and select **Register**.
-  </Step>
-
-  <Step title="Copy the IDs">
-    On the **Overview** page, copy the **Application (client) ID** and the **Directory (tenant) ID**.
-    Onyx asks for both, and the application access policy for meeting transcripts needs the client ID.
-  </Step>
-
-  <Step title="Add the Microsoft Graph permissions">
-    Open **API permissions**, select **Add a permission**, then **Microsoft Graph** and **Application permissions**.
-    Add the permissions of every option you plan to turn on:
-
-    - **Team.ReadBasic.All**, **Channel.ReadBasic.All** and **ChannelMessage.Read.All**: always
-    - **ChannelMember.Read.All** and **User.Read.All**: for **Auto Sync Permissions**
-    - **Files.Read.All** or **Sites.Read.All**, **GroupMember.Read.All** and **User.Read.All**:
-    for **Include Attachments**. A file is often shared with a group, and Onyx lists the group's members.
-    - **OnlineMeetingTranscript.Read.All**, **OnlineMeetings.Read.All** and **User.Read.All**:
-    for **Include Meeting Transcripts**
-    - **Chat.Read.All** and **User.Read.All**: for **Include Meeting Chats**
-
-    Select **Add permissions**.
-  </Step>
-
-  <Step title="Add the SharePoint permission, for Include Attachments">
-    Select **Add a permission** again. This time choose **SharePoint**, not Microsoft Graph,
-    then **Application permissions**, and add **Sites.FullControl.All**.
-    A permission with the same name on Microsoft Graph does not count: SharePoint checks its own API permission.
-  </Step>
-
-  <Step title="Grant admin consent">
-    Select **Grant admin consent** for your organization and confirm.
-    Every permission must show **Granted** in the status column.
-    Grant consent again each time you add a permission later.
-  </Step>
-
-  <Step title="Add a certificate or a client secret">
-    Open **Certificates & secrets**.
-
-    **Include Attachments** needs a certificate,
-    because SharePoint refuses app-only tokens that come from a client secret. Upload the public certificate (`.cer`,
-    `.pem` or `.crt`) under **Certificates**, and keep the PFX bundle and its password for Onyx.
-    Set a password on the PFX bundle, since Onyx does not accept an empty one. To make a self-signed pair:
-
-    ```bash
-    openssl genrsa -out onyx-teams.key 2048
-    openssl req -new -x509 -days 365 -key onyx-teams.key -out onyx-teams.crt -subj "/CN=Onyx Teams Connector"
-    openssl pkcs12 -export -out onyx-teams.pfx -inkey onyx-teams.key -in onyx-teams.crt
-    ```
-
-    This example certificate expires after 365 days. Upload a new one before then.
-
-    Without **Include Attachments** you can use a client secret instead: select **New client secret**,
-    set an expiration and copy the secret **Value** right away.
-  </Step>
-</Steps>
-
-<Note>
-  Microsoft applies a new permission or consent within minutes, but not everywhere at once.
-  It can take about half an hour before every sign-in carries the new permissions,
-  so the same check in Onyx can pass and then fail. Wait and retry before you change anything else.
-</Note>
+Follow [Microsoft 365 Setup](/admins/connectors/official/microsoft-365/setup)
+with the Teams rows of its [permission table](/admins/connectors/official/microsoft-365/setup#permissions):
+channel threads always, and one row for each option you turn on.
+Every option works with a client secret except **Include Attachments**, which needs a certificate.
+Keep the **Application (client) ID** at hand:
+the application access policy for **Include Meeting Transcripts** needs it.
 
 ## Configure Microsoft Teams
 
@@ -191,11 +111,9 @@ with either setting below missing, Microsoft refuses the transcripts even though
   </Step>
 
   <Step title="Create a credential">
-    Choose the authentication method and enter the values from Entra:
-
-    - **Client Secret**: the client ID, the directory ID and the secret value
-    - **Certificate Authentication**: the client ID, the directory ID, the PFX bundle and its password.
-    Required for **Include Attachments**.
+    Select an existing Teams credential or create one as described in [Microsoft 365
+    Setup](/admins/connectors/official/microsoft-365/setup#enter-the-credential-in-onyx).
+    **Include Attachments** needs **Certificate Authentication**.
   </Step>
 
   <Step title="Choose the teams">
@@ -242,16 +160,20 @@ with either setting below missing, Microsoft refuses the transcripts even though
 
 | Setting        | Default                             | Purpose                                                                                                                         |
 | -------------- | ----------------------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
-| Authority Host | `https://login.microsoftonline.com` | The Microsoft identity endpoint. For GCC High or DoD, use `https://login.microsoftonline.us`.                                   |
-| Graph API Host | `https://graph.microsoft.com`       | The Microsoft Graph endpoint. For GCC High, use `https://graph.microsoft.us`. For DoD, use `https://dod-graph.microsoft.us`.    |
+| Authority Host | `https://login.microsoftonline.com` | The Microsoft identity endpoint. See [National clouds](/admins/connectors/official/microsoft-365/setup#national-clouds). |
+| Graph API Host | `https://graph.microsoft.com`       | The Microsoft Graph endpoint. See [National clouds](/admins/connectors/official/microsoft-365/setup#national-clouds).    |
 
 ## Attachments
 
 With **Include Attachments** on, each file in a channel's **Files** tab becomes a document of its own,
 with the readers SharePoint grants it. A channel's files live in a SharePoint document library,
-which is why this option needs a certificate and the SharePoint permission.
+which is why this option needs a certificate and the SharePoint permission. A file is often shared with a group,
+and Onyx lists the group's members, which is what **GroupMember.Read.All** is for.
 Onyx reads each file's readers while it indexes, whatever the access type,
 so the permissions for this option are needed even on a **Public** connector.
+With **Sites.Selected** in place of **Sites.Read.All**, grant the app full control on each channel's site.
+See [Limiting the app to specific
+sites](/admins/connectors/official/microsoft-365/setup#limiting-the-app-to-specific-sites).
 
 Set `TEAMS_CONNECTOR_ATTACHMENT_SIZE_THRESHOLD` (bytes) to change the 20 MB (20 × 1024 × 1024 bytes) size limit.
 
@@ -293,16 +215,17 @@ Set `TEAMS_PERMISSION_DOC_SYNC_FREQUENCY` and `TEAMS_PERMISSION_GROUP_SYNC_FREQU
 
 ## Troubleshooting
 
+See [Microsoft 365 Setup](/admins/connectors/official/microsoft-365/setup#troubleshooting)
+for the messages every Microsoft 365 connector can show.
+
 | Message or symptom                                                                                                | Cause and fix                                                                                                                                                                                                                                                       |
 | ----------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Invalid or expired Microsoft Teams credentials, or an error that names `AADSTS7000215` or `AADSTS7000222` | The secret or certificate is wrong, expired or belongs to another app registration. Create a new one and update the credential. |
 | Your app lacks sufficient permissions to read Teams (403 Forbidden)                                               | **Team.ReadBasic.All** is missing or admin consent was not granted. Check that every permission shows **Granted**.                                                                                                                                                  |
 | Include Attachments needs certificate authentication                                                              | The credential uses a client secret. Create a **Certificate Authentication** credential.                                                                                                                                                                            |
 | Include Attachments needs read access to the channel files on Graph                                               | Grant **Files.Read.All** or **Sites.Read.All** on Microsoft Graph and admin-consent it.                                                                                                                                                                             |
 | Include Attachments reads each file's readers from SharePoint, which needs Sites.FullControl.All on the SharePoint API | The permission is missing on the **SharePoint** API. **Sites.Read.All** on SharePoint, or any permission on Microsoft Graph, is not enough.                                          |
 | The files of channel "…" in team … answered 403 | An indexing error for one channel. **GroupMember.Read.All** or **User.Read.All** is missing, or SharePoint refuses the app on that channel's site. Private and shared channels each have a site of their own. |
 | Could not find a channel to check the files grant on | The tenant listed no channel to run the check on. List the teams to index in **Teams**, or retry. |
-| Failed to load certificate | The PFX password is wrong or the file is not a PFX bundle. |
 | Include Meeting Transcripts needs the tenant setting that allows Graph API access to transcripts                  | **Microsoft Graph access** is off under **Transcript API access** in the Teams admin center. Microsoft reports it as `GraphAccessToTranscriptsDisabled`. No permission overrides it.                                                                               |
 | An application access policy naming this app must be granted to the organizer                                     | The organizer has no application access policy that names the app. Create and grant the policy in Teams PowerShell, then wait up to 30 minutes.                                                                                                                     |
 | Include Meeting Transcripts needs the OnlineMeetingTranscript.Read.All and OnlineMeetings.Read.All application permissions | A permission is missing or not consented. If you granted it minutes ago, wait and retry: it can take about half an hour before every sign-in carries it.                                                                                             |
@@ -311,7 +234,6 @@ Set `TEAMS_PERMISSION_DOC_SYNC_FREQUENCY` and `TEAMS_PERMISSION_GROUP_SYNC_FREQU
 | No enabled user with a Teams license to check Include Meeting Transcripts (or Include Meeting Chats) on | The tenant lists no enabled user with a Teams license. List the organizers in **Meeting Organizers**. |
 | Include Meeting Chats needs the Chat.Read.All application permission                                              | Grant **Chat.Read.All** and admin-consent it.                                                                                                                                                                                                                       |
 | A meeting has no transcript in Onyx | Check these in order. Transcription was started in the meeting. The organizer has a OneDrive. The application access policy and **Meeting Organizers** both cover the organizer. The meeting is not a channel meeting. The transcript is less than six months old. |
-| A setup check passes, then fails minutes later                                                                    | Microsoft is still applying a permission, consent or policy change. Wait and retry before you change anything else.                                                                                                                                                 |
 | Operation timed out after 10 seconds, or Timeout while validating Teams access | Microsoft answered more slowly than Onyx waits. Retry. If Onyx then reports that the name exists, use a different name. |
 | Connector by this name already exists                                                                             | An earlier attempt that failed left its connector behind. Use a different name.                                                                                                                                                                                     |
 | Threads are visible to no one under **Auto Sync Permissions** | The first group sync has not finished, or a member's email in Microsoft 365 does not match the user's email in Onyx. Grant **ChannelMember.Read.All** and **User.Read.All**. |
