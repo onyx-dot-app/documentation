@@ -63,31 +63,27 @@ so choose the access type with that in mind.
 
 <Steps>
   <Step title="Open the Gong admin settings">
-    Sign in to Gong as a technical administrator. Open **Company settings**,
-    which is under your avatar at the top right. In newer Gong layouts,
-    open the **Admin center** and select the **Settings** tab.
+    Sign in to Gong as a technical administrator. In the left sidebar, select **Admin center** at the very bottom.
+    Expand the sidebar first if it is collapsed. Only technical administrators see this entry.
 
-    <img className="rounded-image" src="/assets/admins/connectors/gong/GongMenu.png" alt="The Gong avatar menu with Company Settings highlighted"/>
+    <img className="rounded-image" src="/assets/admins/connectors/gong/AdminPanel.png" alt="The bottom of the Gong sidebar, with the Admin center entry below the divider"/>
   </Step>
 
   <Step title="Open the API settings">
     Find the **Ecosystem** section and select **API**.
 
-    <img className="rounded-image" src="/assets/admins/connectors/gong/GongEcosystem.png" alt="The Ecosystem section of the Gong company settings, with API highlighted"/>
+    <img className="rounded-image" src="/assets/admins/connectors/gong/GongEcosystem.png" alt="The Ecosystem section of the Gong company settings"/>
   </Step>
 
   <Step title="Create the key">
-    Open the **API keys** tab, next to **Integrations**, and select **Get API key**. Give the key a name such as `Onyx`.
+    Click "+ Get API Key" and enter the required fields in the form.
 
-    Set an expiration only if your policy requires one. When the key expires,
-    indexing stops until you save a new key in Onyx.
-
-    Leave **Trusted IPs** empty unless you know every address Onyx connects from.
-    Gong answers requests from any other address with a 403 error.
+    Once you're done filling out the keys, click the "Get API key" button.
+    The dialog box will show you the created access key and secret.
   </Step>
 
   <Step title="Copy the key and secret">
-    Gong shows the **Access key** and the **Access key secret** once. Copy both before you close the dialog.
+    Gong shows the access key and the secret just once. Copy both before you close the dialog.
     Gong does not show the secret again; if you lose it, create a new key.
   </Step>
 
