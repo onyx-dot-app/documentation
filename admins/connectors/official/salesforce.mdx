@@ -35,8 +35,8 @@ You need:
 Onyx signs in as that Salesforce user in one of two ways:
 
 <Columns cols={2}>
-  <Card title="OAuth (self-hosted Onyx only)" icon="key" href="#authenticate-with-oauth">
-    Recommended for most users.
+  <Card title="OAuth" icon="key" href="#authenticate-with-oauth">
+    Recommended for most users. Available on Onyx Cloud and self-hosted.
   </Card>
 
   <Card title="Username, password, and security token" icon="lock" href="#authenticate-with-a-security-token">
@@ -47,8 +47,45 @@ Onyx signs in as that Salesforce user in one of two ways:
 ## Authenticate with OAuth
 
 <Info>
-  If you plan to use a username and password,
-  skip to [Authenticate with a security token](#authenticate-with-a-security-token).
+  OAuth uses your organization's normal Salesforce sign-in, including SSO.
+  You do not need a Salesforce password or security token.
+</Info>
+
+### Onyx Cloud
+
+An administrator must install the Onyx Salesforce OAuth package before users can authorize Onyx.
+
+<Steps>
+  <Step title="Install the Onyx package">
+    Install the [Onyx Salesforce OAuth
+    package](https://login.salesforce.com/packaging/installPackage.apexp?p0=04tbm000000jYfxAAE)
+    in your Salesforce organization.
+
+    For a Salesforce sandbox,
+    use the [sandbox installation
+    page](https://test.salesforce.com/packaging/installPackage.apexp?p0=04tbm000000jYfxAAE).
+  </Step>
+
+  <Step title="Set permitted users">
+    In Salesforce Setup, open **External Client App Manager** and select **Onyx Cloud**.
+    Open **Policies** and pick a permitted-user policy.
+
+    **Admin approved users are pre-authorized** is the safer choice.
+    Assign the app to the profiles or permission sets that need it.
+    Pick **All users may self-authorize** only if your organization allows it.
+  </Step>
+
+  <Step title="Keep the packaged OAuth credentials">
+    Do not generate local consumer credentials for **Onyx Cloud**.
+    Local credentials disconnect the installed app from the OAuth configuration that Onyx manages.
+  </Step>
+</Steps>
+
+Continue to [Configure the connector in Onyx](#configure-the-connector-in-onyx).
+
+### Self-hosted Onyx
+
+<Info>
   If an administrator has already configured OAuth for your deployment,
   skip to [Configure the connector in Onyx](#configure-the-connector-in-onyx).
 </Info>
@@ -306,7 +343,8 @@ and an Onyx user sees only the Salesforce records they can read in Salesforce.
   </Accordion>
 
   <Accordion title="The OAuth option is missing from the credential form">
-    On Onyx Cloud, OAuth is not available yet. Use a username and password instead.
+    On Onyx Cloud, confirm that an administrator installed the Onyx Salesforce OAuth package.
+    If the package is installed and the option is still missing, contact Onyx Support.
 
     On a self-hosted deployment, `SALESFORCE_CLIENT_ID` and `SALESFORCE_CLIENT_SECRET` are missing. Set both,
     then restart the API server and every background worker.

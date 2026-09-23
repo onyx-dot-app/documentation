@@ -1,203 +1,262 @@
 ---
-title: "GitHub Connector"
-description: "Access knowledge from your GitHub Repositories"
+title: "GitHub"
+description: "Index the pull requests, issues, and documentation files in your GitHub repositories"
 ---
 
-## How it works
+## What gets indexed
 
-The Github Connector picks up all of the Pull Requests and Issues in a specified repository.
+You pick any combination of three content types:
 
-- It will index both Open and Closed PRs. This includes the Title and Summary.
-- It will index Issues and comments both Open and Closed
-- Includes certain other metadata such as the URL, creator, etc.
+- **Pull requests**: the title and description of every pull request, open and closed.
+  Onyx also stores the author, assignees, labels, state, merge status, commit and changed-file counts,
+  and timestamps as metadata.
+- **Issues**: the title and description of every issue, open and closed,
+  with the author, assignees, labels, state, and timestamps as metadata.
+- **Documents**: documentation files from each repository.
+  That means `.md`, `.mdx`, `.markdown`, `.rst`, and `.txt` files, plus extensionless files that are docs by convention,
+  such as `README`, `LICENSE`, `CHANGELOG`, `CONTRIBUTING`, and `CODEOWNERS`.
 
-## Permission Sync Feature
+### What is not indexed
 
-The GitHub connector supports permission synchronization,
-which ensures that users can only access documents they have permissions to view in GitHub. When enabled, this feature:
+- Comments on issues and pull requests, review comments, diffs, and commits
+- Source code, and data or config files such as `.json`, `.yaml`, and `.csv`
+- Files larger than 1 MB, binary files,
+  and anything under `.git`, `node_modules`, `vendor`, `dist`, `build`, `.venv`, or `__pycache__`
+- Wikis, discussions, releases, and projects
 
-- Syncs user permissions from GitHub repositories and organizations
-- Ensures that users only see search results for repositories they have access to
-- Maintains consistent access control between GitHub and Onyx
+## Before you begin
 
-<Note>
-  Permission sync is available only on Cloud and the Enterprise Edition of Onyx,
-  and it requires additional token permissions beyond those needed for basic indexing.
-</Note>
+You need:
 
-### ⚠️ CRITICAL REQUIREMENT: Public Email Profile
+- An Onyx administrator account.
+- A GitHub personal access token, either fine-grained or classic.
+  Onyx authenticates only with a token; GitHub App and OAuth sign-in are not supported.
+- For [permission sync](#permission-sync), a paid Onyx tier: Business or Enterprise on Onyx Cloud,
+  or the Enterprise Edition when self-hosted.
 
-<Info>
-  **VERY IMPORTANT:** For permission sync to work,
-  users must have their email address publicly visible in their GitHub profile. If a user's email is set to private,
-  they will not get access to any documents through Onyx.
-</Info>
+## Create the token
 
-<Accordion title="How to make your email public on GitHub">
-  <Steps>
-    <Step title="Log in to GitHub">
-      Log in to your GitHub account
-    </Step>
+Create the token as a user who can see every repository you want indexed; for permission sync,
+the token's user also needs push access to every private repository. Fine-grained tokens are the least-privilege choice.
+Use a classic token when your organization does not allow fine-grained tokens,
+or when one token must cover repositories of several owners.
 
-    <Step title="Access profile settings">
-      Click on your profile picture in the top-right corner and select **Settings** from the dropdown menu
-    </Step>
+Pick the expiration deliberately: when the token expires or is revoked, indexing stops until you save a new one in Onyx.
+After generating the token, copy it right away - GitHub shows it only once.
 
-    <Step title="Navigate to email settings">
-      In the left sidebar, click on **Emails**
-    </Step>
+<Tabs>
+  <Tab title="Fine-grained token">
+    In GitHub,
+    open **Settings -> Developer settings -> Personal access tokens -> Fine-grained tokens** and select **Generate new
+    token** ([GitHub's
+    guide](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens#creating-a-fine-grained-personal-access-token)).
 
-    <Step title="Enable public email">
-      Scroll down to **Keep my email addresses private** and **uncheck this option**
-    </Step>
+    - **Resource owner**: the user or organization that owns the repositories.
+    Permission sync needs an organization permission, so for permission sync pick the organization,
+    not your personal account. An organization must allow fine-grained tokens, and may require an approval step,
+    before a token for it works.
+    - **Repository access**: the repositories to index, or **All repositories**.
+    - **Repository permissions**: set **Contents**, **Issues**, and **Pull requests** to **Read-only**.
+    GitHub adds **Metadata** on its own.
+    - **Organization permissions**, only if you use permission sync: set **Members** to **Read-only**.
 
-    <Step title="Configure public profile">
-      Now go back to the left sidebar and click on **Public profile**
-    </Step>
-
-    <Step title="Set public email">
-      Scroll down to the **Public email** section and select your email address from the dropdown
-    </Step>
-
-    <Step title="Save changes">
-      Click **Update profile** to save the changes
-    </Step>
-  </Steps>
-</Accordion>
-
-**Why is this required?**
-
-Onyx uses the public email to match GitHub users with Onyx users for permission synchronization. Without a public email,
-the system cannot identify which GitHub permissions apply to which Onyx user.
-
-## Setting up
-
-### Authorization
-
-This Connector uses a GitHub Access Token.
-The required permissions depend on whether you're using the permission sync feature.
-
-#### Basic Setup (Indexing Only)
-
-For basic indexing without permission sync:
-
-<Steps>
-  <Step title="Review detailed guide">
-    [This
-    guide](https://docs.github.com/en/enterprise-server@3.4/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token)
-    shows the following steps in detail.
-  </Step>
-
-  <Step title="Log in to GitHub">
-    Log in to GitHub.
-  </Step>
-
-  <Step title="Access settings">
-    In the upper right corner, expand your profile and click on **Settings**
-  </Step>
-
-  <Step title="Navigate to developer settings">
-    On the bottom, go to **Developer settings** -> **Personal access tokens** -> **Tokens (classic)**
-  </Step>
-
-  <Step title="Generate new token">
-    Click on **Generate new token**
-  </Step>
-
-  <Step title="Grant permissions">
-    Grant the following permissions:
-    - **Repository permissions:**
-    - `repo` (Full control of private repositories) - to access PRs and issues
-
-    <Accordion title="Fine-Grain Access Token Requirements">
-      If you're using a fine-grain access token instead of a classic token:
-
-      <Steps>
-        <Step title="Open repository permissions">
-          In the token configuration page, go to **Repository permissions**
-        </Step>
-
-        <Step title="Add permissions">
-          Click **Add permission**, then add the following with **Read access**:
-          - **Pull requests** - to access PR data
-          - **Metadata** - for repository metadata
-          - **Issues** - to access issues and comments
-          - **Contents** - to access repository contents
-        </Step>
-      </Steps>
-    </Accordion>
-  </Step>
-</Steps>
-
-#### Permission Sync Setup
-
-Pick the token type you're using:
-
-<Tabs tabs={["Fine-grained access token", "Classic token"]}>
-  <Tab title="Fine-grained access token">
-    <Steps>
-      <Step title="Select the organization (resource owner)">
-        When creating a **fine-grained** GitHub access token for **permission sync**,
-        make sure you select the correct **Resource owner organization** (the GitHub **organization** that owns the
-        repositories you want to create the connector for).
-        Fine-grained tokens scoped to a personal user account do **not** allow granting **Organization permissions**
-        (like **Members**), so permission sync requires selecting an organization as the resource owner.
-      </Step>
-
-      <Step title="Add required permissions">
-        Add these in the token configuration page using **Repository permissions** -> **Add permission** and
-        **Organization permissions** -> **Add permission**:
-
-        <img className="rounded-image" src="/assets/admins/connectors/github/Permissions.png" alt="GitHub fine-grained token permissions: Repository permissions and Organization permissions"/>
-
-        - **Repository permissions** (Read access): **Administration**, **Issues**, **Metadata**, **Pull requests**
-        - **Organization permissions** (Read only): **Administration**, **Members**
-      </Step>
-    </Steps>
+    <Note>
+      Grant **Contents** even if you skip document indexing: when you name specific repositories,
+      Onyx reads each repository root at setup, and a token without **Contents** fails validation.
+    </Note>
   </Tab>
 
   <Tab title="Classic token">
-    <Steps>
-      <Step title="Add the org read scope">
-        If you're using a **classic** GitHub personal access token (PAT) and want **permission sync**,
-        you must also grant:
-        - `read:org`
-      </Step>
+    In GitHub,
+    open **Settings -> Developer settings -> Personal access tokens -> Tokens (classic)** and select **Generate new
+    token** ([GitHub's
+    guide](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens#creating-a-personal-access-token-classic)).
 
-      <Step title="Keep indexing scopes enabled">
-        Keep the basic indexing permission enabled as well:
-        - `repo` (Full control of private repositories) - to access PRs and issues
-      </Step>
-    </Steps>
+    Select scopes based on what you need:
+
+    | You want | Scopes |
+    | --- | --- |
+    | Public repositories only | None |
+    | Private repositories | `repo` |
+    | Permission sync | `repo` and `read:org` |
+
+    If the organization enforces SAML single sign-on,
+    also [authorize the token for the
+    organization](https://docs.github.com/en/enterprise-cloud@latest/authentication/authenticating-with-single-sign-on/authorizing-a-personal-access-token-for-use-with-single-sign-on)
+    after creating it.
   </Tab>
 </Tabs>
 
-#### Token Configuration
+## Configure the connector in Onyx
 
 <Steps>
-  <Step title="Set expiration time">
-    Set any expiration time.
-    A new token will have to be provided to Onyx to continue updating the Onyx index once this one expires.
+  <Step title="Open the GitHub connector">
+    In Onyx, go to **Admin Panel -> Add Connector** and select **GitHub**.
   </Step>
 
-  <Step title="Verify permissions">
-    **Important:** If you plan to use permission sync,
-    ensure all the above permissions are granted when creating the token.
+  <Step title="Create a credential">
+    Select **Create New** and paste the token into **GitHub Access Token**.
+
+    Leave **GitHub Enterprise Server URL** blank for github.com. To index a GitHub Enterprise Server instance instead,
+    see [GitHub Enterprise Server](#github-enterprise-server).
+  </Step>
+
+  <Step title="Name the connector and the owner">
+    Enter a **Connector Name**, then the **Repository Owner**:
+    the user or organization login that owns the repositories. For `https://github.com/onyx-dot-app/onyx`,
+    that is `onyx-dot-app`.
+  </Step>
+
+  <Step title="Choose the repositories">
+    Under **What should we index from GitHub?**, pick one:
+
+    - **Specific Repository**: enter one repository name in **Repository Name(s)**, such as `onyx`,
+    or several separated by commas, such as `onyx,docs`. Wildcards do not work.
+    - **Everything**: index every repository of that owner the token can see.
+
+    <Warning>
+      With several repository names, Onyx only verifies at setup that one of them is accessible.
+      A misspelled or inaccessible name is skipped during indexing without any error in the UI, so check each name.
+    </Warning>
+
+    <Note>
+      When the owner is a personal account rather than an organization,
+      **Everything** finds only that account's public repositories.
+      Use **Specific Repository** to index a personal account's private repositories.
+    </Note>
+  </Step>
+
+  <Step title="Choose the content types">
+    Turn on at least one of **Include pull requests?**, **Include Issues?**, and **Include Documents?**.
+    See [What gets indexed](#what-gets-indexed) for what each includes.
+  </Step>
+
+  <Step title="Choose the access type">
+    **Public** shows every indexed document to all Onyx users. **Private** limits them to selected Onyx user groups.
+    **Auto Sync Permissions** mirrors each searcher's own GitHub access; see [Permission sync](#permission-sync).
+
+    On tiers without permission sync this selector does not appear, and the connector is **Public**.
+    See [Document Access Controls](/admins/connectors/overview#document-access-controls) for details.
+  </Step>
+
+  <Step title="Set the branch (optional)">
+    Under **Advanced Options**, **Branch** sets the branch documents are read from, such as `gh-pages`;
+    blank means each repository's default branch. It only affects indexing when **Include Documents?** is on,
+    though with a single repository Onyx still checks at setup that the branch exists.
+    After changing it on an existing connector, select **Re-Index** on the connector's page to pick up the new branch.
+  </Step>
+
+  <Step title="Create and verify">
+    Select **Create Connector**. Onyx checks the credential and repositories, then starts indexing.
+
+    Open **Admin Panel -> Existing Connectors**, select the connector,
+    and check that the first indexing attempt reaches **Succeeded**.
+    Then search Onyx for the title of a pull request or README you know is indexed.
   </Step>
 </Steps>
 
-### Indexing
+## GitHub Enterprise Server
 
-<Steps>
-  <Step title="Navigate to connector">
-    Navigate to the Admin Panel and select the **GitHub** Connector
-  </Step>
+To index a GitHub Enterprise Server instance,
+set **GitHub Enterprise Server URL** on the credential to your server's address. Both the web host,
+`https://github.example.com`, and the API root, `https://github.example.com/api/v3`, work.
+Create the personal access token on the Enterprise Server instance itself, under the same **Settings** path;
+whether fine-grained tokens are available there depends on the server's version and configuration.
 
-  <Step title="Configure connector">
-    For [https://github.com/onyx-dot-app/onyx](https://github.com/onyx-dot-app/onyx), it would look like:
-  </Step>
-</Steps>
+The URL must use HTTPS.
+At the default [SSRF protection level](/admins/advanced_configs/security_hardening#ssrf-protection),
+Onyx also rejects private-network addresses; an administrator can relax that level to reach an internal server.
 
-<img className="rounded-image" src="/assets/admins/connectors/github/GithubCredential.png" alt="Onyx GitHub connector credentials entry screen"/>
+The URL lives on the credential,
+so one Onyx deployment can index github.com and an Enterprise Server side by side under different credentials.
+Self-hosted deployments can instead set the `GITHUB_CONNECTOR_BASE_URL` environment variable as a deployment-wide
+default for credentials that leave the field blank; see [Configuration](/deployment/configuration/configuration).
 
-<img className="rounded-image" src="/assets/admins/connectors/github/GithubConnector.png" alt="Onyx GitHub connector repository configuration example"/>
+## Permission sync
+
+Set the access type to **Auto Sync Permissions** when you create the connector,
+and an Onyx user sees only the GitHub content they can read on GitHub.
+For an administrator the selector defaults to **Public**, so pick this option deliberately;
+the access type cannot be changed later in the admin UI, so switching means recreating the connector.
+
+- Documents from **public** repositories are visible to every Onyx user.
+- Documents from **private** repositories are visible to the repository's collaborators,
+  including people who have access through a team.
+- Documents from **internal** repositories (GitHub Enterprise) are visible to the organization's members,
+  matched by email as described below.
+
+### Matching GitHub users to Onyx users
+
+Onyx matches by email: the **public email** on a user's GitHub profile must equal their Onyx sign-in email,
+ignoring case. A user whose GitHub email is private, unset,
+or different from their Onyx email sees no private- or internal-repository content.
+
+To set a public email in GitHub, open **Settings -> Emails**, clear **Keep my email addresses private**,
+then pick the address under **Public profile -> Public email**.
+
+### Requirements for the token
+
+- The token's user needs **push access** to every private repository the connector indexes,
+  because GitHub only reveals a repository's collaborator list to users with push access.
+- If any repository in the connector cannot be synced, the permission update run stops
+  and the remaining repositories are skipped. Permission sync fails closed: while runs keep failing,
+  users can lose access to private- and internal-repository documents, so fix a failing sync promptly.
+- For internal repositories, the token's user must be a member of the organization.
+  A non-member gets only the organization's public members, which silently leaves out most users.
+- GitHub teams are not synced as Onyx groups.
+  Team members still get access to private repositories through the collaborator list.
+
+<Note>
+  Permission sync is a paid feature: the Business and Enterprise tiers on Onyx Cloud,
+  and the Enterprise Edition when self-hosted. On other tiers the access type selector does not appear,
+  and connectors are **Public**.
+</Note>
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="None of the specified repositories could be accessed">
+    The owner or a repository name is misspelled, or the token cannot see the repositories. For a fine-grained token,
+    check that the repositories are selected under **Repository access** and that **Contents** read access is granted;
+    Onyx reads the repository root during validation even when documents are not indexed.
+  </Accordion>
+
+  <Accordion title="Your GitHub token is missing authorization to access the organization">
+    The organization enforces SAML single sign-on.
+    [Authorize the token for the
+    organization](https://docs.github.com/en/enterprise-cloud@latest/authentication/authenticating-with-single-sign-on/authorizing-a-personal-access-token-for-use-with-single-sign-on),
+    then retry.
+  </Accordion>
+
+  <Accordion title="Found no repos for organization or user">
+    An **Everything** connector found nothing the token can see for that owner. Check the owner spelling,
+    and give a classic token the `repo` scope or a fine-grained token access to the owner's repositories.
+  </Accordion>
+
+  <Accordion title="Private repositories are missing from the index">
+    The token cannot see them, so Onyx skips them without an error: a classic token is missing the `repo` scope,
+    a fine-grained token does not include those repositories, or the owner is a personal account in **Everything** mode,
+    which only finds public repositories.
+  </Accordion>
+
+  <Accordion title="Branch not found">
+    The **Branch** value does not exist in the repository. Fix the branch name,
+    or leave the field blank to use each repository's default branch.
+  </Accordion>
+
+  <Accordion title="A user sees no GitHub results under permission sync">
+    Their GitHub profile has no public email, or it differs from their Onyx sign-in email.
+    See [Matching GitHub users to Onyx users](#matching-github-users-to-onyx-users).
+  </Accordion>
+
+  <Accordion title="Validation failed due to GitHub rate-limits being exceeded">
+    The token has used up GitHub's hourly API quota, usually because something else shares it.
+    During indexing Onyx waits out the limit and retries on its own; for this error during setup,
+    wait for the quota to reset, then retry.
+  </Accordion>
+
+  <Accordion title="GitHub credential appears to be invalid or expired">
+    The token was revoked, expired, or pasted incorrectly.
+    Create a new token and update the credential on the connector's page under **Admin Panel -> Existing Connectors**.
+  </Accordion>
+</AccordionGroup>
