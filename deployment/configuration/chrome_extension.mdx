@@ -93,6 +93,73 @@ For organizations deploying the extension at scale, use Google Admin Console for
   </Step>
 </Steps>
 
+### Pre-set the Onyx URL with a managed policy
+
+Extension version 1.2 and later reads settings from Chrome managed storage.
+Use it to set the Onyx URL and the new tab behavior for all users.
+Settings set by policy are read-only in the extension UI and show a "managed by your organization" notice.
+
+The Chrome Web Store extension ID is `dacfbnglakogghooelgjflkhjcdbemia`. The examples below use this ID.
+If you self-host the extension, replace it with your own ID from `chrome://extensions`.
+
+| Key                          | Type    | Description                                           |
+| ---------------------------- | ------- | ----------------------------------------------------- |
+| `onyxExtensionDomain`        | string  | Root URL of your Onyx instance (trailing `/` removed) |
+| `onyxExtensionDefaultNewTab` | boolean | Force the "Use Onyx as new tab page" toggle on or off |
+
+<Tabs>
+  <Tab title="Google Admin Console">
+    - Navigate to **Devices → Chrome → Apps and extensions**
+    - Select the Onyx extension
+    - Under **Policy for extensions**, paste the JSON below
+
+    ```json
+    {
+      "onyxExtensionDomain": {
+        "Value": "https://onyx.example.com"
+      },
+      "onyxExtensionDefaultNewTab": {
+        "Value": false
+      }
+    }
+    ```
+  </Tab>
+
+  <Tab title="Windows / macOS / Linux policy">
+    Set the `3rdparty.extensions.<extension-id>` policy.
+
+    **Linux** – save as `/etc/opt/chrome/policies/managed/onyx.json`:
+
+    ```json
+    {
+      "3rdparty": {
+        "extensions": {
+          "dacfbnglakogghooelgjflkhjcdbemia": {
+            "onyxExtensionDomain": "https://onyx.example.com",
+            "onyxExtensionDefaultNewTab": false
+          }
+        }
+      }
+    }
+    ```
+
+    **Windows** – add string values via Group Policy, Intune, or a `.reg` file:
+
+    ```text
+    HKLM\Software\Policies\Google\Chrome\3rdparty\extensions\dacfbnglakogghooelgjflkhjcdbemia\policy
+      onyxExtensionDomain        = "https://onyx.example.com"
+      onyxExtensionDefaultNewTab = "false"
+    ```
+
+    **macOS** – deploy a configuration profile (MDM or MCX)
+    for the preference domain `com.google.Chrome.extensions.dacfbnglakogghooelgjflkhjcdbemia` with the same keys.
+    Chrome reads extension policy only from managed preferences; `defaults write` is not enough.
+  </Tab>
+</Tabs>
+
+Omit a key to let users set that value themselves.
+Check `chrome://policy` on a client to confirm the policy was applied.
+
 ### Self-Hosting the Extension
 
 For private distribution without the Chrome Web Store:
