@@ -6,6 +6,255 @@ mode: "wide"
 rss: true
 ---
 
+<Update label="v4.8.0" description="September 18th, 2026" tags={["New Features", "Deployment Changes", "Bug Fixes"]}>
+
+  ## v4.8.0
+
+  Outlook and Zoom join the connector lineup: Microsoft 365 mail and calendar on one side,
+  meeting and webinar transcripts on the other, both with permission sync.
+  The Onyx Terraform provider arrives on the public Terraform Registry,
+  Arabic becomes the ninth interface language and brings full right-to-left support with it,
+  re-indexing completes its lifecycle by reclaiming the old index once the new one proves out,
+  and background LLM spend becomes visible and budgetable.
+  Thank you to our contributors for helping make this release possible!
+
+  ## [Update] Deployment Changes
+
+  - **MinIO now pulls from quay.io.** Docker Hub removed the `minio/minio` repository after MinIO archived its
+    community edition, so a fresh `docker compose pull` failed with "pull access denied for minio/minio".
+    The compose files now pull `quay.io/minio/minio`,
+    pinned by digest to the last release published for both amd64 and arm64.
+    Existing deployments with the image already present are unaffected until they pull.
+  - **The code-interpreter sandbox is pinned and health-checked.** Its image previously defaulted to `latest`,
+    so every upgrade silently moved the sandbox to whatever was newest that day;
+    it is now pinned to the version tested with the release (`CODE_INTERPRETER_IMAGE_TAG` still overrides).
+    The service also gains a real healthcheck:
+    `docker ps` and `onyx-cli deploy status` previously reported "Up" even when the executor backend was broken,
+    and the first symptom was a failed tool call in chat.
+  - **Redis hardening.** Helm deployments get first-class TLS to external Redis (see Contributor Highlights).
+    All application Redis clients now carry socket deadlines (`REDIS_SOCKET_TIMEOUT`, default 30s,
+    and `REDIS_SOCKET_CONNECT_TIMEOUT`, default 10s):
+    previously a single Redis read that never returned could pin request threads one by one until the API server stopped
+    answering, with the liveness probe still green.
+    A stalled Prometheus metrics collection likewise no longer holds a thread per scrape;
+    other scrapes are served the last collected values.
+  - **Background workers boot 28% lighter.** Heavy Python imports moved to where they are used, cutting idle
+    memory for the full worker fleet from roughly 2.0 GB to 1.4 GB.
+
+  ## Key Improvements
+
+  ### The Outlook Connector
+
+  Onyx can now index Microsoft 365 mail. The connector walks named mailboxes (or every mailbox in the tenant),
+  stores one document per conversation, and skips junk, deleted items, and drafts.
+  Conversations whose messages were all deleted leave the index on the next prune. Two options extend the reach:
+  attachments (off by default) parse text and document files into the conversation,
+  capped at 20 MB per file (`OUTLOOK_CONNECTOR_ATTACHMENT_SIZE_THRESHOLD`), and calendar indexing (off by default,
+  requires the `Calendars.Read` application permission) writes one document per event with organizer, attendees, time,
+  and body, folding a recurring series into one document plus its diverged exceptions.
+  Cancelled and private/confidential events are never indexed. With permission sync enabled (Business/Enterprise),
+  each mailbox's documents are readable by its owner and events also by their organizer and attendees;
+  shared mailboxes stay hidden rather than guessing, and nothing is ever marked public.
+  Credentials accept a client secret or a certificate (PFX bundle plus password).
+
+  ### The Zoom Connector
+
+  Onyx can also now index Zoom:
+  every cloud-recorded meeting and webinar becomes a searchable document built from its transcript,
+  with each occurrence of a recurring session indexed on its own. Indexing is scoped by meeting or webinar IDs,
+  by a host allowlist, or by a Zoom Group's members;
+  the host and group paths also reach recordings older than the fifteen-month history limit Zoom puts on ID lookups.
+  Access follows the session: with permission sync enabled,
+  a recording is searchable only by the people who were actually in it (participants, approved registrants, invitees,
+  or panelists), never by a group and never publicly,
+  and a session whose attendance Zoom can no longer report is not indexed at all.
+  Because Zoom rate limits the whole account rather than each app,
+  a first backfill paces itself so it does not starve the customer's other Zoom integrations (declaring your Zoom plan
+  speeds it up), a throttled crawl resumes from its checkpoint instead of skipping what Zoom rejected,
+  and individual recordings that failed to index can be retried without re-running the whole connector.
+
+  ### Onyx on the Terraform Registry
+
+  The Onyx Terraform provider is now published on the public [Terraform
+  Registry](https://registry.terraform.io/providers/onyx-dot-app/onyx),
+  so a whole deployment's configuration becomes reviewable, versioned code: workspace settings,
+  LLM providers and their default models, the embedding provider, API keys, credentials, connectors,
+  connector-credential pairs, document sets, agents, custom tools, MCP servers, and user groups.
+  Secrets can be supplied through write-only attributes that never land in Terraform state (Terraform 1.11+).
+  Supporting it, the admin API grew up as a machine contract:
+  every error response now carries a machine-readable `error_code`,
+  missing resources answer 404 instead of statuses that read as auth failures or bad input,
+  a resource that cannot be deleted because something uses it says so (`RESOURCE_IN_USE`),
+  and a group mid-sync says "retry later" (`RESOURCE_SYNCING`) instead of "not found".
+  One rename before the interface freezes at 1.0: the `onyx_persona` resource is now `onyx_agent`,
+  matching what the product calls them; existing users run `terraform state mv onyx_persona.name onyx_agent.name` once.
+  See the [Terraform provider guide](https://docs.onyx.app/admins/advanced_configs/terraform_provider)
+  for setup and the full resource reference.
+
+  ### Arabic, and a Right-to-Left Interface
+
+  Arabic joins as the ninth interface language and the first written right-to-left. The whole layout mirrors: sidebar,
+  panels, animations, and navigation arrows flip, while media controls and code stay put.
+  Chat messages set direction per paragraph, so an answer mixing Arabic and English aligns each block correctly.
+  Numbers and dates across the UI now format in the interface language rather than the browser's (a German interface
+  shows 1.234,5 from any browser), with Eastern Arabic-Indic digits for Arabic.
+  The model is told the interface language, so a user who reads Arabic gets Arabic answers without asking,
+  whatever language their prompt arrives in. Rounding out the effort,
+  the last hardcoded English strings moved into the translation catalogs, built-in action names translate,
+  and Opal component labels and relative times follow the locale. One note for rolling deployments:
+  deploy the API server before the web pods,
+  or selecting Arabic mid-rollout can briefly fail while an old API rejects the new language code.
+
+  ### Re-indexing Cleans Up After Itself
+
+  The re-indexing overhaul of the past releases deliberately keeps the old index through a switchover,
+  so an embedding-model change can be reverted; the final step of that lifecycle is now automatic.
+  Before a re-index starts,
+  a confirmation modal lists exactly which connectors' data will not carry over (paused or invalid ones,
+  depending on the switchover mode) and requires acknowledgment, so nothing disappears unannounced.
+  After the switchover,
+  the old index is held for a grace period and deleted automatically once the new index proves healthy,
+  freeing the storage that a retained index generation holds (on by default;
+  `OLD_INDEX_RECLAIM_ENABLED=false` opts out).
+  A re-index that runs into an index generation left over from before this release pulls it into the same reclamation.
+  Canceling a re-index now cleans up its partial index so it can be restarted immediately,
+  and only one re-index runs at a time.
+
+  ### System LLM Usage
+
+  LLM calls that Onyx makes on its own behalf (contextual retrieval, image summarization during indexing,
+  knowledge graph extraction) are now metered as system usage, separate from what people spend in chat.
+  The admin Usage page gains a System section with spend, tokens, and model and provider filters;
+  generated usage reports add a `usage_by_system.csv` and include system spend in PDF totals without counting it as user
+  activity. System spend counts against global budgets, and when a budget blocks indexing enrichment,
+  the affected documents surface as connector failures instead of quietly indexing without enrichment.
+  Tracing for these calls records only metadata (model, tokens, timing): prompts and outputs are never captured.
+
+  ## Contributor Highlights
+
+  - [@jack-watroba](https://github.com/jack-watroba) contributed **first-class Redis TLS support to the Helm
+    chart**: verified TLS connections to external Redis services, plumbed through every workload that talks to Redis,
+    with documentation for the external Redis setup.
+  - [@nitrogen404](https://github.com/nitrogen404) fixed the SharePoint connector skipping files whose
+    modification time predates their arrival:
+    files synced into SharePoint with back-dated timestamps are now picked up by incremental runs.
+  - [@AhmedElsayed200](https://github.com/AhmedElsayed200) added `--agent-name` to the Onyx CLI's `ask`,
+    `search`, and `chat` commands, with unique-substring matching and a helpful error listing candidates.
+
+  ## Additional Improvements
+
+  ### Chat
+
+  - Turning an action off now sticks to the chat where you turned it off: the setting used to silently apply to
+    that agent across all your chats and devices, and a load-time race could wipe the stored preference entirely.
+  - Actions an admin disabled can no longer be called from chat, and one disabled action attached to the
+    default assistant no longer blocks every toggle in Chat Preferences with "Failed to update tools".
+  - Pasting an image into the composer attached it once again: a dropzone library upgrade in v4.7.0 had made
+    paste attach every image twice, sending duplicate copies to the model.
+  - Answer length now respects the model's real output limit: previously an operator's input-token cap doubled
+    as the output ceiling, so a model with a small configured input window was also cut off mid-answer.
+  - When an attached file is too large for the context window, the guidance now matches the deployment: point
+    the model at internal search or the Python tool where those exist,
+    and never suggest a file-reading action the deployment does not offer (the model had been observed web-searching for
+    an attached document's contents).
+  - Clicking Internal Search in the actions popover visibly pins it: a state sync used to clear the pin the
+    moment it was set.
+  - Agents that declare their own knowledge sources start with them selected immediately instead of waiting on
+    (or permanently losing them to) a background connector fetch.
+  - The streaming-header shimmer animates on the GPU, cutting its render cost from about 20% of a CPU core
+    while streaming to under 2%, and it now respects reduced-motion preferences.
+
+  ### Search and Indexing
+
+  - Indexed text keeps its visible punctuation. The indexing text cleaner was stripping a Unicode range that
+    includes the dashes used in ranges, smart quotes, bullets, and ellipses,
+    so "1-2 weeks" was indexed as "12 weeks" and words could join together.
+    Only invisible formatting characters are stripped now.
+    Content indexed before this release carries the damage in the index:
+    re-index affected sources from the original documents to repair it (re-embedding alone does not).
+  - The model that selects which document sections to read now sees the full fused candidate pool (the token
+    budget for selection doubled):
+    relevant documents ranked 26-50 by the retrieval fusion were previously cut before selection.
+  - The search APIs, including `POST /search`, now appear in the published API reference with real response
+    schemas.
+
+  ### Connectors
+
+  - GitHub credentials accept a per-credential base URL, so one deployment can index github.com and a GitHub
+    Enterprise Server side by side (previously a single environment variable forced one host per deployment).
+  - GitHub permission sync got much cheaper: user profiles are cached across repositories and each
+    organization group is fetched once per sync.
+  - Salesforce syncs on organizations with hundreds of custom fields no longer fail with "Error Code 431
+    Request Header Fields Too Large":
+    per-record requests split their field lists to stay under Salesforce's URL length limit.
+  - SharePoint permission sync now requires certificate credentials, because SharePoint's own API refuses
+    app-only access with a client secret;
+    the previous error advice pointed at permission grants that could never fix it.
+    Indexing without permission sync still accepts a client secret.
+  - Deleting a document set no longer fails with a foreign-key error when the set is shared with user groups.
+
+  ### Authentication and Users
+
+  - On SSO-only deployments with a single provider, the login page goes straight to the identity provider
+    instead of showing a lone button,
+    and deep links (such as browser search-engine shortcuts into `/app?user-prompt=...`)
+    survive the login round trip instead of losing their destination.
+  - A first OIDC login by an account that permission sync had already seen (a shadow user) could freeze the
+    entire API server until restart, with every request hanging and nothing in the logs.
+    That login path now completes in one database transaction.
+  - Users with two linked sign-ins from the same provider (a side effect of pre-v4.5 account linking) no longer
+    fail pass-through OAuth actions with authorization errors:
+    Onyx now forwards the live token instead of whichever link happened to be stored first.
+  - Access tokens scoped to search can now also list the sources and document sets available for filtering,
+    via a new `read:search_filters` scope implied by `read:search`.
+  - SCIM discovery endpoints no longer answer 402 "FEATURE_NOT_AVAILABLE" on Onyx Cloud: identity providers
+    probe them without a token, and the gate misread the anonymous request as an unentitled workspace.
+  - The admin Users page shows real last activity (latest chat) instead of the profile row's update timestamp,
+    which only moved on role or theme changes and made active users look dormant for months.
+
+  ### MCP
+
+  - The MCP server's document search accepts an `agent` parameter, applying that agent's knowledge scope and
+    model by name. Source and document-set filters validate on the call itself,
+    and an unknown value returns close matches instead of silently searching without the filter,
+    which returned deceptively broad results.
+
+  ### LLM Providers
+
+  - Saving a provider no longer pins model context windows: any admin save (even a key rotation) stored the
+    currently known context limit as a permanent override, capping some models at around 31k tokens forever;
+    affected models heal on the next save. Separately,
+    model defaults now resolve by configuration id rather than provider display name,
+    fixing wrong-provider errors when two providers share a name (such as Azure OpenAI next to Azure AI).
+  - A model that still holds a workspace default (vision, reasoning, contextual retrieval, chat naming) can no
+    longer be hidden out from under it by an automatic model-list update,
+    and a provider edit no longer erases those defaults.
+  - GPT-5.4 and newer accept forced tool calls over Chat Completions again: these models reject function tools
+    unless reasoning effort is explicitly "none",
+    and Onyx now sends that on tool-bearing requests through OpenAI-compatible gateways (with a one-time admin warning
+    suggesting Responses mode to keep reasoning).
+  - The agent editor's model selector now offers providers restricted to the agent being edited.
+
+  ### Voice
+
+  - Zoom Scribe joins as a speech-to-text provider: admins configure it under Voice settings with a Zoom key
+    and secret, with per-user admission limits and ten-minute session caps.
+  - Azure voice recordings no longer fall back to slower chunked transcription on every normal stop: the Azure
+    SDK reports a routine end-of-stream as a cancellation, which was being treated as a failure.
+  - Voice provider secrets are stored server-side and never echoed back to the admin UI.
+
+  ### Mobile
+
+  - The mobile app gains a model picker in the composer, moves Deep Research into the actions sheet, greys out
+    unconfigured actions, and lets Send enable as soon as an upload finishes instead of waiting for indexing.
+
+  ---
+
+  Our [GitHub Releases](https://github.com/onyx-dot-app/onyx/releases?utm_source=docs&utm_content=changelog)
+  page has the full list of changes and bug fixes for each release.
+
+</Update>
+
 <Update label="v4.7.0" description="September 4th, 2026" tags={["New Features", "Deployment Changes", "Bug Fixes"]}>
 
   ## v4.7.0
