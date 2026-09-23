@@ -25,8 +25,8 @@ This page lists them by option.
 | Permissions | Optional, on paid plans. Each item is visible to the people who can read it in Teams. See [Auto Sync Permissions](#auto-sync-permissions). |
 
 Each refresh asks every channel for the messages that changed since the last run and rebuilds each thread that changed.
-A meeting chat is asked what changed for three days after its last message.
-An edit or a delete in a chat that has been quiet for longer is picked up at the next re-index. Pruning removes threads,
+Every meeting chat with a message in the last six months is asked what changed, so an edit or a delete
+in a chat that has gone quiet is picked up at the next refresh. Pruning removes threads,
 files, transcripts and chat days that no longer exist, and transcripts and chat days older than six months.
 
 ## Before you begin
