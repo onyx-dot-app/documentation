@@ -7,7 +7,8 @@ The Outlook connector indexes mailboxes in your Microsoft 365 tenant through Mic
 It reads mail conversations, the text of file attachments, and calendar events,
 and it can mirror who may read each item with **Auto Sync Permissions**.
 
-The connector signs in as an app registration, not as a user. It reaches Exchange Online only.
+The connector signs in as an app registration set up in [Microsoft 365
+Setup](/admins/connectors/official/microsoft-365/setup). It reaches Exchange Online only.
 On-premises Exchange Server is not supported.
 
 ## How it works
@@ -26,11 +27,8 @@ Pruning removes conversations that no longer exist and calendar events that have
 
 ## Before you begin
 
-You need:
-
-- A Microsoft 365 tenant with Exchange Online mailboxes
-- Permission to create an app registration in Microsoft Entra and to grant it admin consent
-- An Onyx administrator account
+You need a Microsoft 365 tenant with Exchange Online mailboxes and the roles listed in [Microsoft 365
+Setup](/admins/connectors/official/microsoft-365/setup#before-you-begin).
 
 <Note>
   The app registration can open every mailbox in the tenant by default. To limit it to specific mailboxes,
@@ -43,36 +41,15 @@ You need:
 
 ## Configure Microsoft Entra
 
-<Steps>
-  <Step title="Create an app registration">
-    Sign in to the [Microsoft Entra admin center](https://entra.microsoft.com)
-    (`https://entra.microsoft.us` for GCC High or DoD) and open **App registrations**. Select **New registration**,
-    name it something like `Onyx Outlook Connector`, leave the other settings as they are, and select **Register**.
-  </Step>
+Follow [Microsoft 365 Setup](/admins/connectors/official/microsoft-365/setup)
+with the Outlook rows of its [permission table](/admins/connectors/official/microsoft-365/setup#permissions).
+What each grant is for:
 
-  <Step title="Copy the IDs">
-    On the **Overview** page, copy the **Application (client) ID** and the **Directory (tenant) ID**.
-    Onyx asks for both.
-  </Step>
+- **Mail.Read**: read mail and attachments in every mailbox the app may open
+- **User.Read.All**: list the tenant's users, resolve mailbox addresses and build permission lists
+- **Calendars.Read**: read calendars, only needed when you turn on **Include Calendar**
 
-  <Step title="Add API permissions">
-    Open **API permissions**, select **Add a permission**, then **Microsoft Graph** and **Application permissions**.
-    Add:
-
-    - **Mail.Read**: read mail and attachments in every mailbox the app may open
-    - **User.Read.All**: list the tenant's users, resolve mailbox addresses and build permission lists
-    - **Calendars.Read**: read calendars, only needed when you turn on **Include Calendar**
-
-    Select **Add permissions**, then **Grant admin consent** for your organization and confirm.
-  </Step>
-
-  <Step title="Add a client secret or a certificate">
-    Open **Certificates & secrets**. Either select **New client secret**,
-    set an expiration and copy the secret **Value** right away,
-    or upload the public certificate of a PFX bundle under **Certificates**. Onyx accepts both. For a certificate,
-    keep the PFX file and its password for the next section.
-  </Step>
-</Steps>
+A client secret or a certificate both work. Outlook reads no SharePoint API, so nothing here needs a certificate.
 
 ## Configure Onyx
 
@@ -82,12 +59,10 @@ You need:
   </Step>
 
   <Step title="Create a credential">
-    Choose the authentication method and enter the values from Entra:
+    Select an existing Outlook credential or create one as described in [Microsoft 365
+    Setup](/admins/connectors/official/microsoft-365/setup#enter-the-credential-in-onyx).
 
-    - **Client Secret**: the client ID, the directory ID and the secret value
-    - **Certificate Authentication**: the client ID, the directory ID, the PFX bundle and its password
-
-    Onyx validates the connector on its first indexing attempt: the app can sign in,
+    Onyx validates the connector when you save it: the app can sign in,
     and the tenant's users can be listed or each listed mailbox is reachable. During indexing,
     a mailbox or calendar the app may not open is recorded as an error naming the missing permission when you listed the
     mailbox, and skipped with a log line in every-mailbox mode.
@@ -129,8 +104,8 @@ You need:
 | Excluded Folders       | empty                                | Whole folder names to skip in every mailbox, in addition to the folders that are always skipped. Names are matched without regard to case, and a skipped folder's subfolders are skipped with it.  |
 | Calendar Past Days     | 365                                  | How far back the calendar window reaches. Events older than this leave the index at the next prune. Widening it later needs a re-index, since unchanged events do not re-enter on their own.   |
 | Calendar Future Days   | 180                                  | How far ahead the calendar window reaches. Widening it later also needs a re-index.                                                                                                             |
-| Authority Host         | `https://login.microsoftonline.com`  | The Microsoft identity endpoint. For GCC High or DoD, use `https://login.microsoftonline.us`.                                                                                                   |
-| Graph API Host         | `https://graph.microsoft.com`        | The Microsoft Graph endpoint. For GCC High, use `https://graph.microsoft.us`. For DoD, use `https://dod-graph.microsoft.us`.                                                                    |
+| Authority Host         | `https://login.microsoftonline.com`  | The Microsoft identity endpoint. See [National clouds](/admins/connectors/official/microsoft-365/setup#national-clouds). |
+| Graph API Host         | `https://graph.microsoft.com`        | The Microsoft Graph endpoint. See [National clouds](/admins/connectors/official/microsoft-365/setup#national-clouds).    |
 
 ## Attachments
 
@@ -169,10 +144,11 @@ permission. **User.Read.All** supplies the owner addresses. Both authentication 
 
 ## Troubleshooting
 
+See [Microsoft 365 Setup](/admins/connectors/official/microsoft-365/setup#troubleshooting)
+for the messages every Microsoft 365 connector can show.
+
 | Message or symptom                                 | Cause and fix                                                                                                                                                                                                 |
 | -------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Microsoft rejected the client secret or certificate | The secret or certificate is wrong, expired or belongs to another app registration. Create a new one and update the credential.                                                                              |
-| Microsoft does not know this directory             | The directory ID or the authority host is wrong. For GCC High or DoD, set both advanced hosts.                                                                                                                 |
 | The app cannot look up the tenant's users          | Grant **User.Read.All** as an application permission and admin-consent it.                                                                                                                                    |
 | Graph reported `ErrorAccessDenied`                 | Either **Mail.Read** (or **Calendars.Read**) is missing, or the mailbox sits outside the app's Exchange scope. Grant the permission or add the mailbox to the scope, then wait up to two hours.              |
 | These mailboxes cannot be indexed                  | An address in **Mailboxes** matches no user, or Graph found no mailbox behind it or refused it because it sits outside the app's Exchange scope. Use the user principal name or primary SMTP address, and add scoped mailboxes to the app's scope. Shared mailboxes usually need no license, only an explicit entry. |

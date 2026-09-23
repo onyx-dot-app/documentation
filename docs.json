@@ -251,10 +251,18 @@
                   "admins/connectors/official/loopio",
                   "admins/connectors/official/lumapps",
                   "admins/connectors/official/mediawiki",
+                  {
+                    "group": "Microsoft 365",
+                    "pages": [
+                      "admins/connectors/official/microsoft-365/setup",
+                      "admins/connectors/official/microsoft-365/sharepoint",
+                      "admins/connectors/official/microsoft-365/teams",
+                      "admins/connectors/official/microsoft-365/outlook"
+                    ]
+                  },
                   "admins/connectors/official/notion",
                   "admins/connectors/official/oci_storage",
                   "admins/connectors/official/outline",
-                  "admins/connectors/official/outlook",
                   "admins/connectors/official/productboard",
                   "admins/connectors/official/r2",
                   "admins/connectors/official/requesttracker",
@@ -269,14 +277,6 @@
                     ]
                   },
                   {
-                    "group": "SharePoint",
-                    "pages": [
-                      "admins/connectors/official/sharepoint/sharepoint",
-                      "admins/connectors/official/sharepoint/client-app-auth",
-                      "admins/connectors/official/sharepoint/certificate"
-                    ]
-                  },
-                  {
                     "group": "Slack",
                     "pages": [
                       "admins/connectors/official/slack/slack_indexed",
@@ -284,7 +284,6 @@
                     ]
                   },
                   "admins/connectors/official/slab",
-                  "admins/connectors/official/teams",
                   "admins/connectors/official/testrail",
                   "admins/connectors/official/web",
                   "admins/connectors/official/wikipedia",
@@ -699,7 +698,7 @@
   "redirects": [
     {
       "source": "/admins/connectors/official/sharepoint/client-secret",
-      "destination": "/admins/connectors/official/sharepoint/client-app-auth"
+      "destination": "/admins/connectors/official/microsoft-365/setup"
     },
     {
       "source": "/developers/api_reference/chat/seed_chat",
@@ -716,6 +715,30 @@
     {
       "source": "/developers/api_reference/search/document_search",
       "destination": "/developers/api_reference/search/execute_web_search"
+    },
+    {
+      "source": "/admins/connectors/official/teams",
+      "destination": "/admins/connectors/official/microsoft-365/teams"
+    },
+    {
+      "source": "/admins/connectors/official/outlook",
+      "destination": "/admins/connectors/official/microsoft-365/outlook"
+    },
+    {
+      "source": "/admins/connectors/official/sharepoint",
+      "destination": "/admins/connectors/official/microsoft-365/sharepoint"
+    },
+    {
+      "source": "/admins/connectors/official/sharepoint/sharepoint",
+      "destination": "/admins/connectors/official/microsoft-365/sharepoint"
+    },
+    {
+      "source": "/admins/connectors/official/sharepoint/certificate",
+      "destination": "/admins/connectors/official/microsoft-365/setup"
+    },
+    {
+      "source": "/admins/connectors/official/sharepoint/client-app-auth",
+      "destination": "/admins/connectors/official/microsoft-365/setup"
     }
   ],
   "logo": {
