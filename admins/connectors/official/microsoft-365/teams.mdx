@@ -141,6 +141,15 @@ with either setting below missing, Microsoft refuses the transcripts even though
     and the Enterprise Edition when self-hosted.
   </Step>
 
+  <Step title="Set an indexing start date">
+    Under **Advanced Configuration**, set an **Indexing Start Date** unless you need every thread ever posted.
+    Without one, the first indexing attempt reads every channel from the team's creation,
+    and a tenant with years of channel history takes days to become searchable. With a start date,
+    Onyx indexes the threads last changed after it, so an old thread that gains a reply is indexed whole.
+    Meeting transcripts and chats reach back at most six months, or only to the start date when that is later.
+    See [Advanced Configuration](/admins/connectors/overview#advanced-configuration).
+  </Step>
+
   <Step title="Connect and verify">
     Select **Create Connector**. Onyx checks each option you turned on against Microsoft before it starts indexing,
     and names the missing grant or setting when a check fails.
