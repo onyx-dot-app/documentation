@@ -90,6 +90,14 @@ which needs a [certificate credential](/admins/connectors/official/microsoft-365
     for what each access type means.
   </Step>
 
+  <Step title="Set an indexing start date">
+    Under **Advanced Configuration**, set an **Indexing Start Date** unless you need every file, whatever its age.
+    Without one, the first indexing attempt reads every file and page in every listed site,
+    and a tenant with millions of files takes days to become searchable. With a start date,
+    Onyx indexes the files and pages created or last modified on or after it and skips the rest.
+    See [Advanced Configuration](/admins/connectors/overview#advanced-configuration).
+  </Step>
+
   <Step title="Create and verify">
     Select **Create Connector**. Onyx checks the credential and your site URLs when you save,
     so most permission problems appear here rather than during indexing.

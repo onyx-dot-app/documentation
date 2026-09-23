@@ -90,7 +90,9 @@ This is set to 30 minutes by default.
 
 **Indexing Start Date**:
 The date and time from which data should be indexed (data created or updated before this date will not be indexed).
-This is set to the earliest possible date in the source by default.
+By default there is no start date, so the first indexing attempt reads the source's entire history.
+On a large source that first attempt can take days.
+Set a start date when you create the connector if you only need recent content, or want the connector searchable sooner.
 
 <img className="rounded-image" src="/assets/admins/connectors/generic_advanced_config.png" alt="Onyx Connector Advanced Configuration page"/>
 
