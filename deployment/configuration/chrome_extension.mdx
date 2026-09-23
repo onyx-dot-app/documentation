@@ -151,8 +151,9 @@ If you self-host the extension, replace it with your own ID from `chrome://exten
       onyxExtensionDefaultNewTab = "false"
     ```
 
-    **macOS** – deploy a configuration profile for the preference domain
-    `com.google.Chrome.extensions.dacfbnglakogghooelgjflkhjcdbemia` with the same keys.
+    **macOS** – deploy a configuration profile (MDM or MCX)
+    for the preference domain `com.google.Chrome.extensions.dacfbnglakogghooelgjflkhjcdbemia` with the same keys.
+    Chrome reads extension policy only from managed preferences; `defaults write` is not enough.
   </Tab>
 </Tabs>
 
