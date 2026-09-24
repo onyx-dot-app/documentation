@@ -42,14 +42,15 @@ sudo mv onyx-cli /usr/local/bin/
 
 ## Setup
 
-Run the interactive setup to configure your server URL and API key:
+Launch the interactive chat TUI — on first run it guides you through setup:
 
 ```shell
-onyx-cli configure
+onyx-cli chat
 ```
 
-This prompts for your Onyx server URL and API key, tests the connection,
-and saves config to `~/.config/onyx-cli/config.json`.
+This prompts for your Onyx server URL and personal access token (PAT), tests the connection,
+and saves config to `~/.config/onyx-cli/config.json` (or `$XDG_CONFIG_HOME/onyx-cli/config.json` if set).
+To reconfigure later, use the `/configure` slash command inside the TUI.
 
 ### Generating an Access Token
 
@@ -67,7 +68,7 @@ Environment variables override config file values. This is useful for CI/CD pipe
 | Variable | Required | Description |
 |----------|----------|-------------|
 | `ONYX_SERVER_URL` | No | Server base URL (default: `https://cloud.onyx.app`) |
-| `ONYX_API_KEY` | Yes | API key for authentication |
+| `ONYX_PAT` | No | Personal access token for authentication (required if no config file) |
 | `ONYX_PERSONA_ID` | No | Default agent/persona ID |
 
 ### Validate Configuration
@@ -82,17 +83,17 @@ onyx-cli validate-config
 
 | Command | Description |
 |---------|-------------|
-| `onyx-cli` | Launch the interactive chat TUI (default) |
+| `onyx-cli chat` | Launch the interactive chat TUI (includes first-time setup) |
 | `onyx-cli ask` | Ask a one-shot question (non-interactive) |
+| `onyx-cli search` | Search company knowledge and return ranked documents |
 | `onyx-cli agents` | List available agents |
-| `onyx-cli configure` | Configure server URL and API key |
 | `onyx-cli validate-config` | Validate configuration and test connection |
 | `onyx-cli deploy` | Install and manage a self-hosted Onyx deployment |
 
 ### Interactive Chat
 
 ```shell
-onyx-cli
+onyx-cli chat
 ```
 
 Opens a full-screen terminal UI for conversational interaction with your Onyx agents.
@@ -183,11 +184,11 @@ It is **not** used for general programming questions or questions about code in 
 
 ### Configuration for agents
 
-The simplest approach is to run `onyx-cli configure` once manually — after that,
+The simplest approach is to run `onyx-cli chat` once manually to complete first-time setup — after that,
 AI assistants can invoke `onyx-cli ask` directly without any additional setup.
 
 ```shell
-onyx-cli configure
+onyx-cli chat
 ```
 
 Alternatively, you can configure via environment variables,
@@ -195,7 +196,7 @@ which override the config file and are useful for CI/CD or sandboxed environment
 
 ```shell
 export ONYX_SERVER_URL="https://your-onyx-server.com"
-export ONYX_API_KEY="your-api-key"
+export ONYX_PAT="your-pat"
 ```
 
 ### JSON output for structured parsing
