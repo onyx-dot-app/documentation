@@ -227,7 +227,7 @@ because that role lets someone pass through a folder rather than open what is in
 
 | Limit             | Value                       | Notes                                                                                                                                                       |
 | ----------------- | --------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| File size         | 20 MB                       | Onyx skips larger files rather than indexing part of them. Self-hosted deployments can raise this limit with `SHAREPOINT_CONNECTOR_SIZE_THRESHOLD` (bytes). |
+| File size         | 20 MB                       | Onyx skips larger files rather than indexing part of them. Self-hosted deployments can raise this limit with `MICROSOFT_CONNECTOR_SIZE_THRESHOLD` (bytes), which the SharePoint, Teams and Outlook connectors share, or with `SHAREPOINT_CONNECTOR_SIZE_THRESHOLD` for SharePoint alone. |
 | Site page content | Text and standard web parts | Onyx does not read text from other web part types, such as embeds, lists, and third-party parts.                                                            |
 | Empty files       | Skipped                     | Onyx skips a file if it cannot read any text from it, unless the file is a PDF or an image.                                                                 |
 

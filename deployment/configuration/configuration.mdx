@@ -652,9 +652,15 @@ Read [Deploying Craft](/deployment/local/craft) before enabling Craft in self-ho
 
     `GOOGLE_DRIVE_CONNECTOR_SIZE_THRESHOLD`: File size threshold for Google Drive
 
-    **SharePoint Connector**
+    **Microsoft 365 Connectors**
 
-    `SHAREPOINT_CONNECTOR_SIZE_THRESHOLD`: File size threshold for SharePoint
+    `MICROSOFT_CONNECTOR_SIZE_THRESHOLD`: File size threshold in bytes for SharePoint, Teams and Outlook (default 20 MB)
+
+    `SHAREPOINT_CONNECTOR_SIZE_THRESHOLD`: File size threshold for SharePoint, overrides the shared value
+
+    `TEAMS_CONNECTOR_ATTACHMENT_SIZE_THRESHOLD`: File size threshold for Teams, overrides the shared value
+
+    `OUTLOOK_CONNECTOR_ATTACHMENT_SIZE_THRESHOLD`: Attachment size threshold for Outlook, overrides the shared value
 
     **Jira Connector**
 

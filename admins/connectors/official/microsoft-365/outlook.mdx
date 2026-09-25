@@ -124,7 +124,7 @@ Onyx parses these types: `.csv`, `.docx`, `.eml`, `.epub`, `.html`, `.json`, `.m
 
 A message contributes at most 20 attachments, and a conversation stops downloading after 25 download attempts,
 failed ones included, or one million characters of attachment text.
-Set `OUTLOOK_CONNECTOR_ATTACHMENT_SIZE_THRESHOLD` (bytes) to change the 20 MB (20 × 1024 × 1024 bytes) size limit.
+Set `MICROSOFT_CONNECTOR_SIZE_THRESHOLD` (bytes) to change the 20 MB (20 × 1024 × 1024 bytes) size limit for the SharePoint, Teams and Outlook connectors together, or `OUTLOOK_CONNECTOR_ATTACHMENT_SIZE_THRESHOLD` to change it for Outlook alone.
 
 ## Auto Sync Permissions
 
