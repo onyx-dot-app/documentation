@@ -1,11 +1,12 @@
 ---
-title: "SharePoint and OneDrive"
-description: "Index files and pages from the SharePoint sites in your Microsoft 365 tenant, and the files in OneDrive"
+title: "SharePoint"
+description: "Index files and pages from the SharePoint sites in your Microsoft 365 tenant"
 ---
 
 The SharePoint connector indexes the sites of your Microsoft 365 tenant through Microsoft Graph,
-and it can mirror who may read each item with **Auto Sync Permissions**. It also indexes OneDrive:
-a user's OneDrive is a SharePoint site of its own, listed by URL. See [OneDrive](#onedrive).
+and it can mirror who may read each item with **Auto Sync Permissions**.
+Use the [OneDrive connector](/admins/connectors/official/microsoft-365/onedrive)
+to discover users and index their personal drives.
 
 The connector signs in as an application set up in [Microsoft 365
 Setup](/admins/connectors/official/microsoft-365/setup).
@@ -24,7 +25,8 @@ After the first run, each refresh picks up only what changed.
 ### What is not indexed
 
 - SharePoint lists, their items, and their attachments
-- Personal OneDrive sites, unless you explicitly list `/personal/` URLs in **Sites**
+- Personal OneDrive sites, unless you explicitly list `/personal/` URLs in **Sites**.
+  Use the dedicated [OneDrive connector](/admins/connectors/official/microsoft-365/onedrive) for new setups.
 - Files with an unsupported extension, and files over the [size limit](#limits)
 
 <Accordion title="Supported file types">
@@ -152,41 +154,12 @@ sites](/admins/connectors/official/microsoft-365/setup#limiting-the-app-to-speci
 ## OneDrive
 
 <Note>
-  OneDrive is becoming a connector of its own in Onyx. Until it ships,
-  index OneDrive through the SharePoint connector as described here.
+  Use the dedicated [OneDrive connector](/admins/connectors/official/microsoft-365/onedrive) for new setups.
+  It discovers users, follows each drive's changes, and supports OneDrive permission sync.
 </Note>
 
-A user's OneDrive is a SharePoint site on your tenant's `-my` host,
-at `https://contoso-my.sharepoint.com/personal/jane_contoso_com`,
-where the last part is the user principal name with its dots and `@` replaced by underscores.
-Open the user's OneDrive in a browser to see the exact URL.
-
-<Steps>
-  <Step title="List each OneDrive">
-    Add each user's personal site URL to **Sites**.
-    An empty **Sites** list indexes every SharePoint site in the tenant but skips personal sites,
-    so a OneDrive is indexed only when you list it.
-  </Step>
-
-  <Step title="Grant access">
-    **Sites.Read.All** covers personal sites. With **Sites.Selected**,
-    grant the app a role on each personal site the same way as on any other site.
-    See [Limiting the app to specific
-    sites](/admins/connectors/official/microsoft-365/setup#limiting-the-app-to-specific-sites).
-  </Step>
-
-  <Step title="Name a folder if you want one">
-    A personal site's primary library is called **Documents** in the browser and **OneDrive** in Microsoft Graph.
-    Onyx resolves either,
-    so `https://contoso-my.sharepoint.com/personal/jane_contoso_com/Documents/Reports` indexes that folder.
-    With **Auto Sync Permissions**, list the bare personal site URL instead:
-    the permission sync matches library names exactly and does not resolve **Documents**,
-    so a folder entry leaves the site's documents without access.
-  </Step>
-</Steps>
-
-**Auto Sync Permissions** works on personal sites as on any other site:
-each file is visible to the people SharePoint grants it to, which for most OneDrive files is the owner alone.
+Existing SharePoint connectors that list personal-site URLs continue to work.
+You do not need to migrate them unless you want the dedicated connector's user discovery and drive-level refreshes.
 
 ## Permission sync
 
