@@ -1,0 +1,58 @@
+---
+title: "Jira Service Management"
+description: "Index tickets from one Jira Service Management project"
+---
+
+## How it works
+
+The Jira Service Management connector indexes tickets from one service desk project. It uses Jira's issue API for ticket content and the JSM request API for public comments.
+
+- Each ticket appears under the **Jira Service Management** source.
+- Public comments are indexed. Internal notes are excluded.
+- Attachments are not indexed.
+- The connector can only read tickets and comments that its Jira account can access.
+- A custom JQL filter is always limited to the selected project.
+
+## Before you start
+
+Ask a Jira administrator to confirm that the connector account can browse the selected project and view its customer requests. Test access with a representative ticket before you configure Onyx.
+
+For Jira Cloud, create an API token for the connector account. If the token uses scopes, allow `read:jira-work` and `read:servicedesk-request`. Atlassian also supports granular scopes for Jira issues and JSM request comments; see the [Jira issue API](https://developer.atlassian.com/cloud/jira/platform/rest/v3/api-group-issues/) and [JSM request API](https://developer.atlassian.com/cloud/jira/service-desk/rest/api-group-request/).
+
+For Jira Data Center, use the account's personal access token. Data Center tokens do not use Jira Cloud scopes.
+
+## Configure the connector
+
+<Steps>
+  <Step title="Open the connector form">
+    In the Onyx Admin Panel, select **Jira Service Management**.
+  </Step>
+
+  <Step title="Add Jira credentials">
+    Select **Create New**. For Jira Cloud, enter the connector account's email address and API token. For Jira Data Center, leave the email empty and enter the personal access token.
+
+    <img className="rounded-image" src="/assets/admins/connectors/jira/JiraCredential.png" alt="Jira credentials form with email and token fields used by both Jira connectors" />
+  </Step>
+
+  <Step title="Select the service desk project">
+    Enter the Jira base URL and the service desk project key, such as `SUP`. Enable **Using scoped token** if you created a scoped Jira Cloud token.
+
+    You can add a JQL filter to narrow the tickets. The connector keeps the selected project in scope even when the filter contains another project clause.
+  </Step>
+
+  <Step title="Set comment filtering">
+    Add email addresses to **Comment Email Blacklist** to skip comments from those accounts. The connector always excludes internal JSM notes.
+  </Step>
+
+  <Step title="Choose document access and create the connector">
+    Choose **Private** or another access setting that fits your workspace. Then select **Create Connector**.
+  </Step>
+</Steps>
+
+## Access limits
+
+This connector does not synchronize JSM customer request participants or portal access. Onyx access settings do not mirror per-ticket JSM visibility. Review the selected Jira project's access before indexing tickets. If the Onyx audience must be narrower than the Jira account's access, do not add this connector until you can enforce that boundary in Onyx.
+
+## Indexed content
+
+The connector indexes the ticket title, description, Jira fields, and public comments. It does not index internal notes, request attachments, or comment attachments.
