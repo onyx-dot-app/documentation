@@ -24,8 +24,6 @@ GCP, and Azure. Each set provisions a network, a Kubernetes cluster, managed Pos
 object storage for the file store, and a web application firewall. Once the infra is up,
 you install the Onyx workloads with the [Helm chart](/deployment/local/kubernetes).
 
-{/* TODO: the modules/gcp link resolves only after the GCP modules merge to main in onyx-dot-app/onyx */}
-
 | Cloud | Modules | Release tags | Services | Guide |
 | --- | --- | --- | --- | --- |
 | AWS | [`modules/aws`](https://github.com/onyx-dot-app/onyx/tree/main/deployment/terraform/modules/aws) | `tf/vX.Y.Z` | VPC, EKS, RDS for PostgreSQL, ElastiCache for Redis, S3, WAF, and (optionally) Amazon OpenSearch | This page |
