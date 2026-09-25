@@ -95,6 +95,15 @@
             ]
           },
           {
+            "group": "Production",
+            "pages": [
+              "deployment/production/external_services",
+              "deployment/production/high_availability",
+              "deployment/production/security",
+              "deployment/production/code_interpreter"
+            ]
+          },
+          {
             "group": "Craft",
             "icon": "hammer",
             "pages": [
