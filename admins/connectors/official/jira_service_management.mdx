@@ -187,6 +187,27 @@ Turning the setting off again prunes those attachment documents on the next prun
   </Step>
 </Steps>
 
+### Field mapping
+
+The connector form labels map to these configuration keys.
+Use the keys when you create or update the connector through the Onyx API instead of the Admin Panel,
+and when you match a connector to a configuration file or an export.
+
+| Field label                 | Config key                  | Required | Behavior                                                                                      |
+| --------------------------- | --------------------------- | -------- | --------------------------------------------------------------------------------------------- |
+| **Jira Base URL**           | `jira_base_url`             | Yes      | Base URL of the Jira site, usually `https://your-domain.atlassian.net`.                       |
+| **Project Key**             | `project_key`               | Yes      | The service project key to index, for example `HELP`. Must resolve to a service desk project.  |
+| **Using scoped token**      | `scoped_token`              | No       | Enable it when the API token was created with scopes. Defaults to off.                        |
+| **Include internal notes**  | `include_internal_comments` | No       | Also index internal agent notes, tagged with an `[Internal Note]` prefix. Defaults to off.    |
+| **Include Attachments**     | `include_attachments`       | No       | Index ticket attachments as separate documents linked to their ticket. Defaults to off.       |
+| **Comment Email Blacklist** | `comment_email_blacklist`   | No       | Email addresses whose comments are skipped, such as bots.                                     |
+| **Custom JQL Query**        | `jql_query`                 | No       | Set under **Advanced**. Include no time filters and no project clause.                        |
+
+The credential uses two keys:
+`jira_user_email` for the connector account's email address and `jira_api_token` for the API token.
+This is the same credential type as the [Jira connector](/admins/connectors/official/jira),
+so an existing Jira credential for the same Jira site can be reused.
+
 ### Indexed metadata
 
 ```
