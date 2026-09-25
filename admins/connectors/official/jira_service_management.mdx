@@ -5,8 +5,8 @@ description: "Access service desk tickets from Jira Service Management"
 
 ## How it works
 
-The Jira Service Management (JSM) connector pulls in all tickets from the
-specified service desk project every **10** minutes.
+The Jira Service Management (JSM) connector pulls in all tickets from the specified service desk project.
+It syncs every **10** minutes.
 
 For every JSM ticket, this connector pulls:
 
@@ -16,59 +16,51 @@ For every JSM ticket, this connector pulls:
 - [Common fields](#indexed-metadata) plus JSM-specific metadata: customer
   request type, organizations, and SLA information
 
-Optionally, the connector can also index ticket attachments as separate
-documents linked to their ticket, and internal agent notes (tagged with an
-`[Internal Note]` prefix).
+Optionally, the connector can also index ticket attachments as separate documents linked to their ticket,
+and internal agent notes (tagged with an `[Internal Note]` prefix).
 
 The connector can index only the content that its JSM account can access.
 An API token does not give its owner additional JSM permissions.
 
 ## JSM setup
 
-Jira Service Management is part of Jira Cloud and is hosted by Atlassian.
-Its site URL usually ends in `atlassian.net`.
+Jira Service Management is part of Jira Cloud and is hosted by Atlassian. Its site URL usually ends in `atlassian.net`.
 
 ### 1. Choose a connector account
 
 Use a dedicated JSM account for the connector.
-This makes its access easier to review and prevents a personal account
-change from stopping the connector.
+This makes its access easier to review and prevents a personal account change from stopping the connector.
 
-Create the account or choose an existing account before you grant access
-or create the API token.
+Create the account or choose an existing account before you grant access or create the API token.
 
 ### 2. Learn where to check and grant access
 
-The connector indexes only the projects, tickets, and comments that its JSM
-account can access. Use the checks below to troubleshoot missing content or
-grant the permission sync access in step 4.
+The connector indexes only the projects, tickets, and comments that its JSM account can access.
+Use the checks below to troubleshoot missing content or grant the permission sync access in step 4.
 
 Ask a Jira administrator to complete these steps while signed in to Jira:
 
 <Steps>
   <Step title="Manage project access">
     Go to **Project settings > People** in the service desk project.
-    Add the connector account and assign it a role that can browse the
-    project and view its tickets, such as **Service Desk Team**.
+    Add the connector account and assign it a role that can browse the project and view its tickets,
+    such as **Service Desk Team**.
 
     See Atlassian's [project permissions
     instructions](https://support.atlassian.com/jira-software-cloud/docs/manage-how-people-access-your-team-managed-project/).
   </Step>
 
   <Step title="Manage comment visibility">
-    JSM comments are either public (visible to customers) or internal agent
-    notes. The connector indexes public comments by default.
-    To also index internal agent notes, enable **Include internal notes**
-    when you configure the connector.
+    JSM comments are either public (visible to customers) or internal agent notes.
+    The connector indexes public comments by default. To also index internal agent notes,
+    enable **Include internal notes** when you configure the connector.
 
-    Internal notes are indexed with an `[Internal Note]` prefix so that
-    users can tell them apart from public replies.
+    Internal notes are indexed with an `[Internal Note]` prefix so that users can tell them apart from public replies.
   </Step>
 
   <Step title="Test restricted content">
     Sign in as the connector account.
-    Confirm that it can open representative tickets and comments from the
-    service desk project that you want to index.
+    Confirm that it can open representative tickets and comments from the service desk project that you want to index.
   </Step>
 </Steps>
 
@@ -82,32 +74,26 @@ For indexing without permission sync, the JSM account needs:
 - Access to each restricted comment that you want to index.
 
 JSM omits projects, tickets, and comments that the account cannot access.
-A standard JSM agent account can run the connector if the account has all
-required access.
+A standard JSM agent account can run the connector if the account has all required access.
 
 ### 4. Add permission sync access
 
 <Warning>
-  Onyx treats everything inside a JSM project as accessible to everyone who
-  can see the project. It does not sync Jira issue security levels or
-  restricted comment visibility. Do not enable permission sync for projects
-  that use these restrictions.
+  Onyx treats everything inside a JSM project as accessible to everyone who can see the project.
+  It does not sync Jira issue security levels or restricted comment visibility.
+  Do not enable permission sync for projects that use these restrictions.
 </Warning>
 
-Grant all indexing access from the previous step. Then grant one of these
-administrative access options:
+Grant all indexing access from the previous step. Then grant one of these administrative access options:
 
 - **Administer Jira** globally.
 - **Administer Projects** for every indexed service desk project.
 
-If the account does not have **Administer Jira**, you must also grant the
-global **Browse users and groups** permission.
-Onyx uses this access to read permission schemes, project roles, users,
-groups, and group membership.
+If the account does not have **Administer Jira**, you must also grant the global **Browse users and groups** permission.
+Onyx uses this access to read permission schemes, project roles, users, groups, and group membership.
 
 <Note>
-  **Administer Jira** does not always grant access to issue content. Grant
-  and test the indexing access separately.
+  **Administer Jira** does not always grant access to issue content. Grant and test the indexing access separately.
 </Note>
 
 ### 5. Create the API token
@@ -116,31 +102,26 @@ Create an API token from the connector account.
 Follow Atlassian's [API token
 instructions](https://support.atlassian.com/atlassian-account/docs/manage-api-tokens-for-your-atlassian-account/).
 
-If you create a token with scopes, enable **Using scoped token** when you
-configure the connector in Onyx.
+If you create a token with scopes, enable **Using scoped token** when you configure the connector in Onyx.
 
-For indexing, grant the token the `read:jira-work` scope. For permission
-sync, also grant `read:jira-user` and `manage:jira-configuration`.
-Alternatively, grant the complete granular read scopes listed for these
-Jira APIs:
+For indexing, grant the token the `read:jira-work` scope. For permission sync,
+also grant `read:jira-user` and `manage:jira-configuration`. Alternatively,
+grant the complete granular read scopes listed for these Jira APIs:
 
 - [Issue search and fetch](https://developer.atlassian.com/cloud/jira/platform/rest/v3/api-group-issues/)
 - [Project permission schemes](https://developer.atlassian.com/cloud/jira/platform/rest/v3/api-group-project-permission-schemes/)
 - [Project roles](https://developer.atlassian.com/cloud/jira/platform/rest/v3/api-group-project-roles/)
 - [Groups and group members](https://developer.atlassian.com/cloud/jira/platform/rest/v3/api-group-groups/)
 
-Token scopes limit the token. They do not replace the connector account
-access from the previous steps.
+Token scopes limit the token. They do not replace the connector account access from the previous steps.
 
 ## Attachments
 
-Ticket attachments (documents and files uploaded to a JSM ticket) are
-**not indexed by default**.
+Ticket attachments (documents and files uploaded to a JSM ticket) are **not indexed by default**.
 
-Enable **Include attachments** when you configure the connector to index
-them. Each attachment becomes a separate Onyx document linked to its
-ticket. Turning the setting off again prunes those attachment documents on
-the next prune pass.
+Enable **Include attachments** when you configure the connector to index them.
+Each attachment becomes a separate Onyx document linked to its ticket.
+Turning the setting off again prunes those attachment documents on the next prune pass.
 
 <img className="rounded-image" src="/assets/admins/connectors/jira_service_management/JsmAttachmentParity.png" alt="Diagram showing that the full indexing pass and the slim pruning pass see identical attachment IDs when attachments are enabled"/>
 
@@ -151,27 +132,37 @@ the next prune pass.
 
 ## Configure the connector
 
+<Note>
+  The images in this section are generated schematic field maps.
+  They list the exact field labels that the connector form uses. They are not screenshots of the Onyx Admin Panel.
+  Match the labels, not the layout.
+</Note>
+
 <Steps>
   <Step title="Open the JSM connector">
-    Go to the Admin Panel and select the **Jira Service Management**
-    connector.
+    Go to the Admin Panel and select the **Jira Service Management** connector.
   </Step>
 
   <Step title="Provide credentials">
-    Select **Create New** and enter the connector account's email address
-    and API token.
+    Select **Create New** and enter the connector account's email address and API token.
 
-    <img className="rounded-image" src="/assets/admins/connectors/jira_service_management/JsmCredential.png" alt="Onyx Jira Service Management credential form with email and token fields"/>
+    <img className="rounded-image" src="/assets/admins/connectors/jira_service_management/JsmCredential.png" alt="Schematic field map of the Jira Service Management credential fields, Email and API token. This is a generated diagram, not a screenshot of the Onyx Admin Panel"/>
 
     Select **Create**, select the credential, and select **Continue**.
   </Step>
 
   <Step title="Configure the JSM source">
-    Enter a connector name, the Jira base URL (usually
-    `https://your-domain.atlassian.net`), and the service desk **Project
-    Key** (for example `HELP`).
+    Enter a connector name, the Jira base URL (usually `https://your-domain.atlassian.net`),
+    and the service desk **Project Key** (for example `HELP`).
 
-    <img className="rounded-image" src="/assets/admins/connectors/jira_service_management/JsmProject.png" alt="Jira Service Management connector form with base URL, project key, and indexing options"/>
+    <img className="rounded-image" src="/assets/admins/connectors/jira_service_management/JsmProject.png" alt="Schematic field map of the Jira Service Management source fields, Jira Base URL, Project Key, and the Using scoped token, Include internal notes, and Include attachments options. This is a generated diagram, not a screenshot of the Onyx Admin Panel"/>
+
+    <Warning>
+      The **Project Key** must be a Jira Service Management (service desk) project.
+      Onyx checks the project type when it validates the connector and stops with an error if the key points at a
+      traditional Jira project. Use the [Jira connector](/admins/connectors/official/jira)
+      for traditional Jira projects.
+    </Warning>
   </Step>
 
   <Step title="Choose what to index">
@@ -179,14 +170,11 @@ the next prune pass.
 
     - **Using scoped token** if you created a Jira Cloud token with scopes.
     - **Include internal notes** to also index internal agent notes.
-    - **Include attachments** to index ticket attachments as separate
-      documents.
-    - **Comment Email Blacklist** to exclude comments from specified
-      accounts, such as bots.
+    - **Include attachments** to index ticket attachments as separate documents.
+    - **Comment Email Blacklist** to exclude comments from specified accounts, such as bots.
 
-    Optionally, under **Advanced**, enter a **Custom JQL Query** to further
-    filter which tickets are indexed. Do not include time filters or a
-    project clause in the JQL query.
+    Optionally, under **Advanced**, enter a **Custom JQL Query** to further filter which tickets are indexed.
+    Do not include time filters or a project clause in the JQL query.
   </Step>
 
   <Step title="Choose document access">
@@ -195,8 +183,7 @@ the next prune pass.
   </Step>
 
   <Step title="Create the connector">
-    Select **Create Connector**. Onyx starts indexing the JSM tickets that
-    match your configuration.
+    Select **Create Connector**. Onyx starts indexing the JSM tickets that match your configuration.
   </Step>
 </Steps>
 
