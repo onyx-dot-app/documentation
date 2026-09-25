@@ -3,10 +3,11 @@ title: "Microsoft 365 Setup"
 description: "The Microsoft Entra app registration, permissions and credential that every Microsoft 365 connector shares"
 ---
 
-Onyx reads Microsoft 365 through three connectors: [SharePoint](/admins/connectors/official/microsoft-365/sharepoint),
-which also covers OneDrive, [Microsoft Teams](/admins/connectors/official/microsoft-365/teams)
+Onyx reads Microsoft 365 through four connectors: [SharePoint](/admins/connectors/official/microsoft-365/sharepoint),
+[OneDrive](/admins/connectors/official/microsoft-365/onedrive),
+[Microsoft Teams](/admins/connectors/official/microsoft-365/teams),
 and [Outlook](/admins/connectors/official/microsoft-365/outlook).
-All three sign in to Microsoft Graph as an application registered in Microsoft Entra, not as a user,
+All four sign in to Microsoft Graph as an application registered in Microsoft Entra, not as a user,
 and they are set up the same way: register an application, grant it permissions, give Onyx a credential.
 This page holds those shared steps. Each connector's page says what it needs beyond them.
 
@@ -45,7 +46,7 @@ Every connector accepts either a client secret or a certificate.
 | Indexing files, pages, threads and mail      | Yes                                             | Yes                                                                  |
 | SharePoint permission sync                   | **No**                                          | Yes                                                                  |
 | Teams **Include Attachments**                | **No**                                          | Yes                                                                  |
-| Teams and Outlook permission sync            | Yes                                             | Yes                                                                  |
+| OneDrive, Teams and Outlook permission sync  | Yes                                             | Yes                                                                  |
 | Setup effort                                 | Lower. The portal generates the secret for you. | Higher. You create a certificate and upload part of it to Microsoft. |
 
 SharePoint will not release its permission data, or the readers of a channel's files,
@@ -60,8 +61,10 @@ Onyx reads with it and never writes to SharePoint.
 
 | Connector and option                          | Microsoft Graph application permissions                                                                         | Also needed                                                                                                                                                                                                                             |
 | --------------------------------------------- | --------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| SharePoint and OneDrive files and pages       | **Sites.Read.All**, or **Sites.Selected** with a `read` grant on each site                                       | Nothing                                                                                                                                                                                                                                 |
+| SharePoint files and pages                    | **Sites.Read.All**, or **Sites.Selected** with a `read` grant on each site                                       | Nothing                                                                                                                                                                                                                                 |
 | SharePoint **Auto Sync Permissions**          | **GroupMember.Read.All**, **Group.Read.All**, **Directory.Read.All**, **User.Read.All**, **Member.Read.Hidden** | A certificate credential, and **User.Read.All** on the **SharePoint** API, plus **Sites.FullControl.All** on the **SharePoint** API or, with **Sites.Selected**, a `fullcontrol` grant on each site. |
+| OneDrive files                                | **User.Read.All**, plus **Sites.Read.All** or **Sites.Selected** with a `read` grant on each personal site       | Nothing                                                                                                                                                                                                                                 |
+| OneDrive **Auto Sync Permissions**            | **User.Read.All**, **GroupMember.ReadBasic.All**, plus the site permission above                                | **Member.Read.Hidden** when groups with hidden membership can access files                                                                                                                       |
 | Teams channel threads (always on)             | **Team.ReadBasic.All**, **Channel.ReadBasic.All**, **ChannelMessage.Read.All**                                  | Nothing                                                                                                                                                                                                                                 |
 | Teams **Auto Sync Permissions**               | **ChannelMember.Read.All**, **User.Read.All**                                                                   | Nothing                                                                                                                                                                                                                                 |
 | Teams **Include Attachments**                 | **Files.Read.All** or **Sites.Read.All**, **GroupMember.Read.All**, **User.Read.All**                           | A certificate credential, and **Sites.FullControl.All** on the **SharePoint** API or, with **Sites.Selected**, a `fullcontrol` grant on each channel site |
@@ -245,10 +248,11 @@ The role you grant depends on what the connector does:
 | ---------------------------------------- | -------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
 | SharePoint indexing only                 | `read`                     | Microsoft Graph → **Sites.Selected**                                                                                                  |
 | SharePoint indexing with permission sync | `fullcontrol`              | Microsoft Graph → **Sites.Selected**. The per-site grant replaces tenant-wide **Sites.FullControl.All** on the SharePoint API.       |
+| OneDrive indexing and permission sync    | `read`                     | Microsoft Graph → **Sites.Selected**                                                                                                  |
 | Teams **Include Attachments**            | `fullcontrol`              | Microsoft Graph → **Files.Read.All**, which the connector needs to read channel files. Private and shared channels each have a site of their own. |
 
-Permission sync and Teams channel files need `fullcontrol` because SharePoint shows an item's access list only to an app
-that has full control of the site. Onyx never writes to SharePoint.
+SharePoint permission sync and Teams channel files need `fullcontrol` because SharePoint shows an item's access list
+only to an app that has full control of the site. Onyx never writes to SharePoint.
 
 <Accordion title="Granting a site to the app">
   You need a Global Administrator or SharePoint Administrator account.
