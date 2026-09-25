@@ -85,12 +85,19 @@ not in `configMap`. See [Security Hardening](/deployment/production/security#cre
     - For TLS with certificate verification, set `postgresTls.enabled: true` and give the CA in
     `postgresTls.caSecretName` or `postgresTls.caConfigMapName`.
     - For Amazon RDS, see the [RDS guide](/deployment/cloud/aws/rds).
+    - For Cloud SQL for PostgreSQL, set `POSTGRES_DB` to the database you created. If you do not,
+    Onyx uses the `postgres` database. See the [GCP guide](/deployment/cloud/gcp#gke-with-terraform).
   </Accordion>
 
   <Accordion title="Redis">
     - For TLS with certificate verification, set `redisTls.enabled: true` and give the CA in
     `redisTls.caSecretName` or `redisTls.caConfigMapName`. The bundled Redis does not support TLS.
     - If the managed Redis has no password, set `auth.redis.enabled: false`.
+    - Onyx uses Redis databases 0, 14, and 15. Use a Redis service with one primary endpoint and the default
+    16 databases, such as Memorystore for Redis or ElastiCache for Redis with cluster mode off.
+    Redis Cluster services shard keys, and Celery then fails with `CROSSSLOT` errors.
+    - Memorystore for Redis with transit encryption serves TLS on port `6378`. Set `REDIS_PORT: "6378"` and turn on
+    `redisTls` with the Memorystore CA.
   </Accordion>
 
   <Accordion title="OpenSearch">
@@ -102,6 +109,13 @@ not in `configMap`. See [Security Hardening](/deployment/production/security#cre
     - For S3-compatible storage that is not AWS, also set `configMap.S3_ENDPOINT_URL`.
     - If the pods use a cloud IAM role for S3, set `auth.objectstorage.enabled: false` and do not set access keys.
     - To use Azure Blob Storage, set `configMap.FILE_STORE_BACKEND: "azure"` and the `AZURE_*` keys in `configMap`.
+    - To use Google Cloud Storage, set `configMap.FILE_STORE_BACKEND: "gcs"`, `configMap.GCS_FILE_STORE_BUCKET_NAME`,
+    and `configMap.GCS_PROJECT_ID`. With GKE Workload Identity,
+    set `serviceAccount.name` to a Kubernetes service account that has `roles/storage.objectAdmin` and
+    `roles/storage.legacyBucketReader` on the bucket. Onyx reads the bucket when it starts, so it needs both roles.
+    See the [GCP guide](/deployment/cloud/gcp#gke-with-terraform).
+    - For all file store variables, see
+    [File Storage Configuration](/deployment/configuration/configuration#onyx-environment-variables).
   </Accordion>
 
   <Accordion title="Code Interpreter">
@@ -128,7 +142,7 @@ The chart does not configure backups for any bundled service.
 | PostgreSQL | You own backups, restore, storage growth, and CNPG and PostgreSQL upgrades. | The provider owns backups and patch upgrades. You own restore tests and major upgrades. |
 | Redis | No persistence. Data is cache and task queues. A restart loses queued tasks. | The provider owns availability and upgrades. |
 | OpenSearch | You own snapshots, disk growth, and upgrades. You can rebuild the index from sources, but it is slow. | The provider owns snapshots and upgrades. |
-| MinIO or S3 | You own backups of uploaded files. You cannot rebuild these files from sources. | The provider owns durability. You own versioning and backup policy. |
+| MinIO or object storage (S3, Cloud Storage, Azure Blob Storage) | You own backups of uploaded files. You cannot rebuild these files from sources. | The provider owns durability. You own versioning and backup policy. |
 
 For each external service, you must make sure that its version works with your Onyx version.
 Test upgrades in a staging environment first.
