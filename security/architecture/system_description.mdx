@@ -51,10 +51,10 @@ The Onyx application is a set of Docker Containers which can be deployed on any 
 
 Some components of the Onyx stack are easily replaceable while others are not.
 
-**MinIO** can be replaced with S3 or any similar object storage service.
-The file store interface is abstracted to make this straightforward.
+**MinIO** can be replaced with S3, Google Cloud Storage, Azure Blob Storage,
+or any S3-compatible object storage service. The file store interface is abstracted to make this straightforward.
 
-**Redis** can be replaced with a managed Redis service like AWS ElastiCache.
+**Redis** can be replaced with a managed Redis service like AWS ElastiCache or Google Cloud Memorystore for Redis.
 Other in-memory caches could work but would require code changes.
 
 **Postgres** can be replaced with a managed Postgres service such as AWS RDS.

@@ -760,6 +760,11 @@ Read [Deploying Craft](/deployment/local/craft) before enabling Craft in self-ho
   </Accordion>
 
   <Accordion title="File Storage Configuration">
+    `FILE_STORE_BACKEND`: File store backend. Use `s3` (default) for AWS S3, MinIO, and other S3-compatible storage,
+    `gcs` for Google Cloud Storage, `azure` for Azure Blob Storage, or `postgres` to keep files in PostgreSQL.
+
+    **S3 and MinIO** (`FILE_STORE_BACKEND=s3`)
+
     `S3_FILE_STORE_BUCKET_NAME`: S3 bucket name for file storage
 
     `S3_FILE_STORE_PREFIX`: S3 prefix for file storage
@@ -771,6 +776,44 @@ Read [Deploying Craft](/deployment/local/craft) before enabling Craft in self-ho
     `S3_AWS_ACCESS_KEY_ID`: AWS access key ID for S3
 
     `S3_AWS_SECRET_ACCESS_KEY`: AWS secret access key for S3
+
+    **Google Cloud Storage** (`FILE_STORE_BACKEND=gcs`)
+
+    `GCS_FILE_STORE_BUCKET_NAME`: Cloud Storage bucket name for file storage. Required.
+
+    `GCS_FILE_STORE_PREFIX`: Object prefix for file storage. Defaults to `onyx-files`.
+
+    `GCS_PROJECT_ID`: GCP project of the bucket. If you do not set it, Onyx gets the project from the credentials.
+
+    `GCS_SERVICE_ACCOUNT_KEY_PATH`: Path to a service account JSON key file
+
+    `GCS_SERVICE_ACCOUNT_KEY_JSON`: Service account JSON key as a string
+
+    Onyx uses the first credentials it finds, in this order: `GCS_SERVICE_ACCOUNT_KEY_PATH`,
+    then `GCS_SERVICE_ACCOUNT_KEY_JSON`, then Application Default Credentials.
+    Application Default Credentials include GKE Workload Identity, the Compute Engine metadata server,
+    and `gcloud auth application-default login`. On GKE, use Workload Identity and do not set a key.
+    The identity needs `roles/storage.objectAdmin` and `roles/storage.legacyBucketReader` on the bucket,
+    because Onyx reads the bucket when it starts.
+
+    **Azure Blob Storage** (`FILE_STORE_BACKEND=azure`)
+
+    `AZURE_FILE_STORE_CONTAINER_NAME`: Blob container name for file storage
+
+    `AZURE_FILE_STORE_PREFIX`: Blob prefix for file storage. Defaults to `onyx-files`.
+
+    `AZURE_STORAGE_ACCOUNT_NAME`: Storage account name
+
+    `AZURE_STORAGE_ACCOUNT_URL`: Blob endpoint URL. If you do not set it,
+    Onyx uses `https://<account>.blob.core.windows.net`. Set it for Azurite or sovereign clouds.
+
+    `AZURE_STORAGE_CONNECTION_STRING`: Storage account connection string
+
+    `AZURE_STORAGE_ACCOUNT_KEY`: Storage account key
+
+    Onyx uses the first credentials it finds, in this order: `AZURE_STORAGE_CONNECTION_STRING`,
+    then `AZURE_STORAGE_ACCOUNT_KEY`, then `DefaultAzureCredential`.
+    `DefaultAzureCredential` includes AKS Workload Identity, managed identity, and `az login`.
   </Accordion>
 
   <Accordion title="Telemetry & Analytics">

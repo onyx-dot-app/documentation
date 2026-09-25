@@ -41,7 +41,9 @@ When evaluating your instance, follow the Preferred resources in the table above
 
 ## Container-Specific Resourcing (Standard)
 
-For more efficient scaling, you can dedicate resources to each Onyx container using Kubernetes or AWS EKS.
+For more efficient scaling, you can dedicate resources to each Onyx container using Kubernetes,
+such as AWS EKS or Google GKE. The [Terraform modules](/deployment/local/terraform) for AWS, GCP,
+and Azure include node pool sizes for small, medium, and large deployments.
 
 See the [Onyx Helm chart](https://github.com/onyx-dot-app/onyx/blob/main/deployment/helm/charts/onyx/values.yaml)
 `values.yaml` for our default requests and limits.
@@ -151,7 +153,7 @@ If deploying in a single instance, this would be *in addition to* the base requi
 
 Given these requirements, a `m7g.2xlarge` or `c5.4xlarge` EC2 instance would be appropriate.
 
-If deploying with Kubernetes or AWS EKS, this would give a per-component resource allocation of:
+If deploying with Kubernetes, such as AWS EKS or Google GKE, this would give a per-component resource allocation of:
 
 | Component | CPU | Memory |
 | --- | --- | --- |
@@ -173,5 +175,13 @@ Total available node size: ~14 CPU and ~41GB of Memory.
 
   <Card title="Guide: Deploy on AWS" icon="microchip" href="/deployment/cloud/aws/ec2">
     Deploy Onyx on an EC2 instance.
+  </Card>
+
+  <Card title="Guide: Deploy on GCP" icon="microchip" href="/deployment/cloud/gcp">
+    Deploy Onyx on GKE with Terraform or on a Compute Engine VM.
+  </Card>
+
+  <Card title="Guide: Deploy on Azure" icon="microchip" href="/deployment/cloud/azure">
+    Deploy Onyx on an Azure VM.
   </Card>
 </CardGroup>

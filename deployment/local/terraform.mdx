@@ -1,14 +1,14 @@
 ---
 title: "Terraform"
-description: "Provision the AWS infrastructure Onyx runs on with Terraform modules"
+description: "Provision the AWS, GCP, or Azure infrastructure Onyx runs on with Terraform modules"
 icon: "grid"
 ---
 
 import DeploymentNextSteps from "/snippets/deployment-next-steps.mdx"
 
 <Note>
-  This page covers the Terraform **modules** that provision the infrastructure Onyx runs on — VPC, EKS, RDS,
-  and the rest. They run before Onyx exists.
+  This page covers the Terraform **modules** that provision the infrastructure Onyx runs on — network,
+  Kubernetes cluster, database, and the rest. They run before Onyx exists.
 
   To configure a deployment that is already running — LLM providers, connectors, document sets,
   agents — use the [Onyx Terraform provider](/admins/advanced_configs/terraform_provider) instead.
@@ -19,10 +19,33 @@ import DeploymentNextSteps from "/snippets/deployment-next-steps.mdx"
   Check out the [Resourcing Guide](/deployment/getting_started/resourcing) before getting started.
 </Tip>
 
-Onyx ships a set of [Terraform modules](https://github.com/onyx-dot-app/onyx/tree/main/deployment/terraform/modules/aws)
-that provision the AWS infrastructure Onyx needs: VPC, EKS, RDS for PostgreSQL, ElastiCache for Redis, S3,
-and (optionally) OpenSearch and WAF. Once the infra is up,
+Onyx ships [Terraform modules](https://github.com/onyx-dot-app/onyx/tree/main/deployment/terraform/modules) for AWS,
+GCP, and Azure. Each set provisions a network, a Kubernetes cluster, managed PostgreSQL, Redis,
+object storage for the file store, and a web application firewall. Once the infra is up,
 you install the Onyx workloads with the [Helm chart](/deployment/local/kubernetes).
+
+{/* TODO: the modules/gcp link resolves only after the GCP modules merge to main in onyx-dot-app/onyx */}
+
+| Cloud | Modules | Release tags | Services | Guide |
+| --- | --- | --- | --- | --- |
+| AWS | [`modules/aws`](https://github.com/onyx-dot-app/onyx/tree/main/deployment/terraform/modules/aws) | `tf/vX.Y.Z` | VPC, EKS, RDS for PostgreSQL, ElastiCache for Redis, S3, WAF, and (optionally) Amazon OpenSearch | This page |
+| GCP | [`modules/gcp`](https://github.com/onyx-dot-app/onyx/tree/main/deployment/terraform/modules/gcp) | `tf-gcp/vX.Y.Z` | VPC, GKE, Cloud SQL for PostgreSQL, Memorystore for Redis, Cloud Storage, Cloud Armor | [GCP guide](/deployment/cloud/gcp#gke-with-terraform) |
+| Azure | [`modules/azure`](https://github.com/onyx-dot-app/onyx/tree/main/deployment/terraform/modules/azure) | `tf-azure/vX.Y.Z` | Virtual network, AKS, PostgreSQL Flexible Server, Azure Managed Redis, Blob Storage, WAF policy | [Module README](https://github.com/onyx-dot-app/onyx/blob/main/deployment/terraform/modules/azure/README.md) |
+
+Each cloud has its own release tags, independent of Onyx releases. To use the modules from your own repository,
+set a `git::` source and pin a `ref`:
+
+```hcl
+module "onyx" {
+  source = "git::https://github.com/onyx-dot-app/onyx.git//deployment/terraform/modules/aws/onyx?ref=tf/v1.0.2"
+  # ...
+}
+```
+
+On GCP and Azure, the document index (OpenSearch) runs in the cluster,
+because those clouds have no managed OpenSearch service that the modules use.
+
+The rest of this page covers the **AWS** modules.
 
 <Info>
   These modules are intended as a **reference implementation**.
