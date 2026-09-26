@@ -1,132 +1,157 @@
 ---
 title: "Google Drive OAuth"
-description: "Set up Google Drive OAuth for the connector"
+description: "Set up an OAuth app so Onyx can index a Google account's Drive"
 ---
 
-This section walks through setting up the Google Drive connector using a OAuth-enabled Google App.
-Anyone can do this (even without a paid Google Workspace)!
+With OAuth, one person signs in to Google and Onyx indexes what that account can see: its My Drive,
+the shared drives it belongs to, and files shared with it.
+It works with a personal Google account and needs no Workspace administrator.
 
-If you're an organization with a Google Workspace, and you'd rather use a Service Account to access Google Drive,
-checkout the section [here](./service_account).
+For a whole Google Workspace,
+or for [Auto Sync Permissions](/admins/connectors/official/google_drive/overview#auto-sync-permissions),
+use a [service account](/admins/connectors/official/google_drive/service_account) instead.
+Onyx accepts an OAuth credential for permission sync,
+but it can only read the sharing of files the signed-in account can reach, so the result is incomplete.
 
-### Authorization
+## Before you begin
+
+You need:
+
+- A Google Cloud project, or permission to create one.
+- The public address of your Onyx deployment, such as `https://onyx.example.com`.
+  Google sends the sign-in back to that address, so it must match exactly.
+- The Google account that will authorize Onyx. Everything the connector indexes is what this account can open.
+
+## Configure Google Cloud
 
 <Steps>
-  <Step title="Create Google Cloud Project">
-    - [https://console.cloud.google.com/projectcreate](https://console.cloud.google.com/projectcreate)
+  <Step title="Create or pick a project">
+    In the [Google Cloud console](https://console.cloud.google.com/projectcreate), create a project,
+    or select an existing one.
   </Step>
 
-  <Step title="Enable Google Drive API">
-    - On the left panel, open **APIs & services**
-    - Go to **Enabled APIs and services**
-    - On the top click **+ENABLE APIS AND SERVICES**
-    - Search for **Google Drive API** and click **ENABLE**
-    - Alternatively visit this [link](https://console.cloud.google.com/flows/enableapi?apiid=drive.googleapis.com),
-    select your project and enable the **Google Drive API**
+  <Step title="Enable the APIs">
+    Open **APIs & Services → Library** and enable three APIs:
+
+    - **Google Drive API**
+    - **Admin SDK API**, which permission sync uses to read the Workspace directory
+    - **Google Docs API**, which Onyx uses to split Google Docs at their headings
+
+    Each has a direct link: [Drive](https://console.cloud.google.com/flows/enableapi?apiid=drive.googleapis.com),
+    [Admin SDK](https://console.cloud.google.com/flows/enableapi?apiid=admin.googleapis.com),
+    [Docs](https://console.cloud.google.com/flows/enableapi?apiid=docs.googleapis.com).
+
+    <img className="rounded-image" src="/assets/admins/connectors/google_drive/GoogleDriveEnableAPI.png" alt="Google Cloud console enabling the Google Drive API for the project"/>
   </Step>
 
-  <Step title="Enable Admin SDK API">
-    - Click on **+ENABLE APIS AND SERVICES** again.
-    - Search for **Admin SDK API** and click **ENABLE**
-    - Alternatively visit this [link](https://console.cloud.google.com/flows/enableapi?apiid=admin.googleapis.com),
-    select your project and enable the **Admin SDK API**
+  <Step title="Set up the consent screen">
+    Open **Google Auth Platform → Branding**. If the project has no consent screen yet, select **Get started**.
+
+    - **App name**: `Onyx`, or any name your users will recognize.
+    - **User support email**: an address at your organization.
+    - **Audience**: **Internal** if the project belongs to a Google Workspace and only its users will authorize Onyx.
+    **External** otherwise, including for a personal Google account.
+    - **Contact information**: an address at your organization.
+
+    Agree to the user data policy and select **Create**.
   </Step>
 
-  <Step title="Enable Google Sheets API">
-    - Click on **+ENABLE APIS AND SERVICES** again.
-    - Search for **Google Sheets API** and click **ENABLE**
-    - Alternatively visit this [link](https://console.cloud.google.com/flows/enableapi?apiid=sheets.googleapis.com),
-    select your project and enable the **Google Sheets API**
+  <Step title="Add the scopes">
+    Open **Google Auth Platform → Data Access** and select **Add or remove scopes**. Add these four,
+    then select **Update** and **Save**:
+
+    ```text
+    https://www.googleapis.com/auth/drive.readonly
+    https://www.googleapis.com/auth/drive.metadata.readonly
+    https://www.googleapis.com/auth/admin.directory.user.readonly
+    https://www.googleapis.com/auth/admin.directory.group.readonly
+    ```
+
+    The two Drive scopes are marked sensitive, and the two Admin SDK scopes are restricted.
+    With an **Internal** audience Google applies no review. With **External**, see the next step.
+
+    <img className="rounded-image" src="/assets/admins/connectors/google_drive/GoogleDriveScopes.png" alt="The Google Cloud console scope picker with the Drive and Admin SDK read-only scopes selected"/>
   </Step>
 
-  <Step title="Enable Google Docs API">
-    - Click on **+ENABLE APIS AND SERVICES** again.
-    - Search for **Google Docs API** and click **ENABLE**
-    - Alternatively visit this [link](https://console.cloud.google.com/flows/enableapi?apiid=docs.googleapis.com),
-    select your project and enable the **Google Docs API**
+  <Step title="Add test users, for an External audience">
+    An **External** app starts in testing, and only listed test users can authorize it.
+    Open **Google Auth Platform → Audience**,
+    and under **Test users** select **Add users** and add the Google account that will authorize Onyx.
 
-    <img className="rounded-image" src="/assets/admins/connectors/google_drive/GoogleDriveEnableAPI.png" alt="Google Cloud Console enabling Google Docs API for the project"/>
+    Testing mode is enough for Onyx. Google expires a test user's authorization after seven days, though,
+    so the account has to reauthorize the credential weekly. To avoid that, publish the app under **Publishing status**.
+    With restricted scopes, publishing sends the app to Google for verification,
+    so an **Internal** audience is the easier path for a Workspace.
   </Step>
 
-  <Step title="Set up OAuth consent screen">
-    - Under **APIs & services**, select the **OAuth consent screen** tab
-    - If you don't have a **Google Organization** select **External** for **User Type**
-    - Call the app Onyx (or whatever you want)
-    - For the required emails, use any email of your choice or `founders@onyx.app`
-    if you wish for the Onyx team to help handle issues.
-    - Click **SAVE AND CONTINUE**
+  <Step title="Create the OAuth client">
+    Open **Google Auth Platform → Clients** and select **Create client**.
+
+    - **Application type**: **Web application**.
+    - **Name**: `Onyx`, or anything you like.
+    - **Authorized redirect URIs**: select **Add URI** and enter your Onyx address followed by
+    `/admin/connectors/google-drive/auth/callback`:
+
+    ```text
+    https://onyx.example.com/admin/connectors/google-drive/auth/callback
+    ```
+
+    On Onyx Cloud the address is `https://cloud.onyx.app`. For a local deployment it is `http://localhost:3000`.
+    The scheme, host, and port must match your deployment exactly, or Google rejects the sign-in.
+
+    <img className="rounded-image" src="/assets/admins/connectors/google_drive/DriveCredentials.png" alt="The Google Cloud console OAuth client form with the Onyx redirect URI filled in"/>
   </Step>
 
-  <Step title="Set up scopes">
-    - Add the scope `.../auth/drive.readonly` for `Google Drive API`
-    - Add the scope `.../auth/drive.metadata.readonly` for `Google Drive API`
-    - Add the scope `.../auth/admin.directory.user.readonly` for `Admin SDK API`
-    - Add the scope `.../auth/admin.directory.group.readonly` for `Admin SDK API`
+  <Step title="Download the client JSON">
+    Select **Create**. In the dialog that follows, select **Download JSON**.
+    The same download is available later from the client's row under **Clients**.
+    This file is the OAuth app you upload to Onyx.
 
-    <img className="rounded-image" src="/assets/admins/connectors/google_drive/GoogleDriveScopes.png" alt="OAuth consent screen scopes for Google Drive, Admin SDK, Sheets, and Docs"/>
-  </Step>
-
-  <Step title="Set up test users">
-    - This is only applicable for users without a Google Organization.
-    - Typically for a company, Onyx would be set up as an internal app so this step would
-    not apply.
-    - Add at least one test user email. Only the email accounts added here will be allowed to
-    run the OAuth flow to index new documents.
-    - Click **SAVE AND CONTINUE**, review the changes and click **BACK TO DASHBOARD**
-  </Step>
-
-  <Step title="Create credentials">
-    - Go to the **Credentials** tab and select **+ CREATE CREDENTIALS** -> **OAuth client ID**
-
-    <img className="rounded-image" src="/assets/admins/connectors/google_drive/GoogleDriveCredential.png" alt="Creating OAuth client ID in Google Cloud Console"/>
-
-    - Choose **Web application** and give it some name like `OnyxConnector`
-    - Add a **Authorized JavaScript origins**
-    - `http://localhost:3000` if self-hosting
-    - `https://<INTERNAL_DEPLOYMENT_URL>` if you have setup Onyx for production use
-    - `https://cloud.onyx.app` if you are using the Onyx Cloud service
-    - Add a **Authorized redirect URIs**
-    - `http://localhost:3000/admin/connectors/google-drive/auth/callback` if self-hosting
-    - `https://<INTERNAL_DEPLOYMENT_URL>/admin/connectors/google-drive/auth/callback` if you have setup Onyx for production use
-    - `https://cloud.onyx.app/admin/connectors/google-drive/auth/callback` if you are using the Onyx Cloud service
-
-    <img className="rounded-image" src="/assets/admins/connectors/google_drive/DriveCredentials.png" alt="Configuring authorized origins and redirect URIs for Google Drive OAuth client"/>
-
-    - Click create and on the right hand side next to **Client secret**, there is an option to
-    download the credentials as a JSON. Download the JSON for use in the next step.
-
-    <img className="rounded-image" src="/assets/admins/connectors/google_drive/DriveDownloadCredentials.png" alt="Download OAuth client JSON credentials from Google Cloud Console"/>
+    <img className="rounded-image" src="/assets/admins/connectors/google_drive/DriveDownloadCredentials.png" alt="The Google Cloud console dialog after creating an OAuth client, with the Download JSON option"/>
   </Step>
 </Steps>
 
-### Indexing
+## Create the credential in Onyx
 
-First, navigate to the Admin Panel and select the Google Drive connector.
+<Steps>
+  <Step title="Open the Google Drive connector">
+    In Onyx, go to **Admin Panel → Add Connector** and select **Google Drive**, then select **Create New**.
+  </Step>
 
-Then, click **Create New**. Under **Option 1: OAuth app**, upload (or paste)
-the OAuth app JSON you downloaded in the final step above,
-then click **Authenticate with Google Drive** and continue with the account you want to use to index Google Drive.
+  <Step title="Upload the OAuth app">
+    Under **Option 1: OAuth app**, upload or paste the client JSON you downloaded.
 
-<img className="rounded-image" src="/assets/admins/connectors/google_drive/OAuthCredential.png" alt="Onyx Google Drive credential modal showing the OAuth app and service account options"/>
+    <img className="rounded-image" src="/assets/admins/connectors/google_drive/OAuthCredential.png" alt="The Onyx Google Drive credential dialog with the OAuth app upload and the Authenticate with Google Drive button"/>
+  </Step>
 
-Once complete, select the newly created credential, and click the **Continue** button to configure the connector!
+  <Step title="Sign in to Google">
+    Select **Authenticate with Google Drive** and sign in as the account whose Drive Onyx should index.
+    Approve every permission Google lists; Onyx needs all four. Google returns you to Onyx,
+    which shows **Authentication Complete** and creates the credential.
+  </Step>
 
-<Note>
-  The app JSON is stored on the credential it creates, so each OAuth credential carries its own app.
-  To add more connectors for the same account,
-  select the existing credential from the list instead of creating a new one.
-  An instance can hold multiple Google Drive credentials,
-  including ones using different OAuth apps or different Google Workspaces.
-</Note>
+  <Step title="Continue to the connector">
+    Select the new credential and select **Continue**.
+    Then follow [Configure the connector in
+    Onyx](/admins/connectors/official/google_drive/overview#configure-the-connector-in-onyx).
+  </Step>
+</Steps>
 
-<Note>
-  If you plan on using permission syncing for this connector,
-  the account performing the OAuth flow must have an Admin role in the Google Workspace that has access to the
-  following:
-  - Admin console privileges -> Services -> Drive and Docs -> Settings
-  - Admin API privileges -> Users -> Read
-  - Admin API privileges -> Groups -> Read
-  - Admin API privileges -> Organization Units -> Read
+Each OAuth credential carries its own app JSON and its own Google account.
+To add another connector for the same account, select the existing credential rather than creating a new one.
+To index a different account, create a new credential and sign in as that account; the same app JSON can be reused.
 
-  This can be set by an admin in the admin panel of the Google Workspace under Account > Admin roles.
-</Note>
+## Permission sync with an OAuth credential
+
+If you use this credential with **Auto Sync Permissions**,
+the account that signed in must be a Workspace administrator with these privileges,
+set under **Account → Admin roles** in the Google Admin console:
+
+- **Admin console privileges → Services → Drive and Docs → Settings**
+- **Admin API privileges → Users → Read**
+- **Admin API privileges → Groups → Read**
+- **Admin API privileges → Organization Units → Read**
+
+Even then, Onyx can only follow the folders and shared drives this one account can open,
+so files shared in ways this account cannot see are not mirrored correctly.
+A [service account](/admins/connectors/official/google_drive/service_account) does not have that limit.
