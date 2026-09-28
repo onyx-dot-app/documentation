@@ -41,7 +41,7 @@ The Onyx application is a set of Docker Containers which can be deployed on any 
 - **Search Engine**: OpenSearch providing keyword (BM25) search + vector store for retrieving
   context for queries
 - **In Memory Cache**: Redis, used to optimize performance
-- **File Store**: SeaweedFS object store for user uploaded files and documents pulled from connectors
+- **File Store**: the object store (SeaweedFS) for user uploaded files and documents pulled from connectors
 
 ### Infrastructure Layer
 
@@ -51,7 +51,7 @@ The Onyx application is a set of Docker Containers which can be deployed on any 
 
 Some components of the Onyx stack are easily replaceable while others are not.
 
-The bundled **object store** (SeaweedFS) can be replaced with S3, Google Cloud Storage, Azure Blob Storage,
+The **object store** can be replaced with S3, Google Cloud Storage, Azure Blob Storage,
 or any S3-compatible object storage service. The file store interface is abstracted to make this straightforward.
 
 **Redis** can be replaced with a managed Redis service like AWS ElastiCache or Google Cloud Memorystore for Redis.

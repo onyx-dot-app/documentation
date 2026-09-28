@@ -763,22 +763,22 @@ Read [Deploying Craft](/deployment/local/craft) before enabling Craft in self-ho
   </Accordion>
 
   <Accordion title="File Storage Configuration">
-    `FILE_STORE_BACKEND`: File store backend. Use `s3` (default) for AWS S3, the bundled object store,
+    `FILE_STORE_BACKEND`: File store backend. Use `s3` (default) for AWS S3, the object store,
     and other S3-compatible storage, `gcs` for Google Cloud Storage, `azure` for Azure Blob Storage,
     or `postgres` to keep files in PostgreSQL.
 
-    **S3 and the bundled object store** (`FILE_STORE_BACKEND=s3`)
+    **S3 and the object store** (`FILE_STORE_BACKEND=s3`)
 
     `S3_FILE_STORE_BUCKET_NAME`: S3 bucket name for file storage
 
     `S3_FILE_STORE_PREFIX`: S3 prefix for file storage
 
-    `S3_ENDPOINT_URL`: S3 endpoint URL. `http://object-store:8333` for the bundled store,
+    `S3_ENDPOINT_URL`: S3 endpoint URL. `http://object-store:8333` for the object store,
     or the endpoint of another S3-compatible service.
 
     `S3_VERIFY_SSL`: Verify SSL for S3 connections
 
-    `S3_AWS_ACCESS_KEY_ID`: AWS access key ID for S3. The bundled store uses it as its admin key.
+    `S3_AWS_ACCESS_KEY_ID`: AWS access key ID for S3. The object store uses it as its admin key.
 
     `S3_AWS_SECRET_ACCESS_KEY`: AWS secret access key for S3
 
@@ -794,7 +794,7 @@ Read [Deploying Craft](/deployment/local/craft) before enabling Craft in self-ho
 
     `LEGACY_COPY_WORKERS`: Parallel copies. Defaults to `16`.
 
-    `MINIO_REPLICAS`: Set to `0` to stop the bundled MinIO after retiring it. Defaults to `1`.
+    `MINIO_REPLICAS`: Docker Compose only. Set to `0` to stop the bundled MinIO after retiring it. Defaults to `1`.
 
     **Google Cloud Storage** (`FILE_STORE_BACKEND=gcs`)
 

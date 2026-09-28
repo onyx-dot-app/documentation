@@ -4,8 +4,10 @@ description: "Run Onyx on Kubernetes with managed PostgreSQL, Redis, OpenSearch,
 icon: "database"
 ---
 
-By default, the Onyx Helm chart installs PostgreSQL, Redis, OpenSearch, MinIO, Code Interpreter, and NGINX.
-For production, you can turn off each bundled service and connect Onyx to a managed service.
+By default, the Onyx Helm chart installs PostgreSQL, Redis, OpenSearch, the object store, Code Interpreter, and NGINX.
+Installs upgraded from an earlier chart also keep MinIO while the [move to the object
+store](/admins/advanced_configs/object_store_migration) completes. For production,
+you can turn off each bundled service and connect Onyx to a managed service.
 
 ## Chart toggles
 
@@ -17,6 +19,7 @@ For production, you can turn off each bundled service and connect Onyx to a mana
 | `redis.enabled` | `true` | The chart does not create Redis or the Redis operator. |
 | `redisOperator.enabled` | Follows `redis.enabled` | The chart keeps its Redis, but an existing operator must reconcile it. |
 | `opensearch.enabled` | `true` | The chart does not create OpenSearch. |
+| `objectStore.enabled` | Follows `minio.enabled` | The chart does not create the object store. |
 | `minio.enabled` | `true` | The chart does not create MinIO. |
 | `codeInterpreter.enabled` | `true` | The chart does not create Code Interpreter. |
 | `nginx.enabled` | `true` | The chart does not create the ingress-nginx controller. |
@@ -45,6 +48,8 @@ postgresql:
 redis:
   enabled: false
 opensearch:
+  enabled: false
+objectStore:
   enabled: false
 minio:
   enabled: false
@@ -142,7 +147,7 @@ The chart does not configure backups for any bundled service.
 | PostgreSQL | You own backups, restore, storage growth, and CNPG and PostgreSQL upgrades. | The provider owns backups and patch upgrades. You own restore tests and major upgrades. |
 | Redis | No persistence. Data is cache and task queues. A restart loses queued tasks. | The provider owns availability and upgrades. |
 | OpenSearch | You own snapshots, disk growth, and upgrades. You can rebuild the index from sources, but it is slow. | The provider owns snapshots and upgrades. |
-| MinIO or object storage (S3, Cloud Storage, Azure Blob Storage) | You own backups of uploaded files. You cannot rebuild these files from sources. | The provider owns durability. You own versioning and backup policy. |
+| Object store or external object storage (S3, Cloud Storage, Azure Blob Storage) | You own backups of uploaded files. You cannot rebuild these files from sources. | The provider owns durability. You own versioning and backup policy. |
 
 For each external service, you must make sure that its version works with your Onyx version.
 Test upgrades in a staging environment first.

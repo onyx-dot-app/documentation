@@ -35,12 +35,13 @@ That is why the upgrade copies everything instead of starting fresh.
 
 ## Migration
 
-The release that ships the object store (Helm chart `0.9.0`) runs both stores side by side during a transition:
+Onyx `v4.9` (Helm chart `0.9.0`) ships the object store and runs both stores side by side during a transition:
 
-- The app writes every new file to the object store and to MinIO, so a rollback still finds it.
+- The app writes and deletes every file in both the object store and MinIO, so a rollback still finds it.
 - A read that misses the object store falls back to MinIO.
 - A copy job moves every file that Onyx tracks from MinIO into the object store.
-  It never overwrites a file the app wrote after the upgrade, and it skips objects no file record points at.
+  It never replaces a file the app wrote, except when an older release wrote a newer version after a rollback,
+  and it skips objects no file record points at.
 
 No input is needed from admins other than upgrading. The app starts serving right away and the copy runs beside it.
 
@@ -65,14 +66,14 @@ The app keeps serving from both stores in the meantime.
   If you upgrade a hand-maintained `.env` yourself, the app stays on MinIO until you change two settings:
   set `S3_ENDPOINT_URL=http://object-store:8333` and uncomment `S3_LEGACY_ENDPOINT_URL=http://minio:9000`.
   Nothing breaks before you do, and the copy starts once you restart with those values.
-  Leave `S3_LEGACY_ENDPOINT_URL` unset on installs that use external storage.
 </Note>
 
 ### Helm
 
-Chart `0.9.0` adds the `objectStore` section and the `<release>-legacy-minio-copy-<hash>` Job.
-`objectStore.enabled` follows `minio.enabled` unless you set it, so external-storage installs do not change.
-The MinIO subchart renders the same manifests as before, so its pod does not restart.
+Chart `0.9.0` adds the [`objectStore` section](/deployment/local/object_store)
+and the `<fullname>-legacy-minio-copy-<hash>` Job,
+where `<fullname>` is the release name when it contains `onyx` and `<release>-onyx` otherwise.
+The MinIO subchart only gains a keep annotation on its PVC, so its pod does not restart.
 
 Watch the copy with:
 
@@ -84,27 +85,29 @@ The Job is a plain Job rather than a Helm hook, so `helm upgrade` returns withou
 ArgoCD, Flux and rendered manifests all work. If the Job fails, fix the cause, delete it, and upgrade again to rerun it.
 A rerun skips every object already copied.
 
-Before upgrading, check that the new `<release>-object-store` PVC can hold all of MinIO's data.
+Before upgrading, check that the new `<fullname>-object-store` PVC can hold all of MinIO's data.
 It takes the size and storage class of `minio.persistence` unless you set `objectStore.persistence`.
 The chart's `MIGRATION.md` covers air-gapped registries, pod security, and OpenShift.
 
 ### How long it takes
 
 The copy runs at a few hundred files per second and about 150 MB/s on ordinary hardware,
-so a store of a million files takes on the order of an hour or two. Both stores hold every file until you retire MinIO,
-so plan for the object store volume to need as much space as MinIO uses today.
+so a store of a million files takes on the order of an hour or two. Both stores hold every file until you retire MinIO;
+see [sizing](/deployment/local/object_store#sizing).
 
-<Warning>
+<Note>
   The copy is safe to interrupt. If the copier, MinIO, the object store or PostgreSQL goes down mid-copy,
   the copy stops within about a minute and the next run picks up where it left off. Nothing is lost,
   because the app keeps writing to both stores and reading from either.
-</Warning>
+</Note>
 
 ## Rollback
 
 Rolling back to the previous release points the app back at MinIO. MinIO has every file,
 including files uploaded after the upgrade, because the transition release writes to both stores.
 The object store volume stays, and the next upgrade continues the copy.
+The Onyx CLI and Helm switch the endpoint back for you. On a hand-maintained `.env`,
+set `S3_ENDPOINT_URL=http://minio:9000` again and clear `S3_LEGACY_ENDPOINT_URL` before you start the older release.
 
 One exception: a file written while MinIO was unavailable reaches MinIO only when the copy next runs.
 If MinIO had an outage after the copy completed,
@@ -126,12 +129,12 @@ a rollback to a release before the object store no longer sees files uploaded si
     In Helm, from an API server pod:
 
     ```bash
-    kubectl exec -n <namespace> deploy/<release>-api-server -- \
+    kubectl exec -n <namespace> deploy/<fullname>-api-server -- \
       python -m onyx.file_store.legacy_copy --retire
     ```
 
     It copies anything left, waits a quiet minute, and checks that nothing reached MinIO alone in that time.
-    If something did, a pod on the older release is still running, so it refuses and MinIO stays in use.
+    If something did, a container or pod on the older release is still running, so it refuses and MinIO stays in use.
     Otherwise it writes a marker to the object store, and within a minute every running process stops writing to MinIO.
     No restart is needed.
   </Step>
@@ -157,9 +160,7 @@ a rollback to a release before the object store no longer sees files uploaded si
 A later release removes MinIO from the bundled deployment entirely.
 
 <Warning>
-  Upgrade through the release that ships the object store and let the copy complete before moving to a release that no
-  longer bundles MinIO.
-  Skipping the transition release leaves your files in a MinIO volume that the newer release does not read,
-  and every chat attachment, upload,
-  Craft snapshot and branding asset is unavailable until you go back and run the copy.
+  Upgrade through `v4.9` and let the copy complete before moving to a release that no longer bundles MinIO.
+  Skipping it leaves your files in a MinIO volume that the newer release does not read, and every chat attachment,
+  upload, Craft snapshot and branding asset is unavailable until you go back and run the copy.
 </Warning>
