@@ -27,7 +27,7 @@ you install the Onyx workloads with the [Helm chart](/deployment/local/kubernete
 | Cloud | Modules | Release tags | Services | Guide |
 | --- | --- | --- | --- | --- |
 | AWS | [`modules/aws`](https://github.com/onyx-dot-app/onyx/tree/main/deployment/terraform/modules/aws) | `tf/vX.Y.Z` | VPC, EKS, RDS for PostgreSQL, ElastiCache for Redis, S3, WAF, and (optionally) Amazon OpenSearch | This page |
-| GCP | [`modules/gcp`](https://github.com/onyx-dot-app/onyx/tree/main/deployment/terraform/modules/gcp) | `tf-gcp/vX.Y.Z` | VPC, GKE, Cloud SQL for PostgreSQL, Memorystore for Redis, Cloud Storage, Cloud Armor | [GCP guide](/deployment/cloud/gcp#gke-with-terraform) |
+| GCP | [`modules/gcp`](https://github.com/onyx-dot-app/onyx/tree/main/deployment/terraform/modules/gcp) | `tf-gcp/vX.Y.Z` | VPC, GKE, Cloud SQL for PostgreSQL, Memorystore for Redis, Cloud Storage, Cloud Armor, L7 load balancer (opt-in) | [GCP guide](/deployment/cloud/gcp#gke-with-terraform) |
 | Azure | [`modules/azure`](https://github.com/onyx-dot-app/onyx/tree/main/deployment/terraform/modules/azure) | `tf-azure/vX.Y.Z` | Virtual network, AKS, PostgreSQL Flexible Server, Azure Managed Redis, Blob Storage, WAF policy | [Module README](https://github.com/onyx-dot-app/onyx/blob/main/deployment/terraform/modules/azure/README.md) |
 
 Each cloud has its own release tags, independent of Onyx releases. To use the modules from your own repository,
