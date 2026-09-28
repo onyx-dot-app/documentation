@@ -41,13 +41,18 @@ Stores:
 
 **Access**: Protected by OpenSearch authentication and access controls
 
-## Object Storage - MinIO
+## Object Storage - SeaweedFS or S3-compatible storage
+
+The bundled object store runs SeaweedFS. It can be replaced with AWS S3, Google Cloud Storage, Azure Blob Storage,
+or any S3-compatible service.
 
 Stores:
 - Original documents from connectors and user uploads (PDFs, Word docs, etc.)
 - Document attachments and media files
+- Chat attachments, generated images, Craft sandbox snapshots, and branding assets
 - Temporary files during document processing
 
 **Encryption**: Relies on the disk encryption of the deployment
 
-**Access**: Protected by MinIO access keys, bucket policies, and S3-compatible authentication
+**Access**: Protected by the store's access keys and S3-compatible authentication.
+The bundled store exposes only its S3 port; its internal ports listen on loopback.

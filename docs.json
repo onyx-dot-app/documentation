@@ -91,7 +91,8 @@
               "deployment/local/docker",
               "deployment/local/kubernetes",
               "deployment/local/terraform",
-              "deployment/local/opensearch"
+              "deployment/local/opensearch",
+              "deployment/local/object_store"
             ]
           },
           {
@@ -314,7 +315,8 @@
                   "admins/managing_features/connectors_link",
                   "admins/advanced_configs/search_configs",
                   "admins/managing_features/document_sets",
-                  "admins/advanced_configs/opensearch_document_index_migration"
+                  "admins/advanced_configs/opensearch_document_index_migration",
+                  "admins/advanced_configs/object_store_migration"
                 ]
               },
               "admins/managing_features/chat",

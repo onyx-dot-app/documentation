@@ -1,0 +1,78 @@
+---
+title: "Object Store"
+description: "Configuring the bundled SeaweedFS object store"
+icon: "box-archive"
+---
+
+## Overview
+
+The object store is the S3-compatible service that self-hosted Onyx bundles for file storage: chat attachments, uploads,
+connector attachments, Craft snapshots and the other files Onyx keeps outside PostgreSQL.
+It runs [SeaweedFS](https://github.com/seaweedfs/seaweedfs) as a single process and replaces the bundled MinIO.
+Upgrading from MinIO is automatic; see [Object Store Migration](/admins/advanced_configs/object_store_migration).
+
+You can use AWS S3, Google Cloud Storage, Azure Blob Storage, or any S3-compatible service instead.
+Set `FILE_STORE_BACKEND` and the matching variables from the [configuration
+reference](/deployment/configuration/configuration) and leave the bundled store disabled.
+
+## Docker Compose
+
+The `object-store` service is part of the `s3-filestore` compose profile, which `.env` enables by default.
+The app reaches it at `S3_ENDPOINT_URL=http://object-store:8333` and authenticates with the `S3_AWS_ACCESS_KEY_ID` /
+`S3_AWS_SECRET_ACCESS_KEY` pair, which the store uses as its admin credentials. The installer generates that pair.
+If you write `.env` by hand, change it from the `minioadmin` default before going to production.
+
+Data lives in the `object_store_data` volume. Only the S3 port leaves the container: the SeaweedFS filer,
+master and volume ports accept requests without credentials, so they listen on loopback inside the container.
+
+The development overlay publishes the S3 port on the host as `9004`, the port the MinIO console used to occupy,
+so existing `S3_ENDPOINT_URL=http://localhost:9004` settings keep working.
+
+## Helm
+
+The `objectStore` section of `values.yaml` runs the store as a single-replica Deployment with its own PVC,
+`<release>-object-store`. `objectStore.enabled` follows `minio.enabled` unless you set it.
+
+```yaml values.yaml
+objectStore:
+  enabled: true
+  persistence:
+    size: 100Gi
+    storageClass: ""
+```
+
+The pod runs as a non-root user with a read-only root file system and no capabilities,
+so it passes the `restricted` Pod Security Standard. On OpenShift,
+set `objectStore.podSecurityContext` to an empty map so the cluster assigns the user.
+Its admin credentials are the `s3_aws_access_key_id` and `s3_aws_secret_access_key` keys of `auth.objectstorage`,
+so no new secrets are needed.
+
+The PVC carries `helm.sh/resource-policy: keep` and survives upgrade, rollback and uninstall.
+Delete it yourself when you no longer need the data.
+
+## Using your own storage
+
+To run without the bundled store, disable it and point the app at your storage:
+
+```yaml values.yaml
+minio:
+  enabled: false
+objectStore:
+  enabled: false
+
+configMap:
+  FILE_STORE_BACKEND: "s3"
+  S3_FILE_STORE_BUCKET_NAME: "<your bucket>"
+  S3_AWS_ACCESS_KEY_ID: "<key>"
+  S3_AWS_SECRET_ACCESS_KEY: "<secret>"
+```
+
+In Compose, remove `s3-filestore` from `COMPOSE_PROFILES`, set the same variables in `.env`,
+and leave `S3_LEGACY_ENDPOINT_URL` unset.
+
+## Sizing
+
+The store needs as much disk as your files take,
+plus the same again during the migration from MinIO while both stores hold every file.
+Its CPU and memory needs are small: about two cores and under 2 GB of memory while a million files were copied in,
+and far less at rest.
