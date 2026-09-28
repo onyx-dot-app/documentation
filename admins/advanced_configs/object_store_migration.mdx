@@ -109,9 +109,10 @@ The object store volume stays, and the next upgrade continues the copy.
 The Onyx CLI and Helm switch the endpoint back for you. On a hand-maintained `.env`,
 set `S3_ENDPOINT_URL=http://minio:9000` again and clear `S3_LEGACY_ENDPOINT_URL` before you start the older release.
 
-One exception: a file written while MinIO was unavailable reaches MinIO only when the copy next runs.
-If MinIO had an outage after the copy completed,
-rerun the copy before you roll back (restart `object-store-copy` in Compose, or delete and rerun the Job in Helm).
+One exception: a file written while MinIO was unavailable reaches MinIO only once the failed write is replayed.
+In Compose the copy service replays it within five minutes of MinIO answering again.
+In Helm the replay happens at the next copy run, so if MinIO had an outage after the Job completed,
+delete the Job and upgrade again before you roll back, and wait for it to complete.
 
 ## Retiring MinIO
 
