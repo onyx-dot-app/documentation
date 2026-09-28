@@ -265,6 +265,7 @@
                     "pages": [
                       "admins/connectors/official/microsoft-365/setup",
                       "admins/connectors/official/microsoft-365/sharepoint",
+                      "admins/connectors/official/microsoft-365/onedrive",
                       "admins/connectors/official/microsoft-365/teams",
                       "admins/connectors/official/microsoft-365/outlook"
                     ]
@@ -736,6 +737,10 @@
     {
       "source": "/admins/connectors/official/sharepoint",
       "destination": "/admins/connectors/official/microsoft-365/sharepoint"
+    },
+    {
+      "source": "/admins/connectors/official/onedrive",
+      "destination": "/admins/connectors/official/microsoft-365/onedrive"
     },
     {
       "source": "/admins/connectors/official/sharepoint/sharepoint",
