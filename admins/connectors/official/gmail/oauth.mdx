@@ -94,3 +94,22 @@ Once complete, select the newly created credential, and click the **Continue** b
   select the existing credential from the list instead of creating a new one.
   An instance can hold multiple Gmail credentials.
 </Note>
+
+### Using one credential for Gmail and Google Drive
+
+A Google credential created in Onyx is listed on both the Gmail and the Google Drive connector forms,
+so one account can index both. For this reason, the Google consent screen asks for the scopes of both connectors:
+
+| Connector    | Scopes                                                                                   |
+| ------------ | ---------------------------------------------------------------------------------------- |
+| Google Drive | `drive.readonly`, `drive.metadata.readonly`, `admin.directory.user.readonly`, `admin.directory.group.readonly` |
+| Gmail        | `gmail.readonly`, `admin.directory.user.readonly`, `admin.directory.group.readonly`       |
+
+- To use the credential for both connectors, grant every scope on the consent screen.
+  Add the scopes of both connectors to your app's OAuth consent screen,
+  and add the redirect URI of each connector form you authenticate from.
+- To use the credential for one connector only, untick the scopes of the other connector on the consent screen.
+  The credential then works only for the connector whose scopes you granted.
+  The connector checks report the missing scopes if you select it for the other connector.
+
+To add the other connector's scopes later, authenticate the credential again and grant them.
