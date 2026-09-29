@@ -121,13 +121,6 @@ On the final page, you can configure a variety of advanced search settings.
     </Warning>
   </Accordion>
 
-  <Accordion title="Embedding Precision">
-    Embedding precision applies only to the legacy Vespa index.
-    OpenSearch ignores this setting and always stores `float` (32-bit) vectors.
-
-    To decrease the vector memory in OpenSearch, use [Vector Quantization](#vector-quantization).
-  </Accordion>
-
   <Accordion title="Reduced Dimension">
     Setting this value will reduce the number of dimensions in the embedding vectors.
     This can reduce the memory usage of the index, but may reduce the accuracy of the results.
