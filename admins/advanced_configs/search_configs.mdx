@@ -57,6 +57,35 @@ While the swap is in progress, you will see the Search Settings page show detail
 
 <img className="rounded-image" src="/assets/admins/advanced_configs/embedding_swap.png" alt="Embedding swap in progress"/>
 
+#### Vector Quantization
+
+Vector quantization stores the document vectors in OpenSearch with fewer bits for each dimension.
+This decreases the memory that the vector index uses. Fewer bits can decrease the search quality.
+
+To set it, go to **Index Settings** and use the **Vector Quantization** field in the **Embedding Model** section.
+
+| Option | Vector memory | OpenSearch version |
+| --- | --- | --- |
+| **None** (default) | Full 32-bit precision | Any |
+| **7-bit** | 4x less | 2.16 or later |
+| **1-bit** | 32x less | 3.6 or later |
+
+When the index is quantized, Onyx rescores the top search results with the full-precision vectors.
+OpenSearch keeps the full-precision vectors on disk for this, so the disk usage increases slightly.
+
+<Note>
+  The quantization is part of the index. When you change it, Onyx re-indexes all of your data into a new index,
+  the same as an [embedding swap](#embedding-swaps).
+</Note>
+
+<Note>
+  The OpenSearch that ships with Onyx (Docker Compose and Helm) is version 3.6.0.
+  If you connect Onyx to an external OpenSearch cluster that is older than 3.6, Onyx does not accept the 1-bit option.
+  This setting is not available on Onyx Cloud.
+</Note>
+
+<img className="rounded-image" src="/assets/admins/advanced_configs/vector_quantization.png" alt="Vector Quantization options on the Index Settings page"/>
+
 ### Reranking
 
 Reranking is an optional step that can be used to improve the accuracy of your search results.
