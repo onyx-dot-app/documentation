@@ -82,6 +82,16 @@ The `onyx` module connects all of these modules. You can also use each module on
     Run `terraform apply` from an address in `master_authorized_networks`. If you set `private_endpoint_enabled = true`,
     run it from inside the VPC. From any other address, the apply stops at those two resources.
   </Step>
+
+  <Step title="Allow OS Login (only with the OS Login policy)">
+    If your organization enforces the `compute.managed.requireOsLogin` policy, the first cluster creation fails.
+    The module sets no node metadata. Turn on OS Login for the project before the first `terraform apply`:
+
+    ```bash
+    gcloud compute project-info add-metadata --metadata enable-oslogin=TRUE \
+      --project my-project
+    ```
+  </Step>
 </Steps>
 
 ### Quickstart
@@ -151,6 +161,11 @@ output "redis_server_ca_certs"   { value = module.onyx.redis_server_ca_certs }
 output "postgres_server_ca_cert" { value = module.onyx.postgres_server_ca_cert }
 output "cloud_armor_policy_name" { value = module.onyx.cloud_armor_policy_name }
 
+output "postgres_username" {
+  value     = module.onyx.postgres_username
+  sensitive = true
+}
+
 output "redis_auth_string" {
   value     = module.onyx.redis_auth_string
   sensitive = true
@@ -202,6 +217,12 @@ that value replaces the tier default.
 
 Node counts are for the full pool, not for each zone.
 The document index pool uses memory-optimized machines at all sizes, because OpenSearch runs on it.
+
+The tiers size the infrastructure only. The Helm chart defaults request more CPU than one `small` main node has,
+so the cluster adds nodes. To set the pod resources for each tier,
+see the chart's [`SIZING.md`](https://github.com/onyx-dot-app/onyx/blob/main/deployment/helm/charts/onyx/SIZING.md).
+Copy only the `resources` values. Its OpenSearch `nodeSelector` is for EKS. On GKE,
+use the one in the Helm values below.
 
 ### Common configuration
 
@@ -336,17 +357,28 @@ The `l7_*` outputs are `null` when `enable_l7_ingress = false`.
   </Step>
 
   <Step title="Create the Secrets">
-    Terraform already created the `onyx` namespace. Do not create it again.
-    Create the database and Redis Secrets in that namespace:
+    Terraform already created the `onyx` namespace. Do not create it again. Create the Secrets in that namespace:
 
     ```bash
     kubectl -n onyx create secret generic onyx-postgresql \
-      --from-literal=username=postgres \
+      --from-literal=username="$(terraform output -raw postgres_username)" \
       --from-literal=password="$TF_VAR_postgres_password"
 
     kubectl -n onyx create secret generic onyx-redis \
       --from-literal=redis_password="$(terraform output -raw redis_auth_string)"
+
+    # OpenSearch needs uppercase, lowercase, a digit, and a special character.
+    kubectl -n onyx create secret generic onyx-opensearch \
+      --from-literal=opensearch_admin_username=admin \
+      --from-literal=opensearch_admin_password='Os1!'"$(openssl rand -hex 16)"
+
+    # Signs password reset tokens and OAuth/OIDC login state.
+    kubectl -n onyx create secret generic onyx-userauth \
+      --from-literal=user_auth_secret="$(openssl rand -hex 32)"
     ```
+
+    OpenSearch reads its admin password one time, when the cluster starts for the first time.
+    A later change to the Secret does not change the password.
   </Step>
 
   <Step title="Create the CA ConfigMaps">
@@ -365,12 +397,22 @@ The `l7_*` outputs are `null` when `enable_l7_ingress = false`.
     terraform output -raw postgres_server_ca_cert > postgres-ca.crt
     kubectl -n onyx create configmap onyx-postgres-ca --from-file=ca.crt=postgres-ca.crt
     ```
+
+    <Warning>
+      Do not set `postgresTls` with Onyx v4.8.x or earlier. Those versions reject the Cloud SQL server certificate,
+      and the API server fails with `Missing Authority Key Identifier`. Use `sslMode: verify-ca`. `verify-full` fails,
+      because the Cloud SQL certificate does not name the private IP address.
+    </Warning>
   </Step>
 
   <Step title="Write the Helm values">
     Replace each `<...>` with the Terraform output of the same name.
 
     ```yaml values.yaml
+    # Pin the Onyx version. The chart default is "latest".
+    global:
+      version: "<Onyx version, for example v4.8.1>"
+
     # Run all Onyx pods as the service account that has the bucket grant.
     serviceAccount:
       create: false
@@ -395,12 +437,22 @@ The `l7_*` outputs are `null` when `enable_l7_ingress = false`.
       FILE_STORE_BACKEND: "gcs"
       GCS_FILE_STORE_BUCKET_NAME: "<gcs_bucket_name>"
       GCS_PROJECT_ID: "<gcs_project_id>"
+      # The address that users open. Links and login redirects use it.
+      WEB_DOMAIN: "https://onyx.example.com"
 
     auth:
       postgresql:
         existingSecret: "onyx-postgresql"   # Keys: username, password
       redis:
         existingSecret: "onyx-redis"        # Key: redis_password
+      opensearch:
+        existingSecret: "onyx-opensearch"   # Keys: opensearch_admin_username, opensearch_admin_password
+      userauth:
+        enabled: true
+        existingSecret: "onyx-userauth"     # Key: user_auth_secret
+      # Cloud Storage uses Workload Identity, so Onyx needs no S3 keys.
+      objectstorage:
+        enabled: false
 
     # Sets REDIS_SSL=true and verifies the Memorystore certificate.
     redisTls:
@@ -408,12 +460,12 @@ The `l7_*` outputs are `null` when `enable_l7_ingress = false`.
       caConfigMapName: onyx-redis-ca
       caKey: ca.crt
 
-    # Optional. Verifies the Cloud SQL certificate.
-    postgresTls:
-      enabled: true
-      sslMode: verify-ca
-      caConfigMapName: onyx-postgres-ca
-      caKey: ca.crt
+    # Optional. Verifies the Cloud SQL certificate. See the warning in the previous step.
+    # postgresTls:
+    #   enabled: true
+    #   sslMode: verify-ca
+    #   caConfigMapName: onyx-postgres-ca
+    #   caKey: ca.crt
 
     # Run OpenSearch on the tainted document index pool.
     opensearch:
@@ -440,8 +492,14 @@ The `l7_*` outputs are `null` when `enable_l7_ingress = false`.
     helm repo add onyx https://onyx-dot-app.github.io/onyx/
     helm repo update
 
-    helm upgrade --install onyx onyx/onyx --namespace onyx -f values.yaml
+    # Find a chart version
+    helm search repo onyx/onyx --versions | head
+
+    helm upgrade --install onyx onyx/onyx --namespace onyx \
+      --version <chart version> -f values.yaml
     ```
+
+    Always set `--version`. Without it, each upgrade installs the newest chart.
   </Step>
 </Steps>
 
@@ -466,6 +524,8 @@ The `l7_*` outputs are `null` when `enable_l7_ingress = false`.
     - `403` errors from Cloud Storage: the pods do not run as `onyx-workload-access`, or the release is not in
     the `onyx` namespace.
     - Redis connection errors: `redisTls` is not enabled, or `REDIS_PORT` is not `6378`.
+    - `Missing Authority Key Identifier`: `postgresTls` is set on an Onyx version that cannot verify Cloud SQL.
+    Remove `postgresTls`.
   </Step>
 
   <Step title="Open Onyx">
@@ -475,10 +535,17 @@ The `l7_*` outputs are `null` when `enable_l7_ingress = false`.
     kubectl -n onyx port-forward service/onyx-nginx 8080:80
     ```
 
-    Then open [http://localhost:8080](http://localhost:8080). For public access,
-    point a DNS record such as `onyx.example.com` to the external IP of the `onyx-nginx` Service.
-    This is the default L4 path. To use Cloud Armor,
-    serve through the [L7 load balancer](#serve-through-an-l7-load-balancer-cloud-armor) instead.
+    Then open [http://localhost:8080](http://localhost:8080). For this test,
+    set `WEB_DOMAIN` to `http://localhost:8080`, or login redirects go to the wrong address.
+
+    For public access, point a DNS record such as `onyx.example.com` to the external IP of the `onyx-nginx` Service.
+    This is the default L4 path.
+
+    <Warning>
+      The `onyx-nginx` Service has a public IP address and serves plain HTTP until you set up TLS. For production,
+      serve through the [L7 load balancer](#serve-through-an-l7-load-balancer-cloud-armor).
+      It adds HTTPS and Cloud Armor.
+    </Warning>
   </Step>
 </Steps>
 
