@@ -221,6 +221,7 @@ The document index pool uses memory-optimized machines at all sizes, because Ope
 The tiers size the infrastructure only. The Helm chart defaults request more CPU than one `small` main node has,
 so the cluster adds nodes. To set the pod resources for each tier, see the chart's
 [`SIZING.md`](https://github.com/onyx-dot-app/onyx/blob/main/deployment/helm/charts/onyx/SIZING.md).
+Copy only the `resources` values. Its OpenSearch `nodeSelector` is for EKS. On GKE, use the one in the Helm values below.
 
 ### Common configuration
 
