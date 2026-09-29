@@ -400,6 +400,7 @@ The `l7_*` outputs are `null` when `enable_l7_ingress = false`.
     <Warning>
       Do not set `postgresTls` with Onyx v4.8.x or earlier. Those versions reject the Cloud SQL server certificate,
       and the API server fails with `Missing Authority Key Identifier`.
+      Use `sslMode: verify-ca`. `verify-full` fails, because the Cloud SQL certificate does not name the private IP address.
     </Warning>
   </Step>
 
