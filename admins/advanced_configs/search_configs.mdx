@@ -122,9 +122,10 @@ On the final page, you can configure a variety of advanced search settings.
   </Accordion>
 
   <Accordion title="Embedding Precision">
-    Embedding precision may be set to either `bfloat16` or `float`.
-    Setting the precision to `bfloat16` can reduce the memory usage of the index,
-    but may slightly reduce the accuracy of the results.
+    Embedding precision applies only to the legacy Vespa index.
+    OpenSearch ignores this setting and always stores `float` (32-bit) vectors.
+
+    To decrease the vector memory in OpenSearch, use [Vector Quantization](#vector-quantization).
   </Accordion>
 
   <Accordion title="Reduced Dimension">
