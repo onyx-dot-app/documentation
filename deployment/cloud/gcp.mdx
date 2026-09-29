@@ -219,9 +219,10 @@ Node counts are for the full pool, not for each zone.
 The document index pool uses memory-optimized machines at all sizes, because OpenSearch runs on it.
 
 The tiers size the infrastructure only. The Helm chart defaults request more CPU than one `small` main node has,
-so the cluster adds nodes. To set the pod resources for each tier, see the chart's
-[`SIZING.md`](https://github.com/onyx-dot-app/onyx/blob/main/deployment/helm/charts/onyx/SIZING.md).
-Copy only the `resources` values. Its OpenSearch `nodeSelector` is for EKS. On GKE, use the one in the Helm values below.
+so the cluster adds nodes. To set the pod resources for each tier,
+see the chart's [`SIZING.md`](https://github.com/onyx-dot-app/onyx/blob/main/deployment/helm/charts/onyx/SIZING.md).
+Copy only the `resources` values. Its OpenSearch `nodeSelector` is for EKS. On GKE,
+use the one in the Helm values below.
 
 ### Common configuration
 
@@ -356,8 +357,7 @@ The `l7_*` outputs are `null` when `enable_l7_ingress = false`.
   </Step>
 
   <Step title="Create the Secrets">
-    Terraform already created the `onyx` namespace. Do not create it again.
-    Create the Secrets in that namespace:
+    Terraform already created the `onyx` namespace. Do not create it again. Create the Secrets in that namespace:
 
     ```bash
     kubectl -n onyx create secret generic onyx-postgresql \
@@ -400,8 +400,8 @@ The `l7_*` outputs are `null` when `enable_l7_ingress = false`.
 
     <Warning>
       Do not set `postgresTls` with Onyx v4.8.x or earlier. Those versions reject the Cloud SQL server certificate,
-      and the API server fails with `Missing Authority Key Identifier`.
-      Use `sslMode: verify-ca`. `verify-full` fails, because the Cloud SQL certificate does not name the private IP address.
+      and the API server fails with `Missing Authority Key Identifier`. Use `sslMode: verify-ca`. `verify-full` fails,
+      because the Cloud SQL certificate does not name the private IP address.
     </Warning>
   </Step>
 
@@ -535,15 +535,15 @@ The `l7_*` outputs are `null` when `enable_l7_ingress = false`.
     kubectl -n onyx port-forward service/onyx-nginx 8080:80
     ```
 
-    Then open [http://localhost:8080](http://localhost:8080). For this test, set `WEB_DOMAIN` to
-    `http://localhost:8080`, or login redirects go to the wrong address.
+    Then open [http://localhost:8080](http://localhost:8080). For this test,
+    set `WEB_DOMAIN` to `http://localhost:8080`, or login redirects go to the wrong address.
 
     For public access, point a DNS record such as `onyx.example.com` to the external IP of the `onyx-nginx` Service.
     This is the default L4 path.
 
     <Warning>
-      The `onyx-nginx` Service has a public IP address and serves plain HTTP until you set up TLS.
-      For production, serve through the [L7 load balancer](#serve-through-an-l7-load-balancer-cloud-armor).
+      The `onyx-nginx` Service has a public IP address and serves plain HTTP until you set up TLS. For production,
+      serve through the [L7 load balancer](#serve-through-an-l7-load-balancer-cloud-armor).
       It adds HTTPS and Cloud Armor.
     </Warning>
   </Step>
