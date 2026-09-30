@@ -35,7 +35,8 @@ That is why the upgrade copies everything instead of starting fresh.
 
 ## Migration
 
-Onyx `v4.9` (Helm chart `0.9.0`) ships the object store and runs both stores side by side during a transition:
+The object store ships in Onyx `v5.0.0` (Helm chart `0.9.0`), a major version bump.
+That release runs both stores side by side during a transition:
 
 - The app writes and deletes every file in both the object store and MinIO, so a rollback still finds it.
 - A read that misses the object store falls back to MinIO.
@@ -91,9 +92,16 @@ The chart's `MIGRATION.md` covers air-gapped registries, pod security, and OpenS
 
 ### How long it takes
 
-The copy runs at a few hundred files per second and about 150 MB/s on ordinary hardware,
-so a store of a million files takes on the order of an hour or two. Both stores hold every file until you retire MinIO;
-see [sizing](/deployment/local/object_store#sizing).
+The copy runs at a couple of hundred files per second, or about 165 MB/s when the files are large.
+It reports completion only after a verification pass finds nothing new to copy and ten minutes have passed since it started.
+The pass takes about 20 minutes per million files. Measured on a replica of a real install and on a synthetic million-file store:
+
+| Store | Copy | Reported complete |
+| --- | --- | --- |
+| 22,000 files, 4.8 GB (a replica of a real install) | under 3 minutes | about 13 minutes |
+| 1,000,000 files, 174 GB | 80 minutes | about 2 hours |
+
+Both stores hold every file until you retire MinIO. See [sizing](/deployment/local/object_store#sizing).
 
 <Note>
   The copy is safe to interrupt. If the copier, MinIO, the object store or PostgreSQL goes down mid-copy,
@@ -113,6 +121,19 @@ One exception: a file written while MinIO was unavailable reaches MinIO only onc
 In Compose the copy service replays it within five minutes of MinIO answering again.
 In Helm the replay happens at the next copy run, so if MinIO had an outage after the Job completed,
 delete the Job and upgrade again before you roll back, and wait for it to complete.
+
+<Warning>
+  As with any Onyx downgrade, bring the database schema back first. `v5.0.0` adds a migration
+  (an index on file records), and an older image refuses to start on a database that carries it.
+  From a container still on `v5.0.0`, downgrade to the previous release's migration head before you switch images:
+
+  ```bash
+  # Compose
+  docker compose exec api_server alembic downgrade <previous release's head>
+  # Helm
+  kubectl exec -n <namespace> deploy/<fullname>-api-server -- alembic downgrade <previous release's head>
+  ```
+</Warning>
 
 ## Retiring MinIO
 
@@ -161,7 +182,7 @@ a rollback to a release before the object store no longer sees files uploaded si
 A later release removes MinIO from the bundled deployment entirely.
 
 <Warning>
-  Upgrade through `v4.9` and let the copy complete before moving to a release that no longer bundles MinIO.
+  Upgrade through `v5.0.0` and let the copy complete before moving to a release that no longer bundles MinIO.
   Skipping it leaves your files in a MinIO volume that the newer release does not read, and every chat attachment,
   upload, Craft snapshot and branding asset is unavailable until you go back and run the copy.
 </Warning>
