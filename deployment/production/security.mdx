@@ -33,7 +33,7 @@ Every section under `auth` accepts `existingSecret`. The chart then reads from y
 | --- | --- | --- |
 | `auth.postgresql` | `username`, `password` | The default password is `postgres`. Replace it. |
 | `auth.redis` | `redis_password` | The default password is `password`. Replace it. |
-| `auth.objectstorage` | `s3_aws_access_key_id`, `s3_aws_secret_access_key` | With bundled MinIO, also `rootUser` and `rootPassword`, with the same values. |
+| `auth.objectstorage` | `s3_aws_access_key_id`, `s3_aws_secret_access_key` | The object store uses this pair as its admin keys. With bundled MinIO, also `rootUser` and `rootPassword`, with the same values. |
 | `auth.opensearch` | `opensearch_admin_username`, `opensearch_admin_password` | |
 | `auth.userauth` | `user_auth_secret` | Signs password-reset tokens and login state. Onyx does not start without it. |
 | `auth.metricsAuth` | `metrics_auth_token` | Protects `/metrics` on the API and MCP servers. |

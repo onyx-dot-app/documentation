@@ -38,7 +38,7 @@ you install Onyx with the [Helm chart](/deployment/local/kubernetes).
 | Network | Any network | Custom-mode VPC, Cloud NAT, and Private Service Access | `vpc` |
 | PostgreSQL | CloudNativePG in the cluster | Cloud SQL for PostgreSQL 16, private IP only, encrypted connections only | `postgres` |
 | Redis | Redis in the cluster | Memorystore for Redis (not Cluster), with AUTH and TLS on port `6378` | `redis` |
-| File store | MinIO in the cluster | Cloud Storage bucket, accessed through Workload Identity | `gcs` |
+| File store | The object store in the cluster | Cloud Storage bucket, accessed through Workload Identity | `gcs` |
 | Document index | OpenSearch in the cluster | OpenSearch in the cluster, on a dedicated node pool. GCP has no managed OpenSearch. | `gke` |
 | Web application firewall | None | Cloud Armor security policy. It attaches through an opt-in L7 load balancer that the GKE Gateway API builds. | `cloud-armor`, `l7-ingress` |
 | Secrets | Kubernetes Secrets | Kubernetes Secrets. As an option, sync them from Secret Manager with the chart's `externalSecret` values. The modules do not create secrets in Secret Manager. | None |
@@ -421,6 +421,8 @@ The `l7_*` outputs are `null` when `enable_l7_ingress = false`.
     postgresql:
       enabled: false
     redis:
+      enabled: false
+    objectStore:
       enabled: false
     minio:
       enabled: false
