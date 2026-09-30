@@ -94,9 +94,13 @@ and no key file is ever created or stored.
 
     For the **Authentication Method**, select **Workload Identity (GKE)**.
 
+    <img className="rounded-image" src="/assets/admins/ai_models/vertex_auth_method_dropdown.png" alt="Authentication Method dropdown showing Service Account JSON and Workload Identity (GKE) options"/>
+
     Enter your **GCP Project ID**.
     This is required because Application Default Credentials cannot reliably infer the target project under service
     account impersonation.
+
+    <img className="rounded-image" src="/assets/admins/ai_models/vertex_workload_identity_selected.png" alt="Workload Identity (GKE) selected, showing the ambient-credentials notice and GCP Project ID field"/>
   </Step>
 
   <StandardAiModelConfigs />
