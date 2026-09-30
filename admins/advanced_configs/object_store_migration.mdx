@@ -66,10 +66,10 @@ The app keeps serving from both stores in the meantime.
 <Note>
   If you upgrade a hand-maintained `.env` yourself, the app stays on MinIO until you change two settings:
   set `S3_ENDPOINT_URL=http://object-store:8333` and uncomment `S3_LEGACY_ENDPOINT_URL=http://minio:9000`.
-  The same applies when the CLI upgrades an install whose `.env` reaches the bundled MinIO under any address
-  other than `http://minio:9000`: the CLI leaves that endpoint alone, so make the two changes yourself,
-  with `S3_LEGACY_ENDPOINT_URL` set to the address your `.env` used.
-  Nothing breaks before you do, and the copy starts once you restart with those values.
+  The same applies when the CLI upgrades an install whose `.env` reaches the bundled MinIO under any address other than
+  `http://minio:9000`: the CLI leaves that endpoint alone, so make the two changes yourself,
+  with `S3_LEGACY_ENDPOINT_URL` set to the address your `.env` used. Nothing breaks before you do,
+  and the copy starts once you restart with those values.
 </Note>
 
 ### Helm
@@ -96,8 +96,9 @@ The chart's `MIGRATION.md` covers air-gapped registries, pod security, and OpenS
 ### How long it takes
 
 The copy runs at a couple of hundred files per second, or about 165 MB/s when the files are large.
-It reports completion only after a verification pass finds nothing new to copy and ten minutes have passed since it started.
-The pass takes about 20 minutes per million files. Measured on a replica of a real install and on a synthetic million-file store:
+It reports completion only after a verification pass finds nothing new to copy and ten minutes have passed since it
+started. The pass takes about 20 minutes per million files.
+Measured on a replica of a real install and on a synthetic million-file store:
 
 | Store | Copy | Reported complete |
 | --- | --- | --- |
@@ -126,9 +127,10 @@ In Helm the replay happens at the next copy run, so if MinIO had an outage after
 delete the Job and upgrade again before you roll back, and wait for it to complete.
 
 <Warning>
-  As with any Onyx downgrade, bring the database schema back first. `v5.0.0` adds a migration
-  (an index on file records), and an older image refuses to start on a database that carries it.
-  From a container still on `v5.0.0`, downgrade to the previous release's migration head before you switch images:
+  As with any Onyx downgrade, bring the database schema back first.
+  `v5.0.0` adds a migration (an index on file records),
+  and an older image refuses to start on a database that carries it. From a container still on `v5.0.0`,
+  downgrade to the previous release's migration head before you switch images:
 
   ```bash
   # Compose
