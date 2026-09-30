@@ -19,8 +19,8 @@ This guide walks through setting up Google Vertex AI language models for use wit
 
 Onyx supports two authentication methods for Google Vertex AI:
 
-- **Service Account JSON** — upload a downloaded service account key file. This is the default flow covered
-  in the guide below.
+- **Service Account JSON** — upload a downloaded service account key file. This works with Onyx deployed
+  inside or outside Google Cloud and is the default flow covered in the guide below.
 - **Workload Identity (GKE)** — authenticate using your GKE cluster's ambient credentials, with no key file
   to generate or store. See [Workload Identity (GKE)](#workload-identity-gke) below.
 
@@ -71,8 +71,8 @@ Onyx supports two authentication methods for Google Vertex AI:
 
 ## Workload Identity (GKE)
 
-If your organization's policy disables generating service account JSON keys,
-you can instead authenticate Onyx to Vertex AI using [GKE Workload Identity
+For Onyx deployed on GKE,
+you can authenticate to Vertex AI using [GKE Workload Identity
 Federation](https://cloud.google.com/kubernetes-engine/docs/how-to/workload-identity). With this method,
 Onyx picks up the pod's ambient GCP credentials automatically (via Google's [Application Default
 Credentials](https://cloud.google.com/docs/authentication/application-default-credentials))
@@ -294,6 +294,21 @@ and no key file is ever created or stored.
 </Steps>
 
 ## FAQ
+
+### Does Onyx need to run on Google Cloud or GKE to use Vertex AI?
+
+No. Vertex AI is accessed through Google Cloud APIs,
+and Onyx can call those APIs from another cloud or an on-premises deployment using **Service Account JSON**,
+with the required permissions and network access.
+
+The GKE steps above apply to credentials supplied automatically to Onyx pods by the GKE metadata server.
+Remotely accessing a GKE cluster with `kubectl` does not give an external Onyx deployment those pod credentials.
+
+Onyx's **Workload Identity (GKE)** option uses Application Default Credentials under the hood.
+Google also supports [Workload Identity Federation for workloads outside Google
+Cloud](https://cloud.google.com/iam/docs/workload-identity-federation-with-other-clouds).
+That requires a separate setup that makes credentials available to the Onyx API server and workers;
+it is outside the scope of this GKE walkthrough.
 
 ### Can I use a Vertex AI API key instead of a service account?
 
