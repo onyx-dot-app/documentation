@@ -30,6 +30,8 @@ Onyx supports two authentication methods for Google Vertex AI:
   below for details and an alternative.
 </Warning>
 
+## Service Account JSON
+
 <Steps>
   <Step title="Create a Service Account for Onyx">
     Go to the [Google Cloud Console Service Accounts Page](https://console.cloud.google.com/iam-admin/serviceaccounts)
@@ -76,15 +78,152 @@ Onyx picks up the pod's ambient GCP credentials automatically (via Google's [App
 Credentials](https://cloud.google.com/docs/authentication/application-default-credentials))
 and no key file is ever created or stored.
 
-**Requirements**
+### Prerequisites
 
-- Workload Identity Federation must be enabled on your GKE cluster.
-- The Kubernetes namespace's default `ServiceAccount` must be bound to a GCP Service Account that has Vertex AI
-  access (for example, the `roles/aiplatform.user` role).
+- A self-hosted Onyx deployment on GKE, with billing enabled for the project where you will use Vertex AI.
+- The [Google Cloud CLI](https://cloud.google.com/sdk/docs/install) and
+  [`kubectl`](https://kubernetes.io/docs/tasks/tools/), authenticated to your project and cluster.
+- Permission to enable APIs, update the cluster and node pools, create a Google Cloud service account,
+  and manage its IAM bindings. You also need permission to update Kubernetes service accounts in the Onyx namespace.
 
-**Configuration**
+The steps below link a Kubernetes service account to a Google Cloud service account.
+The Google Cloud account receives Vertex AI permissions; the Kubernetes account lets Onyx pods use that identity.
 
 <Steps>
+  <Step title="Select your project and enable the APIs">
+    Use the project ID, rather than the project name or project number.
+    Replace these example values with your deployment:
+
+    ```bash
+    export PROJECT_ID="my-project"
+    export CLUSTER_NAME="my-onyx-cluster"
+    export CLUSTER_LOCATION="us-central1"
+    export NAMESPACE="onyx"
+    export GSA_NAME="onyx-vertex-ai"
+    export GSA_EMAIL="${GSA_NAME}@${PROJECT_ID}.iam.gserviceaccount.com"
+
+    gcloud services enable \
+      aiplatform.googleapis.com iamcredentials.googleapis.com \
+      --project "$PROJECT_ID"
+
+    gcloud container clusters get-credentials "$CLUSTER_NAME" \
+      --location "$CLUSTER_LOCATION" --project "$PROJECT_ID"
+    ```
+
+    `CLUSTER_LOCATION` is the cluster's region for a regional cluster, or its zone for a zonal cluster.
+    This example uses the same project for GKE and Vertex AI. If they are in different projects,
+    grant the Vertex AI role in the Vertex AI project and use that project's ID in the Onyx form.
+    The workload pool in the IAM binding below must still use the GKE project's ID.
+  </Step>
+
+  <Step title="Enable Workload Identity on the cluster and node pools">
+    **Autopilot:** Workload Identity Federation for GKE is already enabled. Continue to the next step.
+
+    **Standard:** Open the [Google Kubernetes Engine clusters page](https://console.cloud.google.com/kubernetes/list),
+    select your cluster, and open **Details**. Under **Security**, edit **Workload Identity**,
+    select **Enable Workload Identity**, and save.
+
+    Then open **Nodes**, select each node pool that runs Onyx, and click **Edit**. Under **Security**,
+    select **Enable GKE Metadata Server** and save.
+    Enabling Workload Identity on an existing cluster does not enable it on existing node pools.
+
+    You can also configure a Standard cluster with the CLI:
+
+    ```bash
+    gcloud container clusters update "$CLUSTER_NAME" \
+      --location "$CLUSTER_LOCATION" --project "$PROJECT_ID" \
+      --workload-pool "${PROJECT_ID}.svc.id.goog"
+
+    gcloud container node-pools update NODE_POOL_NAME \
+      --cluster "$CLUSTER_NAME" --location "$CLUSTER_LOCATION" \
+      --project "$PROJECT_ID" --workload-metadata GKE_METADATA
+    ```
+
+    Replace `NODE_POOL_NAME` and repeat for every node pool that runs Onyx.
+
+    <Warning>
+      Updating an existing node pool changes how all its workloads obtain Google Cloud credentials.
+      Workloads that rely on the node's service account may lose access.
+      Review those workloads before changing the pool,
+      or migrate Onyx to a new node pool with Workload Identity enabled.
+    </Warning>
+  </Step>
+
+  <Step title="Create a Google Cloud service account with Vertex AI access">
+    Open the [Service Accounts page](https://console.cloud.google.com/iam-admin/serviceaccounts), select your project,
+    and click **Create Service Account**. Use `onyx-vertex-ai` for the name,
+    or set `GSA_NAME` above to match the name you choose.
+
+    In **Permissions**,
+    grant [**Agent Platform
+    User**](https://cloud.google.com/iam/docs/roles-permissions/aiplatform#roles_aiplatform.user)
+    (`roles/aiplatform.user`, formerly **Vertex AI User**), then finish creating the account.
+    You can also reuse an existing service account with this role;
+    set `GSA_EMAIL` to its full email address and skip the creation command below.
+    Do not create a JSON key for this method.
+
+    The equivalent CLI commands are:
+
+    ```bash
+    gcloud iam service-accounts create "$GSA_NAME" \
+      --display-name "Onyx Vertex AI" --project "$PROJECT_ID"
+
+    gcloud projects add-iam-policy-binding "$PROJECT_ID" \
+      --member "serviceAccount:${GSA_EMAIL}" \
+      --role roles/aiplatform.user --condition=None
+    ```
+  </Step>
+
+  <Step title="Link the Kubernetes service account used by Onyx">
+    Find the service account used by your Onyx API server and any workers that call language models:
+
+    ```bash
+    kubectl get pods --namespace "$NAMESPACE" \
+      -o custom-columns=NAME:.metadata.name,SERVICE_ACCOUNT:.spec.serviceAccountName
+    ```
+
+    Set `KSA_NAME` to that account's name.
+    The Helm chart uses `default` when `serviceAccount.create` is `false` and `serviceAccount.name` is empty.
+    If you configured a dedicated account, use its name instead.
+    If the Kubernetes account is already linked to a Google Cloud service account,
+    reuse that Google Cloud account and grant it Vertex AI access instead of replacing the link.
+    Set `GSA_EMAIL` to the email in its existing annotation before running the commands below.
+
+    ```bash
+    export KSA_NAME="default"
+
+    gcloud iam service-accounts add-iam-policy-binding "$GSA_EMAIL" \
+      --project "$PROJECT_ID" --role roles/iam.workloadIdentityUser \
+      --member "serviceAccount:${PROJECT_ID}.svc.id.goog[${NAMESPACE}/${KSA_NAME}]"
+
+    kubectl annotate serviceaccount "$KSA_NAME" --namespace "$NAMESPACE" \
+      "iam.gke.io/gcp-service-account=${GSA_EMAIL}" --overwrite
+    ```
+
+    Both the IAM binding and the Kubernetes annotation are required.
+    If the API server and workers use different service accounts, repeat the binding and annotation for each one.
+    The linked Google Cloud account also needs permissions for other Google Cloud services those pods use,
+    such as Cloud Storage.
+    See Google's [service account linking
+    guide](https://cloud.google.com/kubernetes-engine/docs/how-to/workload-identity#kubernetes-sa-to-iam)
+    for more details.
+
+    If Helm creates your Kubernetes service account,
+    also keep the annotation in your Helm values so upgrades preserve it:
+
+    ```yaml
+    serviceAccount:
+      create: true
+      name: onyx
+      annotations:
+        iam.gke.io/gcp-service-account: onyx-vertex-ai@my-project.iam.gserviceaccount.com
+    ```
+
+    In this example, use `KSA_NAME="onyx"` in the IAM binding. If you change which service account the pods use,
+    apply your Helm values and roll out the API server and worker pods before continuing. On Standard clusters,
+    these pods must run on node pools with the GKE Metadata Server enabled.
+  </Step>
+
   <NavigateToAiModels />
 
   <Step title="Configure Google Vertex AI">
@@ -96,14 +235,31 @@ and no key file is ever created or stored.
 
     <img className="rounded-image" src="/assets/admins/ai_models/vertex_auth_method_dropdown.png" alt="Authentication Method dropdown showing Service Account JSON and Workload Identity (GKE) options"/>
 
-    Enter your **GCP Project ID**.
+    Enter the **GCP Project ID** where Vertex AI is enabled.
     This is required because Application Default Credentials cannot reliably infer the target project under service
     account impersonation.
 
+    Set **Google Cloud Region Name** to a [location supported by your
+    models](https://cloud.google.com/vertex-ai/generative-ai/docs/learn/locations). The default is `global`;
+    this is independent of your GKE cluster's location.
+
     <img className="rounded-image" src="/assets/admins/ai_models/vertex_workload_identity_selected.png" alt="Workload Identity (GKE) selected, showing the ambient-credentials notice and GCP Project ID field"/>
+
+    No credentials file is needed. Select your models and configure provider access below, then click **Connect**.
   </Step>
 
   <StandardAiModelConfigs />
+
+  <Step title="Verify the connection">
+    Start a chat using one of this provider's models and send a message.
+    A successful response confirms that Onyx can obtain credentials and call Vertex AI.
+
+    If authentication fails, check the service account on the running API server pod,
+    its `iam.gke.io/gcp-service-account` annotation, and the matching `roles/iam.workloadIdentityUser` binding.
+    A permissions error can also mean that `roles/aiplatform.user` was granted in a different project from the **GCP
+    Project ID** in Onyx, or that the Vertex AI API is disabled there.
+    Allow a few minutes for new IAM grants to propagate before retrying.
+  </Step>
 </Steps>
 
 ## FAQ
