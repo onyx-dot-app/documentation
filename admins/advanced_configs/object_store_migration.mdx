@@ -66,6 +66,9 @@ The app keeps serving from both stores in the meantime.
 <Note>
   If you upgrade a hand-maintained `.env` yourself, the app stays on MinIO until you change two settings:
   set `S3_ENDPOINT_URL=http://object-store:8333` and uncomment `S3_LEGACY_ENDPOINT_URL=http://minio:9000`.
+  The same applies when the CLI upgrades an install whose `.env` reaches the bundled MinIO under any address
+  other than `http://minio:9000`: the CLI leaves that endpoint alone, so make the two changes yourself,
+  with `S3_LEGACY_ENDPOINT_URL` set to the address your `.env` used.
   Nothing breaks before you do, and the copy starts once you restart with those values.
 </Note>
 
