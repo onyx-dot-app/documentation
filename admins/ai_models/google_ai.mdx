@@ -15,6 +15,21 @@ This guide walks through setting up Google Vertex AI language models for use wit
   Vertex AI has enterprise-grade features that may be useful for your organization.
 </Note>
 
+## Authentication Methods
+
+Onyx supports two authentication methods for Google Vertex AI:
+
+- **Service Account JSON** — upload a downloaded service account key file. This is the default flow covered
+  in the guide below.
+- **Workload Identity (GKE)** — authenticate using your GKE cluster's ambient credentials, with no key file
+  to generate or store. See [Workload Identity (GKE)](#workload-identity-gke) below.
+
+<Warning>
+  A standalone Vertex AI API key (sometimes called a Vertex Express Mode key) is **not** supported.
+  Onyx's Vertex AI provider only accepts a Service Account JSON credential or Workload Identity — see the [FAQ](#faq)
+  below for details and an alternative.
+</Warning>
+
 <Steps>
   <Step title="Create a Service Account for Onyx">
     Go to the [Google Cloud Console Service Accounts Page](https://console.cloud.google.com/iam-admin/serviceaccounts)
@@ -43,10 +58,72 @@ This guide walks through setting up Google Vertex AI language models for use wit
 
     Give this configuration a **Display Name**.
 
-    Upload your JSON key to the **Credentials File** field.
+    For the **Authentication Method**,
+    select **Service Account JSON** and upload your JSON key to the **Credentials File** field.
 
     If relevant, specify a **Location**.
   </Step>
 
   <StandardAiModelConfigs />
 </Steps>
+
+## Workload Identity (GKE)
+
+If your organization's policy disables generating service account JSON keys,
+you can instead authenticate Onyx to Vertex AI using [GKE Workload Identity
+Federation](https://cloud.google.com/kubernetes-engine/docs/how-to/workload-identity). With this method,
+Onyx picks up the pod's ambient GCP credentials automatically (via Google's [Application Default
+Credentials](https://cloud.google.com/docs/authentication/application-default-credentials))
+and no key file is ever created or stored.
+
+**Requirements**
+
+- Workload Identity Federation must be enabled on your GKE cluster.
+- The Kubernetes namespace's default `ServiceAccount` must be bound to a GCP Service Account that has Vertex AI
+  access (for example, the `roles/aiplatform.user` role).
+
+**Configuration**
+
+<Steps>
+  <NavigateToAiModels />
+
+  <Step title="Configure Google Vertex AI">
+    Select **Google Cloud Vertex AI** from the available providers.
+
+    Give this configuration a **Display Name**.
+
+    For the **Authentication Method**, select **Workload Identity (GKE)**.
+
+    Enter your **GCP Project ID**.
+    This is required because Application Default Credentials cannot reliably infer the target project under service
+    account impersonation.
+  </Step>
+
+  <StandardAiModelConfigs />
+</Steps>
+
+## FAQ
+
+### Can I use a Vertex AI API key instead of a service account?
+
+No. Today,
+Onyx's Vertex AI provider supports only **Service Account JSON** or **Workload Identity (GKE)** as authentication
+methods — a standalone Vertex AI API key (Vertex Express Mode) is not accepted.
+
+If you just want to authenticate with a plain API key,
+you can instead add a **Custom** LLM provider using the `gemini` provider name,
+which routes through the [Google AI Studio](https://aistudio.google.com/) Gemini Developer API using an API key.
+See the [Custom Inference Provider](/admins/ai_models/custom_inference_provider) guide.
+
+<Note>
+  Google AI Studio is a separate product from Vertex AI, with different billing and data-handling terms.
+  AI Studio API keys are not interchangeable with Vertex AI credentials.
+</Note>
+
+<Warning>
+  When configuring this alternative,
+  use the **Custom** provider type with the provider name set to `gemini` — not the generic **OpenAI-Compatible**
+  provider type pointed at Gemini's OpenAI-compatible endpoint.
+  Onyx appends a forced `/v1` suffix to the OpenAI-Compatible provider's base URL, which breaks that endpoint.
+  The forced `/v1` suffix does not apply to the `gemini` provider name, so it is unaffected.
+</Warning>
