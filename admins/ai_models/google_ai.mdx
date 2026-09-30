@@ -123,9 +123,20 @@ The Google Cloud account receives Vertex AI permissions; the Kubernetes account 
     select your cluster, and open **Details**. Under **Security**, edit **Workload Identity**,
     select **Enable Workload Identity**, and save.
 
+    Confirm that **Workload Identity** shows **Enabled** and the **Workload identity namespace** is
+    `PROJECT_ID.svc.id.goog`, using your GKE project's ID.
+
+    <img className="rounded-image" src="/assets/admins/ai_models/vertex_gke_workload_identity.png" alt="GKE cluster details showing Workload Identity enabled, with the workload identity namespace redacted"/>
+
     Then open **Nodes**, select each node pool that runs Onyx, and click **Edit**. Under **Security**,
     select **Enable GKE Metadata Server** and save.
     Enabling Workload Identity on an existing cluster does not enable it on existing node pools.
+
+    Confirm that **GKE Metadata Server** shows **Enabled** in the node pool's **Security** section.
+    The node pool's **Service account** is the node identity;
+    the pod identity is configured in the service account linking step below.
+
+    <img className="rounded-image" src="/assets/admins/ai_models/vertex_gke_metadata_server.png" alt="GKE node pool security settings showing GKE Metadata Server enabled, with the node service account redacted"/>
 
     You can also configure a Standard cluster with the CLI:
 
