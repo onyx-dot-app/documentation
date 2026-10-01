@@ -1,0 +1,61 @@
+---
+title: "Atomic Chat"
+description: "Using Atomic Chat with Onyx"
+icon: "message"
+---
+
+import NavigateToAiModels from "/snippets/navigate-to-ai-models.mdx";
+
+## Guide
+
+Configure Onyx to use models served locally by [Atomic Chat](https://github.com/AtomicBot-ai/Atomic-Chat).
+
+Atomic Chat exposes an **OpenAI-compatible API** at `http://localhost:1337/v1`. Load a model in the Atomic Chat app, then connect Onyx through a custom OpenAI-compatible provider.
+
+<Steps>
+  <Step title="Start Atomic Chat and load a model">
+    Download Atomic Chat from the [releases page](https://github.com/AtomicBot-ai/Atomic-Chat/releases) or [atomic.chat](https://atomic.chat/).
+
+    Open the app and load the model you want to use. The local API server starts automatically on port `1337`.
+
+    Verify the server is running:
+
+    ```bash
+    curl http://127.0.0.1:1337/v1/models
+    ```
+
+    <Info>
+      **Running Onyx in Docker on the same machine as Atomic Chat?**
+
+      Use `http://host.docker.internal:1337/v1` as the **Base URL** instead of `http://localhost:1337/v1`.
+      Inside a container, `localhost` refers to the container itself, not your host.
+    </Info>
+  </Step>
+
+  <NavigateToAiModels />
+
+  <Step title="Add a custom OpenAI-compatible provider">
+    Select **Add Custom LLM Provider** from the available providers.
+
+    Give your provider a **Display Name** (for example, `Atomic Chat`).
+
+    Set **Provider Name** to `openai`. Atomic Chat implements the OpenAI API surface that LiteLLM expects for chat completions.
+
+    Set **Base URL** to `http://127.0.0.1:1337/v1` (or `http://host.docker.internal:1337/v1` if Onyx runs in Docker).
+
+    If Atomic Chat requires an API key in your setup, enter any non-empty placeholder such as `atomic`.
+  </Step>
+
+  <Step title="Configure models">
+    In **Model Configurations**, add the model name exactly as shown in Atomic Chat (for example, the loaded GGUF or Hugging Face model ID).
+
+    Click **Fetch Available Models** if your Onyx version supports discovery against OpenAI-compatible `/models` endpoints.
+
+    Choose which models are visible to your users and whether the provider is public or private.
+  </Step>
+</Steps>
+
+## Related resources
+
+- [Atomic Chat API docs](https://github.com/AtomicBot-ai/Atomic-Chat#-use-it-as-an-api)
+- [Custom Inference Provider](/admins/ai_models/custom_inference_provider) for other OpenAI-compatible gateways
