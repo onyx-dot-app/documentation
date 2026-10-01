@@ -10,6 +10,11 @@ import StandardAiModelConfigs from "/snippets/standard-ai-model-configs.mdx";
 
 This guide walks through setting up Google Vertex AI language models for use with Onyx.
 
+For Google embedding models used in search,
+see [Google Embeddings](/admins/advanced_configs/search_configs#google-embeddings).
+The GKE deployment and IAM setup below also applies to embeddings;
+grant access to the API server and every worker that makes embedding requests.
+
 <Note>
   Google Vertex AI and Google AI Studio serve the same models. However,
   Vertex AI has enterprise-grade features that may be useful for your organization.
