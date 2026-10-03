@@ -28,6 +28,10 @@ For Jira Data Center, use the account's personal access token. Data Center token
     In the Onyx Admin Panel, select **Jira Service Management**.
   </Step>
 
+  <Step title="Configure the Jira connection">
+    Enter the **Jira Base URL** in the connection fields above the credentials section. Enable **Using scoped token** if you created a scoped Jira Cloud token.
+  </Step>
+
   <Step title="Add Jira credentials">
     Select **Create New**. For Jira Cloud, enter the connector account's email address and API token. For Jira Data Center, leave the email empty and enter the personal access token.
 
@@ -35,7 +39,7 @@ For Jira Data Center, use the account's personal access token. Data Center token
   </Step>
 
   <Step title="Select the service desk project">
-    Enter the Jira base URL and the service desk project key, such as `SUP`. Enable **Using scoped token** if you created a scoped Jira Cloud token.
+    Enter the service desk **Project Key**, such as `SUP`.
 
     You can add a JQL filter to narrow the tickets. The connector keeps the selected project in scope even when the filter contains another project clause.
   </Step>
