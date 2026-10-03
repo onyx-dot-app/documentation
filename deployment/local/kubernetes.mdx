@@ -69,6 +69,18 @@ OpenSearch).
 See the [Helm chart README](https://github.com/onyx-dot-app/onyx/tree/main/deployment/helm)
 for advanced options such as running as non-root and testing with Kind.
 
+## Production
+
+Before you run Onyx in production, read these guides:
+
+- [External Services](/deployment/production/external_services): use managed PostgreSQL, Redis, OpenSearch, and
+  object storage.
+- [High Availability and Scaling](/deployment/production/high_availability): replicas, autoscaling, probes, and
+  long-running requests.
+- [Security Hardening](/deployment/production/security): image pinning, credentials, security contexts, and network
+  policies.
+- [Code Interpreter](/deployment/production/code_interpreter): restricted clusters, OpenShift, and capacity.
+
 ## Enabling Onyx Craft
 
 Craft adds per-user sandbox pods, scoped RBAC, NetworkPolicies, an egress proxy,

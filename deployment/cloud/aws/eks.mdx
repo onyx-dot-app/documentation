@@ -12,6 +12,11 @@ import DeploymentNextSteps from "/snippets/deployment-next-steps.mdx"
   Updates to this guide are coming soon!
 </Warning>
 
+<Tip>
+  To create the EKS cluster, RDS, ElastiCache, and S3 with code,
+  use the [Terraform modules](/deployment/local/terraform).
+</Tip>
+
 ## Guide
 
 <Steps>
@@ -188,11 +193,12 @@ To remove the Onyx services:
 helm uninstall onyx -n onyx
 ```
 
-OpenSearch, Postgres, and MinIO leave behind PVCs. To delete them:
+OpenSearch, Postgres, the object store, and MinIO leave behind PVCs. To delete them:
 
 ```bash
 kubectl -n onyx get pvc
 kubectl -n onyx delete pvc onyx-opensearch-master-onyx-opensearch-master-0
+kubectl -n onyx delete pvc onyx-object-store
 kubectl -n onyx delete pvc onyx-minio
 kubectl -n onyx delete pvc data-onyx-postgresql-0
 ```

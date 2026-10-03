@@ -25,8 +25,8 @@ but comes at the cost of additional memory and disk usage.
   <Accordion title="Cloud Models" icon="cloud">
     The best embedding models are generally available through a cloud provider such as Cohere or Google.
 
-    To use a cloud provider, select the model you want to use, submit your credentials for the provider,
-    and click **Continue**.
+    To use a cloud provider, select the model you want to use, configure its authentication, and click **Connect**.
+    Then click **Apply & Re-index** to use the new model.
   </Accordion>
 
   <Accordion title="Self-hosted Models" icon="server">
@@ -43,6 +43,49 @@ but comes at the cost of additional memory and disk usage.
   </Accordion>
 </AccordionGroup>
 
+#### Google Embeddings
+
+Google embedding models use Vertex AI. In **Index Settings**,
+open **View All Models → Cloud-based** and click **Connect** on a Google model.
+Google supports two authentication methods:
+
+- **Service Account JSON**: upload the service account's JSON key. Existing Google embedding configurations
+  continue to use this method.
+- **Workload Identity (GKE)**: available on self-hosted Onyx. Onyx uses Application Default Credentials
+  from the pods that make embedding requests, so no JSON key is required.
+
+<img className="rounded-image" src="/assets/admins/advanced_configs/google-authentication-methods.jpg" alt="Google embedding authentication menu with Service Account JSON and Workload Identity (GKE) options"/>
+
+For Workload Identity, follow the [GKE deployment and IAM setup](/admins/ai_models/google_ai#workload-identity-gke).
+Grant `roles/aiplatform.user` in the Vertex AI project to every identity used by the API server and embedding workers,
+including document-processing and user-file processing workers.
+Those pods must run on node pools with the GKE Metadata Server enabled. Cloud embeddings are called from these services,
+rather than the self-hosted model server.
+
+In the Google connection form,
+select **Workload Identity (GKE)** and enter the **GCP Project ID** where Vertex AI is enabled.
+This project can differ from the GKE cluster's project.
+Set **Google Cloud Region Name** to a location supported by your embedding model; the default is `global`.
+The Vertex AI location is independent of the cluster's location.
+
+<img className="rounded-image" src="/assets/admins/advanced_configs/google-gke-configuration.jpg" alt="Google embedding form with Workload Identity (GKE), an example GCP Project ID, and the global region"/>
+
+Click **Connect** to test the configuration with a real embedding request before saving.
+Switching from Service Account JSON to Workload Identity removes the stored JSON key.
+You can later change the authentication method, project, or region using Google's **Edit credentials** button.
+
+After selecting the model, click **Apply & Re-index**.
+Verify that indexing completes and a search retrieves the expected documents.
+A successful connection test verifies the API server's credentials;
+indexing also requires the workers to have Vertex AI access.
+
+If the connection or indexing fails, check the pod's Kubernetes service account, its node pool's metadata server,
+and the IAM grant in the configured Vertex AI project. For a linked Google Cloud service account,
+also check the `iam.gke.io/gcp-service-account` annotation and `roles/iam.workloadIdentityUser` binding.
+Ensure the Vertex AI API is enabled and allow time for new IAM grants to propagate.
+Do not set `GOOGLE_APPLICATION_CREDENTIALS` to a JSON key file when you intend to use the GKE pod identity:
+ADC checks that variable before the metadata server.
+
 #### Embedding Swaps
 
 If you select a new embedding model, Onyx will need to re-index all of your data. During this process,
@@ -56,6 +99,35 @@ While the swap is in progress, you will see the Search Settings page show detail
 </Tip>
 
 <img className="rounded-image" src="/assets/admins/advanced_configs/embedding_swap.png" alt="Embedding swap in progress"/>
+
+#### Vector Quantization
+
+Vector quantization stores the document vectors in OpenSearch with fewer bits for each dimension.
+This decreases the memory that the vector index uses. Fewer bits can decrease the search quality.
+
+To set it, go to **Index Settings** and use the **Vector Quantization** field in the **Embedding Model** section.
+
+| Option | Vector memory | OpenSearch version |
+| --- | --- | --- |
+| **None** (default) | Full 32-bit precision | Any |
+| **7-bit** | 4x less | 2.16 or later |
+| **1-bit** | 32x less | 3.6 or later |
+
+When the index is quantized, Onyx rescores the top search results with the full-precision vectors.
+OpenSearch keeps the full-precision vectors on disk for this, so the disk usage increases slightly.
+
+<Note>
+  The quantization is part of the index. When you change it, Onyx re-indexes all of your data into a new index,
+  the same as an [embedding swap](#embedding-swaps).
+</Note>
+
+<Note>
+  The OpenSearch that ships with Onyx (Docker Compose and Helm) is version 3.6.0.
+  If you connect Onyx to an external OpenSearch cluster that is older than 3.6, Onyx does not accept the 1-bit option.
+  This setting is not available on Onyx Cloud.
+</Note>
+
+<img className="rounded-image" src="/assets/admins/advanced_configs/vector_quantization.png" alt="Vector Quantization options on the Index Settings page"/>
 
 ### Reranking
 
@@ -90,12 +162,6 @@ On the final page, you can configure a variety of advanced search settings.
 
       Contextual RAG can be very expensive as it adds a signficnat amount of data to every embedding call.
     </Warning>
-  </Accordion>
-
-  <Accordion title="Embedding Precision">
-    Embedding precision may be set to either `bfloat16` or `float`.
-    Setting the precision to `bfloat16` can reduce the memory usage of the index,
-    but may slightly reduce the accuracy of the results.
   </Accordion>
 
   <Accordion title="Reduced Dimension">

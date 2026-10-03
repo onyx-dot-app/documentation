@@ -91,7 +91,17 @@
               "deployment/local/docker",
               "deployment/local/kubernetes",
               "deployment/local/terraform",
-              "deployment/local/opensearch"
+              "deployment/local/opensearch",
+              "deployment/local/object_store"
+            ]
+          },
+          {
+            "group": "Production",
+            "pages": [
+              "deployment/production/external_services",
+              "deployment/production/high_availability",
+              "deployment/production/security",
+              "deployment/production/code_interpreter"
             ]
           },
           {
@@ -257,6 +267,7 @@
                     "pages": [
                       "admins/connectors/official/microsoft-365/setup",
                       "admins/connectors/official/microsoft-365/sharepoint",
+                      "admins/connectors/official/microsoft-365/onedrive",
                       "admins/connectors/official/microsoft-365/teams",
                       "admins/connectors/official/microsoft-365/outlook"
                     ]
@@ -305,7 +316,8 @@
                   "admins/managing_features/connectors_link",
                   "admins/advanced_configs/search_configs",
                   "admins/managing_features/document_sets",
-                  "admins/advanced_configs/opensearch_document_index_migration"
+                  "admins/advanced_configs/opensearch_document_index_migration",
+                  "admins/advanced_configs/object_store_migration"
                 ]
               },
               "admins/managing_features/chat",
@@ -728,6 +740,10 @@
     {
       "source": "/admins/connectors/official/sharepoint",
       "destination": "/admins/connectors/official/microsoft-365/sharepoint"
+    },
+    {
+      "source": "/admins/connectors/official/onedrive",
+      "destination": "/admins/connectors/official/microsoft-365/onedrive"
     },
     {
       "source": "/admins/connectors/official/sharepoint/sharepoint",
