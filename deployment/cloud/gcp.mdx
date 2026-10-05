@@ -124,7 +124,7 @@ variable "postgres_password" {
 }
 
 module "onyx" {
-  source = "git::https://github.com/onyx-dot-app/onyx.git//deployment/terraform/modules/gcp/onyx?ref=tf-gcp/v1.1.0"
+  source = "git::https://github.com/onyx-dot-app/onyx.git//deployment/terraform/modules/gcp/onyx?ref=tf-gcp/v1.2.0"
 
   name       = "onyx"
   project_id = local.project_id
