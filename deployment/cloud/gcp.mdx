@@ -280,6 +280,22 @@ use the one in the Helm values below.
   See [Serve through an L7 load balancer](#serve-through-an-l7-load-balancer-cloud-armor).
 </ParamField>
 
+<ParamField path="cloud_armor_extra_uninspected_fields" type="list(string)" default="[]">
+  Field names whose values the OWASP rules do not read, on top of the module default list.
+  The default list holds the Onyx fields that carry chat text, prompts, code, URLs, and secrets.
+  Add a field when the load balancer log shows a signature denying a legitimate request.
+</ParamField>
+
+<ParamField path="cloud_armor_extra_uninspected_field_prefixes" type="list(string)" default="[]">
+  Prefixes of field names whose values the OWASP rules do not read,
+  for whole free-form objects such as a connector's configuration, on top of the module default list.
+</ParamField>
+
+<ParamField path="cloud_armor_rate_limit_exempt_ip_cidrs" type="list(string)" default="[]">
+  Ranges that skip both rate limits, such as an office or VPN range whose users share one address.
+  The OWASP rules still apply to them.
+</ParamField>
+
 <ParamField path="enable_l7_ingress" type="bool" default="false">
   Create a global address and Google-managed certificates for an L7 load balancer that the GKE Gateway API builds.
   The Cloud Armor policy attaches to this load balancer.
@@ -805,7 +821,25 @@ The chart's `LoadBalancer` Service uses the same port. The API, web server, and 
   </Step>
 </Steps>
 
-Set `cloud_armor_preview = true` to log rule matches without blocking requests while you tune the rules.
+### Tune the WAF rules
+
+The OWASP rules deny from the first apply, and the module tunes them for Onyx traffic.
+The rules do not read the values of the Onyx fields that carry chat text, prompts, code, URLs, and secrets,
+and they skip multipart uploads, which Cloud Armor cannot parse. Everything else in a request is still checked.
+
+When a legitimate request gets a 403, find the signature in the load balancer log:
+
+```bash
+gcloud logging read 'resource.type="http_load_balancer" AND jsonPayload.enforcedSecurityPolicy.outcome="DENY"' \
+  --project <project> --freshness=1h --format="value(httpRequest.requestUrl, jsonPayload.enforcedSecurityPolicy.preconfiguredExprIds)"
+```
+
+Then add the field that carried the text to `cloud_armor_extra_uninspected_fields`,
+or its parent object to `cloud_armor_extra_uninspected_field_prefixes`, and apply.
+
+Set `cloud_armor_preview = true` to log what the rules and the rate limits would do without acting on it.
+Users behind one VPN or office address share the per-address rate limits.
+Put that range in `cloud_armor_rate_limit_exempt_ip_cidrs`.
 
 Notes:
 
