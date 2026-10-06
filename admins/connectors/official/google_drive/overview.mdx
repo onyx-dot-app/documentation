@@ -1,34 +1,217 @@
 ---
-title: "Google Drive Overview"
-description: "Overview of the Google Drive connector"
+title: "Google Drive"
+description: "Index the files in your Google Drive, My Drives, and shared drives"
 ---
+
+The Google Drive connector indexes files from a Google Workspace or a single Google account. It can cover shared drives,
+every user's My Drive, files shared with a user, or a list of specific drives and folders,
+and it can mirror who may read each file with **Auto Sync Permissions**.
+
+Onyx signs in to Google in one of two ways. Pick one, set it up on the Google side,
+then come back here to configure the connector.
+
+<Columns cols={2}>
+  <Card title="Service account" icon="key" href="/admins/connectors/official/google_drive/service_account">
+    Recommended for a Google Workspace. Indexes every user's Drive through domain-wide delegation,
+    and it is what permission sync needs. Requires a Workspace administrator.
+  </Card>
+
+  <Card title="OAuth" icon="user" href="/admins/connectors/official/google_drive/oauth">
+    Indexes as one Google account: its My Drive, the shared drives it belongs to, and files shared with it.
+    Works without a Workspace.
+  </Card>
+</Columns>
+
+## What gets indexed
+
+Onyx creates one document per file. The document title is the file name, the link is the file's Drive link,
+and the dates are the file's created and modified times. Each document also records the file's folder path,
+so the folder tree shows up as a hierarchy in Onyx, rooted at the shared drive name, **My Drive**,
+or **Shared with me**.
+
+| File type                         | How it is indexed                                                                                                                                                                                                           |
+| --------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Google Docs                       | Split into sections at headings, each linking to that heading in the document. Tables become text. Smart chips and links are rendered inline. A document over 50 MB of structure falls back to one plain-text section. |
+| Google Sheets                     | Exported as CSV and indexed as a table.                                                                                                                                                                                     |
+| Google Slides                     | Exported as PowerPoint; the text of each slide, plus the images on it when image indexing is on.                                                                                                                            |
+| Word, Excel, PowerPoint           | Text, tables, and slides, as for the Google equivalents.                                                                                                                                                                    |
+| PDF                               | Text, plus embedded images when image indexing is on.                                                                                                                                                                       |
+| Plain text, CSV, Markdown, and other text formats | Indexed as text. See the [file connector](/admins/connectors/official/file) for the full list of extensions Onyx accepts.                                                                                     |
+| JPEG, PNG, and WebP images        | Only when image extraction and analysis is on in the Onyx search settings. Otherwise skipped.                                                                                                                              |
+| Shortcuts                         | Followed to their target. The target file is indexed once, under its own path.                                                                                                                                             |
+
+### What is not indexed
+
+- Files in the trash
+- Files over 10 MB. Set `GOOGLE_DRIVE_CONNECTOR_SIZE_THRESHOLD` (bytes) on a self-hosted deployment to change the limit.
+  Google-native files report no size, so the limit applies to their exported content.
+- Google Forms, Sites, Drawings, Jamboard, Colab notebooks, and other Google types with no text export
+- Files with an extension Onyx does not accept, such as archives, executables, and video
+- Comments, suggestions, and revision history
+- Files the credential's account or the impersonated users cannot open
+
+## Before you begin
+
+You need:
+
+- An Onyx administrator account.
+- A Google Cloud project with the Google Drive API, the Admin SDK API, and the Google Docs API enabled.
+  Each authentication page walks through this.
+- For a service account: a Google Workspace administrator, to grant domain-wide delegation.
+- For [Auto Sync Permissions](#auto-sync-permissions): a service account credential, and a paid Onyx tier.
+  Business or Enterprise on Onyx Cloud, or the Enterprise Edition when self-hosted.
+
+The four Google scopes Onyx uses, for either method:
+
+```text
+https://www.googleapis.com/auth/drive.readonly
+https://www.googleapis.com/auth/drive.metadata.readonly
+https://www.googleapis.com/auth/admin.directory.user.readonly
+https://www.googleapis.com/auth/admin.directory.group.readonly
+```
+
+All four are read-only. The two Admin SDK scopes list the Workspace's users and groups.
+A service account uses them to find the users to index; permission sync uses them for both methods.
+
+## Configure the connector in Onyx
+
+<Steps>
+  <Step title="Open the Google Drive connector">
+    In Onyx, go to **Admin Panel → Add Connector** and select **Google Drive**.
+  </Step>
+
+  <Step title="Create or select a credential">
+    Select **Create New** and follow the [service
+    account](/admins/connectors/official/google_drive/service_account#create-the-credential-in-onyx)
+    or [OAuth](/admins/connectors/official/google_drive/oauth#create-the-credential-in-onyx) page,
+    or select a credential you created earlier. Then select **Continue**.
+
+    An instance can hold several Google Drive credentials, each for its own Workspace or Google account,
+    so one Onyx deployment can index more than one Workspace.
+  </Step>
+
+  <Step title="Choose what to index">
+    Name the connector, then pick **General** or **Specific** under **How should we index your Google Drive?**
+
+    **General** indexes whole areas of Drive:
+
+    | Option                                            | Service account                                        | OAuth                                                 |
+    | ------------------------------------------------- | ------------------------------------------------------ | ----------------------------------------------------- |
+    | **Include shared drives?**                        | Every shared drive in the Workspace                    | Every shared drive the account belongs to             |
+    | **Include Everyone's My Drive?** / **Include My Drive?** | The My Drive of every user in the Workspace     | The account's own My Drive                            |
+    | **Include All Files Shared With You?**            | Not shown. Files shared with each user are included.  | Files shared with the account                         |
+
+    **Specific** indexes only what you list, as comma-separated Drive URLs:
+
+    - **Shared Drive URLs**: whole shared drives.
+    - **Folder URLs**: folders, with all their subfolders.
+    - **My Drive Emails**: the My Drives of the listed users. Service account only.
+
+    When any Specific field is filled in, the General options are ignored.
+    Onyx reads the ID from the end of each URL and does not validate it.
+    A wrong URL indexes nothing and shows up only as a warning in the logs,
+    so check the document count after the first run.
+  </Step>
+
+  <Step title="Review the advanced settings">
+    Under **Advanced**:
+
+    - **Specific User Emails**, service account only: index as these users instead of every user in the Workspace.
+    Onyx then sees only the files these users can open, and the primary admin is not included unless listed.
+    - **Hide domain link-only files?**: skip files shared with the whole domain, or with anyone,
+    by link only. Those files are visible to anyone who has the link, which permission sync cannot mirror.
+    - The refresh and pruning intervals.
+  </Step>
+
+  <Step title="Choose the access type">
+    **Public** shows every indexed file to all Onyx users. **Private** limits them to selected Onyx user groups.
+    **Auto Sync Permissions** applies each searcher's own Drive access.
+    See [Auto Sync Permissions](#auto-sync-permissions).
+
+    See [Document Access Controls](/admins/connectors/overview#document-access-controls) for what each means.
+  </Step>
+
+  <Step title="Create and verify">
+    Select **Create Connector**. Onyx lists one file as the primary admin to check the credential,
+    and for a service account it also opens the admin's My Drive. With **Auto Sync Permissions**,
+    it also checks that the primary admin can read the Workspace directory. A check that fails names the cause;
+    see [Troubleshooting](#troubleshooting).
+
+    Then open **Admin Panel → Existing Connectors**, select the connector,
+    and check that the first indexing attempt finishes with about the number of files you expect.
+    A Workspace with many users takes a while, since Onyx walks each user's Drive in turn.
+  </Step>
+</Steps>
 
 ## How it works
 
-The Google Drive connector indexes documents in your Drive. Currently, it supports:
-- Google: Docs, Sheets, and Slides
-- Microsoft: Word, Excel, and PowerPoint
-- PDF, CSV, and TXT files
-- Certain other document, plaintext, and image files
+- **Refresh**. The default refresh interval is **30 minutes**.
+  Each refresh lists files by modified time and reads only the ones changed since the last run.
+- **Resuming**. A run saves its position as it goes, per user and per drive,
+  so a run that stops partway resumes where it left off rather than starting over.
+- **Users**. With a service account, Onyx lists the Workspace's users through the Admin SDK and impersonates
+  each in turn, four at a time by default. Set `MAX_DRIVE_WORKERS` to change that. A user who cannot use Drive,
+  or who was removed from the Workspace, is skipped.
+- **Access to a file**. Onyx opens each file as the user it found it through.
+  When that fails, it retries as the primary admin and then as owners of the file in the same domain,
+  and it drops the file if none can open it.
+- **Rate limits**. Google throttles per project and per user. Onyx waits as long as Google asks and retries,
+  up to six times per request. A large first index is slower for it, but it does not fail.
+- **Deleted files**. A file deleted or trashed in Drive, or one the credential can no longer see,
+  stays in Onyx until a pruning run removes it.
 
-## Setting up
+## Auto Sync Permissions
 
-Note: This Connector is relatively involved to set up.
+With **Auto Sync Permissions**, an Onyx user sees only the Drive files they can open in Google.
+Onyx reads each file's sharing settings and the Workspace's groups, and matches people by email address.
 
-- **[Recommended]** If you want to setup the connector via Service Accounts, follow the guide
-  [here](./service_account). This does require a business Google Workspace / access to the Admin panel.
-  If you are an organization that meets these pre-requisites, then this is likely the preferred approach.
-
-- If you want to setup the connector via individual account OAuth, follow the guide [here](./oauth).
-  This does not require a business Google Workspace.
-
-- If you have any questions about the setup / which approach is best for you, don't hesitate to
-  reach out to [founders@onyx.app](mailto:founders@onyx.app)
-  OR `@Yuhong Sun` / `@Chris Weaver` in
-  [Slack](https://join.slack.com/t/onyx-dot-app/shared_invite/zt-34lu4m7xg-TsKGO6h8PDvR5W27zTdyhA) if you need help.
+Use a **service account** credential. Nothing stops an OAuth credential,
+but with OAuth Onyx can only walk the authorizing account's own folders, so the group sync sees far less.
 
 <Note>
-  You can set up more than one Google Drive connector on a single Onyx instance,
-  each with its own credential and service account.
-  This lets you index multiple Google Workspaces from one Onyx deployment.
+  Permission sync is a paid feature: the Business and Enterprise tiers on Onyx Cloud,
+  and the Enterprise Edition when self-hosted.
 </Note>
+
+| Sharing in Drive                                | Who can see the file in Onyx                                                                                  |
+| ----------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| Shared with a person                            | That person, matched by email                                                                                 |
+| Shared with a Google Group                      | The group's direct members. Groups nested inside the group are not expanded.                                  |
+| Shared with everyone in the domain              | Every user in the Workspace directory                                                                         |
+| Shared with the domain, by link only            | No one, since Onyx cannot tell who has the link                                                               |
+| Anyone with the link                            | Every Onyx user                                                                                               |
+| Inherited from a folder                         | The people the folder is shared with, as of the last permission sync                                           |
+| In a shared drive                               | The drive's members, plus anyone the file or its folders are shared with                                     |
+
+Some limits to plan around:
+
+- **Email matching**. Onyx matches a Google user to an Onyx user by primary email address, case-insensitively.
+  A user who signs in to Onyx with an alias sees nothing.
+  An external collaborator gets access once they sign in to Onyx with the address the file was shared with.
+- **Nested groups**. A group that is a member of another group is treated as a single address,
+  so its members do not inherit the parent group's files.
+- **Files owned outside the Workspace**. When Google refuses to list a file's sharing settings,
+  usually for a file owned by another organization, only the user Onyx found it through can see it.
+- **A folder shared later**. Onyx records a file's folder at index time.
+  A folder shared with new people after that reaches the file at its next re-index, not at the next permission sync.
+
+The document sync and the group sync each run every 5 minutes by default.
+Set `DEFAULT_PERMISSION_DOC_SYNC_FREQUENCY` and `GOOGLE_DRIVE_PERMISSION_GROUP_SYNC_FREQUENCY` (seconds)
+on a self-hosted deployment to change the intervals.
+
+## Troubleshooting
+
+| Message or symptom                                                                                       | Cause and fix                                                                                                                                                                                                                                                                       |
+| -------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Nothing to index. Please specify at least one of the following…                                          | No General option is on and no Specific field is filled in. Pick at least one.                                                                                                                                                                                                      |
+| Invalid or expired Google Drive credentials (401)                                                        | The OAuth token was revoked, or the service account key was deleted or the account disabled. Create a new credential.                                                                                                                                                              |
+| Google Drive app lacks required permissions (403)                                                        | The Google Drive API is not enabled on the project, a scope is missing, or the Workspace blocks third-party Drive apps. Check the enabled APIs and the scopes, and in the Google Admin console check **Apps → Google Workspace → Drive and Docs → Features and Applications**. |
+| Google Drive credentials are missing required scopes                                                     | The consent screen or the domain-wide delegation entry lacks one of the four scopes. Add it, then create a new credential.                                                                                                                                                         |
+| Unable to access google_drive - service account credentials are invalid                                  | The uploaded file is not a service account key, or the key was revoked in Google Cloud. Create a new key and a new credential.                                                                                                                                                    |
+| Primary admin … is not authorized on the Google Workspace directory API                                  | The primary admin lacks the Users and Groups read privileges. Assign the roles listed on the service account page, or use a different admin.                                                                                                                                       |
+| Cannot impersonate '…'                                                                                   | Domain-wide delegation is missing, names the wrong client ID, or lacks a scope. A user in a different domain than the primary admin cannot be impersonated either.                                                                                                                 |
+| Nothing is indexed, or fewer files than expected                                                         | A Specific URL is wrong, or the credential's account cannot open the files. Also check **Hide domain link-only files?** and, for a service account, **Specific User Emails**.                                                                                                        |
+| Images are not indexed                                                                                   | Image extraction and analysis is off in **Admin Panel → Search Settings**.                                                                                                                                                                                                          |
+| A Google Doc is one long section with no heading links                                                   | The document's structure exceeded the 50 MB parse limit, or the Google Docs API is not enabled on the project. Enable it, or set `GOOGLE_DRIVE_ADVANCED_PARSE_MAX_BYTES` on a self-hosted deployment.                                                                                |
+| Failed to execute request after 6 attempts                                                               | Google kept throttling the project. Lower `MAX_DRIVE_WORKERS`, or wait for the next run.                                                                                                                                                                                             |
+| A user sees no Drive results under Auto Sync Permissions                                                 | Their Onyx email is not their Google primary email, the first group sync has not finished, or the file is shared with them only through a nested group.                                                                                                                              |
