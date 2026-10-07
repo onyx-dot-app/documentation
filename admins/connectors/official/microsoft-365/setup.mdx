@@ -231,8 +231,10 @@ or select **Create New**, pick the tab for your authentication method, and enter
 - **Certificate Authentication** tab: the two IDs, the `.pfx` in the **Private Key (PFX)** field and the export
   password you set in the **Certificate Password** field. Each field is labelled with the connector's name.
 
-Onyx keeps credentials per connector type, so the list on the SharePoint form shows SharePoint credentials only.
-To use one app registration for several connectors, enter the same IDs and secret or certificate once per connector.
+A credential created on the form of one Microsoft 365 connector is also listed on the forms of the other three,
+so one app registration needs only one credential. Grant the app the permissions of every connector that uses it:
+the connector checks report a missing permission.
+Credentials created before credential sharing existed stay on the form of their own connector.
 
 ## Limiting the app to specific sites
 
@@ -346,8 +348,9 @@ Indexing stops when the secret or certificate expires. To rotate without downtim
 
   <Step title="Update the credential in Onyx">
     In **Admin Panel → Existing Connectors**,
-    open the credential of each connector that uses this app registration and replace the secret value,
-    or the `.pfx` and its password.
+    open the credential that uses this app registration and replace the secret value, or the `.pfx` and its password.
+    A shared credential updates every connector that uses it. If you entered the app registration once per connector,
+    update each of those credentials.
   </Step>
 
   <Step title="Delete the old one">
