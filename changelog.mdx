@@ -6,6 +6,322 @@ mode: "wide"
 rss: true
 ---
 
+<Update label="v4.9.0" description="October 7th, 2026" tags={["New Features", "Deployment Changes", "Bug Fixes"]}>
+
+  ## v4.9.0
+
+  OneDrive joins the connector lineup with permission sync,
+  and Teams grows from channel threads into meeting transcripts, meeting chats, channel files, and pasted images.
+  Onyx now ships Terraform modules for Google Cloud, the Helm chart gets readiness probes, graceful shutdown,
+  and serialized migrations for production rollouts, search filters belong to the chat they were set in,
+  the reasoning effort you pick reaches the model on every provider,
+  and a security hardening pass closes a long list of leaks and missing authorization checks.
+  Thank you to our contributors for helping make this release possible!
+
+  ## [Update] Deployment Changes
+
+  - **Helm: readiness probes, graceful shutdown, and serialized migrations.** API, web, and model-server pods
+    previously defaulted to no readiness probe, so they received traffic before they could serve it,
+    and uvicorn never received SIGTERM because a shell stayed PID 1.
+    Default probes are now rendered (a probe you set is used verbatim, `null` removes it), uvicorn is exec'd,
+    and api and web drain for 15 seconds before shutdown.
+    Since the API is not ready until `alembic upgrade head` finishes,
+    `helm upgrade --wait --atomic` now waits for migrations: raise `--timeout` before a large upgrade,
+    or set `api.runStartupMigrations: false` and run them yourself.
+    Concurrent API replicas also take turns running migrations under an advisory lock instead of racing.
+    PodDisruptionBudgets and `topologySpreadConstraints` are available opt-in.
+  - **Helm: the pre-delete hook is scoped to the release.** It used to delete every CNPG Cluster and Redis CR in
+    the namespace; it now deletes only this release's, by name,
+    and a failed delete fails `helm uninstall` (`--no-hooks` skips it).
+    The hook image moves from `bitnami/kubectl:latest` to `registry.k8s.io/kubectl:v1.34.12`,
+    so air-gapped installs must mirror it.
+    Setting `postgresql.cluster.retainOnUninstall` keeps the database cluster through an uninstall.
+    All workloads now default to the `RuntimeDefault` seccomp profile with privilege escalation disallowed,
+    and the install notes warn when the default PostgreSQL or Redis password is still in use.
+  - **MinIO now pulls from `onyxdotapp/minio`.** v4.8.0 moved the image to quay.io after Docker Hub dropped
+    `minio/minio`; on September 24th quay.io stopped serving it too, and every fresh install failed at the pull.
+    Compose, Helm,
+    and the CLI's embedded compose files now pull a digest-pinned copy of the last multi-arch build from our own Docker
+    Hub mirror. Existing volumes are readable as before.
+  - **Code Interpreter 0.4.8.** The sandbox image default moves to 0.4.8 (hardened Kubernetes executor with admission
+    control),
+    and the client retries "queue full" and "no capacity" answers before telling the model the interpreter is busy.
+    On Helm, more than one replica now requires `fileStorage.shared: true`.
+  - **The "Hide Onyx Branding" toggle is gone.** "Powered by Onyx" always shows under a custom application name
+    unless the API server is started with `HIDE_ONYX_BRANDING=true`,
+    which is honored on the Enterprise tier only and requires explicit permission from Onyx.
+    The web build argument `NEXT_PUBLIC_DO_NOT_USE_TOGGLE_OFF_DANSWER_POWERED` is removed.
+    Deployments that hid the tagline through the old toggle get it back until the variable is set.
+  - **Service accounts lose their password paths.** A service account can no longer sign in with a password or
+    request a password reset, and an API key on a deactivated service account stops working;
+    reactivate the account to restore the key.
+  - **Image captioning no longer picks a model for you.** With "Extract & Caption Images" on but no captioning
+    model chosen, captioning used whichever image-capable model it found first,
+    a choice invisible in Index Settings that changed when a provider was added.
+    It now uses only the designated model and stops with a warning until an admin picks one.
+  - **New knobs in the templates.** `CELERY_PERMISSIONS_SYNC_LOCK_TIMEOUT` (default 3600s) and
+    `CELERY_DOCUMENT_SYNC_BEAT_LOCK_TIMEOUT` (default 120s)
+    raise the sync lock leases that large tenants were outrunning ("Cannot reacquire a lock that's no longer owned").
+    The built-in `open_url` fetcher now streams and caps decoded bodies (`OPEN_URL_MAX_HTML_SIZE_BYTES` 20 MiB,
+    `OPEN_URL_MAX_PDF_SIZE_BYTES` 50 MiB, `OPEN_URL_BODY_DEADLINE_SECONDS` 120, `OPEN_URLS_MAX_URLS_PER_REQUEST` 20),
+    where before a small compressed body could expand to gigabytes in the API server.
+    Download caps for Dropbox (20 MiB), Airtable attachments (10 MiB), SharePoint,
+    and Teams attachments are listed in the compose and Helm templates.
+  - **Startup and pool fixes.** The API server opened 20 warm-up connections at boot regardless of pool size, so a
+    pool smaller than that failed startup with "QueuePool limit ... reached"; warm-up is now bounded by the pool.
+    Pooled Redis clients never retried (redis-py drops retry settings when a pool is passed);
+    the retries now live on the pools.
+    The async Postgres driver accepts Cloud SQL's server certificates under `postgresTls: verify-ca`,
+    which previously crash-looped the API server with "Missing Authority Key Identifier".
+    Connection-pool metrics are back under PgBouncer and sharded deployments.
+  - **Vulnerabilities are chased automatically.** A new CVE Alerts workflow scans the lockfiles and the shipped
+    images daily and after any failed tag build, opens a tracking issue and a fix PR per vulnerable package,
+    and backports each fix to the four newest release lines. This release carries the resulting dependency wave,
+    including `sentence-transformers` 5.6.0 (GHSA-jhr6-gm9c-rqjv,
+    reachable only by an admin who can set the embedding model), `cryptography` 50, `pypdf` 6.19, `authlib` 1.8,
+    `anyio` 4.14.2, and Next.js 16.3.8.
+  - **Three migrations run on upgrade:** one strips credential values that API callers could have stored inside
+    connector configs (they were never read),
+    and two add the schema for restricting permission-synced connectors to groups (see Connectors below).
+
+  ## Key Improvements
+
+  ### The OneDrive Connector
+
+  Onyx can now index OneDrive: every user's personal drive, or a named list of users,
+  with app-only authentication by client secret or certificate and configurable authority and Graph hosts for GCC High
+  and DoD. Delta queries checkpoint the exact next page, so a resumed attempt picks up where it stopped,
+  and file-extension, path-exclusion, and time-window filters apply before anything is downloaded.
+  With permission sync enabled (Business/Enterprise), user, group, and anonymous-link grants map onto document access,
+  with an option to treat organization-wide links as public; without permission sync, items are indexed as private.
+  A file that is reachable through both OneDrive and SharePoint is now one document that answers to both sources,
+  the first use of a new ability to list several sources on one document.
+  See the [OneDrive connector guide](https://docs.onyx.app/admins/connectors/official/microsoft-365/onedrive)
+  for the required permissions.
+
+  ### Teams: Meetings, Files, and Images
+
+  The Teams connector indexed channel threads; it now reaches the rest of what happens in Teams,
+  each behind an option that is off by default.
+  **Include Meeting Transcripts** indexes the transcripts of the scheduled meetings of the organizers you list (or of
+  every licensed user when you list none), each as its own document,
+  readable by the organizer and the people on the meeting record, with speakers kept from the WebVTT voice spans;
+  Graph serves about six months of transcripts, so that is the window Onyx keeps.
+  **Include Meeting Chats** indexes what people write in a meeting's chat, one document per day,
+  readable by the members who could see it.
+  **Include Attachments** indexes files posted to a channel's Files tab with their own access lists (this one needs a
+  certificate credential, because file readers come through SharePoint's REST API,
+  which refuses app-only access with a secret).
+  **Include Inline Images** indexes images pasted into messages as image sections of the thread.
+  Access also changed underneath: a standard channel used to be indexed as public, readable by every Onyx user;
+  every channel is now shared with its members,
+  through one group per team or channel rather than a list of thousands of emails on every chunk,
+  which is also what let the permission sync stop re-reading every message of every channel every five minutes.
+  Each message in a thread is its own section, so a search hit cites the message rather than the thread root.
+  Two fixes on the way: a connector with no teams listed indexed nothing (it now indexes every team),
+  and a throttled Teams listing could come back empty and trigger pruning.
+  See the [Teams connector guide](https://docs.onyx.app/admins/connectors/official/microsoft-365/teams)
+  for the permissions each option needs.
+
+  ### Onyx on Google Cloud
+
+  Terraform modules for GCP join the existing AWS and Azure sets: a VPC with Cloud NAT and Private Service Access,
+  a regional GKE Standard cluster with private nodes, Workload Identity, and a dedicated OpenSearch node pool,
+  Cloud SQL for PostgreSQL on private IP, Memorystore for Redis with TLS,
+  a GCS bucket for the native file store (`FILE_STORE_BACKEND=gcs`, no HMAC keys),
+  and a Cloud Armor policy with the OWASP rule set, rate limits, and geo controls. The composition offers small, medium,
+  and large sizes and one `deletion_protection` switch.
+  Cloud Armor attaches through an opt-in L7 load balancer with managed certificates (`enable_l7_ingress`),
+  since a plain L4 Service cannot carry it. Both the GCP and Azure modules have now been applied to live projects.
+  See [Deploy on Google Cloud](https://docs.onyx.app/deployment/cloud/gcp) for the walkthrough.
+
+  ### Search Filters That Belong to the Chat
+
+  Sources, document sets, tags, and time range are now stored per chat instead of as one global preference:
+  narrowing one chat to Confluence no longer rewrites every other chat's sources.
+  Source selection and the search action's state (pinned, available, off) are independent of each other,
+  so pinning search does not widen your sources and disabling it does not discard them;
+  an untouched selection means every source, including connectors added later,
+  and an explicitly empty one searches nothing. Two prompt changes land with it:
+  search no longer narrows to a connected source just because that source is the subject of the question ("which
+  customers use the HighSpot or Gmail connector" used to search only HighSpot and Gmail),
+  and on search-backed turns the model is asked to address every part of the question and carry over the exact figures
+  its sources state, which raised answer completeness on our enterprise RAG benchmark without lengthening answers.
+
+  ### Reasoning Effort That Reaches the Model
+
+  The effort you pick in the reasoning picker was being lost on several providers.
+  On Claude 5 models the choice had no effect on any turn after a tool call,
+  where the API then defaulted to its highest setting (one reported prompt went from 5.5k to 31k completion tokens);
+  the effort is now sent on every turn. "Off" on adaptive-thinking Claude models sent nothing,
+  which the API read as "high"; it now disables thinking,
+  and the picker no longer offers Off on models that reject it (Claude Fable and Mythos floor at low,
+  as do Gemini 3.7+ Flash models).
+  Internal search helper calls on gpt-5.1 and newer ran at the model's default effort (medium from gpt-5.2 on)
+  because "off" omitted the parameter; they now send an explicit `none`. Behind OpenAI-compatible gateways,
+  Claude lost reasoning for the rest of the chat after any tool call, GPT-5.4+ tool steps were forced to `none`,
+  and models the catalog does not know (GPT-6, Gemini) never received an effort at all.
+  Now Claude gets its reasoning back on the next user turn,
+  GPT-5.4+ tool steps send the chosen effort (GPT-6 tool steps still send `none`),
+  and the admin's per-model reasoning flag is honored for unknown models.
+
+  ### A Security Hardening Pass
+
+  A scan-driven burndown closed a long list of issues; most need nothing from you. Logs no longer carry request headers,
+  query strings (OAuth codes, SAML responses, voice tokens), or exception text,
+  and unhandled errors return a generic body instead of `str(exc)`,
+  which for database errors included the SQL and its parameters.
+  OAuth flows validate their endpoints and bind each callback to the user who started it (any authorization in flight
+  during the upgrade must be restarted), and the federated callback stops returning provider tokens to the browser.
+  Files generated by the image and Python tools are scoped to the chat that produced them instead of readable by any
+  signed-in user; archive expansion is bounded (200 MiB per member, 1 GiB total, 200:1 ratio);
+  custom tool parameters are percent-encoded; and the AWS IPv6 metadata address is blocked at every SSRF level.
+  Authorization checks were added where they were missing: seeding a chat from Slack,
+  moving a chat into another user's project, attaching credentials you do not own,
+  scoped managers attaching private connectors, scoped managers reading the full user directory,
+  and tag suggestions outside your document access.
+  Built-in agents can no longer be deleted (one request used to take down the default assistant for the whole
+  workspace),
+  and a document that stops being public now loses `public` on its chunks when its access list is updated rather than at
+  the next re-index.
+
+  ## Contributor Highlights
+
+  - [@jack-watroba](https://github.com/jack-watroba) fixed the **GitHub MCP OAuth connection**: GitHub answers
+    the authorization-code exchange with a form-encoded body, which the MCP SDK helper could not parse,
+    so connecting a GitHub MCP server failed.
+  - [@mayuriphad](https://github.com/mayuriphad) fixed the **Claude 5 reasoning effort being dropped after tool
+    calls**, the first half of the reasoning work above.
+
+  ## Additional Improvements
+
+  ### Chat
+
+  - A closing code fence could be rewritten as ` ```plaintext ` and swallow the prose after it; fence tracking is
+    now line-aware on both the backend and the web, and inline backticks no longer confuse it.
+  - Files generated by the Python tool download with their real names and extensions: the endpoint now sends
+    `Content-Disposition`,
+    Office types are served with their real MIME type instead of `application/octet-stream` (the API image has no
+    `/etc/mime.types`), and a bold-labeled download link renders as a link instead of bold text.
+  - An attached file's processing indicator now stays until the file is actually ready; it used to clear when the
+    upload returned while indexing was still running, leaving Send disabled on a file that looked done.
+  - GPT Image 2.5 Flare and Sunburst are available as image generation models for OpenAI and Azure OpenAI.
+  - Removing a tool-call block from streamed text no longer leaves a doubled space, and malformed streamed tool
+    arguments stop the argument preview instead of erroring the whole response.
+  - Rows in the actions popover toggle when pressed anywhere, and the sidebar's Search tab highlights while the
+    search menu is open.
+  - The embedded chat widget accepts a `tokenProvider` function so each visitor acts as their own Onyx user through
+    JWT passthrough, instead of every visitor sharing one API key visible in page source;
+    inline mode fills its container, Backspace works inside host apps that intercept it,
+    and `start-expanded` opens the full panel before the first message.
+  - When the Code Interpreter's admission queue is full, the tool retries briefly and then tells the model it is
+    busy rather than failing the turn.
+
+  ### Search and Indexing
+
+  - A re-index now spot-checks that the new index actually holds the documents the port reported copying before the
+    swap (retrying after `PORT_SWAP_VERIFY_RETRY_DELAY_S`, default 300s),
+    waits for in-progress index attempts against the new settings,
+    and clears the stale "connector invalid" alert when reclaim removes a connector that did not port.
+  - Pruning read the set of indexed documents after the crawl, so a document indexed mid-crawl could be deleted and
+    never return; the set is now read before the crawl. A Drupal Wiki page that failed to fetch is no longer pruned,
+    and SharePoint's prune no longer empties a site on a 401, 5xx, or transport error.
+  - Image Processing on the Index Settings page stages with the rest of the form and offers "Apply without
+    Re-index" when it is the only change.
+  - Tag suggestions in search are filtered by document access, and the dead `bypass_acl` flag is gone from the
+    search request model.
+
+  ### Connectors
+
+  - Zoom: transcripts are now read from the recording's file list (the transcript endpoint serves AI Companion
+    transcripts, so the connector indexed nothing), credentials, scopes,
+    and the Webinar add-on are verified before the first crawl, listings start at Zoom's launch instead of the epoch,
+    host and Group discovery can be scoped to meetings or webinars,
+    and pruning lists recording ids instead of re-downloading every transcript.
+    The Zoom tile stays hidden from the connector catalog in this release until the rest of the Zoom work lands.
+  - SharePoint: libraries whose URL differs from their display name (`R&D Library` becomes `RD Library`) failed
+    permission sync and indexed nothing when scoped by URL; both paths now resolve by URL.
+    `exhaustive_ad_enumeration` works as a per-connector config field (set through the API),
+    the only way Cloud tenants can enable it.
+  - Salesforce syncs no longer fail with `MALFORMED_QUERY` on child objects whose `CreatedDate` is not sortable.
+  - A deleted and replaced Slack bot left its socket open, silently dropping a share of mentions and DMs until a
+    restart; stale bots are now torn down every cycle.
+  - Group managers can create File connectors again and can see the indexing errors of
+    connectors they manage; renaming a user group no longer drops its connectors at the next sync.
+  - Failed-document ids for Confluence, Drupal Wiki, GitHub, Jira, and Zendesk now match the indexed document id,
+    so targeted re-index can repair a failed Confluence page.
+  - Connector configs are validated against typed models: an unknown key is a 400 instead of a crash at indexing
+    time. On Onyx Cloud, server-requested retry delays are capped at a day and logged as `CONNECTOR_RETRY_AFTER_CAPPED`.
+  - The connector catalog moves to `/admin/connectors` as searchable cards, connector creation is one page instead
+    of a three-step wizard, and the indexing status page moves to `/admin/indexing-status`; old routes redirect.
+  - Groundwork for restricting a permission-synced connector to chosen groups: Security and Hardening gains an
+    "Allow Group Restrictions on Permission-Synced Connectors" toggle (Business and above),
+    but restricted connectors cannot be created yet.
+
+  ### Authentication and Users
+
+  - A stale SSO sign-in link, a login tab left open past its hour, or a second tab's flow used to dead-end on a
+    raw error code; those now restart sign-in automatically, once per five minutes per tab.
+  - With `JWT_PUBLIC_KEY_URL` set, every invalid bearer token cleared the key cache and refetched keys on the event
+    loop, so `Bearer x` could stall the API server; refetches are now rate-limited and shared.
+  - A live chat turn no longer pins a Postgres connection for the whole stream, which let concurrent deep-research
+    turns drain the pool and stall unrelated endpoints.
+  - WebSocket upgrades now resolve the tenant, fixing Craft live preview on multi-tenant deployments.
+  - Deactivating or deleting a user vacates every agent they own, so admins can transfer or delete it from the
+    share modal without a hard refresh.
+  - Whitelabeled deployments showed "Onyx" in 88 UI strings; they now use the Application Display Name.
+    The reset-password modal gains a copy button.
+
+  ### MCP
+
+  - Concurrent tool calls against an OAuth-protected MCP server each redeemed the same refresh token, which
+    providers that rotate refresh tokens reject; the refresh is now single-flight,
+    and the lock no longer blocks the event loop during the OAuth probe.
+
+  ### LLM Providers
+
+  - Vercel AI Gateway is a built-in provider (chat completions, API key auth), with its model list fetched from
+    the gateway's public catalog before you enter a key.
+  - Model pricing and capabilities come from a vendored catalog (models.dev, LiteLLM, OpenRouter) synced weekly
+    into the release instead of a table LiteLLM fetched from GitHub at import,
+    so two pods on one release can no longer price a model differently and air-gapped deployments stop falling back to a
+    stale bundle. Gateway models LiteLLM could not price were recorded at $0;
+    they now use the `DEFAULT_LLM_*_COST_PER_MTOK` fallbacks and warn.
+  - The provider model list shows the model id when it differs from the title, so Bedrock base models and their
+    cross-region profiles can be told apart, and configuration pickers (default models, chat naming, captioning,
+    contextual retrieval) no longer offer admin-hidden models.
+  - LLM budgets are now enforced on the Slack bot, `POST /search`, and the LLM gateway, which previously let an
+    over-budget user keep spending; the Slack service account is held to global budgets only,
+    so one per-user budget no longer silences the bot for every unmapped Slack user.
+  - One-shot LLM calls (classification, query rephrasing, naming) send a plain request instead of streaming and
+    reassembling, cutting their CPU by 2-4x;
+    LiteLLM's per-chunk logging thread is off and its initialization runs once per process.
+    A split response from the OpenAI Responses bridge is merged instead of dropping tool calls,
+    and a streamed 429 is reported as a rate limit rather than "service unavailable".
+  - The cloud provisioning fallback moves from Claude Sonnet 4.5, which Anthropic retires on November 24th, to
+    Claude Sonnet 5.
+
+  ### Chrome Extension
+
+  - Version 1.2 supports Chrome managed policy: admins can pre-set the Onyx URL and force the new-tab toggle through
+    `onyxExtensionDomain` and `onyxExtensionDefaultNewTab`.
+    SSO from the new-tab page opens the identity provider in a new tab instead of inside the iframe,
+    search results on the new-tab page are no longer washed out or unscrollable,
+    and the page accepts messages only from the Onyx origin.
+
+  ### CLI
+
+  - `onyx-cli ask` titles the chat session it creates, so it no longer shows as "New Chat" in the sidebar.
+    Remote `serve` sessions can no longer rewrite the host's config or launch its browser,
+    and terminal escape sequences are stripped from model output.
+
+  ---
+
+  Our [GitHub Releases](https://github.com/onyx-dot-app/onyx/releases?utm_source=docs&utm_content=changelog)
+  page has the full list of changes and bug fixes for each release.
+
+</Update>
+
 <Update label="v4.8.0" description="September 18th, 2026" tags={["New Features", "Deployment Changes", "Bug Fixes"]}>
 
   ## v4.8.0
