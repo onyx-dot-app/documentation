@@ -15,6 +15,7 @@ Even when locked out, admins can still access:
 
 - **Admin Panel > Plans & Billing** — to renew or resubscribe
 - **Admin Panel > Users** — to manage users and free up seats
+- **Downgrade to Community** (self-hosted) — to leave the paid plan and unlock the workspace as Community Edition
 
 ### Subscription expired
 
@@ -25,6 +26,18 @@ Go to **Plans & Billing** and either renew your subscription or [upload an updat
 file](/admins/billing/manage#air-gapped-license-activation).
 
 Access is restored immediately after renewal. No data is lost.
+
+If you do not plan to renew,
+you can [downgrade to Community Edition](/admins/billing/manage#downgrade-to-community-edition)
+from the lock page or the billing page instead. Everything that paid features kept private becomes visible to all users.
+
+### No license with permission-synced connectors
+
+A self-hosted deployment with no license at all stays locked while it has a connector that inherits permissions from its
+source. Those permissions only apply with a paid plan,
+so the lock keeps the restricted content from opening up by accident.
+Either activate a license or [downgrade to Community Edition](/admins/billing/manage#downgrade-to-community-edition),
+which makes those connectors public on purpose.
 
 ### Seat limit exceeded
 

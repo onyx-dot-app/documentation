@@ -80,3 +80,35 @@ eyJwYXlsb2FkIjogeyJ2ZXJzaW9...
 
 To update an existing license (e.g., after renewal or a seat change),
 click **Update License Key** instead and follow the same steps.
+
+## Downgrade to Community Edition
+
+A self-hosted deployment whose license has lapsed can drop to the free Community Edition instead of renewing.
+The option appears only while the workspace is locked (the **Access Restricted** page),
+as a **Downgrade to Community** link at the bottom of the billing page and as a button on the lock page itself.
+Only admins see it.
+
+<Warning>
+  The downgrade cannot be undone.
+  Content that was restricted by synced permissions or user groups becomes visible to every user of the workspace.
+</Warning>
+
+Confirming the consent dialog does the following in one step:
+
+- **Every connector becomes public.** Permissions synced from the source (Google Drive, Confluence,
+  SharePoint and so on) stop applying, and connectors restricted to user groups open up.
+  Search results follow once the document index has been rewritten, which can take a while on a large index.
+- **User groups are removed.** Agents, document sets, LLM providers,
+  MCP servers and skills that were shared with a group become public.
+  Published agents are view-only for everyone except their owner.
+  Members of a group that granted admin rights keep them through the default Admin group.
+- **Paid features are switched off.** Service account API keys, token rate limits and hooks are deleted.
+  Standard answers and SCIM tokens are deactivated. Custom branding and chat retention are reset.
+- **The license is removed** from the deployment.
+
+No indexed data is deleted, and chats, agents, connectors and users stay as they are. If the request fails part way,
+nothing is lost: the license is removed last,
+so the deployment stays licensed and running the downgrade again finishes the job.
+
+To return to a paid plan later, [subscribe](/admins/billing/subscribing) or upload a license file again.
+Connector permissions and user groups are not restored by that. Set them up again after the license is active.
