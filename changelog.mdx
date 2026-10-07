@@ -282,11 +282,6 @@ rss: true
 
   - Vercel AI Gateway is a built-in provider (chat completions, API key auth), with its model list fetched from
     the gateway's public catalog before you enter a key.
-  - Model pricing and capabilities come from a vendored catalog (models.dev, LiteLLM, OpenRouter) synced weekly
-    into the release instead of a table LiteLLM fetched from GitHub at import,
-    so two pods on one release can no longer price a model differently and air-gapped deployments stop falling back to a
-    stale bundle. Gateway models LiteLLM could not price were recorded at $0;
-    they now use the `DEFAULT_LLM_*_COST_PER_MTOK` fallbacks and warn.
   - The provider model list shows the model id when it differs from the title, so Bedrock base models and their
     cross-region profiles can be told apart, and configuration pickers (default models, chat naming, captioning,
     contextual retrieval) no longer offer admin-hidden models.
