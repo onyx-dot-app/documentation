@@ -93,9 +93,10 @@ rss: true
   and DoD. Delta queries checkpoint the exact next page, so a resumed attempt picks up where it stopped,
   and file-extension, path-exclusion, and time-window filters apply before anything is downloaded.
   With permission sync enabled (Business/Enterprise), user, group, and anonymous-link grants map onto document access,
-  with an option to treat organization-wide links as public; without permission sync, items are indexed as private.
+  with an option to treat organization-wide links as public.
   A file that is reachable through both OneDrive and SharePoint is now one document that answers to both sources,
-  the first use of a new ability to list several sources on one document.
+  the first use of a new ability to list several sources on one document;
+  access to such a document is governed by the OneDrive connector's permissions.
   See the [OneDrive connector guide](https://docs.onyx.app/admins/connectors/official/microsoft-365/onedrive)
   for the required permissions.
 
