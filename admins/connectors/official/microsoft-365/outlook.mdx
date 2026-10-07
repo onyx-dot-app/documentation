@@ -23,9 +23,7 @@ On-premises Exchange Server is not supported.
 
 Each refresh reads the messages each folder received since the last run and rebuilds every thread that gained one.
 A thread that only lost a message keeps its old text until it gains a message or the connector is re-indexed.
-Pruning removes threads that no longer exist, threads whose every message is older than **Mail History Days**,
-and calendar events that have left the calendar window.
-Older messages inside a thread that still has newer mail drop at the thread's next rebuild.
+Pruning removes threads that no longer exist and calendar events that have left the calendar window.
 
 After an upgrade that brings thread documents, every existing Outlook connector is re-indexed once,
 and its per-mailbox documents are removed at the next prune.
@@ -86,16 +84,12 @@ A client secret or a certificate both work. Outlook reads no SharePoint API, so 
     Shared mailboxes are normally sign-in disabled, so automatic discovery does not pick them up. List them explicitly.
   </Step>
 
-  <Step title="Bound the mail history">
-    **Mail History Days** sets how far back mail is read, two years on a new connector.
-    Messages older than this are not indexed: a thread whose newest message is older is skipped,
-    and a thread that gained mail keeps only its messages within the window. Leave it empty to index all mail,
-    which can take very long on a large tenant. Connectors created before this setting existed keep reading all mail.
-
-    An **Indexing Start Date** under **Advanced Configuration** is a fixed floor for the first indexing attempt instead:
-    Onyx indexes the threads that received a message on or after it and skips the rest.
-    It does not move with time and does not remove old mail later. When both are set, the later date wins.
-    The calendar has its own window, set by **Calendar Past Days** and **Calendar Future Days** below.
+  <Step title="Set an indexing start date">
+    Under **Advanced Configuration**, set an **Indexing Start Date** unless you need every message ever received.
+    Without one, the first indexing attempt reads each mailbox from its first message,
+    and a tenant with years of mail in many mailboxes takes days to become searchable. With a start date,
+    Onyx indexes the threads that received a message on or after it and skips the rest. The calendar has its own window,
+    set by **Calendar Past Days** and **Calendar Future Days** below.
     See [Advanced Configuration](/admins/connectors/overview#advanced-configuration).
   </Step>
 
@@ -154,7 +148,8 @@ A mailbox's address must match the user's email in Onyx.
 
 Permissions are attached during indexing,
 so a new connector is searchable by the right people from its first indexing attempt.
-A permission sync then runs every 5 minutes by default and updates the access lists of existing documents.
+Who can read a thread follows who holds the mail, which every refresh keeps current.
+A permission sync runs once a day by default to catch deletions and updates the access lists of existing documents.
 Set `OUTLOOK_PERMISSION_DOC_SYNC_FREQUENCY` (seconds) to change the interval.
 
 <Warning>
