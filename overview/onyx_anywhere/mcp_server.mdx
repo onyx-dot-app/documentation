@@ -28,23 +28,137 @@ Personal access tokens and API keys remain available for bearer authentication.
 The examples use `onyx.example.com` as a placeholder. Replace it with your Onyx web domain.
 Use the same URL consistently in your client configuration.
 
-## Choose your client
+## Connect your AI tools
 
-| Client | Setup |
-| --- | --- |
-| Codex | [Add the remote server and sign in with the CLI](/overview/onyx_anywhere/mcp_clients#codex) |
-| Claude Code | [Add an HTTP server and authenticate](/overview/onyx_anywhere/mcp_clients#claude-code) |
-| Claude Desktop | [Add Onyx as a remote custom connector](/overview/onyx_anywhere/mcp_clients#claude-desktop) |
-| ChatGPT desktop | [Configure a remote MCP server](/overview/onyx_anywhere/mcp_clients#chatgpt-desktop) |
+Use your Onyx MCP URL in the setup for your client. Complete [Onyx sign-in and approval](#sign-in-and-approve-access)
+when prompted.
 
-For deployment, proxy routing, and OAuth discovery checks,
-see [MCP server configuration](/deployment/configuration/mcp_server).
+### Codex
+
+#### Add Onyx and sign in
+
+Run these commands in your terminal, replacing the example domain:
+
+```bash
+codex mcp add onyx --url https://onyx.example.com/mcp/
+codex mcp login onyx
+```
+
+Complete the Onyx sign-in and approval in your browser. Then check the configuration and start Codex:
+
+```bash
+codex mcp list
+codex
+```
+
+Inside Codex, enter `/mcp` and check that Onyx is connected. Send the [test prompt](#test-the-connection)
+to confirm a search succeeds.
+
+#### Configure with TOML
+
+As an alternative to `codex mcp add`, add the following to `~/.codex/config.toml`:
+
+```toml
+[mcp_servers.onyx]
+url = "https://onyx.example.com/mcp/"
+```
+
+Run `codex mcp login onyx` after saving. Keep one `mcp_servers.onyx` table in the file. If Onyx already exists,
+update its URL instead of adding another table.
+
+The desktop app, CLI, and IDE extension share configuration on the same Codex host.
+See [OpenAI's MCP guide](https://learn.chatgpt.com/docs/extend/mcp) for configuration options.
+
+### Claude Code
+
+#### Add Onyx for your user account
+
+```bash
+claude mcp add --scope user --transport http onyx https://onyx.example.com/mcp/
+claude
+```
+
+In Claude Code, enter `/mcp`, select Onyx, and choose **Authenticate**. Complete the browser approval.
+Check `/mcp` again and send the [test prompt](#test-the-connection).
+
+Current releases also support authentication directly from the terminal:
+
+```bash
+claude mcp login onyx
+```
+
+Use `claude mcp list` to inspect configured servers.
+See [Claude Code's MCP documentation](https://code.claude.com/docs/en/mcp) for authentication and configuration scopes.
+
+#### Share the configuration with a project
+
+For a team repository, put the endpoint in `.mcp.json` at the project root:
+
+```json
+{
+  "mcpServers": {
+    "onyx": {
+      "type": "http",
+      "url": "https://onyx.example.com/mcp/"
+    }
+  }
+}
+```
+
+Each team member approves the project configuration and signs in with their own Onyx account.
+Commit the endpoint configuration only. OAuth credentials do not belong in the repository.
+Choose either user or project configuration for Onyx to avoid competing definitions.
+
+### Claude Desktop
+
+Use a remote custom connector:
+
+1. Open **Customize > Connectors**.
+2. Select **+ Add > Add custom connector**.
+3. Name it **Onyx** and enter `https://onyx.example.com/mcp/` with your domain.
+4. Continue through authentication settings.
+   Choose sign-in and either Claude's published OAuth identity or automatic registration. Onyx supports both.
+5. Add the connector and complete Onyx sign-in when prompted.
+6. Enable Onyx through the conversation's **+ > Connectors** menu and send the [test prompt](#test-the-connection).
+
+For a managed organization, an owner adds Onyx under **Organization settings > Connectors**.
+Members then select **Connect** for Onyx in their own connector list and approve access with their own account.
+
+<Note>
+  Claude Desktop remote connectors connect from Anthropic's cloud.
+  Your server must be reachable from that infrastructure, even if your laptop can reach it through a VPN.
+  The desktop JSON configuration for local processes is a separate setup mechanism.
+</Note>
+
+See [Anthropic's custom connector
+guide](https://support.claude.com/en/articles/11175166-get-started-with-custom-connectors-using-remote-mcp)
+for current availability and network requirements.
+
+### ChatGPT desktop
+
+1. Open **Settings > MCP servers** and select **Add server**.
+2. Name it **Onyx** and choose **Streamable HTTP**.
+3. Enter `https://onyx.example.com/mcp/` with your domain.
+4. Save, then select **Restart**.
+5. Select **Authenticate** for Onyx and complete the browser sign-in and approval.
+6. Enter `/mcp` in the composer to inspect connected servers, then send the [test prompt](#test-the-connection).
+
+If you already configured Onyx with Codex on the same host, check the server list before adding it again.
+These clients share `~/.codex/config.toml`. See [OpenAI's MCP guide](https://learn.chatgpt.com/docs/extend/mcp)
+for the current desktop controls.
+
+#### ChatGPT on the web
+
+ChatGPT web uses hosted MCP tools through plugins. It does not read your local Codex configuration.
+Adding Onyx in the desktop app therefore does not configure it on the web.
+Consult [OpenAI's MCP guide](https://learn.chatgpt.com/docs/extend/mcp)
+for the web connection model and your workspace's plugin availability.
 
 ## Sign in and approve access
 
 <Steps>
   <Step title="Add your Onyx MCP URL">
-    Configure the URL in your client using its [setup guide](/overview/onyx_anywhere/mcp_clients).
+    Configure the URL in your client using the [client setup instructions](#connect-your-ai-tools).
     Choose OAuth or the client's authenticate action. Leave bearer-token headers out of an OAuth configuration.
   </Step>
 
@@ -65,10 +179,12 @@ see [MCP server configuration](/deployment/configuration/mcp_server).
   </Step>
 </Steps>
 
-<img src="/assets/overview/onyx_anywhere/mcp/oauth_consent.png" alt="Onyx OAuth consent page showing the app name, requested search access, Allow access, and Deny. Account details are redacted." width="360" />
+<img src="/assets/overview/onyx_anywhere/mcp/oauth_consent.png" alt="Onyx OAuth consent page showing the app name, requested search access, Allow access, and Deny. Account details are hidden." width="320" />
 
 The consent screen identifies the app and the account granting access. Account, workspace,
-and callback details are redacted in this screenshot.
+and callback details are hidden in this screenshot.
+
+### Test the connection
 
 Copy this prompt into your client:
 
@@ -111,7 +227,7 @@ If a client registers without refresh support, its authorization lasts only for 
 
 ## Manage connected apps
 
-<img src="/assets/overview/onyx_anywhere/mcp/connected_apps.png" alt="Connected apps in Onyx settings with app names, expiry dates, and Disconnect controls." />
+<img src="/assets/overview/onyx_anywhere/mcp/connected_apps.png" alt="Connected apps in Onyx settings with app names, expiry dates, and Disconnect controls." width="640" />
 
 <Steps>
   <Step title="Open connected apps">
@@ -130,10 +246,91 @@ If a client registers without refresh support, its authorization lasts only for 
   </Step>
 </Steps>
 
-<img src="/assets/overview/onyx_anywhere/mcp/disconnect_confirmation.png" alt="Onyx confirmation dialog explaining that disconnecting Claude Code removes its access, with Cancel and Disconnect buttons." width="480" />
+<img src="/assets/overview/onyx_anywhere/mcp/disconnect_confirmation.png" alt="Onyx confirmation dialog explaining that disconnecting Claude Code removes its access, with Cancel and Disconnect buttons." width="400" />
 
 Signing out of Onyx does not disconnect connected apps. Use **Connected apps** to revoke an OAuth authorization.
 For a personal access token or API key connection, revoke the token or key instead.
+
+## Use a personal access token instead
+
+OAuth is the usual setup for interactive clients. If your environment requires a bearer token,
+create a [personal access token](/developers/overview#personal-access-tokens) with `read:search` access.
+
+Keep the token in a local environment variable. For Bash,
+this reads it without echoing it or putting the value in the command history:
+
+```bash
+read -r -s -p "Onyx personal access token: " ONYX_TOKEN
+printf '\n'
+export ONYX_TOKEN
+```
+
+Run the client from that shell. The variable lasts for the shell session. For a persistent setup,
+use your organization's approved local secret management method.
+
+### Codex token configuration
+
+Use this table instead of the OAuth-only table:
+
+```toml
+[mcp_servers.onyx]
+url = "https://onyx.example.com/mcp/"
+bearer_token_env_var = "ONYX_TOKEN"
+```
+
+Start `codex` from the shell where `ONYX_TOKEN` is exported.
+A desktop app launched separately may not inherit that shell's environment.
+
+### Claude Code token configuration
+
+Use this `.mcp.json` entry instead of the OAuth-only entry:
+
+```json
+{
+  "mcpServers": {
+    "onyx": {
+      "type": "http",
+      "url": "https://onyx.example.com/mcp/",
+      "headers": {
+        "Authorization": "Bearer ${ONYX_TOKEN}"
+      }
+    }
+  }
+}
+```
+
+Start `claude` from the shell where the variable is exported.
+Claude Code expands the environment variable when it loads the configuration.
+Remove the Authorization header to switch back to OAuth.
+
+## Disconnect or change accounts
+
+To clear Codex's saved OAuth credentials:
+
+```bash
+codex mcp logout onyx
+```
+
+To remove its server configuration:
+
+```bash
+codex mcp remove onyx
+```
+
+For Claude Code:
+
+```bash
+claude mcp logout onyx
+claude mcp remove onyx --scope user
+```
+
+If you used a project configuration, remove the Onyx entry from `.mcp.json` instead.
+Desktop connector settings also provide disconnect or removal controls.
+
+Removing a client configuration and revoking an Onyx authorization are separate operations.
+Use [Onyx's connected app controls](#manage-connected-apps) to revoke the grant.
+Revoke a personal access token in Onyx if you used token authentication. To change accounts,
+clear the client's saved authentication and reconnect with the intended Onyx account.
 
 ## Prompts you can use
 
@@ -285,4 +482,4 @@ named filters are resolved on the search call and return an error when they cann
 | The desktop connector cannot reach a self-hosted instance | Hosted connectors may connect from cloud infrastructure. A URL reachable only on your laptop is insufficient for those clients. |
 | Connected apps is missing | Ask your administrator to confirm that your deployment includes OAuth support and has a supported web domain. PAT connections are managed as tokens, not OAuth connected apps. |
 
-For connection commands and client-specific troubleshooting, see [Client setup](/overview/onyx_anywhere/mcp_clients).
+For connection commands, see [Connect your AI tools](#connect-your-ai-tools).

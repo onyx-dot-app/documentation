@@ -56,7 +56,6 @@
               "overview/onyx_anywhere/slack",
               "overview/onyx_anywhere/discord_bot",
               "overview/onyx_anywhere/mcp_server",
-              "overview/onyx_anywhere/mcp_clients",
               "developers/guides/llm_gateway",
               "overview/onyx_anywhere/cli",
               "overview/onyx_anywhere/mobile_app"
