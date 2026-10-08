@@ -1,316 +1,254 @@
 ---
-title: "Onyx MCP Server"
-description: "Connect LLMs like Claude, Cursor, and other AI tools to your Onyx knowledge base via the Model Context Protocol"
-icon: "plug"
+title: "Configure the Onyx MCP server"
+description: "Enable the MCP server on a self-hosted Onyx deployment, configure OAuth discovery, and verify client access."
+icon: "server"
 ---
 
-## Overview
+The Onyx MCP server makes your indexed knowledge available to external AI clients over Streamable HTTP.
+Users can connect with their Onyx account through OAuth or use a personal access token.
+This guide covers deployment and administration. For client setup, tools, and example prompts,
+see [Onyx MCP server](/overview/onyx_anywhere/mcp_server).
 
-The Onyx MCP Server lets any MCP-compatible LLM client (Claude Desktop, Claude Code, Cursor, Windsurf, etc.)
-access your Onyx knowledge base, web search,
-and URL fetching capabilities through the [Model Context Protocol](https://modelcontextprotocol.io/).
+<Note>
+  This is the server that lets other apps search Onyx. To let Onyx call tools on an external MCP server,
+  see [MCP actions](/admins/actions/mcp).
+</Note>
 
-## Prerequisites
+## Deployment requirements
 
-Before connecting, you'll need:
+Use a running Onyx deployment with indexed documents and user access configured.
+The MCP service must be able to reach the Onyx API and the deployment's backing services.
 
-- **A running Onyx instance** (either self-hosted or Onyx Cloud)
-- **Authentication** — see [Personal Access Tokens](/developers/overview#personal-access-tokens)
-   or [API Keys](/admins/user_management/api_keys)
-- **An MCP-compatible client** (Claude Desktop, Claude Code, Cursor, etc.)
+Set `WEB_DOMAIN` to the public HTTPS address users visit, for example `https://onyx.example.com`.
+Onyx derives both its OAuth issuer and MCP resource URL from this value:
 
-<Card title="Self-Hosted MCP Server Configuration" icon="server" href="#self-hosted-configuration">
-  Jump to environment variables, networking, and deployment settings for self-hosted MCP server
-</Card>
+| Setting | Example |
+| --- | --- |
+| Public Onyx address | `https://onyx.example.com` |
+| MCP connection URL | `https://onyx.example.com/mcp/` |
+| OAuth issuer | `https://onyx.example.com/api/oauth-provider` |
+| OAuth scope | `read:search` |
 
-## Quick Start
+OAuth is available automatically when `WEB_DOMAIN` is a valid HTTPS URL.
+HTTP is accepted only for loopback development addresses such as `http://localhost:3000`.
+A non-loopback HTTP address does not enable the OAuth provider. There is no separate OAuth enablement flag.
 
-### Claude Code (CLI)
+The MCP endpoint, OAuth endpoints, discovery metadata,
+and browser authorization pages must be reachable at the public address in `WEB_DOMAIN`.
+An API reachable only on another hostname is insufficient:
+the OAuth API routes must also be served on the `WEB_DOMAIN` host.
+Keep the public address consistent across affected services.
 
-```bash
-claude mcp add --transport http onyx https://cloud.onyx.app/mcp \
-  --header "Authorization: Bearer YOUR_ONYX_TOKEN_HERE"
-```
+## Enable the service
 
-Or add it to your project's `.mcp.json`:
+### Docker Compose
 
-```json
-{
-  "mcpServers": {
-    "onyx": {
-      "type": "http",
-      "url": "https://cloud.onyx.app/mcp",
-      "headers": {
-        "Authorization": "Bearer ${ONYX_TOKEN}"
-      }
-    }
-  }
-}
-```
-
-Then set the environment variable before running Claude Code:
+In the deployment's `.env`, set:
 
 ```bash
-export ONYX_TOKEN="your-token-here"
-claude
-```
-
-### Claude Desktop
-
-Add the following to your Claude Desktop config file:
-
-- **macOS**: `~/Library/Application Support/Claude/claude_desktop_config.json`
-- **Windows**: `%APPDATA%\Claude\claude_desktop_config.json`
-
-```json
-{
-  "mcpServers": {
-    "onyx": {
-      "url": "https://cloud.onyx.app/mcp",
-      "headers": {
-        "Authorization": "Bearer YOUR_ONYX_TOKEN_HERE"
-      }
-    }
-  }
-}
-```
-
-<Tip>
-  Replace `https://cloud.onyx.app/mcp` with `http://YOUR_ONYX_DOMAIN:8090/` if you're self-hosting.
-</Tip>
-
-### Cursor / Windsurf / Other MCP Clients
-
-Most MCP clients support HTTP transport with custom headers. The connection details are:
-
-| Setting | Value |
-|---|---|
-| **URL** | `https://cloud.onyx.app/mcp` (or `http://YOUR_DOMAIN:8090/`) |
-| **Transport** | HTTP (Streamable HTTP) |
-| **Auth Header** | `Authorization: Bearer YOUR_TOKEN` |
-
-Refer to your client's MCP documentation for exact configuration steps.
-
-## Available Tools
-
-The MCP server exposes three tools that LLM clients can invoke:
-
-<AccordionGroup>
-  <Accordion title="search_indexed_documents" icon="magnifying-glass">
-    Search your private knowledge base indexed in Onyx. Returns ranked document chunks with content, relevance scores,
-    and metadata.
-
-    **Parameters:**
-
-    | Parameter | Type | Required | Default | Description |
-    |---|---|---|---|---|
-    | `query` | string | Yes | — | Natural language search query |
-    | `source_types` | string[] | No | All sources | Filter by connector type (e.g. `["confluence", "github", "jira"]`) |
-    | `time_cutoff` | string | No | No cutoff | ISO 8601 datetime — only return docs updated after this time |
-    | `limit` | integer | No | `10` | Maximum number of results to return |
-
-    **Example call:**
-
-    ```json
-    {
-      "query": "What is the latest status of PROJ-1234?",
-      "source_types": ["jira", "google_drive"],
-      "time_cutoff": "2025-01-01T00:00:00Z",
-      "limit": 5
-    }
-    ```
-
-    **Response fields:**
-
-    | Field | Description |
-    |---|---|
-    | `documents` | Array of result objects |
-    | `documents[].semantic_identifier` | Human-readable document name |
-    | `documents[].content` | Relevant text snippet |
-    | `documents[].source_type` | Connector source (e.g. `"confluence"`) |
-    | `documents[].link` | URL to the original document |
-    | `documents[].score` | Relevance score |
-    | `total_results` | Number of results returned |
-    | `query` | The original query |
-    | `executed_queries` | List of queries actually executed (may include expansions) |
-
-    <Tip>
-      To discover which source types are available, use the `indexed_sources` resource (see below).
-    </Tip>
-  </Accordion>
-
-  <Accordion title="search_web" icon="globe">
-    Search the public internet for general knowledge and current events.
-
-    **Parameters:**
-
-    | Parameter | Type | Required | Default | Description |
-    |---|---|---|---|---|
-    | `query` | string | Yes | — | Search query |
-    | `limit` | integer | No | `5` | Maximum number of results |
-
-    **Example call:**
-
-    ```json
-    {
-      "query": "React 19 migration guide",
-      "limit": 5
-    }
-    ```
-
-    **Response fields:**
-
-    | Field | Description |
-    |---|---|
-    | `results` | Array of web search results |
-    | `results[].title` | Page title |
-    | `results[].url` | Page URL |
-    | `results[].snippet` | Short text excerpt |
-    | `query` | The original query |
-
-    <Note>
-      `search_web` returns snippets, not full page content. Use `open_urls` to fetch the complete text of any result.
-    </Note>
-  </Accordion>
-
-  <Accordion title="open_urls" icon="link">
-    Retrieve the complete text content from one or more web URLs.
-
-    **Parameters:**
-
-    | Parameter | Type | Required | Description |
-    |---|---|---|---|
-    | `urls` | string[] | Yes | List of URLs to fetch |
-
-    **Example call:**
-
-    ```json
-    {
-      "urls": [
-        "https://react.dev/blog/2024/12/05/react-19",
-        "https://react.dev/learn/react-compiler"
-      ]
-    }
-    ```
-
-    **Response fields:**
-
-    | Field | Description |
-    |---|---|
-    | `results` | Array of fetched pages |
-    | `results[].title` | Page title |
-    | `results[].url` | The fetched URL |
-    | `results[].content` | Full extracted text content |
-  </Accordion>
-</AccordionGroup>
-
-## Available Resources
-
-<AccordionGroup>
-  <Accordion title="indexed_sources" icon="database">
-    **URI:** `resource://indexed_sources`
-
-    Lists all document connector types currently indexed in your Onyx instance (e.g. `"confluence"`, `"github"`,
-    `"google_drive"`, `"slack"`).
-
-    Use this to discover valid values for the `source_types` filter in `search_indexed_documents`.
-
-    **Example response:**
-
-    ```json
-    {
-      "indexed_sources": ["confluence", "github", "google_drive", "jira", "slack"]
-    }
-    ```
-  </Accordion>
-</AccordionGroup>
-
-## Self-Hosted Configuration
-
-To self-host the MCP server, you will need to enable the deployment via environment variables.
-
-Docker:
-
-```bash .env
+WEB_DOMAIN=https://onyx.example.com
 MCP_SERVER_ENABLED=true
 ```
 
-Kubernetes:
+In `deployment/docker_compose/docker-compose.prod.yml`,
+uncomment the supplied `mcp_server` service block and the `mcp_server_logs` volume declaration near the end of the file.
+Setting the environment variable alone does not create the commented-out service.
 
-```yaml values.yaml
+From the Docker Compose deployment directory, start the service and recreate nginx so it loads the MCP routes:
+
+```bash
+docker compose -f docker-compose.prod.yml up -d mcp_server
+docker compose -f docker-compose.prod.yml up -d --force-recreate nginx
+```
+
+If you changed `WEB_DOMAIN`, recreate the affected API, web,
+and MCP services as part of your deployment update so they use the new value.
+The included nginx startup configuration loads the MCP routing rules when `MCP_SERVER_ENABLED=true`.
+
+### Kubernetes with Helm
+
+Add the following to your Helm values:
+
+```yaml
+mcpServer:
+  enabled: true
+
 configMap:
-  MCP_SERVER_ENABLED: "true"
+  WEB_DOMAIN: "https://onyx.example.com"
 ```
 
-### Health Check
+Apply the values with your normal Helm upgrade command.
+The chart creates the MCP deployment and service and sets `MCP_SERVER_ENABLED=true` in the MCP container.
+Setting a ConfigMap flag without `mcpServer.enabled=true` does not create the service.
 
-Verify the MCP server is running:
+When using the chart's ingress, configure the web hostname and TLS to match `WEB_DOMAIN`.
+The chart includes MCP discovery routes, authorization metadata routes, and the browser callback route.
+It also serves the OAuth API routes on the web hostname when the API and web ingress hostnames differ.
+If you use a custom ingress or proxy, provide equivalent routing as described below.
+
+### Upgrade an existing installation
+
+Deploy matching Onyx versions for the API, web, MCP, and background services.
+Apply the normal database migrations for the release and restart the affected services.
+OAuth grants and tokens use database records introduced by the feature; updating only the MCP container is insufficient.
+
+Keep the background workers and scheduled tasks running for expired-grant cleanup.
+Expired credentials stop working at their expiration time even if cleanup has not yet removed their database records.
+
+## Configure public routing
+
+The bundled nginx configuration and Helm templates provide these routes.
+Use this table when checking a custom reverse proxy:
+
+| Public path | Destination |
+| --- | --- |
+| `/mcp/` | MCP service, with the `/mcp` prefix removed |
+| `/.well-known/oauth-protected-resource/mcp/` | MCP service, preserving the discovery path |
+| `/.well-known/oauth-authorization-server/api/oauth-provider` | API's `/oauth-provider/metadata` route |
+| `/api/oauth-provider/*` | API's `/oauth-provider/*` routes |
+| `/mcp/oauth/callback` | Onyx web application |
+
+Preserve authorization headers, `WWW-Authenticate` response headers, and the forwarded host and protocol.
+Support HTTP streaming and sufficiently long request timeouts for MCP requests.
+Serve discovery metadata publicly without a login redirect or an authentication gateway challenge;
+clients need it before they can sign in.
+
+The `/mcp/oauth/callback` page belongs to the web application and must take precedence over the general MCP proxy route.
+It supports Onyx's browser OAuth callback flow; it is separate from an external client's own registered redirect URI.
+
+<Tip>
+  Use the public `/mcp/` URL in client configuration.
+  The MCP container's port is a service connection detail and does not replace the public URL required for OAuth
+  discovery.
+</Tip>
+
+## Verify the deployment
+
+Run these checks from a machine with access to the public deployment. They do not require a token.
+
+### Protected resource metadata
 
 ```bash
-curl http://localhost:8090/health # or http://YOUR_DOMAIN:8090/health
+curl --fail --silent --show-error \
+  https://onyx.example.com/.well-known/oauth-protected-resource/mcp/
 ```
 
-Expected response:
+Check that the JSON identifies your Onyx MCP endpoint as `resource`,
+lists `https://onyx.example.com/api/oauth-provider` under `authorization_servers`,
+and advertises `read:search` under `scopes_supported`.
 
-```json
-{
-  "status": "healthy",
-  "service": "mcp_server"
-}
-```
+Onyx accepts the MCP resource with or without its trailing slash.
+Use the advertised resource value when building a custom client.
 
-### Environment Variables
-
-<Info>
-  Most users should not need to configure these environment variables.
-</Info>
-
-| Variable | Default | Description |
-|---|---|---|
-| `MCP_SERVER_ENABLED` | `false` | Set to `"true"` to enable the MCP server |
-| `MCP_SERVER_HOST` | `0.0.0.0` | Host to bind the MCP server |
-| `MCP_SERVER_PORT` | `8090` | Port for the MCP server |
-| `MCP_SERVER_CORS_ORIGINS` | (empty) | Comma-separated list of allowed CORS origins |
-| `API_SERVER_PROTOCOL` | `http` | Protocol for internal API server connection |
-| `API_SERVER_HOST` | `127.0.0.1` | Hostname for internal API server connection |
-| `API_SERVER_URL_OVERRIDE_FOR_HTTP_REQUESTS` | (unset) | Full URL override for API server. Use this when self-hosting the MCP server against Onyx Cloud |
-
-## Debugging & Testing
-
-### MCP Inspector
-
-The [MCP Inspector](https://github.com/modelcontextprotocol/inspector) is an interactive debugging tool for MCP servers:
+### Authorization server metadata
 
 ```bash
-npx @modelcontextprotocol/inspector
+curl --fail --silent --show-error \
+  https://onyx.example.com/.well-known/oauth-authorization-server/api/oauth-provider
 ```
 
-**Setup in Inspector:**
+Check that `issuer` is `https://onyx.example.com/api/oauth-provider`. The response includes authorization, token,
+registration, and revocation endpoints under that issuer. It advertises the authorization code and refresh token grants,
+the `read:search` scope, PKCE `S256`, and public client authentication (`none`).
 
-- Ignore the OAuth configuration menus
-- Open the **Authentication** tab
-- Select **Bearer Token** authentication
-- Paste your Onyx PAT or API key
-- Click **Connect**
+A login page, HTML response,
+or unexpected redirect at either discovery URL usually indicates a routing or authentication gateway problem.
 
-Once connected, you can browse tools, test calls with different parameters, and inspect request/response payloads.
+### Authentication challenge
 
-## Next Steps
+```bash
+curl --include --request POST \
+  https://onyx.example.com/mcp/ \
+  --header 'Content-Type: application/json' \
+  --header 'Accept: application/json, text/event-stream' \
+  --data '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2025-03-26","capabilities":{},"clientInfo":{"name":"deployment-check","version":"1.0"}}}'
+```
 
-<CardGroup cols={2}>
-  <Card title="Personal Access Tokens" icon="key" href="/developers/overview#personal-access-tokens">
-    Create a token to authenticate with the MCP server
-  </Card>
+Without credentials,
+expect `401 Unauthorized` and a `WWW-Authenticate` challenge pointing to the protected resource metadata.
+This is the expected sign-in discovery behavior.
+Complete an authenticated connection using the [client setup guide](/overview/onyx_anywhere/mcp_clients)
+to verify that a user can search their indexed documents.
 
-  <Card title="API Keys" icon="shield-check" href="/admins/user_management/api_keys">
-    Create shared API keys for team-wide MCP access
-  </Card>
+## Authentication and access
 
-  <Card title="Connectors" icon="plug" href="/admins/connectors/overview">
-    Add data sources to make your knowledge searchable via MCP
-  </Card>
+OAuth lets a user sign in to Onyx in their browser and approve an app's access without copying a token into that app.
+The supported scope, `read:search`, gives the client search access associated with the signed-in user.
+OAuth does not grant administrator access or bypass document permissions. To authorize an OAuth connection,
+the user must have an active standard account with **Search** and **Create User Access Token** permissions.
+Check these permissions if a user cannot approve a connection.
 
-  <Card title="MCP Actions" icon="diagram-project" href="/admins/actions/mcp">
-    Connect Onyx to external MCP servers as a client
-  </Card>
-</CardGroup>
+For clients that accept bearer tokens instead of OAuth,
+use a [personal access token](/developers/overview#personal-access-tokens)
+or an [API key](/admins/user_management/api_keys).
+A personal token is appropriate when access should follow an individual user.
+Review an API key's permissions before distributing it. Keep tokens out of shared configuration files, source control,
+and example prompts.
+
+### OAuth client requirements
+
+Most users should let their MCP client handle discovery and registration. For a custom client integration,
+Onyx supports:
+
+- **Public clients:** use `token_endpoint_auth_method=none`. A client secret is not required.
+- **Dynamic client registration:** register client metadata at the advertised registration endpoint.
+- **Client ID Metadata Documents:** supported clients can use an HTTPS metadata-document URL as their client identifier.
+- **Authorization code flow with PKCE:** use `code_challenge_method=S256` and supply the matching verifier when exchanging the code.
+- **Resource binding:** use the canonical MCP resource, `https://onyx.example.com/mcp/`, in authorization and token requests.
+- **Registered redirect URIs:** the callback must match the client's registration. Wildcards are unsupported.
+  Loopback callbacks support a variable port for desktop clients, while preserving the registered scheme, hostname,
+  path, and query.
+
+Read endpoint URLs from discovery metadata rather than constructing them in a client.
+Retain and validate OAuth state and issuer information through the browser round trip.
+The redirect URI in a code exchange must be consistent with the authorization request.
+
+### Token lifetime and revocation
+
+Access tokens last up to 15 minutes. When a refresh token is issued,
+its grant lasts 30 days from the original authorization; refreshing does not extend that deadline.
+Without a refresh token, the grant has the access-token lifetime.
+
+Refresh tokens rotate: save each newly returned refresh token and discard the previous one.
+Reusing a consumed refresh token revokes the grant, so concurrent refresh attempts can require the user to reconnect.
+Serialize refresh operations for a connection.
+
+Clients can revoke tokens through the advertised revocation endpoint.
+Users can review and revoke OAuth connections in Onyx. A revoked grant stops authorizing requests;
+the client must obtain a new user authorization to reconnect.
+
+## Service settings
+
+| Variable | Default | Purpose |
+| --- | --- | --- |
+| `MCP_SERVER_ENABLED` | `false` | Enable the MCP service and bundled Docker nginx routes. |
+| `WEB_DOMAIN` | Deployment-specific | Public web address used to derive OAuth issuer and MCP resource URLs. |
+| `MCP_SERVER_HOST` | `0.0.0.0` | MCP service bind address. |
+| `MCP_SERVER_PORT` | `8090` | MCP service listening port. |
+| `MCP_SERVER_CORS_ORIGINS` | Empty | Comma-separated additional allowed browser origins. |
+| `API_SERVER_PROTOCOL` | `http` | Protocol used by MCP to reach the API service. |
+| `API_SERVER_HOST` | `127.0.0.1` | API service hostname; bundled deployments supply the service address. |
+| `API_SERVER_URL_OVERRIDE_FOR_HTTP_REQUESTS` | Unset | Override the API service URL for deployments with custom internal networking. |
+
+The Helm chart supplies the MCP service's API URL. Configure an override only when your deployment topology requires it;
+it does not change the public OAuth issuer or MCP resource.
+
+## Troubleshooting
+
+| Symptom | Check |
+| --- | --- |
+| MCP URL returns `404` | Enable the service and public proxy routes. In Docker, uncomment the service block and recreate nginx. |
+| OAuth metadata returns `404` | Confirm `WEB_DOMAIN` is HTTPS, or HTTP on a loopback development host, and check discovery routing. |
+| Discovery returns HTML or a login redirect | Allow unauthenticated access to metadata and check the reverse proxy destination. |
+| Browser authorization opens the wrong host | Check `WEB_DOMAIN` on the API and MCP services, then restart them after correcting it. |
+| Callback fails or reaches the MCP service | Route `/mcp/oauth/callback` to the web app and verify the external client's registered redirect URI. |
+| `401 Unauthorized` after previously working | Reconnect if credentials expired or were revoked; check that the client saved the latest rotated refresh token. |
+| `402 Payment Required` | Check the deployment's billing or license restrictions. Repeated sign-in does not remove these restrictions. |
+| `403 Forbidden` | Check user permissions and the requested scope; OAuth supports `read:search`. |
+| `503 Service Unavailable` | Check API availability and the MCP service's API connection. |
+| Search succeeds but expected documents are absent | Check indexing status and that the connected user has permission to those documents. |
+
+<Note>
+  Preserve the actual error status in your proxy. A permission, billing,
+  or upstream availability problem should not be rewritten into a generic sign-in failure.
+</Note>
