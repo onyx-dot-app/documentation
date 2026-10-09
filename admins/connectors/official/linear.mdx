@@ -1,20 +1,28 @@
 ---
 title: "Linear"
-description: "Access issues and projects from Linear"
+description: "Access issues and comments from Linear"
 ---
 
 ## How it works
 
-The Linear connector pulls in all the Linear issues and the associated comments.
+The Linear connector indexes issues and their comments. Each issue carries its team, project, creator, assignee,
+state and priority as metadata.
 
 Issues are updated every **10** minutes.
+
+| Content     | Notes                                                                                                   |
+| ----------- | ------------------------------------------------------------------------------------------------------- |
+| Issues      | Title and description, with the issue's comments. Archived and trashed issues are skipped.              |
+| Scope       | Optional. Limit the index to specific teams, specific projects, or both.                                |
+| Permissions | Optional on Onyx Cloud and Enterprise Edition. Onyx mirrors who can see each issue in Linear.          |
 
 ## Setup
 
 ### Configure your Linear Application + Onyx env variables
 
 <Info>
-  This is only necessary if self-hosting Onyx. If using [Onyx Cloud](https://cloud.onyx.app), you can skip this step.
+  This is only necessary if self-hosting Onyx and connecting with OAuth. If using [Onyx Cloud](https://cloud.onyx.app),
+  or connecting with a personal API key, you can skip this step.
 </Info>
 
 <Steps>
@@ -48,19 +56,52 @@ LINEAR_CLIENT_SECRET=
     In the Onyx UI, navigate to the Admin Panel and select the **Linear** Connector
   </Step>
 
-  <Step title="Authorize via OAuth">
-    Click the `Create New` button to go through the OAuth flow.
+  <Step title="Connect a Linear account">
+    Select **New Linear Account**. Either go through the OAuth flow with **Connect**,
+    or paste a [personal API key](https://linear.app/settings/api) and select **Create**.
+
+    Onyx sees exactly what this account sees. Connect as a workspace member, not a guest,
+    who belongs to every private team you want to index. Linear hides a private team from everyone outside it,
+    so Onyx cannot index it or warn you about it.
   </Step>
 
-  <Step title="Return to Onyx">
-    Once you've authorized the application, you'll be redirected back to Onyx.
+  <Step title="Choose what to index">
+    Leave **Teams** and **Projects** empty to index every issue the account can see. To narrow the index,
+    enter team keys (for example `ENG`), project names, or project URLs. When you set both, an issue must match both.
+
+    Onyx checks every entry when you create the connector and names any team or project Linear does not answer for.
+    That means the entry is misspelled, or it belongs to a private team the connected account is not in.
   </Step>
 
-  <Step title="Select credential and configure">
-    Select the new credential and click Continue. Enter connector name and permissions information.
+  <Step title="Choose who can see the issues">
+    - **Public** makes every indexed issue visible to every Onyx user.
+    - **Private** limits the connector to selected Onyx users and groups.
+    - **Sync with Linear** mirrors Linear's own access and is available on Onyx Cloud and Enterprise Edition.
   </Step>
 
   <Step title="Create connector">
     Click `Create Connector` to begin indexing Linear issues and comments!
   </Step>
 </Steps>
+
+## Sync with Linear
+
+With **Sync with Linear**, an Onyx user finds an issue only if their Linear account, matched by email, can see it:
+
+- Issues in a public team are visible to every active workspace member. Guests see them only in the teams they were
+  added to.
+- Issues in a private team are visible to that team's members.
+- Issues in a restricted sub-team are visible to its members and to the members of its private parent team.
+- Issues shared with individual people (Linear Enterprise) are visible to those people as well.
+
+Onyx refreshes team membership every 5 minutes and re-reads each issue's team every hour.
+A newly indexed issue becomes searchable after the first of these hourly passes.
+Both intervals are configurable with `LINEAR_PERMISSION_GROUP_SYNC_FREQUENCY` and `LINEAR_PERMISSION_DOC_SYNC_FREQUENCY`
+(seconds).
+
+<Note>
+  Private teams the connected account is not in are not indexed at all. To cover them,
+  add a second Linear connector as a member of those teams and limit it to them with **Teams**,
+  or connect Linear's MCP server as a per-user action so each person searches those teams live with their own Linear
+  login.
+</Note>
