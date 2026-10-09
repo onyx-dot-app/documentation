@@ -1,0 +1,84 @@
+---
+title: "Auto Model Routing"
+description: "Let a router model pick the best model for each message"
+icon: "wand-magic-sparkles"
+---
+
+<Tip>
+  Auto mode adds a single **Auto** option to the model picker. When a user selects it,
+  a router model chosen by your admins decides which upstream model handles each message.
+</Tip>
+
+## How It Works
+
+Most gateways expose **router models**: virtual models that forward each request to a real model based on cost, latency,
+or capability. For example, OpenRouter's **Auto Router** (`openrouter/auto`)
+picks a model per request instead of pinning one.
+
+Onyx surfaces these as one user-facing option:
+
+- **Admins** choose which router backs Auto mode on the Language Models page.
+- **Users** see a single **Auto** line item in the model picker — no router jargon,
+  no extra configuration.
+
+Router models never appear in the regular model list. They only back the Auto option,
+so your visible model list stays intentional.
+
+## Prerequisites
+
+You need at least one configured provider that exposes router models. [OpenRouter](/admins/ai_models/openrouter)
+is the easiest way to get one — when Onyx syncs the provider's model list,
+router entries like Auto Router are detected automatically.
+
+## Enable Auto Mode
+
+<Steps>
+  <Step title="Configure a provider with router models">
+    Set up [OpenRouter](/admins/ai_models/openrouter) (or another gateway that exposes router models)
+    and fetch its model list. Router entries are marked automatically.
+  </Step>
+
+  <Step title="Turn on Auto Mode">
+    Navigate to **Admin Panel → Language Models**. In the **Default Model** card, enable the **Auto Mode** toggle.
+  </Step>
+
+  <Step title="Choose a Router Model">
+    Select the router that handles Auto requests.
+    The dropdown lists only router models across your configured providers — for OpenRouter,
+    options include **Auto Router**, **Auto Router (Beta)**, **Fusion**, and **Pareto Code Router**.
+
+    <img className="rounded-image" src="/assets/admins/ai_models/model_routing_router_select.png" alt="Choosing a router model"/>
+
+    <img className="rounded-image" src="/assets/admins/ai_models/model_routing_admin.png" alt="Auto Mode and Router Model settings on the Language Models page"/>
+  </Step>
+</Steps>
+
+## What Users See
+
+Users get an **Auto** item at the top of the model picker, marked with a sparkle.
+Selecting it routes every message in that chat through your chosen router.
+
+<img className="rounded-image" src="/assets/admins/ai_models/model_routing_picker.png" alt="Auto option in the model picker"/>
+
+The chat input shows the selection like any other model:
+
+<img className="rounded-image" src="/assets/admins/ai_models/model_routing_selected.png" alt="Chat with Auto selected"/>
+
+<Note>
+  Auto behaves like any other picker selection — it can be set per chat,
+  combined with other models in multi-model chats, and overridden per message.
+</Note>
+
+## Turning Auto Off
+
+Disable the **Auto Mode** toggle to remove the Auto option from the picker.
+Chats that already used Auto keep their history; new messages fall back to your default model.
+
+## Best Practices
+
+- **Cost optimization**: routers like Auto Router tend to prefer cheaper adequate models —
+  a practical way to cut spend on routine messages while keeping frontier models one click away.
+- **Pick the router deliberately**: different routers optimize for different things
+  (price, speed, benchmark scores). Check your gateway's routing strategy before choosing.
+- **Keep an explicit default**: Auto is opt-in per chat. The **Default Model** still applies
+  everywhere users don't actively choose Auto.
