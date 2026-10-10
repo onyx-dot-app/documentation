@@ -31,6 +31,7 @@ All selected data types are updated every **10** minutes.
     - For **Companies**: Select the `Companies` scope
     - For **Deals**: Select the `Deals` scope
     - For **Contacts**: Select the `Contacts` scope
+    - For **permission sync**: Select the `settings.users.read` scope, so Onyx can map record viewers to users
 
     <img className="rounded-image" src="/assets/admins/connectors/hubspot/HubSpotScope.png" alt="Selecting HubSpot OAuth scopes for Contacts, Companies, Deals, and Tickets"/>
   </Step>
@@ -68,3 +69,13 @@ All selected data types are updated every **10** minutes.
   Make sure your HubSpot Access Token has the appropriate scopes enabled for the object types you want to index.
   The connector will only be able to access data for which you've granted the necessary permissions.
 </Note>
+
+### Permission sync
+
+On Onyx Cloud and Enterprise Edition, the connector syncs record permissions from HubSpot by default.
+Each record is visible in Onyx to the HubSpot users who can view it, matched by email address.
+This needs the `settings.users.read` scope. Without it, connector creation fails on the **Users can be listed** check.
+
+If you do not want to sync permissions,
+set the connector's document access to **Public** or **Private** when you create it.
+Private access uses the Onyx user groups you assign to the connector. Neither mode needs the extra scope.
