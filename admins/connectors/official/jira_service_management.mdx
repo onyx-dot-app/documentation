@@ -185,9 +185,16 @@ Turning the setting off again prunes those attachment documents on the next prun
   </Step>
 </Steps>
 
-### Live setup and indexing demo
+### Live setup, indexing, and search API verification
 
-[Watch the real Jira Service Management connector setup and indexing video](/assets/admins/connectors/jira_service_management/JsmDemo.mp4). The recording shows the Admin Panel connector flow, a successful connector check, and **Indexed: 1 document** in the test project. The credential account detail is redacted. It does not claim to demonstrate a search result; search requires a configured default LLM model.
+[Watch the real connector setup and verified search evidence video](/assets/admins/connectors/jira_service_management/JsmDemo.mp4).
+The first segment records the actual Onyx Admin Panel setup, successful connector checks, and **Indexed: 1 document** from a Jira Service Management test project. The final segment presents a separately labeled, **live authenticated** `POST /api/search` response: **HTTP 200**, one result with issue key `OD-1`, its correct Jira link, and `source_type: jira_service_management`.
+
+The final JSON-response segment is **not the native Onyx chat interface**. The credential identity in the Admin Panel recording is redacted; no API token is shown.
+
+[Inspect the recorded API evidence JSON](/assets/admins/connectors/jira_service_management/JsmSearchEvidence.json).
+
+<img className="rounded-image" src="/assets/admins/connectors/jira_service_management/JsmSearchEvidence.png" alt="Live Onyx API response rendered as JSON evidence, showing HTTP 200 and the Jira Service Management ticket OD-1; this is not the native chat interface"/>
 
 ### Field mapping
 
