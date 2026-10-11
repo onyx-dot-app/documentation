@@ -133,9 +133,7 @@ Turning the setting off again prunes those attachment documents on the next prun
 ## Configure the connector
 
 <Note>
-  The images in this section are generated schematic field maps.
-  They list the exact field labels that the connector form uses. They are not screenshots of the Onyx Admin Panel.
-  Match the labels, not the layout.
+  The images below are real captures of the Onyx Admin Panel. The example Jira hostname and project key are illustrative values, not credentials from an active site. Never include API tokens in screenshots or demo recordings.
 </Note>
 
 <Steps>
@@ -144,18 +142,18 @@ Turning the setting off again prunes those attachment documents on the next prun
   </Step>
 
   <Step title="Provide credentials">
-    Select **Create New** and enter the connector account's email address and API token.
+    Select **New Jira Service Management Account** and enter the connector account's email address and API token.
 
-    <img className="rounded-image" src="/assets/admins/connectors/jira_service_management/JsmCredential.png" alt="Schematic field map of the Jira Service Management credential fields, Email and API token. This is a generated diagram, not a screenshot of the Onyx Admin Panel"/>
+    <img className="rounded-image" src="/assets/admins/connectors/jira_service_management/JsmCredential.png" alt="Actual Onyx Jira Service Management Authentication Account panel with the new credential email and API token fields left blank"/>
 
-    Select **Create**, select the credential, and select **Continue**.
+    Select **Create**, then select the saved credential using the radio button in the Authentication Account section.
   </Step>
 
   <Step title="Configure the JSM source">
     Enter a connector name, the Jira base URL (usually `https://your-domain.atlassian.net`),
     and the service desk **Project Key** (for example `HELP`).
 
-    <img className="rounded-image" src="/assets/admins/connectors/jira_service_management/JsmProject.png" alt="Schematic field map of the Jira Service Management source fields, Jira Base URL, Project Key, and the Using scoped token, Include internal notes, and Include attachments options. This is a generated diagram, not a screenshot of the Onyx Admin Panel"/>
+    <img className="rounded-image" src="/assets/admins/connectors/jira_service_management/JsmProject.png" alt="Actual Onyx connector content form showing example Jira Base URL and project key and the optional scope, internal notes, and attachment switches"/>
 
     <Warning>
       The **Project Key** must be a Jira Service Management (service desk) project.
@@ -186,6 +184,10 @@ Turning the setting off again prunes those attachment documents on the next prun
     Select **Create Connector**. Onyx starts indexing the JSM tickets that match your configuration.
   </Step>
 </Steps>
+
+### Live setup and indexing demo
+
+[Watch the real Jira Service Management connector setup and indexing video](/assets/admins/connectors/jira_service_management/JsmDemo.mp4). The recording shows the Admin Panel connector flow, a successful connector check, and **Indexed: 1 document** in the test project. The credential account detail is redacted. It does not claim to demonstrate a search result; search requires a configured default LLM model.
 
 ### Field mapping
 
