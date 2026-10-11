@@ -185,16 +185,23 @@ Turning the setting off again prunes those attachment documents on the next prun
   </Step>
 </Steps>
 
-### Live setup, indexing, and search API verification
+### Live setup, indexing, and native Onyx chat verification
 
-[Watch the real connector setup and verified search evidence video](/assets/admins/connectors/jira_service_management/JsmDemo.mp4).
-The first segment records the actual Onyx Admin Panel setup, successful connector checks, and **Indexed: 1 document** from a Jira Service Management test project. The final segment presents a separately labeled, **live authenticated** `POST /api/search` response: **HTTP 200**, one result with issue key `OD-1`, its correct Jira link, and `source_type: jira_service_management`.
+[Watch the complete Jira Service Management demo](/assets/admins/connectors/jira_service_management/JsmDemo.mp4) (**48.92 seconds**). The recording combines genuine Onyx Admin Panel actions (Add Connector, service-desk credential checks, connector creation, and **Indexed: 1 document**), the independently verified API response, and a **real Onyx chat session** asking for the indexed JSM ticket `OD-1`.
 
-The final JSON-response segment is **not the native Onyx chat interface**. The credential identity in the Admin Panel recording is redacted; no API token is shown.
+In the native chat interface, Onyx retrieves the ticket, answers with its title (**Onyx JSM connector indexing test**), and exposes it in the **Cited Sources** panel with its indexed description. The native chat segment was recorded live—not reconstructed from API JSON.
 
-[Inspect the recorded API evidence JSON](/assets/admins/connectors/jira_service_management/JsmSearchEvidence.json).
+[Watch only the native Onyx chat and citations](/assets/admins/connectors/jira_service_management/JsmNativeChat.mp4) (**25.36 seconds**).
 
-<img className="rounded-image" src="/assets/admins/connectors/jira_service_management/JsmSearchEvidence.png" alt="Live Onyx API response rendered as JSON evidence, showing HTTP 200 and the Jira Service Management ticket OD-1; this is not the native chat interface"/>
+<img className="rounded-image" src="/assets/admins/connectors/jira_service_management/JsmNativeChat.png" alt="Real Onyx chat showing the query for Jira Service Management OD-1, the returned issue title, and the Cited Sources panel displaying the indexed ticket"/>
+
+The separate authenticated `POST /api/search` API test returned **HTTP 200** and one result with key `OD-1`, its Jira link, and `source_type: jira_service_management`:
+
+[Inspect the live search API evidence JSON](/assets/admins/connectors/jira_service_management/JsmSearchEvidence.json).
+
+<img className="rounded-image" src="/assets/admins/connectors/jira_service_management/JsmSearchEvidence.png" alt="Real Onyx search API response rendered as JSON evidence showing HTTP 200 and the Jira Service Management ticket OD-1; this is not the native chat interface"/>
+
+The credential and account identifiers are masked in the published videos and native-chat screenshot. No API token is shown. The small local test LLM required a 4,096-token context configuration for the native chat recording; it is a functional smoke test, not a model-quality benchmark.
 
 ### Field mapping
 
