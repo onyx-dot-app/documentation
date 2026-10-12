@@ -121,6 +121,12 @@ See [Language Model Access Controls](/admins/advanced_configs/llm_access_control
     A per-user exception takes precedence over the workspace default until you change it.
   </Accordion>
 
+  <Accordion title="Every Craft message fails with “Payment Required”">
+    Older self-hosted releases sent Craft traffic through a license-gated path,
+    so deployments without a Business or Enterprise license saw `FEATURE_NOT_AVAILABLE` on every message.
+    Craft does not require a license: upgrade to the latest patch release for your Onyx version.
+  </Accordion>
+
   <Accordion title="Saved workspace instructions are not affecting a session">
     Start a new session to test the saved instructions. They do not update an actively running session.
     Also confirm the guidance does not conflict with Craft's built-in hard rules or an enforced App policy.
