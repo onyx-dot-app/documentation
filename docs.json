@@ -300,6 +300,7 @@
                   "admins/connectors/official/wikipedia",
                   "admins/connectors/official/xenforo",
                   "admins/connectors/official/zendesk",
+                  "admins/connectors/official/zoom",
                   "admins/connectors/official/zulip"
                 ]
               }

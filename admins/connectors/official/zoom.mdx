@@ -1,0 +1,167 @@
+---
+title: "Zoom"
+description: "Index the transcripts of Zoom cloud recordings"
+---
+
+The Zoom connector indexes the transcript of each cloud-recorded meeting and webinar.
+Point it at meeting or webinar IDs, host emails, or a Zoom Group. With **Auto Sync Permissions**,
+each transcript is visible only to the people who can watch the recording in Zoom.
+
+## Before you begin
+
+You need:
+
+- An Onyx administrator account.
+- A Zoom account on a **Pro** plan or higher, and a Zoom user who can build apps on the App Marketplace:
+  the account owner, or an admin with the **Server-to-Server OAuth app** permission.
+- **Audio transcript** turned on in Zoom's cloud recording settings.
+  Zoom only creates a transcript for recordings made after you turn it on.
+- The **Webinar** add-on, if you index webinars.
+- For [permission sync](#permission-sync), the Onyx Enterprise Edition.
+
+## Create a Zoom app
+
+<Steps>
+  <Step title="Build a Server-to-Server OAuth app">
+    Sign in at [marketplace.zoom.us](https://marketplace.zoom.us) and open **Develop → Build App**.
+    Choose **Server to Server OAuth App** and give it a name, such as "Onyx".
+
+    <img className="rounded-image" src="/assets/admins/connectors/zoom/build_app.png" alt="Zoom's app type chooser, with Server to Server OAuth App as one of the choices"/>
+  </Step>
+
+  <Step title="Copy the credentials">
+    On **App Credentials**, copy the **Account ID**, **Client ID**, and **Client Secret**. Onyx needs all three.
+
+    <img className="rounded-image" src="/assets/admins/connectors/zoom/app_credentials.png" alt="The App Credentials page, with the Account ID, Client ID, and Client Secret"/>
+  </Step>
+
+  <Step title="Fill in the Information tab">
+    Enter a short description, your company name, and a developer contact. Zoom does not activate an app without them.
+  </Step>
+
+  <Step title="Add the scopes">
+    On **Scopes**, select **Add Scopes**. Search for each scope below, tick it, and select **Done**.
+
+    <img className="rounded-image" src="/assets/admins/connectors/zoom/add_scopes.png" alt="The Add Scopes dialog, filtered to the cloud_recording:read scopes"/>
+
+    Add these scopes:
+
+    - `cloud_recording:read:list_user_recordings:admin`
+    - `cloud_recording:read:list_recording_files:admin`
+    - `user:read:list_users:admin`
+    - `group:read:list_members:admin`
+    - `meeting:read:meeting:admin`
+    - `meeting:read:past_meeting:admin`
+    - `meeting:read:list_past_instances:admin`
+    - `webinar:read:webinar:admin`
+    - `webinar:read:list_past_instances:admin`
+
+    For **Auto Sync Permissions**, also add:
+
+    - `cloud_recording:read:recording_settings:admin`
+    - `cloud_recording:read:list_recording_registrants:admin`
+    - `user:read:user:admin`
+    - `user:read:settings:admin`
+
+    All of them are read-only. Onyx never changes anything in Zoom.
+  </Step>
+
+  <Step title="Activate the app">
+    On **Activation**, select **Activate your app**.
+
+    <img className="rounded-image" src="/assets/admins/connectors/zoom/activation.png" alt="The Activation tab, showing the app is activated on the account"/>
+  </Step>
+</Steps>
+
+## Configure the connector in Onyx
+
+<Steps>
+  <Step title="Open the Zoom connector">
+    Go to **Admin Panel → Add Connector** and select **Zoom**.
+  </Step>
+
+  <Step title="Create a credential">
+    Select **Create New** and enter the **Account ID**, **Client ID**, and **Client Secret** from your Zoom app.
+  </Step>
+
+  <Step title="Choose what to index">
+    Fill in any of these:
+
+    - **Meeting IDs** and **Webinar IDs**: the numbers from the session's invitation, one per entry.
+    - **Host Emails**: every recording these people host.
+    - **Zoom Group ID**: every recording the group's members host.
+    Find the ID in **User Management → Groups** in the Zoom web portal.
+
+    Untick **Include meetings** or **Include webinars** to leave one session type out.
+  </Step>
+
+  <Step title="Pick the Zoom plan">
+    Choose `pro` on a Pro account, or `business_plus` on Business, Education, Enterprise, or Partner.
+    This sets how fast Onyx may call Zoom.
+  </Step>
+
+  <Step title="Set a start date">
+    Under **Advanced**, set an **Indexing Start Date**. Without one, the first run reads your whole recording history,
+    which can take a long time.
+  </Step>
+
+  <Step title="Choose the access type and create">
+    Pick **Public**, **Private**, or **Auto Sync Permissions**, then select **Create Connector**.
+    Onyx checks the credentials and the scopes before it starts indexing.
+  </Step>
+</Steps>
+
+## Permission sync
+
+With **Auto Sync Permissions**,
+Onyx reads each recording's **Link access** setting in Zoom and grants the transcript to the same people.
+The recording's owner can always see it.
+
+<img className="rounded-image" src="/assets/admins/connectors/zoom/link_access.png" alt="The Share dialog of a Zoom cloud recording, with its Link access setting"/>
+
+| Link access in Zoom                      | Who can see the transcript in Onyx                      |
+| ---------------------------------------- | ------------------------------------------------------- |
+| Private to me                            | The owner                                               |
+| Only people with access                  | The owner. Zoom's API does not share that list          |
+| Signed-in users in my account            | Everyone                                                |
+| Signed-in users from specific domains    | Users with an email address in those domains            |
+| Anyone with the link                     | Everyone                                                |
+
+People who registered to watch a recording can see its transcript in every case.
+Onyx rereads the settings every 6 hours.
+
+<Note>
+  To limit every transcript to its owner instead of **Everyone**,
+  turn off **Treat link access as public** in the connector settings.
+</Note>
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="Zoom refused to issue a token">
+    The app is not activated, or a credential is wrong. Activate the app on its **Activation** tab,
+    and copy the three credentials again.
+  </Accordion>
+
+  <Accordion title="Zoom denied … Grant the scope on the Server-to-Server OAuth app">
+    The app lacks the scope named in the message. Add it on the app's **Scopes** tab.
+  </Accordion>
+
+  <Accordion title="Zoom refused a webinar request">
+    The host has no Webinar add-on. Assign it in Zoom, or leave webinars out of the connector.
+  </Accordion>
+
+  <Accordion title="A host email matches no Zoom user">
+    Check the spelling. The user must be active in Zoom; a deactivated or deleted user does not match.
+  </Accordion>
+
+  <Accordion title="A recording is in Zoom but not in Onyx">
+    The recording has no audio transcript, or Zoom is still processing it.
+    Turn **Audio transcript** on in Zoom's recording settings; only recordings made after that get one.
+  </Accordion>
+
+  <Accordion title="A colleague cannot see a recording shared with Only people with access">
+    Zoom's API does not share that list, so Onyx grants the owner only.
+    Share the recording with your account or a domain instead, or set the connector to **Public**.
+  </Accordion>
+</AccordionGroup>
