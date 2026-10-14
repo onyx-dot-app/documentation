@@ -107,23 +107,23 @@ These are tagged with a version number like `v1.2.3`.
 
     ```json Example Response expandable
     {
-      "stable":{
-        "onyx":"v1.8.1",
-        "relational_db":"postgres:15.2-alpine",
-        "index":"vespaengine/vespa:8.277.17",
-        "nginx":"nginx:1.23.4-alpine"},
-        "dev":{
-          "onyx":"v1.9.0-beta.0",
-          "relational_db":"postgres:15.2-alpine",
-          "index":"vespaengine/vespa:8.277.17",
-          "nginx":"nginx:1.23.4-alpine"
-        },
-        "migration":{
-          "onyx":"airgapped-intfloat-nomic-migration",
-          "relational_db":"postgres:15.2-alpine",
-          "index":"vespaengine/vespa:8.277.17",
-          "nginx":"nginx:1.23.4-alpine"
-        }
+      "stable": {
+        "onyx": "v1.8.1",
+        "relational_db": "postgres:15.2-alpine",
+        "index": "opensearchproject/opensearch:3.6.0",
+        "nginx": "nginx:1.25.5-alpine"
+      },
+      "dev": {
+        "onyx": "v1.9.0-beta.0",
+        "relational_db": "postgres:15.2-alpine",
+        "index": "opensearchproject/opensearch:3.6.0",
+        "nginx": "nginx:1.25.5-alpine"
+      },
+      "migration": {
+        "onyx": "airgapped-intfloat-nomic-migration",
+        "relational_db": "postgres:15.2-alpine",
+        "index": "opensearchproject/opensearch:3.6.0",
+        "nginx": "nginx:1.25.5-alpine"
       }
     }
     ```
