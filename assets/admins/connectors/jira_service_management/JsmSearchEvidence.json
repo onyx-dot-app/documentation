@@ -1,0 +1,22 @@
+{
+  "captured_at_utc": "2026-10-11T01:25:50.818789+00:00",
+  "request": {
+    "method": "POST",
+    "path": "/api/search",
+    "query": "OD-1",
+    "skip_query_expansion": true
+  },
+  "http_status": 200,
+  "response": {
+    "results": [
+      {
+        "citation_id": 1,
+        "title": "OD-1: Onyx JSM connector indexing test",
+        "content": "Create a test request in project OD and verify that its summary and description are indexed and searchable in Onyx.",
+        "link": "https://furkanarkn14531562023.atlassian.net/browse/OD-1",
+        "source_type": "jira_service_management",
+        "updated_at": "2026-10-11T00:13:46+00:00"
+      }
+    ]
+  }
+}
