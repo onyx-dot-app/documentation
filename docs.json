@@ -299,6 +299,7 @@
                   "admins/connectors/official/web",
                   "admins/connectors/official/wikipedia",
                   "admins/connectors/official/xenforo",
+                  "admins/connectors/official/youtrack",
                   "admins/connectors/official/zendesk",
                   "admins/connectors/official/zoom",
                   "admins/connectors/official/zulip"
