@@ -792,7 +792,9 @@ Read [Deploying Craft](/deployment/local/craft) before enabling Craft in self-ho
 
     `LEGACY_COPY_WORKERS`: Parallel copies. Defaults to `16`.
 
-    `MINIO_REPLICAS`: Docker Compose only. Set to `0` to stop the bundled MinIO after retiring it. Defaults to `1`.
+    `MINIO_REPLICAS`: Docker Compose only. `0` stops the bundled MinIO and `object-store-copy`.
+    `env.template` sets `0` for a fresh install, which never held files in MinIO. Without the variable they run,
+    which an install upgraded from a release before `v5.0.0` needs until you retire MinIO.
 
     **Google Cloud Storage** (`FILE_STORE_BACKEND=gcs`)
 

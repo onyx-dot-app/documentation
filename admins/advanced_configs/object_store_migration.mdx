@@ -74,6 +74,9 @@ An install on external storage (S3, GCS, Azure) needs no change.
 1. Set `S3_ENDPOINT_URL=http://object-store:8333`.
 2. Add `S3_LEGACY_ENDPOINT_URL=http://minio:9000`.
 
+Leave `MINIO_REPLICAS` out of `.env`, or set it to `1`, until you retire MinIO. The new `env.template` sets it to `0`,
+which is only right for a fresh install.
+
 Nothing breaks if you forget: the app serves from MinIO as before,
 and the `api_server` and `object-store-copy` logs warn at startup that files are still in MinIO and name the two
 settings. The copy starts once you restart with those values.
@@ -214,7 +217,7 @@ a rollback to a release before the object store no longer sees files uploaded si
   </Step>
 
   <Step title="Stop MinIO">
-    In Compose, set `MINIO_REPLICAS=0` in `.env` and run `docker compose up -d minio`.
+    In Compose, set `MINIO_REPLICAS=0` in `.env` and run `docker compose up -d`. MinIO and `object-store-copy` stop.
     The `minio_data` volume stays until you remove it.
 
     In Helm, first make sure the MinIO PVC carries the keep annotation,
