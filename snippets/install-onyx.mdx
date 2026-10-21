@@ -17,6 +17,10 @@
     # If your email is something like "chris@onyx.app", then this should be "onyx.app"
     # This prevents people outside your company from creating an account
     VALID_EMAIL_DOMAINS=<YOUR_COMPANIES_EMAIL_DOMAIN>
+
+    # Admin keys for the bundled object store. Use long random values.
+    S3_AWS_ACCESS_KEY_ID=<RANDOM_VALUE>
+    S3_AWS_SECRET_ACCESS_KEY=<RANDOM_VALUE>
     ```
 
     Email/password login works out of the box, and SSO (Google / OIDC / SAML) is configured later from the admin panel.
