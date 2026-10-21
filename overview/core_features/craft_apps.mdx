@@ -1,16 +1,25 @@
 ---
-title: "Apps"
+title: "Craft Apps"
 description: "Connect external tools so Craft can retrieve live context and take approved actions"
 icon: "plug"
 ---
 
-Apps give Craft controlled access to the tools where your work already happens. After you connect an app,
-Craft can retrieve live information from your account and, when allowed, create or update content on your behalf.
+Craft Apps give Craft controlled access to the tools where your work already happens.
+A Craft App is a catalog of API endpoints for one application, such as Slack. After you connect your account,
+Craft can read live information and, when allowed, create or update content as you.
+
+Craft acts only on content that your account can access. For example,
+Craft can read a private Slack channel and reply in one of its threads only if you are a member of that channel.
 
 Examples include finding customer context in HubSpot, drafting a reply in Gmail, creating a Linear issue,
 writing a document to Google Drive, or opening a pull request in GitHub.
 
-<img className="rounded-image" src="/assets/overview/core_features/craft_apps.png" alt="The Craft Apps page showing connected apps and another app available to connect"/>
+<img className="rounded-image" src="/assets/overview/core_features/plugins/craft_plugins_directory.png" alt="The Craft Plugins page with an MCP server and the Slack Craft App"/>
+
+<Note>
+  Craft Apps work only in Craft. Main Chat does not support them.
+  Craft can also use [MCP plugins](/overview/core_features/plugins) that your admin enables for Craft.
+</Note>
 
 ## Apps, company knowledge, and files
 
@@ -18,14 +27,14 @@ These sources serve different purposes in a Craft session:
 
 | Source                  | Best for                                                                 | Can change the source?                                                           |
 | ----------------------- | ------------------------------------------------------------------------ | -------------------------------------------------------------------------------- |
-| **Apps**                | Live information and actions in your connected account.                  | Yes, when the app and action policy allow it.                                    |
+| **Apps and MCP plugins** | Live information and actions in your connected account.                 | Yes, when the app and action policy allow it.                                    |
 | **Onyx knowledge**      | Searching indexed company content you already have permission to access. | No. Search is read-only.                                                         |
 | **Session attachments** | Files needed for one session.                                            | Craft works on a sandboxed copy.                                                 |
 | **User Library**        | Templates and reference files you reuse across sessions.                 | Craft reads synchronized library files and writes new work to the session output. |
 
 ## Available apps
 
-Your Apps page shows only the apps your organization has enabled. Onyx includes built-in support for:
+The Plugins page shows only the apps your organization has enabled. Onyx includes built-in support for:
 
 | App                 | Example uses                                                                                        |
 | ------------------- | --------------------------------------------------------------------------------------------------- |
@@ -37,26 +46,30 @@ Your Apps page shows only the apps your organization has enabled. Onyx includes 
 | **GitHub**          | Inspect repositories, issues, and pull requests; create issues, branches, files, and pull requests. |
 | **HubSpot**         | Search contacts, companies, and deals, and create or update CRM records.                            |
 | **Notion**          | Search and read workspace content, then create or update pages, databases, blocks, and comments.    |
+| **Zendesk**         | Search and update tickets, manage side conversations and macros, and edit Help Center content.      |
 
 Your organization can also provide custom apps for APIs or services that are not in the built-in catalog.
+For other applications, your admin can add an [MCP server](/admins/plugins/mcp) and enable it for Craft.
 The actions available to you depend on the access granted by the external service and your organization's policies.
 
 ## Connect an app
 
 <Steps>
-  <Step title="Open Apps">
-    Select **Apps** in the Craft sidebar. Connected accounts appear first;
-    everything else your organization has enabled appears under **Browse apps**.
+  <Step title="Open Plugins">
+    Select **Plugins** in the Craft sidebar. Use the **Connected** and **Needs sign-in** filters to find an app.
+    Craft Apps show the **Craft App** type.
   </Step>
 
   <Step title="Connect your account">
-    Select **Connect**. Built-in apps open the service's authorization flow.
+    Click the app, then click **Connect**. Built-in apps open the service's sign-in page in a new tab.
     A custom app may instead ask for fields defined by your admin.
+
+    <img className="rounded-image" src="/assets/overview/core_features/plugins/member_plugin_slack_detail.png" alt="The Slack app details with Connect your account"/>
   </Step>
 
   <Step title="Review access">
     In the external service, confirm the account and permissions you are granting. When setup finishes,
-    the app moves to **Connected**.
+    the app shows under **Connected**.
   </Step>
 
   <Step title="Use it in a session">
@@ -74,6 +87,13 @@ Connect the app to let the current task continue, or choose **Not now** and ask 
   the Gmail account you authorize is the account Craft reads from and uses for drafts or sends.
 </Tip>
 
+### Review the app's skills
+
+The **Skills** tab lists the [Skills](/overview/core_features/craft_skills) that teach Craft how to use the app.
+Click **Review skills** to see them.
+
+<img className="rounded-image" src="/assets/overview/core_features/plugins/craft_plugin_slack_skills.png" alt="The Skills tab for the Slack app"/>
+
 ## Guide Craft to the right data
 
 Connecting an app makes it available; your prompt should still identify the relevant scope. Include concrete names,
@@ -88,13 +108,13 @@ dates, channels, repositories, projects, folders, or records whenever possible.
 
 ## Review approval requests
 
-Your organization controls every app action with one of three policies:
+Your organization sets one of three policies for every app action:
 
 | Policy           | What you experience                                                   |
 | ---------------- | --------------------------------------------------------------------- |
 | **Auto-approve** | Craft performs the action without pausing. Common for low-risk reads. |
 | **Ask**          | Craft pauses and shows an approval card before sending the request.   |
-| **Deny**         | Craft cannot perform the action and reports that it was blocked.      |
+| **Disabled**     | Craft cannot perform the action and reports that it was blocked.      |
 
 When an action uses **Ask**, expand the approval card to review the app, action, description,
 and request payload before deciding.
@@ -119,17 +139,22 @@ Before approving, confirm:
   and other consequential actions. If an approval expires before you respond, the request fails closed and does not run.
 </Warning>
 
+If your admin lets users manage approval settings,
+open the app's approval settings to change the policy for your account.
+You cannot turn on an action that your admin set to **Disabled**.
+
 ## Apps in Scheduled Tasks
 
 A [Scheduled Task](/overview/core_features/craft_scheduled_tasks) runs without you present.
-Select its expected apps under **Pre-approved apps** so those apps can act without waiting for a live response.
+In the task's approval settings, enable only the apps that the task needs,
+and set the actions it must perform to **Auto-approve**.
 
-Pre-approval applies only to that Scheduled Task. An app action with a **Deny** policy remains blocked,
-and an app you did not pre-approve can leave the run waiting for approval.
+Task settings apply only to that task. An action with a **Disabled** policy stays blocked.
+If a run reaches an action that needs approval, the run stops and waits for you.
 
 ## Disconnect an app
 
-Open **Apps**, find the account under **Connected**, and select **Disconnect**.
+Open **Plugins**, click the app, and click **Disconnect**.
 Craft can no longer make authenticated requests through that connection.
 You can reconnect later by completing the connection flow again.
 
@@ -145,29 +170,29 @@ You can reconnect later by completing the connection flow again.
   <Accordion title="An app does not appear">
     Your organization has not enabled it, or its setup is incomplete.
     Ask an admin to review the app configuration and your access.
-    Admins can use the [Craft Apps setup guide](/admins/managing_features/craft_apps).
+    Admins can use the [Craft Apps setup guide](/admins/plugins/craft_apps).
   </Accordion>
 
 <Accordion title="The connection flow fails">
   Confirm you selected the intended external account, allowed the setup window to open,
   and granted the requested access. For a custom app, verify the credential fields with your admin.
-  Then return to Apps and try again.
+  Then return to Plugins and try again.
 </Accordion>
 
 <Accordion title="Craft cannot perform an action">
-  The action may be denied by policy, outside the connected account's access, rejected,
+  The action may be disabled by policy, outside the connected account's access, rejected,
   or expired while awaiting approval. Craft does not retry a blocked action automatically;
   adjust the request or contact an admin if the action should be available.
 </Accordion>
 
   <Accordion title="A Scheduled Task is awaiting approval">
-    Edit the task and confirm the required app is selected under **Pre-approved apps**. If it is already selected,
-    an admin may have denied that action or the run may need a different app.
+    Edit the task and confirm that the required app is enabled in its approval settings and the action is set to
+    **Auto-approve**. If it is, an admin may have disabled that action, or the run may need a different app.
   </Accordion>
 </AccordionGroup>
 
 <CardGroup cols={2}>
-  <Card title="For admins" icon="user-shield" href="/admins/managing_features/craft_apps">
+  <Card title="For admins" icon="user-shield" href="/admins/plugins/craft_apps">
     Enable built-in or custom apps, configure credentials, and set action policies.
   </Card>
 

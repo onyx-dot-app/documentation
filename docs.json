@@ -29,7 +29,7 @@
               "overview/core_features/connectors",
               "overview/core_features/chat",
               "overview/core_features/agents",
-              "overview/core_features/actions",
+              "overview/core_features/plugins",
               "overview/core_features/web_search",
               "overview/core_features/code_interpreter",
               "overview/core_features/image_generation",
@@ -324,9 +324,14 @@
               "admins/managing_features/chat",
               "admins/agents/overview",
               {
-                "group": "Actions",
-                "icon": "play",
-                "pages": ["admins/actions/mcp", "admins/actions/openapi"]
+                "group": "Plugins",
+                "icon": "plug",
+                "pages": [
+                  "admins/plugins/overview",
+                  "admins/plugins/mcp",
+                  "admins/plugins/openapi",
+                  "admins/plugins/craft_apps"
+                ]
               },
               "admins/actions/web_search",
               "admins/actions/code_interpreter",
@@ -337,8 +342,7 @@
                 "icon": "hammer",
                 "pages": [
                   "admins/managing_features/craft",
-                  "admins/managing_features/craft_skills",
-                  "admins/managing_features/craft_apps"
+                  "admins/managing_features/craft_skills"
                 ]
               },
               "admins/actions/coding_agent"
@@ -710,6 +714,30 @@
     }
   },
   "redirects": [
+    {
+      "source": "/admins/actions/overview",
+      "destination": "/admins/plugins/overview"
+    },
+    {
+      "source": "/admins/actions/mcp",
+      "destination": "/admins/plugins/mcp"
+    },
+    {
+      "source": "/admins/actions/openapi",
+      "destination": "/admins/plugins/openapi"
+    },
+    {
+      "source": "/admins/managing_features/actions",
+      "destination": "/admins/plugins/overview"
+    },
+    {
+      "source": "/admins/managing_features/craft_apps",
+      "destination": "/admins/plugins/craft_apps"
+    },
+    {
+      "source": "/overview/core_features/actions",
+      "destination": "/overview/core_features/plugins"
+    },
     {
       "source": "/admins/connectors/official/sharepoint/client-secret",
       "destination": "/admins/connectors/official/microsoft-365/setup"

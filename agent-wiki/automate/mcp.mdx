@@ -102,13 +102,14 @@ Open **Agents & Actions** in the left sidebar.
 
     <Steps>
       <Step title="Add the MCP server">
-        In the Admin Panel, open **MCP Actions → Add MCP Server** and enter your wiki's MCP URL.
-        See [MCP Actions](/admins/actions/mcp) for the full field reference.
+        In the Admin Panel, open **Plugins**, click **Add → MCP → Add custom MCP server**,
+        and enter your wiki's MCP URL. See [MCP plugins](/admins/plugins/mcp) for the full field reference.
       </Step>
 
       <Step title="Choose API Key authentication">
-        Pick **Individual Key** so each person supplies their own `mcp_…` key — that keeps each user's agent inside
-        their own wiki permissions. A **Shared Key** gives everyone the access of whichever account minted it.
+        Select **API Key**, then choose a personal token so each person supplies their own `mcp_…` key.
+        That keeps each user's agent inside their own wiki permissions.
+        A shared token gives everyone the access of whichever account minted it.
       </Step>
 
       <Step title="Select the tools to expose">
@@ -116,20 +117,20 @@ Open **Agents & Actions** in the left sidebar.
       </Step>
 
       <Step title="Turn it on for Craft">
-        Go to **Admin Panel → Craft → Apps** and enable the wiki.
-        The card should read "Available to the Craft agent — tool calls follow their approval policies".
-        Until this is on, Craft cannot see the wiki at all.
+        Turn on **Enable for Craft** in the server's **Configuration** tab. Until this is on,
+        Craft cannot see the wiki at all. Set Craft approval policies in the **Tools** tab, under **Approval settings**.
       </Step>
     </Steps>
 
     **Each user — connect (once)**
 
-    Open **Craft → Apps**, find the wiki, click **Connect**, and paste your API key from **Agents & Actions**.
-    The credential is shared across surfaces: connect in Craft and you are connected in chat too, and vice versa.
+    Open **Plugins** in the Chat or Craft sidebar, find the wiki, click **Connect**,
+    and paste your API key from **Agents & Actions**. The credential is shared across surfaces:
+    connect in Craft and you are connected in chat too, and vice versa.
 
     <Note>
       Craft tool calls are gated per tool at the sandbox boundary. By default the agent asks before each call;
-      admins can set a tool to always-allow or deny from the MCP admin page.
+      admins can set a tool to **Auto-approve** or **Disabled** in **Admin Panel → Plugins**.
     </Note>
   </Tab>
 
