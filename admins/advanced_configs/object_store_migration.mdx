@@ -133,24 +133,59 @@ The object store volume stays, and the next upgrade continues the copy.
 The Onyx CLI and Helm switch the endpoint back for you. On a hand-maintained `.env`,
 set `S3_ENDPOINT_URL=http://minio:9000` again and clear `S3_LEGACY_ENDPOINT_URL` before you start the older release.
 
-One exception: a file written while MinIO was unavailable reaches MinIO only once the failed write is replayed.
-In Compose the copy service replays it within five minutes of MinIO answering again.
-In Helm the replay happens at the next copy run, so if MinIO had an outage after the Job completed,
-delete the Job and upgrade again before you roll back, and wait for it to complete.
+A rollback does not change the database schema.
+An older release fails to start on the `v5.0.0` schema with `Can't locate revision`.
+Only the `v5.0.0` image has the migrations to downgrade it. Roll back in this order.
 
-<Warning>
-  As with any Onyx downgrade, bring the database schema back first.
-  `v5.0.0` adds a migration (an index on file records),
-  and an older image refuses to start on a database that carries it. From a container still on `v5.0.0`,
-  downgrade to the previous release's migration head before you switch images:
+<Steps>
+  <Step title="Replay writes that MinIO missed">
+    A file written while MinIO was unavailable reaches MinIO only once the failed write is replayed.
+    In Compose the copy service replays it within five minutes of MinIO answering again.
+    In Helm the replay happens at the next copy run. If MinIO had an outage after the Job completed,
+    delete the Job and upgrade again, and wait for it to complete.
+  </Step>
 
-  ```bash
-  # Compose
-  docker compose exec api_server alembic downgrade <previous release's head>
-  # Helm
-  kubectl exec -n <namespace> deploy/<fullname>-api-server -- alembic downgrade <previous release's head>
-  ```
-</Warning>
+  <Step title="Downgrade the database schema">
+    <Warning>
+      The downgrade deletes data that only `v5.0.0` stores, such as child chat sessions,
+      OAuth grants and tokens that Onyx issued, and personal MCP and OpenAPI tool preferences.
+    </Warning>
+
+    In Compose, run it from the directory with your compose files. On a prod install,
+    add `-f docker-compose.prod.yml` after `docker compose`.
+    If `docker compose ls` shows a project name other than `onyx`, add `-p <project>`.
+
+    ```bash
+    IMAGE_TAG=<v5 version> docker compose run --rm --no-deps api_server alembic downgrade 25053020dd5a
+    ```
+
+    In Helm:
+
+    ```bash
+    kubectl exec -n <namespace> deploy/<fullname>-api-server -- alembic downgrade 25053020dd5a
+    ```
+
+    `25053020dd5a` is the last migration of `v4.9`. For another release,
+    get it with `docker run --rm onyxdotapp/onyx-backend:<version> alembic heads`.
+  </Step>
+
+  <Step title="Roll back immediately">
+    The app returns errors until the older release is up.
+    A `v5.0.0` API server that restarts before then upgrades the schema again.
+    Run `onyx-cli` from where you usually run it, or pass `--dir <install root>`.
+    It warns that downgrades are not supported. Continue, because the schema now matches.
+
+    ```bash
+    # Compose
+    onyx-cli deploy upgrade --tag <older version> --allow-downgrade
+    # Helm
+    helm rollback -n <namespace> <release> <revision>
+    ```
+  </Step>
+</Steps>
+
+If you rolled back first, the older API server restarts in a loop. Run the downgrade command from step 2. In Helm,
+`kubectl exec` picks the ready pod, which still runs `v5.0.0`.
 
 ## Retiring MinIO
 
