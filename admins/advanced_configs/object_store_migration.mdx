@@ -78,6 +78,8 @@ Nothing breaks if you forget: the app serves from MinIO as before,
 and the `api_server` and `object-store-copy` logs warn at startup that files are still in MinIO and name the two
 settings. The copy starts once you restart with those values.
 
+Keep `MINIO_REPLICAS` unset or `1` until you retire MinIO. `env.template` sets `0`, which suits only a fresh install.
+
 <Note>
   The same applies when the CLI upgrades an install whose `.env` reaches the bundled MinIO under any address other than
   `http://minio:9000`: the CLI leaves that endpoint alone, so make the two changes yourself,
@@ -214,7 +216,12 @@ a rollback to a release before the object store no longer sees files uploaded si
   </Step>
 
   <Step title="Stop MinIO">
-    In Compose, set `MINIO_REPLICAS=0` in `.env` and run `docker compose up -d minio`.
+    In Compose, set `MINIO_REPLICAS=0` in `.env`, then stop MinIO and `object-store-copy` without restarting the app:
+
+    ```bash
+    docker compose up -d --no-deps minio object-store-copy
+    ```
+
     The `minio_data` volume stays until you remove it.
 
     In Helm, first make sure the MinIO PVC carries the keep annotation,
