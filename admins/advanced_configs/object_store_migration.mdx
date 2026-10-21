@@ -153,6 +153,7 @@ Only the `v5.0.0` image has the migrations to downgrade it. Roll back in this or
 
     In Compose, run it from the directory with your compose files. On a prod install,
     add `-f docker-compose.prod.yml` after `docker compose`.
+    If `docker compose ls` shows a project name other than `onyx`, add `-p <project>`.
 
     ```bash
     IMAGE_TAG=<v5 version> docker compose run --rm --no-deps api_server alembic downgrade 25053020dd5a
@@ -171,7 +172,8 @@ Only the `v5.0.0` image has the migrations to downgrade it. Roll back in this or
   <Step title="Roll back immediately">
     The app returns errors until the older release is up.
     A `v5.0.0` API server that restarts before then upgrades the schema again.
-    `onyx-cli` warns that downgrades are not supported. Continue, because the schema now matches.
+    Run `onyx-cli` from where you usually run it, or pass `--dir <install root>`.
+    It warns that downgrades are not supported. Continue, because the schema now matches.
 
     ```bash
     # Compose
