@@ -176,6 +176,7 @@
             "group": "Language Models",
             "pages": [
               "admins/ai_models/overview",
+              "admins/ai_models/model_routing",
               {
                 "group": "Supported Providers",
                 "icon": "microchip",
