@@ -106,31 +106,35 @@ rss: true
 
   ### One Plugins Page
 
-  MCP servers, OpenAPI actions, and Craft Apps lived on three admin pages; they now share **Admin Panel → Plugins**,
-  with All, MCP, OpenAPI, and Craft Apps filters, and each plugin's settings open in one tabbed dialog (Configuration,
-  Authentication, Tools, and Skills for Craft Apps). Old URLs redirect, and existing servers, tools, credentials,
-  and app settings carry over. Workspace availability is now separate from personal defaults: admins set access,
-  **Enable in default Chat**, and **Enable for Craft**,
-  and each user can turn a plugin off for themselves on their own **Plugins** page, where they also connect accounts.
-  In Chat, plugins sit in a Plugins row of the Actions menu,
-  and a **Tools need credentials** pill appears when an agent's MCP tools need the user to connect or reconnect.
-  MCP setup now checks authentication and discovers tools before it saves,
-  so a failed attempt leaves the working connection alone, and admins can change a saved server's URL.
-  A new **Use client metadata document** switch fixes `Invalid client_id` from providers such as Notion on private
-  deployments. Default-Chat selection for MCP and OpenAPI plugins moves out of Chat Preferences,
-  OpenAPI plugins lose their global disable switch (delete one to remove it),
-  and the Terraform `onyx_custom_tool.enabled` attribute now controls default-Chat selection,
-  so upgrade the Terraform provider with the server. See [Plugins](https://docs.onyx.app/admins/plugins/overview).
+  Manage MCP servers, OpenAPI actions, and Craft Apps in **Admin Panel → Plugins**,
+  with filters for each plugin type and a single settings dialog per plugin.
+  Existing configurations and credentials carry over, and old URLs redirect automatically.
+
+  - **Workspace and personal controls:** Admins manage access and default availability in Chat and Craft.
+    Users connect accounts and turn plugins off for themselves on their own Plugins page.
+  - **Easier access in Chat:** Find plugins in the Actions menu. A **Tools need credentials** prompt lets you know when
+    an agent's tools require a connection.
+  - **More reliable MCP setup:** Onyx verifies authentication and discovers tools before saving,
+    preserving your working connection if setup fails. You can also edit saved server URLs.
+  - **OAuth compatibility:** Turn off **Use client metadata document** to resolve `Invalid client_id` errors with
+    providers such as Notion on private deployments.
+
+  **Upgrade notes:** Default-Chat selection for MCP and OpenAPI plugins now lives in plugin settings instead of Chat
+  Preferences. To remove an OpenAPI plugin workspace-wide, delete it.
+  Terraform users should upgrade the provider alongside Onyx:
+  `onyx_custom_tool.enabled` now controls default-Chat selection.
+
+  See [Plugins](https://docs.onyx.app/admins/plugins/overview).
 
   ### Onyx MCP for AI Clients
 
-  Claude Code, Codex, Claude Desktop,
-  and other MCP clients used to need a pasted personal access token to reach Onyx's MCP server.
-  Onyx is now an OAuth authorization server for its MCP endpoint (authorization code with PKCE,
-  dynamic client registration, and client metadata documents): a client sends the user to a consent page,
-  and the user can review or disconnect apps under **Settings → Accounts & Access → Connected apps**.
-  It turns on whenever `WEB_DOMAIN` is HTTPS; personal access tokens and API keys still work.
-  See [the Onyx MCP server](https://docs.onyx.app/overview/onyx_anywhere/mcp_server).
+  Connect Claude Code, Codex, Claude Desktop, and other compatible MCP clients to Onyx through an OAuth sign-in flow,
+  without copying a personal access token.
+
+  Review and revoke connections under **Settings → Accounts & Access → Connected apps**.
+  OAuth is available when `WEB_DOMAIN` uses HTTPS; personal access tokens and API keys remain supported.
+
+  See [Onyx MCP server](https://docs.onyx.app/overview/onyx_anywhere/mcp_server).
 
   ### Connector Checks
 
@@ -213,26 +217,25 @@ rss: true
 
   ### Model Choices
 
-  Admins can add an **Auto** entry to the chat model picker that routes each message through a router model such as
-  OpenRouter's `openrouter/auto` (off by default; Admin → Language Models).
-  Auto requests used to be recorded at $0 and are now priced by the model actually served.
-  Chat Preferences gains a **Model selection** section to name chats and to select retrieved documents with cheaper
-  models; on our enterprise RAG benchmark,
-  a smaller selection model cut recorded text-generation cost by 71% with answer quality within half a point.
-  Prompt caching now works behind gateways (LiteLLM, Bifrost, Portkey, Vercel AI Gateway, OpenAI-compatible),
-  where it was silently off, and the system prompt no longer changes after the first search,
-  which had invalidated the Anthropic cache on multi-step turns.
+  - **Auto model selection:** Admins can add an **Auto** option to the model picker using a router such as
+    OpenRouter's `openrouter/auto`. Enable it under **Admin → Language Models**.
+    Usage costs reflect the model that serves each request.
+  - **Lower-cost background tasks:** Choose separate models for chat naming and retrieved-document selection in
+    **Chat Preferences → Model selection**.
+  - **Better prompt caching:** Caching now works through supported LLM gateways and stays effective across multi-step
+    searches.
 
   ### Craft
 
-  Craft requires a Business or Enterprise license;
-  Community Edition shows an upgrade page instead of failing every turn with 402.
-  Each Craft App action and MCP tool now has an **Auto-approve / Ask / Disabled** setting per user and per scheduled
-  task, replacing whole-app pre-approval, and admins choose whether users manage their own.
-  Approval cards offer Approve once, Approve for session, and Reject.
-  Files the agent produces appear as output cards under the turn that made them, with unread markers,
-  in a resizable workspace that survives reloads; PDFs render with PDF.js, slides get thumbnails,
-  and CSVs render as tables. Zendesk joins the built-in Craft Apps.
+  Craft is available on Business and Enterprise plans. Community Edition now displays an upgrade page.
+
+  - **Per-tool approvals:** Set each Craft App action and MCP tool to **Auto-approve**, **Ask**, or **Disabled**,
+    with separate settings for users and scheduled tasks. Admins control whether users can manage these settings.
+  - **Flexible approval prompts:** Approve an action once, approve it for the session, or reject it.
+  - **Improved file workspace:** Generated files appear under the turn that created them, with unread indicators and
+    previews for PDFs, slides, and CSVs. The workspace is resizable and persists across reloads.
+  - **Zendesk support:** Connect Zendesk as a built-in Craft App.
+
   See [Craft](https://docs.onyx.app/admins/managing_features/craft).
 
   ## Contributor Highlights
@@ -313,15 +316,12 @@ rss: true
 
   ### Plugins, MCP, and Craft
 
-  - Configuring MCP pass-through OAuth requires the global Manage Actions permission, since it sends each user's login
-    token to the server.
-  - The Craft sandbox's egress proxy closes a DNS-rebinding window: it validates each destination once, pins the
-    connection, and blocks internal, metadata, and NAT64-private addresses.
-  - GitHub and Linear Craft App connections use PKCE, and every Craft App OAuth attempt is single-use.
-  - Craft sessions keep their own composer drafts, are named after the first message (no more `Build Session <UUID>`),
-    and keep pending **Connect app** cards through a refresh.
-  - Removing an attachment chip in Craft no longer deletes the stored file.
-  - Owners and editors can delete custom skills from the skill card.
+  - MCP pass-through OAuth setup now requires the Manage Actions permission.
+  - Improved security for Craft network access and app sign-in.
+  - Craft sessions retain separate drafts, use the first message as their title,
+    and preserve pending connection prompts after refresh.
+  - Removing an attachment from the composer keeps the stored file.
+  - Skill owners and editors can delete custom skills directly from the skill card.
 
   ### Authentication and Users
 
@@ -334,13 +334,15 @@ rss: true
 
   ### LLM Providers
 
-  - An **LLM Gateway** admin page can turn the gateway off for the workspace (Business and above).
-  - Recommended defaults move to `gpt-6.1-sol` and `claude-opus-5-5`, with Gemini 4 Argon on Vertex.
-  - Saving a provider with thousands of models took minutes and now bulk-inserts; model lists page 50 at a time with
-    server-side search, after one tenant's listings ran API pods out of memory.
-  - LLM output parsers did quadratic work on crafted output and are now linear.
-  - Self-hosted LLM calls no longer stream and reassemble every response, cached tokens reported under a nested field
-    are counted, and context-price tiers bill `gpt-6.1-sol` at the premium rate from 272k instead of 200k.
+  - **Gateway controls:** Business and Enterprise admins can disable the workspace gateway from the new
+    **LLM Gateway** page.
+  - **Updated model defaults:** Recommended models now include `gpt-6.1-sol` and `claude-opus-5-5`,
+    with Gemini 4 Argon available on Vertex.
+  - **Faster model management:** Large provider catalogs save faster and support paginated lists with server-side
+    search.
+  - **More accurate usage costs:** Improved cached-token accounting and corrected the `gpt-6.1-sol` premium context
+    threshold to 272k tokens.
+  - Improved reliability when processing model responses.
 
   ### Admin and UI
 
