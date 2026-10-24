@@ -10,7 +10,7 @@ rss: true
 
   ## v5.0.0
 
-  Onyx 5.0 is a platform release. MinIO gives way to a built-in object store,
+  Onyx 5.0 is a platform release. MinIO is replaced by SeaweedFS as the bundled object store,
   and Enterprise features now follow the license alone. MCP servers, OpenAPI actions,
   and Craft Apps come together on one Plugins page,
   and Onyx's own MCP server runs by default with OAuth sign-in for AI clients.
@@ -20,11 +20,11 @@ rss: true
 
   ## [Update] Deployment Changes
 
-  - **MinIO is replaced by a built-in object store.** MinIO stopped publishing images, so Compose, Helm,
-    and the CLI now run an `object-store` service (SeaweedFS, S3 on port 8333). On upgrade both stores run side by side:
-    the app writes to both, reads fall back to MinIO, and a copy job moves every file across while Onyx keeps serving,
-    with no downtime. Installs on external S3, GCS, or Azure storage are unaffected.
-    `onyx-cli deploy upgrade` switches the endpoints for you;
+  - **MinIO is replaced by SeaweedFS.** MinIO stopped publishing images, so Compose, Helm,
+    and the CLI now run SeaweedFS as the bundled object store, in a service named `object-store` (S3 on port 8333).
+    On upgrade both stores run side by side: the app writes to both, reads fall back to MinIO,
+    and a copy job moves every file across while Onyx keeps serving, with no downtime. Installs on external S3, GCS,
+    or Azure storage are unaffected. `onyx-cli deploy upgrade` switches the endpoints for you;
     a hand-run Compose upgrade stays on MinIO until `S3_ENDPOINT_URL=http://object-store:8333` and
     `S3_LEGACY_ENDPOINT_URL=http://minio:9000` are set in `.env`, and the API server logs a warning until they are.
     On Helm (chart 0.9.x), the new `objectStore` PVC takes `minio.persistence`'s size and must hold all of MinIO's data,
