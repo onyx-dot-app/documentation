@@ -10,7 +10,7 @@ rss: true
 
   ## v5.0.0
 
-  Onyx 5.0 is a platform release. MinIO gives way to a built-in object store, Vespa is gone for good,
+  Onyx 5.0 is a platform release. MinIO gives way to a built-in object store,
   and Enterprise features now follow the license alone. MCP servers, OpenAPI actions,
   and Craft Apps come together on one Plugins page,
   and Onyx's own MCP server runs by default with OAuth sign-in for AI clients.
@@ -35,12 +35,11 @@ rss: true
     revision`), and only the 5.0 image can downgrade it: run `alembic downgrade 25053020dd5a` from a 5.0 pod,
     then roll back immediately. The downgrade deletes data only 5.0 stores,
     such as OAuth grants Onyx issued and personal plugin preferences.
-  - **Vespa is removed; OpenSearch is the only document index.** The Vespa-to-OpenSearch migration, its admin API,
-    and its tracking tables are dropped,
-    so a deployment still serving from Vespa must finish that migration on 4.9 before upgrading. `ONYX_DISABLE_VESPA`,
-    `ENABLE_OPENSEARCH_INDEXING_FOR_ONYX`, `ENABLE_OPENSEARCH_RETRIEVAL_FOR_ONYX`, `DISABLE_OPENSEARCH_MIGRATION_TASK`,
-    `VESPA_*`, `MANAGED_VESPA`, `RERANK_COUNT`, and the knowledge-graph pipeline variables are ignored,
-    and the Helm `legacyVespaCheck` is gone.
+  - **The last of the old document index is cleaned up.** OpenSearch has been the only document index since v4.0.0;
+    5.0 deletes the leftover migration task, its `/admin/opensearch-migration` API, and its two tracking tables.
+    `ONYX_DISABLE_VESPA`, `ENABLE_OPENSEARCH_INDEXING_FOR_ONYX`, `ENABLE_OPENSEARCH_RETRIEVAL_FOR_ONYX`,
+    `DISABLE_OPENSEARCH_MIGRATION_TASK`, `VESPA_*`, `MANAGED_VESPA`, `RERANK_COUNT`,
+    and the knowledge-graph pipeline variables are now ignored, and the Helm `legacyVespaCheck` is gone.
   - **Enterprise features follow the license alone.** `ENABLE_PAID_ENTERPRISE_EDITION_FEATURES` and
     `LICENSE_ENFORCEMENT_ENABLED` are removed everywhere.
     A deployment that ran Enterprise features without a license because enforcement was off runs as Community Edition
