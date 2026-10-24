@@ -6,6 +6,358 @@ mode: "wide"
 rss: true
 ---
 
+<Update label="v5.0.0" description="October 23rd, 2026" tags={["New Features", "Deployment Changes", "Bug Fixes"]}>
+
+  ## v5.0.0
+
+  Onyx 5.0 is a platform release. MinIO is replaced by SeaweedFS as the bundled object store,
+  and Enterprise features now follow the license alone. MCP servers, OpenAPI actions,
+  and Craft Apps come together on one Plugins page,
+  and Onyx's own MCP server runs by default with OAuth sign-in for AI clients.
+  Connectors get named checks on the create form, accounts shared across related sources, plan-and-apply editing,
+  and a rebuilt Indexing Status page. Read the Deployment Changes before upgrading:
+  this release has more of them than usual. Thank you to our contributors for helping make this release possible!
+
+  ## [Update] Deployment Changes
+
+  - **MinIO is replaced by SeaweedFS.** MinIO stopped publishing images, so Compose, Helm,
+    and the CLI now run SeaweedFS as the bundled object store, in a service named `object-store` (S3 on port 8333).
+    On upgrade both stores run side by side: the app writes to both, reads fall back to MinIO,
+    and a copy job moves every file across while Onyx keeps serving, with no downtime. Installs on external S3, GCS,
+    or Azure storage are unaffected. `onyx-cli deploy upgrade` switches the endpoints for you;
+    a hand-run Compose upgrade stays on MinIO until `S3_ENDPOINT_URL=http://object-store:8333` and
+    `S3_LEGACY_ENDPOINT_URL=http://minio:9000` are set in `.env`, and the API server logs a warning until they are.
+    On Helm (chart 0.9.x), the new `objectStore` PVC takes `minio.persistence`'s size and must hold all of MinIO's data,
+    air-gapped registries must mirror `chrislusf/seaweedfs`, and from chart 0.9.21 disabling MinIO keeps its PVC.
+    Retiring MinIO is optional in 5.0.
+    See [Object Store Migration](https://docs.onyx.app/admins/advanced_configs/object_store_migration) before upgrading.
+  - **Rolling back needs a schema downgrade first.** An older release cannot start on the 5.0 schema (`Can't locate
+    revision`), and only the 5.0 image can downgrade it: run `alembic downgrade 25053020dd5a` from a 5.0 pod,
+    then roll back immediately. The downgrade deletes data only 5.0 stores,
+    such as OAuth grants Onyx issued and personal plugin preferences.
+  - **The last of the old document index is cleaned up.** OpenSearch has been the only document index since v4.0.0;
+    5.0 deletes the leftover migration task, its `/admin/opensearch-migration` API, and its two tracking tables.
+    `ONYX_DISABLE_VESPA`, `ENABLE_OPENSEARCH_INDEXING_FOR_ONYX`, `ENABLE_OPENSEARCH_RETRIEVAL_FOR_ONYX`,
+    `DISABLE_OPENSEARCH_MIGRATION_TASK`, `VESPA_*`, `MANAGED_VESPA`, `RERANK_COUNT`,
+    and the knowledge-graph pipeline variables are now ignored, and the Helm `legacyVespaCheck` is gone.
+  - **Enterprise features follow the license alone.** `ENABLE_PAID_ENTERPRISE_EDITION_FEATURES` and
+    `LICENSE_ENFORCEMENT_ENABLED` are removed everywhere.
+    A deployment that ran Enterprise features without a license because enforcement was off runs as Community Edition
+    after the upgrade.
+    A self-hosted deployment whose license lapsed can now [downgrade itself to Community
+    Edition](https://docs.onyx.app/admins/billing/manage) from the billing or lock page;
+    the server refuses unless access is actually locked.
+  - **Onyx's MCP server is on by default.** Compose uncomments the `mcp_server` service with
+    `MCP_SERVER_ENABLED=true` (set it to `false` to opt out), and Helm defaults `mcpServer.enabled` to `true`. In 4.9,
+    setting the flag in `.env` never reached nginx, so the `/mcp/` routes were never served on Compose.
+    OAuth sign-in for AI clients turns on by itself when `WEB_DOMAIN` is HTTPS.
+  - **Password resets end sessions and revoke personal access tokens.** A reset or change used to leave every
+    session valid (reported by an outside security researcher). Now a reset signs out all of the user's sessions,
+    a change signs out the others, and either one revokes all of the user's personal access tokens,
+    so scripts and CLIs using that user's PAT need a new one. Service-account API keys are unaffected.
+    Sessions on the stateless `jwt` auth backend cannot be revoked.
+  - **Custom OpenAPI tools go through the SSRF policy.** Tool calls had no destination check, no timeout,
+    and followed redirects. Now the server URL is checked on save,
+    calls never follow redirects and time out after 10s connect / 120s read,
+    loopback is blocked unless SSRF protection is Disabled,
+    and link-local and cloud metadata addresses are always blocked.
+    On self-hosted deployments private ranges stay reachable at every level,
+    so restrict egress at the network layer if you need to. A tool that sits behind a redirect needs its final URL.
+  - **Permission sync moves from Redis to Postgres.** `CELERY_PERMISSIONS_SYNC_LOCK_TIMEOUT` (added in 4.9.0) and
+    `CELERY_EXTERNAL_GROUP_SYNC_LOCK_TIMEOUT` are removed. The new `PERMISSION_SYNC_TIMEOUT_SECONDS` (default 6 hours)
+    limits group syncs; a document permission sync has no time limit and stops only after an hour without progress.
+    Deploy the beat and heavy workers together.
+  - **Connector changes that act on upgrade.** Every Outlook connector is fully re-indexed once (see Outlook below).
+    Permission-synced Zoom connectors need four more read scopes on the Zoom app (recording settings,
+    recording registrants, user settings, and `user:read:user:admin`),
+    and existing Zoom grants shift from attendees to the people allowed to watch the recording.
+    Source ACLs now apply only on permission-synced connectors,
+    so a user who could read a document only through a stale grant from a connector that left permission sync loses that
+    access; re-index the connector to apply it at once.
+    Every existing group that manages a connector becomes an Editor (see Connector Access below).
+    `MAX_DRIVE_WORKERS` is ignored.
+  - **Behavior and API changes.** The chat session field `current_run.run_id` is now `current_stream.stream_id` with no
+    alias.
+    A `{{CITATION_GUIDANCE}}` tag in a custom system or agent prompt now resolves to empty (the guidance still reaches
+    the model). `source_llm_provider_id` is removed from the image generation API,
+    along with the "use an existing provider's key" option.
+    Bearer tokens over 512 characters are rejected before hashing.
+    The SCIM and Service Accounts pages now require a license.
+    Users whose UI language was English now follow the new workspace default language (still English until an admin
+    changes it).
+  - **Defaults and new knobs.** Code Interpreter moves to 0.4.9, which fixes Python tool calls with more than 32 MiB of
+    staged files failing with `[Errno 32] Broken pipe` on Kubernetes. OpenAI shut down `gpt-image-1`,
+    so the image generation default is now `gpt-image-2.5-flare`; saved `gpt-image-1` configurations are kept,
+    with a notice to switch.
+    `ONYX_AIRGAPPED=true` stops outbound calls to Onyx-controlled endpoints (model catalog sync, release notes).
+    `OPENSEARCH_CA_CERTS` falls back to `SSL_CERT_FILE`, so Helm `customCACerts` now covers OpenSearch.
+    Craft's sandbox gains Helm options for `sandboxPod.runtimeClassName`, `sandboxPod.netAdminLockdown`,
+    and IPv6-only clusters. The Helm chart moves from 0.8.40 to 0.9.24.
+  - **Telemetry.** The anonymous call-home is replaced by fleet telemetry: usage, health, and timing counters, never
+    names, URLs, emails, user IDs, document content, or query text. `DISABLE_TELEMETRY=true` still opts out.
+  - **Fixes and dependencies.** The Redis Sentinel broker no longer crashes every task that reads queue depth with
+    `ValueError: Redis URL must specify one of the following schemes`. A stored XSS through agent avatar uploads,
+    chainable with session-token theft via `/auth/mobile/refresh`, is fixed.
+    Dependency updates include `pillow` 13.0.0 (GHSA-8g5g-8vmr-9782), `certifi` 2026.10.19 (GHSA-6q48-6c7w-9gw2),
+    `brotli` 1.2.1 (CVE-2026-111497), Next.js 16.4.1, `dompurify` 3.4.17, and `@sentry/nextjs` 10.75.2.
+    41 database migrations run on upgrade.
+
+  ## Key Improvements
+
+  ### One Plugins Page
+
+  Manage MCP servers, OpenAPI actions, and Craft Apps in **Admin Panel → Plugins**,
+  with filters for each plugin type and a single settings dialog per plugin.
+  Existing configurations and credentials carry over, and old URLs redirect automatically.
+
+  - **Workspace and personal controls:** Admins manage access and default availability in Chat and Craft.
+    Users connect accounts and turn plugins off for themselves on their own Plugins page.
+  - **Easier access in Chat:** Find plugins in the Actions menu. A **Tools need credentials** prompt lets you know when
+    an agent's tools require a connection.
+  - **More reliable MCP setup:** Onyx verifies authentication and discovers tools before saving,
+    preserving your working connection if setup fails. You can also edit saved server URLs.
+  - **OAuth compatibility:** Turn off **Use client metadata document** to resolve `Invalid client_id` errors with
+    providers such as Notion on private deployments.
+
+  **Upgrade notes:** Default-Chat selection for MCP and OpenAPI plugins now lives in plugin settings instead of Chat
+  Preferences. To remove an OpenAPI plugin workspace-wide, delete it.
+  Terraform users should upgrade the provider alongside Onyx:
+  `onyx_custom_tool.enabled` now controls default-Chat selection.
+
+  See [Plugins](https://docs.onyx.app/admins/plugins/overview).
+
+  ### Onyx MCP for AI Clients
+
+  Connect Claude Code, Codex, Claude Desktop, and other compatible MCP clients to Onyx through an OAuth sign-in flow,
+  without copying a personal access token.
+
+  Review and revoke connections under **Settings → Accounts & Access → Connected apps**.
+  OAuth is available when `WEB_DOMAIN` uses HTTPS; personal access tokens and API keys remain supported.
+
+  See [Onyx MCP server](https://docs.onyx.app/overview/onyx_anywhere/mcp_server).
+
+  ### Connector Checks
+
+  Creating a connector ran one generic probe, so a missing scope, a wrong site,
+  or bad JQL usually surfaced only when the first index failed.
+  The create form now has a **Test Connection** card that runs named checks on request ("Sign in to Jira",
+  "List projects", "Run JQL query") for Confluence, Jira, Google Drive, GitHub, Slack, Notion, Linear, HubSpot,
+  SharePoint, OneDrive, Outlook, and YouTrack. Checks run after the ones they depend on,
+  so a rejected token fails one row instead of ten, and a denial names the exact scope or permission to add.
+  Checks that used to pass without testing anything now say Skipped or Incomplete,
+  and an empty scope fails a required check ("No pages in the selected scope").
+  Create turns on once the required checks pass, and a failed optional check asks before creating anyway.
+  Checks also report what the account can reach: Confluence spaces, Slack channels,
+  and Google shared drives fill pick-lists in the form, and Outlook and OneDrive count mailboxes and drives.
+
+  ### Accounts Shared Across Sources
+
+  One account now serves related sources: an Atlassian account for Confluence and Jira,
+  a Google account for Gmail and Google Drive, and one Entra app for SharePoint, OneDrive, Outlook, and Teams.
+  Accounts are set up inside the connector form for every source, Google and Microsoft included,
+  and fields tied to the account (such as the Confluence **Site URL**) come first.
+  A new account stays a draft until the connector is created,
+  so an account that fails its required checks is never saved.
+  Each account has a **Share This Account** setting (Admins, Admins & Groups, Only Me), and sharing is now enforced:
+  users who cannot edit an account see its secrets masked,
+  and using someone else's account requires its bound fields to match a connector it already serves.
+  Only new accounts take the shared shape.
+  See [Microsoft 365 setup](https://docs.onyx.app/admins/connectors/official/microsoft-365/setup).
+
+  ### Editing Connectors Through a Plan
+
+  An **Edit connector** button opens the create form filled with the connector's current settings.
+  Checks run as dry runs against the proposed edit, and **Review changes** shows a plan: what changed,
+  the work it will run, and why. Every config field of every source is classified, so an edit runs only what it needs:
+  a new Slack channel runs a backfill of just that channel, a narrower scope runs a prune, a new base URL re-indexes,
+  and an earlier indexing start date backfills only the new window. File connector edits work per file.
+  A **Pending backfills** card tracks backfills until they succeed,
+  and a resumed attempt no longer reuses a checkpoint from the old configuration.
+
+  ### Indexing Status, Rebuilt
+
+  The Indexing Status page lists every connector with its latest run, status counts, search,
+  and a throughput chart across all connectors, and an Activities card collects recent failures and document errors.
+  Each connector page lists runs of every kind (indexing, permission sync, group sync, checks, prunes) in one feed,
+  charts its throughput, and has an activity panel with failed documents, stack traces, and **Resolve**.
+  A **Manage Index** menu holds Update Index, Full Re-index, Pause Indexing & Syncs, and Delete,
+  and Index Configurations shows how many documents each space, drive, or page contributed.
+
+  ### Connector Access and Permission Sync
+
+  Who can read a connector's documents is now separate from who can manage the connector,
+  and managing groups get **Editor** (config, account, delete) or **Operator** (pause, run, prune, sync) roles.
+  Permission-synced connectors restricted to groups, groundwork in 4.9,
+  can now be created when "Allow Group Restrictions on Permission-Synced Connectors" is on.
+  Permission sync gains Linear, HubSpot,
+  and the new [YouTrack connector](https://docs.onyx.app/admins/connectors/official/youtrack)
+  (Cloud and Server 2026.1+), and Zoom now grants a transcript to the people allowed to watch the recording.
+  Permission sync itself now runs on Postgres leases:
+  a sync interrupted by a restart is failed after 15 minutes instead of staying in progress forever,
+  running syncs report progress, errors name the real cause,
+  and Google Drive permission sync resumes from a checkpoint instead of restarting on large tenants that hit the time
+  limit.
+
+  ### Outlook, One Thread at a Time
+
+  A mail thread is now indexed once across the tenant instead of once per mailbox that holds it,
+  readable by the mailboxes named on every message. A new **Mailbox Groups** setting takes Entra groups,
+  eight mailboxes are walked side by side,
+  and a mailbox past 250,000 messages no longer aborts permission sync or pruning for every mailbox.
+  Every Outlook connector is re-indexed once on upgrade.
+  See the [Outlook connector guide](https://docs.onyx.app/admins/connectors/official/microsoft-365/outlook).
+
+  ### Spreadsheets in Far Fewer Chunks
+
+  Spreadsheets were chunked row by row. A workbook is now chunked as a whole into an overview,
+  per-sheet profiles with exact totals and ranges, verbatim rows for small sheets, and value lists:
+  on our benchmark of 30 workbooks, 50,976 chunks became 105.
+  This applies to newly indexed spreadsheets with no setting; existing ones keep their row chunks until re-indexed.
+  `SKIP_SPREADSHEET_CONTENT=true` indexes connector spreadsheets by title only.
+
+  ### Model Choices
+
+  - **Auto model selection:** Admins can add an **Auto** option to the model picker using a router such as
+    OpenRouter's `openrouter/auto`. Enable it under **Admin → Language Models**.
+    Usage costs reflect the model that serves each request.
+  - **Lower-cost background tasks:** Choose separate models for chat naming and retrieved-document selection in
+    **Chat Preferences → Model selection**.
+  - **Better prompt caching:** Caching now works through supported LLM gateways and stays effective across multi-step
+    searches.
+
+  ### Craft
+
+  Craft is available on Business and Enterprise plans. Community Edition now displays an upgrade page.
+
+  - **Per-tool approvals:** Set each Craft App action and MCP tool to **Auto-approve**, **Ask**, or **Disabled**,
+    with separate settings for users and scheduled tasks. Admins control whether users can manage these settings.
+  - **Flexible approval prompts:** Approve an action once, approve it for the session, or reject it.
+  - **Improved file workspace:** Generated files appear under the turn that created them, with unread indicators and
+    previews for PDFs, slides, and CSVs. The workspace is resizable and persists across reloads.
+  - **Zendesk support:** Connect Zendesk as a built-in Craft App.
+
+  See [Craft](https://docs.onyx.app/admins/managing_features/craft).
+
+  ## Contributor Highlights
+
+  - [@Ajitsharmas](https://github.com/Ajitsharmas) fixed **SAML on HTTPS ports other than 443**, which failed every
+    login; made **admin-generated reset passwords follow the password policy**,
+    where a strict policy made resets fail with a 500; stopped **MCP tool results being JSON-encoded twice**;
+    and let scoped personal access tokens read their own `/user/usage`.
+  - [@JuampiHernandez](https://github.com/JuampiHernandez) added **Firecrawl as a web search provider**.
+  - [@fejesd](https://github.com/fejesd) fixed **Chromium zombie processes in the Web connector**, which piled up until
+    the background container hit its PID limit and every connector failed.
+  - [@ayam04](https://github.com/ayam04) fixed **connectors with hourly or longer refresh intervals deferring
+    indefinitely**, by ordering index attempts by creation time.
+
+  ## Additional Improvements
+
+  ### Chat
+
+  - The UI language can be set for the whole workspace in Chat Preferences, with a per-user override; every remaining
+    hard-coded placeholder is translatable, and German uses "Sie" throughout.
+  - A tab whose session was ended by a password reset now shows the session-ended modal instead of dropping the
+    message on send.
+  - Custom agents in a project now see the project's files and instructions as well as their own.
+  - Chats with several attached files could fail before answering because worker threads shared one database session.
+  - A custom tool call blocked by the SSRF policy or answered with a redirect shows as failed instead of completed.
+  - Stop takes an optional stream id, so a late Stop no longer cancels the next response in the same chat.
+  - Context summaries are their own message type and no longer show as messages in history or chat search.
+  - Deep Research: reasoning no longer loses its last three characters, a timed-out research agent is saved as failed
+    instead of reporting its timeout text, and a think step is no longer counted twice.
+  - Chat file links are underlined again, and an unknown tool call alongside valid ones gets a failure response
+    instead of vanishing from history.
+
+  ### Search and Indexing
+
+  - Index Settings gains an **Embedding rate limit**: when it fills, or the provider returns 429, indexing waits and
+    retries instead of failing. Query embeddings never wait.
+  - A re-index that changes only vector quantization copies the stored vectors instead of re-embedding.
+    Contextual Retrieval can be turned off going forward,
+    and on self-hosted deployments turned on for new and updated documents, without a re-index.
+  - Vector quantization (7-bit, and 1-bit on OpenSearch 3.6) is on Index Settings; 7-bit indexes built before the fix
+    for low recall log a warning to re-index. Titles are no longer embedded separately.
+  - Admins get a warning when OpenSearch is short on disk, heap, or vector cache
+    (the OpenSearch credentials need node-stats and k-NN-stats access).
+  - Voyage 4 embedding models are available, a Bifrost gateway can serve embeddings,
+    and Google embeddings can authenticate with GKE Workload Identity.
+  - Docprocessing tasks were redelivered and counted twice past the broker timeout, which could mark an attempt
+    successful early and drop queued batches; one deployment silently lost about 144 documents.
+  - An attempt that completed with errors now moves the poll cursor forward, so one failing document no longer makes
+    every run rescan.
+  - Deleting a large connector queued one task per document and could exhaust Redis (a 248,000-document deletion pushed
+    about 400 MB); deletion is now batched.
+  - Internal search no longer narrows to a source just because the question is about it.
+  - Indexing a synthetic 30-team Teams tenant went from 2,293 to 201 seconds with the file store and Teams changes.
+
+  ### Connectors
+
+  - Google Drive: service accounts list each shared drive once through an organizer, so restricted folders are no
+    longer missed, and large syncs no longer die at about 1.3 million documents.
+    A Google account shared by Gmail and Drive no longer fails Drive OAuth with "Request did not pass CSRF
+    verification".
+  - Teams: channels, permission sync, and file downloads run in parallel, the export API is used where allowed,
+    and setup with attachments on no longer fails on every tenant (a 4.9.0 bug).
+  - Zoom returns to the connector catalog under a new Meetings section, with a **Treat link access as public** option.
+    See the [Zoom connector guide](https://docs.onyx.app/admins/connectors/official/zoom).
+  - Linear gains Teams and Projects scopes, and HubSpot grants each record to the users HubSpot lets view it.
+  - Slack channels match by ID, so a renamed channel keeps indexing, and the form picks channels from a list.
+    A channel the bot cannot join is skipped instead of failing the run.
+  - Salesforce: a private-only connector was readable by everyone, and a public one was censored whenever another
+    Salesforce connector was permission-synced; both now follow the connector's access type.
+  - OneDrive all-users mode probes up to 200 users per step, where tenants with mostly empty drives spent 25 minutes
+    skipping users.
+  - SharePoint: the documents probe looks past empty sites, and permission reads fail instead of returning a partial
+    access list.
+  - The Web connector's `upload` mode is removed (it read the base URL as a server file path), and outbound requests
+    from the GitLab, Canvas, Google, and Web connectors are pinned to their configured destinations.
+  - The Discord bot no longer asks for the privileged Server Members intent.
+  - File connector file lists are paginated, and zip limits now apply to xlsx files and Google Sites archives.
+
+  ### Plugins, MCP, and Craft
+
+  - MCP pass-through OAuth setup now requires the Manage Actions permission.
+  - Improved security for Craft network access and app sign-in.
+  - Craft sessions retain separate drafts, use the first message as their title,
+    and preserve pending connection prompts after refresh.
+  - Removing an attachment from the composer keeps the stored file.
+  - Skill owners and editors can delete custom skills directly from the skill card.
+
+  ### Authentication and Users
+
+  - Standard users can create personal access tokens again (they could not since 4.7), and admins can turn this off on
+    the Basic group's page.
+  - OAuth flows for connectors and MCP share one implementation: attempts are single-use, tied to the user,
+    and expire after 10 minutes.
+  - A wrong current password is a 400 instead of a 500.
+  - `/api/versions` is cached instead of fetching from Docker Hub on every call.
+
+  ### LLM Providers
+
+  - **Gateway controls:** Business and Enterprise admins can disable the workspace gateway from the new
+    **LLM Gateway** page.
+  - **Updated model defaults:** Recommended models now include `gpt-6.1-sol` and `claude-opus-5-5`,
+    with Gemini 4 Argon available on Vertex.
+  - **Faster model management:** Large provider catalogs save faster and support paginated lists with server-side
+    search.
+  - **More accurate usage costs:** Improved cached-token accounting and corrected the `gpt-6.1-sol` premium context
+    threshold to 272k tokens.
+  - Improved reliability when processing model responses.
+
+  ### Admin and UI
+
+  - Stored secrets show as a key tag instead of a masked string; Backspace clears it and typing replaces it.
+  - Toasts, dropdowns, and icons are redesigned, dropdowns stay inside the viewport,
+    and the connector catalog supports keyboard navigation.
+  - Plan-limited settings are shown locked with an upgrade prompt instead of hidden.
+
+  ---
+
+  Our [GitHub Releases](https://github.com/onyx-dot-app/onyx/releases?utm_source=docs&utm_content=changelog)
+  page has the full list of changes and bug fixes for each release.
+
+</Update>
+
 <Update label="v4.9.0" description="October 7th, 2026" tags={["New Features", "Deployment Changes", "Bug Fixes"]}>
 
   ## v4.9.0
