@@ -15,7 +15,7 @@ Onyx checks YouTrack for new and changed issues every **30** minutes.
 | ----------- | ---------------------------------------------------------------------------------------------------------- |
 | Issues      | Summary and description, with the issue's comments. Deleted comments and comments with their own visibility restriction are skipped. Archived projects are skipped. |
 | Scope       | Optional. Limit the index to specific projects by short name.                                              |
-| Permissions | Optional on Onyx Cloud and Enterprise Edition. Onyx mirrors who can see each issue in YouTrack.           |
+| Permissions | Optional. **Sync with YouTrack** mirrors who can see each issue in YouTrack. It is a paid feature: the Business and Enterprise tiers on Onyx Cloud, and the Enterprise Edition when self-hosted. |
 
 The connector supports YouTrack Cloud and YouTrack Server. **Sync with YouTrack** needs YouTrack 2026.1 or later.
 
@@ -47,7 +47,7 @@ for the extra permissions the token's user needs.
 
 <Steps>
   <Step title="Open YouTrack connector">
-    In the Onyx UI, navigate to the Admin Panel and select the **YouTrack** Connector
+    In the Admin Panel, go to **Connectors** and select **YouTrack**.
   </Step>
 
   <Step title="Enter the YouTrack URL">
@@ -70,7 +70,10 @@ for the extra permissions the token's user needs.
   <Step title="Choose who can see the issues">
     - **Everyone in Your Organization** makes every indexed issue visible to every Onyx user.
     - **Specific Groups** limits the connector to selected Onyx groups.
-    - **Sync with YouTrack** mirrors YouTrack's own access and is available on Onyx Cloud and Enterprise Edition.
+    - **Sync with YouTrack** mirrors YouTrack's own access.
+
+    **Specific Groups** and **Sync with YouTrack** are paid features: the Business and Enterprise tiers on Onyx Cloud,
+    and the Enterprise Edition when self-hosted.
   </Step>
 
   <Step title="Review the connection checks">
@@ -79,7 +82,7 @@ for the extra permissions the token's user needs.
   </Step>
 
   <Step title="Create connector">
-    Click `Create Connector` to begin indexing YouTrack issues and comments!
+    Click **Create Connector** to begin indexing YouTrack issues and comments.
   </Step>
 </Steps>
 
