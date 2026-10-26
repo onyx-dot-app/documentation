@@ -5,8 +5,12 @@ description: "Access sales content from Highspot"
 
 ## How it works
 
-The Highspot connector indexes documents from your Highspot instance.
-It can index either specific spots you add or all spots where you have view access and download permissions.
+The Highspot connector indexes the content items in your Highspot instance.
+It indexes either the Spots you name or every Spot the API user can view and download from.
+Each content item becomes one document.
+
+Onyx checks Highspot for new and changed items on the connector's refresh schedule. The default is every **30** minutes.
+The Highspot connector does not support **Sync with Highspot** (permission sync).
 
 ## Setting up
 
@@ -47,28 +51,35 @@ It can index either specific spots you add or all spots where you have view acce
   </Step>
 
   <Step title="Record credentials">
-    Make a note of your API key, secret and base URL as you will need them for indexing.
+    Note the API key, the secret and the API base URL of your Highspot region,
+    for example `https://api-su2.highspot.com/v1.0/`. You need them to create the credential in Onyx.
   </Step>
 </Steps>
 
 ### Indexing
 
 <Steps>
-  <Step title="Open Highspot connector">
-    Navigate to the Admin Panel and select the **Highspot** Connector Tile
+  <Step title="Open the Highspot connector">
+    Go to **Admin Panel → Connectors** and select **Highspot**.
   </Step>
 
-  <Step title="Enter credentials">
-    Provide your **API Key**, **Secret**, and **Base URL** from the steps above
+  <Step title="Create a credential">
+    Select **New Highspot Account**. Enter the API base URL in **Highspot URL**,
+    the API key in **Highspot Key** and the secret in **Highspot Secret**, then select **Create**.
   </Step>
 
-  <Step title="Choose indexing options">
-    Choose one of the following:
-    - Enter specific spots you want to index
-    - Index all spots where your user has view access and download permissions
+  <Step title="Choose what to index">
+    Under **Highspot Content to Index**, select one option:
+    - **Specific Spots**: enter the names of the Spots to index in **Spot Name(s)**. Names are not case-sensitive.
+    - **Everything**: index every Spot the API user can view and download from.
+  </Step>
+
+  <Step title="Choose document access">
+    Under **Document Access**, select **Everyone in Your Organization** or **Specific Groups**.
+    **Specific Groups** needs the Business or Enterprise tier on Onyx Cloud, or the Enterprise Edition when self-hosted.
   </Step>
 
   <Step title="Start indexing">
-    Click "Connect" to begin indexing your Highspot content
+    Give the connector a name and select **Create Connector** to start indexing.
   </Step>
 </Steps>

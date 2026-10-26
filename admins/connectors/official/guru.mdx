@@ -5,9 +5,11 @@ description: "Access cards and collections from Guru"
 
 ## How it works
 
-The Guru connector pulls in all the Cards your user has access to based on a User Access Token.
+The Guru connector indexes the Cards that the connected Guru user can see. Each Card becomes one document.
+The Card's collection and folders are stored as document metadata.
 
-Cards are updated every **10** minutes.
+Onyx checks Guru for new and changed Cards on the connector's refresh schedule. The default is every **30** minutes.
+The Guru connector does not support **Sync with Guru** (permission sync).
 
 ## Setting up
 
@@ -15,8 +17,8 @@ Cards are updated every **10** minutes.
 
 <Steps>
   <Step title="Obtain access token">
-    Obtain a User Access Token.
-    Follow the Guru API guide described [here](https://developer.getguru.com/docs/getting-started) for more details.
+    Create a Guru **User Token** for the account that Onyx indexes as. Onyx indexes every Card this user can see.
+    Follow the [Guru API guide](https://developer.getguru.com/docs/getting-started) for details.
   </Step>
 </Steps>
 
@@ -25,17 +27,23 @@ Cards are updated every **10** minutes.
 ### Indexing
 
 <Steps>
-  <Step title="Open Guru connector">
-    Navigate to the Admin Panel and select the **Guru** Connector
+  <Step title="Open the Guru connector">
+    Go to **Admin Panel → Connectors** and select **Guru**.
   </Step>
 
-  <Step title="Enter credentials">
-    In **Step 1**, provide your **Username** (most likely your email) and the **Access Token** from above.
+  <Step title="Create a credential">
+    Select **New Guru Account**. Enter the user's email in **Guru Account Email** and the User Token in **API Token**,
+    then select **Create**.
 
     <img className="rounded-image" src="/assets/admins/connectors/guru/GuruConnector.png" alt="Onyx Guru connector credentials form with username and access token"/>
   </Step>
 
+  <Step title="Choose document access">
+    Under **Document Access**, select **Everyone in Your Organization** or **Specific Groups**.
+    **Specific Groups** needs the Business or Enterprise tier on Onyx Cloud, or the Enterprise Edition when self-hosted.
+  </Step>
+
   <Step title="Start indexing">
-    Click `Connect` to begin indexing
+    Give the connector a name and select **Create Connector** to start indexing.
   </Step>
 </Steps>
