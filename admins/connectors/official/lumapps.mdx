@@ -17,14 +17,14 @@ It indexes only the content that service user can read, so that user's access de
 | Live only   | Only content LumApps reports as live is indexed. Archived and unpublished content is skipped.                           |
 | Metadata    | Metadata values are resolved to their labels, so a tag reads as its name rather than its internal id.                    |
 | Language    | Content and metadata labels are read in one language. See **Language** below.                                           |
-| Permissions | Not available. **Auto Sync Permissions** is not offered for LumApps, so the access type can only be **Public** or **Private**. |
+| Permissions | Not available. **Sync with LumApps** (permission sync) is not offered, so **Document Access** can only be **Everyone in Your Organization** or **Specific Groups**. |
 
 Indexing is checkpointed, so a large intranet is covered across several attempts rather than one long run.
 
 <Warning>
   The access type applies to everything the service user can read.
-  If that user has broad intranet access and you choose **Public**, all of it becomes visible to every Onyx user.
-  Give the service user the access you want Onyx to have.
+  If that user has broad intranet access and you choose **Everyone in Your Organization**,
+  all of it becomes visible to every Onyx user. Give the service user the access you want Onyx to have.
 </Warning>
 
 ## Before you begin
@@ -46,12 +46,12 @@ You need:
 
 <Steps>
   <Step title="Open the LumApps connector">
-    In Onyx, go to **Admin Panel → Add Connector** and select **LumApps**.
+    In Onyx, go to **Admin Panel → Connectors** and select **LumApps**.
   </Step>
 
   <Step title="Create a credential">
-    Enter the application ID in **LumApps Application ID**, the key in **LumApps API Key**,
-    and the service user in **LumApps Service User**. A value containing `@` is treated as an email address;
+    Select **New LumApps Account**. Enter the application ID in **LumApps Application ID**, the key in **API Token**,
+    and the service user in **Service User Email**. A value containing `@` is treated as an email address;
     anything else is treated as a user ID.
 
     <img className="rounded-image" src="/assets/admins/connectors/lumapps/LumAppsCredential.png" alt="Create a LumApps credential with an application ID, API key and service user"/>
@@ -59,19 +59,19 @@ You need:
 
   <Step title="Enter the host and organization">
     Give the connector a name.
-    Enter your cell host in **API Base URL (cell host)** and your numeric organization ID in **Organization ID**.
+    Enter your cell host in **API Base URL (Cell Host)** and your numeric organization ID in **Organization ID**.
   </Step>
 
   <Step title="Choose the access type">
-    **Public** makes all indexed LumApps content visible to every Onyx user.
-    **Private** limits the connector to selected Onyx user groups, and is a paid feature:
-    the Business and Enterprise tiers on Onyx Cloud, and the Enterprise Edition when self-hosted.
+    Under **Document Access**,
+    **Everyone in Your Organization** makes all indexed LumApps content visible to every Onyx user.
+    **Specific Groups** limits the connector to selected Onyx user groups.
+    It needs the Business or Enterprise tier on Onyx Cloud, or the Enterprise Edition when self-hosted.
   </Step>
 
   <Step title="Connect and verify">
     Select **Create Connector**. Onyx reads one content item to check the credential before saving.
-    Then open **Admin Panel → Existing Connectors**, select the connector,
-    and confirm its first indexing attempt completes.
+    Then open **Admin Panel → Indexing Status**, select the connector, and confirm its first indexing attempt completes.
   </Step>
 </Steps>
 
@@ -79,7 +79,7 @@ You need:
 
 | Setting                 | Default | Purpose                                                                                                          |
 | ----------------------- | ------- | -------------------------------------------------------------------------------------------------------------------- |
-| Instance (site) IDs     | empty   | Index only these LumApps instances. Leave empty to index everything the service user can read.                    |
+| Instance (Site) IDs     | empty   | Index only these LumApps instances. Leave empty to index everything the service user can read.                    |
 | Custom Content Type IDs | empty   | Index only these custom content types. Leave empty to index every content type.                                   |
 | Language                | `en`    | The language used for content titles, bodies and metadata labels, as an ISO 639-1 code such as `en` or `fr`.      |
 
@@ -106,7 +106,7 @@ so no token rotation is needed on your side. The connector downloads no files, s
   <Accordion title="The credentials are rejected">
     `LumApps credentials are invalid or expired` means the application ID or API key is wrong,
     or the application has been removed. Confirm both,
-    and confirm **API Base URL (cell host)** and **Organization ID** belong to the same LumApps organization.
+    and confirm **API Base URL (Cell Host)** and **Organization ID** belong to the same LumApps organization.
   </Accordion>
 
   <Accordion title="The service user cannot read content">
@@ -121,7 +121,7 @@ so no token rotation is needed on your side. The connector downloads no files, s
 
   <Accordion title="Content is missing">
     Only live content is indexed, so archived and unpublished items never appear.
-    Check that the item's instance is listed in **Instance (site) IDs** when that field is not empty,
+    Check that the item's instance is listed in **Instance (Site) IDs** when that field is not empty,
     that its type is listed in **Custom Content Type IDs** when that field is not empty,
     and that the service user can open it.
   </Accordion>

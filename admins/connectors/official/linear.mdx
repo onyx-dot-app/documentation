@@ -8,13 +8,13 @@ description: "Access issues and comments from Linear"
 The Linear connector indexes issues and their comments. Each issue carries its team, project, creator, assignee,
 state and priority as metadata.
 
-Issues are updated every **10** minutes.
+Onyx checks Linear for new and changed issues on the connector's refresh schedule. The default is every **30** minutes.
 
 | Content     | Notes                                                                                                   |
 | ----------- | ------------------------------------------------------------------------------------------------------- |
 | Issues      | Title and description, with the issue's comments. Archived and trashed issues are skipped.              |
 | Scope       | Optional. Limit the index to specific teams, specific projects, or both.                                |
-| Permissions | Optional on Onyx Cloud and Enterprise Edition. Onyx mirrors who can see each issue in Linear.          |
+| Permissions | Optional. **Sync with Linear** mirrors who can see each issue in Linear. Needs the Business or Enterprise tier on Onyx Cloud, or the Enterprise Edition when self-hosted. |
 
 ## Setup
 
@@ -53,7 +53,7 @@ LINEAR_CLIENT_SECRET=
 
 <Steps>
   <Step title="Open Linear connector">
-    In the Onyx UI, navigate to the Admin Panel and select the **Linear** Connector
+    Go to **Admin Panel → Connectors** and select **Linear**.
   </Step>
 
   <Step title="Connect a Linear account">
@@ -74,9 +74,14 @@ LINEAR_CLIENT_SECRET=
   </Step>
 
   <Step title="Choose who can see the issues">
-    - **Public** makes every indexed issue visible to every Onyx user.
-    - **Private** limits the connector to selected Onyx users and groups.
-    - **Sync with Linear** mirrors Linear's own access and is available on Onyx Cloud and Enterprise Edition.
+    Under **Document Access**, select who can see the indexed content:
+
+    - **Everyone in Your Organization** shows every indexed document to all Onyx users.
+    - **Specific Groups** limits the documents to the Onyx user groups you select.
+    - **Sync with Linear** mirrors Linear access. It is the default where available.
+
+    **Specific Groups** and **Sync with Linear** need the Business or Enterprise tier on Onyx Cloud,
+    or the Enterprise Edition when self-hosted. On other plans the field is locked on **Everyone in Your Organization**.
   </Step>
 
   <Step title="Review the connection checks">
@@ -85,7 +90,7 @@ LINEAR_CLIENT_SECRET=
   </Step>
 
   <Step title="Create connector">
-    Click `Create Connector` to begin indexing Linear issues and comments!
+    Give the connector a name and select **Create Connector** to start indexing Linear issues and comments.
   </Step>
 </Steps>
 

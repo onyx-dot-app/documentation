@@ -14,10 +14,12 @@ The HubSpot connector indexes records from your HubSpot CRM. You choose which ob
 
 Each record becomes one document. The document carries the record's properties, the notes attached to the record,
 and a summary of each company, contact, deal, and ticket linked to it.
-Onyx checks HubSpot for new and changed records every **10** minutes.
+Onyx checks HubSpot for new and changed records on the connector's refresh schedule.
+The default is every **30** minutes.
 
-On Onyx Cloud and in the Enterprise Edition, **Auto Sync Permissions** mirrors who can view each record in HubSpot.
-See [Auto Sync Permissions](#auto-sync-permissions).
+**Sync with HubSpot** mirrors who can view each record in HubSpot.
+It needs the Business or Enterprise tier on Onyx Cloud, or the Enterprise Edition when self-hosted.
+See [Sync with HubSpot](#sync-with-hubspot).
 
 ## Setting up
 
@@ -34,7 +36,7 @@ The connector signs in with the access token of a HubSpot private app.
 
   <Step title="Select scopes">
     Under **Scopes**, grant the read scope of every object type you want to index.
-    Grant `settings.users.read` as well if you use **Auto Sync Permissions**.
+    Grant `settings.users.read` as well if you use **Sync with HubSpot**.
 
     | Scope | Needed for |
     | ----- | ---------- |
@@ -42,7 +44,7 @@ The connector signs in with the access token of a HubSpot private app.
     | `crm.objects.companies.read` | Companies |
     | `crm.objects.contacts.read` | Contacts |
     | `crm.objects.deals.read` | Deals |
-    | `settings.users.read` | Auto Sync Permissions |
+    | `settings.users.read` | **Sync with HubSpot** |
 
     Grant the read scope of a type even if you do not index it when records of the indexed types link to it. Without it,
     Onyx skips those links.
@@ -59,11 +61,11 @@ The connector signs in with the access token of a HubSpot private app.
 
 <Steps>
   <Step title="Open the HubSpot connector">
-    In the Onyx admin panel, open **Add Connector** and select **HubSpot**.
+    Go to **Admin Panel → Connectors** and select **HubSpot**.
   </Step>
 
   <Step title="Enter the access token">
-    Create a credential with the access token from above.
+    Select **New HubSpot Account**, paste the access token into **API Token** and select **Create**.
   </Step>
 
   <Step title="Choose object types">
@@ -71,12 +73,19 @@ The connector signs in with the access token of a HubSpot private app.
   </Step>
 
   <Step title="Choose document access">
-    Select **Public**, **Private**, or **Auto Sync Permissions**.
-    **Auto Sync Permissions** is available on Onyx Cloud and in the Enterprise Edition, and is the default there.
+    Under **Document Access**, select who can see the indexed content:
+
+    - **Everyone in Your Organization** shows every indexed document to all Onyx users.
+    - **Specific Groups** limits the documents to the Onyx user groups you select.
+    - **Sync with HubSpot** mirrors HubSpot access. It is the default where available.
+
+    **Specific Groups** and **Sync with HubSpot** need the Business or Enterprise tier on Onyx Cloud,
+    or the Enterprise Edition when self-hosted. On other plans the field is locked on **Everyone in Your Organization**.
   </Step>
 
-  <Step title="Connect">
-    Click **Connect**. Onyx runs the connector checks below before it creates the connector.
+  <Step title="Create the connector">
+    Give the connector a name and select **Create Connector**.
+    Onyx runs the connector checks below before it creates the connector.
   </Step>
 </Steps>
 
@@ -96,15 +105,15 @@ A required check that fails blocks creation. The message names the missing scope
 | Contacts can be read | `crm.objects.contacts.read`, when Contacts are selected |
 | Associated records can be listed | The read scope of the linked type. Not required: indexing skips links it cannot read. |
 | Notes can be read | The read scope of the indexed type. Not required: indexing skips notes it cannot read. |
-| Users can be listed | `settings.users.read`. Runs only with **Auto Sync Permissions**. |
-| Record viewers can be read | Access to HubSpot's permitted-users API. Runs only with **Auto Sync Permissions**. |
+| Users can be listed | `settings.users.read`. Runs only with **Sync with HubSpot**. |
+| Record viewers can be read | Access to HubSpot's permitted-users API. Runs only with **Sync with HubSpot**. |
 
 A read check only runs for the object types you selected. An empty portal passes every check,
 since there is no record to probe.
 
-## Auto Sync Permissions
+## Sync with HubSpot
 
-With **Auto Sync Permissions**, Onyx asks HubSpot which users may view each record and grants access to those users.
+With **Sync with HubSpot**, Onyx asks HubSpot which users may view each record and grants access to those users.
 A HubSpot user's email address must match the user's email in Onyx.
 
 - Deactivated HubSpot users and the private app itself are not granted access.
@@ -115,5 +124,7 @@ A HubSpot user's email address must match the user's email in Onyx.
 Onyx syncs permissions every hour. When self-hosting,
 set `HUBSPOT_PERMISSION_DOC_SYNC_FREQUENCY` in seconds to change the interval.
 
-If you do not want to sync permissions, select **Public** or **Private** document access when you create the connector.
-**Private** uses the Onyx user groups you assign to the connector. Neither option needs the `settings.users.read` scope.
+If you do not want to sync permissions,
+select **Everyone in Your Organization** or **Specific Groups** under **Document Access** when you create the connector.
+**Specific Groups** uses the Onyx user groups you assign to the connector.
+Neither option needs the `settings.users.read` scope.
