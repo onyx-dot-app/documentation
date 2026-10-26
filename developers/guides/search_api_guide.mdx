@@ -4,7 +4,7 @@ description: "Query the Onyx index programmatically and get ranked documents bac
 icon: "magnifying-glass"
 ---
 
-Onyx exposes two search endpoints, and which one you want depends on what you are building.
+Onyx exposes two search endpoints. Which one you want depends on what you are building.
 
 | Endpoint | Use it when |
 |----------|-------------|
@@ -19,6 +19,11 @@ use [`POST /chat/send-chat-message`](/developers/api_reference/chat/handle_send_
   so the same query run by two users can return different results. Both also need a vector database:
   on deployments running with `DISABLE_VECTOR_DB` set (Onyx Lite), they answer with `501`.
 </Note>
+
+Authenticate with an API key or a Personal Access Token. A limited-access token needs the **Search &mdash; Read** scope.
+See [Authentication](/developers/overview#authentication).
+Query expansion and LLM document selection use the workspace's default LLM,
+so the same token limits that apply to chat apply to them.
 
 ## POST /search
 
@@ -104,13 +109,13 @@ This endpoint takes a different set of parameters, aimed at a search interface r
 | `search_query` | The query to search for. |
 | `filters` | Restrict which documents are searched: `source_type`, `document_set`, `created_at_range` / `updated_at_range`, and `tags`. |
 | `num_hits` | Maximum number of merged sections to return. Defaults to 30. |
-| `hybrid_alpha` | Balance between vector and keyword matching, from `0.0` (pure keyword) to `1.0` (pure vector). Leave unset to use the deployment's `HYBRID_ALPHA`, which defaults to `0.5`. |
+| `hybrid_alpha` | Balance between vector and keyword matching, from `0.0` (pure keyword) to `1.0` (pure vector). Leave unset to use the deployment's `HYBRID_ALPHA`, which defaults to `0.5`. If the deployment sets `ONYX_SEARCH_UI_USES_OPENSEARCH_KEYWORD_SEARCH=true`, an unset value runs a pure keyword search instead. |
 | `include_content` | When true, each result carries the full text of the matched section in `content`. When false, `content` is `null` and only `blurb` is populated. |
 | `run_query_expansion` | Have an LLM generate extra keyword queries. Every query runs in parallel and the results are merged with weighted reciprocal-rank fusion, the original query counting twice as much as each expansion. |
-| `num_docs_fed_to_llm_selection` | Hand the top N sections to an LLM that picks the most relevant ones. Omit it to skip the extra LLM call. |
+| `num_docs_fed_to_llm_selection` | Hand the top N sections to an LLM that picks the most relevant ones. Omit it to skip the extra LLM call. The model's reasoning comes back in `doc_selection_reasoning`. |
 | `stream` | Whether to stream packets as they are produced. **Defaults to `false`**, unlike the chat API. |
 
-Both LLM-backed options are optional and each costs an LLM call, so leave them off for a plain lexical/semantic search.
+Both LLM-backed options are optional and each costs an LLM call. Leave them off for a plain keyword and semantic search.
 Query expansion widens recall on short keyword queries;
 document selection narrows a long result list down to what actually answers the query,
 reporting its picks in `llm_selected_doc_ids` without dropping the other results.
@@ -131,6 +136,7 @@ reporting its picks in `llm_selected_doc_ids` without dropping the other results
       "score": 0.82
     }
   ],
+  "doc_selection_reasoning": null,
   "llm_selected_doc_ids": null,
   "error": null
 }
@@ -138,8 +144,9 @@ reporting its picks in `llm_selected_doc_ids` without dropping the other results
 
 `all_executed_queries` holds more than one entry only when `run_query_expansion` was set.
 `llm_selected_doc_ids` is `null` when LLM selection was not requested or failed,
-and an empty list when it ran and chose nothing. If the search fails partway through,
-`error` is set and the other fields hold whatever was gathered before the failure.
+and an empty list when it ran and chose nothing.
+`doc_selection_reasoning` holds the reasoning text the selection model produced, when the model returned any.
+If the search fails partway through, `error` is set and the other fields hold whatever was gathered before the failure.
 
 ### Streaming response
 
@@ -211,6 +218,14 @@ and [`GET /search/search-history`](/developers/api_reference/search/get_search_h
 reads back that user's own queries, most recent first. Pass `limit` (1&ndash;1000, default 100)
 and `filter_days` to narrow the window. Queries sent to `POST /search` and to the chat API are not recorded there.
 
+## Search from an MCP client
+
+If the caller is an LLM client such as Claude Code, Codex, or Claude Desktop,
+you do not need to call these endpoints yourself.
+Connect the client to the [Onyx MCP server](/overview/onyx_anywhere/mcp_server).
+Its `search_indexed_documents` tool runs the same retrieval pipeline as `POST /search`,
+and the client decides when to search.
+
 ## Next Steps
 
 <CardGroup cols={2}>
@@ -220,5 +235,9 @@ and `filter_days` to narrow the window. Queries sent to `POST /search` and to th
 
   <Card title="Guide: Use the Ingestion API" icon="upload" href="/developers/guides/index_files_ingestion_api">
     Index your own documents so they show up in search
+  </Card>
+
+  <Card title="Onyx MCP server" icon="plug" href="/overview/onyx_anywhere/mcp_server">
+    Search Onyx from MCP clients
   </Card>
 </CardGroup>
