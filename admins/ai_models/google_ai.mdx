@@ -61,14 +61,18 @@ Onyx supports two authentication methods for Google Vertex AI:
   <NavigateToAiModels />
 
   <Step title="Configure Google Vertex AI">
-    Select **Google Cloud Vertex AI** from the available providers.
+    Under **Add Provider**, click **Connect** on the **Gemini** (Google Cloud Vertex AI) card.
 
-    Give this configuration a **Display Name**.
+    Optionally, give this provider a **Display Name**.
 
     For the **Authentication Method**,
-    select **Service Account JSON** and upload your JSON key to the **Credentials File** field.
+    select **Service Account JSON** and upload your JSON key file in the **API Key** field.
 
-    If relevant, specify a **Location**.
+    Set **Google Cloud Region Name** to a [location supported by your
+    models](https://cloud.google.com/vertex-ai/generative-ai/docs/learn/locations). The default is `global`.
+
+    Onyx lists the recommended Gemini models. Select the models you want to use.
+    Keep **Auto Update** on to add new Gemini models when they are released.
   </Step>
 
   <StandardAiModelConfigs />
@@ -260,9 +264,9 @@ and no key file is ever created or stored.
   <NavigateToAiModels />
 
   <Step title="Configure Google Vertex AI">
-    Select **Google Cloud Vertex AI** from the available providers.
+    Under **Add Provider**, click **Connect** on the **Gemini** (Google Cloud Vertex AI) card.
 
-    Give this configuration a **Display Name**.
+    Optionally, give this provider a **Display Name**.
 
     For the **Authentication Method**, select **Workload Identity (GKE)**.
 
@@ -278,7 +282,7 @@ and no key file is ever created or stored.
 
     <img className="rounded-image" src="/assets/admins/ai_models/vertex_workload_identity_selected.png" alt="Workload Identity (GKE) selected, showing the ambient-credentials notice and GCP Project ID field"/>
 
-    No credentials file is needed. Select your models and configure provider access below, then click **Connect**.
+    No credentials file is needed. Select your models and set **Models Access** below, then click **Connect**.
   </Step>
 
   <StandardAiModelConfigs />
@@ -322,8 +326,8 @@ Onyx's Vertex AI provider supports only **Service Account JSON** or **Workload I
 methods — a standalone Vertex AI API key (Vertex Express Mode) is not accepted.
 
 If you just want to authenticate with a plain API key,
-you can instead add a **Custom** LLM provider using the `gemini` provider name,
-which routes through the [Google AI Studio](https://aistudio.google.com/) Gemini Developer API using an API key.
+you can instead add a **Custom Models** provider with **Provider** set to `gemini`.
+It routes through the [Google AI Studio](https://aistudio.google.com/) Gemini Developer API using an API key.
 See the [Custom Inference Provider](/admins/ai_models/custom_inference_provider) guide.
 
 <Note>
@@ -332,9 +336,8 @@ See the [Custom Inference Provider](/admins/ai_models/custom_inference_provider)
 </Note>
 
 <Warning>
-  When configuring this alternative,
-  use the **Custom** provider type with the provider name set to `gemini` — not the generic **OpenAI-Compatible**
-  provider type pointed at Gemini's OpenAI-compatible endpoint.
-  Onyx appends a forced `/v1` suffix to the OpenAI-Compatible provider's base URL, which breaks that endpoint.
-  The forced `/v1` suffix does not apply to the `gemini` provider name, so it is unaffected.
+  When configuring this alternative, use **Custom Models** with **Provider** set to `gemini`,
+  not the **OpenAI-Compatible** provider pointed at Gemini's OpenAI-compatible endpoint.
+  Onyx adds a `/v1` suffix to an OpenAI-Compatible base URL, which breaks that endpoint.
+  The `gemini` provider does not get this suffix.
 </Warning>

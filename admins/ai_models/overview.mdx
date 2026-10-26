@@ -15,65 +15,64 @@ icon: "sliders"
 
 ## Language Models
 
-Navigate to **Admin Panel → Language Models** to choose which providers your workspace can use,
-which models are visible, and which models should be the default or fast option in Onyx.
+Open the **Admin Panel** and go to **Language Models**. On this page you connect providers,
+choose which models users can see, set the default model, and control model settings for the workspace.
 
 <img className="rounded-image" src="/assets/admins/ai_models/ai_config_overview.png" alt="Language Models page overview"/>
+
+The page has these sections:
+
+- **Default Model**: the model Onyx uses for new chat sessions unless a user or agent picks another one.
+- **Available Providers**: the providers you have connected. Click a card to edit it,
+  or use the delete button to remove it. You cannot delete the provider that owns the default model.
+- **Add Provider**, **Gateways & Routers**, and **Self-hosted & Custom**: the providers you can connect.
+  Click **Connect** on a card to open its setup dialog.
 
 ### Provider Types
 
 <AccordionGroup>
-  <Accordion title="Direct Model Providers" icon="cloud">
-    These providers give you direct access to a model vendor's hosted API.
+  <Accordion title="Add Provider: Direct Model Providers" icon="cloud">
+    These cards connect to a model vendor or cloud platform directly: **GPT** (OpenAI), **Claude** (Anthropic),
+    **Gemini** (Google Cloud Vertex AI), **Amazon Bedrock**, and **Azure OpenAI**.
 
-    Common choices include **OpenAI** and **Anthropic**.
-    This is usually the simplest setup when you want fast access to the provider's latest flagship models.
+    This is usually the simplest setup when you want access to the latest flagship models. For OpenAI, Anthropic,
+    and Vertex AI, Onyx lists the recommended models and can update the list automatically.
   </Accordion>
 
-  <Accordion title="Cloud Platforms and Aggregators" icon="server">
-    These providers expose language models through a broader cloud or routing layer.
+  <Accordion title="Gateways & Routers" icon="server">
+    These providers put a routing or gateway layer in front of one or more model vendors: **OpenRouter**,
+    **LiteLLM Proxy**, **Portkey**, **Vercel AI Gateway**, **Nebius TokenFactory**, and **Bifrost**.
 
-    Common choices include **Azure OpenAI**, **Amazon Bedrock**, **Google Vertex AI**, **OpenRouter**,
-    **LiteLLM Proxy**, and **Bifrost**. They are useful when you need enterprise controls, cloud alignment,
-    regional hosting options, or access to multiple model families from one integration point.
+    Onyx reads the model list from the gateway. Use these when you need central billing, routing,
+    or access to many model families from one integration point.
   </Accordion>
 
-  <Accordion title="Self-Hosted and Local Runtimes" icon="desktop">
-    These options let you run open-weight models on your own infrastructure or local hardware.
+  <Accordion title="Self-hosted & Custom" icon="desktop">
+    Run open-weight models on your own infrastructure or local hardware with [Ollama](/admins/ai_models/ollama)
+    or [LM Studio](/admins/ai_models/lm_studio).
 
-    Onyx includes built-in integrations for [Ollama](/admins/ai_models/ollama)
-    and [LM Studio](/admins/ai_models/lm_studio). This is a good fit when your team needs local development workflows,
-    tighter data residency, or lower per-token costs.
-  </Accordion>
-
-  <Accordion title="OpenAI-Compatible Custom Providers" icon="cpu">
-    If your provider is not listed directly, you can still connect it through an OpenAI-compatible API.
-
-    This covers custom gateways, hosted inference endpoints,
-    and internal model platforms that expose an OpenAI-style `/chat/completions` or `/models` interface.
+    If your provider is not listed, connect it as an [OpenAI-Compatible](/admins/ai_models/custom_inference_provider)
+    endpoint, or as **Custom Models** for any provider that LiteLLM supports.
   </Accordion>
 </AccordionGroup>
 
 ### Choosing a Good Starting Setup
 
 <Note>
-  If cloud-hosted models are approved for your organization,
-  they are usually the best default choice because they are easier to operate and generally provide the best
-  capability-to-cost tradeoff.
+  If cloud-hosted models are approved for your organization, they are usually the best default choice.
+  They are easier to operate and generally give the best capability-to-cost tradeoff.
 </Note>
 
 - Start with one primary provider for most users.
 - Use a recent **GPT**, **Claude**,
-  or **Gemini** family model as your default if you want the strongest out-of-the-box experience.
-- Use **Bedrock**, **Vertex AI**, **Azure OpenAI**, **OpenRouter**, **LiteLLM Proxy**, or **Bifrost** when procurement,
-  routing, or cloud alignment matters more than a direct vendor integration.
-- Use open-weight families such as **Llama**, **Qwen**, **DeepSeek**, or **gpt-oss** if you are self-hosting.
-- Keep the visible model list short so users are choosing between a few intentional options instead of every possible
-  version.
+  or **Gemini** family model as your default for the strongest out-of-the-box experience.
+- Use **Bedrock**, **Vertex AI**, **Azure OpenAI**, or a gateway when procurement, routing,
+  or cloud alignment matters more than a direct vendor integration.
+- Use open-weight families such as **Llama**, **Qwen**, **DeepSeek**, or **gpt-oss** if you self-host.
+- Keep the visible model list short so users choose between a few intentional options.
 
 <Info>
-  Self-hosting is best for advanced teams that already know which models they want to run and how they will operate
-  them.
+  Self-hosting is best for teams that already know which models they want to run and how they will operate them.
 </Info>
 
 ## Configure Your Providers
@@ -85,7 +84,7 @@ which models are visible, and which models should be the default or fast option 
 
   <Card title="Anthropic" icon="brain" href="/admins/ai_models/anthropic"/>
 
-  <Card title="AWS Bedrock" icon="aws" href="/admins/ai_models/bedrock"/>
+  <Card title="Amazon Bedrock" icon="aws" href="/admins/ai_models/bedrock"/>
 
   <Card title="Google Vertex AI" icon="google" href="/admins/ai_models/google_ai"/>
 
@@ -99,13 +98,77 @@ which models are visible, and which models should be the default or fast option 
 
   <Card title="LM Studio" icon="desktop" href="/admins/ai_models/lm_studio"/>
 
-  <Card title="OpenAI-Compatible Providers" icon="server" href="/admins/ai_models/custom_inference_provider"/>
+  <Card title="OpenAI-Compatible & Custom" icon="server" href="/admins/ai_models/custom_inference_provider"/>
 </Columns>
+
+**Portkey**, **Vercel AI Gateway**, and **Nebius TokenFactory** follow the same steps as the other gateways:
+enter the **API Base URL** and **API Key**, click **Refresh models**, and select the models you want.
+Portkey also lets you choose the API the gateway exposes (**Chat Completions API**, **Responses API**,
+or **Messages API**).
+
+## Models
+
+Every provider dialog has a **Models** section. Use it to control what users see:
+
+- Select the models that users can pick in chat. Hidden models stay configured but do not appear in the model picker.
+- Click **Refresh models** to reload the list from a provider that publishes one.
+  Type a name and click **Add Model** to add one by hand.
+- **Auto Update** (OpenAI, Anthropic, Vertex AI) adds new models when the vendor releases them.
+- **Set as Default** makes a model the workspace **Default Model**.
+- A **Vision** marker shows that a model accepts images.
+- **Model Settings** on a model row lets you rename it, set the default and maximum reasoning level,
+  and set the default temperature. Reasoning models always run at temperature 1.
+
+## Workspace Model Settings
+
+Below the provider list, the **Language Models** page has switches that apply to every model:
+
+- **Reasoning Control**: let users change the model's reasoning level per session.
+- **Temperature Control**: let users change the model's temperature per session.
+- **Hide Provider Grouping**: show all models as one list in the chat model picker. Best with a small model set.
+- **Auto Mode**: add an **Auto** option to the model picker that picks a model for each message.
+  Select the **Router Model** that handles the routing. A router model is a routing entry on a gateway provider,
+  such as OpenRouter's `openrouter/auto`.
+  See [OpenRouter](/admins/ai_models/openrouter#auto-mode-with-the-openrouter-router).
+
+## Models Access
+
+Each provider has a **Models Access** setting:
+
+- **All Users & Agents**: every user and agent can use the provider's visible models.
+- **Named Groups & Agents**: only the groups and agents you add can use the provider. Admins can always use it.
+
+See [Language Model Access Controls](/admins/advanced_configs/llm_access_controls) for details.
+
+<Note>
+  Restricting a provider to user groups requires the Business tier or higher.
+  Agent restrictions are available in every edition.
+</Note>
+
+## Models for Other Tasks
+
+Some tasks use their own model setting instead of the default chat model:
+
+- **Chat Preferences**: set a **Chat Naming Model** for session titles and a **Search Selection Model**
+  for picking and checking retrieved documents. Both default to the chat model.
+- **Index Settings**:
+  choose the model for [Contextual Retrieval](/admins/advanced_configs/search_configs#contextual-retrieval).
+- **Image Generation** and **Voice** have their own provider pages.
+
+## LLM Gateway
+
+Onyx can also serve the models you configure here to other tools through an OpenAI- and Anthropic-compatible API.
+Users authenticate with a personal access token, and Onyx applies the same model access rules.
+Turn it on or off under **LLM Gateway** in the Admin Panel. See the [LLM Gateway guide](/developers/guides/llm_gateway).
+
+<Note>
+  The LLM Gateway requires the Business tier or higher.
+</Note>
 
 ## Best Practices
 
 - Review the terms, privacy posture, and data processing terms of every provider you enable.
-- Limit the visible model list to the models you actually want users to choose from.
-- Use private providers and access controls for costly, experimental, or team-specific models.
-- Decide on a default model at the organization level before rolling the page out broadly.
+- Limit the visible model list to the models you want users to choose from.
+- Use **Named Groups & Agents** access for costly, experimental, or team-specific models.
+- Decide on a default model at the organization level before you roll the page out broadly.
 - Make sure internal guidance is clear about what data users can send to each provider.

@@ -10,30 +10,57 @@ import StandardAiModelConfigs from "/snippets/standard-ai-model-configs.mdx";
 ## Guide
 
 Configure Onyx to use models served by [Ollama](https://ollama.com/).
+Onyx supports a self-hosted Ollama server and [Ollama Cloud](https://ollama.com/cloud).
 
 <Steps>
-  <Step title="Setup Ollama and Deploy your Models">
+  <Step title="Set Up Ollama and Pull Your Models">
     The [Ollama GitHub repository](https://github.com/ollama/ollama?tab=readme-ov-file#ollama)
-    details how to download and deploy models on Ollama.
+    explains how to install Ollama and pull models.
 
-    If self-hosting, Ollama is configured to run on port `11434` by default.
+    A self-hosted Ollama server listens on port `11434` by default.
+    Make sure the server is reachable from the Onyx host.
 
-    You can also configure Onyx to use [Ollama's managed cloud service](https://ollama.com/cloud).
+    <Info>
+      **Running Onyx in Docker on the same machine as Ollama?**
+
+      Use `http://host.docker.internal:11434` as the **API Base URL**.
+      `localhost` inside a container points to the container itself, not to your host.
+      Onyx shows this hint and fills in the Docker address when it runs in a container.
+    </Info>
+
+    For Ollama Cloud, create an API key in your Ollama account.
   </Step>
 
   <NavigateToAiModels />
 
-  <Step title="Configure Ollama">
-    Select **Ollama** from the available providers.
+  <Step title="Connect Ollama">
+    Under **Self-hosted & Custom**, click **Connect** on the **Ollama** card.
 
-    Give your provider a **Display Name**.
+    Select the **Self-hosted Ollama** tab and enter the **API Base URL** of your server,
+    for example `http://127.0.0.1:11434`.
 
-    If using Ollama Cloud, enter your Ollama Cloud **API Key**.
+    Or select the **Ollama Cloud** tab and paste your Ollama Cloud **API Key**.
 
-    Click the **Fetch Available Models** button to see the models available in your Ollama instance.
+    Optionally, give this provider a **Display Name**.
 
-    <img className="rounded-image" src="/assets/admins/ai_models/ollama_config.png" alt="Ollama Provider Configuration"/>
+    <img className="rounded-image" src="/assets/admins/ai_models/ollama_config.png" alt="Ollama provider setup dialog"/>
+  </Step>
+
+  <Step title="Load Your Models">
+    In the **Models** section, click **Refresh models**.
+    Onyx reads the models that your Ollama instance serves and shows their context size and capabilities (vision,
+    reasoning).
+
+    Select the models you want to use. You can also type a model name and click **Add Model**.
+
+    <Tip>
+      Use a model with strong instruction-following and tool-use capabilities for the best chat and agent results.
+    </Tip>
   </Step>
 
   <StandardAiModelConfigs />
+
+  <Step title="Connect">
+    Click **Connect**. Onyx tests the connection with one of the selected models before it saves the provider.
+  </Step>
 </Steps>

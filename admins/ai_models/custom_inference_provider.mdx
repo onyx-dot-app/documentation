@@ -1,56 +1,98 @@
 ---
 title: "Custom Inference Provider"
-description: "Configure an OpenAI-compatible language model provider"
+description: "Connect an OpenAI-compatible endpoint or any LiteLLM-supported provider"
 icon: "server"
 ---
 
 import NavigateToAiModels from "/snippets/navigate-to-ai-models.mdx";
+import StandardAiModelConfigs from "/snippets/standard-ai-model-configs.mdx";
 
-## Guide
+If Onyx does not list your provider, you can still connect it.
+Onyx offers two options under **Self-hosted & Custom** on the **Language Models** page:
 
-If you want to use a language model provider that is not supported directly by Onyx,
-you can configure a custom inference provider.
+- **OpenAI-Compatible**: for any endpoint that implements the OpenAI Chat Completions API.
+  Onyx reads the model list from the endpoint. Use this option when possible.
+- **Custom Models**: for any provider that [LiteLLM](https://docs.litellm.ai/docs/providers) supports.
+  You enter the LiteLLM provider ID and list the models by hand.
 
-<Tip>
-  Your custom provider must provide OpenAI-compatible API endpoints.
-</Tip>
+## OpenAI-Compatible
 
 <Steps>
-  <Step title="Setup your Custom Inference Provider">
-    Determine your provider's API base URL.
-    It should look something like `https://yourprovider.com/v1` or `http://localhost:12345/v1`.
+  <Step title="Find Your Endpoint">
+    Determine the base URL of your provider. It looks like `https://yourprovider.com/v1` or `http://localhost:12345/v1`.
+
+    Onyx adds `/v1` to the URL if it is missing.
   </Step>
 
   <NavigateToAiModels />
 
-  <Step title="Configure Custom Inference Provider">
-    Select **Add Custom LLM Provider** from the available providers.
+  <Step title="Connect the Endpoint">
+    Under **Self-hosted & Custom**, click **Connect** on the **OpenAI-Compatible** card.
 
-    Give your provider a **Display Name**.
+    Enter the **API Base URL**.
 
-    Enter your model's **Provider Name**.
+    If your endpoint requires authentication, paste the **API Key**. This field is optional.
 
-    <Note>
-      The **Provider Name** must match Litellm's [list of supported providers](https://docs.litellm.ai/docs/providers).
-    </Note>
-
-    In this example, the provider name is `vertex_ai`.
-
-    <img className="rounded-image" src="/assets/admins/ai_models/litellm_provider_name.png" alt="Custom inference provider name"/>
+    Optionally, give this provider a **Display Name**.
   </Step>
 
-  <Step title="Configure Optional Fields and Models">
-    Enter the provider's **Base URL**.
+  <Step title="Load Your Models">
+    In the **Models** section, click **Refresh models**. Onyx reads the models from the endpoint's `/v1/models` route.
 
-    Fill out the other optional fields if applicable.
-
-    In the **Model Configurations** section, enter each model you want to make available through this provider.
+    Select the models you want to use. If the endpoint does not list models,
+    type each model name and click **Add Model**.
   </Step>
 
-  <Step title="Designate Provider Access">
-    Lastly, you may select whether or not the provider is public to all users in Onyx.
+  <StandardAiModelConfigs />
 
-    If set to private,
-    the provider's models will be available to Admins and User Groups you explicitly assign the provider to.
+  <Step title="Connect">
+    Click **Connect**. Onyx tests the endpoint with one of the selected models before it saves the provider.
+  </Step>
+</Steps>
+
+## Custom Models (LiteLLM)
+
+Use this option for a provider that is not OpenAI-compatible but that LiteLLM supports.
+
+<Steps>
+  <NavigateToAiModels />
+
+  <Step title="Set Up a Custom Provider">
+    Under **Self-hosted & Custom**, click **Set Up** on the **Custom Models** card.
+
+    Give the provider a **Display Name**.
+
+    In the **Provider** field,
+    enter the provider ID as shown in the [LiteLLM provider list](https://docs.litellm.ai/docs/providers),
+    for example `gemini` or `mistral`.
+
+    <img className="rounded-image" src="/assets/admins/ai_models/litellm_provider_name.png" alt="Custom Models setup dialog with the Provider field"/>
+  </Step>
+
+  <Step title="Enter Credentials and Endpoint Details">
+    Paste the **API Key** if the provider requires one.
+
+    Fill in the optional **API Base URL** and **API Version** fields if the provider needs them.
+
+    Under **Environment Variables**, add any extra properties the provider needs, for example `OPENAI_ORGANIZATION`.
+    Onyx passes them to LiteLLM as environment variables.
+  </Step>
+
+  <Step title="List Your Models">
+    In the **Models** table, click **Add Model** for each model you want to make available.
+    Enter the **Model Name** as LiteLLM expects it. Optionally, set a **Display Name**,
+    the **Input Type** (**Text Only** or **Text & Image**), and **Max Tokens**.
+  </Step>
+
+  <Step title="Set Models Access">
+    Under **Models Access**, choose **All Users & Agents** or **Named Groups & Agents**.
+
+    With **Named Groups & Agents**, only the groups and agents you add can use this provider.
+    See [Language Model Access Controls](/admins/advanced_configs/llm_access_controls).
+    Group-based access requires the Business tier or higher.
+  </Step>
+
+  <Step title="Connect">
+    Click **Connect**. Onyx tests the provider with one of the listed models before it saves it.
   </Step>
 </Steps>
