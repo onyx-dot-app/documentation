@@ -22,7 +22,7 @@ Personal access tokens and API keys remain available for bearer authentication.
 - Sign in with your own Onyx account in the workspace whose documents you want to search.
 - Your account needs **Search** (`read:search`) and **Create User Access Token** (`create:user_api_keys`) permissions to approve an app.
 - Your administrator must enable the MCP server. Self-hosted instances need HTTPS for OAuth,
-  with loopback HTTP supported for local development.
+  with loopback HTTP supported for local development. The MCP server is available on all editions.
 - Use a client that supports remote Streamable HTTP MCP servers and OAuth.
 
 The examples use `onyx.example.com` as a placeholder. Replace it with your Onyx web domain.
@@ -231,8 +231,8 @@ If a client registers without refresh support, its authorization lasts only for 
 
 <Steps>
   <Step title="Open connected apps">
-    Open **Settings > Accounts & Access > Connected apps** in Onyx. Find the app you want to disconnect.
-    The list shows the app name and authorization expiry.
+    Open **Settings > Accounts & Access > Connected apps** (`/app/settings/accounts-access`) in Onyx.
+    Find the app you want to disconnect. The list shows the app name and authorization expiry.
   </Step>
 
   <Step title="Disconnect the app">
@@ -254,7 +254,9 @@ For a personal access token or API key connection, revoke the token or key inste
 ## Use a personal access token instead
 
 OAuth is the usual setup for interactive clients. If your environment requires a bearer token,
-create a [personal access token](/developers/overview#personal-access-tokens) with `read:search` access.
+create a [personal access token](/developers/overview#personal-access-tokens)
+with `read:search` access under **Settings > Accounts & Access > Access Tokens**. On Onyx Cloud,
+access tokens require an active paid subscription.
 
 Keep the token in a local environment variable. For Bash,
 this reads it without echoing it or putting the value in the command history:
