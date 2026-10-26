@@ -27,17 +27,26 @@ auditable events, AU-3 record content, AU-6 review, AU-12 generation).
 
 <AccordionGroup>
   <Accordion title="Authentication">
-    Login success, login failure, logout, registration, password forgot, password reset, and email verification.
+    Login success, login failure, logout, registration, password forgot, password reset, email verification,
+    and admin impersonation.
   </Accordion>
 
   <Accordion title="User & access management">
-    User creation (admin invites), deletion, deactivation, reactivation, role changes,
-    and user-group membership changes.
+    User creation (admin invites), deletion, deactivation, reactivation, role changes, and Craft access changes.
+  </Accordion>
+
+  <Accordion title="Group management">
+    User-group creation, rename, deletion, membership changes, permission changes, and group-manager changes.
+    Changes made through SCIM use the same actions.
   </Accordion>
 
   <Accordion title="Configuration & resources">
-    Create / update / delete of LLM providers, connectors, connector-credential pairs, API keys,
-    and credentials — plus credential-access (decrypt) events.
+    Create / update / delete of LLM providers, connectors, connector-credential pairs, API keys, and credentials,
+    plus selected workspace settings and credential-access (decrypt) events.
+  </Accordion>
+
+  <Accordion title="Authorization refusals">
+    Writes that a scoped permission gate refuses, for example a group manager acting outside the groups they manage.
   </Accordion>
 </AccordionGroup>
 
@@ -50,15 +59,13 @@ Audit events are emitted as `INFO` log records on a dedicated **`onyx.audit`** l
 The message body of each record is a single JSON object — Onyx serializes the event itself,
 so the audit line is identical regardless of your log format.
 
-Emission is **fail-safe**: it never interrupts a user request or a connector run,
-even if context gathering or logging fails. High-volume event classes are de-duplicated within a short (10-minute)
-window using Redis. De-duplication is **fail-open** — if Redis is unavailable,
-the dedup check is skipped and the event is still emitted,
-so an audit event is never silently dropped due to infrastructure trouble (you may just see a duplicate).
+Emission is **fail-safe**: it never interrupts a user request or a connector run.
+High-volume event classes are de-duplicated within a short window. If de-duplication is unavailable,
+Onyx still emits the event, so an audit event is never silently dropped (you may see a duplicate).
 
-The subsystem is **always on** — there is no enable/disable flag, output-format, or destination setting,
-and the de-duplication window is fixed. The only related knob is `LOG_FORMAT` (below),
-which shapes the *surrounding* log records; the audit JSON body itself is identical either way.
+The subsystem is **always on** — there is no enable/disable flag, output-format, or destination setting.
+The only related knob is `LOG_FORMAT` (below), which shapes the *surrounding* log records;
+the audit JSON body itself is identical either way.
 
 <Tip>
   Run Onyx with `LOG_FORMAT=json` so that *all* log records — not just audit events — are machine-parseable,
@@ -73,7 +80,7 @@ which shapes the *surrounding* log records; the audit JSON body itself is identi
 | `audit_schema_version` | string | Schema version (currently `"1.0"`). |
 | `ts` | number | Event time, epoch seconds. |
 | `action` | string | Action taxonomy value, `<domain>.<verb>` (e.g. `llm_provider.update`). Stable, append-only. |
-| `ocsf_class` | string | `authentication`, `account_change`, or `api_activity`. |
+| `ocsf_class` | string | `authentication`, `account_change`, `user_access_management`, `group_management`, or `api_activity`. |
 | `outcome` | string | `success`, `failure`, or `denied`. |
 | `tenant_id` | string \| null | Tenant the action occurred in. |
 | `actor` | object \| null | `{ user_id, email, api_key_id, auth_type }`. Never contains a secret. |
@@ -128,7 +135,7 @@ Because audit events are just JSON log lines on a known logger prefix, any log s
 
   <Step title="Route to your SIEM">
     Send the parsed events to your SIEM's ingest endpoint. The OCSF-shaped fields map onto Authentication,
-    Account Change, and API Activity event classes.
+    Account Change, User Access Management, Group Management, and API Activity event classes.
   </Step>
 </Steps>
 
@@ -160,7 +167,7 @@ source = '. = parse_json!(.message)'
 <Info>
   Filter on the `onyx.audit` **prefix** to capture everything.
   The stream is also split into per-class child loggers — `onyx.audit.authentication`, `onyx.audit.account_change`,
-  `onyx.audit.api_activity`,
+  `onyx.audit.user_access_management`, `onyx.audit.group_management`, `onyx.audit.api_activity`,
   and `onyx.audit.credential_access` — if you want to route classes to different destinations.
 </Info>
 
@@ -183,10 +190,11 @@ and `outcome` are present on every event (see [Event schema](#event-schema)) and
 | `auth.password_forgot` | A password-reset email is requested | |
 | `auth.password_reset` | A password reset is completed | |
 | `auth.email_verify` | An email-verification email is requested | |
+| `auth.impersonate` | An admin impersonates another user | |
 
 ### User & access management
 
-`ocsf_class: account_change` — `resource_type` is `user` (or `user_group`).
+`ocsf_class: account_change` or `user_access_management` — `resource_type` is `user`.
 
 | `action` | Triggered when | `resource_id` | Key `extra` fields |
 |---|---|---|---|
@@ -195,7 +203,21 @@ and `outcome` are present on every event (see [Event schema](#event-schema)) and
 | `user.deactivate` | A user is deactivated | user id | `target_email` |
 | `user.reactivate` | A user is reactivated | user id | `target_email` |
 | `user.role_change` | A user's role is changed | user id | `target_email`, `old_role`, `new_role` |
+| `user.craft_access_change` | A user's Craft access is changed | user id | |
+
+### Group management
+
+`ocsf_class: group_management` — `resource_type` is `user_group`.
+
+| `action` | Triggered when | `resource_id` | Key `extra` fields |
+|---|---|---|---|
 | `user.group_change` | A user group's membership changes | user-group id | `added_user_ids`, `removed_user_ids` |
+| `user_group.create` / `.rename` / `.delete` | A user group is created, renamed, or deleted | user-group id | |
+| `user_group.permission_change` | A user group's permissions change | user-group id | |
+| `user_group.manager_change` | A user group's managers change | user-group id | |
+
+Changes that arrive through SCIM reuse these actions. They carry `extra.source: "scim"` and `extra.scim_token_name`,
+and the actor is the provisioning token (`auth_type: "scim"`). SCIM emits an event only when something changes.
 
 ### Configuration & resources
 
@@ -206,8 +228,12 @@ and `outcome` are present on every event (see [Event schema](#event-schema)) and
 | `llm_provider.create` / `.update` / `.delete` | An LLM provider is created, updated, or deleted | `llm_provider` | provider id | |
 | `connector.create` / `.update` / `.delete` | A connector is created, updated, or deleted | `connector` | connector id | `source` (on create) |
 | `cc_pair.create` / `.update` / `.delete` | A connector is linked to a credential, its status changes, or it is unlinked | `cc_pair` | connector-credential-pair id | `connector_id`, `credential_id`; `status` (on update) |
-| `api_key.create` / `.regenerate` / `.delete` | An API key is created, regenerated, or revoked | `api_key` | API-key id | |
+| `api_key.create` / `.regenerate` / `.update` / `.delete` | An API key is created, regenerated, updated, or revoked | `api_key` | API-key id | |
 | `credential.create` / `.update` / `.delete` | A stored credential is created, updated, or deleted | `credential` | credential id | `source` (on create) |
+| `settings.craft_default_change` | The workspace default for Craft access changes | — | — | |
+| `search_settings.contextual_rag_model_update` | The contextual retrieval model changes | — | — | |
+| `search_settings.cc_pair_access_mode_change` | A connector's access type changes | `cc_pair` | connector-credential-pair id | |
+| `permission.denied` | A scoped permission gate refuses a write | — | — | `gate` (`within_scope`, `manages_group`, or `global_only`); `outcome` is `denied` |
 | `credential.access` | A stored credential is decrypted for use | — | — | Emitted on a **different schema** — see [Credential access](#credential-access) below |
 
 ### Credential access
@@ -239,6 +265,13 @@ Parse this stream separately; detection rules written against the generalized sc
   but existing ones never change meaning — so detection rules and dashboards built against these values keep working
   across upgrades.
 </Tip>
+
+## Export logs for support
+
+Enterprise self-hosted admins can download the raw server log files, including the audit stream,
+from **Admin Panel > Export Logs**.
+Click **Export Logs** to collect logs from the API server and background workers into one ZIP file.
+Attach the file to an Onyx support thread.
 
 ## Notes
 

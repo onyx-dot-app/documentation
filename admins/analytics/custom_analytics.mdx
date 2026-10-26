@@ -8,29 +8,30 @@ import EnterpriseEditionInfo from "/snippets/enterprise-edition-info.mdx";
 
 <EnterpriseEditionInfo />
 
-Onyx Enterprise Edition allows you to configure a custom analytics provider.
+Self-hosted Onyx Enterprise deployments can load a custom analytics script, such as PostHog or Google Analytics,
+into the Onyx web app.
 
 <Steps>
   <Step title="Set the CUSTOM_ANALYTICS_SECRET_KEY environment variable">
-    Set the `CUSTOM_ANALYTICS_SECRET_KEY` environment variable to some random string.
-    Make sure you have the value saved temporarily somewhere.
+    Set `CUSTOM_ANALYTICS_SECRET_KEY` on the API server to a random string. Save the value, you need it in step 3.
 
-    Re-deploy Onyx.
+    Re-deploy Onyx. The **Custom Analytics** page appears in the Admin Panel only when this variable is set.
   </Step>
 
-  <Step title="Go to the Custom Analytics tab in the Admin Panel">
-    Go to the Custom Analytics tab in the Admin Panel.
+  <Step title="Open Custom Analytics in the Admin Panel">
+    Open **Admin Panel > Custom Analytics**. If the page says **Custom Analytics is not enabled**,
+    the environment variable is not set.
   </Step>
 
-  <Step title="Enter in the Javascript snippet provided by your Analytics provider">
-    This snippet would normally be placed within the `<head>` tags at the base of your project. For the Secret Key,
-    use the value you saved in Step 1.
+  <Step title="Enter the JavaScript snippet from your analytics provider">
+    Paste the snippet that your provider asks you to put in the `<head>` of a web page.
+    Enter the secret key from step 1 and save.
 
     <Note>
-      The `<script>` tag MUST be removed before being copied into the text box.
+      Remove the surrounding `<script>` tags before you paste the snippet.
     </Note>
   </Step>
 </Steps>
 
-For reference: [PostHog's documentation](https://posthog.com/docs/product-analytics/installation)
-on how to set up a custom analytics provider.
+For reference, see [PostHog's documentation](https://posthog.com/docs/product-analytics/installation)
+on how to install its snippet.

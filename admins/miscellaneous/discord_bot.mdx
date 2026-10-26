@@ -12,6 +12,7 @@ You can access Onyx Cloud or your self-hosted instance through a Discord bot.
   If you want to use Onyx Cloud, you must use the official OnyxBot Discord app.
 
   Self-hosted instances must create their own Discord app in the Developer Portal.
+  The Discord bot is available in all editions.
 </Note>
 
 ## Configuration
@@ -39,9 +40,9 @@ You'll need to be an admin of the Discord server and an admin in your Onyx insta
   <Step title="Create a registration key in Onyx">
     Create or log in to your account on [Onyx Cloud](https://cloud.onyx.app).
 
-    Navigate to the Onyx Admin Panel > Discord Bots and click on the **Add Server** button.
+    Open **Admin Panel > Discord Integration** and click **Add Server**.
 
-    Copy the registration key.
+    Copy the registration command. It contains a one-time registration key.
 
     <Note>
       The registration key will only be shown once. If you lose it,
@@ -52,9 +53,11 @@ You'll need to be an admin of the Discord server and an admin in your Onyx insta
   </Step>
 
   <Step title="Register your Server in Onyx">
-    Send your registration key in the private channel you allowed OnyxBot to access.
+    In the private channel you allowed OnyxBot to access, send `!register <your-key>`.
+    You need the **Administrator** or **Manage Server** permission in the Discord server.
+    One Discord server can connect to only one Onyx workspace.
 
-    OnyxBot should respond with a message confirming the server has been registered.
+    OnyxBot responds with a message that confirms the server is registered.
 
     <img className="rounded-image" src="/assets/admins/discord_bot/register_server.png" alt="OnyxBot registered in Onyx"/>
 
@@ -64,7 +67,7 @@ You'll need to be an admin of the Discord server and an admin in your Onyx insta
   </Step>
 
   <Step title="Configure Channel behavior">
-    Click the pencil icon next to the server name to configure the bot's behavior.
+    Click the server name to configure the bot's behavior.
 
     <Tip>
       By default, the bot will not respond in any channels. You must select the channels you want the bot to respond in.
@@ -74,10 +77,14 @@ You'll need to be an admin of the Discord server and an admin in your Onyx insta
     </Tip>
 
     You can customize:
-    - The default agent that powers the bot's responses
-    - Agent overrides for specific channels
-    - Whether the bot should respond to all messages or only to messages tagged with @OnyxBot
-    - Whether the bot responds in replies or threads
+    - **Default Agent**: the Agent that powers the bot's responses in all channels
+    - **Agent Override** for specific channels
+    - **Enabled**: which channels the bot answers in.
+    Use **Enable All** or **Disable All** to change every channel at once
+    - **Require @mention**: respond to all messages, or only to messages that tag @OnyxBot
+    - **Thread Only Mode**: answer in a new thread instead of a reply
+
+    Click **Update Configuration** to save your changes.
 
     <img className="rounded-image" src="/assets/admins/discord_bot/discord_channel_configs.png" alt="Configure Channel Behavior"/>
   </Step>
@@ -105,7 +112,7 @@ you'll need to set up your own Discord app.
   <Step title="Configure permissions and installation settings">
     Navigate to the **Installation** tab.
 
-    Uncheck **User Install**. The Discord app cannot be installed for pesronal use.
+    Uncheck **User Install**. The Discord app cannot be installed for personal use.
     It must be installed in servers only.
 
     Add the following scopes:
@@ -159,9 +166,9 @@ you'll need to set up your own Discord app.
   </Step>
 
   <Step title="Configure your app in Onyx">
-    Navigate to the Onyx Admin Panel > Discord Bots.
+    Open **Admin Panel > Discord Integration**.
 
-    Paste your bot token into the **Bot Token** field and click **Create!**
+    Paste your bot token into the **Bot Token** field and save.
 
     <img className="rounded-image" src="/assets/admins/discord_bot/configure_discord_bot_token.png" alt="Discord bot token"/>
   </Step>
@@ -178,9 +185,10 @@ you'll need to set up your own Discord app.
   </Step>
 
   <Step title="Register your Server in Onyx">
-    Send your registration key in the private channel you allowed your app to access.
+    In the private channel you allowed your app to access, send `!register <your-key>`.
+    You need the **Administrator** or **Manage Server** permission in the Discord server.
 
-    Your Onyx bot should respond with a message confirming the server has been registered.
+    Your Onyx bot responds with a message that confirms the server is registered.
 
     <img className="rounded-image" src="/assets/admins/discord_bot/register_server.png" alt="OnyxBot registered in Onyx"/>
 
@@ -190,7 +198,7 @@ you'll need to set up your own Discord app.
   </Step>
 
   <Step title="Configure Channel behavior">
-    Click the pencil icon next to the server name to configure the bot's behavior.
+    Click the server name to configure the bot's behavior.
 
     <Tip>
       By default, the bot will not respond in any channels. You must select the channels you want the bot to respond in.
@@ -200,14 +208,25 @@ you'll need to set up your own Discord app.
     </Tip>
 
     You can customize:
-    - The default agent that powers the bot's responses
-    - Agent overrides for specific channels
-    - Whether the bot should respond to all messages or only to messages tagged with @OnyxBot
-    - Whether the bot responds in replies or threads
+    - **Default Agent**: the Agent that powers the bot's responses in all channels
+    - **Agent Override** for specific channels
+    - **Enabled**: which channels the bot answers in.
+    Use **Enable All** or **Disable All** to change every channel at once
+    - **Require @mention**: respond to all messages, or only to messages that tag @OnyxBot
+    - **Thread Only Mode**: answer in a new thread instead of a reply
+
+    Click **Update Configuration** to save your changes.
 
     <img className="rounded-image" src="/assets/admins/discord_bot/discord_channel_configs.png" alt="Configure Channel Behavior"/>
   </Step>
 </Steps>
+
+## Using the Bot
+
+In an enabled channel, users ask a question by tagging @OnyxBot,
+or by posting a message when **Require @mention** is off.
+The bot also answers replies to its messages and messages in threads it created.
+The bot does not answer direct messages.
 
 ## FAQ
 
@@ -219,7 +238,7 @@ Run `!sync-channels` in any text channel that OnyxBot has access to.
 
 ### `!` is already taken by another command!
 
-`!sync-channels` is currently the only command supported for OnyxBot.
+`!register` and `!sync-channels` are the only commands OnyxBot supports.
 
 If you are self-hosting, you can set the `DISCORD_BOT_INVOKE_CHAR` environment variable to change the command prefix.
 
