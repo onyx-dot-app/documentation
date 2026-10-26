@@ -39,7 +39,7 @@ Onyx signs in as that Salesforce user in one of two ways:
     Recommended for most users. Available on Onyx Cloud and self-hosted.
   </Card>
 
-  <Card title="Username, password, and security token" icon="lock" href="#authenticate-with-a-security-token">
+  <Card title="API Token: username, password, and security token" icon="lock" href="#authenticate-with-a-security-token">
     Available on Onyx Cloud and self-hosted.
   </Card>
 </Columns>
@@ -157,7 +157,7 @@ in Salesforce and sign in as an administrator.
 
     <Warning>
       Onyx hides the OAuth option if either variable is missing.
-      If **Connect with Salesforce** does not appear when you create a credential, start here.
+      If the **OAuth** tab does not appear when you create an authentication account, start here.
     </Warning>
   </Step>
 </Steps>
@@ -200,44 +200,46 @@ Sign in to Salesforce as the user Onyx will index with, then:
 
 <Steps>
   <Step title="Open the Salesforce connector">
-    In Onyx, go to **Admin Panel → Add Connector** and select **Salesforce**.
+    In Onyx, go to **Admin Panel → Connectors** and select **Salesforce**.
   </Step>
 
-  <Step title="Create a credential">
-    Select **Create New**, then choose one of:
+  <Step title="Create an authentication account">
+    Under **Authentication Account**, select **Create New**, then pick a tab:
 
-    - **Connect with Salesforce**: Enter your My Domain root, such as `https://company.my.salesforce.com`.
-    For a sandbox, use an address like `https://company--dev.sandbox.my.salesforce.com`. Then sign in to Salesforce.
-    - **Enter credentials manually**: Enter the **Username**, **Password**, and **Security Token**.
-    Turn on **Is Sandbox Environment** for a sandbox account.
+    - **OAuth**: Enter your My Domain root in **Salesforce My Domain URL**, such as `https://company.my.salesforce.com`.
+    For a sandbox, use an address like `https://company--dev.sandbox.my.salesforce.com`.
+    Select **Authorize with Salesforce** and sign in to Salesforce.
+    - **API Token**: Enter a **Display Name**, the **Salesforce Username**, **Salesforce Password**,
+    and **Salesforce Security Token**, then select **Create**. Turn on **Is Sandbox Environment** for a sandbox account.
 
     <Tip>
-      For **Connect with Salesforce**, enter the root only. Onyx rejects `login.salesforce.com`, a path, a query,
-      or a custom port.
+      For **OAuth**, enter the root only. Onyx rejects `login.salesforce.com`, a path, a query, or a custom port.
     </Tip>
-  </Step>
 
-  <Step title="Select the credential">
-    Select the credential you just created and continue.
+    To reuse a saved account, select **Use Account** on it instead.
   </Step>
 
   <Step title="Choose the objects to index">
-    Name the connector. Then list the objects you want under **Simple**, or describe them exactly under **Advanced**.
+    Under **Connector Settings**, give the connector a **Display Name**. In **Configuration Type**,
+    list the objects you want under **Simple**, or describe them exactly under **Advanced**.
     See [Choosing objects](#choosing-objects).
   </Step>
 
-  <Step title="Choose the access type">
-    **Public** shows every indexed record to all Onyx users. **Private** limits them to selected Onyx user groups.
-    **Auto Sync Permissions** applies each searcher's own Salesforce access. See [Permission sync](#permission-sync).
+  <Step title="Choose the document access">
+    Under **Document Access**, **Everyone in Your Organization** shows every indexed record to all Onyx users.
+    **Specific Groups** limits them to selected Onyx user groups.
+    **Sync with Salesforce** applies each searcher's own Salesforce access. See [Permission sync](#permission-sync).
+    **Specific Groups** and **Sync with Salesforce** are paid features: the Business and Enterprise tiers on Onyx Cloud,
+    and the Enterprise Edition when self-hosted.
 
     See [Document Access Controls](/admins/connectors/overview#document-access-controls)
     for what each access type means.
   </Step>
 
   <Step title="Create and verify">
-    Select **Connect**. Onyx checks the credential, then starts indexing.
+    Select **Create Connector**. Onyx checks the account, then starts indexing.
 
-    Open **Admin Panel → Existing Connectors**, select the connector,
+    Open **Admin Panel → Indexing Status**, select the connector,
     and check that the first indexing attempt finishes with about the number of documents you expect.
   </Step>
 </Steps>
@@ -292,8 +294,10 @@ It also creates one document for each lead, with nothing attached.
 
 ## Permission sync
 
-Set the access type to **Auto Sync Permissions**,
-and an Onyx user sees only the Salesforce records they can read in Salesforce.
+Set **Document Access** to **Sync with Salesforce**,
+and an Onyx user sees only the Salesforce records they can read in Salesforce. Onyx applies the check to each search.
+It does not run separate permission sync jobs for Salesforce,
+so the connector's status page shows no permission sync history.
 
 - Onyx matches an Onyx user to a Salesforce user by email address.
   It checks the Salesforce username first, then the Salesforce email field, and it matches active users only.
@@ -342,7 +346,7 @@ and an Onyx user sees only the Salesforce records they can read in Salesforce.
     but the run finishes sooner if you narrow the connector or schedule it away from your other integrations.
   </Accordion>
 
-  <Accordion title="The OAuth option is missing from the credential form">
+  <Accordion title="The OAuth tab is missing from the authentication account form">
     On Onyx Cloud, confirm that an administrator installed the Onyx Salesforce OAuth package.
     If the package is installed and the option is still missing, contact Onyx Support.
 
