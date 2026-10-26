@@ -121,27 +121,52 @@ and with selected data from your index.
   </Step>
 
   <Step title="Setup Onyx for the Slack Bot">
-    Navigate to the Onyx Admin Panel and select the **Slack Bots** tab.
+    Open the Onyx **Admin Panel** and click **Slack Integration** in the sidebar. Click **New Slack Bot**.
 
-    Enter the **Bot Token**, **App Token**, and **User Token** (Recommended) and click **Create!**
+    Name the bot. Enter the **Slack Bot Token**, **Slack App Token**, and **Slack User Token** (optional, recommended)
+    and click **Create**. Onyx validates the tokens and connects to Slack over Socket Mode,
+    so your deployment does not need a public URL.
 
     <img className="rounded-image" src="/assets/admins/slackbot/slackbot_onyx_setup.png" alt="Onyx Slack Bot Onyx Setup"/>
   </Step>
 
   <Step title="Configure the Slack Bot's Behavior">
-    Once your Slack bot is created, you can configure it's universal behavior through the **Default Configuration**.
+    Once your Slack bot is created,
+    you can configure its behavior for all channels and DMs through the **Default Configuration**.
+    Click **Edit Default Configuration** to change it. By default the bot only answers when it is tagged or in a DM.
 
-    You can also set channel-specific behavior using **Channel Configurations**.
+    Click **New Channel Configuration** to set channel-specific behavior.
+    A channel configuration overrides the default configuration for that channel.
 
     <img className="rounded-image" src="/assets/admins/slackbot/slackbot_config.png" alt="Onyx Slack Bot Configuration"/>
   </Step>
 </Steps>
 
+## Channel Configuration Options
+
+For the default configuration and for each channel, you can set:
+
+- **Agent**: the Agent that answers in the channel.
+  Use an Agent with a narrow knowledge scope so the bot does not answer from private data.
+- **Document Sets**: limit the search to selected [Document Sets](/admins/managing_features/document_sets).
+- **Respond to tags only**: answer only when a user tags @OnyxBot or sends a DM, instead of every message.
+- **Only respond if citations found**: stay silent when the answer has no supporting documents.
+- **Respond to user in a private (ephemeral) message**: show the answer only to the person who asked.
+  They can click **Show everyone** to share it.
+- **Respond to specific users or groups**: limit who can trigger the bot in the channel.
+- **Follow-up tags**: Slack users or groups to notify when a user asks for a human follow-up.
+- **Standard answer categories** (Business plan and higher): post a predefined answer when a message matches a keyword.
+
+<Tip>
+  Turn off the default configuration with **Disable Default Configuration** if the bot must only answer in configured
+  channels. The bot then also stops answering DMs.
+</Tip>
+
 <HowToUseOnyxBot />
 
-## Advanced Configuration
+## Advanced Configuration (Self-Hosted)
 
-There are a set of advanced configuration options available via environment variables that control your Slack bot's
+Self-hosted deployments can set environment variables on the background worker that runs the Slack bot to change its
 behavior.
 
 You can find the full list of configuration options [in the Onyx
@@ -201,12 +226,6 @@ GitHub](https://github.com/onyx-dot-app/onyx/blob/main/backend/onyx/configs/onyx
     Default: `false (bool)`
   </Accordion>
 
-  <Accordion title="ONYX_BOT_RESPOND_EVERY_CHANNEL">
-    Respond in all channels by default, instead of only those configured in the UI.
-
-    Default: `false (bool)`
-  </Accordion>
-
   <Accordion title="ONYX_BOT_MAX_QPM">
     Maximum questions per minute the bot can answer. Set to `0` or leave unset for uncapped.
 
@@ -223,12 +242,6 @@ GitHub](https://github.com/onyx-dot-app/onyx/blob/main/backend/onyx/configs/onyx
     Minutes after which a reminder DM is sent to request feedback on an answer. Set to `0` to disable.
 
     Default: `0 (disabled; 0 minutes)`
-  </Accordion>
-
-  <Accordion title="ONYX_BOT_REPHRASE_MESSAGE">
-    Rephrase Slack user messages before sending to the LLM (may improve clarity for the model).
-
-    Default: `false (bool)`
   </Accordion>
 
   <Accordion title="ONYX_BOT_RESPONSE_LIMIT_PER_TIME_PERIOD">

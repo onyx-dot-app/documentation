@@ -6,15 +6,29 @@ icon: "chart-simple"
 
 ## Admin Panel
 
-The Onyx Admin Panel is accessed by clicking your user profile icon and selecting **Admin Panel**.
+Open the Admin Panel from the user menu. Click your profile icon and select **Admin Panel**.
 
-This centralized dashboard gives administrators comprehensive control over their Onyx workspace.
+The Admin Panel is the central place to configure your Onyx workspace.
+The sidebar groups settings into sections such as **Agents & Actions**, **Documents & Knowledge**, **Integrations**,
+**Permissions**, **Organization**, and **Usage**.
 
 <Note>
-  The first user in your Onyx instance will automatically be an Admin. Only Admins can designate other users as Admins.
+  The first user in your Onyx deployment is automatically an Admin. Only Admins can make other users Admins.
 </Note>
 
 <img className="rounded-image" src="/assets/admins/admin_panel_overview.png" alt="Onyx Admin Panel Overview"/>
+
+## Editions
+
+Some Admin Panel pages depend on your edition. Onyx has four editions:
+
+- **Community Edition (CE)**: free, self-hosted, no license.
+- **Business**: adds groups, permission sync, SSO, usage dashboards, theming, and the LLM Gateway.
+- **Enterprise**: adds SCIM, custom analytics, hook extensions, and other advanced controls.
+- **Cloud**: hosted by Onyx with Business or Enterprise features depending on your plan.
+
+Pages that need a higher edition stay visible in the sidebar with a lock.
+See [Plans & Billing](/admins/billing/overview) for details.
 
 ## Core Admin Features
 
@@ -36,19 +50,19 @@ This centralized dashboard gives administrators comprehensive control over their
   </Card>
 
   <Card title="Agents" icon="robot" href="/admins/agents/overview">
-    Publish custom Agents for every use case.
+    Feature, list, and manage the custom Agents in your organization.
   </Card>
 
-  <Card title="Onyx Slack Bot" icon="slack" href="/admins/getting_started/slack_bot_setup">
-    Configure a Slack Bot powered by your knowledge, Agents, and Actions.
+  <Card title="Slack Integration" icon="slack" href="/admins/getting_started/slack_bot_setup">
+    Connect OnyxBot to Slack so users can ask questions from Slack channels and DMs.
   </Card>
 
   <Card title="User Management" icon="users" href="/admins/user_management/users_and_groups">
     Manage users, groups, and API keys.
   </Card>
 
-  <Card title="Workspace Analytics" icon="chart-line" href="/admins/analytics/overview">
-    Monitor usage and performance across your workspace.
+  <Card title="Usage & Analytics" icon="chart-line" href="/admins/analytics/overview">
+    Monitor usage, feedback, and query history across your workspace.
   </Card>
 
   <Card title="Advanced Configs" icon="gear" href="/admins/advanced_configs/search_configs">
