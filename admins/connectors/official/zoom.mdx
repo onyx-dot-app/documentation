@@ -17,7 +17,8 @@ You need:
 - **Audio transcript** turned on in Zoom's cloud recording settings.
   Zoom only creates a transcript for recordings made after you turn it on.
 - The **Webinar** add-on, if you index webinars.
-- For [permission sync](#permission-sync), the Onyx Enterprise Edition.
+- For **Specific Groups** or [permission sync](#permission-sync), a paid tier: Business or Enterprise on Onyx Cloud,
+  or the Enterprise Edition when self-hosted.
 
 ## Create a Zoom app
 
@@ -77,7 +78,7 @@ You need:
 
 <Steps>
   <Step title="Open the Zoom connector">
-    Go to **Admin Panel → Add Connector** and select **Zoom** under **Meetings**.
+    In the Admin Panel, go to **Connectors** and select **Zoom** under **Meetings**.
   </Step>
 
   <Step title="Pick the Zoom plan">
@@ -104,7 +105,7 @@ You need:
     - **Zoom Group ID**: every recording the group's members host.
     Find the ID in **User Management → Groups** in the Zoom web portal.
 
-    Turn off **Include meetings** or **Include webinars** to leave one session type out.
+    Turn off **Include Meetings** or **Include Webinars** to leave one session type out.
 
     <img className="rounded-image" src="/assets/admins/connectors/zoom/onyx_content.png" alt="The Connector Content section of the Zoom setup page"/>
   </Step>
@@ -147,7 +148,7 @@ Onyx rereads the settings every 6 hours.
 
 <Note>
   To limit every transcript to its owner instead of **Everyone**,
-  turn off **Treat link access as public** in the connector settings.
+  turn off **Treat Link Access as Public** in the connector settings.
 </Note>
 
 ## Troubleshooting
@@ -165,7 +166,7 @@ Onyx rereads the settings every 6 hours.
 
   <Accordion title="Webinars are not indexed">
     The host has no Webinar add-on, so Zoom refuses every webinar request. Assign the add-on in Zoom,
-    or turn off **Include webinars**.
+    or turn off **Include Webinars**.
   </Accordion>
 
   <Accordion title="A host email is reported as an indexing error">

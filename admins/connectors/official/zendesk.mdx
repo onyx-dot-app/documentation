@@ -5,87 +5,120 @@ description: "Access tickets and conversations from Zendesk"
 
 ## How it works
 
-The Zendesk Connector can sync content from your Zendesk instance, supporting two content types:
+The Zendesk connector indexes content from your Zendesk instance. One connector indexes one content type:
 
-- **Articles**: Syncs all published Articles from your company's Help Center
-- **Tickets**: Syncs Support Tickets with their comments and metadata
+- **Articles**: Published articles from your Help Center
+- **Tickets**: Support tickets with their comments and metadata
 
-The connector supports incremental updates and maintains author information, content tags, and other metadata.
+To index both articles and tickets, create two connectors with the same Zendesk account.
+
+The connector keeps author information, labels, tags, and other metadata. After the first run,
+it fetches only new and changed content. It also removes documents from Onyx when Zendesk deletes them.
+
+Permission sync is not available. **Document Access** can be **Everyone in Your Organization** or **Specific Groups**.
+**Specific Groups** is a paid feature: the Business and Enterprise tiers on Onyx Cloud,
+and the Enterprise Edition when self-hosted.
+
+The connector is available in all editions.
 
 ## Content Types
 
 ### Articles
 
-- Syncs all published articles from Zendesk Help Center
+- Indexes all published articles from the Zendesk Help Center
 - Includes article content, labels, and content tags
 - Tracks author information and update timestamps
-- Skips draft articles and articles with specific skip labels (configurable)
+- Skips draft articles
+- Skips articles that carry a label listed in the `ZENDESK_CONNECTOR_SKIP_ARTICLE_LABELS` environment variable
+  (self-hosted only)
 
 ### Tickets
 
-- Syncs support tickets with full comment threads
+- Indexes support tickets with full comment threads
 - Includes ticket metadata (status, priority, tags, type)
 - Tracks submitter and commenter information
 - Excludes deleted tickets
-- **Note**: Requires active Zendesk Support Product
+- **Note**: Requires an active Zendesk Support product
 
 ## Current Limitations
 
-- Articles: Does not allow filtering by specific categories or sections
-- Tickets: Requires Zendesk Support Product to be active
+- Articles: Cannot filter by category or section
+- Tickets: Requires an active Zendesk Support product
 
 ## Setting up
 
 ### Authorization
 
-The Zendesk Connector requires 3 things to connect:
-- **Subdomain**: Your Zendesk subdomain (e.g., `your-company` from `your-company.zendesk.com`)
-- **Email**: Email address of the API token owner
-- **API Token**: Zendesk API token for authentication
+The Zendesk connector needs 3 values:
+- **Zendesk Subdomain**: Your Zendesk subdomain, for example `your-company` from `your-company.zendesk.com`
+- **Zendesk Account Email**: The email address of the API token owner
+- **API Token**: A Zendesk API token
 
-See below for instructions on getting the API token:
+See below for how to create the API token:
 
 <img className="rounded-image" src="/assets/admins/connectors/zendesk/ZendeskAPI.gif" alt="Zendesk settings page showing how to generate an API token"/>
+
+<Note>
+  Onyx indexes only what the token owner can read in Zendesk.
+  Use an agent or admin account that can read the articles or tickets you want to index.
+</Note>
 
 ### Indexing
 
 <Steps>
-  <Step title="Add Zendesk connector">
-    Navigate to the **Admin Panel** and select `Add Connector` followed by the Zendesk tile
+  <Step title="Open the Zendesk connector">
+    In the Admin Panel, go to **Connectors** and select **Zendesk**.
   </Step>
 
-  <Step title="Choose content type">
-    Choose your content type (Articles or Tickets)
+  <Step title="Add the credential">
+    Under **Authentication Account**, select **New Zendesk Account** and enter the subdomain, account email,
+    and API token from the section above.
   </Step>
 
-  <Step title="Provide authentication">
-    Provide the authentication information from the section above
+  <Step title="Configure the content">
+    - **Zendesk Subdomain**: Enter the subdomain again.
+    - **Content Type**: Choose **articles** or **tickets**.
+    - **API Calls per Minute** (under **Advanced Options**): Limit the request rate if your Zendesk plan has a low
+    API rate limit. Leave empty for no limit.
   </Step>
 
-  <Step title="Start syncing">
-    Click connect to start syncing content from Zendesk
+  <Step title="Set access and create">
+    Under **Connector Settings**, choose **Document Access** and click **Create Connector**.
   </Step>
 </Steps>
 
-The connector will perform incremental syncs to keep content up to date,
-using cursor-based pagination for articles and timestamp-based retrieval for tickets.
+Watch the first index attempt on the **Indexing Status** page. Later runs pick up new and updated content only.
 
 ## Metadata
 
-The connector extracts and indexes the following metadata:
+The connector indexes the following metadata:
 
 ### Articles
 
-- Labels (article labels)
+- Labels
 - Content tags
 - Author information
 - Update timestamps
 
 ### Tickets
 
-- Status (open, pending, solved, etc.)
+- Status (open, pending, solved, and so on)
 - Priority level
 - Tags
 - Ticket type
 - Submitter information
 - Comment history with authors and timestamps
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="Your Zendesk token does not have sufficient permissions (HTTP 403)">
+    The token owner cannot read the content type you selected.
+    Check that the account has access to the Help Center (articles) or to Zendesk Support (tickets),
+    and that API token access is enabled in Zendesk Admin Center.
+  </Accordion>
+
+  <Accordion title="Indexing is slow or hits rate limits">
+    Set **API Calls per Minute** under **Advanced Options** to a value below your Zendesk plan's rate limit.
+  </Accordion>
+</AccordionGroup>
