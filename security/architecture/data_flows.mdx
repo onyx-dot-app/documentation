@@ -6,56 +6,65 @@ icon: "arrows-split-up-and-left"
 
 ## Indexing Flow
 
-Documents from connectors and user uploads are processed by the Onyx indexing pipeline.
-With default configurations no data ever leaves the deployment.
+Documents from connectors and user uploads pass through the Onyx indexing pipeline. With the default configuration,
+no document data leaves your deployment.
 
 <img className="rounded-image" src="/assets/security/OnyxIndexingFlow.png" alt="Onyx Indexing Flow"/>
 
 <Note>
-  The LLM-based contextual retrieval and the informativeness model are not enabled by default.
+  LLM-based contextual retrieval and image captioning are off by default.
 </Note>
 
-Not shown in the diagram, the object store (which runs locally)
-acts as an intermediate store for the document before the downstream processing steps like chunking.
+Not shown in the diagram, the object store (which runs inside your deployment)
+holds the original document before processing steps such as chunking.
 
-Onyx does also allow configuring the following options:
+Admins can turn on these options:
 
 <Info>
-  Note that overriding the default configurations may means that documents will be sent to your selected third party
-  services for processing
+  If you turn on these options, Onyx sends document content to the selected third-party service for processing.
 </Info>
 
-- API based embedding model. Teams may choose to do this instead of choosing between running their
-  own GPUs, using a less capable embedding model, or accepting a slower initial indexing.
-- Image captioning service. Connecting a vision-capable model lets files with embedded images, as
-  well as standalone image files, be captioned into text so they can be represented for retrieval.
-- Connecting an LLM for contextual retrieval. This uses the LLM to prepend a short, document-aware
-  summary to each chunk so it carries the surrounding context,
-  which improves retrieval accuracy for chunks that would otherwise be ambiguous on their own.
+- **API-based embedding model** (**Admin Panel > Index Settings**). Teams choose this instead of running
+  their own GPUs, using a smaller embedding model, or accepting a slower initial indexing.
+- **Image captioning**. A vision-capable LLM describes images inside files and standalone image files
+  so that Onyx can retrieve them as text.
+- **Contextual Retrieval** (**Admin Panel > Index Settings**). An LLM adds a short, document-aware
+  summary to each chunk. This improves retrieval for chunks that are ambiguous on their own.
 
 ## Query Flow
 
 <img className="rounded-image" src="/assets/security/OnyxQueryFlow.png" alt="Onyx Query Flow"/>
 
-When users query Onyx, the LLM determines if the system should fetch additional context or respond to the user directly.
+When a user sends a message, the LLM decides whether to answer directly or to fetch more context.
 
-If additional context is needed, the system can run an internal search (outlined above),
-invoke a built-in action (such as code execution or web search), or call an action configured by your admins.
+To fetch context, the agent can run an internal search over your indexed documents, use a built-in tool (code execution,
+web search, image generation),
+or call a custom action that your admins configured under **Admin Panel > Plugins** (OpenAPI Actions and MCP Actions).
 
-By default, the system does not communicate data to any external systems outside of the admin configured LLM.
+Internal search applies the user's document permissions before any result reaches the LLM. By default,
+Onyx sends data only to the LLM provider that your admins configured.
 
 ### Configurable External Services
 
-Admins of the system can configure support for external services to enrich the user experience.
+Admins can connect external services to improve the user experience.
 
 <Tip>
-  It is recommended to enable these functionalities to let your users get the most of out Onyx.
+  We recommend these features so that your users get the most out of Onyx.
 </Tip>
 
-**Web Search**: Sends search queries to a configured search provider. Supported providers include Google PSE, Serper,
-Exa AI, and Firecrawl to get links and snippets. A crawler is used to fetch the full contents of the page,
-Onyx has a built in one and also supports Firecrawl.
+**Web Search** (**Admin Panel > Web Search**): sends search queries to the configured search provider.
+Supported providers are Google PSE, Serper, Exa, Firecrawl, Brave, Tavily, and SearXNG.
+Onyx then fetches page contents with its built-in crawler or a configured content provider such as Exa or Serper.
 
-**Image Generation**: Sends prompts to a third party image generation endpoint like OpenAI's Dalle model.
+**Image Generation** (**Admin Panel > Image Generation**): sends prompts to an OpenAI, Azure OpenAI,
+or Vertex AI image model.
 
-**Custom Actions**: API calls available to the LLM, configured by the Admin users of your Onyx deployment.
+**Code Interpreter** (**Admin Panel > Code Interpreter**): runs Python that the LLM writes.
+The code runs in a separate container inside your deployment. Admins can turn it off for the whole deployment.
+
+**Plugins**: OpenAPI Actions and MCP Actions call the external APIs that your admins configure.
+Each action has a policy of **Auto-approve**, **Ask**, or **Disabled**.
+
+**Craft**: runs agent-generated code in a per-user sandbox.
+All sandbox traffic passes through a proxy that injects credentials and enforces app policies.
+See [Craft Architecture](/security/architecture/craft).

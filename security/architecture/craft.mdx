@@ -8,6 +8,10 @@ Craft adds an untrusted code-execution environment to Onyx. Onyx controls the sa
 keeps credentials outside the sandbox, and mediates access to company knowledge, external services,
 and generated web apps.
 
+<Note>
+  Craft requires the Business or Enterprise plan. Admins choose who can use it under **Admin Panel > Craft > Access**.
+</Note>
+
 <img className="rounded-image" src="/assets/security/OnyxCraftArchitecture.png" alt="Craft runtime architecture showing the browser, Onyx control plane, per-user sandbox, sandbox proxy, model providers, search, external Apps, and generated web apps"/>
 
 ## Components and trust boundaries
@@ -60,7 +64,7 @@ generated code, intermediate files, outputs, and the session's agent instruction
 
 Skills and User Library files are synchronized into a managed area of the sandbox and linked into each session.
 Attachments belong only to their session, while User Library files remain available across the user's sessions.
-Skill bundles can contain executable scripts, so they should be reviewed as code before being shared.
+Skill bundles can contain executable scripts. Review them as code before you share them.
 
 When a sandbox becomes idle, Onyx snapshots its session state to the configured file store and stops the runtime.
 Onyx restores that state when the user returns. Snapshots support sleep and restore;
@@ -72,8 +76,8 @@ they are not user-facing version history.
 | **Docker Compose** | A sandbox container on a dedicated bridge, with an in-container firewall and no connection to the default Compose network. |
 
 The Docker backend requires read-write Docker socket access from the API server and background worker.
-This access is effectively root access to the host,
-which is why Docker Compose is intended for small deployments on a trusted host.
+This access is effectively root access to the host. For this reason,
+Docker Compose is intended for small deployments on a trusted host.
 
 ## Network egress
 
@@ -120,12 +124,12 @@ Craft searches company knowledge through the Onyx API rather than connecting the
 or indexed sources. Onyx evaluates the request as the sandbox owner and applies that user's document permissions.
 
 Enabling Craft, sharing a Skill, or connecting an App does not expand the user's indexed document access.
-Search results can still become part of a prompt, generated file, or web app,
-so users must review outputs before sharing them.
+Search results can still become part of a prompt, generated file, or web app.
+Users must review outputs before they share them.
 
 ## Apps and approvals
 
-Requests attributed to an App use the policies configured by an Admin:
+Requests attributed to an App use the policies that an admin configures under **Admin Panel > Craft > Apps**:
 
 | Policy | Enforcement |
 | --- | --- |
