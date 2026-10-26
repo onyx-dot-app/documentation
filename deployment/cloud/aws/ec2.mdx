@@ -7,18 +7,21 @@ import CustomDomain from "/snippets/custom-domain.mdx"
 import InstallOnyx from "/snippets/install-onyx.mdx"
 import DeploymentNextSteps from "/snippets/deployment-next-steps.mdx"
 
-Using AWS EC2 is the recommended way of deploying Onyx.
-It is simple to set up and should meet the performance needs of 90% of organizations looking to use Onyx!
+A single EC2 instance is the simplest way to self-host Onyx. It meets the performance needs of most organizations.
+
+<Tip>
+  To run Onyx on EKS with managed RDS, ElastiCache, and S3 instead, see the [EKS guide](/deployment/cloud/aws/eks)
+  or the [Terraform modules](/deployment/local/terraform).
+</Tip>
 
 ## Guide
 
 <Steps>
   <Step title="Create an EC2 instance">
-    Create an EC2 instance with the appropriate resources. For this guide,
-    we will use the recommended `m7g.xlarge` instance.
+    Create an EC2 instance with the appropriate resources. This guide uses the recommended `m7g.xlarge` instance.
 
     <Note>
-      Read our [Resourcing guide](/deployment/getting_started/resourcing) for more details.
+      Read the [Resourcing guide](/deployment/getting_started/resourcing) for more details.
     </Note>
 
     - Give your instance a descriptive name like `onyx-prod`
@@ -26,18 +29,18 @@ It is simple to set up and should meet the performance needs of 90% of organizat
     - Select the `64-bit (Arm)` architecture
     - Select the `m7g.xlarge` instance type
     - Select `Allow HTTPS traffic from the internet` in the *Network settings* section
-    - Configure storage following the Resourcing Guide
+    - Configure storage following the Resourcing guide
 
     <img className="rounded-image" src="/assets/deployment/ec2_create_instance.png" alt="EC2 Instance Creation"/>
 
     <img className="rounded-image" src="/assets/deployment/ec2_https.png" alt="EC2 Security Group Configuration"/>
   </Step>
 
-  <Step title="Create the instance">
+  <Step title="Launch the instance">
     Click **Launch instance** and then view your instance details.
 
     <Tip>
-      Save the **Public IPv4 address** of the instance!
+      Save the **Public IPv4 address** of the instance.
     </Tip>
 
     <img className="rounded-image" src="/assets/deployment/ec2_ipv4.png" alt="EC2 Public IPv4 Address"/>
@@ -46,24 +49,42 @@ It is simple to set up and should meet the performance needs of 90% of organizat
   <CustomDomain />
 
   <Step title="Install Onyx requirements">
-    Onyx requires `git`, `docker`, and `docker compose`.
+    Onyx requires `git`, `docker`, and the `docker compose` plugin.
 
     To install these on Amazon Linux 2023, run the following:
 
     ```bash
     sudo yum update -y
+    sudo yum install -y docker git
+    sudo systemctl enable --now docker
+    sudo usermod -aG docker ec2-user
 
-    sudo yum install docker -y
-    sudo service docker start
-
-    sudo curl -L https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose
-    sudo chmod +x /usr/local/bin/docker-compose
-
-    sudo yum install git
+    DOCKER_CONFIG=/usr/local/lib/docker
+    sudo mkdir -p $DOCKER_CONFIG/cli-plugins
+    sudo curl -SL https://github.com/docker/compose/releases/latest/download/docker-compose-linux-$(uname -m) \
+      -o $DOCKER_CONFIG/cli-plugins/docker-compose
+    sudo chmod +x $DOCKER_CONFIG/cli-plugins/docker-compose
     ```
+
+    Log out and back in so your user can run `docker` without `sudo`. Then confirm the install:
+
+    ```bash
+    docker compose version
+    ```
+
+    <Tip>
+      Prefer a guided install? The [Onyx CLI](/deployment/local/onyx_cli) installs Docker Compose,
+      writes the configuration, and manages upgrades for you. Skip the remaining steps if you use it.
+    </Tip>
   </Step>
 
   <InstallOnyx />
 </Steps>
+
+## Use managed AWS services
+
+The default install runs PostgreSQL, Redis, OpenSearch, and the object store as containers on the instance.
+For larger deployments, you can move the database to [Amazon RDS](/deployment/cloud/aws/rds)
+and keep the rest on the instance. See [External services](/deployment/production/external_services) for Redis and S3.
 
 <DeploymentNextSteps />
