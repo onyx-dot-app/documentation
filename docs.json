@@ -430,7 +430,8 @@
                   "developers/api_reference/chat/get_user_chat_sessions",
                   "developers/api_reference/chat/fetch_chat_file",
                   "developers/api_reference/chat/delete_chat_session_by_id",
-                  "developers/api_reference/chat/delete_all_chat_sessions"
+                  "developers/api_reference/chat/delete_all_chat_sessions",
+                  "developers/api_reference/chat/end_incognito_session"
                 ]
               },
               {
@@ -470,7 +471,8 @@
                   "developers/api_reference/actions/validate_tool",
                   "developers/api_reference/actions/list_tools",
                   "developers/api_reference/actions/list_openapi_tools",
-                  "developers/api_reference/actions/get_custom_tool"
+                  "developers/api_reference/actions/get_custom_tool",
+                  "developers/api_reference/actions/update_tool_user_preferences"
                 ]
               },
               {
@@ -522,7 +524,8 @@
                       "developers/api_reference/files_connectors/associate_credential_to_connector",
                       "developers/api_reference/files_connectors/dissociate_credential_from_connector"
                     ]
-                  }
+                  },
+                  "developers/api_reference/files_connectors/update_credential_sharing"
                 ]
               },
               {
@@ -563,9 +566,7 @@
                   "developers/api_reference/user_management/get_auth_type",
                   "developers/api_reference/user_management/verify_user_logged_in",
                   "developers/api_reference/user_management/get_current_user_permissions",
-                  "developers/api_reference/user_management/get_user_role",
                   "developers/api_reference/user_management/set_user_admin_access",
-                  "developers/api_reference/user_management/set_user_role",
                   "developers/api_reference/user_management/list_all_users_basic_info",
                   "developers/api_reference/user_management/list_all_users",
                   "developers/api_reference/user_management/list_invited_users",
@@ -574,7 +575,31 @@
                   "developers/api_reference/user_management/remove_invited_user",
                   "developers/api_reference/user_management/activate_user_api",
                   "developers/api_reference/user_management/deactivate_user_api",
-                  "developers/api_reference/user_management/delete_user"
+                  "developers/api_reference/user_management/delete_user",
+                  "developers/api_reference/user_management/list_all_accepted_users",
+                  "developers/api_reference/user_management/list_minimal_user_groups",
+                  "developers/api_reference/user_management/get_permission_registry"
+                ]
+              },
+              {
+                "group": "User Groups",
+                "icon": "users",
+                "pages": [
+                  "developers/api_reference/user_groups/list_user_groups",
+                  "developers/api_reference/user_groups/create_user_group",
+                  "developers/api_reference/user_groups/get_user_group",
+                  "developers/api_reference/user_groups/patch_user_group",
+                  "developers/api_reference/user_groups/delete_user_group",
+                  "developers/api_reference/user_groups/get_user_group_permissions",
+                  "developers/api_reference/user_groups/set_user_group_permissions",
+                  "developers/api_reference/user_groups/rename_user_group",
+                  "developers/api_reference/user_groups/patch_user_group_incognito",
+                  "developers/api_reference/user_groups/set_user_group_data_access_cc_pairs",
+                  "developers/api_reference/user_groups/set_group_managed_cc_pairs",
+                  "developers/api_reference/user_groups/add_users",
+                  "developers/api_reference/user_groups/update_group_agents",
+                  "developers/api_reference/user_groups/update_group_document_sets",
+                  "developers/api_reference/user_groups/set_group_manager"
                 ]
               },
               {
@@ -584,7 +609,49 @@
                   "developers/api_reference/miscellaneous/get_global_token_limit_settings",
                   "developers/api_reference/miscellaneous/create_global_token_limit_settings",
                   "developers/api_reference/miscellaneous/update_token_limit_settings",
-                  "developers/api_reference/miscellaneous/delete_token_limit_settings"
+                  "developers/api_reference/miscellaneous/delete_token_limit_settings",
+                  "developers/api_reference/miscellaneous/get_all_group_token_limit_settings",
+                  "developers/api_reference/miscellaneous/get_group_token_limit_settings",
+                  "developers/api_reference/miscellaneous/create_group_token_limit_settings",
+                  "developers/api_reference/miscellaneous/update_group_token_limit_settings",
+                  "developers/api_reference/miscellaneous/delete_group_token_limit_settings",
+                  "developers/api_reference/miscellaneous/get_user_token_limit_settings",
+                  "developers/api_reference/miscellaneous/create_user_token_limit_settings"
+                ]
+              },
+              {
+                "group": "Usage & Cost",
+                "icon": "chart-line",
+                "pages": [
+                  "developers/api_reference/usage/list_cost_overrides",
+                  "developers/api_reference/usage/create_cost_override",
+                  "developers/api_reference/usage/update_cost_override",
+                  "developers/api_reference/usage/delete_cost_override",
+                  "developers/api_reference/usage/get_my_usage",
+                  "developers/api_reference/usage/export_usage",
+                  "developers/api_reference/usage/get_system_usage",
+                  "developers/api_reference/usage/reset_usage"
+                ]
+              },
+              {
+                "group": "Analytics",
+                "icon": "chart-bar",
+                "pages": [
+                  "developers/api_reference/analytics/get_query_analytics",
+                  "developers/api_reference/analytics/get_user_analytics",
+                  "developers/api_reference/analytics/get_onyxbot_analytics",
+                  "developers/api_reference/analytics/get_persona_messages",
+                  "developers/api_reference/analytics/get_persona_unique_users",
+                  "developers/api_reference/analytics/get_assistant_stats"
+                ]
+              },
+              {
+                "group": "Query History",
+                "icon": "clock-rotate-left",
+                "pages": [
+                  "developers/api_reference/query_history/start_query_history_export",
+                  "developers/api_reference/query_history/get_query_history_export_status",
+                  "developers/api_reference/query_history/download_query_history_csv"
                 ]
               },
               {
@@ -593,7 +660,8 @@
                 "pages": [
                   "developers/api_reference/miscellaneous/healthcheck",
                   "developers/api_reference/miscellaneous/get_version",
-                  "developers/api_reference/miscellaneous/get_versions"
+                  "developers/api_reference/miscellaneous/get_versions",
+                  "developers/api_reference/miscellaneous/readiness"
                 ]
               }
             ]
@@ -785,6 +853,14 @@
     {
       "source": "/admins/connectors/official/sharepoint/client-app-auth",
       "destination": "/admins/connectors/official/microsoft-365/setup"
+    },
+    {
+      "source": "/developers/api_reference/user_management/get_user_role",
+      "destination": "/developers/api_reference/user_management/get_current_user_permissions"
+    },
+    {
+      "source": "/developers/api_reference/user_management/set_user_role",
+      "destination": "/developers/api_reference/user_management/set_user_admin_access"
     }
   ],
   "logo": {
@@ -827,7 +903,7 @@
   },
   "seo": {
     "title": "Onyx AI - Open Source Enterprise Search and AI Platform",
-    "description": "Onyx AI is the open source AI platform for enterprise search, generation, and automation \u2014 powered by your team's data.",
+    "description": "Onyx AI is the open source AI platform for enterprise search, generation, and automation — powered by your team's data.",
     "metatags": {
       "keywords": "enterprise search, onyx ai, onyx, open source ai, enterprise ai, generative ai platform, ai assistant, knowledge management, danswer"
     }

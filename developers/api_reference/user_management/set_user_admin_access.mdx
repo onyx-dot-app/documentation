@@ -11,9 +11,7 @@ Admin access is membership in the **Admin** group, so this endpoint adds the use
 
 <Note>
   This endpoint applies to Onyx **v4.7 and later**. It replaces `PATCH /manage/set-user-role`,
-  which was removed with the role model in v4.7. For older versions,
-  see [Set User Role](/developers/api_reference/user_management/set_user_role). To grant any other permission,
-  add the user to a group that grants it.
+  which was removed with the role model in v4.7. To grant any other permission, add the user to a group that grants it.
 </Note>
 
 Onyx rejects the request when it would lock you out of the admin panel or when the account cannot hold admin access:
