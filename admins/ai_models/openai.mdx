@@ -1,6 +1,6 @@
 ---
 title: "OpenAI"
-description: "Configure OpenAI language models for Onyx"
+description: "Configure OpenAI GPT models for Onyx"
 icon: "bolt"
 ---
 
@@ -12,16 +12,32 @@ import StandardAiModelConfigs from "/snippets/standard-ai-model-configs.mdx";
 <Steps>
   <NavigateToAiModels />
 
-  <Step title="Configure OpenAI Provider">
-    Select **OpenAI** from the available providers.
-
-    Give this configuration a **Display Name**.
+  <Step title="Connect OpenAI">
+    Under **Add Provider**, click **Connect** on the **GPT** (OpenAI) card.
 
     Create an [API key](https://platform.openai.com/api-keys)
-    from the OpenAI API dashboard and paste it in the **API Key** field.
+    in the OpenAI dashboard and paste it in the **API Key** field.
 
-    <img className="rounded-image" src="/assets/admins/ai_models/openai_config.png" alt="OpenAI Provider Configuration"/>
+    Optionally, give this provider a **Display Name**.
+
+    <img className="rounded-image" src="/assets/admins/ai_models/openai_config.png" alt="OpenAI provider setup dialog"/>
+  </Step>
+
+  <Step title="Select Models">
+    Onyx lists the recommended GPT models. Select the models you want to use.
+    Click **More Models** to see the full list.
+
+    Hover over a model to open **Model Settings**.
+    There you can rename the model and set the default reasoning level and temperature.
+
+    Keep **Auto Update** on to add new OpenAI models when they are released.
   </Step>
 
   <StandardAiModelConfigs />
+
+  <Step title="Connect">
+    Click **Connect**. Onyx tests the API key with one of the selected models before it saves the provider.
+
+    If this is the first provider, Onyx sets it as the **Default Model** for new chats.
+  </Step>
 </Steps>

@@ -12,23 +12,56 @@ import StandardAiModelConfigs from "/snippets/standard-ai-model-configs.mdx";
 Configure Onyx to use models served by [OpenRouter](https://openrouter.ai/).
 
 <Steps>
-  <Step title="Setup OpenRouter and Deploy your Models">
+  <Step title="Create an OpenRouter API Key">
     Log in to your OpenRouter account and create a new API key.
   </Step>
 
   <NavigateToAiModels />
 
-  <Step title="Configure OpenRouter">
-    Select **OpenRouter** from the available providers.
+  <Step title="Connect OpenRouter">
+    Under **Gateways & Routers**, click **Connect** on the **OpenRouter** card.
 
-    Give your provider a **Display Name**.
+    Paste your OpenRouter **API Key**.
 
-    Enter your OpenRouter **API Key**.
+    Keep the default **API Base URL** (`https://openrouter.ai/api/v1`),
+    or enter the URL of an OpenRouter-compatible endpoint.
 
-    Click the **Fetch Available Models** button to see the models currently available on OpenRouter.
+    Optionally, give this provider a **Display Name**.
 
-    <img className="rounded-image" src="/assets/admins/ai_models/openrouter_config.png" alt="OpenRouter Provider Configuration"/>
+    <img className="rounded-image" src="/assets/admins/ai_models/openrouter_config.png" alt="OpenRouter provider setup dialog"/>
+  </Step>
+
+  <Step title="Load Your Models">
+    In the **Models** section, click **Refresh models**. Onyx reads the current OpenRouter catalog,
+    including each model's context size and capabilities (vision, reasoning).
+
+    Select the models you want to use. Click **More Models** to see the full list.
   </Step>
 
   <StandardAiModelConfigs />
+
+  <Step title="Connect">
+    Click **Connect**. Onyx tests the API key with one of the selected models before it saves the provider.
+  </Step>
 </Steps>
+
+## Auto Mode with the OpenRouter Router
+
+OpenRouter exposes a router model (`openrouter/auto`) that picks a model for each request.
+Onyx can offer this router to users as an **Auto** option in the chat model picker.
+
+<Steps>
+  <Step title="Enable the Router Model">
+    Select the OpenRouter router model in the provider's **Models** list and save the provider.
+  </Step>
+
+  <Step title="Turn On Auto Mode">
+    On the **Language Models** page, turn on **Auto Mode**.
+  </Step>
+
+  <Step title="Select the Router Model">
+    Under **Router Model**, select the OpenRouter router.
+  </Step>
+</Steps>
+
+Users then see **Auto** in the model picker. Onyx records the cost of the model that OpenRouter served.
