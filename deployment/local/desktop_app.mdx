@@ -9,7 +9,8 @@ and Linux.
 
 Features include:
 
-- Quick-launch from system tray or dock
+- Quick-launch from the system tray or dock
+- A global shortcut that summons Onyx from any app (`⌘ ⇧ Space` on macOS, `Ctrl Alt Space` on Windows and Linux)
 - Desktop notifications
 
 <img className="rounded-image" src="/assets/deployment/onyx_desktop_app.png" alt="Onyx Desktop App"/>
@@ -102,6 +103,8 @@ Example `config.json`:
 | `window_title` | string<br />(default: `"Onyx"`) | Windows, macOS, Linux | Custom title shown in the application window. |
 | `show_menu_bar` | boolean<br />(default: `true`) | Windows, Linux | Whether the application menu bar is shown. Normally toggled from **Window → Show Menu Bar** rather than pre-configured. Ignored on macOS, where the menu bar is managed by the operating system. |
 | `hide_window_decorations` | boolean<br />(default: `false`) | Linux | Hides the window's title bar and borders. Normally toggled from **Window → Hide Window Decorations**. |
+| `summon_shortcut` | string or `null`<br />(default: `"Super+Shift+Space"` on macOS, `"Ctrl+Alt+Space"` on Windows and Linux) | Windows, macOS, Linux | Global shortcut that brings Onyx to the front from any app, in Tauri accelerator syntax. Set to `null` to disable it. |
+| `summon_opens_new_chat` | boolean<br />(default: `true`) | Windows, macOS, Linux | Whether the summon shortcut opens a new chat. Set to `false` to return to the current page. |
 
 <Warning>
   `config.json` must be valid JSON with values of the correct type.

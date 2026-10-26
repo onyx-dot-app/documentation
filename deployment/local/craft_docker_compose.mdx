@@ -19,10 +19,11 @@ single-host Onyx deployment that you trust and control.
 
 ## Requirements
 
+- A Business or Enterprise license
 - A full Docker Compose deployment of Onyx 4.0.6 or later
 - Docker Engine with Compose
 - A host with capacity for the Onyx stack and active sandbox containers
-- An Onyx URL reachable through the sandbox proxy
+- An Onyx API base URL that sandboxes can reach (the overlay sets a working default)
 
 Craft does not run with the Onyx Lite Compose overlay.
 
@@ -35,7 +36,8 @@ onyx-cli deploy install --include-craft
 ```
 
 The installer downloads `docker-compose.craft.yml`, enables Craft, selects the Docker sandbox backend,
-creates the sandbox bridge network and proxy CA volume, and starts the deployment.
+creates the sandbox bridge network and proxy CA volume, pulls the sandbox image, and starts the deployment.
+Craft works with the default Onyx URL. To use a public URL instead, see [Set the Onyx URL](#set-the-onyx-url).
 
 <Note>
   The examples below use the CLI's default deployment directory.
@@ -43,25 +45,9 @@ creates the sandbox bridge network and proxy CA volume, and starts the deploymen
   replace `~/.config/onyx` with your `onyx_data` directory (e.g. `onyx_data/deployment/.env`).
 </Note>
 
-Open `~/.config/onyx/deployment/.env` and set the Onyx URL:
-
-```dotenv
-ONYX_SERVER_URL=https://onyx.example.com
-```
-
-Then recreate the affected services with both Compose files:
-
-```bash
-cd ~/.config/onyx/deployment
-docker compose \
-  -f docker-compose.yml \
-  -f docker-compose.craft.yml \
-  up -d --force-recreate
-```
-
 ## Existing deployment
 
-Set `ONYX_SERVER_URL` in the existing deployment's `.env`, then rerun the installer:
+Rerun the installer with the Craft flag:
 
 ```bash
 onyx-cli deploy install --include-craft
@@ -79,20 +65,35 @@ starts the sandbox proxy, and attaches the API server and background worker to t
 
 ## Set the Onyx URL
 
-For production, use the public HTTPS URL users use to reach Onyx:
+`ONYX_SERVER_URL` is the complete API base URL that sandboxes use to call Onyx, path prefix included.
+The overlay defaults to `http://onyx-craft-api:8080`, an alias of the API server on the sandbox bridge network.
+This default needs no change for most deployments.
+
+To route sandbox calls through your public endpoint instead,
+set the public HTTPS URL with its `/api` prefix in `~/.config/onyx/deployment/.env`:
 
 ```dotenv
-ONYX_SERVER_URL=https://onyx.example.com
+ONYX_SERVER_URL=https://onyx.example.com/api
 ```
 
 For local Docker Desktop on macOS or Windows, use the host port selected by the installer:
 
 ```dotenv
-ONYX_SERVER_URL=http://host.docker.internal:3000
+ONYX_SERVER_URL=http://host.docker.internal:3000/api
 ```
 
-On Linux, use a hostname or host address reachable from Docker containers.
-Compose service names such as `api_server` and `nginx` do not resolve from the isolated sandbox bridge.
+Then recreate the affected services with both Compose files:
+
+```bash
+cd ~/.config/onyx/deployment
+docker compose \
+  -f docker-compose.yml \
+  -f docker-compose.craft.yml \
+  up -d --force-recreate
+```
+
+Other Compose service names such as `api_server` and `nginx` do not resolve from the isolated sandbox bridge.
+A public URL without its `/api` prefix fails at sandbox provisioning. The error names the corrected value.
 
 ## Plan host capacity
 
@@ -109,6 +110,8 @@ change this with `SANDBOX_IDLE_TIMEOUT_SECONDS` when faster cleanup or longer-li
 
 The sandbox image follows `IMAGE_TAG`. Keep the Onyx backend and sandbox on the same release.
 Normal deployments should not set `SANDBOX_CONTAINER_IMAGE` separately.
+`docker compose pull` with the Craft overlay also pulls the sandbox image,
+so the first sandbox does not wait for the download.
 
 ## Build Craft from source
 
@@ -201,14 +204,14 @@ See [Craft Architecture](/security/architecture/craft) for the complete trust an
     Include both `docker-compose.yml` and `docker-compose.craft.yml` in the Compose command.
   </Accordion>
 
-  <Accordion title="Sandbox provisioning reports that ONYX_SERVER_URL is missing">
-    Set the value in the deployment directory's `.env` and recreate the API server, background worker,
-    and sandbox proxy with the Craft overlay.
+  <Accordion title="Sandbox provisioning rejects ONYX_SERVER_URL">
+    Set a complete API base URL in the deployment directory's `.env`, or remove the line to use the default.
+    Then recreate the API server, background worker, and sandbox proxy with the Craft overlay.
   </Accordion>
 
   <Accordion title="The configured Onyx URL uses a Compose hostname">
     Replace `api_server`, `nginx`,
-    or another Compose-only hostname with the public Onyx URL or a host address reachable from Docker containers.
+    or another Compose-only hostname with `http://onyx-craft-api:8080` or the public Onyx API URL.
   </Accordion>
 
   <Accordion title="The sandbox proxy is unhealthy">

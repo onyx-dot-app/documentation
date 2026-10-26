@@ -9,14 +9,18 @@ RBAC, egress proxy, NetworkPolicies, and Scheduled Task worker used by Craft.
 
 ## Requirements
 
+- A Business or Enterprise license
 - Kubernetes 1.33 or later
 - A full Onyx Helm deployment with the vector database enabled
 - Nodes with enough CPU, memory, and ephemeral storage for active sandboxes
-- A URL that sandbox pods can use to reach the Onyx API
 
 The chart fails the install or upgrade when Craft is enabled on an older Kubernetes version,
-when the sandbox backend is not `kubernetes`, when `ONYX_SERVER_URL` is empty,
-or when sandbox push authentication is not configured.
+when the sandbox backend is not `kubernetes`, or when sandbox push authentication is not configured.
+
+<Tip>
+  On AWS, the [Terraform modules](/deployment/local/terraform)
+  create a labeled and tainted sandbox node group when you set `enable_craft = true`.
+</Tip>
 
 ## Prepare sandbox nodes
 
@@ -69,7 +73,6 @@ merge these entries under the existing keys rather than adding a second block.
 configMap:
   ENABLE_CRAFT: "true"
   SANDBOX_BACKEND: "kubernetes"
-  ONYX_SERVER_URL: "https://onyx.example.com/api"
 
 auth:
   sandboxPushSecret:
@@ -77,11 +80,17 @@ auth:
     existingSecret: "onyx-sandbox-push-secret"
 ```
 
-`ONYX_SERVER_URL` is the full API base URL, path prefix included.
-It can be the public Onyx URL through your proxy (`https://onyx.example.com/api`)
-or the cluster-internal API Service (`http://<release>-api-service.<namespace>.svc.cluster.local:8080`, no prefix).
+`ONYX_SERVER_URL` is the full API base URL that sandboxes use to call Onyx, path prefix included. When unset,
+the chart uses the cluster-internal API Service (`http://<release>-api-service.<namespace>.svc.cluster.local:8080`,
+no prefix). To route sandbox calls through your public endpoint instead, set the public URL with its `/api` prefix:
+
+```yaml
+configMap:
+  ONYX_SERVER_URL: "https://onyx.example.com/api"
+```
+
 Use a scheme and hostname that resolve from the sandbox proxy and route to the Onyx API.
-A public URL without its `/api` prefix fails at sandbox provisioning with a corrected value.
+A public URL without its `/api` prefix fails at sandbox provisioning. The error names the corrected value.
 
 <Note>
   Before `v4.5.0` this setting was named `SANDBOX_API_SERVER_URL`. Rename it in your values file when upgrading.
@@ -192,7 +201,7 @@ Most clusters work with the chart defaults. Two cluster layouts require addition
 <AccordionGroup>
   <Accordion title="Helm rejects the Craft configuration">
     Read the render error first. Confirm Kubernetes 1.33 or later, `SANDBOX_BACKEND: "kubernetes"`,
-    a non-empty `ONYX_SERVER_URL`, and `auth.sandboxPushSecret.enabled: true` with a populated Secret.
+    and `auth.sandboxPushSecret.enabled: true` with a populated Secret.
   </Accordion>
 
   <Accordion title="Sandbox pods remain Pending">
@@ -210,6 +219,7 @@ Most clusters work with the chart defaults. Two cluster layouts require addition
   <Accordion title="Craft cannot reach the Onyx API">
     Verify `ONYX_SERVER_URL` (including the `/api` prefix on public URLs), DNS, TLS trust, and routing from the proxy.
     Do not point it at a Service name from another cluster or an address the proxy cannot resolve.
+    Remove the key to fall back to the in-cluster API Service.
   </Accordion>
 
   <Accordion title="The sandbox proxy is not Ready">
