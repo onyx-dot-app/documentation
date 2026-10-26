@@ -4,159 +4,125 @@ description: "Manage multiple SSO providers from the admin panel"
 icon: "users-gear"
 ---
 
-Onyx supports configuring SSO providers directly from the admin panel. Google, OIDC,
-and SAML providers are stored as rows you can add, edit,
-and enable without touching environment variables or restarting Onyx. Users pick their provider on the login page,
-so one Onyx instance can serve teams on different identity providers.
+Admins add and manage single sign-on (SSO) providers at **Admin Panel → Organization → SSO Providers**.
+Each provider is one way to sign in: Google, OIDC, or SAML. Changes apply at once.
+No restart or environment variables are needed.
 
-<Note>
-  Available starting in `v4.4.0`. From this version on, the admin panel is the only way to set up SSO.
-  The legacy environment variables (`AUTH_TYPE=google_oauth`, `AUTH_TYPE=oidc`,
-  or `AUTH_TYPE=saml` and their companion variables) no longer enable SSO on a new install.
-  Onyx logs a warning while `AUTH_TYPE` is still set, and the variables are planned for full removal in `v4.5`.
-  On a fresh install, create the first user with email and password (the first user becomes an admin),
-  then add your provider from the admin panel.
-</Note>
+![SSO Providers page](/assets/deployment/sso_providers_page.png)
 
-<Note>
-  If you are upgrading from `v4.3` or earlier with environment-based SSO,
-  the upgrade imports your configuration into an SSO provider entry automatically, and existing logins keep working.
-  The import runs once, when the upgrade first runs against your existing database,
-  so keep the legacy configuration in place through the upgrade.
-  Migrated providers keep using the redirect URIs and ACS URLs already registered with your identity provider,
-  so nothing changes on the IdP side. Once the migrated provider appears in the admin panel,
-  sign-ins and token refresh use the provider entry's credentials, and the legacy variables (`AUTH_TYPE`,
-  the OAuth credential variables, and for SAML the settings file) can be removed.
-  The variables only act as a fallback for login accounts that no provider entry matches,
-  such as after deleting or renaming the migrated provider.
-</Note>
+| Plan                         | What you can do                                                          |
+| ---------------------------- | ------------------------------------------------------------------------ |
+| Community Edition            | One enabled provider of any type.                                        |
+| Business / Enterprise        | Any number of enabled providers at the same time.                        |
+| Onyx Cloud                   | Google and OIDC providers. Allowed email domains are required and verified. |
+
+For the setup steps for each type, see [Google OAuth](/deployment/authentication/oauth),
+[OIDC](/deployment/authentication/oidc), and [SAML](/deployment/authentication/saml).
 
 ## Managing Providers
 
-Navigate to **Admin Panel** → **Organization** → **SSO Providers**.
+### Add a Provider
 
-<img className="rounded-image" src="/assets/deployment/sso_providers_page.png" alt="SSO Providers admin page"/>
+1. Click **Add Provider**.
+2. Set **Provider Type**: **Google**, **OIDC**, or **SAML**.
+3. Fill in the common fields:
 
-<Steps>
-  <Step title="Add a Provider">
-    Click **Add Provider** and pick the provider type: **Google**, **OIDC**, or **SAML**.
+| Field                     | Description                                                                                                                     |
+| ------------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| **Name**                  | A unique lowercase slug: letters, numbers, and hyphens. It is part of the sign-in URL and cannot change later.                   |
+| **Display Name**          | The label on the sign-in button.                                                                                                |
+| **Allowed Email Domains** | Only emails on these domains can sign in through this provider. Recommended on self-hosted. Required on Onyx Cloud.             |
+| **Enabled**               | Turn the provider off to hide it from the login page without deleting it.                                                       |
 
-    Give the provider a **Name** (a lowercase slug used in the login URL)
-    and a **Display Name** (the label users see on the sign-in button).
+4. Fill in the provider-specific fields. The modal shows the **Redirect URI** (Google and OIDC) or **ACS (Reply)
+   URL** (SAML) to register in your identity provider.
+5. Click **Create**.
 
-    <img className="rounded-image" src="/assets/deployment/sso_providers_modal.png" alt="Add SSO Provider modal"/>
-  </Step>
+![Add SSO Provider modal](/assets/deployment/sso_providers_modal.png)
 
-  <Step title="Fill in the Provider Configuration">
-    Each provider type asks for its own credentials:
+The redirect URI for Google and OIDC providers is:
 
-    - **Google**: Client ID and Client Secret from your Google Cloud Console.
-    - **OIDC**: Client ID, Client Secret, and the OpenID configuration URL
-    (the `.well-known/openid-configuration` endpoint).
-    - **SAML**: IdP entity ID, IdP SSO URL, the IdP x509 certificate, and
-    the SP entity ID. The SP certificate, private key, and email attribute are optional depending on your IdP.
+```
+https://<your-onyx-domain>/api/auth/oidc/<name>/callback
+```
 
-    Optionally restrict the provider to specific **email domains**.
-    Users outside those domains cannot sign in through it. (On Onyx Cloud this list is required.
-    See [Onyx Cloud](#onyx-cloud) below.)
+The ACS URL for SAML is shared by all SAML providers:
 
-    OIDC entries also expose a **Require Verified Email Claim** toggle for IdPs that send the optional `email_verified`
-    claim. Starting in `v4.5`,
-    Google and OIDC entries additionally offer **Enable PKCE** and a per-provider **Scopes** override,
-    taking precedence over the deployment-wide environment variables.
-    See [Customizing requested scopes](/deployment/authentication/oidc#customizing-requested-scopes) for the details.
-  </Step>
+```
+https://<your-onyx-domain>/auth/saml/callback
+```
 
-  <Step title="Register the Callback with your Identity Provider">
-    After saving, the provider row shows its **Redirect URI** (OIDC and Google) or **ACS URL** (SAML).
-    Copy it into your identity provider's console as the allowed callback for the application.
-  </Step>
+### Edit a Provider
 
-  <Step title="Verify the Sign-In Option">
-    New providers are enabled on creation and appear as sign-in options on the login page.
-    Use the toggle on the provider row to disable or re-enable it later.
-  </Step>
-</Steps>
+Click the edit icon on a provider row. You can change every field except **Name**. Secret fields show as empty.
+Leave them empty to keep the stored secret, or enter a new value to replace it.
+
+### Delete a Provider
+
+Click the delete icon on a provider row. The modal shows how many users signed in with the provider.
+
+- Users keep their accounts. Their next sign-in through another provider with the same email opens the same account.
+- Add the replacement provider before you delete the old one.
+- You cannot delete or disable the last enabled provider while **Disable Password Login & Signup** is on.
+
+## How Accounts Match
+
+Onyx matches SSO sign-ins to accounts by email.
+
+- A user who signed up with a password and then signs in with SSO for the first time gets the same account.
+- An account that is already linked to one SSO provider does not accept a second provider.
+  The sign-in fails with an "account already exists" error. Delete the old provider first,
+  or ask the user to sign in with the provider they used before.
+- A user whose email changed in the identity provider cannot claim their old account by default.
+
+Two settings in **Admin Panel → Organization → Security & Hardening** open a window for these cases.
+Turn them on only while you move users, then turn them off again:
+
+- **Relink Accounts After an OIDC Client Change**:
+  lets users whose provider issued a new subject ID sign back in to the account with their email.
+- **Claim Renamed Accounts After a Provider Delete**:
+  lets users whose email changed sign in through another provider to the account that holds their current email,
+  when that account has no provider link left.
 
 ## Onyx Cloud
 
-Onyx Cloud is multi-tenant: many workspaces share one login page,
-so provider configuration and sign-in work a little differently than self-hosted.
+On Onyx Cloud, the login page shows a **Sign in with SSO** button. Users enter their email,
+and Onyx sends them to the provider whose **Allowed Email Domains** includes that domain. Because of this:
 
-- The provider type picker offers **Google** and **OIDC** only. SAML is not available on Onyx Cloud.
-- **Email Domains** are required, not optional. Without them the provider would admit every account your identity
-  provider authenticates, and each one consumes a seat.
-- The login page shows a single **Sign in with SSO** button. A visitor enters their email first, and Onyx resolves
-  which workspace they belong to (or, for a first-time employee, which workspace their domain belongs to)
-  and shows that workspace's sign-in options next.
+- **Allowed Email Domains** is required for every provider.
+- You must verify each domain before users can sign in through it.
+- SAML providers are not available. Use OIDC.
 
 ### Domain Verification
 
-Because Onyx Cloud serves many companies from one instance,
-a domain only routes sign-ins once your workspace proves it controls that domain:
-listing a domain on a provider claims it,
-but a first-time employee on that domain cannot sign in and be provisioned automatically until the claim is verified.
-Users already provisioned in the workspace can always sign in through the provider regardless of verification status.
+When you add a domain, the provider modal shows a **Domain verification** panel with a DNS record for each domain:
 
-<Steps>
-  <Step title="Save the Provider">
-    Add or update the provider with the domain listed under **Email Domains**, then save.
-  </Step>
+1. Copy the **Name**, **Type** (`TXT`), and **Value**.
+2. Add the record at your DNS host.
+3. Click **Verify domain**. The status changes from **Pending** to **Verified**.
+   DNS changes can take some time to propagate.
 
-  <Step title="Publish the DNS Record">
-    Reopen the provider and find the domain under **Domain Verification**.
-    Copy the shown **Name** and **Value** into a new **TXT** record at your DNS provider.
-  </Step>
-
-  <Step title="Verify the Domain">
-    Click **Verify Domain**. Onyx resolves the record and, on a match, marks the domain verified.
-    DNS changes can take up to an hour to propagate, so if verification fails right away, wait and try again.
-  </Step>
-</Steps>
-
-Onyx re-checks each verified domain's TXT record on an ongoing schedule (about every six hours).
-If the record is removed or changed, the domain stops routing new sign-ins.
-A temporary DNS lookup failure does not drop verification.
-
-<Note>
-  Domain verification does not apply to Google. List your email domains as usual,
-  but a first-time employee on a Google Workspace domain can sign in and be provisioned without a DNS TXT record,
-  since their Google sign-in already proves they control an address on that domain.
-</Note>
+Verified domains also let Onyx create accounts for new users on first sign-in without an invitation.
 
 ## Turning Off Password Login
 
-<Note>
-  Available in `v4.5` and in `v4.4` patch releases after `v4.4.5`.
-</Note>
+To require SSO for everyone:
 
-Once SSO works, you can close password login and sign-up entirely so your identity provider is the only way in.
-Go to **Admin Panel** → **Organization** → **Security & Hardening** and turn on **Disable Password Login & Signup**.
+1. Make sure at least one provider is enabled and that you can sign in with it.
+2. Go to **Admin Panel → Organization → Security & Hardening**.
+3. Turn on **Disable Password Login & Signup**.
 
-- The save is refused unless at least one SSO provider is enabled, so you
-  cannot lock yourself out.
-- With the switch on, the login page shows only the SSO sign-in options,
-  the sign-up page redirects to login, and password sign-in is refused by the backend regardless of how it is called.
-- Disabling the last enabled SSO provider is refused while the switch is on.
-- Self-hosted (single-tenant) deployments only.
+The login page then shows only SSO buttons. Password sign-in returns "Password login is turned off.
+Sign in with your identity provider." Admins can turn the setting off again at any time.
 
-## Plan Availability
+Related settings in the same section:
 
-Configuring a single SSO provider is available on every plan.
-Enabling more than one provider at the same time requires the **Business** plan or above.
+- **Restrict Open Sign-Up**: only invited users can create an account.
+- **Allowed Email Domains**: limits sign-up and sign-in to these domains for all methods.
+- **Sync Session Expiry with Identity Provider**: ends the Onyx session when the provider session ends.
 
 ## Notes
 
-- Secrets are write-only. After saving, credentials are shown masked and are
-  never returned in full by the API.
-- Provider **type** and **name** are fixed after creation. To change them,
-  add a new provider and disable the old one.
-- Providers are disabled rather than deleted, so accounts that signed in
-  through a provider survive a disable and re-enable.
-- Google and OIDC sign-ins do not attach to an existing account with the same email.
-  The sign-in fails with an error instead of merging the accounts. To move a user to a Google or OIDC provider,
-  have an admin deactivate and then delete the account so the user can sign up fresh through it.
-  SAML sign-ins match users by email, so an existing account can sign in through a new SAML provider directly.
-- If open sign-up is restricted (the **Restrict Open Sign-Up** setting on
-  **Admin Panel** → **Permissions** → **Users**), SSO sign-ups are gated too.
-  New users who have not been invited are rejected at sign-in until an admin invites their email address.
+- Client secrets and SAML private keys are stored encrypted.
+- Set `OIDC_PKCE_ENABLED=true` to force PKCE for every Google and OIDC provider. Set `GOOGLE_OAUTH_SCOPE_OVERRIDE` or `OIDC_SCOPE_OVERRIDE` to change the default scopes for a provider type.
+- Deployments upgraded from v4.3 or earlier get a provider created from the old `AUTH_TYPE` environment variables. Remove `AUTH_TYPE` and the old SSO variables after you check the provider. See the type-specific pages for details.
