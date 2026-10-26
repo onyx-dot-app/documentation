@@ -1,76 +1,80 @@
 ---
 title: "Coding Agent"
-description: "Enable your AI Agents to investigate and answer questions about a GitHub codebase"
+description: "Let your Agents investigate a GitHub repository and answer questions about its code"
 icon: "code-branch"
 ---
 
 <Note>
-  The Coding Agent is a **beta** Action.
-  It is disabled by default and currently supports **public** GitHub repositories only.
+  The Coding Agent supports **public** GitHub repositories only.
 </Note>
 
 The Coding Agent action lets your Agents investigate a GitHub repository and answer questions about its codebase.
-It clones the repository into an isolated sandbox, explores the code with shell commands, and returns a written answer.
+It downloads the repository into an isolated sandbox, explores the code with shell commands,
+and returns a written answer.
 
 ## Capabilities
 
-- **Codebase Q&A**: Answer questions about how a repository is implemented and where logic lives
+- **Codebase Q&A**: Explain how a repository implements a feature and where the logic lives
 - **Code investigation**: Trace data flow and interactions between components
 - **Onboarding**: Summarize a project's structure and key modules
 
 ## How It Works
 
-When invoked, the Coding Agent:
+When the LLM invokes the Coding Agent, Onyx:
 
 <Steps>
-  <Step title="Clones the repository">
-    The target GitHub repository is cloned into an isolated sandbox.
+  <Step title="Downloads the repository">
+    Onyx downloads an archive of the repository's default branch (no Git history)
+    into an isolated session in the [Code Interpreter](/admins/actions/code_interpreter) service.
   </Step>
 
   <Step title="Investigates the code">
-    An iterative loop powered by an LLM executes shell commands to explore the codebase.
+    An LLM loop runs shell commands to explore the code.
+    The chat shows each step as a timeline of **thinking** and **bash** entries.
   </Step>
 
   <Step title="Returns an answer">
-    A final answer is produced based on its findings.
+    The loop ends with a written answer based on its findings. The answer appears in the chat like any other response.
   </Step>
 </Steps>
 
-The Coding Agent runs in the same sandboxed environment as the [Code Interpreter](/admins/actions/code_interpreter),
-so it requires a connected code execution (bash) server.
+One investigation runs for up to 25 minutes. After that,
+the Coding Agent stops exploring and writes its answer from what it found.
+The sandbox session is removed when the investigation ends.
 
 ## Configuration
 
-The Coding Agent is a built-in Action, but because it is in beta it is **disabled by default**.
+The Coding Agent is a built-in action. It needs no credentials.
 
 <Steps>
-  <Step title="Enable the Action">
-    Go to the **Admin Panel** and open the **Actions** tab. Locate the **Coding Agent** action and enable it.
+  <Step title="Confirm the Code Interpreter is connected">
+    The Coding Agent runs in the same sandbox service as the [Code Interpreter](/admins/actions/code_interpreter).
+    Open **Admin Panel > Code Interpreter** and confirm the status is **Connected**.
+    The action does not appear in chat while the service is disconnected or unhealthy.
   </Step>
 
-  <Step title="Confirm the code execution server is connected">
-    The Coding Agent relies on the same sandboxed bash environment as the Code Interpreter.
-    Make sure the code execution server is connected and healthy from the Admin Panel.
+  <Step title="Turn it on for default Chat">
+    Go to **Admin Panel > Chat Preferences > Actions & Tools** and turn on **Coding Agent**.
   </Step>
 
-  <Step title="Attach it to an Agent">
-    Enable the **Coding Agent** action on the [Agents](/admins/agents/overview) that should be able to use it.
-    Once enabled, the LLM automatically decides when to invoke it.
+  <Step title="Turn it on for custom Agents">
+    In the [Agent editor](/admins/agents/overview),
+    open **Actions** and turn on **Coding Agent** for each Agent that should use it.
   </Step>
 </Steps>
 
 ## Using the Coding Agent
 
-Once enabled and attached to an Agent,
-the LLM decides when to invoke the Coding Agent based on the user's query — no explicit invocation is needed.
+The LLM decides when to invoke the Coding Agent based on the user's request. Users do not need to invoke it explicitly.
 
 <Tip>
-  Be explicit about which repository you want analyzed. For example:
+  Name the repository you want analyzed, as a GitHub URL or as `owner/repository`. For example:
   *"Using the repository at https://github.com/onyx-dot-app/onyx, explain how the connector indexing pipeline works."*
 </Tip>
 
 ## Limitations
 
-- **Public repositories only**: Private repositories are not yet supported and will currently fail to clone. Support
-  for private repositories is planned.
-- **Beta**: Behavior and configuration may change as the feature matures.
+- **Public repositories only**: The Coding Agent cannot download private repositories. The investigation fails with
+  a "Repository or branch not found" error.
+- **Default branch only**: The Coding Agent reads the current state of the default branch. It does not read Git
+  history, other branches, pull requests, or issues.
