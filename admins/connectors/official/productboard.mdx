@@ -5,34 +5,51 @@ description: "Access product feedback and features from Productboard"
 
 ## How it works
 
-The Productboard connector pulls in all the `Features`, `Components`, `Products`, and `Objectives` into Onyx.
-At this time, the Productboard APIs does not support pulling in `Releases` or `Notes`.
+The Productboard connector indexes the **Features**, **Components**, **Products**,
+and **Objectives** in your Productboard workspace. Each one becomes a searchable document in Onyx.
 
-Everything is updated every **10** minutes.
+Onyx does not index **Notes**, **Releases**, or the comments on a feature.
+The Productboard public API does not expose them in a form Onyx can index.
+
+Onyx pulls new and changed items on the connector's **Refresh Every** schedule. The default is **30 minutes**.
 
 ## Setting up
 
 ### Authorization
 
 <Steps>
-  <Step title="Get access token">
-    Follow the `Getting a token` guide
-    [here](https://developer.productboard.com/#section/Authentication/Public-API-Access-Token) to get an Access Token.
+  <Step title="Get an access token">
+    Follow the Productboard [public API access token
+    guide](https://developer.productboard.com/#section/Authentication/Public-API-Access-Token)
+    to create an access token. Onyx reads data as the user who created the token.
   </Step>
 </Steps>
 
 ### Indexing
 
 <Steps>
-  <Step title="Open Productboard connector">
-    Navigate to the Admin Panel and select the **Productboard** Connector
+  <Step title="Open the Productboard connector">
+    In Onyx, go to **Admin Panel → Connectors** and select **Productboard**.
   </Step>
 
-  <Step title="Enter access token">
-    In **Step 1**, provide your **Access Token**
+  <Step title="Create an authentication account">
+    Under **Authentication Account**, select **Create New**. Enter a **Display Name**,
+    paste the token into **API Token**, and select **Create**. To reuse a saved account,
+    select **Use Account** on it instead.
+  </Step>
+
+  <Step title="Configure the connector">
+    Under **Connector Settings**, give the connector a **Display Name**. The connector has no other settings.
+
+    Under **Document Access**, choose who can see the indexed items.
+    **Everyone in Your Organization** shows them to all Onyx users.
+    **Specific Groups** limits them to the Onyx user groups you pick. **Specific Groups** is a paid feature:
+    the Business and Enterprise tiers on Onyx Cloud, and the Enterprise Edition when self-hosted.
+    The Productboard connector does not sync Productboard permissions.
   </Step>
 
   <Step title="Start indexing">
-    Click `Connect` to begin indexing
+    Select **Create Connector** to save the connector and start indexing.
+    Open **Admin Panel → Indexing Status** and select the connector to follow the first indexing run.
   </Step>
 </Steps>

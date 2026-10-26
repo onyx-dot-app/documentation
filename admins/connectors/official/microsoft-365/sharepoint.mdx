@@ -59,42 +59,44 @@ which needs a [certificate credential](/admins/connectors/official/microsoft-365
 
 <Steps>
   <Step title="Open the SharePoint connector">
-    In Onyx, go to **Admin Panel → Add Connector** and select **SharePoint**.
+    In Onyx, go to **Admin Panel → Connectors** and select **SharePoint**.
   </Step>
 
-  <Step title="Select or create a credential">
-    Pick an existing credential from the list,
+  <Step title="Select or create an authentication account">
+    Under **Authentication Account**, pick a saved account,
     or select **Create New** and enter the details from your Entra app registration,
     as described in [Microsoft 365 Setup](/admins/connectors/official/microsoft-365/setup#enter-the-credential-in-onyx).
-    Select **Create**, confirm the new credential is selected, and continue.
+    Select **Create**, confirm the new account is selected, and continue.
   </Step>
 
   <Step title="Name the connector and choose sites">
-    Give the connector a descriptive **Connector Name**.
+    Give the connector a descriptive **Display Name**.
 
     In **Sites**, add one entry per site you want indexed, such as `https://contoso.sharepoint.com/sites/support`.
     Leave the list empty to index every site in the tenant.
   </Step>
 
   <Step title="Adjust the advanced settings">
-    Select **Advanced Options** to reach the content, exclusion,
+    Expand the advanced settings to reach the content, exclusion,
     and national cloud settings described in [Connector settings](#connector-settings). By default,
     Onyx indexes both files and site pages from every site you listed.
   </Step>
 
-  <Step title="Choose the access type">
-    **Public** shows every indexed document to all Onyx users. **Private** limits them to selected Onyx user groups.
+  <Step title="Choose the document access">
+    Under **Document Access**, **Everyone in Your Organization** shows every indexed document to all Onyx users.
+    **Specific Groups** limits them to selected Onyx user groups.
 
-    **Auto Sync Permissions** mirrors SharePoint's own permissions and needs a certificate credential.
-    See [Permission sync](#permission-sync).
+    **Sync with SharePoint** mirrors SharePoint's own permissions and needs a certificate account.
+    See [Permission sync](#permission-sync). **Specific Groups** and **Sync with SharePoint** are paid features:
+    the Business and Enterprise tiers on Onyx Cloud, and the Enterprise Edition when self-hosted.
 
     See [Document Access Controls](/admins/connectors/overview#document-access-controls)
     for what each access type means.
   </Step>
 
   <Step title="Set an indexing start date">
-    Under **Advanced Configuration**, set an **Indexing Start Date** unless you need every file, whatever its age.
-    Without one, the first indexing attempt reads every file and page in every listed site,
+    Under **Schedule**, set **Index Documents After** unless you need every file, whatever its age. Without one,
+    the first indexing attempt reads every file and page in every listed site,
     and a tenant with millions of files takes days to become searchable. With a start date,
     Onyx indexes the files and pages created or last modified on or after it and skips the rest.
     See [Advanced Configuration](/admins/connectors/overview#advanced-configuration).
@@ -104,7 +106,7 @@ which needs a [certificate credential](/admins/connectors/official/microsoft-365
     Select **Create Connector**. Onyx checks the credential and your site URLs when you save,
     so most permission problems appear here rather than during indexing.
 
-    Then open **Admin Panel → Existing Connectors**, select the connector,
+    Then open **Admin Panel → Indexing Status**, select the connector,
     and confirm the first indexing attempt finishes with roughly the document count you expect.
   </Step>
 </Steps>
@@ -116,7 +118,7 @@ which needs a [certificate credential](/admins/connectors/official/microsoft-365
 | Sites                         | empty                               | Sites to index. Empty means every site in the tenant. See [Scoping to sites, libraries, and folders](#scoping-to-sites-libraries-and-folders). |
 | Index Documents               | on                                  | Index the files in each site's document libraries.                                                                                      |
 | Index ASPX Sites              | on                                  | Index each site's `.aspx` pages, even when a site entry names a single library or folder.                                                |
-| Treat sharing links as public | off                                 | When on, Onyx treats a document reachable by an anonymous or organization-wide sharing link as public. When off, only the users and groups given explicit access can see it. Applies to permission sync only. |
+| Treat Sharing Links as Public | off                                 | When on, Onyx treats a document reachable by an anonymous or organization-wide sharing link as public. When off, only the users and groups given explicit access can see it. Applies to permission sync only. |
 | Excluded Sites                | empty                               | Site URLs or glob patterns to skip, even when **Sites** names them. For example `*://*/sites/archive-*`.                                 |
 | Excluded Paths                | empty                               | Glob patterns for files to skip. Onyx matches them against the path within the library and against the filename alone. For example `*.tmp`, `~$*`, `Archive/*`. |
 | Authority Host                | `https://login.microsoftonline.com` | Microsoft identity host. Change only for a [national cloud](/admins/connectors/official/microsoft-365/setup#national-clouds).          |
@@ -192,7 +194,7 @@ What each Graph grant is for: **GroupMember.Read.All** works out who is in a gro
 **User.Read.All** matches the people in your directory to their Onyx accounts.
 **Member.Read.Hidden** reads the membership of groups whose members are hidden in Entra ID.
 
-Onyx treats items shared by link as private unless you turn on **Treat sharing links as public**.
+Onyx treats items shared by link as private unless you turn on **Treat Sharing Links as Public**.
 It ignores users and groups that hold only SharePoint's *Limited Access* role,
 because that role lets someone pass through a folder rather than open what is inside it.
 

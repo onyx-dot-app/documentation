@@ -1,39 +1,14 @@
 ---
-title: "RequestTracker"
-description: "Access tickets from RequestTracker"
+title: "Request Tracker"
+description: "The Request Tracker connector is no longer available"
 ---
 
-## How it works
+<Warning>
+  Onyx v5 does not include a Request Tracker connector. Onyx removed the connector,
+  which supported only the Request Tracker 4.x REST API 1.0.
+</Warning>
 
-The Request Tracker connector will pull in all tickets updated within the last 10 minutes into the dataset.
+Existing Request Tracker connectors do not run on Onyx v5. Delete them from **Admin Panel → Indexing Status**.
 
-Tickets are updated every **10** minutes.
-
-Only Request Tracker REST API 1.0 is supported at this time. REST API 1.0 is implemented in Request Tracker 4.x,
-Request Tracker 5.x is not supported currently.
-
-## Setting up
-
-### Create or use a Request Tracker user who has the appropriate permissions
-
-- Create a Request Tracker user that has read access to all queues Onyx should read.
-
-### Configure Request Tracker connector and begin indexing
-
-<Steps>
-  <Step title="Open Request Tracker connector">
-    Navigate to the Admin Panel and select the **Request Tracker** Connector
-  </Step>
-
-  <Step title="Enter credentials">
-    In **Step 1**, provide your Request Tracker **username**, **password**, and **RT installation base url**.
-
-    <img className="rounded-image" src="/assets/admins/connectors/requesttracker/RequestTrackerAuth.png" alt="Onyx Request Tracker connector credentials form"/>
-  </Step>
-
-  <Step title="Start indexing">
-    In **Step 2**, click `Connect` to begin indexing
-
-    <img className="rounded-image" src="/assets/admins/connectors/requesttracker/RequestTrackerConnect.png" alt="Onyx Request Tracker connector indexing step"/>
-  </Step>
-</Steps>
+To index ticket data from another system,
+see the connectors under [Ticketing & Task Management](/admins/connectors/overview#ticketing-task-management).

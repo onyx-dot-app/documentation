@@ -223,15 +223,15 @@ Either get a certificate from your organization's certificate authority, or crea
 
 ### Enter the credential in Onyx
 
-Each connector asks for a credential when you add it. Select an existing credential from the list,
-or select **Create New**, pick the tab for your authentication method, and enter the details from your app registration:
+Each connector asks for an **Authentication Account** when you add it. Select a saved account, or select **Create New**,
+pick the tab for your authentication method, and enter the details from your app registration:
 
 - **Client Secret** tab: the **Application (client) ID**, the **Directory (tenant) ID** and the secret **Value** you
   copied
 - **Certificate Authentication** tab: the two IDs, the `.pfx` in the **Private Key (PFX)** field and the export
   password you set in the **Certificate Password** field. Each field is labelled with the connector's name.
 
-A credential created on the form of one Microsoft 365 connector is also listed on the forms of the other three,
+An account created on the form of one Microsoft 365 connector is also listed on the forms of the other three,
 so one app registration needs only one credential. Grant the app the permissions of every connector that uses it:
 the connector checks report a missing permission.
 Credentials created before credential sharing existed stay on the form of their own connector.
@@ -347,10 +347,10 @@ Indexing stops when the secret or certificate expires. To rotate without downtim
   </Step>
 
   <Step title="Update the credential in Onyx">
-    In **Admin Panel → Existing Connectors**,
-    open the credential that uses this app registration and replace the secret value, or the `.pfx` and its password.
-    A shared credential updates every connector that uses it. If you entered the app registration once per connector,
-    update each of those credentials.
+    In **Admin Panel → Connectors**, open any Microsoft 365 connector form and expand **Saved Accounts**.
+    Select the account that uses this app registration, select **Update Credentials**, and replace the secret value,
+    or the `.pfx` and its password. A shared account updates every connector that uses it.
+    If you entered the app registration once per connector, update each of those credentials.
   </Step>
 
   <Step title="Delete the old one">
