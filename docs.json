@@ -314,8 +314,10 @@
                 "group": "RAG and Search",
                 "icon": "magnifying-glass",
                 "pages": [
+                  "admins/managing_features/rag_and_search",
                   "admins/managing_features/connectors_link",
                   "admins/advanced_configs/search_configs",
+                  "admins/advanced_configs/doc_processing",
                   "admins/managing_features/document_sets",
                   "admins/advanced_configs/opensearch_document_index_migration",
                   "admins/advanced_configs/object_store_migration"
@@ -333,10 +335,16 @@
                   "admins/plugins/craft_apps"
                 ]
               },
-              "admins/actions/web_search",
-              "admins/actions/code_interpreter",
-              "admins/actions/image_generation",
-              "admins/actions/voice_mode",
+              {
+                "group": "Built-in Actions",
+                "pages": [
+                  "admins/actions/web_search",
+                  "admins/actions/code_interpreter",
+                  "admins/actions/image_generation",
+                  "admins/actions/voice_mode",
+                  "admins/actions/coding_agent"
+                ]
+              },
               {
                 "group": "Craft",
                 "icon": "hammer",
@@ -344,8 +352,7 @@
                   "admins/managing_features/craft",
                   "admins/managing_features/craft_skills"
                 ]
-              },
-              "admins/actions/coding_agent"
+              }
             ]
           },
           {
@@ -373,13 +380,16 @@
             ]
           },
           {
-            "group": "Auditing",
+            "group": "Usage & Analytics",
             "pages": [
-              "admins/auditing/audit_logs",
               "admins/analytics/overview",
               "admins/analytics/query_history",
               "admins/analytics/custom_analytics"
             ]
+          },
+          {
+            "group": "Auditing",
+            "pages": ["admins/auditing/audit_logs"]
           },
           {
             "group": "Plans & Billing",
@@ -483,6 +493,7 @@
                     "group": "Connectors",
                     "pages": [
                       "developers/api_reference/files_connectors/create_connector_from_model",
+                      "developers/api_reference/files_connectors/update_connector_from_model",
                       "developers/api_reference/files_connectors/get_connectors_by_credential",
                       "developers/api_reference/files_connectors/get_connectors",
                       "developers/api_reference/files_connectors/get_connector_by_id",
@@ -861,6 +872,26 @@
     {
       "source": "/developers/api_reference/user_management/set_user_role",
       "destination": "/developers/api_reference/user_management/set_user_admin_access"
+    },
+    {
+      "source": "/admins/advanced_configs/workspace_settings",
+      "destination": "/admins/managing_features/chat"
+    },
+    {
+      "source": "/overview/core_features/workflows",
+      "destination": "/overview/core_features/craft_scheduled_tasks"
+    },
+    {
+      "source": "/overview/onyx_anywhere/web_interface",
+      "destination": "/overview/core_features/chat"
+    },
+    {
+      "source": "/admins/managing_features/connectors",
+      "destination": "/admins/connectors/overview"
+    },
+    {
+      "source": "/overview/getting_started/first_look",
+      "destination": "/overview/getting_started/quickstart"
     }
   ],
   "logo": {
@@ -903,7 +934,7 @@
   },
   "seo": {
     "title": "Onyx AI - Open Source Enterprise Search and AI Platform",
-    "description": "Onyx AI is the open source AI platform for enterprise search, generation, and automation — powered by your team's data.",
+    "description": "Onyx AI is the open source AI platform for enterprise search, generation, and automation \u2014 powered by your team's data.",
     "metatags": {
       "keywords": "enterprise search, onyx ai, onyx, open source ai, enterprise ai, generative ai platform, ai assistant, knowledge management, danswer"
     }

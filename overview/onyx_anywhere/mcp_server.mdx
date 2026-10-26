@@ -21,7 +21,8 @@ Personal access tokens and API keys remain available for bearer authentication.
 - Ask your administrator for your Onyx MCP URL, such as `https://onyx.example.com/mcp/`.
 - Sign in with your own Onyx account in the workspace whose documents you want to search.
 - Your account needs **Search** (`read:search`) and **Create User Access Token** (`create:user_api_keys`) permissions to approve an app.
-- Your administrator must enable the MCP server. Self-hosted instances need HTTPS for OAuth,
+- The MCP server is on by default in the bundled Docker Compose files and Helm chart.
+  Your administrator can turn it off. Self-hosted instances need HTTPS for OAuth,
   with loopback HTTP supported for local development. The MCP server is available on all editions.
 - Use a client that supports remote Streamable HTTP MCP servers and OAuth.
 

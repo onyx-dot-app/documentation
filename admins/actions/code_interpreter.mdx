@@ -25,10 +25,8 @@ Variables from one run are not available in the next run unless the model writes
 Code Interpreter is available on all editions. Onyx Cloud has it ready to use.
 
 Self-hosted deployments run the code in a separate `code-interpreter` container that ships with the standard Docker
-Compose and Helm deployments. The Onyx API server never runs the code itself. [Onyx Lite](/deployment/local/onyx_cli)
-does not include the container,
-so Code Interpreter is not available there unless you point `CODE_INTERPRETER_BASE_URL` at a Code Interpreter service
-you run yourself.
+Compose and Helm deployments, including the Onyx Lite overlays. The Onyx API server never runs the code itself.
+To use a Code Interpreter service you run yourself, point `CODE_INTERPRETER_BASE_URL` at it.
 
 ## Connect or disconnect the Code Interpreter
 

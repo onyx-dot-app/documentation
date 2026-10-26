@@ -253,6 +253,17 @@ LANGFUSE_PUBLIC_KEY="pk-..."
 LANGFUSE_BASE_URL="https://cloud.langfuse.com" # Or "https://us.cloud.langfuse.com"
 ```
 
+**Prometheus metrics**
+
+The API server exposes Prometheus metrics at `GET /metrics`. The endpoint requires a bearer token:
+
+```bash
+METRICS_AUTH_TOKEN="<random-secret>"   # scrapers send: Authorization: Bearer <random-secret>
+```
+
+If `METRICS_AUTH_TOKEN` is unset, the endpoint rejects every request.
+Set `DISABLE_METRICS_AUTH=true` only on networks where the API server is not reachable from outside.
+
 ### Craft
 
 Craft is enabled with `ENABLE_CRAFT=true` and requires a supported sandbox backend.
@@ -276,6 +287,10 @@ Read [Deploying Craft](/deployment/local/craft) before enabling Craft in self-ho
     `DISABLE_USER_KNOWLEDGE`: Controls whether users can use the My Documents feature with Agents.
 
     `ONYX_QUERY_HISTORY_TYPE`: Controls query history reports (show user emails, anonymous, no queries)
+
+    `ONYX_AIRGAPPED`: Set to `true` on deployments with no internet access.
+    Onyx then skips the outbound fetches for the recommended-model catalog, the model price table,
+    and release notes from GitHub.
   </Accordion>
 
   <Accordion title="Craft Configuration">
@@ -284,10 +299,11 @@ Read [Deploying Craft](/deployment/local/craft) before enabling Craft in self-ho
     `SANDBOX_BACKEND`: Craft sandbox backend. Valid values are `docker` and `kubernetes`. Defaults to `kubernetes`.
 
     `ONYX_SERVER_URL`: Full Onyx API base URL reachable from inside Craft sandboxes,
-    including any `/api` path prefix (for example `https://onyx.example.com/api`,
-    or `http://<release>-api-service.<ns>.svc.cluster.local:8080` with no prefix). Required for Helm Craft deployments.
-    Docker Compose defaults it to the private `onyx-craft-api` alias. `SANDBOX_IDLE_TIMEOUT_SECONDS`:
-    Idle timeout before sandbox sleep or cleanup. Defaults to `3600`.
+    including any `/api` path prefix (for example `https://onyx.example.com/api`).
+    Docker Compose defaults it to `http://onyx-craft-api:8080` and Helm defaults it to the chart's internal API Service.
+    Set it only when sandboxes must reach Onyx through a public URL.
+
+    `SANDBOX_IDLE_TIMEOUT_SECONDS`: Idle timeout before sandbox sleep or cleanup. Defaults to `3600`.
 
     `BUILD_MAX_UPLOAD_FILE_SIZE_MB`: Maximum Craft session attachment size. Defaults to `50`.
 
@@ -326,7 +342,9 @@ Read [Deploying Craft](/deployment/local/craft) before enabling Craft in self-ho
 
     `PASSWORD_REQUIRE_SPECIAL_CHAR`: For basic auth. Require special characters in passwords
 
-    `ENCRYPTION_KEY_SECRET`: Enterprise Edition only. Key for encrypting connector credentials, API keys, etc.
+    `ENCRYPTION_KEY_SECRET`: Key that Onyx uses to AES-encrypt connector credentials, API keys,
+    and other secrets at rest. Encryption is on whenever the key is set. Keep it stable:
+    changing it makes stored credentials unreadable.
 
     `MASK_CREDENTIAL_PREFIX`: Mask connector credentials in the admin UI.
     Turn off if admins should see the credentials in the admin panel.

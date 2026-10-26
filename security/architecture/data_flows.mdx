@@ -68,3 +68,10 @@ Each action has a policy of **Auto-approve**, **Ask**, or **Disabled**.
 **Craft**: runs agent-generated code in a per-user sandbox.
 All sandbox traffic passes through a proxy that injects credentials and enforces app policies.
 See [Craft Architecture](/security/architecture/craft).
+
+**Tracing** (optional): when an admin sets `BRAINTRUST_API_KEY` or the `LANGFUSE_*` variables,
+Onyx sends LLM call traces to Braintrust or Langfuse. See [Tracing](/admins/advanced_configs/tracing).
+
+**Hook Extensions** (Enterprise, optional):
+admin-installed hooks run inside the Onyx pipeline and can call the external services your admins choose.
+See [Hook Extensions](/admins/advanced_configs/hook_extensions).
