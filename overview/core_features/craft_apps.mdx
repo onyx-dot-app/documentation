@@ -30,11 +30,12 @@ These sources serve different purposes in a Craft session:
 | **Apps and MCP plugins** | Live information and actions in your connected account.                 | Yes, when the app and action policy allow it.                                    |
 | **Onyx knowledge**      | Searching indexed company content you already have permission to access. | No. Search is read-only.                                                         |
 | **Session attachments** | Files needed for one session.                                            | Craft works on a sandboxed copy.                                                 |
-| **User Library**        | Templates and reference files you reuse across sessions.                 | Craft reads synchronized library files and writes new work to the session output. |
+| **Library**             | Templates and reference files you reuse across sessions.                 | Craft reads synchronized library files and writes new work to the session output. |
 
 ## Available apps
 
-The Plugins page shows only the apps your organization has enabled. Onyx includes built-in support for:
+Craft Apps are available in all editions. The Plugins page shows only the apps your organization has enabled.
+Onyx includes built-in support for:
 
 | App                 | Example uses                                                                                        |
 | ------------------- | --------------------------------------------------------------------------------------------------- |
@@ -146,8 +147,8 @@ You cannot turn on an action that your admin set to **Disabled**.
 ## Apps in Scheduled Tasks
 
 A [Scheduled Task](/overview/core_features/craft_scheduled_tasks) runs without you present.
-In the task's approval settings, enable only the apps that the task needs,
-and set the actions it must perform to **Auto-approve**.
+In the task's **Plugins** section, enable only the apps that the task needs,
+and set the actions it must perform to **Auto-approve** in the app's **Approval settings**.
 
 Task settings apply only to that task. An action with a **Disabled** policy stays blocked.
 If a run reaches an action that needs approval, the run stops and waits for you.
@@ -186,8 +187,9 @@ You can reconnect later by completing the connection flow again.
 </Accordion>
 
   <Accordion title="A Scheduled Task is awaiting approval">
-    Edit the task and confirm that the required app is enabled in its approval settings and the action is set to
-    **Auto-approve**. If it is, an admin may have disabled that action, or the run may need a different app.
+    Edit the task and confirm that the required app is enabled under **Plugins** and the action is set to
+    **Auto-approve** in its approval settings. If it is, an admin may have disabled that action,
+    or the run may need a different app.
   </Accordion>
 </AccordionGroup>
 

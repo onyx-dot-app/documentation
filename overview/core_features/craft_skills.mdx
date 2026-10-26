@@ -59,7 +59,8 @@ Select a skill card to preview its instructions before using it.
 | **Personal**    | Created and owned by you. It starts private, but you can share it if your permissions allow. |
 | **Unavailable** | Visible for reference, but Craft cannot use it until its dependency is configured.           |
 
-Built-in skills currently cover presentations, company search, image generation, and website navigation.
+Built-in skills cover presentations (`pptx`), company search, image generation, website navigation (Browser),
+and Craft documentation. Each connected [App](/overview/core_features/craft_apps) also brings its own Skill.
 The exact list you see depends on what your organization has enabled.
 
 <Tip>
@@ -76,6 +77,7 @@ Open **Skills**, select **Create skill**, then choose how you want to begin:
 | --- | --- | --- |
 | You want to write the Skill in Onyx | **Start from scratch** | The Skill editor opens so you can write the details and instructions, then add supporting files. |
 | You already have a Skill | **Upload a skill** | Upload `SKILL.md`, a ZIP, or a Skill folder. Onyx reads the instructions and creates the Skill for you. |
+| The Skill lives in a GitHub repository | **Import from GitHub** | Enter the repository. Onyx lists the importable Skills it finds, and you choose which ones to import. |
 
 Every new Skill is personal and private. After creating it, you can share it from the Skill editor.
 
@@ -159,6 +161,15 @@ description: Create a concise weekly customer update from meeting notes and acco
   </Step>
 </Steps>
 
+### Import from GitHub
+
+Select **Create skill** > **Import from GitHub** and enter the repository, such as `owner/repo`.
+Onyx scans the repository for folders that contain a `SKILL.md` and lists the importable Skills.
+Select the Skills you want, then select **Done**. Onyx shows which Skills it imported and which it could not.
+
+Public repositories work without setup. To import from a private repository, use **Connect GitHub** in the
+import dialog. If GitHub is not set up for your workspace, ask an admin.
+
 ### Update a Skill
 
 Open a personal Skill to edit its name, description, or instructions. Under **Supporting files**, you can:
@@ -171,6 +182,18 @@ Open a personal Skill to edit its name, description, or instructions. Under **Su
 
 Changes are synchronized to people who can use the Skill. You can also disable the Skill without deleting it,
 change its sharing, transfer ownership, or delete it.
+
+### Share a Skill
+
+Open the Skill and select **Share**.
+Choose who can use it and give each person or group **Can use** or **Can edit** access. Under **Installation**,
+choose how the Skill is installed for people with access:
+
+| Option | Effect |
+| --- | --- |
+| **Available to install** | People can install or uninstall the Skill at any time. |
+| **Installed by default** | Onyx installs the Skill automatically. People can disable or uninstall it. |
+| **Required** | Onyx installs the Skill automatically. People cannot disable or uninstall it. |
 
 <Warning>
   Never put passwords, API keys, tokens, or production credentials in a skill bundle.

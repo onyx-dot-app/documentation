@@ -1,20 +1,32 @@
 ---
-title: "Workflows (Coming Soon)"
-description: "Automated workflows and processes in Onyx"
+title: "Workflows"
+description: "Automate recurring work in Onyx"
 icon: "arrow-right-arrow-left"
 ---
 
-<Info>
-  **Coming Soon!**
+Onyx does not have a separate Workflows product. Use these features to automate work:
 
-  This feature is currently under development. Stay tuned for updates!
-</Info>
+<CardGroup cols={2}>
+  <Card title="Scheduled Tasks" icon="calendar-clock" href="/overview/core_features/craft_scheduled_tasks">
+    Run a Craft prompt on a recurring schedule. Each run starts a fresh Craft session,
+    can read and act in your connected Apps, and records its result in run history.
+  </Card>
 
-## What's Coming
+  <Card title="Craft Apps" icon="plug" href="/overview/core_features/craft_apps">
+    Let Craft read live data and take approved actions in Slack, Gmail, Linear, GitHub, and other tools.
+    Set each action to auto-approve, ask for approval, or disabled.
+  </Card>
 
-The Onyx Workflows feature will enable:
+  <Card title="Agents" icon="robot" href="/overview/core_features/agents">
+    Package instructions, knowledge, and actions into a reusable Agent for a repeat task, then share it with your team.
+  </Card>
 
-- **Asynchronous Actions**: Set up Agents to run when triggered by events or on a time basis.
-- **Batch Processing**: Set up instructions to run against large sets of objects to automate repeat work.
-- **Acknowledgements**: Optionally set up notifications to give approval for more sensitive Actions.
-- **Reports**: Get breakdowns of the work that was done for you in the background.
+  <Card title="Plugins" icon="puzzle-piece" href="/overview/core_features/plugins">
+    Connect MCP servers and OpenAPI plugins so agents can read from and write to external systems.
+  </Card>
+</CardGroup>
+
+<Note>
+  A Scheduled Task does not send you its result by default. Tell the prompt where to deliver the output,
+  such as a Slack channel or an email, or review the result in the task's run history.
+</Note>
