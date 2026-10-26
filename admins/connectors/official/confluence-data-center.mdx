@@ -39,35 +39,36 @@ A PAT has the same Confluence access as its owner.
   </Step>
 </Steps>
 
-## Add the credential to Onyx
-
-Open **Admin Panel > Connectors > Confluence**, select **Create New**, and enter:
-
-- **Name**: A clear name, such as `Confluence Data Center - docs account`.
-- **Confluence Username**: The PAT owner's Confluence username.
-  The Server/Data Center client authenticates with the PAT,
-  but Onyx still requires this field on the shared credential form.
-- **Confluence Access Token**: The PAT.
-
-![The Onyx Confluence credential dialog](/assets/admins/connectors/confluence/credential-form.jpg)
-
 ## Configure the connector
 
-Select the credential, select **Continue**, and configure these fields:
+Open **Admin Panel → Connectors** and select **Confluence**. Under **Index Configurations**:
 
-- Disable **Is Cloud**.
-- Set **Wiki Base URL** to the user-facing site root, such as `https://confluence.example.com`.
+- Select **Confluence Data Center**. Do this first: the account form then asks for a personal access token only.
+- Set **Site URL** to the user-facing site root, such as `https://confluence.example.com`.
 - Include a configured context path, such as `https://example.com/confluence`.
 - Do not add `/rest/api`.
-- Leave **Using scoped token** disabled.
+- Leave **Scoped API Token** off.
 - Choose the indexing scope and attachment setting described in the [Confluence overview](./confluence).
 
-![A Confluence Data Center connector with Is Cloud
-disabled](/assets/admins/connectors/confluence/connector-form-data-center.jpg)
+![A Confluence Data Center connector in Onyx](/assets/admins/connectors/confluence/connector-form-data-center.jpg)
+
+## Add the account to Onyx
+
+Under **Authentication Account**, select **New Confluence Account** and enter:
+
+- **Display Name**: A clear name, such as `Confluence Data Center - docs account`.
+- **Personal Access Token**: The PAT. Onyx sends it as a bearer token.
+
+![The Onyx Confluence account form](/assets/admins/connectors/confluence/credential-form.jpg)
+
+<Note>
+  An account saved for Confluence Data Center holds a PAT only.
+  An account saved for Confluence Cloud holds an email and API token, and cannot be reused for a Data Center connector.
+</Note>
 
 ## Configure permission sync
 
-Permission sync requires Onyx Enterprise Edition. Onyx reads space permissions, page restrictions,
+**Sync with Confluence** requires Onyx Enterprise Edition. Onyx reads space permissions, page restrictions,
 inherited ancestor restrictions, users, groups, and group membership. It maps Confluence users to Onyx users by email.
 
 ### Data Center 9.1 and later
@@ -78,7 +79,7 @@ Onyx uses the REST space-permissions API introduced in Data Center 9.1. Grant th
 - Space administrator for every indexed space.
 
 Confluence can return HTTP `500` instead of `403` when the account lacks this access.
-Grant the required admin role and retry the connector validation.
+Grant the required admin role and run the connection checks again.
 
 If your release provides the **Browse All Group Members** global permission,
 grant it to the connector account or one of its groups.
@@ -135,7 +136,7 @@ public in Onyx as well.
 
 | Symptom | Check |
 | --- | --- |
-| `401 Unauthorized` | Replace the PAT and confirm the base URL includes the context path. |
+| `401 Unauthorized` | Replace the PAT and confirm the **Site URL** includes the context path. |
 | No spaces found | Sign in as the connector account and confirm that it can open at least one space. |
 | Permission sync returns `500` on Data Center 9.1+ | Grant Confluence-admin or space-admin access for the indexed space. |
 | Legacy permission sync returns `401` | Enable **Remote API (XML-RPC & SOAP)**. |
