@@ -7,57 +7,44 @@ icon: "lightbulb"
 import BuiltInActionsTable from '/snippets/built-in-actions-table.mdx';
 import AgentsPersonasAssistantsNote from '/snippets/agents-personas-assistants-note.mdx';
 
-## Actions & MCP
+## Plugins & Actions
 
 <AccordionGroup>
   <Accordion title="Actions" icon="wrench">
-    Actions (also called Tools in the backend)
-    are the functions that your Agents can perform to interact with external systems and services.
-    They extend your agents' capabilities beyond just the language model.
+    Actions (called Tools in the API)
+    are the functions that your Agents can call to interact with external systems and services.
+    They extend your agents' capabilities beyond the language model.
 
     Built-in Actions:
     <BuiltInActionsTable />
 
-    <Info>
-
-      SCIM support for common IdPs is coming soon!
-    </Info>
-
-    Custom Actions:
-    - **API Integrations**: Connect to external REST APIs
+    Custom Actions let an agent call your own systems, for example:
+    - **API Integrations**: Call external REST APIs
     - **Database Operations**: Query and update databases
     - **Workflow Automation**: Trigger business processes
-    - **File Operations**: Read, write, and manipulate files
 
-    You can add your own tools in **Admin Panel → Plugins** with an [MCP server](/admins/plugins/mcp)
-    or an [OpenAPI schema](/admins/plugins/openapi).
+    Admins add custom Actions in **Admin Panel** > **Plugins** from an [MCP server](/admins/plugins/mcp)
+    or an [OpenAPI schema](/admins/plugins/openapi). Each MCP tool or OpenAPI operation becomes one Action.
+    The [Actions](/developers/api_reference/actions/list_tools) endpoints list and manage them.
+  </Accordion>
+
+  <Accordion title="Plugins" icon="puzzle-piece">
+    Plugins are everything an admin connects to Onyx under **Admin Panel** > **Plugins**:
+    - **MCP servers**: Each tool the server exposes becomes an Action.
+    - **OpenAPI Actions**: Each operation in the schema becomes an Action.
+    - **Apps**: External apps that [Craft](/admins/plugins/craft_apps) sessions can use.
+
+    See the [Plugins overview](/admins/plugins/overview) for setup and permissions.
   </Accordion>
 
   <Accordion title="MCP" icon="handshake">
-    Model Context Protocol (MCP)
-    is an open standard that enables AI assistants to securely access external data sources and tools.
-    Onyx can be configured as an MCP client to interact with external systems, databases,
-    and APIs in a controlled manner.
-
-    Key features of MCP:
-    - **External Data Access**: Connect to databases, APIs, and file systems
-    - **Authentication**: Pass through OAuth to ensure secure access to your MCP server.
-  </Accordion>
-
-  <Accordion title="(Advanced) Custom Built-in Actions" icon="wrench">
-    Sometimes, you need more control over your action than what is possible with a Custom Action.
-    Since Onyx is open-source, you can extend the built-in actions to your liking!
-
-    To find templates for built-in actions,
-    see `backend/onyx/tools/tool_implementations` in the [Onyx repository](https://github.com/onyx-dot-app/onyx).
-
-    <Warning>
-
-      Extending the codebase is not recommended for most users. Before you start,
-      please reach out to us on
-      [Slack](https://join.slack.com/t/onyx-dot-app/shared_invite/zt-34lu4m7xg-TsKGO6h8PDvR5W27zTdyhA)
-      or [Discord](https://discord.gg/TDJ59cGV2X) for support!
-    </Warning>
+    Model Context Protocol (MCP) is an open standard that lets AI assistants access external data sources and tools.
+    Onyx works in both directions:
+    - **Onyx as an MCP client**: Admins connect external MCP servers as [Plugins](/admins/plugins/mcp).
+    Their tools become Actions your Agents can call. OAuth, API key, and no-auth servers are supported.
+    - **Onyx as an MCP server**: External clients such as Claude, ChatGPT, or Codex connect to `https://your-onyx-domain.com/mcp/`
+    with OAuth, a Personal Access Token, or an API Key, and search your Onyx knowledge.
+    See [Onyx MCP server](/overview/onyx_anywhere/mcp_server).
   </Accordion>
 </AccordionGroup>
 
@@ -69,19 +56,21 @@ import AgentsPersonasAssistantsNote from '/snippets/agents-personas-assistants-n
 
     <AgentsPersonasAssistantsNote />
 
-    **Built-in Agents:**
-    - `id: 0` Search Agent - Uses the Search Tool to answer questions from your knowledge base
-    - `id: -1` General Agent - Basic chat with no tools (basic chat with an LLM)
-    - `id: -2` Paraphrase Agent - Uses Search Tool and quotes exact snippets from sources
-    - `id: -3` Art Agent - Generates images and visual content
+    The API still uses the older name: Agent endpoints live under `/persona`, and an Agent ID is a `persona_id`.
 
-    You can create your own Agents in the Admin Panel or by API.
+    **The default Agent**
 
-    **Most Chat endpoints require an Agent ID**
+    Every Onyx instance has one built-in Agent with `id: 0`. Every chat session that does not name an Agent uses it.
+    Admins can edit its instructions and Actions in the Admin Panel, but cannot delete it.
 
-    To find your Agent ID, you can:
-    - Use the `GET /persona` API endpoint to list all agents
-    - In the Admin Panel: Click into an agent and check the first number in the URL
+    You can create your own Agents in the Onyx UI or with the [Agents](/developers/api_reference/agents/create_persona)
+    endpoints.
+
+    **Most Chat endpoints accept an Agent ID**
+
+    To find an Agent ID, you can:
+    - Call `GET /persona` to list the Agents you can access, or `GET /agents` for a paginated list
+    - In the Onyx UI, open the Agent. The number in the URL is its ID
   </Accordion>
 </AccordionGroup>
 
@@ -89,75 +78,94 @@ import AgentsPersonasAssistantsNote from '/snippets/agents-personas-assistants-n
 
 <AccordionGroup>
   <Accordion title="Streamed Chat Responses" icon="comment">
-    The chat response system uses a packet-based architecture to deliver real-time responses to users.
+    `POST /chat/send-chat-message` streams its response as server-sent events (SSE). Each event is one JSON packet.
     Instead of waiting for a complete response,
-    the system breaks down the chat interaction into discrete packets that can be streamed incrementally.
+    Onyx breaks the chat interaction into discrete packets that arrive as they are produced. Set `stream:
+    false` in the request to receive one complete JSON response instead.
 
-    Every packet follows a consistent structure defined by the `Packet` class:
+    Every packet has the same two fields:
 
-    ```python
-    class Packet(BaseModel):
-      ind: int        # Sequential index for ordering
-      obj: PacketObj  # The actual content including type of packet
+    ```json
+    {
+      "placement": { "turn_index": 0, "tab_index": 0, "sub_turn_index": null, "model_index": 0 },
+      "obj": { "type": "message_delta", "content": "Hello" }
+    }
     ```
+
+    - `placement` tells you where the packet belongs. `turn_index` increases with each reasoning or tool-call round,
+    `tab_index` separates parallel tool calls in one round, `sub_turn_index` is set for a tool that calls other tools,
+    and `model_index` identifies the model when several models answer side by side.
+    - `obj` is the content. Its `type` field tells you how to read the rest of the object.
 
     **Streaming Flow:**
 
-    - A chat request triggers the streaming process
-    - Various packet types are generated based on the required operations
+    - A chat request starts the stream
+    - Packets of different types are generated based on the required operations
     (reasoning, tool calls, AI response, documents, citations, etc.)
-    - Packets are sent with sequential indices to maintain order
-    - The frontend processes packets in real-time to update the UI
-    - An `OverallStop` packet signals completion
+    - Packets with the same `placement` form one block in the UI
+    - A `section_end` packet closes each block
+    - A `stop` packet signals completion
   </Accordion>
 
-  <Accordion title="Basic Message Packets" icon="message">
-    **MessageStart and MessageDelta**
+  <Accordion title="Message Packets" icon="message">
+    These packets carry the answer itself:
 
-    These packets form the core of the streaming response system:
-
-    - **MessageStart**: Initiates a new message with initial content and final search documents (if any)
-    - **MessageDelta**: Delivers incremental text content as it's generated
+    - **`message_start`**: Starts the answer. Carries `final_documents`, the documents the answer can cite, if any
+    - **`message_delta`**: Delivers incremental text in `content` as it is generated
   </Accordion>
 
   <Accordion title="Control Packets" icon="gear">
-    **Session and Section Management**
+    Control packets manage the flow and lifecycle of the stream:
 
-    Control packets manage the flow and lifecycle of the streaming process:
-
-    - **OverallStop**: Signals the end of the entire streaming session
-    - **SectionEnd**: Marks the completion of a packet type (reasoning, message, citations, etc.)
+    - **`stop`**: Signals the end of the entire stream. There is no end packet for the answer itself
+    - **`section_end`**: Marks the completion of one block (reasoning, a tool call, the answer, etc.)
+    - **`chat_heartbeat`**: Keepalive during silent stretches. It carries no state
+    - **`error`**: Reports a failure. The stream ends after it
   </Accordion>
 
   <Accordion title="Tool Packets" icon="wrench">
-    Tool responses are streamed in the same way as the main message response.
+    Tool activity streams in the same way as the answer. Each tool has a start packet and one or more delta packets.
 
-    **Search Tools**
-    - SearchToolStart and SearchToolDelta handle document search operations
+    **Internal Search**
+    - `search_tool_start`, `search_tool_queries_delta`, `search_tool_filter_delta`, and `search_tool_documents_delta`
+    show the queries, filters, and documents the search found
+
+    **Web Search**
+    - `open_url_start`, `open_url_urls`, and `open_url_documents` show the pages Onyx opened
 
     **Image Generation**
-    - ImageGenerationToolStart, ImageGenerationToolDelta, and ImageGenerationToolHeartbeat manage AI image creation
+    - `image_generation_start`, `image_generation_heartbeat`, and `image_generation_final`
 
-    **Custom Tools**
-    - CustomToolStart and CustomToolDelta are used for MCP and custom Actions
+    **Code Execution**
+    - `python_tool_start` and `python_tool_delta`
 
-    The start packet signals the start of the tool response.
-    The delta packets stream the results as they become available.
+    **File Reading and Memory**
+    - `file_reader_start`, `file_reader_result`, `memory_tool_start`, `memory_tool_delta`, and `memory_tool_no_access`
+
+    **Custom Actions (MCP and OpenAPI)**
+    - `custom_tool_start`, `custom_tool_args`, and `custom_tool_delta`
+
+    **Deep Research and Coding Agent**
+    - `deep_research_plan_start`, `deep_research_plan_delta`, `research_agent_start`,
+    `intermediate_report_start`, `intermediate_report_delta`, and `intermediate_report_cited_docs`
+    - `coding_agent_start`, `coding_agent_thinking_delta`, `coding_agent_final`, `bash_tool_start`, and `bash_tool_delta`
+
+    New tools add new packet types. Ignore any `type` you do not recognize.
   </Accordion>
 
   <Accordion title="Reasoning Packets" icon="lightbulb">
-    Any reasoning steps are streamed so the frontend can render them as the system is processing.
+    Reasoning steps stream so a client can render them while the model is working.
     Reasoning packets are generally the first ones sent.
 
-    - **ReasoningStart**: Begins a reasoning section
-    - **ReasoningDelta**: Streams the AI's reasoning process
+    - **`reasoning_start`**: Begins a reasoning section
+    - **`reasoning_delta`**: Streams the model's reasoning text
+    - **`reasoning_done`**: Ends the reasoning section
   </Accordion>
 
   <Accordion title="Citation Packets" icon="quote-right">
-    Citation packets associate citation ids with document ids.
+    Citation packets map the citation numbers in the answer text to documents.
 
-    - **CitationStart**: Initiates citation results
-    - **CitationDelta**: Delivers source citations and references
+    - **`citation_info`**: One packet per citation. Carries the citation number and the document it points to
   </Accordion>
 </AccordionGroup>
 
@@ -171,13 +179,14 @@ import AgentsPersonasAssistantsNote from '/snippets/agents-personas-assistants-n
 <AccordionGroup>
   <Accordion title="Connectors" icon="plug">
     `Connectors` in Onyx define the data you would like to index
-    - `name`: Not actually displayed in the UI if `ConnectorCredentialPairMetadata:name` is set
+    - `name`: Internal name. The Admin Panel shows the `ConnectorCredentialPairMetadata` name instead
     - `source`: Which system to connect to (see `DocumentSource` accordion below)
     - `input_type`: How the `Connector` retrieves data (see `InputType` accordion below)
-    - `connector_specific_config`: Source-specific settings like folder paths or channels. You will need to see [`/backend/onyx/connectors`](https://github.com/onyx-dot-app/onyx/tree/main/backend/onyx/connectors) for the expected Connector-specific Configurations.
-    - `refresh_freq`: How often to check for new or updated content in seconds
-    - `prune_freq`: How often to remove old content from Onyx in seconds
-    - `indexing_start`: Optional datetime to specify when indexing should begin
+    - `connector_specific_config`: Source-specific settings like folder paths or channels. The [Create Connectors](/developers/guides/create_connector) guide shows how to find the expected keys for each source.
+    - `refresh_freq`: How often to check for new or updated content, in seconds. `null` indexes once with no refresh
+    - `prune_freq`: How often to remove deleted content from Onyx, in seconds
+    - `check_freq`: How often to run connector health checks, in seconds. `null` runs them only on request
+    - `indexing_start`: Optional datetime. Only content changed after this time is indexed
 
     ```python Python
     class ConnectorBase(BaseModel):
@@ -187,6 +196,7 @@ import AgentsPersonasAssistantsNote from '/snippets/agents-personas-assistants-n
       connector_specific_config: dict[str, Any]
       refresh_freq: int | None = None
       prune_freq: int | None = None
+      check_freq: int | None = None
       indexing_start: datetime | None = None
     ```
   </Accordion>
@@ -195,6 +205,7 @@ import AgentsPersonasAssistantsNote from '/snippets/agents-personas-assistants-n
     `Credentials` contain the authentication details needed to access data sources. These include API keys,
     OAuth tokens, personal access tokens (PATs),
     or service account credentials that allow Onyx to securely connect to your external systems.
+    Onyx stores them encrypted.
 
     Types of `Credentials`:
     - **API Keys**: Simple token-based authentication
@@ -206,7 +217,7 @@ import AgentsPersonasAssistantsNote from '/snippets/agents-personas-assistants-n
   <Accordion title="ConnectorCredentialPairs" icon="link">
     Behind the scenes, `Connectors` and `Credentials` are combined into a `ConnectorCredentialPair` (CC-pair).
     A CC-pair is an active connection that can sync data from your external sources into Onyx.
-    CC-pairs are what you see and manage on the Admin `Connectors` page.
+    CC-pairs are what you see and manage on the Admin Panel **Connectors** page.
 
     CC-pair functionality:
     - **Active Connections**: Live data synchronization between source and Onyx
@@ -225,17 +236,23 @@ import AgentsPersonasAssistantsNote from '/snippets/agents-personas-assistants-n
     `ConnectorCredentialPairMetadata` defines the configuration and access settings for a CC-pair.
 
     Configuration options:
-    - `name`: Optional display name for the CC-pair (overrides the `Connector` name)
+    - `name`: Display name for the CC-pair, shown in the Admin Panel
     - `access_type`: Who can access data from this CC-pair (see `AccessType` accordion below)
-    - `auto_sync_options`: Optional configuration for automatic synchronization settings
-    - `groups`: List of group IDs that have access to this CC-pair
+    - `auto_sync_options`: Optional settings for permission syncing
+    - `manage_access`: Groups that manage the CC-pair, each with a role
+    - `groups`: Older form of `manage_access`. Group IDs that manage the CC-pair as Editors. Set at most one of `groups` and `manage_access`
+    - `data_access`: Group IDs whose members can read a `PRIVATE` CC-pair's documents. `null` means the managing groups
+    - `processing_mode`: `REGULAR` indexes documents for search. `RAW_BINARY` stores the raw files without text extraction
 
     ```python Python
     class ConnectorCredentialPairMetadata(BaseModel):
-      name: str | None = None
+      name: str
       access_type: AccessType
       auto_sync_options: dict[str, Any] | None = None
       groups: list[int] = Field(default_factory=list)
+      manage_access: ManageAccessList = Field(default_factory=list)
+      data_access: list[int] | None = None
+      processing_mode: ProcessingMode = ProcessingMode.REGULAR
     ```
   </Accordion>
 </AccordionGroup>
@@ -246,24 +263,26 @@ import AgentsPersonasAssistantsNote from '/snippets/agents-personas-assistants-n
   <Accordion title="DocumentBase" icon="page">
     `DocumentBase` is a core structure used throughout Onyx for storing and managing document data.
     Note that the embeddings are stored in OpenSearch separately.
-    - `id`: Unique identifier. Generated by Onyx if not provided
+    - `id`: Unique identifier. Generated by Onyx if not provided. Pushing the same `id` again updates the existing document
     - `sections`: List of content sections (see `TextSection` and `ImageSection`)
     - `source`: The system this document originated from (see `DocumentSource`)
     - `semantic_identifier`: Displayed in the UI as the name of the Document
-    - `metadata`: Arbitrary `string` or `list[string]` that will be saved as tags for this Document
+    - `metadata`: Arbitrary `string` or `list[string]` values that are saved as tags for this Document
     - `doc_updated_at`: UTC timestamp when the document was last updated
+    - `doc_created_at`: UTC timestamp when the document was created
     - `chunk_count`: Number of chunks the document is split into for processing
     - `primary_owners`: Metadata about people associated with the Document
     - `secondary_owners`: Metadata about people associated with the Document
     - `title`: Used for search (defaults to `semantic_identifier` if not specified)
     - `from_ingestion_api`: Whether this document came from the Ingestion API
-    - `additional_info`: Connector-specific information that other parts of the code may need
+    - `additional_info`: Connector-specific information that other parts of Onyx may need
     - `external_access`: Permission sync data (Enterprise Edition only)
 
     <Note>
 
-      The Ingestion API extends the DocumentBase definition to include `cc_pair_id` to automatically associate a
+      The Ingestion API wraps `DocumentBase` in an `IngestionDocument` with an optional `cc_pair_id` that associates the
       document with a CC-pair.
+      Documents pushed through the Ingestion API can only contain `TextSection` and `ImageSection` entries.
     </Note>
 
     ```python Python expandable
@@ -271,12 +290,13 @@ import AgentsPersonasAssistantsNote from '/snippets/agents-personas-assistants-n
       """Used for Onyx ingestion api, the ID is inferred before use if not provided"""
 
       id: str | None = None
-      sections: list[TextSection | ImageSection]
+      sections: Sequence[TextSection | ImageSection | TabularSection]
       source: DocumentSource | None = None
       semantic_identifier: str
       metadata: dict[str, str | list[str]]
 
       doc_updated_at: datetime | None = None
+      doc_created_at: datetime | None = None
       chunk_count: int | None = None
 
       primary_owners: list[BasicExpertInfo] | None = None
@@ -301,53 +321,66 @@ import AgentsPersonasAssistantsNote from '/snippets/agents-personas-assistants-n
       WEB = "web"
       GOOGLE_DRIVE = "google_drive"
       GMAIL = "gmail"
-      REQUESTTRACKER = "requesttracker"
       GITHUB = "github"
       GITBOOK = "gitbook"
       GITLAB = "gitlab"
+      BITBUCKET = "bitbucket"
       GURU = "guru"
       BOOKSTACK = "bookstack"
+      OUTLINE = "outline"
       CONFLUENCE = "confluence"
       JIRA = "jira"
       SLAB = "slab"
       PRODUCTBOARD = "productboard"
       FILE = "file"
+      CODA = "coda"
+      CANVAS = "canvas"
       NOTION = "notion"
       ZULIP = "zulip"
       LINEAR = "linear"
+      YOUTRACK = "youtrack"
       HUBSPOT = "hubspot"
       DOCUMENT360 = "document360"
       GONG = "gong"
       GOOGLE_SITES = "google_sites"
       ZENDESK = "zendesk"
       LOOPIO = "loopio"
+      BOX = "box"
       DROPBOX = "dropbox"
       SHAREPOINT = "sharepoint"
+      ONEDRIVE = "onedrive"
       TEAMS = "teams"
+      OUTLOOK = "outlook"
       SALESFORCE = "salesforce"
       DISCOURSE = "discourse"
       AXERO = "axero"
       CLICKUP = "clickup"
       MEDIAWIKI = "mediawiki"
       WIKIPEDIA = "wikipedia"
+      DRUPAL_WIKI = "drupal_wiki"
       ASANA = "asana"
       S3 = "s3"
       R2 = "r2"
       GOOGLE_CLOUD_STORAGE = "google_cloud_storage"
       OCI_STORAGE = "oci_storage"
       XENFORO = "xenforo"
-      NOT_APPLICABLE = "not_applicable"
       DISCORD = "discord"
       FRESHDESK = "freshdesk"
       FIREFLIES = "fireflies"
+      ZOOM = "zoom"
       EGNYTE = "egnyte"
       AIRTABLE = "airtable"
       HIGHSPOT = "highspot"
-
+      TESTRAIL = "testrail"
+      BRAINTRUST = "braintrust"
+      LUMAPPS = "lumapps"
       IMAP = "imap"
 
-      # Special case just for integration tests
-      MOCK_CONNECTOR = "mock_connector"
+      # Used by Onyx itself, not for Connectors you create
+      NOT_APPLICABLE = "not_applicable"
+      USER_FILE = "user_file"
+      CRAFT_FILE = "craft_file"
+      FEDERATED_SLACK = "federated_slack"
     ```
   </Accordion>
 
@@ -355,39 +388,56 @@ import AgentsPersonasAssistantsNote from '/snippets/agents-personas-assistants-n
     `TextSection` is a portion of a Document in Onyx.
     - `text`: The actual text content of the section
     - `link`: Optional URL that this text section relates to or was sourced from
+    - `heading`: Optional heading for the section
 
     ```python Python
     class TextSection(Section):
+      type: Literal["text"] = "text"
       text: str
       link: str | None = None
+      heading: str | None = None
     ```
   </Accordion>
 
   <Accordion title="ImageSection" icon="image">
     `ImageSection` is an image extracted from a Document in Onyx.
-    - `image_file_id`: UUID of the image file stored in Onyx's file store
+    - `image_file_id`: ID of the image file stored in Onyx's file store
     - `text`: Optional text description or caption for the image
     - `link`: Optional URL that this image section relates to or was sourced from
 
     ```python Python
     class ImageSection(Section):
+      type: Literal["image"] = "image"
       image_file_id: str
       text: str | None = None
       link: str | None = None
     ```
+
+    <Note>
+
+      `TabularSection` is a third section type.
+      Connectors use it for CSV and spreadsheet content that Onyx stages in its file store.
+      The Ingestion API does not accept it.
+    </Note>
   </Accordion>
 
   <Accordion title="AccessType" icon="shield">
     `AccessType` defines who can access data from a `Connector` in Onyx.
     - `PUBLIC`: All Onyx users may access data from this `Connector`
-    - `PRIVATE`: Only the user who created the `Connector` and specified Groups may access data from this `Connector`
-    - `SYNC`: Only `Connectors` with permission-sync support can be set to SYNC. The `Connector` will sync access permissions with the source system.
+    - `PRIVATE`: Only the groups in `data_access` (or the managing groups) may access data from this `Connector`
+    - `SYNC`: The `Connector` syncs access permissions from the source system. Only `Connectors` with permission-sync support can use it
+    - `SYNC_RESTRICTED`: Like `SYNC`, narrowed to the members of the `Connector`'s `data_access` groups
+
+    <Info>
+      `SYNC` and `SYNC_RESTRICTED` require the Enterprise Edition.
+    </Info>
 
     ```python Python
     class AccessType(str, Enum):
       PUBLIC = "public"
       PRIVATE = "private"
       SYNC = "sync"
+      SYNC_RESTRICTED = "sync_restricted"
     ```
   </Accordion>
 
@@ -411,10 +461,9 @@ import AgentsPersonasAssistantsNote from '/snippets/agents-personas-assistants-n
 ## Next Steps
 
 <CardGroup cols={2}>
-  {/* <Card title="Guide:
-  Create a Connector with the API" icon="lightbulb" href="/developers/guides/create_connector"> Learn how to create a
-  Connector through the API
-  </Card> */}
+  <Card title="Guide: Create Connectors" icon="plug" href="/developers/guides/create_connector">
+    Learn how to create a Connector through the API
+  </Card>
 
   <Card title="Guide: Index files with the Ingestion API" icon="lightbulb" href="/developers/guides/index_files_ingestion_api">
     Learn how to index files with the Ingestion API
@@ -424,8 +473,7 @@ import AgentsPersonasAssistantsNote from '/snippets/agents-personas-assistants-n
     Simple example of sending a message programmatically
   </Card>
 
-  {/* <Card title="Guide:
-  Set up an MCP (Admin Panel)" icon="comment" href="/developers/guides/mcp_guide"> Learn how to set up an MCP server in
-  the Admin Panel
-  </Card> */}
+  <Card title="Guide: Search with the API" icon="magnifying-glass" href="/developers/guides/search_api_guide">
+    Query the Onyx index and get ranked documents back
+  </Card>
 </CardGroup>

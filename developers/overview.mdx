@@ -7,14 +7,17 @@ icon: "code"
 **Nearly every Onyx feature is accessible through the Onyx API.**
 
 Onyx APIs are built on REST principles with JSON request/response formats.
-All endpoints require authentication and follow relatively consistent patterns.
+All endpoints require authentication and follow consistent patterns. The API has no separate paths or response shapes:
+a script calls the same endpoints the Onyx web app calls.
 
 Make API requests to:
 
 `https://cloud.onyx.app/api` or `https://your-self-hosted-onyx.com/api`
 
 <Note>
-  Onyx follows [SemVer 2.0.0](https://semver.org/). Breaking changes will be indicated by major version increments.
+  Onyx releases follow [SemVer 2.0.0](https://semver.org/). Breaking changes are indicated by major version increments.
+  The endpoints in the [API Reference](/developers/api_reference/chat/get_chat_session) are the supported surface.
+  Other endpoints can change between releases without notice.
 </Note>
 
 <Info>
@@ -35,8 +38,9 @@ Onyx has two kinds of token. An **API Key** belongs to a service account. A **Pe
 
 ### API Keys
 
-API Keys are created by admins from the Admin Panel. Each key exists as a distinct **service account** user in Onyx,
-so you can trace activity, keep chat sessions private, and scope resources to a specific key.
+Admins create API Keys in the Admin Panel under **Integrations** > **Service Accounts**.
+Each key exists as a distinct **service account** user in Onyx, so you can trace activity, keep chat sessions private,
+and scope resources to a specific key.
 
 A service account has no permissions of its own.
 Its access comes from the **groups** you assign to it when you create the key.
@@ -56,7 +60,8 @@ Permissions add together. A key in several groups receives the union of their pe
 </Warning>
 
 <Info>
-  Custom groups and configurable group permissions are an Enterprise Edition feature.
+  Custom groups and configurable group permissions are an Enterprise Edition feature. On Onyx Cloud,
+  service accounts require a paid plan.
 </Info>
 
 See [Service Accounts](/admins/user_management/api_keys) for setup instructions.
@@ -65,8 +70,9 @@ See [Service Accounts](/admins/user_management/api_keys) for setup instructions.
 
 Personal Access Tokens (PATs) let a user authenticate API requests as themselves.
 
-To create a token, go to **Settings** > **Accounts & Access** and click **Create New Token**. Give it a name,
-choose an expiration (7 days, 30 days, 365 days, or never), and choose its permissions:
+To create a token, go to **Settings** > **Accounts & Access**. In the **Access Tokens** section,
+click **New Access Token**. Give the token a name, choose when it expires (**7 days**, **30 days**, **365 days**,
+or **No expiration**), and choose its permissions:
 
 | Permissions | Behavior |
 |---|---|
@@ -77,25 +83,31 @@ A limited token can pick from these scopes:
 
 | Scope | Permission | Allows |
 |---|---|---|
-| Search &mdash; Read | `read:search` | Use the search and web search endpoints. |
+| Search &mdash; Read | `read:search` | Use the search and query endpoints. |
 | Chat &mdash; Read | `read:chat` | View chat sessions and messages. |
 | Chat &mdash; Write | `write:chat` | Create sessions and send messages. Includes Chat &mdash; Read. |
-| LLM Gateway &mdash; Use | `use:llm_gateway` | Call the [LLM Gateway](/developers/guides/llm_gateway) from external tools. Enterprise Edition. |
+| LLM Gateway &mdash; Use | `use:llm_gateway` | Call the [LLM Gateway](/developers/guides/llm_gateway) from external tools. Business and Enterprise only, and only when an admin has enabled the LLM Gateway. |
 
 Scopes only narrow access. A limited token receives the scopes you selected **and** your own permissions,
 never more than you can do yourself. A limited token is also rejected on any endpoint outside its scopes,
 even one you can reach in the browser.
 
 <Note>
-  Creating a token requires the **Create User Access Token** permission, which an admin grants to a group.
-  Admins always have it.
+  Creating a token requires the **Create User Access Token** permission. The Basic group grants it by default.
+  An admin can turn it off from the Basic group's page or grant it to another group. Admins always have it.
 </Note>
+
+<Info>
+  On Onyx Cloud, access tokens require a paid plan.
+  Trial workspaces see an **Upgrade Plan** prompt instead of the token list.
+</Info>
 
 <Warning>
   Your token is displayed only once at creation. Copy it immediately and store it securely.
 </Warning>
 
 You can view, audit, and revoke your tokens at any time from **Settings** > **Accounts & Access**.
+Changing your password revokes all of your tokens.
 
 ## Permissions
 
@@ -164,10 +176,25 @@ You can find all Onyx API endpoints in the built-in OpenAPI explorer:
 
 `https://cloud.onyx.app/api/docs` or `https://your-onyx-domain.com/api/docs`
 
+<Note>
+  On self-hosted deployments the explorer is off by default.
+  Set `ENABLE_PUBLIC_DOCS=true` on the API server to serve `/api/docs`, `/api/redoc`, and `/api/openapi.json`.
+</Note>
+
 <Warning>
   The explorer is purely for reference. It is not a fully-featured API client.
   Ignore the tenant_id parameter and use your API key as a Bearer token.
 </Warning>
+
+## Other Ways to Integrate
+
+The same tokens unlock three integration surfaces that sit next to the REST API:
+
+| Surface | What it does | Learn more |
+|---|---|---|
+| Ingestion API | Push documents straight into the Onyx index without a connector. | [Index files with the Ingestion API](/developers/guides/index_files_ingestion_api) |
+| MCP server | Let Claude, ChatGPT, Codex, or any MCP client search your Onyx knowledge. | [Onyx MCP server](/overview/onyx_anywhere/mcp_server) |
+| LLM Gateway | Call the models your admin configured in Onyx from external tools with an OpenAI-compatible API. Business and Enterprise only. | [LLM Gateway](/developers/guides/llm_gateway) |
 
 ## Next Steps
 
