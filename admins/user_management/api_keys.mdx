@@ -12,9 +12,14 @@ which lets you build custom applications, integrate with external systems, and a
   see [Service Accounts before v4.7](/admins/user_management/api_keys_legacy).
 </Info>
 
+<Info>
+  Service accounts require a **Business** or **Enterprise** plan, or Onyx Cloud. On Onyx Cloud,
+  trial workspaces cannot create API keys. Upgrade to a paid plan first.
+</Info>
+
 <Note>
   A service account is a distinct user in Onyx, so you can trace its activity, keep its chat sessions private,
-  and scope resources to it.
+  and scope resources to it. It cannot sign in with a password. It authenticates only with its API key.
 </Note>
 
 ## How a Service Account Gets Its Access
@@ -56,21 +61,19 @@ Admins always have it.
   </Step>
 
   <Step title="Create the account">
-    Click **New Service Account**, give it a name, and select the groups it should belong to. You can change both later.
+    Click **New Service Account**. In the **Create Service Account** dialog, enter a **Name**,
+    select the **Groups** it should belong to, and click **Create Account**. You can change both later.
   </Step>
 
   <Step title="Save and copy the key">
-    Copy or download the key before closing the dialog. Onyx shows it only once.
+    The **Service Account API Key** dialog shows the key once.
+    Click **Copy API Key** or **Download** before you close it.
   </Step>
 </Steps>
 
-<Note>
-  On Onyx Cloud, service accounts require a paid plan. Trial workspaces cannot create API keys.
-</Note>
-
 ## Managing Service Accounts
 
-The Service Accounts page lists each account with its name, masked key, and groups. For each account you can:
+The Service Accounts page lists each account with its name, masked API key, and groups. For each account you can:
 
 | Action | What it does |
 |---|---|
@@ -87,6 +90,25 @@ The Service Accounts page lists each account with its name, masked key, and grou
 
 Service accounts are for applications. When you want a token that acts as a **person**,
 use a Personal Access Token instead.
-Any user with the **Create User Access Token** permission can create one from **Settings** > **Accounts & Access**.
+
+Any user with the **Create User Access Token** permission can create one from **Settings** > **Accounts & Access** >
+**Access Tokens**. Click **New Access Token**, then set:
+
+| Field | Options |
+|---|---|
+| **Token Name** | A label for the token. |
+| **Expires in** | 7 days, 30 days, 365 days, or no expiration. |
+| **Permissions** | **Full access** inherits all of the user's permissions. **Limited access** restricts the token to the capabilities you select. |
+
+A token can never do more than the user who created it. Users see and revoke only their own tokens.
+
+The **Basic** group grants **Create User Access Token** by default.
+An admin can turn it off on the Basic group's page to stop users from creating tokens.
+The same permission controls whether users can authorize external MCP clients that connect to Onyx.
+
+<Note>
+  Changing or resetting a user's password revokes all of their Personal Access Tokens. API keys are not affected.
+  On Onyx Cloud, Personal Access Tokens require a paid plan.
+</Note>
 
 See [Overview & Auth](/developers/overview#personal-access-tokens) for token scopes and usage.

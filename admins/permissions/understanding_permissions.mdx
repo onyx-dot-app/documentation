@@ -78,8 +78,12 @@ can also be assigned to groups when configured.
 Custom groups let you grant specific permissions to the users in that group.
 
 <Info>
-  Custom groups and configurable group permissions are an Enterprise Edition feature.
+  Custom groups and configurable group permissions require a **Business** or **Enterprise** plan, or Onyx Cloud.
+  Community Edition has the **Admin** and **Basic** groups only.
 </Info>
+
+The **Basic** group has one permission you can change: **Create User Access Token**. It is on by default.
+Turn it off on the Basic group's page to stop users from creating personal access tokens.
 
 <Warning>
   Because all access comes from groups, a user who belongs to **no group at all** has no permissions.
@@ -132,7 +136,7 @@ Common examples:
 - Give an IT administrators group **Manage Connectors & Document Sets** so they can manage all connectors.
 - Give a model operations group **Manage LLMs** so they can configure language models.
 - Give an analytics group **View Query History** so they can review query activity.
-- Give a developer platform group **Manage Actions** so they can maintain workspace actions and MCP servers.
+- Give a developer platform group **Manage Actions** so they can maintain MCP and OpenAPI plugins.
 
 You set these permissions on the group's detail page in the Admin Panel.
 For a tour of where the Users and Groups pages live, see [Users and Groups](/admins/user_management/users_and_groups).
@@ -152,7 +156,9 @@ Scoped to the group they manage, a Group Manager can:
 - Add and remove members from that group.
 - Manage connectors and document sets shared only with that group.
 - Manage agents shared only with that group.
-- Manage actions through the agents shared with that group.
+- Manage skills shared only with that group.
+- Manage plugins through the agents shared with that group.
+- Restrict an MCP plugin to the groups they manage. They must select at least one of their groups.
 
 A Group Manager cannot:
 
@@ -187,7 +193,7 @@ The following permissions can be assigned to custom groups:
 |---|---|
 | Manage LLMs | Add and update language model configurations. |
 | Manage Connectors & Document Sets | Add and update connectors and document sets across the workspace. |
-| Manage Actions | Add and update custom tools, MCP servers, and OpenAPI actions across the workspace. |
+| Manage Actions | Add and update MCP and OpenAPI plugins on the **Plugins** page across the workspace. Only full admins can add Craft Apps or change what is on in default Chat. |
 | Manage Groups | Add and update user groups across the workspace. |
 | Manage Service Accounts | Add and update service accounts and their API keys. |
 | Manage Slack/Discord Bots | Add and update Onyx integrations with Slack or Discord. |
@@ -195,7 +201,7 @@ The following permissions can be assigned to custom groups:
 | Manage Agents | View and update public and shared agents across the workspace. |
 | View Agent Analytics | View analytics for agents the user owns. Users with **Manage Agents** can view analytics for all agents. |
 | View Query History | View query history across the workspace. |
-| Create User Access Token | Add and update the user's personal access tokens. |
+| Create User Access Token | Create personal access tokens. This is the only permission you can toggle on the **Basic** group. |
 
 <Note>
   **View Agent Analytics** is not scoped through Group Manager access. The permission can be granted to a group,
@@ -204,7 +210,7 @@ The following permissions can be assigned to custom groups:
 
 <Info>
   Community Edition has no group permission configuration, so **Create Agents** is available to everyone.
-  The permissions in this table are configured per group in Enterprise Edition.
+  The permissions in this table are configured per group on the **Business** and **Enterprise** plans.
 </Info>
 
 ## Document Access Is Separate
@@ -214,9 +220,16 @@ Document visibility is still controlled by connector and resource access setting
 
 Connectors can be:
 
-- **Private**: Visible only to the creator, plus any users or groups explicitly granted access.
+- **Private**: Visible only to the creator, plus any groups explicitly granted access.
 - **Public**: Visible to all Onyx users.
-- **Auto Sync Permissions**: Restricted using permissions synced from the source system.
+- **Auto-sync**: Restricted using permissions synced from the source system.
+- **Auto-sync, restricted**: Synced permissions apply, and only members of the selected groups can see the documents.
+  Turn on **Restrict Access to Groups** on the connector.
+  An admin must first turn on **Allow Group Restrictions on Permission-Synced Connectors** on **Security & Hardening**.
+  Requires a **Business** or **Enterprise** plan.
+
+Group-based document access needs a **Business** or **Enterprise** plan. In Community Edition,
+a document is visible to its connector's creator and to everyone when the connector is public.
 
 That means a user can have a management permission without automatically seeing every document in search.
 Search results still respect document access controls.
@@ -270,7 +283,7 @@ Search results still respect document access controls.
 
   <Accordion title="Does a management permission show all documents in search?">
     No. Document visibility is controlled separately by connector access settings: **Private**, **Public**,
-    and **Auto Sync Permissions**.
+    **Auto-sync**, and **Auto-sync, restricted**.
   </Accordion>
 
   <Accordion title="What are the default groups?">
