@@ -6,12 +6,12 @@ icon: "sitemap"
 
 ## Overview
 
-The Onyx application is a set of Docker Containers which can be deployed on any infra and for any scale.
+Onyx is a set of containers that you can deploy on any infrastructure and at any scale.
 
 <Tip>
   As an open source project,
   Onyx is designed with security and data privacy as a foundational principle so that teams can trust the software even
-  without needing partnership guarantees.
+  without partnership guarantees.
 </Tip>
 
 ## System Architecture
@@ -22,48 +22,65 @@ The Onyx application is a set of Docker Containers which can be deployed on any 
 
 ### Application Layer
 
-- **Frontend web client**: Next.js-based web application providing the user interface for the Onyx
-  platform
-- **API Server**: Python FastAPI web server to handle business logic and requests
-- **Background Workers**: Python workers to handle async jobs like fetching document updates, etc.
+- **Frontend web client**: Next.js web application that provides the Onyx user interface
+- **API Server**: Python FastAPI server that handles business logic and requests
+- **Background Workers**: Python workers that handle asynchronous jobs such as fetching and indexing
+  documents, syncing permissions, and running scheduled Craft tasks
+- **MCP Server**: exposes Onyx search to external LLM clients that authenticate with a personal access
+  token or API key
 
 ### Model Servers
 
-- **Inference Model Server**: Serves the embedding and reranking models used at query time to
-  retrieve and order context
-- **Indexing Model Server**: A dedicated model server that handles embedding of documents during
-  indexing, isolating heavy indexing workloads from live query traffic
+- **Inference Model Server**: embeds user queries at search time so that Onyx can retrieve matching
+  chunks
+- **Indexing Model Server**: a dedicated model server that embeds documents during indexing. It keeps
+  heavy indexing workloads away from live query traffic
+
+Both servers run a local, open-source embedding model. Admins can instead select an API-based embedding provider.
 
 ### Data Layer
 
-- **Relational Database**: Postgres database to store application data, user sessions, and system
-  state
-- **Search Engine**: OpenSearch providing keyword (BM25) search + vector store for retrieving
-  context for queries
-- **In Memory Cache**: Redis, used to optimize performance
-- **File Store**: the object store (SeaweedFS) for user uploaded files and documents pulled from connectors
+- **Relational Database**: Postgres database for application data, user sessions, and system state
+- **Search Engine**: OpenSearch for keyword (BM25) search and vector search over document chunks
+- **In-Memory Cache**: Redis for sessions, task queues, and short-lived state
+- **File Store**: the object store (SeaweedFS) for user uploaded files and documents pulled from
+  connectors
 
 ### Infrastructure Layer
 
-- **Request Router**: Nginx reverse proxy for load balancing and request routing
+- **Request Router**: Nginx reverse proxy for request routing. Kubernetes deployments typically use an
+  Ingress instead
+
+### Optional Components
+
+- **Code Interpreter**: a separate container that runs the Python code the LLM writes. Admins can turn
+  it off under **Admin Panel > Code Interpreter**
+- **Craft sandboxes and sandbox proxy**: per-user sandboxes for Craft, plus a proxy that controls their
+  network egress. See [Craft Architecture](/security/architecture/craft)
+
+### Onyx Lite
+
+Onyx Lite is a minimal deployment with only the API server, web server, and Postgres.
+Postgres replaces Redis and the object store. Connectors and internal search are off, but chat, tools, file uploads,
+Projects, and the code interpreter work. See [Deployment Overview](/deployment/overview).
 
 ## Component Replacements
 
-Some components of the Onyx stack are easily replaceable while others are not.
+Some components of the Onyx stack are easy to replace, and others are not.
 
 The **object store** can be replaced with S3, Google Cloud Storage, Azure Blob Storage,
 or any S3-compatible object storage service. The file store interface is abstracted to make this straightforward.
 
-**Redis** can be replaced with a managed Redis service like AWS ElastiCache or Google Cloud Memorystore for Redis.
-Other in-memory caches could work but would require code changes.
+**Redis** can be replaced with a managed Redis service such as AWS ElastiCache or Google Cloud Memorystore for Redis.
+Other in-memory caches would require code changes.
 
 **Postgres** can be replaced with a managed Postgres service such as AWS RDS.
-It is much more challenging and not advised to switch to a different relational DB due to language specific features and
-optimizations.
+Switching to a different relational database is much harder and not advised,
+because Onyx uses Postgres-specific features and optimizations.
 
-**OpenSearch** can be replaced with a multi-node OpenSearch cluster (typically not necessary)
-or a managed OpenSearch service such as AWS OpenSearch Service.
-OpenSearch is tightly integrated with the context retrieval functionalities and switching to a different search engine
-would require significant development effort to maintain the same functionality.
+**OpenSearch** can be replaced with a multi-node OpenSearch cluster (usually not necessary)
+or a managed OpenSearch service such as Amazon OpenSearch Service.
+OpenSearch is tightly integrated with context retrieval.
+Switching to a different search engine would require significant development effort to keep the same functionality.
 
 **Nginx** can be removed and replaced with your own routing proxy.
