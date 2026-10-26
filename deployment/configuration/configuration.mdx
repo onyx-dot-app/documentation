@@ -29,7 +29,7 @@ Onyx Lite retains the following capabilities:
 - User file uploads
 - Projects
 - Agent knowledge
-- Assistants (without RAG retrieval)
+- Agents (without RAG retrieval)
 
 ### What's Removed
 
@@ -37,7 +37,7 @@ Onyx Lite disables or does not use:
 - **Vector indexing and RAG search**: `DISABLE_VECTOR_DB=true` prevents use of OpenSearch, even if it is running
 - **Redis**: PostgreSQL handles caching and session management instead
 - **Indexing model server**: no document embeddings; Docker Compose Lite also skips the inference model server
-- **Celery background workers**: the API server handles background work directly
+- **Background workers**: the API server handles background work directly
 - **Object store / S3 file storage**: PostgreSQL handles file storage instead, even if the object store is running
 - **Connectors**: all data source connectors are disabled
 
@@ -273,9 +273,7 @@ Read [Deploying Craft](/deployment/local/craft) before enabling Craft in self-ho
 
     `WEB_DOMAIN`: Set this if you are deploying Onyx on a custom domain.
 
-    `DISABLE_GENERATIVE_AI`: Disable generative AI features.
-
-    `DISABLE_USER_KNOWLEDGE`: Controls whether users can use the My Documents feature with assistants.
+    `DISABLE_USER_KNOWLEDGE`: Controls whether users can use the My Documents feature with Agents.
 
     `ONYX_QUERY_HISTORY_TYPE`: Controls query history reports (show user emails, anonymous, no queries)
   </Accordion>
@@ -288,14 +286,8 @@ Read [Deploying Craft](/deployment/local/craft) before enabling Craft in self-ho
     `ONYX_SERVER_URL`: Full Onyx API base URL reachable from inside Craft sandboxes,
     including any `/api` path prefix (for example `https://onyx.example.com/api`,
     or `http://<release>-api-service.<ns>.svc.cluster.local:8080` with no prefix). Required for Helm Craft deployments.
-    Docker Compose defaults it to the private `onyx-craft-api` alias.
-    Replaces `SANDBOX_API_SERVER_URL` (renamed in `v4.5.0`).
-
-    `SANDBOX_IDLE_TIMEOUT_SECONDS`: Idle timeout before sandbox sleep or cleanup. Defaults to `3600`.
-
-    `SANDBOX_MAX_CONCURRENT_PER_ORG`: Maximum concurrent Craft sandboxes per organization. Defaults to `10`.
-
-    `SANDBOX_TURN_TIMEOUT_SECONDS`: Wall-clock budget for one Craft turn. Defaults to `900`.
+    Docker Compose defaults it to the private `onyx-craft-api` alias. `SANDBOX_IDLE_TIMEOUT_SECONDS`:
+    Idle timeout before sandbox sleep or cleanup. Defaults to `3600`.
 
     `BUILD_MAX_UPLOAD_FILE_SIZE_MB`: Maximum Craft session attachment size. Defaults to `50`.
 
@@ -543,12 +535,6 @@ Read [Deploying Craft](/deployment/local/craft) before enabling Craft in self-ho
     `OPENSEARCH_EXPLAIN_ENABLED`: Return per-hit score breakdowns for relevance debugging (large performance cost)
 
     `ONYX_SEARCH_UI_USES_OPENSEARCH_KEYWORD_SEARCH`: Use OpenSearch keyword search for the Search UI
-
-    `ENABLE_OPENSEARCH_INDEXING_FOR_ONYX`: Index documents into OpenSearch (default `true`)
-
-    `ONYX_DISABLE_VESPA`: Run without the legacy Vespa index (default `true`)
-
-    `DISABLE_OPENSEARCH_MIGRATION_TASK`: Disable the periodic Vespa to OpenSearch migration task
   </Accordion>
 
   <Accordion title="Celery Configuration">
@@ -563,15 +549,6 @@ Read [Deploying Craft](/deployment/local/craft) before enabling Craft in self-ho
     `CELERY_WORKER_DOCPROCESSING_CONCURRENCY`: Document processing worker concurrency
 
     `CELERY_WORKER_DOCFETCHING_CONCURRENCY`: Document fetching worker concurrency
-
-    `CELERY_WORKER_KG_PROCESSING_CONCURRENCY`: Knowledge graph processing worker concurrency
-
-    `CELERY_EXTERNAL_GROUP_SYNC_LOCK_TIMEOUT`: Per-connector external group sync lock TTL in seconds. Defaults to `300`.
-    Raise it if group syncs run long, so periodic re-dispatches do not start duplicate syncs.
-
-    `CELERY_PERMISSIONS_SYNC_LOCK_TIMEOUT`: Per-connector document permission sync lock TTL in seconds.
-    Defaults to `3600`.
-    Raise it if a permission sync on a large tenant fails with "Cannot reacquire a lock that's no longer owned".
 
     `CELERY_DOCUMENT_SYNC_BEAT_LOCK_TIMEOUT`: Document-index sync lock TTL in seconds. Defaults to `120`.
     Raise it if the sync pass aborts with "no longer owned" or "Lock not owned on completion".
@@ -709,16 +686,8 @@ Read [Deploying Craft](/deployment/local/craft) before enabling Craft in self-ho
     `MAX_PRUNING_DOCUMENT_RETRIEVAL_PER_MINUTE`: Maximum document retrieval rate during pruning
   </Accordion>
 
-  <Accordion title="Tool Configuration">
-    `OKTA_PROFILE_TOOL_ENABLED`: Enable Okta profile tool
-
-    `OKTA_API_TOKEN`: Okta API token for SSWS auth
-  </Accordion>
-
   <Accordion title="Logging Configuration">
     `LOG_ONYX_MODEL_INTERACTIONS`: Log Onyx model interactions
-
-    `LOG_VESPA_TIMING_INFORMATION`: Log document index query performance
 
     `LOG_ENDPOINT_LATENCY`: Log endpoint latency
 
@@ -740,14 +709,6 @@ Read [Deploying Craft](/deployment/local/craft) before enabling Craft in self-ho
     `AZURE_IMAGE_API_BASE`: Azure OpenAI endpoint base URL for image generation
 
     `AZURE_IMAGE_DEPLOYMENT_NAME`: Azure OpenAI image deployment namespace
-
-    `AZURE_DALLE_API_VERSION`: Legacy alias for `AZURE_IMAGE_API_VERSION` (kept for backwards compatibility)
-
-    `AZURE_DALLE_API_KEY`: Legacy alias for `AZURE_IMAGE_API_KEY` (kept for backwards compatibility)
-
-    `AZURE_DALLE_API_BASE`: Legacy alias for `AZURE_IMAGE_API_BASE` (kept for backwards compatibility)
-
-    `AZURE_DALLE_DEPLOYMENT_NAME`: Legacy alias for `AZURE_IMAGE_DEPLOYMENT_NAME` (kept for backwards compatibility)
 
     `IMAGE_SUMMARIZATION_SYSTEM_PROMPT`: System prompt for image summarization
 
@@ -848,8 +809,6 @@ Read [Deploying Craft](/deployment/local/craft) before enabling Craft in self-ho
 
     `API_KEY_HASH_ROUNDS`: Hash rounds for API keys
 
-    `LLM_MODEL_UPDATE_API_URL`: LLM model update API endpoint
-
     `LITELLM_CUSTOM_ERROR_MESSAGE_MAPPINGS`: Custom error message mappings (JSON)
 
     `GEN_AI_MODEL_FALLBACK_MAX_TOKENS`: Maximum token limit for generative AI model fallback
@@ -872,8 +831,6 @@ Read [Deploying Craft](/deployment/local/craft) before enabling Craft in self-ho
     `DEV_MODE`: Enable development mode
 
     `INTEGRATION_TESTS_MODE`: Enable integration tests mode
-
-    `MOCK_LLM_RESPONSE`: Boolean to create mock LLM responses for testing
   </Accordion>
 
   <Accordion title="Deployment Configuration">

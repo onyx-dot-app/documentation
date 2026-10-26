@@ -47,11 +47,13 @@ and Azure include node pool sizes for small, medium, and large deployments.
 
 See the [Onyx Helm chart](https://github.com/onyx-dot-app/onyx/blob/main/deployment/helm/charts/onyx/values.yaml)
 `values.yaml` for our default requests and limits.
+The chart's [sizing guide](https://github.com/onyx-dot-app/onyx/blob/main/deployment/helm/charts/onyx/SIZING.md)
+has small, medium, and large values snippets.
 
 | Component | CPU | Memory |
 | --- | --- | --- |
 | `api_server` | 1 | 2 Gi |
-| `background` | 2 | 8 Gi |
+| Background workers (all `celery_*` workers) | 2 | 8 Gi |
 | `indexing_model_server` | 2 | 4 Gi |
 | `inference_model_server` | 2 | 4 Gi |
 | `postgres` | 2 | 2 Gi |
@@ -67,7 +69,7 @@ All together, this comes out to a total available node size of at least ~12 CPU 
 
 ## Container-Specific Resourcing (Lite)
 
-Docker Compose Lite starts five services. File storage, cache data, and sessions use PostgreSQL.
+Docker Compose Lite starts six services. File storage, cache data, and sessions use PostgreSQL.
 
 | Component | CPU | Memory |
 | --- | --- | --- |
@@ -76,6 +78,7 @@ Docker Compose Lite starts five services. File storage, cache data, and sessions
 | `postgres` | 1 | 1 Gi |
 | `nginx` | 250m (1/4) | 128 Mi |
 | `code-interpreter` | 100m | 512 Mi |
+| `mcp_server` | 250m (1/4) | 256 Mi |
 
 <Info>
   Memory usage in Lite mode scales with the number of user-uploaded files, since PostgreSQL handles file storage,

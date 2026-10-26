@@ -43,22 +43,20 @@ Keep the public address consistent across affected services.
 
 ### Docker Compose
 
-In the deployment's `.env`, set:
+The bundled Compose files (`docker-compose.yml` and `docker-compose.prod.yml`) include the `mcp_server` service.
+It starts by default. In the deployment's `.env`, set your public address and keep the service enabled:
 
 ```bash
 WEB_DOMAIN=https://onyx.example.com
 MCP_SERVER_ENABLED=true
 ```
 
-In `deployment/docker_compose/docker-compose.prod.yml`,
-uncomment the supplied `mcp_server` service block and the `mcp_server_logs` volume declaration near the end of the file.
-Setting the environment variable alone does not create the commented-out service.
+Set `MCP_SERVER_ENABLED=false` to turn the service off. The container then idles and nginx does not load the MCP routes.
 
-From the Docker Compose deployment directory, start the service and recreate nginx so it loads the MCP routes:
+After you change these values, recreate the MCP service and nginx from the Docker Compose deployment directory:
 
 ```bash
-docker compose -f docker-compose.prod.yml up -d mcp_server
-docker compose -f docker-compose.prod.yml up -d --force-recreate nginx
+docker compose -f docker-compose.prod.yml up -d --force-recreate mcp_server nginx
 ```
 
 If you changed `WEB_DOMAIN`, recreate the affected API, web,
@@ -67,7 +65,8 @@ The included nginx startup configuration loads the MCP routing rules when `MCP_S
 
 ### Kubernetes with Helm
 
-Add the following to your Helm values:
+The chart enables the MCP service by default (`mcpServer.enabled: true`).
+Set it to `false` to remove the deployment and its routes. To set it explicitly, add the following to your Helm values:
 
 ```yaml
 mcpServer:
@@ -222,11 +221,12 @@ the client must obtain a new user authorization to reconnect.
 
 | Variable | Default | Purpose |
 | --- | --- | --- |
-| `MCP_SERVER_ENABLED` | `false` | Enable the MCP service and bundled Docker nginx routes. |
+| `MCP_SERVER_ENABLED` | `true` in the bundled Compose files and Helm chart (`false` when unset) | Enable the MCP service and bundled Docker nginx routes. |
 | `WEB_DOMAIN` | Deployment-specific | Public web address used to derive OAuth issuer and MCP resource URLs. |
 | `MCP_SERVER_HOST` | `0.0.0.0` | MCP service bind address. |
 | `MCP_SERVER_PORT` | `8090` | MCP service listening port. |
 | `MCP_SERVER_CORS_ORIGINS` | Empty | Comma-separated additional allowed browser origins. |
+| `MCP_SERVER_API_REQUEST_TIMEOUT_SECONDS` | `300` | Read timeout for MCP requests to the API service. |
 | `API_SERVER_PROTOCOL` | `http` | Protocol used by MCP to reach the API service. |
 | `API_SERVER_HOST` | `127.0.0.1` | API service hostname; bundled deployments supply the service address. |
 | `API_SERVER_URL_OVERRIDE_FOR_HTTP_REQUESTS` | Unset | Override the API service URL for deployments with custom internal networking. |
@@ -238,7 +238,7 @@ it does not change the public OAuth issuer or MCP resource.
 
 | Symptom | Check |
 | --- | --- |
-| MCP URL returns `404` | Enable the service and public proxy routes. In Docker, uncomment the service block and recreate nginx. |
+| MCP URL returns `404` | Enable the service and public proxy routes. In Docker, set `MCP_SERVER_ENABLED=true` and recreate the `mcp_server` and `nginx` services. |
 | OAuth metadata returns `404` | Confirm `WEB_DOMAIN` is HTTPS, or HTTP on a loopback development host, and check discovery routing. |
 | Discovery returns HTML or a login redirect | Allow unauthenticated access to metadata and check the reverse proxy destination. |
 | Browser authorization opens the wrong host | Check `WEB_DOMAIN` on the API and MCP services, then restart them after correcting it. |
