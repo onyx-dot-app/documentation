@@ -67,8 +67,9 @@ not an Onyx server.
 onyx-cli deploy install
 ```
 
-The interactive installer asks two questions — the deployment mode (**Lite** or **Standard**) and the version to deploy,
-prefilled with the latest release — while environment checks run in the background. It then:
+The interactive installer asks two questions — the deployment mode (**Lite**, the recommended default for chat, tools,
+uploads, and projects without vector search, or **Standard** for full search, connectors, and RAG)
+and the version to deploy, prefilled with the latest release — while environment checks run in the background. It then:
 
 - Checks system resources (RAM, disk) and scans for a free host port
 - Installs Docker Engine and the compose plugin on Linux after confirmation;
@@ -84,9 +85,12 @@ Re-running `deploy install` on an existing deployment asks a single question:
 | Flag | Description |
 |------|-------------|
 | `--lite` | Deploy Onyx Lite (no OpenSearch, Redis, or model servers) |
-| `--include-craft` | Enable [Onyx Craft](/deployment/local/craft_docker_compose) — Craft is opt-in via this flag only and is not offered by the interactive prompt |
+| `--include-craft` | Enable [Onyx Craft](/deployment/local/craft_docker_compose) — Craft is opt-in via this flag only and is not offered by the interactive prompt. Craft requires a Business or Enterprise license |
 | `--tag <version>` | Image tag to deploy (default: the latest Onyx release) |
 | `--dir <path>` | Deployment directory (default: `~/.config/onyx`, or an existing `./onyx_data`) |
+| `--project <name>` | Docker Compose project name (default: the name recorded by the CLI, else `onyx`) |
+| `--prod` | Restart an existing deployment that uses the standalone `docker-compose.prod.yml`; the CLI does not create new prod installs |
+| `--dev` | Stack `docker-compose.dev.yml` on the deployment to publish the API, PostgreSQL, Redis, OpenSearch, object store, and model server ports on the host (development and testing) |
 | `--no-prompt` | Run non-interactively with defaults applied to every prompt (for CI/automation) |
 | `--local` | Use existing config files on disk instead of downloading |
 | `--offline` | Deploy from images already on the host without any network access (implies `--local`) |
@@ -98,7 +102,7 @@ Re-running `deploy install` on an existing deployment asks a single question:
 For example, a fully non-interactive install pinned to a specific version:
 
 ```shell
-onyx-cli deploy install --tag v4.4.6 --no-prompt
+onyx-cli deploy install --tag v5.0.0 --no-prompt
 ```
 
 ### Deployment directory
@@ -157,21 +161,21 @@ onyx-cli deploy upgrade
 Upgrades an existing deployment to the latest release, or to a specific version with `--tag`:
 
 ```shell
-onyx-cli deploy upgrade --tag v4.4.6
+onyx-cli deploy upgrade --tag v5.0.0
 ```
 
 The upgrade is designed to preserve your customizations:
 
-- Only the `IMAGE_TAG` line in `.env` is rewritten (plus `SANDBOX_BACKEND` when Craft is enabled) —
-  every other setting, including your edits, is kept.
+- Only the `IMAGE_TAG` line in `.env` is rewritten (plus `SANDBOX_BACKEND` when Craft is enabled, and the
+  object-store endpoint lines when you move off the bundled MinIO) — every other setting, including your edits, is kept.
 - Managed files (compose files, overlays, nginx config) are refreshed to match the target version.
   Files you hand-edited are detected via the manifest, backed up,
   and only overwritten after you confirm (or with `--force`).
-- Downgrades to an older version warn and require confirmation or `--force`.
+- Downgrades to an older version warn and require confirmation or `--allow-downgrade`.
 
 The running services keep serving while the new images download and are then recreated on the new version.
-`upgrade` accepts the same `--dir`, `--no-prompt`, `--local`, `--offline`, `--no-wait`, `--dry-run`,
-and `--verbose` flags as `install`.
+`upgrade` accepts the same `--dir`, `--project`, `--prod`, `--no-prompt`, `--local`, `--offline`, `--no-wait`,
+`--dry-run`, and `--verbose` flags as `install`.
 
 ## Status
 
@@ -184,6 +188,9 @@ and by the running containers (drift between them is flagged), plus per-containe
 and — for a service that is down — why (restarts, exit code, OOM, last failing health probe).
 
 `status` is read-only and works as a health probe: use `--json` for machine-readable output, and check the exit code.
+`status`, `logs`, `stop`,
+and `uninstall` accept `--dir` and `--project` to target a deployment in another location or under another Compose
+project name.
 
 | Exit code | Meaning |
 |-----------|---------|

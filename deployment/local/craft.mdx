@@ -32,17 +32,17 @@ Self-hosted deployments can run these sandboxes in Kubernetes or Docker.
 ## Requirements
 
 <Note>
-  Craft requires a Business or Enterprise license.
-  It is not supported on the Community Edition until Craft is merged into the main chat experience.
+  Craft requires a Business or Enterprise license. Onyx Cloud includes it. On the Community Edition,
+  Craft stays visible in the sidebar with an upgrade prompt, but users cannot start a session.
 </Note>
 
 Both deployment paths require:
 
 - A full Onyx deployment with the vector database and background workers. Craft does not run on Onyx Lite.
-- A supported Onyx release and matching application and sandbox image versions.
-- An Onyx API URL that the sandbox runtime can reach, configured as `ONYX_SERVER_URL` (Docker Compose sets a
-  working default; Helm requires it).
-- Capacity for a sandbox per active Craft user.
+- Matching application and sandbox image versions. The sandbox image follows the Onyx release tag.
+- An Onyx API base URL that sandboxes can reach, set as `ONYX_SERVER_URL`.
+  Docker Compose and Helm both set a working in-cluster default. Set it yourself when sandboxes must use a public URL.
+- Capacity for one sandbox per active Craft user.
 - An Anthropic, OpenAI, or OpenRouter provider configured after deployment.
 
 <Warning>
@@ -60,7 +60,7 @@ Both deployment paths require:
 
   <Step title="Configure workspace access">
     Open **Admin Panel → Craft → Access**. Keep the workspace default off for a limited rollout,
-    or enable Craft for everyone.
+    or enable Craft for everyone. Set workspace instructions and defaults under **Admin Panel → Craft → Preferences**.
   </Step>
 
   <Step title="Run a complete test">
@@ -68,8 +68,8 @@ Both deployment paths require:
   </Step>
 
   <Step title="Add Apps and Skills">
-    Configure Craft Apps and MCP servers under **Admin Panel → Plugins** and reusable workflows under **Craft →
-    Skills**. See [Craft Apps](/admins/plugins/craft_apps).
+    Configure Craft Apps and MCP servers under **Admin Panel → Plugins**. Manage reusable Skills in **Craft → Skills**.
+    See [Craft Apps](/admins/plugins/craft_apps).
   </Step>
 </Steps>
 
