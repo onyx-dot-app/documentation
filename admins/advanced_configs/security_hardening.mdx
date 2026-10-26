@@ -70,6 +70,12 @@ person, so leave it off outside a migration. Accounts linked to a different prov
 and accounts whose email has changed since sign-up (through SCIM or the provider), are refused either way.
 A deactivated account is never relinked.
 
+### Claim Renamed Accounts After a Provider Delete
+
+Lets a user whose email was renamed sign in through another provider to the account that holds their current email,
+when that account has no provider link left. Turn it on only while you move users off a deleted SSO provider,
+and turn it off when they are through. It is off by default and has no environment variable.
+
 ### Restrict Open Sign-Up
 
 Self-hosted only. Requires an invitation to join the workspace. This is the same workspace setting as on the Users page;
@@ -130,6 +136,12 @@ Controls who can list every user in the workspace, which the sharing dialogs use
   Other users cannot share with individual people from the sharing dialogs. Sharing with groups still works.
 
 Environment default: `USER_DIRECTORY_ADMIN_ONLY`.
+
+### Allow Group Restrictions on Permission-Synced Connectors
+
+Business plan and higher. When on, a permission-synced connector can also require membership in specific groups.
+A user must have access in the source **and** be in one of the groups to see the documents. When off,
+access in the source is enough. There is no environment variable.
 
 ### Incognito Chats
 

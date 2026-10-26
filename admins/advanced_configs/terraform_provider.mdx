@@ -279,17 +279,17 @@ and Terraform does not allow an argument to be both computed and write-only.
   Several resources hold credentials for systems well outside Onyx.
 </Tip>
 
-## Enterprise Edition
+## Business and Enterprise Plans
 
-Most of the provider works on Community Edition. These parts need Enterprise Edition:
+Most of the provider works on Community Edition. These parts need a Business plan or higher:
 
-- `onyx_user_group` — the routes live in the Enterprise application and answer 404 on Community Edition.
+- `onyx_user_group` — user groups are not available on Community Edition, and the routes answer 404.
 - `users` and `groups` on `onyx_document_set` and `onyx_persona` — Community Edition rejects a private set or agent.
 
 <Info>
-  **Enterprise Edition Feature**
+  **Business Plan Feature**
 
-  These features require an Enterprise plan. [View plans](/admins/billing/overview)
+  These features require a Business plan or higher. [View plans](/admins/billing/overview)
   or [contact sales](https://onyx.app/contact-sales) to learn more.
 </Info>
 

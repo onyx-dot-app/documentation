@@ -1,24 +1,46 @@
 ---
 title: "Document Processing"
-description: "Configure document processing settings and options"
+description: "Use the Unstructured API to parse complex documents"
 icon: "file-lines"
 ---
 
 ## Overview
 
-Onyx has a built-in document parser that can process a wide range of document types. However,
-you may have certain documents that need advanced processing such as large tables, OCR files,
-or PDFs with complex layouts and rich media.
+Onyx has a built-in parser for common document types. Some documents need more advanced processing,
+for example large tables, scanned files that need OCR, or PDFs with complex layouts and rich media.
 
-In these cases, you can configure the document processing settings to use a third party document processing service.
+For these cases, Onyx can send documents to [Unstructured](https://unstructured.io) for parsing.
+
+<Note>
+  Document processing is available on self-hosted deployments that use the document index.
+  Onyx Cloud manages document processing for you.
+</Note>
 
 <Tip>
-  Currently, Unstructured is the only third party document processing service that is supported. However,
-  we are open to adding more services in the future!
+  Unstructured is the only third-party document processing service that Onyx supports today.
 </Tip>
 
-### Unstructured
+## Connect Unstructured
 
-To configure Onyx to use Unstructured, just set the API key in the **Document Processing** section.
+<Steps>
+  <Step title="Open the Document Processing page">
+    The page has no sidebar entry. Open `<your-onyx-url>/admin/document-processing` in your browser.
+    You need full admin access.
+  </Step>
 
-<img className="rounded-image" src="/assets/admins/advanced_configs/document_processing.png" alt="Unstructured"/>
+  <Step title="Save the API key">
+    Under **Process with Unstructured API**, enter your Unstructured API key and click **Save API Key**.
+  </Step>
+</Steps>
+
+<img className="rounded-image" src="/assets/admins/advanced_configs/document_processing.png" alt="Process with Unstructured API card"/>
+
+Once a key is saved, new indexing runs send supported files to Unstructured.
+Documents that are already indexed are not re-processed until their connector indexes them again.
+
+<Warning>
+  Onyx sends document content to Unstructured's servers for processing.
+</Warning>
+
+To change the key, click **Delete API Key** first, then save the new key.
+Deleting the key returns Onyx to the built-in parser.
