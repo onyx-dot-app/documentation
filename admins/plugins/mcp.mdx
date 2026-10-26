@@ -51,7 +51,7 @@ or when no built-in [Craft App](/admins/plugins/craft_apps) exists for the appli
 
     | Setting | Effect |
     | --- | --- |
-    | **Access control** | **Public** lets all users use the server. Select users or groups to limit access. |
+    | **Access control** | **Public** lets all users use the server. **User groups** limits it to the groups you select. Group-restricted servers require a **Business** or **Enterprise** plan. A Group Manager must select at least one group they manage. |
     | **Enable in default Chat** | Makes the tools available in chats without a custom agent. |
     | **Enable for Craft** | Makes the tools available in Craft sessions and scheduled tasks. This switch shows only when Craft is enabled. |
 
@@ -78,7 +78,7 @@ or when no built-in [Craft App](/admins/plugins/craft_apps) exists for the appli
 | **API Key**, shared | The admin, once for everyone | All users can share one service account. |
 | **API Key**, personal | Each user | Each user has a personal token, and the server must apply that user's permissions. |
 | **OAuth** | Each user | The server supports OAuth. Each user signs in with their own account. |
-| **Pass-through** | Each user, with their Onyx sign-in | Onyx sends the user's Onyx OAuth token to the server. This method shows only when Onyx sign-in uses OAuth, OIDC, or Google OAuth. |
+| **OAuth Pass-through** | Each user, with their Onyx sign-in | Onyx sends the user's Onyx OAuth token to the server. This method shows only when Onyx sign-in uses OAuth, OIDC, or Google OAuth. |
 
 With personal API keys and OAuth,
 each user connects their own account from the [Plugins page](/overview/core_features/plugins).
@@ -121,8 +121,8 @@ Expand **Advanced settings** to add custom headers or change the transport.
 
 - **Custom Headers** are sent with every request. Use `{api_key}` for each user's API key and `{user_email}` for the user's email address.
   Any other `{placeholder}` asks each user for a value when they connect.
-- **Connection transport** is **Streamable HTTP** by default. Select SSE only if the server requires legacy SSE.
-  Onyx does not detect this setting.
+- **Connection transport** is **Streamable HTTP** by default. Onyx tries Streamable HTTP first and then SSE
+  during the setup check. Select **SSE (legacy)** only if the server supports SSE alone.
 
 ## Manage tools
 
@@ -132,7 +132,7 @@ Open the server from the Plugins page, then select the **Tools** tab.
 
 - In **Available tools**, turn tools on or off for the whole workspace.
   Use **Enable all** or **Disable all tools** for bulk changes.
-- Click **Refresh tools** after the server adds, removes, or changes tools.
+- Click **Refresh tools** after the server adds, removes, or changes tools. Save or discard pending changes first.
 - Click **Save Changes** to apply your changes.
 
 When Craft is enabled, the **Approval settings** tab sets the Craft policy for each tool.
@@ -166,6 +166,8 @@ A tool that you turn off in **Available tools** is not available anywhere.
 | **Let users manage approval settings** | Lets users change Craft approval policies for tools that you did not disable. |
 
 If you change the server URL, Onyx removes the stored connections for that server. Users must connect again.
+
+To delete a server, use the trash icon on the Plugins page. The settings dialog has no delete button.
 
 ## Use MCP tools in custom agents
 

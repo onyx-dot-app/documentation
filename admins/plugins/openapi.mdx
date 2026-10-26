@@ -16,6 +16,9 @@ Agents read the operation descriptions and parameters to decide when and how to 
 OpenAPI plugins work in default Chat and in custom agents. They are not available in Craft. For Craft,
 use an [MCP server](/admins/plugins/mcp) or a [custom Craft App](/admins/plugins/craft_apps#custom-apps).
 
+Users with the **Manage Actions** permission can add and edit OpenAPI plugins.
+Only full admins can change **Enable in default Chat**.
+
 Use an OpenAPI plugin for internal services, such as a ticket system or an inventory API, when no MCP server exists.
 
 ## Add an OpenAPI plugin
@@ -56,7 +59,7 @@ Use an OpenAPI plugin for internal services, such as a ticket system or an inven
   </Step>
 
   <Step title="Save">
-    Click **Add**. The plugin shows on the Plugins page with the **OpenAPI** type.
+    Click **Add Plugin**. The plugin shows on the Plugins page with the **OpenAPI** type.
   </Step>
 </Steps>
 
@@ -67,7 +70,7 @@ Use an OpenAPI plugin for internal services, such as a ticket system or an inven
 | **No authentication** | Onyx sends requests without credentials. |
 | **Custom Authorization Header** | Onyx adds one or more headers that you set, such as `Authorization: Bearer <token>`, to every request. All users share these credentials. |
 | **OAuth** | Each user signs in with their own account. Onyx sends the user's access token with each request. |
-| **Pass-through** | Onyx sends the user's Onyx sign-in token to the API. This method shows only when Onyx sign-in uses OAuth, OIDC, or Google OAuth. |
+| **OAuth Pass-through** | Onyx sends the user's Onyx sign-in token to the API. This method shows only when Onyx sign-in uses OAuth, OIDC, or Google OAuth. |
 
 ### Custom authorization header
 
