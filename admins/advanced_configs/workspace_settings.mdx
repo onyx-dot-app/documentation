@@ -1,26 +1,47 @@
 ---
 title: "Workspace Settings"
-description: "Configure global settings for your Onyx workspace"
+description: "Where the former Workspace Settings options live in the Admin Panel"
 icon: "gear"
 ---
 
 ## Overview
 
-The Workspace Settings page allows you to configure global settings for your Onyx workspace.
+Onyx no longer has a **Workspace Settings** page. The options moved to two pages in the **Admin Panel**.
 
-<img className="rounded-image" src="/assets/admins/advanced_configs/workspace_settings.png" alt="Workspace settings page"/>
+| Former setting | Current location |
+|---|---|
+| Chat retention | **Chat Preferences → Advanced Options → Keep Chat History** |
+| Image processing and vision model | **Index Settings → Image Processing** |
 
-### Chat Retention
+## Chat Preferences
 
-Setting a Chat Retention policy will delete chat messages after the specified number of days.
+Open the **Admin Panel** and select **Chat Preferences**. This page holds the workspace defaults for chat:
+feature switches, team context, the system prompt, file limits, anonymous access, and chat retention.
+See [Chat Preferences](/admins/managing_features/chat) for every option.
+
+<img className="rounded-image" src="/assets/admins/advanced_configs/workspace_settings.png" alt="Advanced Options on the Chat Preferences page"/>
+
+### Keep Chat History
+
+Under **Advanced Options**, set **Keep Chat History** to **Forever**, a preset (7, 30, 60, or 90 days, or 1 year),
+or **Custom Retention** in days. Onyx deletes chats with no activity for longer than the retention period.
+
+<Warning>
+  When you reduce retention, Onyx permanently deletes older chats across the workspace. This cannot be undone.
+</Warning>
+
+<Info>
+  **Enterprise Plan Feature**
+
+  Chat retention requires an Enterprise plan. Onyx Cloud includes it. [View plans](/admins/billing/overview).
+</Info>
 
 <Tip>
-
-  Let your users know what the retention policy is to avoid any surprises!
+  Tell your users what the retention policy is to avoid surprises.
 </Tip>
 
-### Image Processing
+## Image Processing
 
-Image processing and analysis must be explicitly enabled on this page.
-
-Once enabled, you can set a **Default Vision LLM** for Onyx.
+Image extraction and captioning are set on the **Index Settings** page under **Documents & Knowledge**.
+Turn on **Extract & Caption Images**, then choose a **Captioning LLM**.
+See [Index Settings](/admins/advanced_configs/search_configs#image-processing).

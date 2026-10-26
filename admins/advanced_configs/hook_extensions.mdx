@@ -4,10 +4,12 @@ description: "Inject custom logic into Onyx's pipeline at defined stages without
 icon: "webhook"
 ---
 
-<Note>
-  Hook Extensions are an [Enterprise Edition](/deployment/miscellaneous/enterprise_edition)
-  feature and are only available on **single-tenant** deployments.
-</Note>
+<Info>
+  **Enterprise Plan Feature**
+
+  Hook Extensions require an Enterprise plan and a **self-hosted** deployment. They are not available on Onyx Cloud.
+  [View plans](/admins/billing/overview).
+</Info>
 
 ## Overview
 
@@ -64,7 +66,7 @@ Onyx follows the **fail strategy** you configured.
 
 <Steps>
   <Step title="Navigate to Hook Extensions">
-    Go to the **Admin Panel** and select **Hook Extensions**.
+    Open the **Admin Panel** and select **Hook Extensions** under **Integrations**.
   </Step>
 
   <Step title="Connect a hook point">
@@ -78,11 +80,11 @@ Onyx follows the **fail strategy** you configured.
 
     | Field | Required | Description |
     |---|---|---|
-    | Display Name | Yes | A human-readable label for this hook |
-    | Fail Strategy | No | **Hard** — abort the pipeline. **Soft** — log and continue. Defaults to the hook point's recommended strategy |
-    | Timeout | No | Seconds to wait for your endpoint to respond (1–600). Defaults to the hook point's recommended timeout |
-    | Endpoint URL | Yes | The HTTPS URL Onyx will POST to when the hook point is triggered. Must use HTTPS. |
-    | API Key | No | If provided, Onyx sends this as `Authorization: Bearer <api_key>` on every request |
+    | Display Name | Yes | A label for this hook |
+    | External API Endpoint URL | Yes | The HTTPS URL Onyx POSTs to when the hook point fires. Only connect to servers you trust. |
+    | API Key | No | If set, Onyx sends it as `Authorization: Bearer <api_key>` on every request |
+    | Fail Strategy | No | **Block Pipeline on Failure** or **Log Error and Continue**. Defaults to the hook point's strategy, marked **(Default)** |
+    | Timeout | No | Seconds to wait for a response, more than 0 and at most 600. Defaults to the hook point's timeout. Click **Revert to Default** to reset it |
   </Step>
 
   <Step title="Connect">
@@ -95,10 +97,11 @@ Onyx follows the **fail strategy** you configured.
 
 Once connected, you can:
 
-- **Activate / Deactivate** — toggle whether the hook runs
-- **Edit** — update the name, endpoint URL, API key, timeout, or fail strategy
-- **Delete** — remove the hook entirely
-- **View Logs** — inspect recent execution failures for debugging
+- **Manage** — change the name, endpoint URL, API key, timeout, or fail strategy, then click **Save Changes**
+- **Test Connection** — send a test request to re-validate the endpoint
+- **Disconnect Hook** — stop calling the endpoint. Requests in flight finish.
+  The card shows **(Disconnected)** and a **Reconnect** button
+- **Delete** — remove the hook. This cannot be undone
 
 ## Hook Health
 
@@ -107,7 +110,7 @@ Onyx monitors your endpoint after the hook is registered and connected, displays
 | Status | Meaning |
 |---|---|
 | <img src="/assets/icons/check_circle.svg" width="16" style={{display:"inline", marginRight:"6px"}} />Connected | Reachable, no failures in the last hour |
-| <img src="/assets/icons/alert_triangle.svg" width="16" style={{display:"inline", marginRight:"6px"}} />Degraded | Reachable, but failures occurred in the last hour |
+| <img src="/assets/icons/alert_triangle.svg" width="16" style={{display:"inline", marginRight:"6px"}} />Errors in the past hour | Reachable, but some calls failed in the last hour. The card shows the error count |
 | <img src="/assets/icons/x_octagon.svg" width="16" style={{display:"inline", marginRight:"6px"}} />Connection Lost | Onyx cannot reach your endpoint |
 
 <img className="rounded-image" src="/assets/admins/advanced_configs/hook_card_connected.png" alt="Connected Hook Card"/>
@@ -116,7 +119,7 @@ Onyx monitors your endpoint after the hook is registered and connected, displays
 
 <img className="rounded-image" src="/assets/admins/advanced_configs/hook_card_connection_lost.png" alt="Hook Connection Lost"/>
 
-The 10 most recent failures from the past 30 days are also shown to help with debugging.
+Click the status to open **Most Recent Errors**. Use **View Older Errors** to see failures from the past 30 days.
 
 <img className="rounded-image" src="/assets/admins/advanced_configs/hook_thirty_days_errors.png" alt="Hook Errors in the Last 30 Days"/>
 

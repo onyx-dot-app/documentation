@@ -4,45 +4,59 @@ description: "Customize Onyx's branding and appearance"
 icon: "brush"
 ---
 
-White labeling allows you to customize Onyx's appearance to match your organization's identity.
-These settings are found in the **Admin Panel** under **Appearance & Theming**.
+White labeling lets you change how Onyx looks to match your organization's identity.
+These settings are on the **Appearance & Theming** page in the **Admin Panel**, under **Organization**.
 
-<Note>
-  White labeling is an [Enterprise Edition](/deployment/miscellaneous/enterprise_edition) feature.
-</Note>
+<Info>
+  **Business Plan Feature**
+
+  Appearance & Theming requires a Business plan or higher. The custom help link requires an Enterprise plan.
+  Onyx Cloud includes all of them. [View plans](/admins/billing/overview).
+</Info>
+
+Change the settings, then click **Apply Changes**. The changes apply to all users.
 
 {/* The screenshots here should really be of the white-labeled content and not the admin page. */}
 
-## White Labeling Options
+## Logo and Name
 
-### Logo and Name
+You can change the logo, the application name, or both:
 
-You can customize the logo, the application name, or both independently:
+- **Application Logo** — upload an image to replace the Onyx logo in the sidebar and on the login page.
+- **Application Display Name** — set a name that replaces "Onyx" across the app.
+- **Logo Display Style** — choose **Logo & Name**, **Logo Only**, or **Name Only** for the top of the sidebar.
+  The options become available after you add a logo or a name.
 
-- **Custom Logo** — upload an image to replace the default Onyx logo shown in the top left corner and on the login page
-- **Application Name** — set a custom name displayed alongside or in place of the logo
+<img className="rounded-image" src="/assets/admins/advanced_configs/whitelabeling_logo_name.png" alt="Application Logo, Application Display Name, and Logo Display Style"/>
 
-<img className="rounded-image" src="/assets/admins/advanced_configs/whitelabeling_logo_name.png" alt="Custom Logo and Name"/>
+## Messaging
 
-### Messaging
+Change the text users see in the chat interface and on the login page:
 
-Customize the text shown throughout the chat interface:
+- **Greeting Message** — a short message on the home page.
+- **Chat Header Text** — text in the header of the chat interface.
+- **Chat Footer Text** — Markdown content in the footer, for disclaimers or extra information.
+- **Login Page Subtitle** — replaces the tagline under the welcome heading on the login page.
+- **Custom Help Link** and **Custom Help Link Label** — add a link to your own help resource in the user menu,
+  next to the Onyx documentation. Enterprise plan only.
 
-- **Greeting Message** — shown to users when they start a new chat session
-- **Chat Header Text** — displayed in the header of the chat interface
-- **Chat Footer Text** — displayed in the footer of the chat interface
+<img className="rounded-image" src="/assets/admins/advanced_configs/whitelabeling_message_header_footer.png" alt="Greeting Message, Chat Header Text, and Chat Footer Text"/>
 
-<img className="rounded-image" src="/assets/admins/advanced_configs/whitelabeling_message_header_footer.png" alt="Greeting Message, Chat Header, and Footer"/>
+## System Announcement
 
-### First Visit Notice
+**System Announcement** shows a persistent banner that users can dismiss.
+Turn on **Pop-up Notice at First Visit** to also show it as a full-screen pop-up to every user at their next visit.
 
-Configure a notice shown to users the first time they access Onyx. The notice has the following options:
+## First Visit Notice
+
+Show a one-time notice to new users at their first visit.
 
 | Option | Description |
 |---|---|
-| **Show Notice** | Toggle to enable or disable the first visit notice |
-| **Notice Header** | Title text displayed at the top of the notice |
+| **Show First Visit Notice** | Turn the notice on or off |
+| **Notice Header** | Title at the top of the notice |
 | **Notice Content** | Body text of the notice |
-| **Require Consent** | When enabled, users must acknowledge the notice before they can access Onyx |
+| **Require Consent to Notice** | Users must read and agree before they can use Onyx |
+| **Notice Consent Prompt** | The text next to the consent checkbox |
 
-<img className="rounded-image" src="/assets/admins/advanced_configs/whitelabeling_first_visit_notice.png" alt="First Visit Notice"/>
+<img className="rounded-image" src="/assets/admins/advanced_configs/whitelabeling_first_visit_notice.png" alt="First Visit Notice options"/>
