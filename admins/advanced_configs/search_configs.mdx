@@ -22,7 +22,7 @@ You must be a member of the **Admin** group.
   has no search index, so it does not show this page.
 </Note>
 
-<img className="rounded-image" src="/assets/admins/advanced_configs/index_settings_overview.png" alt="Top of the Index Settings page with the changes banner, the current embedding model, and vector quantization"/>
+<img className="rounded-image" src="/assets/admins/advanced_configs/index_settings_overview.webp" alt="Top of the Index Settings page with the changes banner, the current embedding model, and vector quantization"/>
 
 ## Applying Changes
 
@@ -44,7 +44,7 @@ The [embedding rate limit](#embedding-rate-limit) is an exception: it saves when
   </Step>
 </Steps>
 
-<img className="rounded-image" src="/assets/admins/advanced_configs/index_settings_reindex_options.png" alt="Changes banner with the re-index options, the Revert button, and the Apply & Re-index button"/>
+<img className="rounded-image" src="/assets/admins/advanced_configs/index_settings_reindex_options.webp" alt="Changes banner with the re-index options, the Revert button, and the Apply & Re-index button"/>
 
 A new embedding model, a new vector quantization, and turning on contextual retrieval need a re-index.
 A re-index builds a new index from the documents that are already in the index.
@@ -83,7 +83,7 @@ Some changes do not need a re-index when they are the only change on the page:
 While a re-index runs, the banner shows its progress. The re-index moves each connector, and the files of each user,
 to the new index. The counts show how many of these items are waiting, in progress, completed, failed, and paused.
 
-<img className="rounded-image" src="/assets/admins/advanced_configs/index_settings_reindex_progress.png" alt="Re-indexing in progress banner with the item counts, the progress bar, and the Cancel Re-index & Revert button"/>
+<img className="rounded-image" src="/assets/admins/advanced_configs/index_settings_reindex_progress.webp" alt="Re-indexing in progress banner with the item counts, the progress bar, and the Cancel Re-index & Revert button"/>
 
 - Onyx tries a failed item again automatically. If an item fails again and again at the same point,
   Onyx pauses it.
@@ -135,7 +135,7 @@ The heading of a connected provider has buttons to disconnect the provider and t
 You cannot disconnect the provider of the current model. If the current model is a cloud model,
 the settings button on its card also opens the provider's credentials.
 
-<img className="rounded-image" src="/assets/admins/advanced_configs/index_settings_cloud_models.png" alt="Cloud-based tab of the model list with Cohere and OpenAI models and their Connect buttons"/>
+<img className="rounded-image" src="/assets/admins/advanced_configs/index_settings_cloud_models.webp" alt="Cloud-based tab of the model list with Cohere and OpenAI models and their Connect buttons"/>
 
 #### Google Embeddings
 
@@ -190,7 +190,7 @@ Each model shows how many documents it can embed per minute on one CPU core, and
   We recommend a GPU for the models with the **GPU recommended** tag.
 </Note>
 
-<img className="rounded-image" src="/assets/admins/advanced_configs/index_settings_self_hosted_models.png" alt="Self-hosted tab of the model list with the current model and other self-hosted models"/>
+<img className="rounded-image" src="/assets/admins/advanced_configs/index_settings_self_hosted_models.webp" alt="Self-hosted tab of the model list with the current model and other self-hosted models"/>
 
 ### Bring Your Own Model or Proxy
 
@@ -241,13 +241,13 @@ OpenSearch keeps the full-precision vectors on disk for this, so the disk usage 
   If you connect Onyx to an external OpenSearch cluster that is older than 3.6, Onyx does not accept the 1-bit option.
 </Note>
 
-<img className="rounded-image" src="/assets/admins/advanced_configs/index_settings_vector_quantization.png" alt="Vector Quantization options: None, 7-bit, and 1-bit"/>
+<img className="rounded-image" src="/assets/admins/advanced_configs/index_settings_vector_quantization.webp" alt="Vector Quantization options: None, 7-bit, and 1-bit"/>
 
 ## Retrieval Optimization
 
 These settings change how Onyx chunks and enriches documents during indexing. They can increase the embedding cost.
 
-<img className="rounded-image" src="/assets/admins/advanced_configs/index_settings_retrieval_optimization.png" alt="Retrieval Optimization section with Multipass Indexing and Contextual Retrieval"/>
+<img className="rounded-image" src="/assets/admins/advanced_configs/index_settings_retrieval_optimization.webp" alt="Retrieval Optimization section with Multipass Indexing and Contextual Retrieval"/>
 
 ### Multipass Indexing
 
@@ -293,7 +293,7 @@ Image processing extracts the images in your documents during indexing.
 A vision-capable language model writes a description of each image,
 and Onyx indexes the descriptions so that search can find them.
 
-<img className="rounded-image" src="/assets/admins/advanced_configs/index_settings_image_processing.png" alt="Image Processing section with Extract & Caption Images turned on, a Captioning LLM, and the maximum image size"/>
+<img className="rounded-image" src="/assets/admins/advanced_configs/index_settings_image_processing.webp" alt="Image Processing section with Extract & Caption Images turned on, a Captioning LLM, and the maximum image size"/>
 
 | Setting | Description |
 | --- | --- |
@@ -328,7 +328,7 @@ Use it to stay below the rate limits of your embedding provider.
 | **Requests per window** | Leave empty for no limit. Empty is the default. The maximum is 100,000. |
 | **Window length (seconds)** | The length of the time window. The default is 60, for a limit per minute. The maximum is 86,400 (one day). |
 
-<img className="rounded-image" src="/assets/admins/advanced_configs/index_settings_embedding_rate_limit.png" alt="Embedding rate limit section with the Requests per window and Window length fields"/>
+<img className="rounded-image" src="/assets/admins/advanced_configs/index_settings_embedding_rate_limit.webp" alt="Embedding rate limit section with the Requests per window and Window length fields"/>
 
 When indexing reaches the limit, it waits and tries again.
 It also waits and tries again when the provider sends a rate-limit error.
