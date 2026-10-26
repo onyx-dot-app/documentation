@@ -5,75 +5,84 @@ description: "Access knowledge from Dropbox"
 
 ## How it works
 
-The Dropbox connector ingests all documents from your Dropbox account into Onyx.
+The Dropbox connector indexes the files in the Dropbox account of the access token. It walks every folder from the root.
+You cannot limit the connector to specific folders.
 
-The connector recursively pulls all files from the root directory of your Dropbox account.
-It is currently not possible to pull files only from specific directories.
+Onyx indexes the supported document types and skips files larger than 20 MB. For each file,
+Onyx creates or reuses a Dropbox shared link and uses it as the document link.
 
-The connector will only pull once upon initialization. If you would like to pull more documents,
-you must generate a new access token (step 6 below), put that token into the connector, and re-initialize the connector.
+After the first run, Onyx checks Dropbox for new and changed files every 30 minutes by default.
+You can change **Refresh Every** on the connector.
+
+Permission sync is not available for Dropbox.
+Everyone who can see the connector's documents in Onyx can see every indexed file.
 
 ## Setting up
 
 ### Authorization
 
 <Steps>
-  <Step title="Create Dropbox app">
-    Head over to https://www.dropbox.com/developers/apps and click the `Create app` button on the top right.
-    Select `Scoped access` and `Full Dropbox` as the type of access.
-    Give your app a name like 'Onyx Connector' and click `Create app`.
+  <Step title="Create a Dropbox app">
+    Go to [https://www.dropbox.com/developers/apps](https://www.dropbox.com/developers/apps) and click **Create app**.
+    Select **Scoped access** and **Full Dropbox** as the type of access.
+    Give your app a name like `Onyx Connector` and click **Create app**.
 
-    <img className="rounded-image" src="/assets/admins/connectors/dropbox/dropbox-connector-1.png" alt="DropboxStep1"/>
+    <img className="rounded-image" src="/assets/admins/connectors/dropbox/dropbox-connector-1.png" alt="Dropbox app creation form with Scoped access and Full Dropbox selected"/>
   </Step>
 
   <Step title="Open Permissions">
-    Click on the `Permissions` tab.
+    Click the **Permissions** tab.
 
-    <img className="rounded-image" src="/assets/admins/connectors/dropbox/dropbox-connector-2.png" alt="DropboxStep2"/>
+    <img className="rounded-image" src="/assets/admins/connectors/dropbox/dropbox-connector-2.png" alt="Permissions tab of a Dropbox app"/>
   </Step>
 
-  <Step title="Grant required scopes">
-    Check the `files.content.read` and `sharing.write` permissions so the files can be read and links for the documents
-    can be created. Click `Submit` to save the changes.
+  <Step title="Grant the required scopes">
+    Check `files.content.read` and `sharing.write`. Onyx needs them to read files and to create document links.
+    Click **Submit**.
 
-    <img className="rounded-image" src="/assets/admins/connectors/dropbox/dropbox-connector-3.png" alt="DropboxStep3"/>
+    <img className="rounded-image" src="/assets/admins/connectors/dropbox/dropbox-connector-3.png" alt="Dropbox app permissions with files.content.read and sharing.write checked"/>
   </Step>
 
-  <Step title="Generate access token">
-    Navigate to the `Settings` tab and scroll down to the `OAuth 2` section.
-    Click `Generate` to generate an access token.
+  <Step title="Generate an access token">
+    Open the **Settings** tab and scroll down to the **OAuth 2** section.
+    Set **Access token expiration** to **No expiration**. Click **Generate** to create an access token.
 
     <Warning>
-      You must complete granting permissions before generating an access token.
-      Changing permissions will not affect existing access tokens, and Onyx will be unable to index your Dropbox.
+      Grant the permissions before you generate the token. A token does not pick up permissions that you grant later.
+      Onyx does not refresh the token. A short-lived token stops working after a few hours.
     </Warning>
 
-    <img className="rounded-image" src="/assets/admins/connectors/dropbox/dropbox-connector-4.png" alt="DropboxStep4"/>
+    <img className="rounded-image" src="/assets/admins/connectors/dropbox/dropbox-connector-4.png" alt="OAuth 2 section of the Dropbox app settings with the Generate button"/>
   </Step>
 
-  <Step title="Copy access token">
+  <Step title="Copy the access token">
     Copy the access token.
 
     <Info>
-      Refresh the page if you need to regenerate your access token
+      Refresh the page if you need to generate the token again.
     </Info>
 
-    <img className="rounded-image" src="/assets/admins/connectors/dropbox/dropbox-connector-5.png" alt="DropboxStep5"/>
+    <img className="rounded-image" src="/assets/admins/connectors/dropbox/dropbox-connector-5.png" alt="Generated Dropbox access token"/>
   </Step>
 </Steps>
 
 ### Indexing
 
 <Steps>
-  <Step title="Open Dropbox connector">
-    In the Onyx UI, navigate to the Admin Panel and select the **Dropbox** Connector
+  <Step title="Open the Dropbox connector">
+    In the Onyx admin panel, go to **Connectors** and select **Dropbox**.
   </Step>
 
-  <Step title="Enter access token">
-    Provide the access token from the previous step
+  <Step title="Create the account">
+    Under **Authentication Account**, click **Create New** and enter the access token as the **API Token**.
   </Step>
 
-  <Step title="Start indexing">
-    Click `Connect` to begin indexing your Dropbox files
+  <Step title="Choose document access">
+    Under **Document Access**, select who can see the indexed files.
+    **Specific Groups** is available on the Business and Enterprise plans and on Onyx Cloud.
+  </Step>
+
+  <Step title="Create the connector">
+    Click **Create Connector**. Onyx starts the first indexing run.
   </Step>
 </Steps>

@@ -56,8 +56,8 @@ You need:
   Gong shows it on the same page where you create the key.
 
 The API key has the access of the whole company, so Onyx can read every call the account holds.
-Use the **Workspaces** setting in Onyx to narrow that. Onyx does not support **Auto Sync Permissions** for Gong,
-so choose the access type with that in mind.
+Use the **Workspaces** setting in Onyx to narrow that. Permission sync is not available for Gong,
+so choose **Document Access** with that in mind.
 
 ## Create a Gong API key
 
@@ -100,11 +100,11 @@ See Gong's guide to [managing API keys](https://help.gong.io/docs/receive-access
 
 <Steps>
   <Step title="Open the Gong connector">
-    In Onyx, go to **Admin Panel → Add Connector** and select **Gong**.
+    In the Onyx admin panel, go to **Connectors** and select **Gong**.
   </Step>
 
-  <Step title="Create a credential">
-    Select **Create New** and enter:
+  <Step title="Create the account">
+    Under **Authentication Account**, click **Create New** and enter:
 
     - **Gong Access Key** and **Gong Access Key Secret**: the pair you copied from Gong.
     - **Gong API Base URL**: leave it empty for `https://api.gong.io`. For an account outside the US,
@@ -115,7 +115,7 @@ See Gong's guide to [managing API keys](https://help.gong.io/docs/receive-access
   </Step>
 
   <Step title="Choose the workspaces">
-    Name the connector. In **Workspaces**, list the workspaces to index, one per entry,
+    Enter a **Display Name**. In **Workspaces**, list the workspaces to index, one per entry,
     or leave the list empty to index every workspace in the account.
 
     Each entry is a workspace's ID or its exact name as shown in Gong. The name is case sensitive.
@@ -123,17 +123,19 @@ See Gong's guide to [managing API keys](https://help.gong.io/docs/receive-access
     and the connector fails with **No valid Gong workspaces found** when no entry matches.
   </Step>
 
-  <Step title="Choose the access type">
-    **Public** shows every indexed call to all Onyx users. **Private** limits them to selected Onyx user groups.
+  <Step title="Choose document access">
+    Under **Document Access**, **Everyone in Your Organization** shows every indexed call to all Onyx users.
+    **Specific Groups** limits them to selected Onyx user groups.
+    It is available on the Business and Enterprise plans and on Onyx Cloud.
     See [Document Access Controls](/admins/connectors/overview#document-access-controls) for what each means.
 
-    **Auto Sync Permissions** is not available for Gong.
+    **Sync with Gong** is not available.
   </Step>
 
   <Step title="Create and verify">
     Select **Create Connector**. Onyx starts indexing.
 
-    Open **Admin Panel → Existing Connectors**, select the connector,
+    Open **Connectors**, select the connector,
     and check that the first indexing attempt finishes with about the number of calls you expect.
     A large account takes a while, since Gong serves transcripts a page at a time under its rate limits.
   </Step>
@@ -158,13 +160,13 @@ which then removes them.
 
 | Message or symptom                                                   | Cause and fix                                                                                                                                                                                                                                                           |
 | -------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 401 Unauthorized                                                     | The access key or secret is wrong, or the key expired or was deleted in Gong. Create a new key and update the credential.                                                                                                                                              |
+| 401 Unauthorized                                                     | The access key or secret is wrong, or the key expired or was deleted in Gong. Create a new key. Open the connector and click **Edit Account** under **Authentication Account**.                                                                                                                                              |
 | 403 Forbidden                                                        | The key's **Trusted IPs** list does not include the address Onyx connects from. Clear the list in Gong, or add the address.                                                                                                                                             |
 | gong_base_url must use https, or must be a Gong API host             | The **Gong API Base URL** is not an `api.gong.io` host, or it starts with `http://`. Enter the host Gong shows on its API page, over HTTPS.                                                                                                                              |
 | No valid Gong workspaces found                                       | No entry in **Workspaces** matches a workspace ID or exact name. Names are case sensitive. Copy the name from Gong, or clear the list to index every workspace.                                                                                                        |
-| Couldn't get call details after 6 attempts for Call ID …             | Gong listed the transcript but did not serve the call's details in time. The next refresh picks the call up if it started within the last day. Otherwise, or if the same call keeps failing, check the call in Gong and then run a complete re-index. |
+| Couldn't get call details after 6 attempts for Call ID …             | Gong listed the transcript but did not serve the call's details in time. The next refresh picks the call up if it started within the last day. Otherwise, or if the same call keeps failing, check the call in Gong and then run **Full Re-index** from **Manage Index**. |
 | Indexing is slow, or the run stops for a long time                   | Gong is throttling the company's API use. Onyx waits as long as Gong asks before it retries. Once the daily allowance of 10,000 calls is spent, the wait lasts until Gong resets it. Other integrations on the same Gong account share that allowance.                 |
 | A speaker is labeled **Unknown**                                     | Gong has no name or email address for that party. This is common for external participants that Gong did not match to a contact.                                                                                                                                       |
 | Old calls are missing                                                | `GONG_CONNECTOR_START_TIME` is set on the deployment, or the calls are in a workspace the connector does not list. Also check that the calls have transcripts in Gong.                                                                                                 |
 | Recent calls are missing                                             | Gong transcribes a call some time after it ends. Wait for the next refresh; each refresh rereads the previous day. A workspace name changed in Gong also breaks a connector that lists it by name, so prefer the ID for a long-lived connector.                         |
-| A call deleted in Gong still appears in Onyx                         | Deleted calls leave Onyx when a pruning run removes them. Check the pruning interval under the connector's advanced settings, or run a prune from the connector's page. A prune rereads every transcript, so expect it to take as long as a first index. |
+| A call deleted in Gong still appears in Onyx                         | Deleted calls leave Onyx when a pruning run removes them. Check **Prune Every** in the connector's **Schedule** on the connector's page. A prune rereads every transcript, so expect it to take as long as a first index. |

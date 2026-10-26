@@ -5,46 +5,64 @@ description: "Access documentation from GitBook"
 
 ## How it works
 
-The GitBook connector will pull in all the documentation content from your specified GitBook spaces.
+The GitBook connector indexes the pages of one GitBook space. Each page becomes one document.
+Onyx converts the page content to Markdown and links the document to the page in GitBook.
+
+Onyx checks GitBook for new and changed pages every 30 minutes by default.
+You can change **Refresh Every** on the connector.
+
+Permission sync is not available for GitBook.
+Everyone who can see the connector's documents in Onyx can see every indexed page.
 
 ## Setting up
 
 ### Authorization
 
 <Steps>
-  <Step title="Open Developer settings">
-    Go to your GitBook account settings and navigate to 'Developers' section (https://app.gitbook.com/account/developer)
+  <Step title="Open the developer settings">
+    In GitBook,
+    open your account settings and go to **Developer** at
+    [https://app.gitbook.com/account/developer](https://app.gitbook.com/account/developer).
   </Step>
 
-  <Step title="Create API token">
-    Click on 'Create new token'. Give your token a name and select the appropriate scopes.
-    Click 'Create' to generate your API token.
+  <Step title="Create an API token">
+    Click **Create new token**. Give the token a name and select the scopes it needs to read the space.
+    Click **Create**.
   </Step>
 
-  <Step title="Copy and store token">
-    Copy and save your token securely — you won't be able to see it again.
+  <Step title="Copy the token">
+    Copy the token and store it safely. GitBook does not show it again.
   </Step>
 </Steps>
 
-<img className="rounded-image" src="/assets/admins/connectors/gitbook/gitbook_1.png" alt="GitBook Developer Page"/>
+<img className="rounded-image" src="/assets/admins/connectors/gitbook/gitbook_1.png" alt="GitBook developer settings page"/>
 
 ### Indexing
 
 <Steps>
-  <Step title="Open GitBook connector">
-    Navigate to the Admin Panel and select the **GitBook** Connector
+  <Step title="Open the GitBook connector">
+    In the Onyx admin panel, go to **Connectors** and select **GitBook**.
   </Step>
 
-  <Step title="Enter API token">
-    In **Step 1**, paste your **API Token** from the previous step
+  <Step title="Create the account">
+    Under **Authentication Account**, click **Create New** and enter the token as the **API Token**.
 
-    <img className="rounded-image" src="/assets/admins/connectors/gitbook/gitbook_2.png" alt="GitBook API Configuration"/>
+    <img className="rounded-image" src="/assets/admins/connectors/gitbook/gitbook_2.png" alt="GitBook account form with the API Token field"/>
   </Step>
 
-  <Step title="Enter Space ID and connect">
-    Enter your **Space ID** - you can find this in the URL of your GitBook space (e.g.,
-    `https://app.gitbook.com/o/<organization>/s/<space-id>`). Click 'Connect' to begin indexing your GitBook content.
+  <Step title="Enter the space ID">
+    Enter the **Space ID**. You find it in the URL of a page in the space.
+    For `https://app.gitbook.com/o/<organization>/s/<space-id>/`, the space ID is `<space-id>`.
 
-    <img className="rounded-image" src="/assets/admins/connectors/gitbook/gitbook_3.png" alt="GitBook Space Configuration"/>
+    <img className="rounded-image" src="/assets/admins/connectors/gitbook/gitbook_3.png" alt="GitBook connector configuration with the Space ID field"/>
+  </Step>
+
+  <Step title="Choose document access">
+    Under **Document Access**, select who can see the indexed pages.
+    **Specific Groups** is available on the Business and Enterprise plans and on Onyx Cloud.
+  </Step>
+
+  <Step title="Create the connector">
+    Click **Create Connector**. Onyx starts the first indexing run.
   </Step>
 </Steps>

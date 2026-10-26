@@ -5,60 +5,62 @@ description: "Access files stored in Egnyte"
 
 ## How it works
 
-The Egnyte connector pulls in files stored in Egnyte. The Egnyte connector indexes the file name, file type,
-and contents of the file.
+The Egnyte connector indexes the files in your Egnyte domain.
+You can index the whole domain or one folder and its subfolders. Onyx indexes the file name, the file type,
+and the text content of the supported document types. It skips images.
 
-New files are pulled every **10** minutes.
+Onyx checks Egnyte for new and changed files every 30 minutes by default.
+You can change **Refresh Every** on the connector.
 
-## Setup
+Permission sync is not available for Egnyte.
+Everyone who can see the connector's documents in Onyx can see every indexed file.
 
-### Configure your Egnyte Application + Onyx env variables
+## Setting up
 
-<Info>
-  This is only necessary if self-hosting Onyx. If using [Onyx Cloud](https://cloud.onyx.app), you can skip this step.
-</Info>
+### Authorization
+
+The connector signs in with an Egnyte API access token.
 
 <Steps>
-  <Step title="Create Egnyte Application">
-    Create an Egnyte Application.
-    Check out the [Egnyte API documentation](https://developers.egnyte.com/docs/read/introduction) for more information.
+  <Step title="Register an Egnyte application">
+    Register an application in the [Egnyte Developer Portal](https://developers.egnyte.com/)
+    and note its API key (client ID) and secret.
   </Step>
 
-  <Step title="Set environment variables">
-    Set the following environment variables on your Onyx instance:
-
-    ```bash
-    EGNYTE_DOMAIN=something like "app4onyx"
-    EGNYTE_CLIENT_ID=
-    EGNYTE_CLIENT_SECRET=
-    ```
+  <Step title="Get an access token">
+    Use the application to get an access token for your Egnyte domain.
+    Follow the [Egnyte authentication guide](https://developers.egnyte.com/docs/read/Public_API_Authentication).
+    The token must belong to a user who can read every folder you want to index.
   </Step>
 
-  <Step title="Restart Onyx">
-    Restart your Onyx instance as you normally would to apply the changes.
+  <Step title="Copy the token">
+    Copy the access token. You enter it in Onyx in the next section.
   </Step>
 </Steps>
 
 ### Indexing
 
 <Steps>
-  <Step title="Open Egnyte connector">
-    In the Onyx UI, navigate to the Admin Panel and select the **Egnyte** Connector
+  <Step title="Open the Egnyte connector">
+    In the Onyx admin panel, go to **Connectors** and select **Egnyte**.
   </Step>
 
-  <Step title="Authorize via OAuth">
-    Click the `Create New` button to go through the OAuth flow.
+  <Step title="Create the account">
+    Under **Authentication Account**, click **Create New**. Enter the **Egnyte Domain**,
+    for example `acme` for `acme.egnyte.com`, and the access token as the **API Token**.
   </Step>
 
-  <Step title="Return to Onyx">
-    Once you've authorized the application, you'll be redirected back to Onyx.
+  <Step title="Choose the folder">
+    Enter a **Folder Path** such as `/Shared/Documents` to index one folder and its subfolders.
+    Leave it empty to index everything.
   </Step>
 
-  <Step title="Complete configuration">
-    Finish the setup, optionally specifying a folder path to index.
+  <Step title="Choose document access">
+    Under **Document Access**, select who can see the indexed files.
+    **Specific Groups** is available on the Business and Enterprise plans and on Onyx Cloud.
   </Step>
 
-  <Step title="Start indexing">
-    Click `Connect` to begin indexing Egnyte files!
+  <Step title="Create the connector">
+    Click **Create Connector**. Onyx starts the first indexing run.
   </Step>
 </Steps>
