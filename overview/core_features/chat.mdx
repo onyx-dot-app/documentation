@@ -66,7 +66,9 @@ and actions to give the best answer. Use it for complex questions that need many
 <img className="rounded-image" src="/assets/overview/core_features/model_selector.webp" alt="Model Selector"/>
 
 Onyx supports all major LLM providers and self-hosted options such as Ollama and vLLM. The model selector offers:
-- **Auto**: Onyx picks the best available model for each message.
+- **Auto** (optional): Onyx picks a model for each message through a router model. It appears only after an admin
+  turns on **Auto Mode** and selects a **Router Model** from a gateway provider that offers one, such as OpenRouter.
+  See [Auto Mode](/admins/ai_models/overview#workspace-model-settings).
 - **Reasoning Level** and **Temperature** for models that support them. Admins can hide these controls.
 - **Add Model**: Generate answers from several models side by side. An admin turns **Multi-Model Generation**
   on at **Admin Panel → Chat Preferences**.
