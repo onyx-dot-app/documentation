@@ -26,17 +26,10 @@ The Slack Federated connector is available in all editions: Community Edition, B
 ### Authorization
 
 <Steps>
-  <Step title="Prerequisite">
-    You must be an admin of the Slack workspace to set up the connector.
-  </Step>
-
-  <Step title="Open Slack apps">
-    Navigate and sign in to [https://api.slack.com/apps](https://api.slack.com/apps).
-  </Step>
-
   <Step title="Create new app">
-    Click the **Create New App** button in the top right. Select **From an app manifest** option.
-    Select the relevant workspace from the dropdown and click **Next**.
+    You must be an admin of the Slack workspace to set up the connector.
+    Sign in to [https://api.slack.com/apps](https://api.slack.com/apps).
+    Click **Create New App** and select **From an app manifest**. Select the relevant workspace and click **Next**.
 
     <img className="rounded-image" src="/assets/admins/connectors/slack/SlackApp.webp" alt="Slack app creation flow with manifest option selected"/>
   </Step>
@@ -84,15 +77,8 @@ settings:
 </Warning>
 
 <Steps>
-  <Step title="Create app">
-    Click the **Create** button.
-  </Step>
-
-  <Step title="Open Basic Information">
-    In the app page, navigate to the **Basic Information** tab under the **Settings** header.
-  </Step>
-
   <Step title="Copy client credentials">
+    Click **Create**. In the app page, open the **Basic Information** tab under the **Settings** header.
     Copy the **Client ID** and **Client Secret**. Store them somewhere safe for the next step.
   </Step>
 </Steps>
@@ -113,8 +99,6 @@ settings:
   </Step>
 
   <Step title="Configure search scope">
-    Set the search scope for the federated connector. The following options are available:
-
     **Channel Selection:**
     - **Search All Channels**: Search all channels the user can access. When enabled, the Channels field is ignored.
     - **Channels**: The channels to search when Search All Channels is disabled. At least one channel is required.
@@ -131,7 +115,7 @@ settings:
     - **Max Messages Per Query**: Maximum number of messages to retrieve per search (default 25, range 1 to 100).
     Higher values make more Slack API calls and can hit rate limits.
 
-    Click **Create** (or **Update** for an existing connector).
+    Click **Create**.
 
     <img className="rounded-image" src="/assets/admins/connectors/slack/SlackFederatedConnectorSetting.webp" alt="Onyx Slack Federated connector settings showing client credentials"/>
   </Step>
@@ -143,8 +127,8 @@ settings:
 </Steps>
 
 <Info>
-  Every user must connect their own Slack account. If a user has not connected Slack,
-  Onyx skips Slack for that user's searches and returns results from other sources. The searchable content depends on:
+  If a user has not connected Slack, Onyx skips Slack for that user's searches and returns results from other sources.
+  The searchable content depends on:
   - The connector configuration (channels, DMs, private channels)
   - The OAuth scopes granted during setup
   - The user's own access in Slack

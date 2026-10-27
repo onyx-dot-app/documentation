@@ -7,11 +7,6 @@ icon: "circle-nodes"
 Onyx's Connectors create a bridge between your organization's data sources and generative AI features in Onyx.
 Nearly all connectors are persistent and regularly sync changes from your source.
 
-<Note>
-  Both the data that is retrieved from the source and the data that your users can access through Onyx can be customized
-  to your needs!
-</Note>
-
 To find specific instructions for each Connector, see the [Supported Connectors](#supported-connectors) section.
 
 <img className="rounded-image" src="/assets/admins/connectors/add_connector.webp" alt="Onyx Add Connector page"/>
@@ -25,8 +20,6 @@ This page shows all officially supported connectors.
   You can see unofficial, community-supported connectors by setting `SHOW_EXTRA_CONNECTORS=true` in your environment.
 </Info>
 
-Click on any of the tiles to begin creating a new Connector.
-
 ### Credentials
 
 Most Connectors require some form of authentication for Onyx to access your source.
@@ -37,8 +30,7 @@ Onyx encrypts credentials at rest and never shows the secret again after you sav
 
 ### Configuration
 
-Each connector must be given a Name. Additionally,
-each Connector has its own configuration options to specify the data that should be indexed.
+Each Connector has its own configuration options to specify the data that should be indexed.
 
 <img className="rounded-image" src="/assets/admins/connectors/generic_config.webp" alt="Onyx Connector Configuration page"/>
 
@@ -125,7 +117,6 @@ Set a start date when you create the connector if you only need recent content, 
 
 To see your existing Connectors, open the **Admin Panel** and click **Indexing Status** in the sidebar.
 This page shows each Connector, its status, access type, document count, and when it was last indexed.
-Search the list or filter it by status.
 
 <img className="rounded-image" src="/assets/admins/connectors/indexing_status.webp" alt="Onyx Existing Connectors page showing connector statuses"/>
 
@@ -151,12 +142,9 @@ The status of a Connector can be:
 
 <Note>
   Most failures are temporary and will resolve themselves naturally within a few hours.
-  If you see a failure that persists, please reach out.
 </Note>
 
 ### Connector Details
-
-Click a Connector to see its configuration, status, documents, and indexing runs.
 
 The **Manage Index** menu has these actions:
 
@@ -167,8 +155,6 @@ The **Manage Index** menu has these actions:
 - **Pause Indexing & Syncs** / **Resume Indexing & Syncs**: stop or restart indexing runs and permission syncs.
   Indexed documents stay searchable while paused.
 - **Delete**: remove the Connector and its documents from Onyx.
-
-You can also rename the Connector, change its access type, and edit the refresh and prune frequency.
 
 <img className="rounded-image" src="/assets/admins/connectors/connector_details.webp" alt="Onyx Connector details page showing connector details"/>
 

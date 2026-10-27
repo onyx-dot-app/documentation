@@ -199,12 +199,9 @@ Sign in to Salesforce as the user Onyx will index with, then:
 ## Configure the connector in Onyx
 
 <Steps>
-  <Step title="Open the Salesforce connector">
-    In Onyx, go to **Admin Panel → Connectors** and select **Salesforce**.
-  </Step>
-
   <Step title="Create an authentication account">
-    Under **Authentication Account**, select **Create New**, then pick a tab:
+    In Onyx, go to **Admin Panel → Connectors** and select **Salesforce**. Under **Authentication Account**,
+    select **Create New**, then pick a tab:
 
     - **OAuth**: Enter your My Domain root in **Salesforce My Domain URL**, such as `https://company.my.salesforce.com`.
     For a sandbox, use an address like `https://company--dev.sandbox.my.salesforce.com`.
@@ -215,22 +212,17 @@ Sign in to Salesforce as the user Onyx will index with, then:
     <Tip>
       For **OAuth**, enter the root only. Onyx rejects `login.salesforce.com`, a path, a query, or a custom port.
     </Tip>
-
-    To reuse a saved account, select **Use Account** on it instead.
   </Step>
 
   <Step title="Choose the objects to index">
-    Under **Connector Settings**, give the connector a **Display Name**. In **Configuration Type**,
-    list the objects you want under **Simple**, or describe them exactly under **Advanced**.
-    See [Choosing objects](#choosing-objects).
+    Under **Connector Settings**, in **Configuration Type**, list the objects you want under **Simple**,
+    or describe them exactly under **Advanced**. See [Choosing objects](#choosing-objects).
   </Step>
 
   <Step title="Choose the document access">
-    Under **Document Access**, **Everyone in Your Organization** shows every indexed record to all Onyx users.
-    **Specific Groups** limits them to selected Onyx user groups.
-    **Sync with Salesforce** applies each searcher's own Salesforce access. See [Permission sync](#permission-sync).
-    **Specific Groups** and **Sync with Salesforce** are paid features: the Business and Enterprise tiers on Onyx Cloud,
-    and the Enterprise Edition when self-hosted.
+    Under **Document Access**, **Sync with Salesforce** applies each searcher's own Salesforce access.
+    See [Permission sync](#permission-sync). **Specific Groups** and **Sync with Salesforce** are paid features:
+    the Business and Enterprise tiers on Onyx Cloud, and the Enterprise Edition when self-hosted.
 
     See [Document Access Controls](/admins/connectors/overview#document-access-controls)
     for what each access type means.
@@ -248,10 +240,6 @@ Sign in to Salesforce as the user Onyx will index with, then:
 
 **Simple** takes a list of object names.
 **Advanced** takes JSON that names the exact fields and related objects to index.
-
-<Tip>
-  Use **Advanced** for finer control over what Onyx indexes.
-</Tip>
 
 ### Simple
 
@@ -305,11 +293,6 @@ so the connector's status page shows no permission sync history.
 - A single result can come back partly redacted.
   If you can read an account but not one of its opportunities, Onyx strips out the opportunity and keeps the rest.
 - Users who are not signed in see no Salesforce content at all.
-
-<Note>
-  Permission sync is a paid feature: the Business and Enterprise tiers on Onyx Cloud,
-  and the Enterprise Edition when self-hosted.
-</Note>
 
 ## Troubleshooting
 
