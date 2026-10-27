@@ -41,18 +41,19 @@ Everyone who can see the connector's documents in Onyx can see every indexed fil
     Click **Submit**.
 
     <img className="rounded-image" src="/assets/admins/connectors/dropbox/dropbox-connector-3.webp" alt="Dropbox app permissions with files.content.read and sharing.write checked"/>
+
+    <img className="rounded-image" src="/assets/admins/connectors/dropbox/dropbox-connector-4.webp" alt="Dropbox banner asking you to click Submit to save permission changes"/>
   </Step>
 
   <Step title="Generate an access token">
     Open the **Settings** tab and scroll down to the **OAuth 2** section.
-    Set **Access token expiration** to **No expiration**. Click **Generate** to create an access token.
+    If the **Access token expiration** setting is available, set it to **No expiration**.
+    Click **Generate** to create an access token.
 
     <Warning>
       Grant the permissions before you generate the token. A token does not pick up permissions that you grant later.
       Onyx does not refresh the token. A short-lived token stops working after a few hours.
     </Warning>
-
-    <img className="rounded-image" src="/assets/admins/connectors/dropbox/dropbox-connector-4.webp" alt="OAuth 2 section of the Dropbox app settings with the Generate button"/>
   </Step>
 
   <Step title="Copy the access token">
