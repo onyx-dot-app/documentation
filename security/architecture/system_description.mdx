@@ -8,12 +8,6 @@ icon: "sitemap"
 
 Onyx is a set of containers that you can deploy on any infrastructure and at any scale.
 
-<Tip>
-  As an open source project,
-  Onyx is designed with security and data privacy as a foundational principle so that teams can trust the software even
-  without partnership guarantees.
-</Tip>
-
 ## System Architecture
 
 <img className="rounded-image" src="/assets/security/OnyxArchitecture.webp" alt="Onyx Architecture"/>
@@ -66,10 +60,8 @@ Projects, and the code interpreter work. See [Deployment Overview](/deployment/o
 
 ## Component Replacements
 
-Some components of the Onyx stack are easy to replace, and others are not.
-
 The **object store** can be replaced with S3, Google Cloud Storage, Azure Blob Storage,
-or any S3-compatible object storage service. The file store interface is abstracted to make this straightforward.
+or any S3-compatible object storage service.
 
 **Redis** can be replaced with a managed Redis service such as AWS ElastiCache or Google Cloud Memorystore for Redis.
 Other in-memory caches would require code changes.
