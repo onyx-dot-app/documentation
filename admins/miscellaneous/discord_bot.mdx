@@ -38,8 +38,6 @@ You'll need to be an admin of the Discord server and an admin in your Onyx insta
   </Step>
 
   <Step title="Create a registration key in Onyx">
-    Create or log in to your account on [Onyx Cloud](https://cloud.onyx.app).
-
     Open **Admin Panel > Discord Integration** and click **Add Server**.
 
     Copy the registration command. It contains a one-time registration key.
@@ -79,21 +77,15 @@ You'll need to be an admin of the Discord server and an admin in your Onyx insta
     You can customize:
     - **Default Agent**: the Agent that powers the bot's responses in all channels
     - **Agent Override** for specific channels
-    - **Enabled**: which channels the bot answers in.
-    Use **Enable All** or **Disable All** to change every channel at once
+    - **Enabled**: which channels the bot answers in
     - **Require @mention**: respond to all messages, or only to messages that tag @OnyxBot
     - **Thread Only Mode**: answer in a new thread instead of a reply
-
-    Click **Update Configuration** to save your changes.
 
     <img className="rounded-image" src="/assets/admins/discord_bot/discord_channel_configs.webp" alt="Configure Channel Behavior"/>
   </Step>
 </Steps>
 
 ### Self-hosted Discord Bot
-
-If you want to deploy your own Discord bot with your self-hosted Onyx instance,
-you'll need to set up your own Discord app.
 
 <Info>
   In the Developer Portal, you'll see references to "Guilds." This is Discord's internal term for servers.
@@ -103,8 +95,6 @@ you'll need to set up your own Discord app.
   <Step title="Create a new Discord app">
     Navigate to the [Discord Developer Portal](https://discord.com/developers/applications)
     and click **New Application**.
-
-    Give your app a name and click **Create**.
 
     <img className="rounded-image" src="/assets/admins/discord_bot/new_discord_app.webp" alt="Create a new Discord app"/>
   </Step>
@@ -158,9 +148,7 @@ you'll need to set up your own Discord app.
   </Step>
 
   <Step title="Retrieve your bot token">
-    In the Developer Portal, navigate to the **Bot** tab and look for the **Token** section.
-
-    Click **Reset Token** and copy your bot token.
+    On the **Bot** tab, click **Reset Token** and copy your bot token.
 
     <img className="rounded-image" src="/assets/admins/discord_bot/bot_token_config.webp" alt="Discord bot token configuration"/>
   </Step>
@@ -210,12 +198,9 @@ you'll need to set up your own Discord app.
     You can customize:
     - **Default Agent**: the Agent that powers the bot's responses in all channels
     - **Agent Override** for specific channels
-    - **Enabled**: which channels the bot answers in.
-    Use **Enable All** or **Disable All** to change every channel at once
+    - **Enabled**: which channels the bot answers in
     - **Require @mention**: respond to all messages, or only to messages that tag @OnyxBot
     - **Thread Only Mode**: answer in a new thread instead of a reply
-
-    Click **Update Configuration** to save your changes.
 
     <img className="rounded-image" src="/assets/admins/discord_bot/discord_channel_configs.webp" alt="Configure Channel Behavior"/>
   </Step>
@@ -242,8 +227,8 @@ Run `!sync-channels` in any text channel that OnyxBot has access to.
 
 If you are self-hosting, you can set the `DISCORD_BOT_INVOKE_CHAR` environment variable to change the command prefix.
 
-If you are using the official OnyxBot, unfortunately, we cannot change the prefix. However,
-you may still be able to run the command by creating a private channel that only OnyxBot has access to.
+If you are using the official OnyxBot, the prefix cannot be changed.
+You may still be able to run the command by creating a private channel that only OnyxBot has access to.
 
 ### My Discord bot is connected but not responding to any messages
 

@@ -8,7 +8,7 @@ import HowToUseOnyxBot from "/snippets/how-to-use-onyxbot.mdx";
 
 ## Overview
 
-Onyx can connect to your Slack workspace and answer questions like an expert teammate.
+Onyx can connect to your Slack workspace and answer questions.
 
 You can configure OnyxBot to respond to certain types of messages, in specific channels,
 and with selected data from your index.
@@ -91,7 +91,7 @@ and with selected data from your index.
       token_rotation_enabled: false
     ```
 
-    Click **Create** and you will be taken to the app page.
+    Click **Create**.
   </Step>
 
   <Step title="Generate an App Token">
@@ -100,16 +100,11 @@ and with selected data from your index.
     Give your token a name, add the `connections:write` scope to the app-level token and click **Generate**.
     Save this token for later.
 
-    <Tip>
-      You can customize your Slack bot's name, description, and icon in the **Display Information** section.
-    </Tip>
-
     <img className="rounded-image" src="/assets/admins/slackbot/slackbot_app_token.webp" alt="Onyx Slack Bot App Token"/>
   </Step>
 
   <Step title="Install the Slack App">
-    Navigate to the **OAuth & Permissions** tab, click **Install to Workspace**,
-    and follow the instructions to install the app.
+    Navigate to the **OAuth & Permissions** tab and click **Install to Workspace**.
 
     Copy the **Bot User OAuth Token** and **User OAuth Token** (Recommended) and save it for later.
 
@@ -121,7 +116,7 @@ and with selected data from your index.
   </Step>
 
   <Step title="Setup Onyx for the Slack Bot">
-    Open the Onyx **Admin Panel** and click **Slack Integration** in the sidebar. Click **New Slack Bot**.
+    Open **Admin Panel → Slack Integration** and click **New Slack Bot**.
 
     Name the bot. Enter the **Slack Bot Token**, **Slack App Token**, and **Slack User Token** (optional, recommended)
     and click **Create**. Onyx validates the tokens and connects to Slack over Socket Mode,
@@ -131,12 +126,9 @@ and with selected data from your index.
   </Step>
 
   <Step title="Configure the Slack Bot's Behavior">
-    Once your Slack bot is created,
-    you can configure its behavior for all channels and DMs through the **Default Configuration**.
-    Click **Edit Default Configuration** to change it. By default the bot only answers when it is tagged or in a DM.
-
-    Click **New Channel Configuration** to set channel-specific behavior.
-    A channel configuration overrides the default configuration for that channel.
+    The **Default Configuration** sets the bot's behavior for all channels and DMs.
+    By default the bot only answers when it is tagged or in a DM.
+    A **Channel Configuration** overrides the default configuration for that channel.
 
     <img className="rounded-image" src="/assets/admins/slackbot/slackbot_config.webp" alt="Onyx Slack Bot Configuration"/>
   </Step>
@@ -171,10 +163,6 @@ behavior.
 
 You can find the full list of configuration options [in the Onyx
 GitHub](https://github.com/onyx-dot-app/onyx/blob/main/backend/onyx/configs/onyxbot_configs.py).
-
-<Warning>
-  These configuration options are rarely needed and should be used with caution.
-</Warning>
 
 <AccordionGroup>
   <Accordion title="ONYX_BOT_NUM_RETRIES">
@@ -215,13 +203,13 @@ GitHub](https://github.com/onyx-dot-app/onyx/blob/main/backend/onyx/configs/onyx
   </Accordion>
 
   <Accordion title="NOTIFY_SLACKBOT_NO_ANSWER">
-    If enabled, OnyxBot sends a brief apology message when it cannot find an answer, so users aren't left wondering.
+    If enabled, OnyxBot sends a brief apology message when it cannot find an answer.
 
     Default: `false (bool)`
   </Accordion>
 
   <Accordion title="ONYX_BOT_DISPLAY_ERROR_MSGS">
-    Show brief error explanations when something goes wrong answering a question (useful for debugging).
+    Show brief error explanations when something goes wrong answering a question.
 
     Default: `false (bool)`
   </Accordion>

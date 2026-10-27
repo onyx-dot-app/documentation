@@ -63,7 +63,7 @@ weekly-customer-update/
 ```
 
 For a ZIP upload, put `SKILL.md` at the archive root or directly inside one enclosing folder.
-When you use an enclosing folder, keep every Skill file inside it. Upload only one Skill at a time.
+When you use an enclosing folder, keep every Skill file inside it.
 
 `SKILL.md` must begin with YAML frontmatter containing a non-empty name and description.
 The description should state when Craft should choose the Skill.
@@ -123,7 +123,6 @@ Craft can follow scripts and commands included in the archive.
 ## Publish a Skill
 
 Admins create Skills through the same personal creation flow as other users.
-A new Skill belongs to its creator and starts private.
 Publishing means reviewing that Skill and then sharing it with the intended audience.
 
 <Note>
@@ -135,13 +134,11 @@ Publishing means reviewing that Skill and then sharing it with the intended audi
   <Step title="Create the personal Skill">
     Open **Craft → Skills** and select **Create skill**. Choose **Start from scratch** to write the Skill in Onyx,
     **Upload a skill** to import `SKILL.md`, a ZIP, or a Skill folder,
-    or **Import from GitHub** to import one or more Skills from a repository. Complete the editor and select **Create**.
-    You can set sharing in the same editor.
+    or **Import from GitHub** to import one or more Skills from a repository. You can set sharing in the same editor.
   </Step>
 
   <Step title="Review the Skill">
     Review the name, description, rendered instructions, and supporting-file tree.
-    Confirm that Craft can understand when to use the Skill and that every included file is expected.
   </Step>
 
   <Step title="Choose who can use it">
@@ -166,8 +163,7 @@ Publishing means reviewing that Skill and then sharing it with the intended audi
 | **Organization**    | Everyone can use and preview the Skill.                   | Everyone can modify and manage it. Use this only for intentionally collaborative Skills. |
 
 Users with **Can edit** can change instructions and files, update sharing within their permissions,
-enable or disable the Skill, and delete it. Only the owner can transfer ownership;
-an Admin can transfer ownership after the existing owner becomes inactive or is otherwise vacant.
+enable or disable the Skill, and delete it.
 
 <Tip>
   Prefer organization-wide **Can use** access with a small maintainer group that has **Can edit**.
@@ -186,8 +182,7 @@ Admins set how a shared Skill is installed for everyone with access:
 | **Installed by default** | Onyx installs it automatically. Users can disable or uninstall it. |
 | **Required** | Onyx installs it automatically. Users cannot disable or uninstall it. Only Admins can delete it. |
 
-Required Skills show a **Required** badge instead of a toggle. The policy follows the current audience;
-changing who can access the Skill does not reset it.
+The policy follows the current audience; changing who can access the Skill does not reset it.
 
 ## Maintain a Skill
 
@@ -241,11 +236,6 @@ Do not transfer ownership to bots, service accounts, limited accounts, or inacti
   Rewrite its description to name the covered tasks and outputs more concretely. Test again,
   and have users select it explicitly when the workflow must be followed.
 </Accordion>
-
-  <Accordion title="A former employee still owns a Skill">
-    After the account is inactive, an Admin can open the Skill, select **Edit sharing**,
-    and transfer the vacant ownership to an active standard user.
-  </Accordion>
 </AccordionGroup>
 
 <CardGroup cols={2}>
