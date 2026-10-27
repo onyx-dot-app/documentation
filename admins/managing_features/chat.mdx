@@ -7,7 +7,7 @@ icon: "comment"
 The **Chat Preferences** page in the Admin Panel sets the default chat behavior, models,
 and capabilities for your organization. Open **Admin Panel → Chat Preferences** (`/admin/chat-preferences`).
 These defaults apply to all users unless a user overrides them in their personal settings.
-The page is available in all editions. Individual settings that need a paid plan show a plan tag.
+The page is available in all editions.
 
 <img className="rounded-image" src="/assets/admins/chat_preferences/chat_preferences.webp" alt="Chat Preferences in the Admin Panel"/>
 
@@ -48,11 +48,9 @@ The page is available in all editions. Individual settings that need a paid plan
 ## System Prompt
 
 The system prompt is the base instruction set for chats, [Agents](/admins/agents/overview), and projects.
-Select **Modify Prompt** to edit it. Use **Restore default** in the editor to return to the built-in prompt.
 
 <Warning>
   Changes to this prompt affect answer quality and behavior across your workspace.
-  Review changes carefully before you save.
 </Warning>
 
 The full default system prompt:
@@ -83,7 +81,6 @@ You can use Markdown tables to format your responses for data, lists, and other 
 ## Connectors
 
 This section lists the sources that Internal Search uses in the default chat.
-Select **Manage connectors** to open **Indexing Status** and add or edit connectors.
 See [Connectors](/admins/connectors/overview) for setup details.
 
 ## Actions & Tools
@@ -110,8 +107,6 @@ See [Plugins](/admins/plugins/overview).
 
 ## Advanced Options
 
-Expand **Advanced Options** at the bottom of the page.
-
 <img className="rounded-image" src="/assets/admins/chat_preferences/chat_preferences_advanced_options.webp" alt="Advanced Options on Chat Preferences"/>
 
 ### Keep Chat History
@@ -121,16 +116,12 @@ This setting needs an Enterprise plan or Onyx Cloud.
 
 <Warning>
   If you **shorten** retention, Onyx permanently deletes chats with no activity for longer than the new period.
-  Onyx asks you to confirm before it applies the change.
 </Warning>
 
 ### Query History Visibility
 
-Set what admins see on the [Query History](/admins/analytics/query_history) page:
-
-- **Show with User Info**: Full chat history with user identities.
-- **Anonymized**: Chat history without user identities.
-- **Hidden**: No query history.
+Set what admins see on the [Query History](/admins/analytics/query_history) page: **Show with User Info**,
+**Anonymized**, or **Hidden**.
 
 ### File Attachment Size Limit
 

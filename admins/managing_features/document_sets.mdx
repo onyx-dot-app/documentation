@@ -13,14 +13,8 @@ Document Sets are available in all editions.
 ## Creating a Document Set
 
 <Steps>
-  <Step title="Navigate to Document Sets">
-    In the Admin Panel, go to **Document Sets** under **Documents & Knowledge** (`/admin/documents/sets`).
-
-    <img className="rounded-image" src="/assets/admins/document_sets/document_sets.webp" alt="Document Sets"/>
-  </Step>
-
   <Step title="Create New Document Set">
-    Select **New Document Set**. Enter a **Name** and an optional **Description**.
+    Go to **Admin Panel → Document Sets** (`/admin/documents/sets`) and select **New Document Set**.
 
     <img className="rounded-image" src="/assets/admins/document_sets/new_document_set.webp" alt="New Document Set"/>
   </Step>
@@ -34,21 +28,17 @@ Document Sets are available in all editions.
 
   <Step title="Add Connectors">
     Under **Pick your connectors**, select the connectors to include.
-    All documents indexed by the selected connectors become part of the set.
-    You can combine many data sources in one set. If you use federated connectors, such as federated Slack,
-    add them under **Federated Connectors**. Select **Create Document Set** to save.
+    All documents indexed by the selected connectors become part of the set. If you use federated connectors,
+    such as federated Slack, add them under **Federated Connectors**.
 
     <img className="rounded-image" src="/assets/admins/document_sets/add_connectors.webp" alt="Add Connectors to Document Set"/>
   </Step>
 </Steps>
 
 Onyx updates the set in the background after you save. The list shows a status until the update is complete.
-Open a set from the list to edit it or delete it.
 
 ## Use Cases
 
-- **Organized Knowledge**: Group related content from different sources into a single collection.
 - **Agent Knowledge**: Attach Document Sets to [Agents](/admins/agents/overview)
   so they only reference relevant knowledge.
 - **Access Control**: Scope a set to User Groups so only members can use it.
-- **Search Filtering**: Let users filter chat and Search Mode by Document Set.

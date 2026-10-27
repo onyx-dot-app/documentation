@@ -18,7 +18,6 @@ Craft needs a Business or Enterprise plan, or Onyx Cloud.
 On the Community Edition the Craft section shows an upgrade page.
 
 If you self-host Onyx, first configure the runtime described in [Deploying Craft](/deployment/local/craft).
-The deployment guide covers sandboxes, the proxy, workers, networking, storage, resources, and environment variables.
 
 ## Control access
 
@@ -31,7 +30,6 @@ Open **Admin Panel → Craft → Access**.
 
 For a limited rollout, turn off **Enable Craft by default**, then enable the users who should have access.
 Per-user exceptions remain in place if you later change the workspace default.
-The page shows how many users currently have access.
 
 <Info>
   Removing access prevents the user from starting new Craft work and skips future Scheduled Task runs they own.
@@ -44,7 +42,6 @@ The page shows how many users currently have access.
 Open **Admin Panel → Craft → Preferences** and pick a **Default model**.
 Craft uses this model for new sessions and Scheduled Tasks. When unset,
 Craft uses the workspace default chat model and the picker shows **Workspace default**.
-Select **Clear** to return to the workspace default.
 
 Craft can use any provider you configure under **Language Models**.
 Users also need access to the provider and at least one visible model.
@@ -74,9 +71,7 @@ For client-facing deliverables:
 - Add "Confidential" to draft materials unless the user requests otherwise.
 ```
 
-The editor accepts up to 4,000 characters.
-Select **View base instructions** to see the built-in prompt your text is added to,
-or **Reset to default** to remove the workspace instructions for everyone.
+The editor accepts up to 4,000 characters. **Reset to default** removes the workspace instructions for everyone.
 
 <Warning>
   Workspace instructions supplement Craft's built-in behavior. They cannot override its hard rules, App policies,
@@ -84,7 +79,6 @@ or **Reset to default** to remove the workspace instructions for everyone.
 </Warning>
 
 Changes apply when a Craft session starts or is restored. They do not alter a session while it is actively running.
-Use **Try in Craft** to test the saved instructions in a new session.
 
 ## Configure Apps and Skills
 
@@ -120,11 +114,6 @@ Use **Try in Craft** to test the saved instructions in a new session.
     Craft needs a Business or Enterprise plan. Deployments without one see an upgrade page,
     and older releases return `FEATURE_NOT_AVAILABLE` on every message.
     Add a license or upgrade to the latest patch release for your Onyx version.
-  </Accordion>
-
-  <Accordion title="Saved workspace instructions are not affecting a session">
-    Start a new session to test the saved instructions. They do not update an actively running session.
-    Also confirm the guidance does not conflict with Craft's built-in hard rules or an enforced App policy.
   </Accordion>
 </AccordionGroup>
 

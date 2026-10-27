@@ -22,9 +22,6 @@ The following legacy roles and settings are removed:
 - **Global Curator role**
 - **`CURATORS_CANNOT_VIEW_OR_EDIT_NON_OWNED_ASSISTANTS`** environment variable
 
-The Curator roles are removed,
-but the scoped management capability they provided is preserved through **Group Managers**.
-
 ## What Replaces Curators
 
 The new system uses two mechanisms:
@@ -110,22 +107,6 @@ Review the following:
   <Accordion title="What if we were not using Curators?">
     If you only used Admin and Basic roles, there is little to review. Admin users move to **Admin**,
     and Basic users move to **Basic**.
-  </Accordion>
-
-  <Accordion title="Do existing groups and resources change?">
-    Existing groups, memberships, connectors, document sets, and agents are preserved.
-    The migration changes how management permissions are represented, not the resources themselves.
-  </Accordion>
-
-  <Accordion title="Can we recreate Curator-like behavior?">
-    Yes. Make the user a **Group Manager** of the relevant group.
-    This gives scoped management over that group's members and resources.
-  </Accordion>
-
-  <Accordion title="When should we use group permissions instead?">
-    Use group permissions when the access should be organization-wide. For example,
-    grant **Manage Connectors & Document Sets** to an IT group only if that group should manage connectors and document
-    sets across the workspace.
   </Accordion>
 
   <Accordion title="What happens to API keys and service accounts?">
