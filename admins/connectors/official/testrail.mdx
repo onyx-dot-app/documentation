@@ -37,27 +37,22 @@ for enabling the API and generating a key.
 ## Configure Onyx
 
 <Steps>
-  <Step title="Open the TestRail connector">
-    In the Admin Panel, go to **Connectors** and select **TestRail**.
-  </Step>
-
   <Step title="Create a credential">
-    Under **Authentication Account**, select **New TestRail Account**. Enter the site URL in **TestRail Base URL**,
+    In the Admin Panel, go to **Connectors** and select **TestRail**. Under **Authentication Account**,
+    select **New TestRail Account**. Enter the site URL in **TestRail Base URL**,
     the user's login in **TestRail Account Email**, and the API key in **API Token**.
 
     <img className="rounded-image" src="/assets/admins/connectors/testrail/TestRailCredential.webp" alt="Create a TestRail credential with a base URL, username and API key"/>
   </Step>
 
   <Step title="Choose the projects">
-    Give the connector a name and enter the site URL again in **TestRail Base URL**. In **Project IDs**,
+    Enter the site URL again in **TestRail Base URL**. In **Project IDs**,
     enter a comma-separated list of TestRail project IDs, for example `1,2,3`.
     Leave it empty to index every project the user can read.
   </Step>
 
   <Step title="Choose the document access">
-    Under **Connector Settings**, set **Document Access**.
-    **Everyone in Your Organization** makes all indexed cases visible to every Onyx user.
-    **Specific Groups** limits the connector to selected Onyx user groups, and is a paid feature:
+    Under **Connector Settings**, set **Document Access**. **Specific Groups** is a paid feature:
     the Business and Enterprise tiers on Onyx Cloud, and the Enterprise Edition when self-hosted.
   </Step>
 
@@ -80,9 +75,6 @@ for enabling the API and generating a key.
 | Limit                | Value  | Notes                                                                             |
 | -------------------- | ------ | ----------------------------------------------------------------------------------- |
 | TestRail API call    | 60s    | Set `REQUEST_TIMEOUT_SECONDS` to change it. This is a global setting.              |
-| Cases per page       | 250    | **Cases Page Size** above.                                                          |
-| Pages per project    | 10000  | **Max Pages** above.                                                                |
-| Case text            | 200000 characters | **Skip Document Character Limit** above. A longer case is skipped.        |
 
 The connector indexes no attachments, so it has no file-size cap.
 

@@ -33,21 +33,11 @@ You need:
 - Pages that do not require signing in
 - An Onyx administrator account
 
-<Note>
-  The connector cannot sign in, send a cookie, or answer a login form.
-  If the content you want sits behind authentication,
-  index the system that holds it with its own connector instead of crawling its web front end.
-</Note>
-
 ## Configure Onyx
 
 <Steps>
-  <Step title="Open the Web connector">
-    In the Admin Panel, go to **Connectors** and select **Web**.
-  </Step>
-
-  <Step title="Name the connector and enter the base URL">
-    Give the connector a descriptive **Connector Name**. In **Base URL**, enter the address to start from,
+  <Step title="Enter the base URL">
+    In the Admin Panel, go to **Connectors** and select **Web**. In **Base URL**, enter the address to start from,
     for example `https://docs.onyx.app/`. If you leave off the scheme, Onyx adds `https://`.
   </Step>
 
@@ -63,9 +53,7 @@ You need:
   </Step>
 
   <Step title="Choose the document access">
-    Under **Connector Settings**, set **Document Access**.
-    **Everyone in Your Organization** makes the indexed pages visible to every Onyx user.
-    **Specific Groups** limits the connector to selected Onyx user groups, and is a paid feature:
+    Under **Connector Settings**, set **Document Access**. **Specific Groups** is a paid feature:
     the Business and Enterprise tiers on Onyx Cloud, and the Enterprise Edition when self-hosted.
 
     See [Document Access Controls](/admins/connectors/overview#document-access-controls)

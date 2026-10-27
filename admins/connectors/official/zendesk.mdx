@@ -25,16 +25,13 @@ The connector is available in all editions.
 
 ### Articles
 
-- Indexes all published articles from the Zendesk Help Center
 - Includes article content, labels, and content tags
 - Tracks author information and update timestamps
-- Skips draft articles
 - Skips articles that carry a label listed in the `ZENDESK_CONNECTOR_SKIP_ARTICLE_LABELS` environment variable
   (self-hosted only)
 
 ### Tickets
 
-- Indexes support tickets with full comment threads
 - Includes ticket metadata (status, priority, tags, type)
 - Tracks submitter and commenter information
 - Excludes deleted tickets
@@ -43,7 +40,6 @@ The connector is available in all editions.
 ## Current Limitations
 
 - Articles: Cannot filter by category or section
-- Tickets: Requires an active Zendesk Support product
 
 ## Setting up
 
@@ -66,13 +62,9 @@ See below for how to create the API token:
 ### Indexing
 
 <Steps>
-  <Step title="Open the Zendesk connector">
-    In the Admin Panel, go to **Connectors** and select **Zendesk**.
-  </Step>
-
   <Step title="Add the credential">
-    Under **Authentication Account**, select **New Zendesk Account** and enter the subdomain, account email,
-    and API token from the section above.
+    In the Admin Panel, go to **Connectors** and select **Zendesk**. Under **Authentication Account**,
+    select **New Zendesk Account** and enter the subdomain, account email, and API token from the section above.
   </Step>
 
   <Step title="Configure the content">
@@ -86,28 +78,6 @@ See below for how to create the API token:
     Under **Connector Settings**, choose **Document Access** and click **Create Connector**.
   </Step>
 </Steps>
-
-Watch the first index attempt on the **Indexing Status** page. Later runs pick up new and updated content only.
-
-## Metadata
-
-The connector indexes the following metadata:
-
-### Articles
-
-- Labels
-- Content tags
-- Author information
-- Update timestamps
-
-### Tickets
-
-- Status (open, pending, solved, and so on)
-- Priority level
-- Tags
-- Ticket type
-- Submitter information
-- Comment history with authors and timestamps
 
 ## Troubleshooting
 

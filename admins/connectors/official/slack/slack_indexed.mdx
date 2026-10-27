@@ -13,27 +13,17 @@ To index a private channel, invite the Slack app to that channel.
 For Slack Enterprise Grid orgs, a single install covers every workspace in the org.
 See [Enterprise Grid setup](#enterprise-grid-setup) below.
 
-The connector is available in all editions. **Specific Groups** and **Sync with Slack** are paid features:
-the Business and Enterprise tiers on Onyx Cloud, and the Enterprise Edition when self-hosted.
+The connector is available in all editions.
 
 ## Setting up
 
 ### Authorization
 
 <Steps>
-  <Step title="Admin requirement">
-    **Note: You must be an admin of the Slack workspace to set up the connector**
-  </Step>
-
-  <Step title="Navigate to Slack Apps">
-    Navigate and sign in to [https://api.slack.com/apps](https://api.slack.com/apps).
-  </Step>
-
   <Step title="Create new Slack app">
-    Create a new Slack app:
-    - Click the **Create New App** button in the top right.
-    - Select **From an app manifest** option.
-    - Select the relevant workspace from the dropdown and click **Next**.
+    You must be an admin of the Slack workspace to set up the connector.
+    Sign in to [https://api.slack.com/apps](https://api.slack.com/apps).
+    Click **Create New App** and select **From an app manifest**. Select the relevant workspace and click **Next**.
 
     <img className="rounded-image" src="/assets/admins/connectors/slack/SlackApp.webp" alt="Slack app creation flow with manifest option selected"/>
   </Step>
@@ -68,17 +58,9 @@ settings:
 ```
   </Step>
 
-  <Step title="Create the app">
-    Click the **Create** button.
-  </Step>
-
-  <Step title="Navigate to OAuth permissions">
-    In the app page, navigate to the **OAuth & Permissions** tab under the **Features** header.
-    Click **Install to Workspace** and approve the request.
-  </Step>
-
-  <Step title="Copy OAuth token">
-    Copy the **Bot User OAuth Token**. Onyx uses this token to access Slack.
+  <Step title="Install the app and copy the OAuth token">
+    Click **Create**. In the app page, open the **OAuth & Permissions** tab under the **Features** header.
+    Click **Install to Workspace** and approve the request. Copy the **Bot User OAuth Token**.
   </Step>
 </Steps>
 
@@ -87,12 +69,8 @@ settings:
 ### Indexing
 
 <Steps>
-  <Step title="Open the Slack connector">
-    In the Admin Panel, go to **Connectors** and select **Slack**.
-  </Step>
-
   <Step title="Add the credential">
-    Under **Authentication Account**,
+    In the Admin Panel, go to **Connectors** and select **Slack**. Under **Authentication Account**,
     click **New Slack Account** and paste the **Bot User OAuth Token** into **Slack Bot Token**.
     Onyx checks the token and reports any missing scopes before it saves the credential.
 
@@ -137,16 +115,6 @@ Onyx detects Grid automatically from the bot token and indexes every workspace t
 <Note>
   You must be an **Org Owner** or **Org Admin** of the Slack Enterprise Grid org to do the org-level install.
 </Note>
-
-### What changes vs the single-workspace setup
-
-- The app manifest must enable org-level deploys and include the `team:read` scope.
-- You install the app to the **organization** once (a single OAuth approval as Org Admin), but you must also pick
-  which workspaces in the org the bot is deployed to — Onyx can only index the workspaces the bot is actually a member
-  of.
-- Channel links in indexed documents resolve to the correct per-workspace URL.
-- With **Sync with Slack**, documents from public channels are visible only to the users of the workspaces the channel
-  is shared into (not the entire org). A user in Workspace A cannot see Workspace B's public channel documents in Onyx.
 
 ### Authorization (Grid)
 
