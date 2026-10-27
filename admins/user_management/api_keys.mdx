@@ -4,8 +4,7 @@ description: "Create and manage service accounts for programmatic access"
 icon: "key"
 ---
 
-A service account is a non-human user that exists only to call the Onyx API. Creating one gives you an API key,
-which lets you build custom applications, integrate with external systems, and automate workflows.
+A service account is a non-human user that exists only to call the Onyx API. Creating one gives you an API key.
 
 <Info>
   This page applies to Onyx **v4.7 and later**. For older versions,
@@ -56,30 +55,24 @@ Admins always have it.
 ## Creating a Service Account
 
 <Steps>
-  <Step title="Navigate to Service Accounts">
-    In the Admin Panel, go to **Service Accounts** under **Integrations**.
-  </Step>
-
   <Step title="Create the account">
-    Click **New Service Account**. In the **Create Service Account** dialog, enter a **Name**,
-    select the **Groups** it should belong to, and click **Create Account**. You can change both later.
+    Go to **Admin Panel → Service Accounts** and click **New Service Account**.
+    Enter a **Name** and select the **Groups** it should belong to. You can change both later.
   </Step>
 
   <Step title="Save and copy the key">
-    The **Service Account API Key** dialog shows the key once.
-    Click **Copy API Key** or **Download** before you close it.
+    The **Service Account API Key** dialog shows the key once. Copy or download it before you close the dialog.
   </Step>
 </Steps>
 
 ## Managing Service Accounts
 
-The Service Accounts page lists each account with its name, masked API key, and groups. For each account you can:
+For each account you can:
 
 | Action | What it does |
 |---|---|
 | Regenerate | Issues a new key and revokes the current one. |
 | Groups | Adds the account to groups or removes it from them, which changes what its key can do. |
-| Edit Account | Renames the account or changes its groups. |
 | Delete Account | Removes the account and its key. |
 
 <Warning>
@@ -96,7 +89,6 @@ Any user with the **Create User Access Token** permission can create one from **
 
 | Field | Options |
 |---|---|
-| **Token Name** | A label for the token. |
 | **Expires in** | 7 days, 30 days, 365 days, or no expiration. |
 | **Permissions** | **Full access** inherits all of the user's permissions. **Limited access** restricts the token to the capabilities you select. |
 
