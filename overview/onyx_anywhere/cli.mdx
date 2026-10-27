@@ -71,7 +71,7 @@ and select **New Access Token** to create an access token for the CLI.
 
 ### Environment Variables
 
-Environment variables override config file values. This is useful for CI/CD pipelines and scripting.
+Environment variables override config file values.
 
 | Variable | Required | Description |
 |----------|----------|-------------|
@@ -112,7 +112,6 @@ Use `--version` to print the client and server versions, and `--debug` for verbo
 onyx-cli chat
 ```
 
-Opens a full-screen terminal UI for chatting with your Onyx Agents.
 Use `--agent-id` or `--agent-name` to start the session with a specific Agent,
 and `--no-stream-markdown` to turn off progressive Markdown rendering.
 
@@ -128,12 +127,6 @@ Use `--agent-id` to target a specific agent:
 
 ```shell
 onyx-cli ask --agent-id 5 "Summarize our Q4 roadmap"
-```
-
-Use `--json` for structured NDJSON output (useful for scripting):
-
-```shell
-onyx-cli ask --json "List all active API integrations"
 ```
 
 | Flag | Description |
@@ -205,8 +198,6 @@ onyx-cli deploy install
 
 ## Slash Commands (Interactive TUI)
 
-When using the interactive chat, the following slash commands are available:
-
 | Command | Description |
 |---------|-------------|
 | `/help` | Show help message |
@@ -238,10 +229,6 @@ The skill is written to `.agents/skills/onyx-cli/`. Use `--global` to install it
 You can also read it in the Onyx repository at
 [`cli/internal/embedded/SKILL.md`](https://github.com/onyx-dot-app/onyx/blob/main/cli/internal/embedded/SKILL.md).
 
-Once configured,
-the AI assistant can call `onyx-cli ask` and `onyx-cli search` to look up company-specific information — policies,
-internal docs, connected data sources — without leaving the editor.
-
 ### When the skill is invoked
 
 The skill is triggered when you ask your AI assistant about:
@@ -261,14 +248,7 @@ and truncates long `ask` output at 50000 bytes (use `--max-output 0` to disable)
 
 ### Configuration for agents
 
-The simplest approach is to run `onyx-cli chat` once manually to complete first-time setup — after that,
-AI assistants can invoke `onyx-cli ask` directly without any additional setup.
-
-```shell
-onyx-cli chat
-```
-
-Alternatively, you can configure via environment variables,
+Run `onyx-cli chat` once to complete first-time setup, or set environment variables,
 which override the config file and are useful for CI/CD or sandboxed environments:
 
 ```shell

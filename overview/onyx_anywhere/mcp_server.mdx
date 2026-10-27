@@ -8,7 +8,6 @@ Connect your AI client to Onyx to search documents you can access, search the we
 Your client uses Onyx's search results to answer your question in the conversation where you are already working.
 
 OAuth lets you connect by signing in to Onyx and approving the app.
-You do not need to copy a personal access token into your client configuration.
 Personal access tokens and API keys remain available for bearer authentication.
 
 <Note>
@@ -27,12 +26,8 @@ Personal access tokens and API keys remain available for bearer authentication.
 - Use a client that supports remote Streamable HTTP MCP servers and OAuth.
 
 The examples use `onyx.example.com` as a placeholder. Replace it with your Onyx web domain.
-Use the same URL consistently in your client configuration.
 
 ## Connect your AI tools
-
-Use your Onyx MCP URL in the setup for your client. Complete [Onyx sign-in and approval](#sign-in-and-approve-access)
-when prompted.
 
 ### Codex
 
@@ -88,7 +83,6 @@ Current releases also support authentication directly from the terminal:
 claude mcp login onyx
 ```
 
-Use `claude mcp list` to inspect configured servers.
 See [Claude Code's MCP documentation](https://code.claude.com/docs/en/mcp) for authentication and configuration scopes.
 
 #### Share the configuration with a project
@@ -160,7 +154,7 @@ for the web connection model and your workspace's plugin availability.
 <Steps>
   <Step title="Add your Onyx MCP URL">
     Configure the URL in your client using the [client setup instructions](#connect-your-ai-tools).
-    Choose OAuth or the client's authenticate action. Leave bearer-token headers out of an OAuth configuration.
+    Leave bearer-token headers out of an OAuth configuration.
   </Step>
 
   <Step title="Sign in to Onyx">
@@ -171,19 +165,10 @@ for the web connection model and your workspace's plugin availability.
   <Step title="Review the connection">
     Onyx shows **Connect to Onyx** and asks whether to allow the app to search Onyx. Check the app name,
     signed-in account, workspace, and app address before choosing **Allow access**.
-    Choose **Deny** to return to your client without granting access.
-  </Step>
-
-  <Step title="Return to your client">
-    The client completes sign-in and stores its credentials. Confirm that the Onyx tools appear, then try a search.
-    A configured server alone does not prove that authentication and search work.
   </Step>
 </Steps>
 
 <img src="/assets/overview/onyx_anywhere/mcp/oauth_consent.webp" alt="Onyx OAuth consent page showing the app name, requested search access, Allow access, and Deny. Account details are hidden." width="320" />
-
-The consent screen identifies the app and the account granting access. Account, workspace,
-and callback details are hidden in this screenshot.
 
 ### Test the connection
 
@@ -210,8 +195,7 @@ Connecting an app does not give it access to documents you cannot read. Workspac
 billing restrictions, and usage limits can affect requests after connection.
 
 Your external AI client receives the retrieved content so it can use it in its response.
-Choose a client and account that your organization permits to receive that information. Onyx retrieves content;
-the external client writes the final answer.
+Choose a client and account that your organization permits to receive that information.
 
 ## Connection expiry
 
@@ -230,24 +214,8 @@ If a client registers without refresh support, its authorization lasts only for 
 
 <img src="/assets/overview/onyx_anywhere/mcp/connected_apps.webp" alt="Connected apps in Onyx settings with app names, expiry dates, and Disconnect controls." width="640" />
 
-<Steps>
-  <Step title="Open connected apps">
-    Open **Settings > Accounts & Access > Connected apps** (`/app/settings/accounts-access`) in Onyx.
-    Find the app you want to disconnect. The list shows the app name and authorization expiry.
-  </Step>
-
-  <Step title="Disconnect the app">
-    Select **Disconnect** and confirm. Onyx revokes that connection's access and refresh tokens.
-    The app can no longer use that authorization to access Onyx.
-  </Step>
-
-  <Step title="Remove the client configuration if needed">
-    Remove the server or connector from your AI client if you no longer want it configured.
-    Removing a local configuration and revoking an Onyx authorization are separate actions.
-  </Step>
-</Steps>
-
-<img src="/assets/overview/onyx_anywhere/mcp/disconnect_confirmation.webp" alt="Onyx confirmation dialog explaining that disconnecting Claude Code removes its access, with Cancel and Disconnect buttons." width="400" />
+Open **Settings > Accounts & Access > Connected apps** (`/app/settings/accounts-access`) in Onyx,
+select **Disconnect** next to the app, and confirm. Onyx revokes that connection's access and refresh tokens.
 
 Signing out of Onyx does not disconnect connected apps. Use **Connected apps** to revoke an OAuth authorization.
 For a personal access token or API key connection, revoke the token or key instead.
@@ -268,8 +236,7 @@ printf '\n'
 export ONYX_TOKEN
 ```
 
-Run the client from that shell. The variable lasts for the shell session. For a persistent setup,
-use your organization's approved local secret management method.
+Run the client from that shell. The variable lasts for the shell session.
 
 ### Codex token configuration
 
@@ -328,11 +295,9 @@ claude mcp remove onyx --scope user
 ```
 
 If you used a project configuration, remove the Onyx entry from `.mcp.json` instead.
-Desktop connector settings also provide disconnect or removal controls.
 
 Removing a client configuration and revoking an Onyx authorization are separate operations.
-Use [Onyx's connected app controls](#manage-connected-apps) to revoke the grant.
-Revoke a personal access token in Onyx if you used token authentication. To change accounts,
+Use [Onyx's connected app controls](#manage-connected-apps) to revoke the grant. To change accounts,
 clear the client's saved authentication and reconnect with the intended Onyx account.
 
 ## Prompts you can use
@@ -484,5 +449,3 @@ named filters are resolved on the search call and return an error when they cann
 | A named filter fails | Use the suggested or available names. Keep the filter if the search must stay within that scope. |
 | The desktop connector cannot reach a self-hosted instance | Hosted connectors may connect from cloud infrastructure. A URL reachable only on your laptop is insufficient for those clients. |
 | Connected apps is missing | Ask your administrator to confirm that your deployment includes OAuth support and has a supported web domain. PAT connections are managed as tokens, not OAuth connected apps. |
-
-For connection commands, see [Connect your AI tools](#connect-your-ai-tools).

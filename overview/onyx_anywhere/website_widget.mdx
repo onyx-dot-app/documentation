@@ -40,8 +40,6 @@ Add these few lines to your website:
 </onyx-chat-widget>
 ```
 
-That's it! The widget will appear as a floating button in the bottom-right corner of your page.
-
 <Warning>
   **Always use a limited-scope API key for the widget.** The API key is visible in client-side code,
   so it should have restricted permissions and rate limits. Never use admin or full-access keys.
@@ -58,10 +56,10 @@ That's it! The widget will appear as a floating button in the bottom-right corne
 
 <video src="/assets/overview/onyx_anywhere/widget_popup.mov" alt="Onyx Widget Chat Popup" autoPlay />
 
-A floating button appears in the bottom-right corner. Clicking it opens a chat popup.
+A floating button appears in the bottom-right corner.
 
 - **Desktop**: 400x600px popup above the button
-- **Mobile**: Full-screen overlay for optimal mobile experience
+- **Mobile**: Full-screen overlay
 
 ```html
 <onyx-chat-widget mode="launcher"></onyx-chat-widget>
@@ -71,7 +69,7 @@ A floating button appears in the bottom-right corner. Clicking it opens a chat p
 
 <video src="/assets/overview/onyx_anywhere/widget_inline.mov" alt="Onyx Widget Inline Mode" autoPlay />
 
-The widget embeds directly in your page layout. Perfect for dedicated support pages or knowledge bases.
+The widget embeds directly in your page layout.
 
 ```html
 <div style="width: 400px; height: 600px;">
@@ -163,7 +161,6 @@ Add `start-expanded` to show the full chat panel from the start:
 ### Styling
 
 The widget uses CSS custom properties for theming.
-All styles are scoped within Shadow DOM to prevent conflicts with your site's CSS.
 
 **Default Colors:**
 
@@ -229,7 +226,6 @@ Use this when your page already signs the visitor in with the same identity prov
 
 The widget talks directly to your Onyx server. It creates a chat session, sends each message,
 and streams the answer back in real time. Answers render with full Markdown support.
-The conversation survives page reloads.
 
 ## Browser Support
 
@@ -243,7 +239,3 @@ The conversation survives page reloads.
 
 For detailed deployment instructions, including self-hosted setup and API key security best practices,
 see the [Website Widget Deployment Guide](/deployment/configuration/website_widget).
-
-<Info>
-  **Need help with setup?** Contact your Onyx administrator for API key configuration or deployment assistance.
-</Info>
