@@ -17,25 +17,19 @@ The default for this connector is **1 day**.
 ### Authorization
 
 <Steps>
-  <Step title="Open Oracle Cloud Console">
-    Log into your Oracle Cloud Console.
-  </Step>
-
   <Step title="Open User Settings">
-    Select the user icon in the top-right corner and select **User Settings**.
+    In the Oracle Cloud Console, select the user icon in the top-right corner and select **User Settings**.
 
     <img className="rounded-image" src="/assets/admins/connectors/blob/oci/topbar.webp" alt="OCI user settings"/>
   </Step>
 
-  <Step title="Open Customer Secret Keys">
-    Under **Resources**, select **Customer Secret Keys**.
+  <Step title="Generate a secret key">
+    Under **Resources**, select **Customer Secret Keys**, then **Generate Secret Key**.
 
     <img className="rounded-image" src="/assets/admins/connectors/blob/oci/apikeys.webp" alt="OCI customer secret keys"/>
-  </Step>
 
-  <Step title="Generate a secret key">
-    Select **Generate Secret Key**. Enter a name for the key, such as `OnyxOCIConnector`,
-    and select **Generate Secret Key** again. Copy the secret key at once. You cannot view it again later.
+    Enter a name for the key, such as `OnyxOCIConnector`, and select **Generate Secret Key** again.
+    Copy the secret key at once. You cannot view it again later.
   </Step>
 
   <Step title="Copy the access key">
@@ -56,19 +50,16 @@ The default for this connector is **1 day**.
 ### Indexing
 
 <Steps>
-  <Step title="Open the Oracle Storage connector">
-    In Onyx, go to **Admin Panel → Connectors** and select **Oracle Storage**.
-  </Step>
-
   <Step title="Create an authentication account">
-    Under **Authentication Account**, select **Create New**. Enter a **Display Name** and fill in:
+    In Onyx, go to **Admin Panel → Connectors** and select **Oracle Storage**. Under **Authentication Account**,
+    select **Create New**. Enter a **Display Name** and fill in:
 
     - **OCI Namespace**: the Object Storage namespace of your tenancy
     - **OCI Region**: the region of the bucket
     - **OCI Access Key ID**: the access key you copied
     - **OCI Secret Access Key**: the secret key you copied
 
-    Select **Create**. To reuse a saved account, select **Use Account** on it instead.
+    Select **Create**.
 
     <img className="rounded-image" src="/assets/admins/connectors/blob/oci/Onyx1.webp" alt="OCI credentials input"/>
   </Step>
@@ -91,13 +82,3 @@ The default for this connector is **1 day**.
     Open **Admin Panel → Indexing Status** and select the connector to follow the first indexing run.
   </Step>
 </Steps>
-
-## Understanding Oracle Cloud Infrastructure Object Storage Structure
-
-Oracle Cloud Infrastructure Object Storage organizes data into buckets.
-Each bucket can contain an unlimited number of objects (files). You can think of a bucket as a root directory,
-and the objects as files within that directory.
-
-For more information on OCI Object Storage structure,
-visit the [Oracle Cloud Infrastructure Object Storage
-documentation](https://docs.oracle.com/en-us/iaas/Content/Object/Concepts/objectstorageoverview.htm).
