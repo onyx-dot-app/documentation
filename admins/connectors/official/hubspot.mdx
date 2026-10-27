@@ -5,21 +5,15 @@ description: "Access CRM data from HubSpot"
 
 ## How it works
 
-The HubSpot connector indexes records from your HubSpot CRM. You choose which object types to index:
-
-- **Tickets** - Support tickets with their subject, content, and priority
-- **Companies** - Company records with their domain, industry, and location
-- **Deals** - Sales opportunities with their amount, stage, and close date
-- **Contacts** - Contact records with their email, company, and job title
+The HubSpot connector indexes records from your HubSpot CRM. You choose which object types to index: **Tickets**,
+**Companies**, **Deals**, and **Contacts**.
 
 Each record becomes one document. The document carries the record's properties, the notes attached to the record,
 and a summary of each company, contact, deal, and ticket linked to it.
 Onyx checks HubSpot for new and changed records on the connector's refresh schedule.
 The default is every **30** minutes.
 
-**Sync with HubSpot** mirrors who can view each record in HubSpot.
-It needs the Business or Enterprise tier on Onyx Cloud, or the Enterprise Edition when self-hosted.
-See [Sync with HubSpot](#sync-with-hubspot).
+**Sync with HubSpot** mirrors who can view each record in HubSpot. See [Sync with HubSpot](#sync-with-hubspot).
 
 ## Setting up
 
@@ -60,12 +54,9 @@ The connector signs in with the access token of a HubSpot private app.
 ### Indexing
 
 <Steps>
-  <Step title="Open the HubSpot connector">
-    Go to **Admin Panel → Connectors** and select **HubSpot**.
-  </Step>
-
   <Step title="Enter the access token">
-    Select **New HubSpot Account**, paste the access token into **API Token** and select **Create**.
+    Go to **Admin Panel → Connectors** and select **HubSpot**. Select **New HubSpot Account**,
+    paste the access token into **API Token** and select **Create**.
   </Step>
 
   <Step title="Choose object types">
@@ -73,26 +64,22 @@ The connector signs in with the access token of a HubSpot private app.
   </Step>
 
   <Step title="Choose document access">
-    Under **Document Access**, select who can see the indexed content:
-
-    - **Everyone in Your Organization** shows every indexed document to all Onyx users.
-    - **Specific Groups** limits the documents to the Onyx user groups you select.
-    - **Sync with HubSpot** mirrors HubSpot access. It is the default where available.
+    Under **Document Access**, select **Everyone in Your Organization**, **Specific Groups**, or **Sync with HubSpot**.
+    **Sync with HubSpot** mirrors HubSpot access and is the default where available.
 
     **Specific Groups** and **Sync with HubSpot** need the Business or Enterprise tier on Onyx Cloud,
-    or the Enterprise Edition when self-hosted. On other plans the field is locked on **Everyone in Your Organization**.
+    or the Enterprise Edition when self-hosted.
   </Step>
 
   <Step title="Create the connector">
-    Give the connector a name and select **Create Connector**.
-    Onyx runs the connector checks below before it creates the connector.
+    Select **Create Connector**. Onyx runs the connector checks below before it creates the connector.
   </Step>
 </Steps>
 
 ### Connector checks
 
-Onyx probes the private app before it creates the connector and shows one row per check.
-A required check that fails blocks creation. The message names the missing scope.
+Onyx probes the private app before it creates the connector. A required check that fails blocks creation.
+The message names the missing scope.
 
 <img className="rounded-image" src="/assets/admins/connectors/hubspot/HubSpotChecks.webp" alt="Connector Checks card with every HubSpot check passed"/>
 
@@ -108,8 +95,7 @@ A required check that fails blocks creation. The message names the missing scope
 | Users can be listed | `settings.users.read`. Runs only with **Sync with HubSpot**. |
 | Record viewers can be read | Access to HubSpot's permitted-users API. Runs only with **Sync with HubSpot**. |
 
-A read check only runs for the object types you selected. An empty portal passes every check,
-since there is no record to probe.
+An empty portal passes every check, since there is no record to probe.
 
 ## Sync with HubSpot
 
@@ -123,8 +109,3 @@ A HubSpot user's email address must match the user's email in Onyx.
 
 Onyx syncs permissions every hour. When self-hosting,
 set `HUBSPOT_PERMISSION_DOC_SYNC_FREQUENCY` in seconds to change the interval.
-
-If you do not want to sync permissions,
-select **Everyone in Your Organization** or **Specific Groups** under **Document Access** when you create the connector.
-**Specific Groups** uses the Onyx user groups you assign to the connector.
-Neither option needs the `settings.users.read` scope.

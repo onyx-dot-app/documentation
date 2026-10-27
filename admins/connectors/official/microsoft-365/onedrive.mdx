@@ -34,18 +34,13 @@ Both client secret and certificate credentials support indexing and permission s
 ## Configure Onyx
 
 <Steps>
-  <Step title="Open the OneDrive connector">
-    In Onyx, go to **Admin Panel → Connectors** and select **OneDrive**.
-  </Step>
-
   <Step title="Select or create a credential">
+    In Onyx, go to **Admin Panel → Connectors** and select **OneDrive**.
     Select an existing OneDrive credential or create one as described in [Microsoft 365
     Setup](/admins/connectors/official/microsoft-365/setup#enter-the-credential-in-onyx).
   </Step>
 
   <Step title="Choose the users">
-    Give the connector a descriptive name.
-
     Select **General** to index every enabled, non-guest user with a user principal name.
     Select **Specific** to list user principal names or primary email addresses.
   </Step>
@@ -53,20 +48,14 @@ Both client secret and certificate credentials support indexing and permission s
   <Step title="Adjust the advanced settings">
     Add glob patterns to **Excluded Paths** if needed. For example, `*.tmp` skips that file type at every depth,
     and `Archive/*` skips files under that path.
-
-    Change **Authority Host** and **Graph API Host** only for a [national
-    cloud](/admins/connectors/official/microsoft-365/setup#national-clouds).
   </Step>
 
   <Step title="Choose the access type">
-    Under **Document Access**, select who can see the indexed content:
-
-    - **Everyone in Your Organization** shows every indexed document to all Onyx users.
-    - **Specific Groups** limits the documents to the Onyx user groups you select.
-    - **Sync with OneDrive** mirrors OneDrive access. It is the default where available.
+    Under **Document Access**, select **Everyone in Your Organization**, **Specific Groups**, or **Sync with OneDrive**.
+    **Sync with OneDrive** mirrors OneDrive access and is the default where available.
 
     **Specific Groups** and **Sync with OneDrive** need the Business or Enterprise tier on Onyx Cloud,
-    or the Enterprise Edition when self-hosted. On other plans the field is locked on **Everyone in Your Organization**.
+    or the Enterprise Edition when self-hosted.
   </Step>
 
   <Step title="Set an indexing start date">

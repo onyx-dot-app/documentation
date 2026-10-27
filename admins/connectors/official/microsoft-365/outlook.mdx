@@ -57,11 +57,8 @@ A client secret or a certificate both work. Outlook reads no SharePoint API, so 
 ## Configure Onyx
 
 <Steps>
-  <Step title="Open the Outlook connector">
-    In Onyx, go to **Admin Panel → Connectors** and select **Outlook**.
-  </Step>
-
   <Step title="Create a credential">
+    In Onyx, go to **Admin Panel → Connectors** and select **Outlook**.
     Select an existing Outlook credential or create one as described in [Microsoft 365
     Setup](/admins/connectors/official/microsoft-365/setup#enter-the-credential-in-onyx).
 
@@ -73,8 +70,7 @@ A client secret or a certificate both work. Outlook reads no SharePoint API, so 
   </Step>
 
   <Step title="Choose the mailboxes">
-    Give the connector a name. In **Mailboxes**, list the user principal names or primary email addresses to index.
-    In **Mailbox Groups**,
+    In **Mailboxes**, list the user principal names or primary email addresses to index. In **Mailbox Groups**,
     list Microsoft Entra groups by display name or object ID to index the mailbox of every member,
     members of nested groups included. This is the way to limit a large tenant to the people who use Onyx.
     It needs the **GroupMember.Read.All** application permission.
@@ -98,19 +94,16 @@ A client secret or a certificate both work. Outlook reads no SharePoint API, so 
   </Step>
 
   <Step title="Choose the access type">
-    Under **Document Access**, select who can see the indexed content:
-
-    - **Everyone in Your Organization** shows all indexed mail to every Onyx user.
-    - **Specific Groups** limits the connector to the Onyx user groups you select.
-    - **Sync with Outlook** mirrors mailbox ownership and meeting attendance. It is the default where available.
+    Under **Document Access**, select **Everyone in Your Organization**, **Specific Groups**, or **Sync with Outlook**.
+    **Sync with Outlook** mirrors mailbox ownership and meeting attendance and is the default where available.
 
     **Specific Groups** and **Sync with Outlook** need the Business or Enterprise tier on Onyx Cloud,
-    or the Enterprise Edition when self-hosted. On other plans the field is locked on **Everyone in Your Organization**.
+    or the Enterprise Edition when self-hosted.
   </Step>
 
   <Step title="Connect and verify">
-    Give the connector a name and select **Create Connector**. Then open **Admin Panel → Indexing Status**,
-    select the connector, and confirm its initial indexing attempt completes.
+    Select **Create Connector**. Then open **Admin Panel → Indexing Status**, select the connector,
+    and confirm its initial indexing attempt completes.
   </Step>
 </Steps>
 

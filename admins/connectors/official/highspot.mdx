@@ -16,15 +16,14 @@ The Highspot connector does not support **Sync with Highspot** (permission sync)
 
 ### Authorization
 
-> **IMPORTANT:** Highspot Platform Plus is an add-on feature that provides access to the API. Without Platform Plus, users cannot access the API features required for this connector. Please ensure your organization has purchased the Platform Plus add-on before proceeding.
+> **IMPORTANT:** Highspot Platform Plus is an add-on feature that provides access to the API. Without Platform Plus, users cannot access the API features required for this connector.
 
 #### Enabling Developer Options
 
 <Steps>
   <Step title="Open company settings">
     Log into your Highspot account as an administrator.
-    Click on your profile icon in the top right corner and select "Settings".
-    Select "your company" under company settings.
+    Open "Settings" and select "your company" under company settings.
   </Step>
 
   <Step title="Enable API access">
@@ -38,34 +37,26 @@ The Highspot connector does not support **Sync with Highspot** (permission sync)
 #### Generating API Credentials
 
 <Steps>
-  <Step title="Open Developer settings">
-    Log in as the user who has been granted API access.
-    Click on the profile icon in the top right corner and select "Settings".
-    Look for the "Developer" tab under user settings.
-  </Step>
-
   <Step title="Generate API key">
-    Navigate to the developer section and generate a new API key. After generation, you'll receive a key and secret.
+    Log in as the user who has been granted API access. Open "Settings",
+    select the "Developer" tab and generate a new API key. You'll receive a key and secret.
 
     <img className="rounded-image" src="/assets/admins/connectors/highspot/highspot_generate_api.webp" alt="Highspot user Developer settings generating an API key and secret"/>
   </Step>
 
   <Step title="Record credentials">
     Note the API key, the secret and the API base URL of your Highspot region,
-    for example `https://api-su2.highspot.com/v1.0/`. You need them to create the credential in Onyx.
+    for example `https://api-su2.highspot.com/v1.0/`.
   </Step>
 </Steps>
 
 ### Indexing
 
 <Steps>
-  <Step title="Open the Highspot connector">
-    Go to **Admin Panel → Connectors** and select **Highspot**.
-  </Step>
-
   <Step title="Create a credential">
-    Select **New Highspot Account**. Enter the API base URL in **Highspot URL**,
-    the API key in **Highspot Key** and the secret in **Highspot Secret**, then select **Create**.
+    Go to **Admin Panel → Connectors** and select **Highspot**. Select **New Highspot Account**.
+    Enter the API base URL in **Highspot URL**, the API key in **Highspot Key** and the secret in **Highspot Secret**,
+    then select **Create**.
   </Step>
 
   <Step title="Choose what to index">
@@ -80,6 +71,6 @@ The Highspot connector does not support **Sync with Highspot** (permission sync)
   </Step>
 
   <Step title="Start indexing">
-    Give the connector a name and select **Create Connector** to start indexing.
+    Select **Create Connector** to start indexing.
   </Step>
 </Steps>

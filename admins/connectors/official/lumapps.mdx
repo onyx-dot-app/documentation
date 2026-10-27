@@ -35,7 +35,6 @@ You need:
 - Your LumApps organization ID, which is numeric
 - A LumApps application with an ID and an API key
 - A service user for the application to act as, given as an email address or a user ID
-- An Onyx administrator account
 
 <Note>
   The API base URL is your organization's cell host, not the LumApps documentation site `api.lumapps.com`.
@@ -45,12 +44,9 @@ You need:
 ## Configure Onyx
 
 <Steps>
-  <Step title="Open the LumApps connector">
-    In Onyx, go to **Admin Panel → Connectors** and select **LumApps**.
-  </Step>
-
   <Step title="Create a credential">
-    Select **New LumApps Account**. Enter the application ID in **LumApps Application ID**, the key in **API Token**,
+    In Onyx, go to **Admin Panel → Connectors** and select **LumApps**. Select **New LumApps Account**.
+    Enter the application ID in **LumApps Application ID**, the key in **API Token**,
     and the service user in **Service User Email**. A value containing `@` is treated as an email address;
     anything else is treated as a user ID.
 
@@ -58,15 +54,12 @@ You need:
   </Step>
 
   <Step title="Enter the host and organization">
-    Give the connector a name.
     Enter your cell host in **API Base URL (Cell Host)** and your numeric organization ID in **Organization ID**.
   </Step>
 
   <Step title="Choose the access type">
-    Under **Document Access**,
-    **Everyone in Your Organization** makes all indexed LumApps content visible to every Onyx user.
-    **Specific Groups** limits the connector to selected Onyx user groups.
-    It needs the Business or Enterprise tier on Onyx Cloud, or the Enterprise Edition when self-hosted.
+    Under **Document Access**, select **Everyone in Your Organization** or **Specific Groups**.
+    **Specific Groups** needs the Business or Enterprise tier on Onyx Cloud, or the Enterprise Edition when self-hosted.
   </Step>
 
   <Step title="Connect and verify">
@@ -114,20 +107,10 @@ so no token rotation is needed on your side. The connector downloads no files, s
     access. Grant it access to the instances you want indexed in LumApps.
   </Accordion>
 
-  <Accordion title="Authentication fails against the documentation host">
-    Using `api.lumapps.com` instead of your cell host fails. Enter the cell host for your organization,
-    for example `https://go-cell-005.api.lumapps.com`.
-  </Accordion>
-
   <Accordion title="Content is missing">
     Only live content is indexed, so archived and unpublished items never appear.
     Check that the item's instance is listed in **Instance (Site) IDs** when that field is not empty,
     that its type is listed in **Custom Content Type IDs** when that field is not empty,
     and that the service user can open it.
-  </Accordion>
-
-  <Accordion title="Titles or tags appear in the wrong language">
-    Set **Language** to the ISO 639-1 code you want. One connector indexes one language;
-    add a second connector for a second language.
   </Accordion>
 </AccordionGroup>
