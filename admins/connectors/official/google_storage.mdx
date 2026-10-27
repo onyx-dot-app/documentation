@@ -56,19 +56,12 @@ The connector does not support **Sync with Google Cloud Storage** (permission sy
 ### Indexing
 
 <Steps>
-  <Step title="Open the Google Cloud Storage connector">
-    Go to **Admin Panel → Connectors** and select **Google Cloud Storage**.
-  </Step>
-
   <Step title="Create a credential">
-    Select **New GCS Account** to create a new credential.
-
-    <img className="rounded-image" src="/assets/admins/connectors/blob/google/onyx_1.webp" alt="Onyx Google Cloud Storage credentials"/>
-  </Step>
-
-  <Step title="Enter the keys">
+    Go to **Admin Panel → Connectors** and select **Google Cloud Storage**. Select **New GCS Account**.
     Paste the HMAC access key into **GCS Access Key ID** and the secret into **GCS Secret Access Key**.
     Save the credential.
+
+    <img className="rounded-image" src="/assets/admins/connectors/blob/google/onyx_1.webp" alt="Onyx Google Cloud Storage credentials"/>
   </Step>
 
   <Step title="Configure and create the connector">
@@ -78,16 +71,8 @@ The connector does not support **Sync with Google Cloud Storage** (permission sy
     Under **Document Access**, select **Everyone in Your Organization** or **Specific Groups**.
     **Specific Groups** needs the Business or Enterprise tier on Onyx Cloud, or the Enterprise Edition when self-hosted.
 
-    Give the connector a name and select **Create Connector** to start indexing.
+    Select **Create Connector** to start indexing.
 
     <img className="rounded-image" src="/assets/admins/connectors/blob/google/onyx_2.webp" alt="Onyx Connector creation"/>
   </Step>
 </Steps>
-
-## Understanding Google Cloud Storage Structure
-
-Google Cloud Storage organizes data into buckets. Each bucket can contain an unlimited number of objects (files).
-You can think of a bucket as a root directory, and the objects as files within that directory.
-
-For more information on Google Cloud Storage structure,
-visit the [Google Cloud Storage documentation](https://cloud.google.com/storage/docs).

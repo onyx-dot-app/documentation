@@ -9,14 +9,11 @@ The Email (IMAP)
 connector signs in to a mail server over IMAP with SSL and indexes the emails in the mailboxes you select.
 Each email becomes one document. The subject is the document title. The email body is the document text.
 
-By default the connector indexes every mailbox on the account. You can limit it to specific mailboxes.
 After the first run, the connector only fetches new emails on each poll.
 
 ## Setting up
 
 ### Authorization
-
-The connector needs an email account with IMAP access.
 
 <Steps>
   <Step title="Enable IMAP">
@@ -33,12 +30,9 @@ The connector needs an email account with IMAP access.
 ### Indexing
 
 <Steps>
-  <Step title="Open the Email (IMAP) connector">
-    Go to **Admin Panel → Connectors** and select **Email (IMAP)**.
-  </Step>
-
   <Step title="Create a credential">
-    Select **New IMAP Account**. Enter the **IMAP Username** and **IMAP Password**, then select **Create**.
+    Go to **Admin Panel → Connectors** and select **Email (IMAP)**. Select **New IMAP Account**.
+    Enter the **IMAP Username** and **IMAP Password**, then select **Create**.
   </Step>
 
   <Step title="Enter the server details">
@@ -57,13 +51,11 @@ The connector needs an email account with IMAP access.
   </Step>
 
   <Step title="Start indexing">
-    Give the connector a name and select **Create Connector**.
-    Onyx signs in to the server to confirm the settings and then starts indexing.
+    Select **Create Connector**. Onyx signs in to the server to confirm the settings and then starts indexing.
   </Step>
 </Steps>
 
 <Note>
-  The connector indexes emails from one account per connector. To index several accounts,
-  create one connector per account. The Email (IMAP)
+  To index several accounts, create one connector per account. The Email (IMAP)
   connector does not support **Sync with Email (IMAP)** (permission sync).
 </Note>

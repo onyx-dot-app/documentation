@@ -17,7 +17,7 @@ The Guru connector does not support **Sync with Guru** (permission sync).
 
 <Steps>
   <Step title="Obtain access token">
-    Create a Guru **User Token** for the account that Onyx indexes as. Onyx indexes every Card this user can see.
+    Create a Guru **User Token** for the account that Onyx indexes as.
     Follow the [Guru API guide](https://developer.getguru.com/docs/getting-started) for details.
   </Step>
 </Steps>
@@ -27,13 +27,9 @@ The Guru connector does not support **Sync with Guru** (permission sync).
 ### Indexing
 
 <Steps>
-  <Step title="Open the Guru connector">
-    Go to **Admin Panel → Connectors** and select **Guru**.
-  </Step>
-
   <Step title="Create a credential">
-    Select **New Guru Account**. Enter the user's email in **Guru Account Email** and the User Token in **API Token**,
-    then select **Create**.
+    Go to **Admin Panel → Connectors** and select **Guru**. Select **New Guru Account**.
+    Enter the user's email in **Guru Account Email** and the User Token in **API Token**, then select **Create**.
 
     <img className="rounded-image" src="/assets/admins/connectors/guru/GuruConnector.webp" alt="Onyx Guru connector credentials form with username and access token"/>
   </Step>
@@ -44,6 +40,6 @@ The Guru connector does not support **Sync with Guru** (permission sync).
   </Step>
 
   <Step title="Start indexing">
-    Give the connector a name and select **Create Connector** to start indexing.
+    Select **Create Connector** to start indexing.
   </Step>
 </Steps>

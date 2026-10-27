@@ -19,17 +19,11 @@ The default is every **30** minutes.
 
 ## Setting up
 
-Note: This connector takes more steps to set up than most.
-
 - **[Recommended]** To set up the connector with a service account, follow the guide
   [here](./service_account). This requires a Google Workspace and access to its Admin console.
-  If your organization meets these prerequisites, this is the preferred approach.
 
 - To set up the connector with an individual account and OAuth, follow the guide [here](./oauth).
   This does not require a Google Workspace.
-
-- If you are not sure which approach fits your organization, ask in the
-  [Onyx Slack community](https://join.slack.com/t/onyx-dot-app/shared_invite/zt-34lu4m7xg-TsKGO6h8PDvR5W27zTdyhA).
 
 <Note>
   You can set up more than one Google Drive connector on a single Onyx instance,
@@ -67,18 +61,17 @@ After you select a credential, choose the indexing scope under **Index Configura
 
 ## Document access and permission sync
 
-Under **Document Access**, choose who can see the indexed files:
-
-- **Everyone in Your Organization** shows every indexed file to all Onyx users.
-- **Specific Groups** limits the files to the Onyx user groups you select.
-- **Sync with Google Drive** mirrors Google Drive sharing. A user finds a file in Onyx only if their Google account, matched by email, can open it in Drive. Onyx re-reads file permissions and Google group membership every 5 minutes by default. Self-hosted admins can change the group interval with `GOOGLE_DRIVE_PERMISSION_GROUP_SYNC_FREQUENCY`, in seconds.
+Under **Document Access**, select **Everyone in Your Organization**, **Specific Groups**, or **Sync with Google Drive**.
+**Sync with Google Drive** mirrors Google Drive sharing. A user finds a file in Onyx only if their Google account,
+matched by email, can open it in Drive.
+Onyx re-reads file permissions and Google group membership every 5 minutes by default.
+Self-hosted admins can change the group interval with `GOOGLE_DRIVE_PERMISSION_GROUP_SYNC_FREQUENCY`, in seconds.
 
 **Specific Groups** and **Sync with Google Drive** need a Business plan or higher, or Onyx Cloud.
 
 ## Connection checks
 
-When you select a credential, Onyx runs checks against Google Drive and lists each one in the form.
-The checks confirm that Onyx can sign in, list Workspace users, find the drives and folders you listed,
-and read file content. With **Sync with Google Drive**,
+When you select a credential, Onyx runs checks against Google Drive. The checks confirm that Onyx can sign in,
+list Workspace users, find the drives and folders you listed, and read file content. With **Sync with Google Drive**,
 Onyx also checks that it can read file permissions and group members.
-**Create Connector** is enabled when the required checks pass. A failed check names what to fix.
+**Create Connector** is enabled when the required checks pass.
