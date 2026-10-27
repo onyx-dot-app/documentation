@@ -1751,7 +1751,7 @@
           "kind": "connector-mixed"
         },
         {
-          "src": "/assets/admins/connectors/confluence/connector-form-cloud.jpg",
+          "src": "/assets/admins/connectors/confluence/connector-form-cloud.png",
           "kind": "connector-mixed"
         }
       ]
@@ -1799,7 +1799,7 @@
           "kind": "connector-mixed"
         },
         {
-          "src": "/assets/admins/connectors/confluence/connector-form-cloud.jpg",
+          "src": "/assets/admins/connectors/confluence/connector-form-cloud.png",
           "kind": "connector-mixed"
         }
       ]
@@ -1846,7 +1846,7 @@
           "kind": "connector-mixed"
         },
         {
-          "src": "/assets/admins/connectors/discourse/discourse_4.gif",
+          "src": "/assets/admins/connectors/discourse/discourse_4.png",
           "kind": "connector-mixed"
         }
       ]
