@@ -11,17 +11,11 @@ icon: "users"
   see [Users and Groups before v4.7](/admins/user_management/users_and_groups_legacy).
 </Info>
 
-Onyx lets you manage users, account types, groups,
-and invitations from the **Users** and **Groups** pages in the Admin Panel.
-Both pages are under **Permissions** in the Admin Panel sidebar.
+The **Users** and **Groups** pages are under **Permissions** in the Admin Panel.
 
 ### Users
 
-As users join your workspace, they appear on the Users page. The page header counts **active users**,
-**pending invites**, and **requests to join**. Click a count to filter the list.
-
-Each row shows the account's name, groups, account type, status, and when it was last active.
-You can filter the list by account type, group, or status, and you can download the list as a CSV file.
+As users join your workspace, they appear on the Users page.
 
 | Status | Meaning |
 |---|---|
@@ -36,8 +30,6 @@ Open the menu on a row to act on that user:
 |---|---|
 | Groups & Roles | Adds the user to groups or removes them from groups. |
 | Make Admin / Remove Admin Access | Adds the user to the **Admin** group or removes them from it. |
-| Approve | Accepts a request to join. |
-| Cancel Invite | Withdraws a pending invitation. |
 | Deactivate User / Activate User | Blocks or restores sign-in. Deactivating a user frees their license seat. |
 | Reset Password | Generates a new random password and signs the user out of all sessions. Available for password sign-in only. |
 | Delete User | Removes the user and their chat history. This cannot be undone. |
@@ -61,10 +53,6 @@ service account, or system-managed account.
 | Slack Bot | A bot-created account used for Slack interactions. These accounts are system-managed. |
 | External User | A placeholder account discovered through external permission sync before the person logs in. These accounts are system-managed. |
 | Anonymous | A temporary anonymous account when anonymous access is enabled. These accounts are system-managed. |
-
-Most day-to-day user management happens with **Standard** users.
-Use groups to control what Standard users and Service Accounts can access or manage. Slack Bot, External User,
-and Anonymous accounts are created by system workflows and are not usually edited directly.
 
 Because all access comes from groups, an account that belongs to no group has no permissions.
 A service account with no group is the one exception: it can still post to chat, but it cannot search.
@@ -106,16 +94,13 @@ see [Understanding Permissions](/admins/permissions/understanding_permissions).
   Community Edition has the default **Admin** and **Basic** groups only.
 </Info>
 
-The Groups page lists every group in your workspace with its member count and the private resources shared with it.
-The built-in **Admin** and **Basic** groups are marked **Default**. Use **New Group** to create a custom group.
-
 <img className="rounded-image" src="/assets/admins/user_management/manage_groups.webp" alt="Groups page showing the default Admin and Basic groups alongside a custom group"/>
 
 Selecting a group opens its **Edit Group** page:
 
 | Section | What you manage |
 |---|---|
-| Members | Add or remove users and service accounts. Use **Make manager** to promote a member to Group Manager. Managers show a **Manager** badge. |
+| Members | Add or remove users and service accounts. Use **Make manager** to promote a member to Group Manager. |
 | Group Permissions | The organization-wide permissions every member receives. |
 | Shared with This Group | The connectors, document sets, and agents shared with the group. |
 | Incognito Chats | Lets members of this group start incognito chats, when incognito access is set to designated groups on **Security & Hardening**. |
