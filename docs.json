@@ -57,8 +57,7 @@
               "overview/onyx_anywhere/discord_bot",
               "overview/onyx_anywhere/mcp_server",
               "developers/guides/llm_gateway",
-              "overview/onyx_anywhere/cli",
-              "overview/onyx_anywhere/mobile_app"
+              "overview/onyx_anywhere/cli"
             ]
           },
           {
@@ -891,6 +890,10 @@
     {
       "source": "/overview/getting_started/first_look",
       "destination": "/overview/getting_started/quickstart"
+    },
+    {
+      "source": "/overview/onyx_anywhere/mobile_app",
+      "destination": "/overview/onyx_anywhere/desktop_app"
     }
   ],
   "logo": {
@@ -933,7 +936,7 @@
   },
   "seo": {
     "title": "Onyx AI - Open Source Enterprise Search and AI Platform",
-    "description": "Onyx AI is the open source AI platform for enterprise search, generation, and automation \u2014 powered by your team's data.",
+    "description": "Onyx AI is the open source AI platform for enterprise search, generation, and automation — powered by your team's data.",
     "metatags": {
       "keywords": "enterprise search, onyx ai, onyx, open source ai, enterprise ai, generative ai platform, ai assistant, knowledge management, danswer"
     }
