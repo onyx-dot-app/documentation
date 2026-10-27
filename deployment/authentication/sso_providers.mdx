@@ -36,7 +36,6 @@ For the setup steps for each type, see [Google OAuth](/deployment/authentication
 
 4. Fill in the provider-specific fields. The modal shows the **Redirect URI** (Google and OIDC) or **ACS (Reply)
    URL** (SAML) to register in your identity provider.
-5. Click **Create**.
 
 ![Add SSO Provider modal](/assets/deployment/sso_providers_modal.webp)
 
@@ -54,12 +53,12 @@ https://<your-onyx-domain>/auth/saml/callback
 
 ### Edit a Provider
 
-Click the edit icon on a provider row. You can change every field except **Name**. Secret fields show as empty.
-Leave them empty to keep the stored secret, or enter a new value to replace it.
+You can change every field except **Name**. Secret fields show as empty. Leave them empty to keep the stored secret,
+or enter a new value to replace it.
 
 ### Delete a Provider
 
-Click the delete icon on a provider row. The modal shows how many users signed in with the provider.
+The delete modal shows how many users signed in with the provider.
 
 - Users keep their accounts. Their next sign-in through another provider with the same email opens the same account.
 - Add the replacement provider before you delete the old one.
@@ -100,7 +99,6 @@ When you add a domain, the provider modal shows a **Domain verification** panel 
 1. Copy the **Name**, **Type** (`TXT`), and **Value**.
 2. Add the record at your DNS host.
 3. Click **Verify domain**. The status changes from **Pending** to **Verified**.
-   DNS changes can take some time to propagate.
 
 Verified domains also let Onyx create accounts for new users on first sign-in without an invitation.
 
@@ -113,7 +111,7 @@ To require SSO for everyone:
 3. Turn on **Disable Password Login & Signup**.
 
 The login page then shows only SSO buttons. Password sign-in returns "Password login is turned off.
-Sign in with your identity provider." Admins can turn the setting off again at any time.
+Sign in with your identity provider."
 
 Related settings in the same section:
 
@@ -125,4 +123,3 @@ Related settings in the same section:
 
 - Client secrets and SAML private keys are stored encrypted.
 - Set `OIDC_PKCE_ENABLED=true` to force PKCE for every Google and OIDC provider. Set `GOOGLE_OAUTH_SCOPE_OVERRIDE` or `OIDC_SCOPE_OVERRIDE` to change the default scopes for a provider type.
-- Deployments upgraded from v4.3 or earlier get a provider created from the old `AUTH_TYPE` environment variables. Remove `AUTH_TYPE` and the old SSO variables after you check the provider. See the type-specific pages for details.
