@@ -4,9 +4,7 @@ description: "Enable web search for your AI Agents in Onyx"
 icon: "globe"
 ---
 
-The Web Search action lets your Agents query the internet and retrieve real-time information from web sources. In chat,
-the user sees the queries the Agent ran, the pages it found,
-and numbered citations that work the same way as citations from internal documents.
+The Web Search action lets your Agents query the internet and retrieve real-time information from web sources.
 
 Web Search has two parts:
 
@@ -20,15 +18,11 @@ so users can paste a link into the chat and Onyx reads the page.
 The web search action does not appear in chat until an admin connects a search engine and sets it as the default.
 
 <Steps>
-  <Step title="Open the Web Search page">
-    Open the **Admin Panel** and select **Web Search** in the sidebar.
+  <Step title="Set up a search engine">
+    Open **Admin Panel → Web Search**. In **Search Engine**, click **Connect** on a provider and enter its credentials.
+    Onyx tests the connection before it saves.
 
     <img className="rounded-image" src="/assets/admins/actions/web_search/web_search.webp" alt="Web Search page in the Onyx Admin Panel"/>
-  </Step>
-
-  <Step title="Set up a search engine">
-    The **Search Engine** section lists the supported providers: Exa, Serper, Brave, Google PSE, SearXNG, Tavily,
-    and Firecrawl. Click **Connect** on a provider and enter its credentials. Onyx tests the connection before it saves.
 
     <img className="rounded-image" src="/assets/admins/actions/web_search/search_engines.webp" alt="Search Engine providers"/>
 
@@ -84,7 +78,7 @@ The web search action does not appear in chat until an admin connects a search e
   </Step>
 
   <Step title="Set up a web crawler">
-    The **Web Crawler** section lists the supported crawlers: Onyx Web Crawler, Firecrawl, Exa, and Tavily.
+    The **Web Crawler** section lists the supported crawlers.
 
     <img className="rounded-image" src="/assets/admins/actions/web_search/crawlers.webp" alt="Web Crawler providers"/>
 
@@ -114,12 +108,11 @@ The web search action does not appear in chat until an admin connects a search e
   </Step>
 
   <Step title="Set the default providers">
-    Click **Set as Default** on the search engine you want to use. The selected provider shows **Current Default**.
-    Only one search engine is active at a time.
+    Click **Set as Default** on the search engine you want to use. Only one search engine is active at a time.
     Other connected providers stay available but are not used until you select them.
 
-    The crawler marked **Current Crawler** reads result pages. Click **Set as Default** on another crawler to switch.
-    If you disconnect the current crawler, Onyx falls back to the Onyx Web Crawler.
+    The crawler marked **Current Crawler** reads result pages. If you disconnect the current crawler,
+    Onyx falls back to the Onyx Web Crawler.
 
     <img className="rounded-image" src="/assets/admins/actions/web_search/set_default_provider.webp" alt="Set as Default on a search engine"/>
   </Step>
@@ -132,11 +125,4 @@ The web search action does not appear in chat until an admin connects a search e
   Keep **Open URL** on as well. Without it, the Agent cannot read the pages it finds, and web results are much worse.
 
 Users can turn Web Search off for a single message from the **Actions** menu in the chat input.
-The Agent then answers without searching the internet.
 Links the user pastes still resolve if the page is already indexed by a connector.
-
-<Note>
-  If no search engine is set as the default,
-  the Web Search action is hidden from the chat even when an Agent has it turned on.
-  Check this page first if web search stops appearing.
-</Note>

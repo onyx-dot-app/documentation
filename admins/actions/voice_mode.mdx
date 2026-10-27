@@ -13,25 +13,18 @@ the microphone button and read-aloud controls are hidden in chat.
 ## Set up Voice
 
 <Steps>
-  <Step title="Open the Voice page">
-    Open the **Admin Panel** and select **Voice** in the sidebar.
+  <Step title="Set up a Speech to Text provider">
+    Open **Admin Panel → Voice**. In **Speech to Text**,
+    click **Connect** on a model and enter the provider credentials.
 
     <img className="rounded-image" src="/assets/admins/actions/voice-mode/voice_mode_dashboard.webp" alt="Voice page in the Onyx Admin Panel"/>
-  </Step>
-
-  <Step title="Set up a Speech to Text provider">
-    The **Speech to Text** section lists the models that transcribe speech into text.
-    Click **Connect** on a model and enter the provider credentials.
 
     <img className="rounded-image" src="/assets/admins/actions/voice-mode/stt.webp" alt="Speech to Text models"/>
 
     <Tabs tabs={["Whisper", "Azure Speech", "ElevenAPI", "Zoom Scribe"]}>
       <Tab title="Whisper">
-        OpenAI's Whisper speech recognition model.
-
         Create an API key in the [OpenAI dashboard](https://platform.openai.com/api-keys),
-        or reuse an OpenAI key you already use for a chat model.
-        Enter it in the **API Key** field and click **Connect**.
+        or reuse an OpenAI key you already use for a chat model. Enter it in the **API Key** field.
       </Tab>
 
       <Tab title="Azure Speech">
@@ -46,10 +39,8 @@ the microphone button and read-aloud controls are hidden in chat.
       </Tab>
 
       <Tab title="ElevenAPI">
-        ElevenLabs Speech to Text API.
-
-        Create an API key in the [ElevenLabs dashboard](https://elevenlabs.io/app/settings/api-keys).
-        Enter it in the **API Key** field and click **Connect**.
+        Create an API key in the [ElevenLabs dashboard](https://elevenlabs.io/app/settings/api-keys)
+        and enter it in the **API Key** field.
       </Tab>
 
       <Tab title="Zoom Scribe">
@@ -66,8 +57,7 @@ the microphone button and read-aloud controls are hidden in chat.
   </Step>
 
   <Step title="Set up a Text to Speech provider">
-    The **Text to Speech** section lists the models that read replies aloud, grouped by provider.
-    Click **Connect** on a model and enter the provider credentials.
+    In **Text to Speech**, click **Connect** on a model and enter the provider credentials.
 
     <img className="rounded-image" src="/assets/admins/actions/voice-mode/tts.webp" alt="Text to Speech models"/>
 
@@ -91,36 +81,24 @@ the microphone button and read-aloud controls are hidden in chat.
     </Tabs>
 
     In the **Voice** field, select a voice from the list or enter a voice ID. Onyx uses this voice for spoken responses.
-    Click **Connect** to save.
 
     <img className="rounded-image" src="/assets/admins/actions/voice-mode/voice_selection.webp" alt="Voice selection in the provider setup dialog"/>
   </Step>
 
   <Step title="Set the default providers">
     Click **Set as Default** on the STT model and on the TTS model you want to use.
-    The selected model shows **Current Default**. The STT default and the TTS default are independent.
     You can use one provider for speech to text and a different provider for text to speech.
 
     <img className="rounded-image" src="/assets/admins/actions/voice-mode/set_default.webp" alt="Set as Default on a Speech to Text model"/>
 
-    To change credentials or the voice later, click the gear icon on the model. To remove a provider,
-    open the gear menu and click **Disconnect**. Disconnecting removes its stored credentials.
+    Disconnecting a provider removes its stored credentials.
   </Step>
 </Steps>
 
 ## Using Voice in chat
 
-- **Speak a message**: Click the microphone button in the chat input and speak. The recognized text appears in the
-  input box. Live transcription needs a browser with microphone access.
-- **Hear a reply**: Use the read-aloud control on a response. The text advances in sync with the audio.
-
-Each user can tune voice behavior under **Settings > Voice**:
-
-| Setting | Effect |
-| ------- | ------ |
-| **Auto-Send on Pause** | Sends the voice input automatically when the user stops speaking. |
-| **Auto-Playback** | Plays voice responses automatically. |
-| **Playback Speed** | Adjusts the speed of voice playback. |
+Each user can turn on **Auto-Send on Pause** and **Auto-Playback** and set the **Playback Speed** under **Settings >
+Voice**.
 
 <Note>
   Onyx does not store audio. Recorded speech goes to the STT provider and only the transcript is kept,

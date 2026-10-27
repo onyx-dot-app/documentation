@@ -30,17 +30,10 @@ any chat model in Onyx can invoke the action.
 ## Configuration
 
 <Steps>
-  <Step title="Open Image Generation">
-    Open the **Admin Panel** and select **Image Generation** in the sidebar.
+  <Step title="Connect a Model">
+    Open **Admin Panel → Image Generation** and click **Connect** on a model. Enter the provider credentials:
 
     <img className="rounded-image" src="/assets/admins/actions/image_generation_overview.webp" alt="Image Generation page in the Onyx Admin Panel"/>
-  </Step>
-
-  <Step title="Connect a Model">
-    The page lists the available models grouped by provider: **OpenAI**, **Azure OpenAI**,
-    and **Google Cloud Vertex AI**.
-
-    Click **Connect** on a model. A dialog opens where you enter the provider credentials:
 
     <Tabs>
       <Tab title="OpenAI">
@@ -62,20 +55,16 @@ any chat model in Onyx can invoke the action.
       </Tab>
     </Tabs>
 
-    Onyx tests the credentials before it saves them. If the test fails, the dialog shows the error and nothing is saved.
+    Onyx tests the credentials before it saves them.
   </Step>
 
   <Step title="Set the Default Model">
-    Click **Set as Default** on the model you want to use.
-    The model marked **Current Default** generates images when users ask for them in chat.
-    Only one model can be the default.
+    Click **Set as Default** on the model you want to use. Only one model can be the default.
 
-    - To **change the default**: Click **Set as Default** on another connected model.
-    - To **clear the default**: Click the **Current Default** badge. Image generation is turned off until you set
+    - To clear the default, click the **Current Default** badge. Image generation is turned off until you set
     another default.
-    - To **edit credentials**: Click the **Edit** (gear) icon on the model.
-    - To **disconnect a model**: Click the **Disconnect** icon. If the model is the current default, the dialog asks
-    you to choose a replacement default or **No Default**, which turns image generation off.
+    - If you disconnect the current default model, the dialog asks you to choose a replacement default or
+    **No Default**, which turns image generation off.
   </Step>
 </Steps>
 
@@ -90,7 +79,6 @@ Image generation does not appear in chat until a default model is set, even if a
 ## Using Image Generation
 
 When a user asks for an image, the Agent calls the default image model with a prompt it writes from the request.
-The user sees a generating indicator, then the image inline in the response.
 Generated images belong to the chat session that created them.
 
 To edit an image, the user attaches it to the message (or refers to an image generated earlier in the chat)

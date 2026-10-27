@@ -14,8 +14,7 @@ data analysis, and chart generation.
 - **File generation**: Create files such as reports, modified datasets, or exports. Users download them from the chat.
 - **Visualizations**: Generate charts and graphs that render directly in the [Chat UI](/overview/core_features/chat)
 
-The LLM decides when to run code based on the user's request. Users do not need to invoke it explicitly. In the chat,
-the user sees the code the model wrote, its output, and any files it produced.
+The LLM decides when to run code based on the user's request. Users do not need to invoke it explicitly.
 
 Each code run is independent.
 Variables from one run are not available in the next run unless the model writes them to a file.
@@ -30,16 +29,14 @@ To use a Code Interpreter service you run yourself, point `CODE_INTERPRETER_BASE
 
 ## Connect or disconnect the Code Interpreter
 
-Open the **Admin Panel** and select **Code Interpreter** in the sidebar.
-The page shows one card for the Code Interpreter service with its connection status (**Connected**, **Unhealthy**,
-or **Connection Lost**). The status refreshes every 30 seconds.
+Open **Admin Panel → Code Interpreter**. The card shows the connection status of the Code Interpreter service.
+The status refreshes every 30 seconds.
 
 <img className="rounded-image" src="/assets/admins/actions/code_interpreter.webp" alt="Code Interpreter page in the Onyx Admin Panel"/>
 
-- Click **Disconnect** to turn Code Interpreter off for the whole deployment. Onyx removes the action from every
-  chat without changing any Agent configuration. Running sessions stop. No data is removed from the runtime.
-- Click **Reconnect** to turn it back on.
-- Click **Refresh** to check the connection again.
+Click **Disconnect** to turn Code Interpreter off for the whole deployment.
+Onyx removes the action from every chat without changing any Agent configuration. Running sessions stop.
+No data is removed from the runtime.
 
 ## Enable Code Interpreter for Agents
 

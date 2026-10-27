@@ -7,10 +7,7 @@ icon: "arrow-right-arrow-left"
 ## Overview
 
 Onyx v5 uses OpenSearch as its only document index. Vespa is no longer part of Onyx.
-OpenSearch needs fewer resources and is a widely used, well-supported index.
-
-This page tells you how the change affects an upgrade. It does not apply to Onyx Cloud,
-where the migration finished in April 2026.
+The migration does not apply to Onyx Cloud, where it finished in April 2026.
 
 ## Upgrade Path
 
@@ -40,5 +37,4 @@ switch retrieval to OpenSearch on the same page and confirm that search works. T
 The migration was best-effort. A small number of documents could not be migrated,
 in particular documents indexed by old versions of Onyx with weaker content rules.
 
-If a document does not appear in search after you upgrade, re-index its connector. Open the **Admin Panel**,
-select **Connectors**, open the connector, and start a re-index. Re-indexed documents are written to OpenSearch.
+If a document does not appear in search after you upgrade, re-index its connector from **Admin Panel → Connectors**.
