@@ -13,16 +13,11 @@ import AgentsPersonasAssistantsNote from '/snippets/agents-personas-assistants-n
   <Accordion title="Actions" icon="wrench">
     Actions (called Tools in the API)
     are the functions that your Agents can call to interact with external systems and services.
-    They extend your agents' capabilities beyond the language model.
 
     Built-in Actions:
     <BuiltInActionsTable />
 
-    Custom Actions let an agent call your own systems, for example:
-    - **API Integrations**: Call external REST APIs
-    - **Database Operations**: Query and update databases
-    - **Workflow Automation**: Trigger business processes
-
+    Custom Actions let an agent call your own systems.
     Admins add custom Actions in **Admin Panel** > **Plugins** from an [MCP server](/admins/plugins/mcp)
     or an [OpenAPI schema](/admins/plugins/openapi). Each MCP tool or OpenAPI operation becomes one Action.
     The [Actions](/developers/api_reference/actions/list_tools) endpoints list and manage them.
@@ -79,9 +74,7 @@ import AgentsPersonasAssistantsNote from '/snippets/agents-personas-assistants-n
 <AccordionGroup>
   <Accordion title="Streamed Chat Responses" icon="comment">
     `POST /chat/send-chat-message` streams its response as server-sent events (SSE). Each event is one JSON packet.
-    Instead of waiting for a complete response,
-    Onyx breaks the chat interaction into discrete packets that arrive as they are produced. Set `stream:
-    false` in the request to receive one complete JSON response instead.
+    Set `stream: false` in the request to receive one complete JSON response instead.
 
     Every packet has the same two fields:
 
@@ -97,14 +90,7 @@ import AgentsPersonasAssistantsNote from '/snippets/agents-personas-assistants-n
     and `model_index` identifies the model when several models answer side by side.
     - `obj` is the content. Its `type` field tells you how to read the rest of the object.
 
-    **Streaming Flow:**
-
-    - A chat request starts the stream
-    - Packets of different types are generated based on the required operations
-    (reasoning, tool calls, AI response, documents, citations, etc.)
-    - Packets with the same `placement` form one block in the UI
-    - A `section_end` packet closes each block
-    - A `stop` packet signals completion
+    Packets with the same `placement` form one block in the UI.
   </Accordion>
 
   <Accordion title="Message Packets" icon="message">
@@ -206,24 +192,12 @@ import AgentsPersonasAssistantsNote from '/snippets/agents-personas-assistants-n
     OAuth tokens, personal access tokens (PATs),
     or service account credentials that allow Onyx to securely connect to your external systems.
     Onyx stores them encrypted.
-
-    Types of `Credentials`:
-    - **API Keys**: Simple token-based authentication
-    - **OAuth Tokens**: Delegated authorization with refresh capabilities
-    - **Service Accounts**: Machine-to-machine authentication
-    - **Personal Access Tokens**: User-specific access credentials
   </Accordion>
 
   <Accordion title="ConnectorCredentialPairs" icon="link">
     Behind the scenes, `Connectors` and `Credentials` are combined into a `ConnectorCredentialPair` (CC-pair).
     A CC-pair is an active connection that can sync data from your external sources into Onyx.
     CC-pairs are what you see and manage on the Admin Panel **Connectors** page.
-
-    CC-pair functionality:
-    - **Active Connections**: Live data synchronization between source and Onyx
-    - **Status Monitoring**: Track sync health and performance
-    - **Access Control**: Manage who can see data from this connection
-    - **Configuration Management**: Update sync settings and credentials
 
     <Warning>
 

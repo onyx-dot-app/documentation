@@ -7,8 +7,7 @@ icon: "code"
 **Nearly every Onyx feature is accessible through the Onyx API.**
 
 Onyx APIs are built on REST principles with JSON request/response formats.
-All endpoints require authentication and follow consistent patterns. The API has no separate paths or response shapes:
-a script calls the same endpoints the Onyx web app calls.
+The API has no separate paths or response shapes: a script calls the same endpoints the Onyx web app calls.
 
 Make API requests to:
 
@@ -70,9 +69,8 @@ See [Service Accounts](/admins/user_management/api_keys) for setup instructions.
 
 Personal Access Tokens (PATs) let a user authenticate API requests as themselves.
 
-To create a token, go to **Settings** > **Accounts & Access**. In the **Access Tokens** section,
-click **New Access Token**. Give the token a name, choose when it expires (**7 days**, **30 days**, **365 days**,
-or **No expiration**), and choose its permissions:
+To create a token, go to **Settings** > **Accounts & Access** and click **New Access Token**.
+Choose when the token expires and choose its permissions:
 
 | Permissions | Behavior |
 |---|---|
@@ -106,7 +104,6 @@ even one you can reach in the browser.
   Your token is displayed only once at creation. Copy it immediately and store it securely.
 </Warning>
 
-You can view, audit, and revoke your tokens at any time from **Settings** > **Accounts & Access**.
 Changing your password revokes all of your tokens.
 
 ## Permissions
@@ -167,10 +164,6 @@ A request that fails a permission check returns `403`:
 ```
 
 ## API Reference and Playground
-
-In the [API Reference](/developers/api_reference/chat/get_chat_session),
-we have curated a subset of useful Onyx API endpoints.
-You can experiment with the endpoints on each page or follow one of our [Guides](/developers/guides/chat_new_guide).
 
 You can find all Onyx API endpoints in the built-in OpenAPI explorer:
 
