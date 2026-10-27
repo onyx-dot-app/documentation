@@ -25,8 +25,7 @@ Select it, approve the Atlassian consent screen, then choose the Confluence site
 Onyx stores a refresh token and renews short-lived access tokens automatically.
 An OAuth account works with Confluence Cloud only.
 
-OAuth is the simplest option on Onyx Cloud. Self-hosted Onyx does not offer it.
-Use an API token for self-hosted Onyx or when the **OAuth** tab is not shown.
+Self-hosted Onyx does not offer OAuth. Use an API token for self-hosted Onyx or when the **OAuth** tab is not shown.
 
 ### Atlassian API token
 
@@ -84,7 +83,6 @@ but the **Scoped API Token** setting in Onyx must match the token type.
 
   <Step title="Copy the token">
     Create and copy the token. Atlassian shows the token value once.
-    Store it in your secrets manager until you add it to Onyx.
   </Step>
 </Steps>
 
@@ -100,13 +98,10 @@ Open **Admin Panel → Connectors** and select **Confluence**. Under **Index Con
 ![A Confluence Cloud connector configured in Onyx with an unscoped
 token](/assets/admins/connectors/confluence/connector-form-cloud.webp)
 
-This example uses an unscoped token. Enable **Scoped API Token** if you created a scoped token.
-
 ## Add the Cloud account to Onyx
 
 Under **Authentication Account**, select **New Confluence Account** and enter:
 
-- **Display Name**: A clear name, such as `Confluence Cloud - docs account`.
 - **Confluence Account Email**: The connector account's Atlassian email address.
 - **API Token**: The API token.
 

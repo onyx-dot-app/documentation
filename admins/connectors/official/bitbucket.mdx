@@ -26,39 +26,15 @@ The access type can only be **Everyone in Your Organization** or **Specific Grou
 
 The Bitbucket connector authenticates with an Atlassian API token.
 
-To create an API token:
-
 <Steps>
-  <Step title="Log in to Bitbucket">
-    Log in to your Bitbucket account.
-  </Step>
-
-  <Step title="Open account settings">
-    Select the **Settings** cog in the upper-right corner of the top navigation bar.
-  </Step>
-
-  <Step title="Access Atlassian account settings">
-    Under **Personal settings**, select **Atlassian account settings**.
-  </Step>
-
-  <Step title="Go to the Security tab">
-    Select the **Security** tab on the top navigation bar.
-  </Step>
-
-  <Step title="Manage API tokens">
-    Select **Create and manage API tokens**.
-  </Step>
-
   <Step title="Create a scoped token">
-    Select **Create API token with scopes**.
+    In Bitbucket,
+    open **Settings → Atlassian account settings → Security → Create and manage API tokens** and select **Create API
+    token with scopes**.
   </Step>
 
   <Step title="Name the token">
-    Give the API token a name and an expiry date, then select **Next**.
-  </Step>
-
-  <Step title="Choose Bitbucket">
-    Select **Bitbucket** as the app and select **Next**.
+    Give the API token a name and an expiry date, select **Bitbucket** as the app, then select **Next**.
   </Step>
 
   <Step title="Select scopes">
@@ -70,17 +46,9 @@ To create an API token:
   </Step>
 
   <Step title="Create the token">
-    Review the token and select **Create token**. The page shows the new API token.
-  </Step>
-
-  <Step title="Save the token">
-    Copy the API token. You enter it in Onyx in the next section.
+    Select **Create token** and copy the API token. It is shown once and cannot be retrieved later.
   </Step>
 </Steps>
-
-<Note>
-  The token is shown once and cannot be retrieved later.
-</Note>
 
 For the most up-to-date instructions,
 refer to the [official Bitbucket
@@ -89,12 +57,9 @@ documentation](https://support.atlassian.com/bitbucket-cloud/docs/create-an-api-
 ### Indexing
 
 <Steps>
-  <Step title="Open the Bitbucket connector">
-    In Onyx, go to **Admin Panel → Connectors** and select **Bitbucket**.
-  </Step>
-
   <Step title="Connect a Bitbucket account">
-    Under **Authentication Account**, select **New Bitbucket Account** and enter:
+    In Onyx, go to **Admin Panel → Connectors** and select **Bitbucket**. Under **Authentication Account**,
+    select **New Bitbucket Account** and enter:
 
     - **Bitbucket Account Email**: The email address of the Atlassian account that owns the token.
     - **API Token**: The API token you created.

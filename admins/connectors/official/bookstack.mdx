@@ -35,7 +35,7 @@ You need API credentials for a user in your BookStack instance:
 
   <Step title="Create and copy the token">
     Click **Create Token**, enter a name and an optional expiry date, then save.
-    Copy the **Token ID** and **Token Secret**. You enter them in Onyx in the next section.
+    Copy the **Token ID** and **Token Secret**.
 
     <img className="rounded-image" src="/assets/admins/connectors/bookstack/BookstackApiToken.webp" alt="BookStack API Token View"/>
   </Step>
@@ -44,12 +44,9 @@ You need API credentials for a user in your BookStack instance:
 ### Indexing
 
 <Steps>
-  <Step title="Open the BookStack connector">
-    In Onyx, go to **Admin Panel → Connectors** and select **BookStack**.
-  </Step>
-
   <Step title="Connect a BookStack account">
-    Under **Authentication Account**, select **New Bookstack Account** and enter:
+    In Onyx, go to **Admin Panel → Connectors** and select **BookStack**. Under **Authentication Account**,
+    select **New Bookstack Account** and enter:
 
     - **Bookstack Base URL**: Your BookStack site, such as `https://bookstack.example.com`.
     - **Bookstack API Token ID**: The Token ID you copied.

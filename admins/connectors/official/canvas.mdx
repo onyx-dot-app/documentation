@@ -33,20 +33,12 @@ You need:
 - Permission in Canvas to create an API access token for that user
 - An Onyx administrator account
 
-<Note>
-  The access token has the same Canvas access as the user who created it. Onyx indexes only the available courses,
-  published pages, published assignments, and active announcements that user can see.
-</Note>
-
 ## Configure Canvas
 
 <Steps>
-  <Step title="Open Canvas account settings">
-    In Canvas, open **Account → Settings**. You can also go directly to `/profile` on your Canvas site.
-  </Step>
-
   <Step title="Create an access token">
-    In **Approved Integrations**, select **New Access Token** (sometimes labeled **Add New Access Token**).
+    In Canvas, open **Account → Settings** (`/profile` on your Canvas site). In **Approved Integrations**,
+    select **New Access Token** (sometimes labeled **Add New Access Token**).
 
     Enter a purpose such as `Onyx Connector`. Optionally set an expiration date.
     Leave the expiration empty only if your institution allows non-expiring tokens.
@@ -69,12 +61,9 @@ and Canvas's [OAuth / access token documentation](https://canvas.instructure.com
 ## Configure Onyx
 
 <Steps>
-  <Step title="Open the Canvas connector">
-    In Onyx, go to **Admin Panel → Connectors** and select **Canvas**.
-  </Step>
-
   <Step title="Connect a Canvas account">
-    Under **Authentication Account**, select **New Canvas Account** and paste the token into **API Token**.
+    In Onyx, go to **Admin Panel → Connectors** and select **Canvas**. Under **Authentication Account**,
+    select **New Canvas Account** and paste the token into **API Token**.
 
     <img className="rounded-image" src="/assets/admins/connectors/canvas/CanvasCredential.webp" alt="Create a Canvas account with a display name and the Canvas access token"/>
   </Step>
@@ -89,18 +78,13 @@ and Canvas's [OAuth / access token documentation](https://canvas.instructure.com
   </Step>
 
   <Step title="Choose who can see the content">
-    Under **Document Access**, select one option:
-
-    - **Everyone in Your Organization** makes all indexed Canvas content visible to every Onyx user.
-    - **Specific Groups** limits the entire connector to selected Onyx groups.
-    - **Sync with Canvas** mirrors supported Canvas access controls.
-
+    Under **Document Access**, select **Everyone in Your Organization**, **Specific Groups**, or **Sync with Canvas**.
     **Specific Groups** and **Sync with Canvas** are available on Onyx Cloud and Enterprise Edition.
   </Step>
 
   <Step title="Create and verify">
-    Give the connector a display name and select **Create Connector**. Then open **Admin Panel → Indexing Status**,
-    select the connector, and confirm its first indexing attempt completes.
+    Select **Create Connector**. Then open **Admin Panel → Indexing Status**, select the connector,
+    and confirm its first indexing attempt completes.
   </Step>
 </Steps>
 
@@ -158,8 +142,6 @@ so a new connector is searchable by the right people from its first indexing att
 | ---------------------- | ------ | ----------------------------------------------------------------------------- |
 | Canvas API call        | 30s    | A Canvas request that does not answer in time fails the indexing attempt.    |
 | Results per API page   | 100    | Onyx pages through courses, rosters and account users at this size.          |
-| Permission sync        | 30 min | `CANVAS_PERMISSION_DOC_SYNC_FREQUENCY`                                       |
-| Group sync             | 30 min | `CANVAS_PERMISSION_GROUP_SYNC_FREQUENCY`                                     |
 
 The connector has no file-size cap because it indexes no files. It reads page,
 assignment and announcement text through the Canvas API and does not download course attachments.

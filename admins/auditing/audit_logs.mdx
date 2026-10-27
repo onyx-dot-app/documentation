@@ -14,7 +14,6 @@ Onyx emits a normalized, structured **audit-event stream** for security-relevant
 user and access-control changes, admin configuration changes, and credential access.
 Every event is a single JSON object, so you can forward the stream to any SIEM — **Splunk, Microsoft Sentinel, Elastic,
 Google Chronicle, AWS Security Lake** — with no Onyx-side integration to build.
-You point your log shipper at Onyx's logs, filter the audit stream, and parse the JSON.
 
 Field names and the action taxonomy are shaped toward [**OCSF**](https://schema.ocsf.io)
 (the Open Cybersecurity Schema Framework), so events map cleanly onto the event classes most SIEMs already understand.
@@ -48,9 +47,6 @@ auditable events, AU-3 record content, AU-6 review, AU-12 generation).
     Writes that a scoped permission gate refuses, for example a group manager acting outside the groups they manage.
   </Accordion>
 </AccordionGroup>
-
-Each event records **who** did **what**, to **which resource**, **when**, from **where**,
-and whether it **succeeded** — the core of an audit trail.
 
 ## How it works
 
@@ -114,8 +110,6 @@ New actions may be added over time; existing ones do not change meaning.
 ```
 
 ## Forward to your SIEM
-
-Because audit events are just JSON log lines on a known logger prefix, any log shipper works.
 
 <Steps>
   <Step title="Run Onyx with JSON logging">
@@ -259,12 +253,6 @@ Parse this stream separately; detection rules written against the generalized sc
 | `endpoint` | string \| null | Route that produced the event. |
 | `client_ip` | string \| null | Client IP (from `X-Forwarded-For`). |
 
-<Tip>
-  The taxonomy is **append-only**: new `action` values may be added in future releases,
-  but existing ones never change meaning — so detection rules and dashboards built against these values keep working
-  across upgrades.
-</Tip>
-
 ## Export logs for support
 
 Enterprise self-hosted admins can download the raw server log files, including the audit stream,
@@ -276,9 +264,6 @@ Attach the file to an Onyx support thread.
 
 - **Secrets are never logged.** Actor objects and `extra` context are scrubbed
   of credential values by design.
-- **Credential-access events** (`onyx.audit.credential_access`) use a separate,
-  flat field set than the generalized schema for backward compatibility — see [Credential access](#credential-access)
-  for the full field list. They share the same logger tree and fail-safe behavior.
 - For **Onyx Cloud** (multi-tenant) deployments, audit-log forwarding is handled
   differently since you don't control the log pipeline — [contact us](/security/contact_us)
   to discuss SIEM delivery options.
