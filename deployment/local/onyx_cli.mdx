@@ -16,20 +16,6 @@ are thin wrappers that install the CLI and run `onyx-cli deploy install`, so bot
 Deployments created by older versions of the scripts are detected and [managed in
 place](#migrating-an-existing-deployment).
 
-Compared to managing the [Docker Compose files](/deployment/local/docker) by hand, the CLI:
-
-- **Keeps the compose files in sync automatically**: `deploy upgrade` refreshes the compose files, overlays,
-  and nginx config to match the target version, so you never diff them against the repo yourself.
-- **Protects your customizations**: hand-edited files are detected via a checksum manifest and backed up before
-  they are ever overwritten, and your `.env` settings survive every upgrade.
-- **Steers debugging**: `deploy status` flags version drift and explains *why* a service is down
-  (restarts, exit code, OOM, last failing health probe),
-  and `deploy logs` finds the right compose files and overlays for you.
-- **Handles the environment**: it checks RAM, disk, and ports, installs Docker on Linux,
-  and generates secrets, instead of leaving prerequisites to a README.
-- **Has a convenient, discoverable interface**: guided prompts with sensible defaults, `--help` on every command,
-  and clear error messages, with `--no-prompt` and `--json` for automation.
-
 | Command | Description |
 |---------|-------------|
 | `onyx-cli deploy install` | Install a new deployment, or restart / update an existing one |
@@ -69,7 +55,7 @@ onyx-cli deploy install
 
 The interactive installer asks two questions — the deployment mode (**Lite**, the recommended default for chat, tools,
 uploads, and projects without vector search, or **Standard** for full search, connectors, and RAG)
-and the version to deploy, prefilled with the latest release — while environment checks run in the background. It then:
+and the version to deploy, prefilled with the latest release. It then:
 
 - Checks system resources (RAM, disk) and scans for a free host port
 - Installs Docker Engine and the compose plugin on Linux after confirmation;
@@ -108,8 +94,6 @@ onyx-cli deploy install --tag v5.0.0 --no-prompt
 ### Deployment directory
 
 New installs live in `~/.config/onyx` (XDG-aware).
-Deployments created by older versions of the `install.sh` script in `./onyx_data` are detected automatically and managed
-**in place** — no migration needed.
 Pass `--dir` or set the `ONYX_DEPLOYMENT_DIR` environment variable to target a specific location.
 
 The directory holds the compose files, `.env`, and an `install-state.json` manifest recording the deployment mode,
@@ -204,7 +188,6 @@ project name.
 onyx-cli deploy logs api_server
 ```
 
-Shows service logs without needing to locate the deployment directory or remember which compose overlays it uses.
 Name one or more services to narrow the output, or pass none for all services.
 
 | Flag | Description |
