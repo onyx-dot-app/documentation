@@ -20,8 +20,6 @@ You can control the resources available to Docker in the **Resources** section o
 
 For small to mid scale deployments, we recommend deploying Onyx to a single instance in your cloud provider of choice.
 
-When evaluating your instance, follow the Preferred resources in the table above.
-
 ### Onyx Lite
 
 | Provider | Recommended Instance Type |
@@ -137,8 +135,7 @@ Based on our experience, we recommend the following for single-node or small-clu
 | Medium (5–50 GB) | ~1.5 GB | ~0.25 CPU |
 | Large (50+ GB) | ~1 GB | ~0.2 CPU |
 
-The per-GB cost decreases at larger scale because the fixed baseline overhead is amortized. At very large scale,
-consider a dedicated OpenSearch cluster or a managed service.
+At very large scale, consider a dedicated OpenSearch cluster or a managed service.
 
 Other factors that may affect resource requirements include:
 - The embedding model and vector dimensions

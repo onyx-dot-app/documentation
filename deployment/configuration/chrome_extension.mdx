@@ -21,8 +21,7 @@ Features include:
 
 **Onyx Cloud users**: Install directly from the Chrome Web Store (extension ID `dacfbnglakogghooelgjflkhjcdbemia`).
 
-**Self-hosted users**: Install from the Chrome Web Store and set the **Root Domain** to your Onyx URL,
-or ask your administrator for installation instructions.
+**Self-hosted users**: Install from the Chrome Web Store and set the **Root Domain** to your Onyx URL.
 
 ## Manual Installation (Self-Hosted)
 
@@ -43,13 +42,10 @@ or ask your administrator for installation instructions.
     - Click **Load unpacked**
     - Select the `extensions/chrome` folder
     - Click **Load**
-
-    The extension is now installed and ready to configure.
   </Step>
 
   <Step title="Configure connection settings">
-    - Click the three dots (...) next to the extension
-    - Select **Options**
+    - Open the extension's **Options**
     - Set the **Root Domain** to your self-hosted Onyx instance's URL (for example `https://onyx.yourcompany.com`)
     - Optional: turn on **Use Onyx as new tab page** and **Use Onyx in Address Bar**
 
@@ -60,7 +56,6 @@ or ask your administrator for installation instructions.
 </Steps>
 
 <Note>
-  The extension now connects to your self-hosted Onyx instance and can be used from any page in Chrome.
   Sign in to Onyx in the side panel or new tab page the same way you sign in on the web.
 </Note>
 
@@ -69,29 +64,14 @@ or ask your administrator for installation instructions.
 For organizations deploying the extension at scale, use Google Admin Console for centralized management.
 
 <Steps>
-  <Step title="Access Chrome Management">
-    - Log in to your Google Admin console
-    - Navigate to **Devices → Chrome → Apps and extensions**
-  </Step>
-
   <Step title="Add the extension">
+    - In the Google Admin console, go to **Devices → Chrome → Apps and extensions**
     - Click the yellow plus icon to add the extension
     - Enter the Chrome extension ID `dacfbnglakogghooelgjflkhjcdbemia` and click **Add**
   </Step>
 
   <Step title="Configure deployment">
-    Configure deployment options such as:
-
-    - Force installation for specific organizational units
-    - User access controls
-    - Update policies and version management
-    - Installation policies (allowed, forced, or blocked)
-  </Step>
-
-  <Step title="Save configuration">
-    <Warning>
-      Remember to save your changes after configuring the extension settings.
-    </Warning>
+    Set the installation policy (allowed, forced, or blocked) for each organizational unit.
   </Step>
 </Steps>
 
