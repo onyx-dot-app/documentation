@@ -77,16 +77,22 @@ Changes to Docker files and Helm charts increment the version numbers in their r
 
 ## Release Schedule
 
-Onyx follows a predictable weekly release cycle.
+Onyx ships a new minor release every two weeks. Each release has a two-week cycle:
 
-**Every Monday:**
-- The last pre-release version is promoted to stable
-- `main` is frozen as the new pre-release
+**Week 1 (pre-release):**
+- `main` is frozen into a new `release/vX.Y` branch
+- Only `vX.Y.0-beta.N` pre-releases are cut from this branch
+
+**Week 2 (stable):**
+- Only stable `vX.Y.N` releases are cut from the previous week's release branch
+- No new release branch is created
+
+The next cycle starts the following week with `release/vX.(Y+1)`.
 
 ### Hotfix Process
 
 - Critical bug fixes are **backported** to stable releases as necessary
-- Hotfixes bypass the normal weekly cycle for urgent production issues
+- Hotfixes bypass the normal two-week cycle for urgent production issues
 - Both stable and pre-release branches receive hotfixes when applicable
 
 ## Update Best Practices
