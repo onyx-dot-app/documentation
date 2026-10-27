@@ -276,7 +276,6 @@
                   "admins/connectors/official/outline",
                   "admins/connectors/official/productboard",
                   "admins/connectors/official/r2",
-                  "admins/connectors/official/requesttracker",
                   "admins/connectors/official/salesforce",
                   {
                     "group": "S3",
