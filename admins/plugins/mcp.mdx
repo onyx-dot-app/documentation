@@ -26,7 +26,7 @@ or when no built-in [Craft App](/admins/plugins/craft_apps) exists for the appli
   <Step title="Open the MCP catalog">
     Go to **Admin Panel → Plugins**, click **Add**, then select **MCP**.
 
-    <img className="rounded-image" src="/assets/admins/plugins/add_mcp_catalog.png" alt="The MCP catalog with Slack, HubSpot, Asana, Linear, Notion, Sentry, Atlassian, and Add custom MCP server"/>
+    <img className="rounded-image" src="/assets/admins/plugins/add_mcp_catalog.webp" alt="The MCP catalog with Slack, HubSpot, Asana, Linear, Notion, Sentry, Atlassian, and Add custom MCP server"/>
 
     Select a catalog entry to fill in the server name and URL for that vendor. The catalog contains Slack, HubSpot,
     Asana, Linear, Notion, Sentry, and Atlassian. Select **Add custom MCP server** for any other server.
@@ -36,11 +36,11 @@ or when no built-in [Craft App](/admins/plugins/craft_apps) exists for the appli
     Enter a **Server Name** and the **MCP Server URL**.
     Onyx checks the server and shows the authentication method and connection transport that it detects.
 
-    <img className="rounded-image" src="/assets/admins/plugins/mcp_custom_filled.png" alt="The Add MCP Server dialog after Onyx detects no authentication and the Streamable HTTP transport"/>
+    <img className="rounded-image" src="/assets/admins/plugins/mcp_custom_filled.webp" alt="The Add MCP Server dialog after Onyx detects no authentication and the Streamable HTTP transport"/>
 
     Catalog entries also show a **Setup guide** link to the vendor's documentation.
 
-    <img className="rounded-image" src="/assets/admins/plugins/mcp_linear_setup.png" alt="The Add MCP Server dialog for Linear with OAuth detected"/>
+    <img className="rounded-image" src="/assets/admins/plugins/mcp_linear_setup.webp" alt="The Add MCP Server dialog for Linear with OAuth detected"/>
 
     The Onyx API server must be able to reach the URL. Onyx blocks private, loopback,
     and link-local addresses during setup checks.
@@ -62,7 +62,7 @@ or when no built-in [Craft App](/admins/plugins/craft_apps) exists for the appli
     Select an **Authentication Method**. Onyx marks the method it detected as **Recommended**.
     See [Authentication](#authentication) for each method.
 
-    <img className="rounded-image" src="/assets/admins/plugins/mcp_auth_methods.png" alt="The Authentication Method menu with OAuth, API Key, and No authentication"/>
+    <img className="rounded-image" src="/assets/admins/plugins/mcp_auth_methods.webp" alt="The Authentication Method menu with OAuth, API Key, and No authentication"/>
   </Step>
 
   <Step title="Connect">
@@ -88,7 +88,7 @@ The MCP server then returns only data that the user's account can access.
 
 OAuth is the best choice for most hosted vendor servers, such as Linear, Notion, Atlassian, and Sentry.
 
-<img className="rounded-image" src="/assets/admins/plugins/mcp_linear_oauth.png" alt="OAuth settings with Set up automatically, Use your own OAuth client, and Use client metadata document"/>
+<img className="rounded-image" src="/assets/admins/plugins/mcp_linear_oauth.webp" alt="OAuth settings with Set up automatically, Use your own OAuth client, and Use client metadata document"/>
 
 | Option | Effect |
 | --- | --- |
@@ -108,7 +108,7 @@ https://<your-onyx-domain>/mcp/oauth/callback
 
 ### API key
 
-<img className="rounded-image" src="/assets/admins/plugins/mcp_api_key.png" alt="API Key settings with a choice of personal or shared token and a test credential field"/>
+<img className="rounded-image" src="/assets/admins/plugins/mcp_api_key.webp" alt="API Key settings with a choice of personal or shared token and a test credential field"/>
 
 Choose whether each user connects with a personal token or everyone uses a shared token.
 Enter a key to test the server and load its tools. A test key is saved to your account only.
@@ -117,7 +117,7 @@ Enter a key to test the server and load its tools. A test key is saved to your a
 
 Expand **Advanced settings** to add custom headers or change the transport.
 
-<img className="rounded-image" src="/assets/admins/plugins/mcp_advanced.png" alt="Advanced settings with Custom Headers and Connection transport"/>
+<img className="rounded-image" src="/assets/admins/plugins/mcp_advanced.webp" alt="Advanced settings with Custom Headers and Connection transport"/>
 
 - **Custom Headers** are sent with every request. Use `{api_key}` for each user's API key and `{user_email}` for the user's email address.
   Any other `{placeholder}` asks each user for a value when they connect.
@@ -128,7 +128,7 @@ Expand **Advanced settings** to add custom headers or change the transport.
 
 Open the server from the Plugins page, then select the **Tools** tab.
 
-<img className="rounded-image" src="/assets/admins/plugins/mcp_tab_tools.png" alt="The Tools tab with the list of tools from an MCP server"/>
+<img className="rounded-image" src="/assets/admins/plugins/mcp_tab_tools.webp" alt="The Tools tab with the list of tools from an MCP server"/>
 
 - In **Available tools**, turn tools on or off for the whole workspace.
   Use **Enable all** or **Disable all tools** for bulk changes.
@@ -137,7 +137,7 @@ Open the server from the Plugins page, then select the **Tools** tab.
 
 When Craft is enabled, the **Approval settings** tab sets the Craft policy for each tool.
 
-<img className="rounded-image" src="/assets/admins/plugins/mcp_tools_approval.png" alt="Approval settings with Auto-approve, Ask, and Disabled for each tool"/>
+<img className="rounded-image" src="/assets/admins/plugins/mcp_tools_approval.webp" alt="Approval settings with Auto-approve, Ask, and Disabled for each tool"/>
 
 | Policy | Effect in Craft |
 | --- | --- |
@@ -155,7 +155,7 @@ A tool that you turn off in **Available tools** is not available anywhere.
 
 ## Configuration tab
 
-<img className="rounded-image" src="/assets/admins/plugins/mcp_after_connect.png" alt="The Configuration tab for an MCP server"/>
+<img className="rounded-image" src="/assets/admins/plugins/mcp_after_connect.webp" alt="The Configuration tab for an MCP server"/>
 
 | Setting | Effect |
 | --- | --- |

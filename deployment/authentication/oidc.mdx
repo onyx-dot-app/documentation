@@ -22,7 +22,7 @@ This guide uses Okta as the example. The steps are similar for other providers.
 1. In the Okta admin console, go to **Applications → Applications** and click **Create App Integration**.
 2. Select **OIDC - OpenID Connect** and **Web Application**.
 
-![Create an Okta app integration](/assets/deployment/oidc_create_integration.png)
+![Create an Okta app integration](/assets/deployment/oidc_create_integration.webp)
 
 3. Enter a name for the application.
 4. Under **Sign-in redirect URIs**, add the redirect URI for your Onyx provider. It has this form:
@@ -35,7 +35,7 @@ Use the provider name you plan to enter in Onyx, for example `okta`.
 
 5. Under **Assignments**, select who can use the application. Save.
 
-![Okta application settings](/assets/deployment/oidc_config.png)
+![Okta application settings](/assets/deployment/oidc_config.webp)
 
 ### Step 2: Collect the Client Details
 
@@ -44,7 +44,7 @@ From the application's **General** tab, copy:
 - **Client ID**
 - **Client secret**
 
-![Okta client credentials](/assets/deployment/oidc_secrets.png)
+![Okta client credentials](/assets/deployment/oidc_secrets.webp)
 
 You also need the OpenID configuration URL. For Okta it is:
 

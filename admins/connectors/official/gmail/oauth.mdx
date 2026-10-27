@@ -45,7 +45,7 @@ follow the [Service Account guide](./service_account).
       **Groups > Read** privileges. Set this in the Google Admin console under **Account > Admin roles**.
     </Info>
 
-    <img className="rounded-image" src="/assets/admins/connectors/gmail/GmailScopes.png" alt="Google Cloud OAuth consent screen with the Gmail readonly scope selected"/>
+    <img className="rounded-image" src="/assets/admins/connectors/gmail/GmailScopes.webp" alt="Google Cloud OAuth consent screen with the Gmail readonly scope selected"/>
   </Step>
 
   <Step title="Add test users">
@@ -57,7 +57,7 @@ follow the [Service Account guide](./service_account).
   <Step title="Create the OAuth client">
     Go to the **Credentials** tab and select **+ CREATE CREDENTIALS > OAuth client ID**.
 
-    <img className="rounded-image" src="/assets/admins/connectors/google_drive/GoogleDriveCredential.png" alt="Creating an OAuth client ID in Google Cloud Console"/>
+    <img className="rounded-image" src="/assets/admins/connectors/google_drive/GoogleDriveCredential.webp" alt="Creating an OAuth client ID in Google Cloud Console"/>
 
     - Choose **Web application** and name it, for example `OnyxConnector`.
     - Add an **Authorized JavaScript origin**:
@@ -69,11 +69,11 @@ follow the [Service Account guide](./service_account).
     - `https://<YOUR_ONYX_URL>/admin/connectors/gmail/auth/callback` for a self-hosted deployment
     - `https://cloud.onyx.app/admin/connectors/gmail/auth/callback` for Onyx Cloud
 
-    <img className="rounded-image" src="/assets/admins/connectors/gmail/GmailCredentials.png" alt="Authorized origins and redirect URIs for the Gmail OAuth client"/>
+    <img className="rounded-image" src="/assets/admins/connectors/gmail/GmailCredentials.webp" alt="Authorized origins and redirect URIs for the Gmail OAuth client"/>
 
     Click **CREATE**. Next to **Client secret**, download the client as JSON. You upload it to Onyx in the next section.
 
-    <img className="rounded-image" src="/assets/admins/connectors/google_drive/DriveDownloadCredentials.png" alt="Download the OAuth client JSON from Google Cloud Console"/>
+    <img className="rounded-image" src="/assets/admins/connectors/google_drive/DriveDownloadCredentials.webp" alt="Download the OAuth client JSON from Google Cloud Console"/>
   </Step>
 </Steps>
 

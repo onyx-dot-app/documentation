@@ -22,7 +22,7 @@ for how providers work together, how to require SSO, and plan limits.
 1. Go to the [Google Cloud Console](https://console.cloud.google.com/) and sign in.
 2. Create a new project, or select an existing one.
 
-![Google Cloud project creation](/assets/deployment/gcc_project_creation.png)
+![Google Cloud project creation](/assets/deployment/gcc_project_creation.webp)
 
 ### Step 2: Enable the People API
 
@@ -31,7 +31,7 @@ Onyx reads the user's name and email from the People API.
 1. Go to **APIs & Services → Library**.
 2. Search for **Google People API** and click **Enable**.
 
-![Enable Google People API](/assets/deployment/gcc_people_api.png)
+![Enable Google People API](/assets/deployment/gcc_people_api.webp)
 
 ### Step 3: Configure the OAuth Consent Screen
 
@@ -41,7 +41,7 @@ Onyx reads the user's name and email from the People API.
 3. Enter an app name and support email. Add your Onyx domain to **Authorized domains**.
 4. Save. You do not need to add scopes here.
 
-![OAuth consent screen](/assets/deployment/gcc_oauth_consent.png)
+![OAuth consent screen](/assets/deployment/gcc_oauth_consent.webp)
 
 ### Step 4: Create an OAuth Client
 
@@ -57,11 +57,11 @@ https://<your-onyx-domain>/api/auth/oidc/<provider-name>/callback
 
 Use the provider name you plan to enter in Onyx. The example below uses `google`.
 
-![Create OAuth client](/assets/deployment/gcc_oauth_client.png)
+![Create OAuth client](/assets/deployment/gcc_oauth_client.webp)
 
 5. Click **Create**. Copy the **Client ID** and **Client secret**.
 
-![OAuth client details](/assets/deployment/gcc_oauth_client_details.png)
+![OAuth client details](/assets/deployment/gcc_oauth_client_details.webp)
 
 ### Step 5: Add the Provider in Onyx
 

@@ -68,7 +68,7 @@ such as the instance role of a self-hosted deployment on EC2. This method is for
     - Name it (e.g., `OnyxS3AccessRole`) and click **Create role**
     - Copy the **Role ARN** from the role summary page (e.g., `arn:aws:iam::YOUR_AWS_ACCOUNT_ID:role/YOUR_CREATED_ROLE_NAME`)
 
-    <img className="rounded-image" src="/assets/admins/connectors/blob/s3/role-arn.png" alt="Diagram of page where role arn can be copied"/>
+    <img className="rounded-image" src="/assets/admins/connectors/blob/s3/role-arn.webp" alt="Diagram of page where role arn can be copied"/>
   </Step>
 
   <Step title="Grant AssumeRole to EC2 instance role">
@@ -92,7 +92,7 @@ such as the instance role of a self-hosted deployment on EC2. This method is for
 
     - Name the policy (e.g., `AllowAssumeOnyxS3Role`) and click **Create policy**
 
-    <img className="rounded-image" src="/assets/admins/connectors/blob/s3/iam-role.png" alt="Diagram of IAM role assignment"/>
+    <img className="rounded-image" src="/assets/admins/connectors/blob/s3/iam-role.webp" alt="Diagram of IAM role assignment"/>
 
     Your EC2 instance now uses its existing instance profile to obtain temporary credentials for the OnyxS3AccessRole,
     which can then securely interact with your designated S3 buckets.
@@ -114,6 +114,6 @@ When you create the authentication account for the S3 connector in Onyx:
   </Step>
 </Steps>
 
-<img className="rounded-image" src="/assets/admins/connectors/blob/s3/onyx-iam-role.png" alt="Screenshot of Onyx S3 IAM role configuration with tabs"/>
+<img className="rounded-image" src="/assets/admins/connectors/blob/s3/onyx-iam-role.webp" alt="Screenshot of Onyx S3 IAM role configuration with tabs"/>
 
 Then follow the [indexing steps in the overview](./overview#indexing) to configure your S3 connector.

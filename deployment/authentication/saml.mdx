@@ -23,7 +23,7 @@ This guide uses Okta as the example. The steps are similar for other providers.
 1. In the Okta admin console, go to **Applications → Applications** and click **Create App Integration**.
 2. Select **SAML 2.0** and click **Next**.
 
-![Create an Okta app integration](/assets/deployment/oidc_create_integration.png)
+![Create an Okta app integration](/assets/deployment/oidc_create_integration.webp)
 
 3. Enter a name for the application and click **Next**.
 4. In **SAML Settings**, set:
@@ -38,7 +38,7 @@ This guide uses Okta as the example. The steps are similar for other providers.
 The single sign-on URL is also called the ACS or Reply URL. Every SAML provider on one Onyx instance shares this URL.
 Onyx matches the sign-in to the right provider by the issuer in the SAML response.
 
-![Okta SAML settings](/assets/deployment/saml_config.png)
+![Okta SAML settings](/assets/deployment/saml_config.webp)
 
 5. Under **Attribute Statements**, add an attribute named `email` with value `user.email`.
 6. Finish the wizard and assign the application to your users.

@@ -40,7 +40,7 @@ COMPONENT_MAP = [
     ("agent-wiki", ["craft-admin", "craft-sessions", "craft-sandboxes", "craft-scheduled-tasks", "skills"]),
 ]
 
-IMG_RE = re.compile(r'(?:!\[[^\]]*\]\(([^)\s]+)|<(?:img|Frame|Image)[^>]*src=["\']([^"\']+))')
+IMG_RE = re.compile(r'(?:!\[[^\]]*\]\(([^)\s]+)|<(?:img|Frame|Image|video)[^>]*src=["\']([^"\']+))')
 
 
 def classify_image(path: str) -> str:

@@ -47,9 +47,9 @@ Onyx supports two authentication methods for Google Vertex AI:
 
     On the **Permissions** tab, grant the service account the **Agent Platform User** role.
 
-    <img className="rounded-image" src="/assets/admins/ai_models/gcs_service_acc.png" alt="Google Cloud Console Service Accounts Page"/>
+    <img className="rounded-image" src="/assets/admins/ai_models/gcs_service_acc.webp" alt="Google Cloud Console Service Accounts Page"/>
 
-    <img className="rounded-image" src="/assets/admins/ai_models/gcs_service_acc_config.png" alt="Google Cloud Console Service Account Configuration"/>
+    <img className="rounded-image" src="/assets/admins/ai_models/gcs_service_acc_config.webp" alt="Google Cloud Console Service Account Configuration"/>
   </Step>
 
   <Step title="Create a New Key for the Service Account">
@@ -111,12 +111,12 @@ and no key file is ever created or stored.
     and open **Details → Security**. **Workload Identity** must show **Enabled**,
     with the namespace `PROJECT_ID.svc.id.goog` using your GKE project's ID.
 
-    <img className="rounded-image" src="/assets/admins/ai_models/vertex_gke_workload_identity.png" alt="GKE cluster details showing Workload Identity enabled, with the workload identity namespace redacted"/>
+    <img className="rounded-image" src="/assets/admins/ai_models/vertex_gke_workload_identity.webp" alt="GKE cluster details showing Workload Identity enabled, with the workload identity namespace redacted"/>
 
     For Standard clusters, under **Nodes**, open each node pool that runs Onyx.
     Its **Security → GKE Metadata Server** must also show **Enabled**.
 
-    <img className="rounded-image" src="/assets/admins/ai_models/vertex_gke_metadata_server.png" alt="GKE node pool security settings showing GKE Metadata Server enabled, with the node service account redacted"/>
+    <img className="rounded-image" src="/assets/admins/ai_models/vertex_gke_metadata_server.webp" alt="GKE node pool security settings showing GKE Metadata Server enabled, with the node service account redacted"/>
 
     <Accordion title="If Workload Identity or the metadata server is disabled">
       In **Details → Security**, edit **Workload Identity**, select **Enable Workload Identity**, and save.
@@ -270,7 +270,7 @@ and no key file is ever created or stored.
 
     For the **Authentication Method**, select **Workload Identity (GKE)**.
 
-    <img className="rounded-image" src="/assets/admins/ai_models/vertex_auth_method_dropdown.png" alt="Authentication Method dropdown with Workload Identity (GKE) selected and highlighted"/>
+    <img className="rounded-image" src="/assets/admins/ai_models/vertex_auth_method_dropdown.webp" alt="Authentication Method dropdown with Workload Identity (GKE) selected and highlighted"/>
 
     Enter the **GCP Project ID** where Vertex AI is enabled.
     This is required because Application Default Credentials cannot reliably infer the target project under service
@@ -280,7 +280,7 @@ and no key file is ever created or stored.
     models](https://cloud.google.com/vertex-ai/generative-ai/docs/learn/locations). The default is `global`;
     this is independent of your GKE cluster's location.
 
-    <img className="rounded-image" src="/assets/admins/ai_models/vertex_workload_identity_selected.png" alt="Workload Identity (GKE) selected, showing the ambient-credentials notice and GCP Project ID field"/>
+    <img className="rounded-image" src="/assets/admins/ai_models/vertex_workload_identity_selected.webp" alt="Workload Identity (GKE) selected, showing the ambient-credentials notice and GCP Project ID field"/>
 
     No credentials file is needed. Select your models and set **Models Access** below, then click **Connect**.
   </Step>
