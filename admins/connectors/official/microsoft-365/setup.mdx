@@ -9,7 +9,7 @@ Onyx reads Microsoft 365 through four connectors: [SharePoint](/admins/connector
 and [Outlook](/admins/connectors/official/microsoft-365/outlook).
 All four sign in to Microsoft Graph as an application registered in Microsoft Entra, not as a user,
 and they are set up the same way: register an application, grant it permissions, give Onyx a credential.
-This page holds those shared steps. Each connector's page says what it needs beyond them.
+Each connector's page says what it needs beyond them.
 
 One app registration can serve every connector. Grant it the union of the permissions in the table below,
 or register one app per connector to keep the grants apart.
@@ -143,13 +143,9 @@ then grant consent once at the end.
 ### Client secret
 
 <Steps>
-  <Step title="Open Certificates & secrets">
-    In your app registration, go to **Certificates & secrets → Client secrets**.
-  </Step>
-
   <Step title="Add a secret">
-    Select **New client secret**, give it a description, and choose an expiry. Microsoft allows up to 24 months.
-    Select **Add**.
+    In your app registration, go to **Certificates & secrets → Client secrets** and select **New client secret**.
+    Give it a description, and choose an expiry. Microsoft allows up to 24 months. Select **Add**.
   </Step>
 
   <Step title="Copy the value immediately">
@@ -201,8 +197,6 @@ Either get a certificate from your organization's certificate authority, or crea
     | `onyx-m365.crt` | Entra ID                                       |
     | `onyx-m365.pfx` | Onyx                                           |
     | `onyx-m365.key` | Neither. Keep it somewhere safe, or delete it. |
-
-    Store the `.pfx` and its password securely.
   </Step>
 
   <Step title="Upload the public certificate to Entra">
@@ -252,9 +246,6 @@ The role you grant depends on what the connector does:
 | SharePoint indexing with permission sync | `fullcontrol`              | Microsoft Graph → **Sites.Selected**. The per-site grant replaces tenant-wide **Sites.FullControl.All** on the SharePoint API.       |
 | OneDrive indexing and permission sync    | `read`                     | Microsoft Graph → **Sites.Selected**                                                                                                  |
 | Teams **Include Attachments**            | `fullcontrol`              | Microsoft Graph → **Files.Read.All**, which the connector needs to read channel files. Private and shared channels each have a site of their own. |
-
-SharePoint permission sync and Teams channel files need `fullcontrol` because SharePoint shows an item's access list
-only to an app that has full control of the site. Onyx never writes to SharePoint.
 
 <Accordion title="Granting a site to the app">
   You need a Global Administrator or SharePoint Administrator account.

@@ -6,16 +6,8 @@ description: "Authorize the S3 connector using AWS Access Keys."
 ## AWS Access Keys Authorization
 
 <Steps>
-  <Step title="Open AWS Console">
-    Log into your AWS Management Console.
-  </Step>
-
-  <Step title="Open IAM">
-    Navigate to the IAM (Identity and Access Management) dashboard.
-  </Step>
-
   <Step title="Create user">
-    In the left sidebar, select **Users** and then **Create user**.
+    In the AWS Management Console, open **IAM**. In the left sidebar, select **Users** and then **Create user**.
 
     <img className="rounded-image" src="/assets/admins/connectors/blob/s3/iam.webp" alt="AWS IAM dashboard with Users section for creating a user"/>
   </Step>
@@ -26,11 +18,7 @@ description: "Authorize the S3 connector using AWS Access Keys."
 
   <Step title="Attach policy">
     Select **Attach policies directly** and search for **AmazonS3ReadOnlyAccess**, or a policy limited to your bucket.
-    Select the policy and select **Next**.
-  </Step>
-
-  <Step title="Create user">
-    Add tags if needed, then select **Create user**.
+    Select the policy, select **Next**, then **Create user**.
   </Step>
 
   <Step title="Create access key">

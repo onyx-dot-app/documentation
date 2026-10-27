@@ -24,15 +24,10 @@ Onyx supports three ways to authorize access to the bucket. Pick the one that fi
 
 ### Indexing
 
-After you set up your authorization method, follow these steps to index your S3 bucket:
-
 <Steps>
-  <Step title="Open the S3 connector">
-    In Onyx, go to **Admin Panel → Connectors** and select **Amazon S3**.
-  </Step>
-
   <Step title="Create an authentication account">
-    Under **Authentication Account**, select a saved account, or select **Create New** and enter a **Display Name**.
+    In Onyx, go to **Admin Panel → Connectors** and select **Amazon S3**. Under **Authentication Account**,
+    select a saved account, or select **Create New** and enter a **Display Name**.
     Then pick the tab for your authorization method:
 
     - **Access Key and Secret**: enter the **AWS Access Key ID** and **AWS Secret Access Key**
@@ -67,11 +62,3 @@ Open **Admin Panel → Indexing Status** and select the connector to follow the 
 or edit the connector. Create one connector per bucket to index more buckets.
 
 <img className="rounded-image" src="/assets/admins/connectors/blob/s3/connector.webp" alt="Onyx S3 connector details page"/>
-
-## Understanding S3 Structure
-
-Amazon S3 organizes data into buckets. Each bucket can contain an unlimited number of objects (files).
-You can think of a bucket as a root directory, and the objects as files within that directory.
-
-For more information on S3 structure,
-visit the [Amazon S3 documentation](https://docs.aws.amazon.com/AmazonS3/latest/userguide/Welcome.html).
