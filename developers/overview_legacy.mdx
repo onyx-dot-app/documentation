@@ -12,7 +12,6 @@ icon: "code"
 **Nearly every Onyx feature is accessible through the Onyx API.**
 
 Onyx APIs are built on REST principles with JSON request/response formats.
-All endpoints require authentication and follow relatively consistent patterns.
 
 Make API requests to:
 
@@ -33,34 +32,17 @@ Each key is created with a role, and there are three:
   <Accordion title="Admin API Keys" icon="shield-check">
     Can access all endpoints, including those pre-fixed with `admin/`.
 
-    **Use cases:**
-    - Full system administration
-    - User management operations
-    - Data management and analytics
-    - Complete access to all Onyx features
-
     **⚠️ Use with caution:** Admin keys have unrestricted access to your Onyx instance.
   </Accordion>
 
   <Accordion title="Basic API Keys" icon="key">
     Can access the non-admin endpoints like Search, Chat, Agents, and Actions.
 
-    **Use cases:**
-    - Building chat applications
-    - Implementing search functionality
-    - Creating and managing agents
-    - Running actions and workflows
-
     **✅ Recommended:** Most users should use Basic API Keys for application development.
   </Accordion>
 
   <Accordion title="Limited API Keys" icon="lock">
     Read-only Agent access. Can post messages to Chat endpoints, but cannot read chat history.
-
-    **Use cases:**
-    - Highly restricted environments
-    - Specific use cases requiring minimal permissions
-    - Testing with limited scope
   </Accordion>
 </AccordionGroup>
 
@@ -69,10 +51,10 @@ for setup instructions.
 
 ### Personal Access Tokens
 
-Personal Access Tokens (PATs) let any user authenticate API requests as themselves. Any user can create one.
+Personal Access Tokens (PATs) let any user authenticate API requests as themselves.
 
-To create a token, go to **Settings** > **Accounts & Access** and click **Create New Token**. Give it a name,
-choose an expiration (7 days, 30 days, 365 days, or never), and choose its permissions:
+To create a token, go to **Settings** > **Accounts & Access** and click **Create New Token**.
+Choose an expiration and choose its permissions:
 
 | Permissions | Behavior |
 |---|---|
@@ -97,8 +79,6 @@ Use the token as a Bearer token in the `Authorization` header:
 curl -H "Authorization: Bearer onyx_pat_..." \
   https://cloud.onyx.app/api/chat/get-user-chat-sessions
 ```
-
-You can view, audit, and revoke your tokens at any time from **Settings** > **Accounts & Access**.
 
 ## API Reference and Playground
 

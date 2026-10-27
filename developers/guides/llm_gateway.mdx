@@ -11,10 +11,8 @@ Use the gateway when you want an application, automation,
 or coding tool to use organization-approved models without storing a separate provider key.
 
 <Note>
-  The LLM Gateway is available on the Business and Enterprise plans and on Onyx Cloud.
-  An administrator must configure at least one visible language model before it can serve requests.
-  An administrator can also turn the gateway off for the whole workspace with the **Enable LLM Gateway** switch in
-  **Admin Panel** > **LLM Gateway**. While it is off,
+  An administrator can turn the gateway off for the whole workspace with the **Enable LLM Gateway** switch in **Admin
+  Panel** > **LLM Gateway**. While it is off,
   every gateway request is rejected and the gateway scope is hidden from the token picker.
 </Note>
 
@@ -24,8 +22,6 @@ or coding tool to use organization-approved models without storing a separate pr
 - An [OpenAI Responses endpoint](https://platform.openai.com/docs/api-reference/responses).
 - An [Anthropic Messages endpoint](https://platform.claude.com/docs/en/api/messages) and [token-count endpoint](https://platform.claude.com/docs/en/api/messages/count_tokens).
 - A `GET /models` endpoint that lists the models your Onyx identity can access.
-- Usage attribution through the existing Onyx usage views.
-- The same model access controls and token limits that apply in Onyx.
 
 Onyx Craft sandboxes use the same gateway. Their coding agents call your configured providers through it,
 so Craft usage shows up with the same attribution and limits.
@@ -47,21 +43,14 @@ You need all of the following:
 
 Create a [Personal Access Token](/developers/overview#personal-access-tokens) from **Settings** > **Accounts & Access**
 > **New Access Token**, or click **New token** in **Settings** > **LLM Gateway**.
-Under **Permissions**, choose **Limited access** and select **LLM Gateway &mdash; Use**. Treat the token as a password.
-Onyx shows it only once.
+Under **Permissions**, choose **Limited access** and select **LLM Gateway &mdash; Use**. Onyx shows the token only once.
 
 A full-access token does not work with the gateway. The gateway accepts only tokens with an explicit scope,
 and it rejects API keys and browser sessions.
 
-<Tip>
-  Use a scoped PAT for an application or local development.
-  It limits the token to gateway requests while preserving the model access of the user who created it.
-</Tip>
-
 ## Gateway address
 
-**Settings** > **LLM Gateway** shows the **Gateway URL** for your deployment, with a copy button.
-For a standard Onyx deployment, it is:
+**Settings** > **LLM Gateway** shows the **Gateway URL** for your deployment. For a standard Onyx deployment, it is:
 
 ```text
 https://your-onyx-domain.com/api/gateway/v1
@@ -81,10 +70,7 @@ export ONYX_GATEWAY_API_KEY="onyx_pat_..."
 
 The easiest way to find a model ID is in the **Models** section of **Settings** > **LLM Gateway**.
 The tab appears only when your plan includes the gateway and at least one model is visible and accessible to your
-account.
-
-Open a provider, then copy the ID beside the model that you want to use.
-The copied value already has the required format:
+account. The copied value already has the required format:
 
 <img className="rounded-image" src="/assets/developers/llm_gateway_available_models.webp" alt="Onyx LLM Gateway settings with an expanded provider and model IDs"/>
 
@@ -250,7 +236,6 @@ opencode
 ```
 
 The `@ai-sdk/openai-compatible` provider uses the gateway's Chat Completions endpoint.
-Replace the example model with one from **Settings** > **LLM Gateway**.
 
 ## Usage and limits
 

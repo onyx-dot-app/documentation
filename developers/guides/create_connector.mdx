@@ -75,7 +75,7 @@ See [Understanding Permissions](/admins/permissions/understanding_permissions).
 
     <Note>
       The `ConnectorSpecificConfig` fields are the same fields you fill out in the Admin Panel when you create a
-      Connector. The Jira form offers the same three scopes: **Everything**, **Project**, and **JQL Query**.
+      Connector.
     </Note>
   </Step>
 
@@ -83,8 +83,6 @@ See [Understanding Permissions](/admins/permissions/understanding_permissions).
     In addition to the `ConnectorSpecificConfig`,
     we also need to satisfy the schema for the `ConnectorUpdateRequest` object. See [Core Concepts:
     Connectors](/developers/core_concepts#connectors) for more details.
-
-    In this example, we set `access_type`, `name`, `source`, `input_type`, `refresh_freq`, and `prune_freq`.
 
     | Field | Description |
     |-------|-------------|
@@ -244,11 +242,7 @@ See [Understanding Permissions](/admins/permissions/understanding_permissions).
   </Step>
 
   <Step title="Find your Credentials for the Connector">
-    The easiest way to create a Credential is in the Admin Panel.
-    - Open **Admin Panel** > **Connectors** and click **Add Connector**
-    - Select your relevant Connector
-    - Complete the credential step of the setup flow
-
+    The easiest way to create a Credential is the **Add Connector** flow in **Admin Panel** > **Connectors**.
     Credentials created this way are reusable across Connectors of the same source.
 
     Certain Connectors, such as the File and Web connectors, do not need a Credential. `credential_id:
