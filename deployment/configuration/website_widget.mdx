@@ -9,10 +9,8 @@ The Onyx Website Widget embeds AI-powered chat on any website. It is available i
 Features include:
 
 - Lightweight ~100-150kb gzipped bundle
-- Fully customizable colors and branding
 - Responsive design (desktop popup, mobile fullscreen)
 - Two display modes: floating launcher or inline embed
-- Real-time streaming responses
 - Session persistence across page reloads
 
 ## Deployment Options
@@ -41,12 +39,8 @@ The widget lives in the `widget/` directory of the Onyx repository and uses the 
 workspace.
 
 <Steps>
-  <Step title="Clone the repository">
-    Clone the [Onyx repository](https://github.com/onyx-dot-app/onyx) from GitHub.
-  </Step>
-
   <Step title="Install dependencies">
-    Run this once at the repository root:
+    Clone the [Onyx repository](https://github.com/onyx-dot-app/onyx) and run this once at the repository root:
 
     ```bash
     bun install
@@ -136,36 +130,8 @@ HTML attributes take priority over values baked into a self-hosted build.
 
 #### `backend-url`
 
-The URL of your Onyx backend API. This is where the widget sends chat requests.
-
 - **Onyx Cloud**: Use `https://cloud.onyx.app/api`
 - **Self-hosted**: Use your Onyx instance URL (e.g., `https://onyx.yourcompany.com/api`)
-
-```html
-<!-- Onyx Cloud -->
-<onyx-chat-widget backend-url="https://cloud.onyx.app/api" ...></onyx-chat-widget>
-
-<!-- Self-hosted -->
-<onyx-chat-widget backend-url="https://onyx.yourcompany.com/api" ...></onyx-chat-widget>
-```
-
-#### `api-key`
-
-A valid Onyx API key for authenticating widget requests. **This key is visible in client-side code**,
-so always use a limited-scope key.
-
-```html
-<onyx-chat-widget
-  backend-url="https://cloud.onyx.app/api"
-  api-key="on_abc123xyz789"
-  ...
-></onyx-chat-widget>
-```
-
-<Note>
-  For self-hosted builds with baked-in config,
-  `backend-url` and `api-key` can be set via environment variables during build instead of HTML attributes.
-</Note>
 
 ### Optional Attributes
 
@@ -182,9 +148,6 @@ so always use a limited-scope key.
 | `start-expanded`    | boolean | `false`       | Inline mode only: show the full chat panel before the first message         |
 
 #### `include-citations`
-
-When enabled, assistant messages display clickable citation badges below the response text.
-Each badge shows a sequential number and the source document title, linking directly to the original document.
 
 `include-citations` is a boolean flag. Its presence turns citations on,
 so `include-citations="false"` also turns them on. Omit the attribute to turn citations off.
@@ -274,20 +237,6 @@ JWT passthrough works on self-hosted Onyx only. It does not work on Onyx Cloud.
   - **Monitoring** - Track usage and detect anomalies
 </Warning>
 
-<Steps>
-  <Step title="Create a widget-specific API key">
-    In **Settings > Service Accounts**, create a new service account with minimal permissions.
-  </Step>
-
-  <Step title="Enable rate limiting">
-    Configure rate limits appropriate for your expected usage.
-  </Step>
-
-  <Step title="Monitor usage">
-    Regularly review API key usage for unusual patterns.
-  </Step>
-</Steps>
-
 ## Browser Support
 
 - Chrome/Edge 90+ (Chromium)
@@ -295,7 +244,3 @@ JWT passthrough works on self-hosted Onyx only. It does not work on Onyx Cloud.
 - Safari 15+
 - Mobile Safari (iOS 15+)
 - Mobile Chrome (Android)
-
-<Info>
-  **Need help with setup?** Contact your Onyx administrator for API key configuration or deployment assistance.
-</Info>

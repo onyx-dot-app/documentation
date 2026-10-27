@@ -5,9 +5,8 @@ icon: "server"
 ---
 
 The Onyx MCP server makes your indexed knowledge available to external AI clients over Streamable HTTP.
-Users can connect with their Onyx account through OAuth or use a personal access token.
-This guide covers deployment and administration. For client setup, tools, and example prompts,
-see [Onyx MCP server](/overview/onyx_anywhere/mcp_server).
+Users can connect with their Onyx account through OAuth or use a personal access token. For client setup, tools,
+and example prompts, see [Onyx MCP server](/overview/onyx_anywhere/mcp_server).
 
 <Note>
   This is the server that lets other apps search Onyx. To let Onyx call tools on an external MCP server,
@@ -37,7 +36,6 @@ The MCP endpoint, OAuth endpoints, discovery metadata,
 and browser authorization pages must be reachable at the public address in `WEB_DOMAIN`.
 An API reachable only on another hostname is insufficient:
 the OAuth API routes must also be served on the `WEB_DOMAIN` host.
-Keep the public address consistent across affected services.
 
 ## Enable the service
 
@@ -76,7 +74,6 @@ configMap:
   WEB_DOMAIN: "https://onyx.example.com"
 ```
 
-Apply the values with your normal Helm upgrade command.
 The chart creates the MCP deployment and service and sets `MCP_SERVER_ENABLED=true` in the MCP container.
 Setting a ConfigMap flag without `mcpServer.enabled=true` does not create the service.
 
@@ -165,7 +162,6 @@ curl --include --request POST \
 
 Without credentials,
 expect `401 Unauthorized` and a `WWW-Authenticate` challenge pointing to the protected resource metadata.
-This is the expected sign-in discovery behavior.
 Complete an authenticated connection using the [client setup
 guide](/overview/onyx_anywhere/mcp_server#connect-your-ai-tools)
 to verify that a user can search their indexed documents.
@@ -182,8 +178,6 @@ For clients that accept bearer tokens instead of OAuth,
 use a [personal access token](/developers/overview#personal-access-tokens)
 or an [API key](/admins/user_management/api_keys).
 A personal token is appropriate when access should follow an individual user.
-Review an API key's permissions before distributing it. Keep tokens out of shared configuration files, source control,
-and example prompts.
 
 ### OAuth client requirements
 
