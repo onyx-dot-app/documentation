@@ -8,17 +8,10 @@ import StandardAiModelConfigs from "/snippets/standard-ai-model-configs.mdx";
 
 ## Guide
 
-This guide walks through setting up Google Vertex AI language models for use with Onyx.
-
 For Google embedding models used in search,
 see [Google Embeddings](/admins/advanced_configs/search_configs#google-embeddings).
 The GKE deployment and IAM setup below also applies to embeddings;
 grant access to the API server and every worker that makes embedding requests.
-
-<Note>
-  Google Vertex AI and Google AI Studio serve the same models. However,
-  Vertex AI has enterprise-grade features that may be useful for your organization.
-</Note>
 
 ## Authentication Methods
 
@@ -43,8 +36,6 @@ Onyx supports two authentication methods for Google Vertex AI:
 
     Select your project and click **Create Service Account**.
 
-    Give your Service Account a name and a description.
-
     On the **Permissions** tab, grant the service account the **Agent Platform User** role.
 
     <img className="rounded-image" src="/assets/admins/ai_models/gcs_service_acc.webp" alt="Google Cloud Console Service Accounts Page"/>
@@ -63,16 +54,13 @@ Onyx supports two authentication methods for Google Vertex AI:
   <Step title="Configure Google Vertex AI">
     Under **Add Provider**, click **Connect** on the **Gemini** (Google Cloud Vertex AI) card.
 
-    Optionally, give this provider a **Display Name**.
-
     For the **Authentication Method**,
     select **Service Account JSON** and upload your JSON key file in the **API Key** field.
 
     Set **Google Cloud Region Name** to a [location supported by your
     models](https://cloud.google.com/vertex-ai/generative-ai/docs/learn/locations). The default is `global`.
 
-    Onyx lists the recommended Gemini models. Select the models you want to use.
-    Keep **Auto Update** on to add new Gemini models when they are released.
+    Onyx lists the recommended Gemini models. Keep **Auto Update** on to add new Gemini models when they are released.
   </Step>
 
   <StandardAiModelConfigs />
@@ -266,8 +254,6 @@ and no key file is ever created or stored.
   <Step title="Configure Google Vertex AI">
     Under **Add Provider**, click **Connect** on the **Gemini** (Google Cloud Vertex AI) card.
 
-    Optionally, give this provider a **Display Name**.
-
     For the **Authentication Method**, select **Workload Identity (GKE)**.
 
     <img className="rounded-image" src="/assets/admins/ai_models/vertex_auth_method_dropdown.webp" alt="Authentication Method dropdown with Workload Identity (GKE) selected and highlighted"/>
@@ -282,7 +268,7 @@ and no key file is ever created or stored.
 
     <img className="rounded-image" src="/assets/admins/ai_models/vertex_workload_identity_selected.webp" alt="Workload Identity (GKE) selected, showing the ambient-credentials notice and GCP Project ID field"/>
 
-    No credentials file is needed. Select your models and set **Models Access** below, then click **Connect**.
+    No credentials file is needed.
   </Step>
 
   <StandardAiModelConfigs />

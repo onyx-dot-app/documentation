@@ -86,8 +86,7 @@ see [Restricting Who Can Join](/admins/user_management/users_and_groups#restrict
 Self-hosted only. Limits registration, SSO login,
 and JWT login to email addresses in the **Allowed Email Domains** list.
 Existing users outside the list are refused at their next SSO login.
-The restriction is active while the list has at least one domain.
-Turning the toggle on opens the list so you can add the first domain. Turning it off saves an empty list,
+The restriction is active while the list has at least one domain. Turning the toggle off saves an empty list,
 which also overrides any `VALID_EMAIL_DOMAINS` value from the environment.
 
 Environment default: `VALID_EMAIL_DOMAINS`, comma-separated. The older singular `VALID_EMAIL_DOMAIN` is still read.

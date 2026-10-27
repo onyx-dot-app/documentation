@@ -4,10 +4,6 @@ description: "Configure language model providers and models in Onyx"
 icon: "sliders"
 ---
 
-<Tip>
-  Use this page to configure the language models available for chat, agents, and other text-based workflows in Onyx.
-</Tip>
-
 <Note>
   Image generation and voice are configured separately in [Image Generation](/admins/actions/image_generation)
   and [Voice Mode](/admins/actions/voice_mode).
@@ -23,10 +19,8 @@ choose which models users can see, set the default model, and control model sett
 The page has these sections:
 
 - **Default Model**: the model Onyx uses for new chat sessions unless a user or agent picks another one.
-- **Available Providers**: the providers you have connected. Click a card to edit it,
-  or use the delete button to remove it. You cannot delete the provider that owns the default model.
+- **Available Providers**: the providers you have connected. You cannot delete the provider that owns the default model.
 - **Add Provider**, **Gateways & Routers**, and **Self-hosted & Custom**: the providers you can connect.
-  Click **Connect** on a card to open its setup dialog.
 
 ### Provider Types
 
@@ -35,8 +29,7 @@ The page has these sections:
     These cards connect to a model vendor or cloud platform directly: **GPT** (OpenAI), **Claude** (Anthropic),
     **Gemini** (Google Cloud Vertex AI), **Amazon Bedrock**, and **Azure OpenAI**.
 
-    This is usually the simplest setup when you want access to the latest flagship models. For OpenAI, Anthropic,
-    and Vertex AI, Onyx lists the recommended models and can update the list automatically.
+    For OpenAI, Anthropic, and Vertex AI, Onyx lists the recommended models and can update the list automatically.
   </Accordion>
 
   <Accordion title="Gateways & Routers" icon="server">
@@ -70,10 +63,6 @@ The page has these sections:
   or cloud alignment matters more than a direct vendor integration.
 - Use open-weight families such as **Llama**, **Qwen**, **DeepSeek**, or **gpt-oss** if you self-host.
 - Keep the visible model list short so users choose between a few intentional options.
-
-<Info>
-  Self-hosting is best for teams that already know which models they want to run and how they will operate them.
-</Info>
 
 ## Configure Your Providers
 
@@ -165,11 +154,3 @@ Turn it on or off under **LLM Gateway** in the Admin Panel. See the [LLM Gateway
 <Note>
   The LLM Gateway requires the Business tier or higher.
 </Note>
-
-## Best Practices
-
-- Review the terms, privacy posture, and data processing terms of every provider you enable.
-- Limit the visible model list to the models you want users to choose from.
-- Use **Named Groups & Agents** access for costly, experimental, or team-specific models.
-- Decide on a default model at the organization level before you roll the page out broadly.
-- Make sure internal guidance is clear about what data users can send to each provider.

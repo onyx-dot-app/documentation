@@ -8,20 +8,16 @@ The **Onyx Terraform provider** manages the configuration *inside* a running Ony
 connectors and their credentials, document sets, agents, actions, MCP servers, user groups, API keys,
 and workspace settings.
 
-Everything you would otherwise click through in the Admin Panel becomes a version-controlled `.tf` file that you can
-review, diff, and apply from CI.
-
 <Card
   title="onyx-dot-app/onyx on the Terraform Registry" icon="book"
   href="https://registry.terraform.io/providers/onyx-dot-app/onyx/latest/docs"
 >
   The registry holds the full reference: every resource, every attribute, and the import syntax.
-  This page covers what the provider is for and how to get started.
 </Card>
 
 ## Two different Terraform surfaces
 
-Onyx has two separate Terraform offerings. They solve different problems and are used at different times.
+Onyx has two separate Terraform offerings.
 
 | | [Terraform modules](/deployment/local/terraform) | Terraform provider (this page) |
 | --- | --- | --- |
@@ -295,7 +291,7 @@ Most of the provider works on Community Edition. These parts need a Business pla
 
 ## Things the API cannot express
 
-A few behaviours come from the Onyx API rather than the provider, and are worth knowing before you rely on them:
+A few behaviours come from the Onyx API rather than the provider:
 
 - **Secret drift is invisible.** The API masks secrets on read, so rotating one in the Admin Panel does not show up
   in `terraform plan`. The configured value is authoritative and is re-asserted on the next apply.
@@ -317,6 +313,3 @@ carries the full list, and each resource's registry page repeats the ones that a
 - **Source:** [`terraform-provider-onyx/`](https://github.com/onyx-dot-app/onyx/tree/main/terraform-provider-onyx)
   in the Onyx repo
 - **Release mirror:** [onyx-dot-app/terraform-provider-onyx](https://github.com/onyx-dot-app/terraform-provider-onyx)
-
-Pin the provider version in `required_providers` and let Terraform's lock file pick up the checksums,
-the same as any other provider. The registry page always shows the current release.
