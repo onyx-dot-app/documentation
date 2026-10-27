@@ -19,24 +19,13 @@ The access type can only be **Everyone in Your Organization** or **Specific Grou
 ## Setting up a bot user
 
 <Steps>
-  <Step title="Open the Discord developer portal">
-    Log in to the [Discord developer portal](https://discord.com/developers/applications).
-  </Step>
-
   <Step title="Create an application">
-    Click **New Application**.
-  </Step>
-
-  <Step title="Name and create">
-    Give the application a name and click **Create**.
-  </Step>
-
-  <Step title="Open the Bot tab">
-    Open the **Bot** tab to configure the bot.
+    Log in to the [Discord developer portal](https://discord.com/developers/applications), click **New Application**,
+    name it, and click **Create**.
   </Step>
 
   <Step title="Enable the Message Content intent">
-    Under **Privileged Gateway Intents**, enable **Message Content Intent**.
+    Open the **Bot** tab. Under **Privileged Gateway Intents**, enable **Message Content Intent**.
   </Step>
 
   <Step title="Copy the bot token">
@@ -46,27 +35,14 @@ The access type can only be **Everyone in Your Organization** or **Specific Grou
 
 ## Inviting the bot to your servers
 
-The bot is not in any server yet. To add it:
-
 <Steps>
-  <Step title="Open the application">
-    Open your application in the [developer portal](https://discord.com/developers/applications).
-  </Step>
-
-  <Step title="Open the Installation tab">
-    Open the **Installation** tab.
-  </Step>
-
   <Step title="Enable Guild Install">
-    Under **Installation Contexts**, enable **Guild Install**.
+    Open your application's **Installation** tab. Under **Installation Contexts**, enable **Guild Install**.
   </Step>
 
-  <Step title="Add the bot scope">
-    Under **Default Install Settings → Guild Install**, add the `bot` scope.
-  </Step>
-
-  <Step title="Set the permissions">
-    Under **Permissions** for **Guild Install**, add **View Channels** and **Read Message History**.
+  <Step title="Set the scope and permissions">
+    Under **Default Install Settings → Guild Install**, add the `bot` scope. Under **Permissions**,
+    add **View Channels** and **Read Message History**.
   </Step>
 
   <Step title="Install the bot">
@@ -78,12 +54,9 @@ The bot is not in any server yet. To add it:
 ## Indexing
 
 <Steps>
-  <Step title="Open the Discord connector">
-    In Onyx, go to **Admin Panel → Connectors** and select **Discord**.
-  </Step>
-
   <Step title="Connect the bot">
-    Under **Authentication Account**, select **New Discord Account** and paste the token into **Discord Bot Token**.
+    In Onyx, go to **Admin Panel → Connectors** and select **Discord**. Under **Authentication Account**,
+    select **New Discord Account** and paste the token into **Discord Bot Token**.
   </Step>
 
   <Step title="Choose the servers and channels">

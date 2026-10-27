@@ -27,8 +27,8 @@ Onyx checks for updates every 30 minutes by default. You can change the refresh 
 
 ## Configure the connector in Onyx
 
-First, complete the authentication steps in the guide for your deployment. Then open **Admin Panel → Connectors**,
-select **Confluence**, and follow these steps.
+First, complete the authentication steps in the guide for your deployment.
+Then open **Admin Panel → Connectors** and select **Confluence**.
 
 <Steps>
   <Step title="Set the deployment and URL">
@@ -62,8 +62,6 @@ select **Confluence**, and follow these steps.
     | **Select Spaces/Pages** | Add one or more space keys or URLs under **Spaces**, page IDs or URLs under **Pages**, or both. Keep **Include Child Pages** on to index every page nested under the named pages. |
     | **CQL Query** | Index pages returned by a custom Confluence Query Language query. Select **Test Query** to run it before you create the connector. |
 
-    Once an account is selected, **Spaces** and **Pages** show how many spaces and pages the account can see.
-
     A CQL query must use `type=page` as its only content-type filter. Do not add `order by`, `lastModified`,
     or other date filters. Onyx adds its own time filters during incremental sync, and yours can break them.
     Onyx still retrieves comments and enabled attachments for the returned pages.
@@ -82,27 +80,17 @@ select **Confluence**, and follow these steps.
   </Step>
 
   <Step title="Choose who can see the pages">
-    Under **Document Access**, choose one option:
-
-    - **Everyone in Your Organization** makes every indexed document available to every Onyx user.
-    - **Specific Groups** limits every indexed document to the connector's assigned Onyx groups.
-    - **Sync with Confluence** mirrors Confluence space permissions, page restrictions, and inherited ancestor
-    restrictions.
+    Under **Document Access**, choose **Everyone in Your Organization**, **Specific Groups**,
+    or **Sync with Confluence**. **Sync with Confluence** mirrors Confluence space permissions, page restrictions,
+    and inherited ancestor restrictions.
 
     **Specific Groups** and **Sync with Confluence** are available on Onyx Cloud and Enterprise Edition.
-    Permission sync maps Confluence users to Onyx users by email and syncs Confluence groups.
-    Read the deployment guide before you enable it.
-  </Step>
-
-  <Step title="Review the connection checks">
-    Once an account is selected, Onyx runs its checks against Confluence and lists each one in the form.
-    **Create Connector** is enabled once the required checks pass. A failed check names what to fix.
   </Step>
 
   <Step title="Create and verify">
-    Select **Create Connector**. Open **Admin Panel → Indexing Status**, select the connector,
+    **Create Connector** is enabled once the required [connection checks](#connection-checks) pass. Select it,
+    then open **Admin Panel → Indexing Status**, select the connector,
     and wait for the first indexing attempt to complete. Then search for a known page in Onyx.
-    Open the result's source link and confirm that it points to the expected Confluence page.
   </Step>
 </Steps>
 

@@ -27,12 +27,8 @@ A PAT has the same Confluence access as its owner.
   </Step>
 
   <Step title="Create the token">
-    Select **Create token**. Enter a descriptive name and set an expiration date if your policy requires one.
-  </Step>
-
-  <Step title="Copy the token">
-    Select **Create**, then copy the token. Confluence shows the value once.
-    Store it in your secrets manager until you add it to Onyx.
+    Select **Create token**, name it, and set an expiration date if your policy requires one. Select **Create**,
+    then copy the token. Confluence shows the value once.
 
     See Atlassian's [Data Center PAT
     instructions](https://confluence.atlassian.com/enterprise/using-personal-access-tokens-1026032365.html).
@@ -56,7 +52,6 @@ Open **Admin Panel → Connectors** and select **Confluence**. Under **Index Con
 
 Under **Authentication Account**, select **New Confluence Account** and enter:
 
-- **Display Name**: A clear name, such as `Confluence Data Center - docs account`.
 - **Personal Access Token**: The PAT. Onyx sends it as a bearer token.
 
 ![The Onyx Confluence account form](/assets/admins/connectors/confluence/credential-form.webp)

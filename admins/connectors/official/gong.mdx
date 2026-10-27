@@ -64,7 +64,7 @@ so choose **Document Access** with that in mind.
 <Steps>
   <Step title="Open the Gong admin settings">
     Sign in to Gong as a technical administrator. In the left sidebar, select **Admin center** at the very bottom.
-    Expand the sidebar first if it is collapsed. Only technical administrators see this entry.
+    Only technical administrators see this entry.
 
     <img className="rounded-image" src="/assets/admins/connectors/gong/AdminPanel.webp" alt="The bottom of the Gong sidebar, with the Admin center entry below the divider"/>
   </Step>
@@ -76,21 +76,14 @@ so choose **Document Access** with that in mind.
   </Step>
 
   <Step title="Create the key">
-    Click "+ Get API Key" and enter the required fields in the form.
-
-    Once you're done filling out the keys, click the "Get API key" button.
-    The dialog box will show you the created access key and secret.
-  </Step>
-
-  <Step title="Copy the key and secret">
-    Gong shows the access key and the secret just once. Copy both before you close the dialog.
-    Gong does not show the secret again; if you lose it, create a new key.
+    Click **+ Get API Key**, complete the form, and click **Get API key**.
+    Gong shows the access key and the secret just once. Copy both before you close the dialog. If you lose the secret,
+    create a new key.
   </Step>
 
   <Step title="Note your API address, outside the US">
     On the same API page, Gong shows the base URL for your company's API calls. The default is `https://api.gong.io`.
     An account with data residency in another region uses a host such as `https://<region>.api.gong.io`.
-    Note it if it differs from the default.
   </Step>
 </Steps>
 
@@ -99,12 +92,9 @@ See Gong's guide to [managing API keys](https://help.gong.io/docs/receive-access
 ## Configure the connector in Onyx
 
 <Steps>
-  <Step title="Open the Gong connector">
-    In the Onyx admin panel, go to **Connectors** and select **Gong**.
-  </Step>
-
   <Step title="Create the account">
-    Under **Authentication Account**, click **Create New** and enter:
+    In the Onyx admin panel, go to **Connectors** and select **Gong**. Under **Authentication Account**,
+    click **Create New** and enter:
 
     - **Gong Access Key** and **Gong Access Key Secret**: the pair you copied from Gong.
     - **Gong API Base URL**: leave it empty for `https://api.gong.io`. For an account outside the US,
@@ -115,7 +105,7 @@ See Gong's guide to [managing API keys](https://help.gong.io/docs/receive-access
   </Step>
 
   <Step title="Choose the workspaces">
-    Enter a **Display Name**. In **Workspaces**, list the workspaces to index, one per entry,
+    In **Workspaces**, list the workspaces to index, one per entry,
     or leave the list empty to index every workspace in the account.
 
     Each entry is a workspace's ID or its exact name as shown in Gong. The name is case sensitive.
@@ -124,11 +114,9 @@ See Gong's guide to [managing API keys](https://help.gong.io/docs/receive-access
   </Step>
 
   <Step title="Choose document access">
-    Under **Document Access**, **Everyone in Your Organization** shows every indexed call to all Onyx users.
-    **Specific Groups** limits them to selected Onyx user groups.
-    It is available on the Business and Enterprise plans and on Onyx Cloud.
+    Under **Document Access**, select **Everyone in Your Organization** or **Specific Groups**.
+    **Specific Groups** is available on the Business and Enterprise plans and on Onyx Cloud.
     See [Document Access Controls](/admins/connectors/overview#document-access-controls) for what each means.
-
     **Sync with Gong** is not available.
   </Step>
 
@@ -137,7 +125,6 @@ See Gong's guide to [managing API keys](https://help.gong.io/docs/receive-access
 
     Open **Connectors**, select the connector,
     and check that the first indexing attempt finishes with about the number of calls you expect.
-    A large account takes a while, since Gong serves transcripts a page at a time under its rate limits.
   </Step>
 </Steps>
 

@@ -21,16 +21,12 @@ follow the [Service Account guide](./service_account).
     - In the left panel, open **APIs & services** and go to **Enabled APIs and services**.
     - Click **+ ENABLE APIS AND SERVICES**.
     - Search for **Gmail API** and click **ENABLE**.
-    - Or open this [link](https://console.cloud.google.com/apis/enableflow?apiid=gmail.googleapis.com), select your
-    project, and enable the **Gmail API**.
   </Step>
 
   <Step title="Set up the OAuth consent screen">
     - Under **APIs & services**, select **OAuth consent screen**.
     - If you do not have a Google organization, select **External** as the **User Type**.
-    - Name the app, for example `Onyx`.
-    - Enter the required contact emails.
-    - Click **SAVE AND CONTINUE**.
+    - Name the app and enter the required contact emails.
   </Step>
 
   <Step title="Add the scopes">
@@ -38,7 +34,7 @@ follow the [Service Account guide](./service_account).
 
     <Info>
       To use **Sync with Gmail**, or to index every mailbox in your Workspace, also:
-      - Enable the **Admin SDK API** with this [link](https://console.cloud.google.com/flows/enableapi?apiid=admin.googleapis.com).
+      - Enable the **Admin SDK API**.
       - Add the scope `.../auth/admin.directory.user.readonly` for the **Admin SDK API**.
       - Add the scope `.../auth/admin.directory.group.readonly` for the **Admin SDK API**.
       - Sign in with an account that has an admin role in the Google Workspace with the **Users > Read** and
@@ -51,7 +47,6 @@ follow the [Service Account guide](./service_account).
   <Step title="Add test users">
     This step applies only to apps without a Google organization.
     - Add at least one test user email. Only these accounts can run the OAuth flow.
-    - Click **SAVE AND CONTINUE**, review the changes, and click **BACK TO DASHBOARD**.
   </Step>
 
   <Step title="Create the OAuth client">
@@ -71,7 +66,7 @@ follow the [Service Account guide](./service_account).
 
     <img className="rounded-image" src="/assets/admins/connectors/gmail/GmailCredentials.webp" alt="Authorized origins and redirect URIs for the Gmail OAuth client"/>
 
-    Click **CREATE**. Next to **Client secret**, download the client as JSON. You upload it to Onyx in the next section.
+    Click **CREATE**. Next to **Client secret**, download the client as JSON.
 
     <img className="rounded-image" src="/assets/admins/connectors/google_drive/DriveDownloadCredentials.webp" alt="Download the OAuth client JSON from Google Cloud Console"/>
   </Step>
@@ -80,13 +75,9 @@ follow the [Service Account guide](./service_account).
 ### Indexing
 
 <Steps>
-  <Step title="Open the Gmail connector">
-    In the Onyx admin panel, go to **Connectors** and select **Gmail**.
-  </Step>
-
   <Step title="Create the account">
-    Under **Authentication Account**, click **Create New** and select **OAuth**.
-    Upload or paste the OAuth app JSON you downloaded above.
+    In the Onyx admin panel, go to **Connectors** and select **Gmail**. Under **Authentication Account**,
+    click **Create New** and select **OAuth**. Upload or paste the OAuth app JSON you downloaded above.
     Click **Authenticate with Gmail** and sign in with the Google account whose mail you want to index.
   </Step>
 
@@ -94,10 +85,7 @@ follow the [Service Account guide](./service_account).
     Under **Document Access**, select who can see the indexed threads.
     **Sync with Gmail** mirrors each user's own mailbox.
     **Specific Groups** and **Sync with Gmail** are available on the Business and Enterprise plans and on Onyx Cloud.
-  </Step>
-
-  <Step title="Create the connector">
-    Click **Create Connector**. Onyx runs the connector checks and starts the first indexing run.
+    Then click **Create Connector**.
   </Step>
 </Steps>
 
