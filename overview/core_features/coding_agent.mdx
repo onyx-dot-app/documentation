@@ -15,43 +15,17 @@ The **Coding Agent** action lets Onyx investigate a GitHub repository and answer
 Give it a repository and a question. It downloads a copy of the repository into an isolated sandbox,
 explores the code with shell commands, and returns a written answer.
 
-Use it to:
-
-- **Understand a codebase**: Ask how a feature is implemented or where a piece of logic lives.
-- **Onboard**: Get a high-level explanation of a project's structure and key modules.
-- **Investigate code**: Trace how data flows through the application or how two components interact.
-- **Answer "where / how / why" questions**: Locate relevant files and summarize what the code does.
-
 <Info>
   The LLM decides when to use the Coding Agent based on your message. To force or block it for one chat,
-  open the actions menu in the input bar and toggle **Coding Agent**.
-  You can also add it as an action on a custom [Agent](/overview/core_features/agents).
-  Name the repository in your prompt, as a URL or as `owner/repo`.
+  open the actions menu in the input bar and toggle **Coding Agent**. Name the repository in your prompt,
+  as a URL or as `owner/repo`.
 </Info>
-
-## How It Works
-
-<Steps>
-  <Step title="Downloads the repository">
-    Onyx downloads a snapshot of the repository into an isolated sandbox. It does not download the git history.
-  </Step>
-
-  <Step title="Investigates the code">
-    An LLM-driven loop runs shell commands to explore the codebase.
-  </Step>
-
-  <Step title="Returns an answer">
-    Onyx writes a final answer based on what it found and shows it in the chat.
-  </Step>
-</Steps>
-
-The Coding Agent runs in the same sandbox as the [Code Interpreter](/overview/core_features/code_interpreter),
-so it needs a connected Code Interpreter service.
 
 ## Configuration
 
 An admin can turn the Coding Agent on or off at **Admin Panel → Chat Preferences → Coding Agent**.
-The Code Interpreter service must show **Connected** at **Admin Panel → Code Interpreter**.
+The Coding Agent runs in the same sandbox as the [Code Interpreter](/overview/core_features/code_interpreter),
+so the Code Interpreter service must show **Connected** at **Admin Panel → Code Interpreter**.
 Agent builders can then add the action to their [Agents](/overview/core_features/agents).
 
 For details, see the [admin configuration guide](/admins/actions/coding_agent).

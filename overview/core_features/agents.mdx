@@ -5,7 +5,6 @@ icon: "robot"
 ---
 
 An Agent combines your instructions, knowledge, and [Actions](/overview/core_features/plugins).
-Think of an Agent as an AI team member that is tuned for one task.
 
 You can keep an Agent private or share it with other users or [user groups](/admins/user_management/users_and_groups)
 in Onyx.
@@ -41,7 +40,6 @@ The Agent editor has these sections:
 
 | Section | What to set |
 | --- | --- |
-| **Name, Description, Agent Avatar** | How the Agent appears in the Agents list. |
 | **Instructions** | The system prompt that controls the Agent's behavior. |
 | **Conversation Starters** | Example prompts shown when a user opens the Agent. |
 | **Knowledge** | Connectors, Document Sets, and uploaded files the Agent can search. |
@@ -50,10 +48,6 @@ The Agent editor has these sections:
 | **Share** | Who can use the Agent. Admins can also feature an Agent and add labels. |
 
 ### Instructions (Prompting)
-
-<Tip>
-  Instructions are free text, so test different versions and check the behavior before you share the Agent widely.
-</Tip>
 
 For inspiration, this is the **Instruction** for the default Onyx experience.
 
@@ -87,13 +81,12 @@ Instructions are plain language. Examples:
 </Tip>
 
 An Agent can use knowledge from [Connectors](/overview/core_features/connectors), Document Sets, and uploaded files.
-Onyx keeps connector knowledge up to date as documents change in the source applications.
 You can also set a **Knowledge Cutoff Date** so the Agent ignores older documents.
 
 ### Actions
 
 <Note>
-  If a built-in action is missing from the editor, contact your Onyx admin. Web Search, Image Generation, Voice,
+  Web Search, Image Generation, Voice,
   and Code Interpreter must be set up in the Admin Panel before Agents can use them.
 </Note>
 
@@ -105,8 +98,3 @@ Common plugin actions:
 - Update a ticket status based on the conversation.
 - Check the status of a service to give a real-time answer.
 - Move a deal along a sales pipeline in a CRM from a call transcript or a user request.
-
-### Sharing
-
-Under **Share**, choose who can use the Agent: only you, specific users or groups, or everyone.
-Admins can **Feature This Agent** so it appears at the top of the Agents list, and add labels to help people find it.

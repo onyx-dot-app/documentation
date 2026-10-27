@@ -12,16 +12,14 @@ icon: "comment"
 
 <img className="rounded-image" src="/assets/overview/core_features/chat_ui.webp" alt="Onyx Chat Interface"/>
 
-The Chat UI is the main way to work with Onyx. This page describes its main parts.
-
 ## Input Bar
 
 ### Attach Files
 
 <img className="rounded-image" src="/assets/overview/core_features/files.webp" alt="Files Input"/>
 
-Click **Attach Files**, the leftmost button of the input bar, to add files to the chat.
-You can also drag files into the chat or paste an image. Onyx processes each file before you can send the message.
+Click **Attach Files** to add files to the chat. You can also drag files into the chat or paste an image.
+Onyx processes each file before you can send the message.
 Attached files appear under **User Files** in the sources sidebar.
 
 <Note>
@@ -46,8 +44,8 @@ The actions button opens a menu where you force or block actions for the current
 - **[Image Generation](/overview/core_features/image_generation)**: Creates images.
   Appears after an admin connects an image provider.
 
-Select **Plugins** in the same menu to turn MCP and OpenAPI plugins on or off for the chat,
-or click **Browse plugins** to open the Plugins page. See [Plugins](/overview/core_features/plugins).
+Select **Plugins** in the same menu to turn MCP and OpenAPI plugins on or off for the chat.
+See [Plugins](/overview/core_features/plugins).
 
 ### Deep Research
 
@@ -75,27 +73,11 @@ Onyx supports all major LLM providers and self-hosted options such as Ollama and
 
 Set your default model, reasoning level, and temperature under **Settings → Chats**.
 
-### Voice
-
-Click the **microphone** button to speak your message. See [Voice Mode](/overview/core_features/voice_mode).
-
 ## Sidebar Contents
-
-The left sidebar contains:
-- **New Session** to start a new Chat or Search session.
-- **Projects** to group chats and reuse files and instructions. See [Projects](#projects) below.
-- **Agents** to start a session with your own or your team's [Agents](/overview/core_features/agents).
-- **Recents** with your latest conversations. Use **Search Chats** to find an older chat.
-- **Plugins** to connect and manage [Plugins](/overview/core_features/plugins).
-- **Craft** to open [Craft](/overview/core_features/craft), when it is enabled for you.
 
 The sources sidebar on the right shows the documents used for the answer under **Cited Sources** and **Found Sources**.
 These can come from **Internal Search**, **Web Search**, or both.
 Select a document there to include its full content in your next message.
-
-<Tip>
-  Ask a question to find a document, then select it to do a deep dive on it.
-</Tip>
 
 ## Projects
 
@@ -104,7 +86,6 @@ Select a document there to include its full content in your next message.
 A **Project** groups chats with a shared set of **Files** and **Instructions**. Use Projects to organize ongoing work,
 or to reuse files and instructions without creating an Agent.
 
-Select **Projects → New Project** in the sidebar, then use **Add Files** and **Set Instructions**.
 Chats started in the Project use its files and instructions.
 Use **Move to Project** in the chat header menu to move an existing chat.
 
@@ -120,8 +101,3 @@ Your admin's data policy still applies. An admin can turn Incognito Chats off at
 
 Onyx can store facts from your chats and use them in later answers. Manage this under **Settings → Memory**:
 turn **Reference Stored Memories** and **Update Memories** on or off, and use **View/Add** to edit the stored lines.
-
-## Share and Export
-
-Share a chat from the chat header: choose **Private** or **Your Organization**, then copy the link.
-Use **Export As…** in the chat header menu to download the chat as Markdown or plaintext.

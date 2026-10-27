@@ -56,21 +56,12 @@ The actions available to you depend on the access granted by the external servic
 ## Connect an app
 
 <Steps>
-  <Step title="Open Plugins">
-    Select **Plugins** in the Craft sidebar. Use the **Connected** and **Needs sign-in** filters to find an app.
-    Craft Apps show the **Craft App** type.
-  </Step>
-
   <Step title="Connect your account">
-    Click the app, then click **Connect**. Built-in apps open the service's sign-in page in a new tab.
+    Select **Plugins** in the Craft sidebar, click the app, then click **Connect**.
+    Built-in apps open the service's sign-in page in a new tab.
     A custom app may instead ask for fields defined by your admin.
 
     <img className="rounded-image" src="/assets/overview/core_features/plugins/member_plugin_slack_detail.webp" alt="The Slack app details with Connect your account"/>
-  </Step>
-
-  <Step title="Review access">
-    In the external service, confirm the account and permissions you are granting. When setup finishes,
-    the app shows under **Connected**.
   </Step>
 
   <Step title="Use it in a session">
@@ -81,7 +72,6 @@ The actions available to you depend on the access granted by the external servic
 
 Craft can also recognize that an unconnected app is needed while it works. In that case,
 a connection card appears in the session with **Connect** and **Not now** options.
-Connect the app to let the current task continue, or choose **Not now** and ask Craft to use another source.
 
 <Tip>
   Connect the account you want Craft to act as. For example,
@@ -91,7 +81,6 @@ Connect the app to let the current task continue, or choose **Not now** and ask 
 ### Review the app's skills
 
 The **Skills** tab lists the [Skills](/overview/core_features/craft_skills) that teach Craft how to use the app.
-Click **Review skills** to see them.
 
 <img className="rounded-image" src="/assets/overview/core_features/plugins/craft_plugin_slack_skills.webp" alt="The Skills tab for the Slack app"/>
 
@@ -156,8 +145,6 @@ If a run reaches an action that needs approval, the run stops and waits for you.
 ## Disconnect an app
 
 Open **Plugins**, click the app, and click **Disconnect**.
-Craft can no longer make authenticated requests through that connection.
-You can reconnect later by completing the connection flow again.
 
 <Info>
   Raw app credentials never enter Craft's sandbox workspace.
@@ -168,18 +155,6 @@ You can reconnect later by completing the connection flow again.
 ## Troubleshooting
 
 <AccordionGroup>
-  <Accordion title="An app does not appear">
-    Your organization has not enabled it, or its setup is incomplete.
-    Ask an admin to review the app configuration and your access.
-    Admins can use the [Craft Apps setup guide](/admins/plugins/craft_apps).
-  </Accordion>
-
-<Accordion title="The connection flow fails">
-  Confirm you selected the intended external account, allowed the setup window to open,
-  and granted the requested access. For a custom app, verify the credential fields with your admin.
-  Then return to Plugins and try again.
-</Accordion>
-
 <Accordion title="Craft cannot perform an action">
   The action may be disabled by policy, outside the connected account's access, rejected,
   or expired while awaiting approval. Craft does not retry a blocked action automatically;
