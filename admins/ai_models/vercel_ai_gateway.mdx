@@ -19,9 +19,6 @@ Configure Onyx to use models served through [Vercel AI Gateway](https://vercel.c
 <Steps>
   <Step title="Set Up Your Vercel AI Gateway Access">
     In your Vercel dashboard, open **AI Gateway** and create an **API Key**.
-
-    Onyx uses the hosted endpoint `https://ai-gateway.vercel.sh/v1` by default.
-    Note a custom base URL only if you proxy the gateway.
   </Step>
 
   <NavigateToAiModels />
@@ -31,15 +28,13 @@ Configure Onyx to use models served through [Vercel AI Gateway](https://vercel.c
 
     Keep the default **API Base URL** (`https://ai-gateway.vercel.sh/v1`) or paste a custom base URL.
 
-    Paste your Vercel AI Gateway **API Key**. Optionally, give this provider a **Display Name**.
+    Paste your Vercel AI Gateway **API Key**.
 
     <img className="rounded-image" src="/assets/admins/ai_models/vercel_ai_gateway_connect.webp" alt="Set up Vercel AI Gateway dialog with API Base URL, API Key, Display Name, and Models"/>
   </Step>
 
   <Step title="Load Your Models">
     In the **Models** section, click **Refresh models**. Onyx lists the models that Vercel AI Gateway exposes.
-
-    Select the models you want to use. You can also type a model name and click **Add Model**.
   </Step>
 
   <StandardAiModelConfigs />

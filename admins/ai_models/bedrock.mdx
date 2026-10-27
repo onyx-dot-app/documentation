@@ -60,12 +60,6 @@ Onyx assumes the role with the credentials above before each call.
 ## Guide
 
 <Steps>
-  <Step title="Choose Your Authentication Method">
-    Decide whether an Environment IAM Role, an Access Key, or a Long-term API Key fits your environment.
-
-    Open the accordions above to set up the method you chose.
-  </Step>
-
   <Step title="Enable the Models You Want">
     In the Bedrock console, open the **Model catalog** and decide which models you want to use with Onyx.
 
@@ -93,16 +87,12 @@ Onyx assumes the role with the credentials above before each call.
     Depending on the method, enter the **AWS Access Key ID** and **AWS Secret Access Key**,
     or the **Long-term API Key**. Optionally, enter a **Role ARN to assume** and **External ID**.
 
-    Optionally, give this provider a **Display Name**.
-
     <img className="rounded-image" src="/assets/admins/ai_models/bedrock_config.webp" alt="Amazon Bedrock provider setup dialog"/>
   </Step>
 
   <Step title="Load Your Models">
     After you set the region and credentials, click **Refresh models** in the **Models** section.
     Onyx lists the models and inference profiles available to your account in that region.
-
-    Select the models you want to use. You can also type a model ID and click **Add Model**.
   </Step>
 
   <StandardAiModelConfigs />

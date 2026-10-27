@@ -15,12 +15,8 @@ and [Langfuse](https://langfuse.com).
 ## Connect a provider
 
 <Steps>
-  <Step title="Navigate to the Tracing dashboard">
-    Click your user profile icon, select **Admin Panel**,
-    and open the **Tracing** tab under the **Usage** section of the sidebar.
-  </Step>
-
   <Step title="Connect Braintrust and/or Langfuse">
+    Open **Admin Panel → Usage → Tracing**.
     You can connect either or both providers — traces are sent to every connected provider.
 
     <Tabs tabs={["Braintrust", "Langfuse"]}>
@@ -48,15 +44,14 @@ and [Langfuse](https://langfuse.com).
       </Tab>
     </Tabs>
 
-    Onyx validates the credentials before saving. Once connected,
-    the card shows **Connected** and traces begin flowing within about 30 seconds — no restart required.
+    Onyx validates the credentials before saving. Traces begin flowing within about 30 seconds — no restart required.
   </Step>
 </Steps>
 
 ## Disconnect a provider
 
-Open the provider card, click the disconnect button, and confirm.
-Onyx stops sending new traces to that provider immediately. Traces already delivered are unaffected.
+When you disconnect a provider, Onyx stops sending new traces to it immediately.
+Traces already delivered are unaffected.
 
 ## Configuring with environment variables
 

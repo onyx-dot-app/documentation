@@ -9,14 +9,9 @@ import NavigateToAiModels from "/snippets/navigate-to-ai-models.mdx";
 ## Guide
 
 <Steps>
-  <Step title="Open Azure OpenAI in the Azure Portal">
-    Go to the [Azure Portal](https://portal.azure.com/) and open the Azure OpenAI Service.
-
-    <img className="rounded-image" src="/assets/admins/ai_models/azure_oai_service.webp" alt="Azure OpenAI Service"/>
-  </Step>
-
   <Step title="Create an Azure OpenAI Resource">
-    Click **Create** and fill in the required fields in each section. The default values are usually sufficient.
+    In the [Azure Portal](https://portal.azure.com/), open the Azure OpenAI Service and click **Create**.
+    Fill in the required fields in each section. The default values are usually sufficient.
 
     The deployment can take a few minutes to complete.
 
@@ -63,8 +58,6 @@ import NavigateToAiModels from "/snippets/navigate-to-ai-models.mdx";
 
     Paste your **API Key**.
 
-    Optionally, give this provider a **Display Name**.
-
     <img className="rounded-image" src="/assets/admins/ai_models/azure_oai_provider_config.webp" alt="Azure OpenAI provider setup dialog"/>
   </Step>
 
@@ -73,7 +66,6 @@ import NavigateToAiModels from "/snippets/navigate-to-ai-models.mdx";
     type the name of the model behind your deployment (for example, `gpt-4.1`) and click **Add Model**.
 
     Repeat for each deployment that shares this resource and API key.
-    Hover over a model to open **Model Settings** and set its default reasoning level and temperature.
   </Step>
 
   <Step title="Set Models Access">
