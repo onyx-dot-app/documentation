@@ -7,7 +7,7 @@ import CustomDomain from "/snippets/custom-domain.mdx"
 import InstallOnyx from "/snippets/install-onyx.mdx"
 import DeploymentNextSteps from "/snippets/deployment-next-steps.mdx"
 
-A single EC2 instance is the simplest way to self-host Onyx. It meets the performance needs of most organizations.
+A single EC2 instance is the simplest way to self-host Onyx.
 
 <Tip>
   To run Onyx on EKS with managed RDS, ElastiCache, and S3 instead, see the [EKS guide](/deployment/cloud/aws/eks)
@@ -20,16 +20,12 @@ A single EC2 instance is the simplest way to self-host Onyx. It meets the perfor
   <Step title="Create an EC2 instance">
     Create an EC2 instance with the appropriate resources. This guide uses the recommended `m7g.xlarge` instance.
 
-    <Note>
-      Read the [Resourcing guide](/deployment/getting_started/resourcing) for more details.
-    </Note>
-
     - Give your instance a descriptive name like `onyx-prod`
     - Select the `Amazon Linux 2023` AMI
     - Select the `64-bit (Arm)` architecture
     - Select the `m7g.xlarge` instance type
     - Select `Allow HTTPS traffic from the internet` in the *Network settings* section
-    - Configure storage following the Resourcing guide
+    - Configure storage following the [Resourcing guide](/deployment/getting_started/resourcing)
 
     <img className="rounded-image" src="/assets/deployment/ec2_create_instance.webp" alt="EC2 Instance Creation"/>
 

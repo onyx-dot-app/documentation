@@ -4,15 +4,11 @@ description: "Email and password authentication in Onyx"
 icon: "user-lock"
 ---
 
-Email and password sign-in is always on in Onyx. You do not need to set anything to use it.
+Email and password sign-in is always on in Onyx.
 
 - The first user who signs up becomes the admin.
 - Every later user signs up with an email and password, or signs in with SSO if you add a provider.
 - Admins invite users and approve requests at **Admin Panel → Permissions → Users**.
-
-For most teams, we recommend that you also add an SSO provider.
-See [SSO Providers](/deployment/authentication/sso_providers), [Google OAuth](/deployment/authentication/oauth),
-[OIDC](/deployment/authentication/oidc), and [SAML](/deployment/authentication/saml).
 
 <Note>
   The `AUTH_TYPE` environment variable is no longer used. Onyx ignores it and logs a warning at startup.

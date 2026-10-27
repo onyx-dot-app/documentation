@@ -18,8 +18,6 @@ This guide creates the cluster in the AWS console and installs Onyx with Helm.
 
 <Steps>
   <Step title="Install requirements">
-    EKS requires the AWS CLI, kubectl, and Helm.
-
     - Download and install the [AWS CLI](https://aws.amazon.com/cli/)
     - Download and install [kubectl](https://kubernetes.io/docs/tasks/tools/)
     - Download and install [Helm](https://helm.sh/docs/intro/install/)
@@ -30,17 +28,11 @@ This guide creates the cluster in the AWS console and installs Onyx with Helm.
 
     - Navigate to Elastic Kubernetes Service (EKS) and create a new cluster
     - For **Cluster service role**, create a new IAM role with a descriptive name like `onyx-eks-cluster-role`
-
-    <Note>
-      If you do not see the newly created role in the dropdown, click the refresh button in the UI.
-    </Note>
-
     - For **Kubernetes version**, select a version with standard support
     - Choose **Standard** upgrade policy
     - Add the **Amazon EBS CSI Driver** add-on. Onyx uses persistent volumes for PostgreSQL, OpenSearch,
     and the object store
     - Keep the other default add-ons enabled
-    - Review and click **Create**
 
     The cluster can take several minutes to become ready.
 
@@ -51,7 +43,6 @@ This guide creates the cluster in the AWS console and installs Onyx with Helm.
     Once the cluster is active, add worker nodes where Onyx services run.
 
     - On the **Cluster** page, select the **Compute** tab and click **Add node group**
-    - Provide a **Name** for the group (for example, `onyx-node-group`)
     - For **Node IAM role**, select an existing role or create a new one
 
     <Note>
@@ -67,8 +58,6 @@ This guide creates the cluster in the AWS console and installs Onyx with Helm.
     </Tip>
 
     - For most setups, set the **Desired size** and **Minimum size** to 1. You can increase these later to scale up
-    - **Maximum unavailable** can remain at the default
-    - Keep the default networking configuration and click **Create**
 
     It can take up to 15 minutes for the compute nodes to come online.
   </Step>
@@ -77,8 +66,8 @@ This guide creates the cluster in the AWS console and installs Onyx with Helm.
     Your AWS identity needs admin access to the cluster.
 
     - On the cluster page, select **Access** and then **Create access entry**
-    - In **IAM principal**, select the IAM role or user you use with the AWS CLI, then click **Next**
-    - For **Policy name**, select `AmazonEKSClusterAdminPolicy`, then click **Next** and **Create**
+    - In **IAM principal**, select the IAM role or user you use with the AWS CLI
+    - For **Policy name**, select `AmazonEKSClusterAdminPolicy`
 
     <Note>
       Prefer an IAM role (for example, through AWS SSO) over a long-lived IAM user with access keys.
@@ -146,8 +135,6 @@ This guide creates the cluster in the AWS console and installs Onyx with Helm.
     kubectl create namespace onyx
     helm install onyx onyx/onyx -n onyx -f values.yaml
     ```
-
-    This pulls the latest Onyx chart and deploys all dependencies.
 
     <Tip>
       To use RDS, ElastiCache, or S3 instead of the bundled services, see [RDS](/deployment/cloud/aws/rds)

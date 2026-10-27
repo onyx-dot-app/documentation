@@ -52,7 +52,6 @@ You also need the OpenID configuration URL. For Okta it is:
 https://<your-okta-domain>/.well-known/openid-configuration
 ```
 
-Other providers publish a similar URL.
 For Microsoft Entra ID it is `https://login.microsoftonline.com/<tenant-id>/v2.0/.well-known/openid-configuration`.
 
 ### Step 3: Add the Provider in Onyx
@@ -72,7 +71,6 @@ For Microsoft Entra ID it is `https://login.microsoftonline.com/<tenant-id>/v2.0
 | **Require Verified Email Claim** | Reject sign-ins whose ID token has no `email_verified: true` claim. Turn this off for Microsoft Entra ID, which does not send the claim. |
 
 4. Copy the **Redirect URI** shown in the modal and make sure it matches the URI in your identity provider.
-5. Click **Create**.
 
 Users now see a **Sign in with &lt;Display Name&gt;** button on the login page.
 

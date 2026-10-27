@@ -21,15 +21,11 @@ A single Azure virtual machine is the simplest way to self-host Onyx on Azure.
   <Step title="Create a VM instance">
     Create a VM with the appropriate resources. This guide uses the recommended `Standard_D4s_v3` size.
 
-    <Note>
-      Read the [Resourcing guide](/deployment/getting_started/resourcing) for more details.
-    </Note>
-
     - Give your VM a descriptive name like `onyx-prod`
     - Select the `Ubuntu Server 24.04 LTS` image
     - Select the `Standard_D4s_v3` size
     - Select `Allow selected ports` and check `HTTPS (443)` in the *Inbound port rules* section
-    - Configure storage following the Resourcing guide
+    - Configure storage following the [Resourcing guide](/deployment/getting_started/resourcing)
 
     <img className="rounded-image" src="/assets/deployment/setup_guides/azure/create-vm.webp" alt="Create VM Instance"/>
 

@@ -16,50 +16,30 @@ and IAM authentication.
 
 <Steps>
   <Step title="Create an RDS PostgreSQL instance">
-    Navigate to the Amazon RDS console and create a new PostgreSQL database.
+    In the Amazon RDS console, click **Create database**.
 
-    - Click **Create database**
     - Select **PostgreSQL** as the engine type
     - Choose **Standard create** for the creation method
-    - Select your preferred **PostgreSQL version**
-    - Choose the **Production** or **Dev/Test** template as needed
   </Step>
 
   <Step title="Configure database settings">
-    Set up your database identifier, credentials, and instance configuration.
-
     **Settings:**
-    - Set a descriptive **DB instance identifier** like `onyx-prod-db`
     - Set a **Master username** (for example, `postgres`)
-    - Set a strong **Master password** and confirm it
+    - Set a strong **Master password**
 
     **Instance configuration:**
     - Choose an **Instance class**. `db.t4g.medium` suits small deployments; `db.m7g.large` suits production
     - Configure **Storage** size and enable autoscaling if needed
-
-    <Tip>
-      Save your database credentials securely. You need them to configure Onyx.
-    </Tip>
   </Step>
 
   <Step title="Configure connectivity and security">
-    Set up network access and security groups for your database.
-
     - Select your **VPC** and **Subnet group**
     - Configure the **VPC security group** to allow port `5432` from your Onyx instance or EKS nodes
     - Set **Public access** to **No** for production (recommended)
-    - Choose your preferred **Availability Zone**
-
-    Click **Create database** to launch your RDS instance.
   </Step>
 
   <Step title="Configure Onyx">
-    Once your RDS instance is running, configure Onyx to connect to it.
-
-    Get your database details from the RDS console:
-    - **Endpoint**: Found in the RDS instance details
-    - **Port**: Typically `5432`
-    - **Database name**: Your database name, or `postgres` if you kept the default
+    Get the **Endpoint** from the RDS instance details. The database name is `postgres` unless you set one.
 
     **For Docker Compose deployments**, set these variables in your `.env` file:
 
@@ -150,10 +130,7 @@ Onyx fetches a new token for each connection and always verifies the RDS certifi
 
 <Steps>
   <Step title="Enable IAM authentication on RDS">
-    Navigate to your RDS instance in the AWS console and enable IAM authentication.
-
-    - Go to your RDS PostgreSQL instance
-    - Click **Modify**
+    - Open your RDS PostgreSQL instance and click **Modify**
     - Under **Database authentication**, enable **IAM database authentication**
     - Click **Continue**, then **Apply immediately**
   </Step>
@@ -274,8 +251,6 @@ Onyx fetches a new token for each connection and always verifies the RDS certifi
   </Step>
 
   <Step title="Restart Onyx">
-    Restart Onyx to apply the changes.
-
     ```bash Docker Compose
     docker compose -f docker-compose.yml -f docker-compose.prod.yml -p onyx-stack up -d --force-recreate
     ```

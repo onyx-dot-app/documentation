@@ -24,21 +24,17 @@ Use SCIM together with SSO so that accounts exist before the first sign-in and g
 - **Group sync**: creates Onyx user groups from the identity provider's groups and keeps the members in sync.
 
 Users that SCIM manages show **SCIM synced** at **Admin Panel → Permissions → Users**.
-The same page shows a **SCIM Sync** summary card.
 
 ## Generate a SCIM Token
 
 1. Go to **Admin Panel → Permissions → SCIM**.
 2. Click **Generate SCIM Token**.
-3. Copy the token or click **Download**. Onyx shows the token one time only.
+3. Copy the token. Onyx shows the token one time only.
 
 The identity provider authenticates with this token as a bearer token. The token does not expire.
 
 To replace the token, click **Regenerate Token**. The old token stops working at once.
 Update the identity provider with the new token.
-
-The **SCIM Sync** card shows **Waiting for Connection** until the identity provider makes its first request,
-then **Connected**.
 
 ## Configure Your Identity Provider
 

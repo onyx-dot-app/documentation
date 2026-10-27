@@ -21,11 +21,11 @@ This guide uses Okta as the example. The steps are similar for other providers.
 ### Step 1: Create a SAML Application in Your Identity Provider
 
 1. In the Okta admin console, go to **Applications → Applications** and click **Create App Integration**.
-2. Select **SAML 2.0** and click **Next**.
+2. Select **SAML 2.0**.
 
 ![Create an Okta app integration](/assets/deployment/oidc_create_integration.webp)
 
-3. Enter a name for the application and click **Next**.
+3. Enter a name for the application.
 4. In **SAML Settings**, set:
 
 | Okta field                       | Value                                                                  |
@@ -71,7 +71,6 @@ On the application's **Sign On** tab, open the SAML setup instructions or metada
 | **Email Attribute**          | Optional. The SAML attribute that holds the email. Leave empty to use common names such as `email`.    |
 
 4. The modal shows the **ACS (Reply) URL**. Make sure it matches the single sign-on URL in your identity provider.
-5. Click **Create**.
 
 Users now see a **Sign in with &lt;Display Name&gt;** button on the login page.
 Onyx also accepts IdP-initiated sign-in from the identity provider's app dashboard.
