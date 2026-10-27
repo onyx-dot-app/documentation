@@ -210,9 +210,8 @@ api:
 
 ### Stop a chat
 
-Users stop a response with the stop button. API clients can send `POST /api/chat/stop-chat-session/{chat_session_id}`.
-Onyx writes a stop signal to the cache, and the stream ends at its next check.
-Any API replica can receive the stop request.
+API clients can send `POST /api/chat/stop-chat-session/{chat_session_id}`. Onyx writes a stop signal to the cache,
+and the stream ends at its next check. Any API replica can receive the stop request.
 
 ### Limits
 

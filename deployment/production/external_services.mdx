@@ -149,9 +149,6 @@ The chart does not configure backups for any bundled service.
 | OpenSearch | You own snapshots, disk growth, and upgrades. You can rebuild the index from sources, but it is slow. | The provider owns snapshots and upgrades. |
 | Object store or external object storage (S3, Cloud Storage, Azure Blob Storage) | You own backups of uploaded files. You cannot rebuild these files from sources. | The provider owns durability. You own versioning and backup policy. |
 
-For each external service, you must make sure that its version works with your Onyx version.
-Test upgrades in a staging environment first.
-
 ## Uninstall
 
 <Warning>
