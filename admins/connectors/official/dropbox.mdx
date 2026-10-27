@@ -30,15 +30,11 @@ Everyone who can see the connector's documents in Onyx can see every indexed fil
     <img className="rounded-image" src="/assets/admins/connectors/dropbox/dropbox-connector-1.webp" alt="Dropbox app creation form with Scoped access and Full Dropbox selected"/>
   </Step>
 
-  <Step title="Open Permissions">
-    Click the **Permissions** tab.
+  <Step title="Grant the required scopes">
+    On the **Permissions** tab, check `files.content.read` and `sharing.write`.
+    Onyx needs them to read files and to create document links. Click **Submit**.
 
     <img className="rounded-image" src="/assets/admins/connectors/dropbox/dropbox-connector-2.webp" alt="Permissions tab of a Dropbox app"/>
-  </Step>
-
-  <Step title="Grant the required scopes">
-    Check `files.content.read` and `sharing.write`. Onyx needs them to read files and to create document links.
-    Click **Submit**.
 
     <img className="rounded-image" src="/assets/admins/connectors/dropbox/dropbox-connector-3.webp" alt="Dropbox app permissions with files.content.read and sharing.write checked"/>
 
@@ -48,20 +44,12 @@ Everyone who can see the connector's documents in Onyx can see every indexed fil
   <Step title="Generate an access token">
     Open the **Settings** tab and scroll down to the **OAuth 2** section.
     If the **Access token expiration** setting is available, set it to **No expiration**.
-    Click **Generate** to create an access token.
+    Click **Generate** and copy the access token. Refresh the page if you need to generate it again.
 
     <Warning>
       Grant the permissions before you generate the token. A token does not pick up permissions that you grant later.
       Onyx does not refresh the token. A short-lived token stops working after a few hours.
     </Warning>
-  </Step>
-
-  <Step title="Copy the access token">
-    Copy the access token.
-
-    <Info>
-      Refresh the page if you need to generate the token again.
-    </Info>
 
     <img className="rounded-image" src="/assets/admins/connectors/dropbox/dropbox-connector-5.webp" alt="Generated Dropbox access token"/>
   </Step>
@@ -70,20 +58,14 @@ Everyone who can see the connector's documents in Onyx can see every indexed fil
 ### Indexing
 
 <Steps>
-  <Step title="Open the Dropbox connector">
-    In the Onyx admin panel, go to **Connectors** and select **Dropbox**.
-  </Step>
-
   <Step title="Create the account">
-    Under **Authentication Account**, click **Create New** and enter the access token as the **API Token**.
+    In the Onyx admin panel, go to **Connectors** and select **Dropbox**. Under **Authentication Account**,
+    click **Create New** and enter the access token as the **API Token**.
   </Step>
 
   <Step title="Choose document access">
     Under **Document Access**, select who can see the indexed files.
     **Specific Groups** is available on the Business and Enterprise plans and on Onyx Cloud.
-  </Step>
-
-  <Step title="Create the connector">
-    Click **Create Connector**. Onyx starts the first indexing run.
+    Then click **Create Connector**.
   </Step>
 </Steps>

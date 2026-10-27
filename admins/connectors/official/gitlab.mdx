@@ -22,8 +22,6 @@ Everyone who can see the connector's documents in Onyx can see every indexed ite
 
 ### Authorization
 
-The connector signs in with a GitLab personal access token.
-
 <Steps>
   <Step title="Open your access tokens">
     Log in to GitLab. In the left sidebar, select your avatar, then **Edit profile**.
@@ -48,12 +46,9 @@ The connector signs in with a GitLab personal access token.
 ### Indexing
 
 <Steps>
-  <Step title="Open the GitLab connector">
-    In the Onyx admin panel, go to **Connectors** and select **GitLab**.
-  </Step>
-
   <Step title="Create the account">
-    Under **Authentication Account**, click **Create New**. Enter the **GitLab URL** and the token as the **API Token**.
+    In the Onyx admin panel, go to **Connectors** and select **GitLab**. Under **Authentication Account**,
+    click **Create New**. Enter the **GitLab URL** and the token as the **API Token**.
     Keep `https://gitlab.com` for GitLab.com. Enter the address of your instance for a self-hosted GitLab.
   </Step>
 
@@ -69,10 +64,7 @@ The connector signs in with a GitLab personal access token.
   <Step title="Choose document access">
     Under **Document Access**, select who can see the indexed items.
     **Specific Groups** is available on the Business and Enterprise plans and on Onyx Cloud.
-  </Step>
-
-  <Step title="Create the connector">
-    Click **Create Connector**. Onyx starts the first indexing run.
+    Then click **Create Connector**.
   </Step>
 </Steps>
 

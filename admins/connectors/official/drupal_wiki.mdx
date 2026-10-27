@@ -30,26 +30,15 @@ You need a Drupal Wiki personal access token. The token starts with `pat:`.
     Follow the Drupal Wiki documentation to generate a personal access token:
     [https://help.drupal-wiki.com/node/605#2-Zugriffs-Token-generieren](https://help.drupal-wiki.com/node/605#2-Zugriffs-Token-generieren)
   </Step>
-
-  <Step title="Copy the token">
-    Copy the token. It starts with `pat:`.
-  </Step>
 </Steps>
-
-<Info>
-  The token decides what Onyx can index. Onyx indexes only the spaces and pages that the token user can read.
-</Info>
 
 ### Indexing
 
 <Steps>
-  <Step title="Open the Drupal Wiki connector">
-    In the Onyx admin panel, go to **Connectors** and select **Drupal Wiki**.
-  </Step>
-
   <Step title="Create the account">
-    Under **Authentication Account**, click **Create New**. Enter the **Base URL** of your instance,
-    for example `https://help.drupal-wiki.com`, and the token as the **API Token**.
+    In the Onyx admin panel, go to **Connectors** and select **Drupal Wiki**. Under **Authentication Account**,
+    click **Create New**. Enter the **Base URL** of your instance, for example `https://help.drupal-wiki.com`,
+    and the token as the **API Token**.
   </Step>
 
   <Step title="Choose the content to index">
@@ -67,18 +56,10 @@ You need a Drupal Wiki personal access token. The token starts with `pat:`.
   <Step title="Choose document access">
     Under **Document Access**, select who can see the indexed pages.
     **Specific Groups** is available on the Business and Enterprise plans and on Onyx Cloud.
-  </Step>
-
-  <Step title="Create the connector">
-    Click **Create Connector**. Onyx starts the first indexing run.
+    Then click **Create Connector**.
   </Step>
 </Steps>
 
 <img className="rounded-image" src="/assets/admins/connectors/drupal_wiki/OnyxDrupalWikiConfig.webp" alt="Drupal Wiki connector configuration in Onyx"/>
-
-## Indexed content
-
-- **Pages**: Wiki pages, converted from HTML to text.
-- **Attachments** (optional): Files attached to pages, up to 10 MB each.
 
 The connector works with self-hosted and cloud-hosted Drupal Wiki instances.

@@ -20,11 +20,8 @@ Everyone who can see the connector's documents in Onyx can see every indexed tic
 ### Authorization
 
 <Steps>
-  <Step title="Log in to Freshdesk">
-    Log in to Freshdesk as a verified agent, admin, or account owner.
-  </Step>
-
   <Step title="Open your profile settings">
+    Log in to Freshdesk as a verified agent, admin, or account owner.
     Click your profile avatar and select **Profile settings**.
 
     <img className="rounded-image" src="/assets/admins/connectors/freshdesk/freshdesk_1.webp" alt="Freshdesk profile menu"/>
@@ -40,21 +37,15 @@ Everyone who can see the connector's documents in Onyx can see every indexed tic
 ### Indexing
 
 <Steps>
-  <Step title="Open the Freshdesk connector">
-    In the Onyx admin panel, go to **Connectors** and select **Freshdesk**.
-  </Step>
-
   <Step title="Create the account">
-    Under **Authentication Account**, click **Create New**. Enter the **Freshdesk Domain**,
-    for example `acme` for `acme.freshdesk.com`, and the key as the **API Token**.
+    In the Onyx admin panel, go to **Connectors** and select **Freshdesk**. Under **Authentication Account**,
+    click **Create New**. Enter the **Freshdesk Domain**, for example `acme` for `acme.freshdesk.com`,
+    and the key as the **API Token**.
   </Step>
 
   <Step title="Choose document access">
     Under **Document Access**, select who can see the indexed tickets.
     **Specific Groups** is available on the Business and Enterprise plans and on Onyx Cloud.
-  </Step>
-
-  <Step title="Create the connector">
-    Click **Create Connector**. Onyx starts the first indexing run.
+    Then click **Create Connector**.
   </Step>
 </Steps>

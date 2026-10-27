@@ -20,16 +20,9 @@ The access type can only be **Everyone in Your Organization** or **Specific Grou
 ### Authorization
 
 <Steps>
-  <Step title="Log in to Discourse">
-    Log in to your Discourse forum.
-
-    <Info>
-      This Discourse user must have admin privileges to create an API key.
-    </Info>
-  </Step>
-
   <Step title="Open API keys">
-    Open the **Admin** menu. Open the **Advanced** sub-menu and select **API keys**.
+    Log in to Discourse as an admin. Only an admin can create an API key. Open the **Admin** menu, then **Advanced**,
+    and select **API keys**.
 
     <video className="rounded-image" src="/assets/admins/connectors/discourse/discourse_1.mp4" autoPlay muted loop playsInline aria-label="Discourse admin navigation to the API keys page" />
   </Step>
@@ -41,7 +34,7 @@ The access type can only be **Everyone in Your Organization** or **Specific Grou
   </Step>
 
   <Step title="Save and copy the key">
-    Click **Save** and copy the key. You enter it in Onyx in the next section.
+    Click **Save** and copy the key.
 
     <video className="rounded-image" src="/assets/admins/connectors/discourse/discourse_3.mp4" autoPlay muted loop playsInline aria-label="Create and copy API key" />
   </Step>
@@ -50,12 +43,9 @@ The access type can only be **Everyone in Your Organization** or **Specific Grou
 ### Indexing
 
 <Steps>
-  <Step title="Open the Discourse connector">
-    In Onyx, go to **Admin Panel → Connectors** and select **Discourse**.
-  </Step>
-
   <Step title="Connect a Discourse account">
-    Under **Authentication Account**, select **New Discourse Account** and enter:
+    In Onyx, go to **Admin Panel → Connectors** and select **Discourse**. Under **Authentication Account**,
+    select **New Discourse Account** and enter:
 
     - **API Token**: The API key you copied.
     - **Discourse API Username**: The username of the Discourse account whose access Onyx uses.

@@ -28,7 +28,6 @@ You pick any combination of three content types:
 
 You need:
 
-- An Onyx administrator account.
 - A GitHub personal access token, either fine-grained or classic.
   Onyx authenticates only with a token; GitHub App and OAuth sign-in are not supported.
 - For [permission sync](#permission-sync), the Business or Enterprise plan, or Onyx Cloud.
@@ -89,12 +88,9 @@ After generating the token, copy it right away - GitHub shows it only once.
 ## Configure the connector in Onyx
 
 <Steps>
-  <Step title="Open the GitHub connector">
-    In the Onyx admin panel, go to **Connectors** and select **GitHub**.
-  </Step>
-
   <Step title="Create the account">
-    Under **Authentication Account**, click **Create New** and paste the token into **API Token**.
+    In the Onyx admin panel, go to **Connectors** and select **GitHub**. Under **Authentication Account**,
+    click **Create New** and paste the token into **API Token**.
 
     Leave **GitHub Enterprise Server URL** blank for github.com. To index a GitHub Enterprise Server instance instead,
     see [GitHub Enterprise Server](#github-enterprise-server).
@@ -130,14 +126,10 @@ After generating the token, copy it right away - GitHub shows it only once.
   </Step>
 
   <Step title="Choose document access">
-    Under **Document Access**, pick one:
-
-    - **Everyone in Your Organization** shows every indexed document to all Onyx users.
-    - **Specific Groups** limits them to selected Onyx user groups.
-    - **Sync with GitHub** mirrors each user's own GitHub access; see [Permission sync](#permission-sync).
+    Under **Document Access**, pick **Everyone in Your Organization**, **Specific Groups**, or **Sync with GitHub**.
+    **Sync with GitHub** mirrors each user's own GitHub access; see [Permission sync](#permission-sync).
 
     **Specific Groups** and **Sync with GitHub** are available on the Business and Enterprise plans and on Onyx Cloud.
-    On the Community Edition, the connector is visible to everyone.
     See [Document Access Controls](/admins/connectors/overview#document-access-controls) for details.
   </Step>
 
@@ -179,8 +171,6 @@ default for accounts that leave the field blank; see [Configuration](/deployment
 
 Set **Document Access** to **Sync with GitHub** when you create the connector,
 and an Onyx user sees only the GitHub content they can read on GitHub.
-Onyx preselects this option when the plan and the account support it. To change it later,
-open the connector and click **Edit Access** under **Sharing Settings**.
 
 - Documents from **public** repositories are visible to every Onyx user.
 - Documents from **private** repositories are visible to the repository's collaborators,
