@@ -67,11 +67,18 @@ Onyx supports all major LLM providers and self-hosted options such as Ollama and
 
 Set your default model, reasoning level, and temperature under **Settings → Chats**.
 
-## Sidebar Contents
+## Sources Panel
 
-The sources sidebar on the right shows the documents used for the answer under **Cited Sources** and **Found Sources**.
-These can come from **Internal Search**, **Web Search**, or both.
-Select a document there to include its full content in your next message.
+<img className="rounded-image" src="/assets/overview/core_features/sources_sidebar.webp" alt="Sources panel with Cited Sources and More"/>
+
+When an answer used **Internal Search** or **Web Search**, a **Sources** button appears under it.
+Select it to open the sources panel on the right. Answers that ran no search have no **Sources** button.
+
+The panel lists the documents from that search:
+- **Cited Sources**: documents the answer cites, in citation order.
+- **Found Sources** (or **More** when there are also cited documents): the other documents the search returned.
+
+Select a document in the panel to include its full content in your next message.
 
 ## Projects
 
