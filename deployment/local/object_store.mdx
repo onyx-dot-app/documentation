@@ -41,6 +41,11 @@ where `<fullname>` is the release name when it contains `onyx` and `<release>-on
 `objectStore.enabled` defaults to the value of `minio.enabled`,
 so an install that already disables MinIO keeps the object store off as well. The examples set both to be explicit.
 
+MinIO is deprecated. The chart keeps `minio.enabled:
+true` for now so that upgrades from before v5.0 can copy their files to SeaweedFS.
+A future release changes the default to `false`. Set `minio.enabled:
+false` on new installs and after the [move to SeaweedFS](/admins/advanced_configs/object_store_migration) completes.
+
 ```yaml values.yaml
 objectStore:
   enabled: true

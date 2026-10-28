@@ -236,7 +236,10 @@ a rollback to a release before the object store no longer sees files uploaded si
 
 ## Deprecation of MinIO
 
-A later release removes MinIO from the bundled deployment entirely.
+MinIO is deprecated. Move to SeaweedFS as soon as you can. The Helm chart keeps `minio.enabled:
+true` for now so that existing installs can run this copy. A future release changes the default to `false`,
+and a later release removes MinIO from the bundled deployment entirely. Set `minio.enabled:
+false` once the copy completes.
 
 <Warning>
   Upgrade through `v5.0.0` and let the copy complete before moving to a release that no longer bundles MinIO.
