@@ -3566,25 +3566,6 @@
       ]
     },
     {
-      "page": "admins/advanced_configs/doc_processing.mdx",
-      "tab": null,
-      "in_nav": false,
-      "title": "Document Processing",
-      "words": 115,
-      "last_commit": "2026-01-11",
-      "components": [
-        "editions-and-gating",
-        "rate-and-usage-limits",
-        "background-jobs"
-      ],
-      "images": [
-        {
-          "src": "/assets/admins/advanced_configs/document_processing.png",
-          "kind": "onyx-ui"
-        }
-      ]
-    },
-    {
       "page": "admins/advanced_configs/hook_extensions.mdx",
       "tab": "Admins",
       "in_nav": true,

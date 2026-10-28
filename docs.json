@@ -318,7 +318,6 @@
                   "admins/managing_features/rag_and_search",
                   "admins/managing_features/connectors_link",
                   "admins/advanced_configs/search_configs",
-                  "admins/advanced_configs/doc_processing",
                   "admins/managing_features/document_sets",
                   "admins/advanced_configs/opensearch_document_index_migration",
                   "admins/advanced_configs/object_store_migration"
@@ -794,6 +793,10 @@
     }
   },
   "redirects": [
+    {
+      "source": "/admins/advanced_configs/doc_processing",
+      "destination": "/admins/managing_features/rag_and_search"
+    },
     {
       "source": "/admins/actions/overview",
       "destination": "/admins/plugins/overview"
