@@ -131,9 +131,8 @@ The key environment variables that drive this are:
 ### Deploying Onyx Lite with Helm
 
     The values-lite.yaml file disables vector database access, Redis, Celery workers, and the indexing model server.
-    Unlike the Docker Compose overlay, it does not disable OpenSearch, the object store, MinIO,
-    the inference model server, or the Slack bot. These workloads still start with the chart defaults.
-    The code interpreter also remains enabled.
+    Unlike the Docker Compose overlay, it does not disable OpenSearch, the object store, the inference model server,
+    or the Slack bot. These workloads still start with the chart defaults. The code interpreter also remains enabled.
 
     For a minimal install that omits those unused workloads, add explicit overrides:
 
@@ -141,7 +140,6 @@ The key environment variables that drive this are:
     helm install onyx ./deployment/helm/charts/onyx \
       -f ./deployment/helm/charts/onyx/values-lite.yaml \
       --set opensearch.enabled=false \
-      --set minio.enabled=false \
       --set objectStore.enabled=false \
       --set inferenceCapability.replicaCount=0 \
       --set slackbot.enabled=false
@@ -154,7 +152,6 @@ The key environment variables that drive this are:
       -f ./deployment/helm/charts/onyx/values-lite.yaml \
       -f my-overrides.yaml \
       --set opensearch.enabled=false \
-      --set minio.enabled=false \
       --set objectStore.enabled=false \
       --set inferenceCapability.replicaCount=0 \
       --set slackbot.enabled=false
@@ -740,21 +737,10 @@ Read [Deploying Craft](/deployment/local/craft) before enabling Craft in self-ho
 
     `S3_AWS_SECRET_ACCESS_KEY`: AWS secret access key for S3
 
-    `S3_LEGACY_ENDPOINT_URL`: The bundled MinIO of earlier releases, `http://minio:9000`,
-    during the [move to the object store](/admins/advanced_configs/object_store_migration).
-    Writes reach both stores and reads fall back to it. Leave unset with external storage.
-
-    `S3_LEGACY_AWS_ACCESS_KEY_ID` / `S3_LEGACY_AWS_SECRET_ACCESS_KEY`:
-    Keys for the legacy store when they differ from the `S3_AWS_*` pair.
-
-    `LEGACY_COPY_SETTLE_SECONDS`:
-    The copy finishes once a pass copies nothing and this long has passed since it started. Defaults to `600`.
-
-    `LEGACY_COPY_WORKERS`: Parallel copies. Defaults to `16`.
-
-    `MINIO_REPLICAS`: Docker Compose only. `0` stops the bundled MinIO and `object-store-copy`. Defaults to `1`.
-    An install upgraded from a release before `v5.0.0` needs `1` until you retire MinIO.
-    `env.template` and `env.prod.template` set `0`, since a fresh install never held files in MinIO.
+    `S3_LEGACY_ENDPOINT_URL`, `S3_LEGACY_AWS_ACCESS_KEY_ID`, `S3_LEGACY_AWS_SECRET_ACCESS_KEY`,
+    `LEGACY_COPY_SETTLE_SECONDS`, `LEGACY_COPY_WORKERS`, `MINIO_REPLICAS`:
+    Used only during the one-time [move to the object store](/admins/advanced_configs/object_store_migration)
+    from a release before `v5.0.0`. Leave unset on a fresh install or with external storage.
 
     **Google Cloud Storage** (`FILE_STORE_BACKEND=gcs`)
 

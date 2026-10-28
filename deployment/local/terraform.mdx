@@ -407,7 +407,7 @@ terraform output -raw redis_connection_url
   <Step title="Install the chart">
     The EKS module creates an IRSA-backed `ServiceAccount` named `onyx-workload-access` in the `onyx` namespace,
     which has access to the S3 bucket the module created.
-    Point the chart at it and disable the in-cluster object store and MinIO so file storage uses the real S3 bucket.
+    Point the chart at it and disable the in-cluster object store so file storage uses the real S3 bucket.
 
     ```bash
     helm repo add onyx https://onyx-dot-app.github.io/onyx/
@@ -415,7 +415,6 @@ terraform output -raw redis_connection_url
 
     helm upgrade --install onyx onyx/onyx \
       --namespace onyx \
-      --set minio.enabled=false \
       --set objectStore.enabled=false \
       --set serviceAccount.create=false \
       --set serviceAccount.name=onyx-workload-access

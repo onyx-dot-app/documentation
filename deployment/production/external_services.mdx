@@ -5,9 +5,7 @@ icon: "database"
 ---
 
 By default, the Onyx Helm chart installs PostgreSQL, Redis, OpenSearch, the object store, Code Interpreter, and NGINX.
-Installs upgraded from an earlier chart also keep MinIO while the [move to the object
-store](/admins/advanced_configs/object_store_migration) completes. For production,
-you can turn off each bundled service and connect Onyx to a managed service.
+For production, you can turn off each bundled service and connect Onyx to a managed service.
 
 ## Chart toggles
 
@@ -19,8 +17,7 @@ you can turn off each bundled service and connect Onyx to a managed service.
 | `redis.enabled` | `true` | The chart does not create Redis or the Redis operator. |
 | `redisOperator.enabled` | Follows `redis.enabled` | The chart keeps its Redis, but an existing operator must reconcile it. |
 | `opensearch.enabled` | `true` | The chart does not create OpenSearch. |
-| `objectStore.enabled` | Follows `minio.enabled` | The chart does not create the object store. |
-| `minio.enabled` | `true` | The chart does not create MinIO. |
+| `objectStore.enabled` | `true` | The chart does not create the object store. |
 | `codeInterpreter.enabled` | `true` | The chart does not create Code Interpreter. |
 | `nginx.enabled` | `true` | The chart does not create the ingress-nginx controller. |
 
@@ -50,8 +47,6 @@ redis:
 opensearch:
   enabled: false
 objectStore:
-  enabled: false
-minio:
   enabled: false
 nginx:
   enabled: false

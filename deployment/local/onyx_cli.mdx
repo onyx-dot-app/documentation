@@ -151,7 +151,8 @@ onyx-cli deploy upgrade --tag v5.0.0
 The upgrade is designed to preserve your customizations:
 
 - Only the `IMAGE_TAG` line in `.env` is rewritten (plus `SANDBOX_BACKEND` when Craft is enabled, and the
-  object-store endpoint lines when you move off the bundled MinIO) — every other setting, including your edits, is kept.
+  object-store endpoint lines when you move to the bundled object store) — every other setting, including your edits,
+  is kept.
 - Managed files (compose files, overlays, nginx config) are refreshed to match the target version.
   Files you hand-edited are detected via the manifest, backed up,
   and only overwritten after you confirm (or with `--force`).
