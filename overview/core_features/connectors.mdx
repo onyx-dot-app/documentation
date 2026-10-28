@@ -3,15 +3,7 @@ title: "Connectors"
 description: "Ingest knowledge from connected applications"
 icon: "plug"
 ---
-<Tip>
-  [Click here to see a full list of all supported connectors.](/admins/connectors/overview#supported-connectors)
-</Tip>
-
-<a href="/admins/connectors/overview#supported-connectors">
-
-  <img src="/assets/overview/core_features/connectors.webp" alt="Connectors" noZoom/>
-
-</a>
+import ConnectorGrid from "/snippets/connector-grid.mdx";
 
 ## What are Connectors?
 
@@ -29,12 +21,14 @@ and can watch sync progress at **Admin Panel → Indexing Status**.
 Document Sets group documents from one or more connectors for use in [Agents](/overview/core_features/agents)
 and search filters.
 
-## Common Connector Questions
+## Supported Connectors
 
-<Card title="What are the supported connectors?" icon="list" href="/admins/connectors/overview#supported-connectors">
-  You can also push documents into Onyx with the [Ingestion API](/developers/guides/index_files_ingestion_api),
-  or upload files in a chat or [Project](/overview/core_features/chat#projects).
-</Card>
+<ConnectorGrid />
+
+You can also push documents into Onyx with the [Ingestion API](/developers/guides/index_files_ingestion_api),
+or upload files in a chat or [Project](/overview/core_features/chat#projects).
+
+## Common Connector Questions
 
 <Card title="How do I ensure my data is secure?" icon="lock" href="/admins/connectors/overview#security">
   Onyx processes and stores documents and metadata inside your deployment.
