@@ -117,7 +117,7 @@ Every page must be in `docs.json` or reachable by a `redirects` entry. Removed p
 ### Page shapes that work here
 
 - **Connector page:** what gets indexed, prerequisites in the source system, credential
-  steps (vendor console), Onyx steps (**Admin Panel → Connectors → New <Source> Account**, **Document Access**),
+  steps (vendor console), Onyx steps (**Admin Panel → Connectors → New [Source] Account**, **Document Access**),
   permission sync if supported, limits and troubleshooting.
 - **Model provider / gateway page:** short "Guide" intro, `<NavigateToAiModels />`, the
   Connect card steps with exact field names, `<StandardAiModelConfigs />`, final **Connect**.
