@@ -141,6 +141,7 @@ The key environment variables that drive this are:
       -f ./deployment/helm/charts/onyx/values-lite.yaml \
       --set opensearch.enabled=false \
       --set objectStore.enabled=false \
+      --set minio.enabled=false \
       --set inferenceCapability.replicaCount=0 \
       --set slackbot.enabled=false
     ```
@@ -153,6 +154,7 @@ The key environment variables that drive this are:
       -f my-overrides.yaml \
       --set opensearch.enabled=false \
       --set objectStore.enabled=false \
+      --set minio.enabled=false \
       --set inferenceCapability.replicaCount=0 \
       --set slackbot.enabled=false
     ```

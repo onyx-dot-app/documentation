@@ -7,6 +7,12 @@ icon: "database"
 By default, the Onyx Helm chart installs PostgreSQL, Redis, OpenSearch, the object store, Code Interpreter, and NGINX.
 For production, you can turn off each bundled service and connect Onyx to a managed service.
 
+<Note>
+  The chart also keeps `minio.enabled: true` for installs that upgrade from a release before v5.0,
+  while the [move to the object store](/admins/advanced_configs/object_store_migration) completes. On a new install,
+  or with external object storage, set `minio.enabled: false` explicitly.
+</Note>
+
 ## Chart toggles
 
 | Key | Default | When you set it to `false` |
@@ -17,7 +23,8 @@ For production, you can turn off each bundled service and connect Onyx to a mana
 | `redis.enabled` | `true` | The chart does not create Redis or the Redis operator. |
 | `redisOperator.enabled` | Follows `redis.enabled` | The chart keeps its Redis, but an existing operator must reconcile it. |
 | `opensearch.enabled` | `true` | The chart does not create OpenSearch. |
-| `objectStore.enabled` | `true` | The chart does not create the object store. |
+| `objectStore.enabled` | Follows `minio.enabled` | The chart does not create the object store. |
+| `minio.enabled` | `true` | The chart does not create the legacy MinIO store. Set this to `false` on every new install. Onyx v5 and later store files in the object store, not in MinIO. |
 | `codeInterpreter.enabled` | `true` | The chart does not create Code Interpreter. |
 | `nginx.enabled` | `true` | The chart does not create the ingress-nginx controller. |
 
@@ -47,6 +54,8 @@ redis:
 opensearch:
   enabled: false
 objectStore:
+  enabled: false
+minio:
   enabled: false
 nginx:
   enabled: false
