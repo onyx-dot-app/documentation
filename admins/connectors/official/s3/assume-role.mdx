@@ -5,26 +5,25 @@ description: "This method automatically uses the IAM role attached to your EC2 i
 
 ### Prerequisites
 
+This method works only for a self-hosted Onyx that runs on an Amazon EC2 instance. It is not available on Onyx Cloud.
+
 - Ensure your EC2 instance has an IAM role attached.
 - Verify the instance profile is properly configured via AWS Console under **EC2 › Instance Settings
   › Attach/Replace IAM role**.
 
 ### Updating the Existing IAM Role
 
-Since your EC2 instance already has an IAM role attached, you need to update it with the necessary S3 permissions:
+Your EC2 instance already has an IAM role attached. Add the S3 permissions to it:
 
 <Steps>
-  <Step title="Open role in IAM">
-    In AWS Console, go to **IAM › Roles** and find your EC2 instance's existing role.
-  </Step>
-
   <Step title="Attach S3 policy">
-    Click on the role and go to the **Permissions** tab. Click **Add permissions › Attach policies**.
-    Search for and select **AmazonS3ReadOnlyAccess** policy. Click **Attach policies**.
+    In AWS Console, go to **IAM › Roles** and open your EC2 instance's existing role. Go to the **Permissions** tab.
+    Click **Add permissions › Attach policies**. Search for and select **AmazonS3ReadOnlyAccess** policy.
+    Click **Attach policies**.
   </Step>
 </Steps>
 
-Alternatively, for more granular control, you can create a custom inline policy:
+For finer control, create a custom inline policy instead:
 
 <Steps>
   <Step title="Create inline policy">
@@ -54,23 +53,17 @@ Alternatively, for more granular control, you can create a custom inline policy:
   </Step>
 </Steps>
 
-The connector will automatically detect and use the EC2 instance's IAM role for accessing your S3 buckets.
-
 ### Credential Entry in Onyx
 
-When configuring the S3 connector in Onyx, you'll need to:
+When you create the authentication account for the S3 connector in Onyx:
 
 <Steps>
-  <Step title="Open Assume Role tab">
-    Click on the **Assume Role** tab
-  </Step>
-
   <Step title="No credentials required">
-    No credentials need to be entered — the connector automatically uses your EC2 instance's attached role.
+    Select the **Assume Role** tab, enter a **Display Name**, and select **Create**.
+    The connector uses the role attached to your EC2 instance.
   </Step>
 </Steps>
 
 <img className="rounded-image" src="/assets/admins/connectors/blob/s3/onyx-assume-role.webp" alt="Screenshot of Onyx S3 assume role configuration"/>
 
-Once you have updated your EC2 instance's role with S3 permissions,
-proceed to the [indexing steps in the overview](./overview#indexing) to configure your S3 connector.
+Then follow the [indexing steps in the overview](./overview#indexing) to configure your S3 connector.

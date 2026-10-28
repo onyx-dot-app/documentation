@@ -6,35 +6,42 @@ icon: "image"
 
 ## Overview
 
-The image generation feature allows users to create PNG images according to their prompts which can be rendered in the
-chat and easily downloaded.
+The **Image Generation** action creates PNG images from your prompt.
+You can also attach an image and ask Onyx to edit or extend it.
 
 <img className="rounded-image" src="/assets/overview/core_features/image_generation.webp" alt="Image Generation"/>
 
-## Configuration
+Image Generation is available in all editions.
+It does not appear in the actions menu until an admin connects a provider.
 
-Currently, Onyx supports five models for image generation, through OpenAI, Azure or Vertex (Google). In the future,
-we will be adding support for other options such as Stability AI.
+## Supported models
 
-**GPT-Image-1.5**: Newest model, best for production-quality generation,
-with strong prompt control and reliable in-image text/structured layouts
+Onyx supports image models from OpenAI, Azure OpenAI, and Google Cloud Vertex AI:
 
-**GPT-Image-1**: Newer model, better prompt adherence. Likely a better default for most use cases.
+| Provider | Models |
+| --- | --- |
+| **OpenAI** | GPT Image 2.5 Flare, GPT Image 2.5 Sunburst, GPT Image 2, GPT Image 1.5 |
+| **Azure OpenAI** | GPT Image 2.5 Flare, GPT Image 2.5 Sunburst, GPT Image 2, GPT Image 1.5 |
+| **Google Cloud Vertex AI** | Gemini 2.5 Flash Image, Gemini 3 Pro Image |
 
-**Nano Banana**: Flash Gemini model designed for fast and efficient image generation. Great for fast,
-creative exploration and simple tasks.
+The GPT Image 2.5 models give the best prompt control and the most reliable in-image text.
+Gemini 2.5 Flash Image is fast and good for quick creative exploration.
+Gemini 3 Pro Image gives high-fidelity output for complex, detailed visuals.
 
-**Nano Banana Pro**: Advanced Gemini model with professional and high-fidelity 4K output.
-Great for complex tasks where consistency and details are key.
-
-**DALL-E 3**: Older model, slightly better for more imaginative and rich styles.
+<Note>
+  Older models such as GPT Image 1 stay visible only while they are still connected. New connections cannot select them.
+</Note>
 
 ## Usage
 
-Configure your image generation models in the Admin Panel under **Configuration** → **Image Generation**.
+An admin connects a provider and selects the default model at **Admin Panel → Image Generation**.
 
-Once configured, you can invoke the Image Generation action from any Agent or AI model in Onyx.
+After setup, the LLM can use Image Generation in any chat or custom [Agent](/overview/core_features/agents)
+that has the action enabled. To force or block it for one chat,
+open the actions menu in the input bar and toggle **Image Generation**.
 
 <Tip>
-  Be explicit in prompting for specific Actions you want your Agent to invoke.
+  Be explicit when you want an image. For example: "Generate an image of ..." or "Edit the attached image to ...".
 </Tip>
+
+For setup details, see the [admin configuration guide](/admins/actions/image_generation).

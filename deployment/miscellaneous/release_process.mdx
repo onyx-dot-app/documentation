@@ -4,14 +4,7 @@ description: "Onyx release process, versioning, and recommended update process"
 icon: "rocket"
 ---
 
-This page explains Onyx's release process, versioning scheme,
-and how updates are delivered to different deployment channels.
-
 ## Release Channels
-
-<Note>
-  Onyx maintains multiple release channels to provide stable and development versions for different use cases.
-</Note>
 
 ### GitHub
 
@@ -46,7 +39,7 @@ This endpoint returns the current latest stable and beta versions available on D
 
 ## Versioning Scheme
 
-Onyx follows [Semantic Versioning (SemVer)](https://semver.org/) with a clear, predictable format.
+Onyx follows [Semantic Versioning (SemVer)](https://semver.org/).
 
 **Standard Version Format:**
 
@@ -62,8 +55,8 @@ major.minor.hotfix-beta.betahotfix
 
 **Examples:**
 - Stable release: `1.2.3`
-- Pre-release: `1.3.0-beta.1`
-- Beta hotfix: `1.3.0-beta.2`
+- Pre-release: `5.1.0-beta.1`
+- Beta hotfix: `5.1.0-beta.2`
 
 <Note>
   - **Major version** - Incremented on breaking changes
@@ -77,22 +70,28 @@ Changes to Docker files and Helm charts increment the version numbers in their r
 
 ## Release Schedule
 
-Onyx follows a predictable weekly release cycle.
+Onyx ships a new minor release every two weeks. Each release has a two-week cycle:
 
-**Every Monday:**
-- The last pre-release version is promoted to stable
-- `main` is frozen as the new pre-release
+**Week 1 (pre-release):**
+- `main` is frozen into a new `release/vX.Y` branch
+- Only `vX.Y.0-beta.N` pre-releases are cut from this branch
+
+**Week 2 (stable):**
+- Only stable `vX.Y.N` releases are cut from the previous week's release branch
+- No new release branch is created
+
+The next cycle starts the following week with `release/vX.(Y+1)`.
 
 ### Hotfix Process
 
 - Critical bug fixes are **backported** to stable releases as necessary
-- Hotfixes bypass the normal weekly cycle for urgent production issues
+- Hotfixes bypass the normal two-week cycle for urgent production issues
 - Both stable and pre-release branches receive hotfixes when applicable
 
 ## Update Best Practices
 
 To maintain a stable deployment, we recommend staying on the latest stable release.
-These are tagged with a version number like `v1.2.3`.
+These are tagged with a version number like `v5.0.0`.
 
 <Steps>
   <Step title="Check Versions API for Stable Version Tag">
@@ -108,21 +107,21 @@ These are tagged with a version number like `v1.2.3`.
     ```json Example Response expandable
     {
       "stable":{
-        "onyx":"v1.8.1",
+        "onyx":"v5.0.0",
         "relational_db":"postgres:15.2-alpine",
-        "index":"vespaengine/vespa:8.277.17",
-        "nginx":"nginx:1.23.4-alpine"},
+        "index":"opensearchproject/opensearch:3.6.0",
+        "nginx":"nginx:1.25.5-alpine"},
         "dev":{
-          "onyx":"v1.9.0-beta.0",
+          "onyx":"v5.1.0-beta.0",
           "relational_db":"postgres:15.2-alpine",
-          "index":"vespaengine/vespa:8.277.17",
-          "nginx":"nginx:1.23.4-alpine"
+          "index":"opensearchproject/opensearch:3.6.0",
+          "nginx":"nginx:1.25.5-alpine"
         },
         "migration":{
           "onyx":"airgapped-intfloat-nomic-migration",
           "relational_db":"postgres:15.2-alpine",
-          "index":"vespaengine/vespa:8.277.17",
-          "nginx":"nginx:1.23.4-alpine"
+          "index":"opensearchproject/opensearch:3.6.0",
+          "nginx":"nginx:1.25.5-alpine"
         }
       }
     }
@@ -130,10 +129,8 @@ These are tagged with a version number like `v1.2.3`.
   </Step>
 
   <Step title="Launch Onyx with the Version Tag">
-    How you launch the specific Onyx version will depend on your deployment process.
-
     <Note>
-      Don't forget the `v` prefix! I.e. `v1.2.3` is correct, `1.2.3` is incorrect.
+      Don't forget the `v` prefix! I.e. `v5.0.0` is correct, `5.0.0` is incorrect.
     </Note>
 
     <AccordionGroup>
@@ -141,7 +138,7 @@ These are tagged with a version number like `v1.2.3`.
         Specify the version tag in the environment.
 
         ```bash
-        IMAGE_TAG=<v.MAJOR.MINOR.HOTFIX> docker compose -f docker-compose.dev.yml -p onyx-stack up -d --pull always --force-recreate
+        IMAGE_TAG=v<MAJOR>.<MINOR>.<HOTFIX> docker compose -f docker-compose.prod.yml up -d --pull always --force-recreate
         ```
       </Accordion>
     </AccordionGroup>
@@ -155,17 +152,17 @@ These are tagged with a version number like `v1.2.3`.
       In the Onyx repo:
 
       ```bash From Release Branch
-      git fetch origin release/v1.2
-      git switch release/v1.2
+      git fetch origin release/v5.0
+      git switch release/v5.0
 
-      docker compose -f docker-compose.dev.yml -p onyx-stack up -d --build --force-recreate
+      docker compose -f docker-compose.prod.yml up -d --build --force-recreate
       ```
 
       ```bash From Tagged Version
-      git fetch origin tag v1.2.3
-      git switch --detach v1.2.3
+      git fetch origin tag v5.0.0
+      git switch --detach v5.0.0
 
-      docker compose -f docker-compose.dev.yml -p onyx-stack up -d --build --force-recreate
+      docker compose -f docker-compose.prod.yml up -d --build --force-recreate
       ```
     </Accordion>
 
@@ -174,7 +171,7 @@ These are tagged with a version number like `v1.2.3`.
 
       ```yaml values.yaml
       global:
-        version: "v1.2.3"
+        version: "v5.0.0"
       ```
     </Accordion>
   </Step>

@@ -17,7 +17,8 @@ You need:
 - **Audio transcript** turned on in Zoom's cloud recording settings.
   Zoom only creates a transcript for recordings made after you turn it on.
 - The **Webinar** add-on, if you index webinars.
-- For [permission sync](#permission-sync), the Onyx Enterprise Edition.
+- For **Specific Groups** or [permission sync](#permission-sync), a paid tier: Business or Enterprise on Onyx Cloud,
+  or the Enterprise Edition when self-hosted.
 
 ## Create a Zoom app
 
@@ -76,13 +77,10 @@ You need:
 ## Configure the connector in Onyx
 
 <Steps>
-  <Step title="Open the Zoom connector">
-    Go to **Admin Panel → Add Connector** and select **Zoom** under **Meetings**.
-  </Step>
-
   <Step title="Pick the Zoom plan">
-    Under **Zoom Plan**, choose `pro` on a Pro account, or `business_plus` on Business, Education, Enterprise,
-    or Partner. This sets how fast Onyx may call Zoom.
+    In the Admin Panel, go to **Connectors** and select **Zoom** under **Meetings**. Under **Zoom Plan**,
+    choose `pro` on a Pro account, or `business_plus` on Business, Education, Enterprise, or Partner.
+    This sets how fast Onyx may call Zoom.
   </Step>
 
   <Step title="Add the credential">
@@ -104,17 +102,14 @@ You need:
     - **Zoom Group ID**: every recording the group's members host.
     Find the ID in **User Management → Groups** in the Zoom web portal.
 
-    Turn off **Include meetings** or **Include webinars** to leave one session type out.
+    Turn off **Include Meetings** or **Include Webinars** to leave one session type out.
 
     <img className="rounded-image" src="/assets/admins/connectors/zoom/onyx_content.webp" alt="The Connector Content section of the Zoom setup page"/>
   </Step>
 
   <Step title="Choose who can see the transcripts">
-    Under **Connector Settings**, name the connector and set **Document Access**:
-
-    - **Everyone in Your Organization**: every Onyx user can see every transcript.
-    - **Specific Groups**: only the Onyx groups you name.
-    - **Sync with Zoom**: each transcript is visible to the people who can watch the recording in Zoom.
+    Under **Connector Settings**, set **Document Access**. With **Sync with Zoom**,
+    each transcript is visible to the people who can watch the recording in Zoom.
     See [Permission sync](#permission-sync).
 
     <img className="rounded-image" src="/assets/admins/connectors/zoom/onyx_access.webp" alt="The Document Access options on the Zoom setup page"/>
@@ -147,7 +142,7 @@ Onyx rereads the settings every 6 hours.
 
 <Note>
   To limit every transcript to its owner instead of **Everyone**,
-  turn off **Treat link access as public** in the connector settings.
+  turn off **Treat Link Access as Public** in the connector settings.
 </Note>
 
 ## Troubleshooting
@@ -165,7 +160,7 @@ Onyx rereads the settings every 6 hours.
 
   <Accordion title="Webinars are not indexed">
     The host has no Webinar add-on, so Zoom refuses every webinar request. Assign the add-on in Zoom,
-    or turn off **Include webinars**.
+    or turn off **Include Webinars**.
   </Accordion>
 
   <Accordion title="A host email is reported as an indexing error">

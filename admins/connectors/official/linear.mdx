@@ -8,13 +8,13 @@ description: "Access issues and comments from Linear"
 The Linear connector indexes issues and their comments. Each issue carries its team, project, creator, assignee,
 state and priority as metadata.
 
-Issues are updated every **10** minutes.
+Onyx checks Linear for new and changed issues on the connector's refresh schedule. The default is every **30** minutes.
 
 | Content     | Notes                                                                                                   |
 | ----------- | ------------------------------------------------------------------------------------------------------- |
 | Issues      | Title and description, with the issue's comments. Archived and trashed issues are skipped.              |
 | Scope       | Optional. Limit the index to specific teams, specific projects, or both.                                |
-| Permissions | Optional on Onyx Cloud and Enterprise Edition. Onyx mirrors who can see each issue in Linear.          |
+| Permissions | Optional. **Sync with Linear** mirrors who can see each issue in Linear.                                |
 
 ## Setup
 
@@ -42,23 +42,18 @@ Issues are updated every **10** minutes.
 LINEAR_CLIENT_ID=
 LINEAR_CLIENT_SECRET=
 ```
-  </Step>
 
-  <Step title="Restart Onyx">
-    Restart your Onyx instance as you normally would to apply the changes.
+    Restart Onyx to apply the changes.
   </Step>
 </Steps>
 
 ### Indexing
 
 <Steps>
-  <Step title="Open Linear connector">
-    In the Onyx UI, navigate to the Admin Panel and select the **Linear** Connector
-  </Step>
-
   <Step title="Connect a Linear account">
-    Select **New Linear Account**. Either go through the OAuth flow with **Connect**,
-    or paste a [personal API key](https://linear.app/settings/api) and select **Create**.
+    Go to **Admin Panel → Connectors** and select **Linear**. Select **New Linear Account**.
+    Either go through the OAuth flow with **Connect**, or paste a [personal API key](https://linear.app/settings/api)
+    and select **Create**.
 
     Onyx sees exactly what this account sees. Connect as a workspace member, not a guest,
     who belongs to every private team you want to index. Linear hides a private team from everyone outside it,
@@ -68,24 +63,18 @@ LINEAR_CLIENT_SECRET=
   <Step title="Choose what to index">
     Leave **Teams** and **Projects** empty to index every issue the account can see. To narrow the index,
     enter team keys (for example `ENG`), project names, or project URLs. When you set both, an issue must match both.
-
-    Onyx checks every entry before you create the connector and names any team or project Linear does not answer for.
-    That means the entry is misspelled, or it belongs to a private team the connected account is not in.
   </Step>
 
   <Step title="Choose who can see the issues">
-    - **Public** makes every indexed issue visible to every Onyx user.
-    - **Private** limits the connector to selected Onyx users and groups.
-    - **Sync with Linear** mirrors Linear's own access and is available on Onyx Cloud and Enterprise Edition.
-  </Step>
+    Under **Document Access**, select **Everyone in Your Organization**, **Specific Groups**, or **Sync with Linear**.
+    **Sync with Linear** mirrors Linear access and is the default where available.
 
-  <Step title="Review the connection checks">
-    Once an account is selected, Onyx runs its checks against Linear and lists each one in the form.
-    **Create Connector** is enabled once the required checks pass. A failed check names what to fix.
+    **Specific Groups** and **Sync with Linear** need the Business or Enterprise tier on Onyx Cloud,
+    or the Enterprise Edition when self-hosted.
   </Step>
 
   <Step title="Create connector">
-    Click `Create Connector` to begin indexing Linear issues and comments!
+    Select **Create Connector**. It is enabled once the required connection checks pass.
   </Step>
 </Steps>
 

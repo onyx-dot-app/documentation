@@ -11,8 +11,9 @@ Use the gateway when you want an application, automation,
 or coding tool to use organization-approved models without storing a separate provider key.
 
 <Note>
-  The LLM Gateway is available with Onyx Enterprise.
-  An administrator must configure at least one visible language model before it can serve requests.
+  An administrator can turn the gateway off for the whole workspace with the **Enable LLM Gateway** switch in **Admin
+  Panel** > **LLM Gateway**. While it is off,
+  every gateway request is rejected and the gateway scope is hidden from the token picker.
 </Note>
 
 ## What the gateway provides
@@ -20,12 +21,13 @@ or coding tool to use organization-approved models without storing a separate pr
 - An [OpenAI-compatible Chat Completions endpoint](https://platform.openai.com/docs/api-reference/chat/completions).
 - An [OpenAI Responses endpoint](https://platform.openai.com/docs/api-reference/responses).
 - An [Anthropic Messages endpoint](https://platform.claude.com/docs/en/api/messages) and [token-count endpoint](https://platform.claude.com/docs/en/api/messages/count_tokens).
-- The models that your Onyx identity can access.
-- Usage attribution through the existing Onyx usage views.
-- The same model access controls and token limits that apply in Onyx.
+- A `GET /models` endpoint that lists the models your Onyx identity can access.
+
+Onyx Craft sandboxes use the same gateway. Their coding agents call your configured providers through it,
+so Craft usage shows up with the same attribution and limits.
 
 The gateway does not replace your model-provider configuration.
-An administrator still configures providers and decides which models are visible in [Language
+An administrator still configures providers and decides which models are visible in **Admin Panel** > [Language
 Models](/admins/ai_models/overview).
 
 <img className="rounded-image" src="/assets/developers/llm_gateway_add_provider.webp" alt="Onyx Admin Panel showing available language-model providers"/>
@@ -34,21 +36,21 @@ Models](/admins/ai_models/overview).
 
 You need all of the following:
 
+- Your workspace is on the Business or Enterprise plan, or on Onyx Cloud.
 - An Onyx administrator has configured a language model and made it visible.
 - Your Onyx account has access to that model.
-- A Personal Access Token (PAT) with the **LLM Gateway** scope.
+- A Personal Access Token (PAT) with the **LLM Gateway &mdash; Use** scope.
 
-Create a [Personal Access Token](/developers/overview#personal-access-tokens) from **Settings** > **Accounts & Access**.
-Choose **Limited access** and select **LLM Gateway**. Treat the token as a password. Onyx shows it only once.
+Create a [Personal Access Token](/developers/overview#personal-access-tokens) from **Settings** > **Accounts & Access**
+> **New Access Token**, or click **New token** in **Settings** > **LLM Gateway**.
+Under **Permissions**, choose **Limited access** and select **LLM Gateway &mdash; Use**. Onyx shows the token only once.
 
-<Tip>
-  Use a scoped PAT for an application or local development.
-  It limits the token to gateway requests while preserving the model access of the user who created it.
-</Tip>
+A full-access token does not work with the gateway. The gateway accepts only tokens with an explicit scope,
+and it rejects API keys and browser sessions.
 
 ## Gateway address
 
-For a standard Onyx deployment, use:
+**Settings** > **LLM Gateway** shows the **Gateway URL** for your deployment. For a standard Onyx deployment, it is:
 
 ```text
 https://your-onyx-domain.com/api/gateway/v1
@@ -66,11 +68,9 @@ export ONYX_GATEWAY_API_KEY="onyx_pat_..."
 
 ## Find an available model
 
-The easiest way to find a model ID is in **Settings** > **LLM Gateway**.
-The section appears only when at least one model is visible and accessible to your account.
-
-Open a provider, then copy the ID beside the model that you want to use.
-The copied value already has the required format:
+The easiest way to find a model ID is in the **Models** section of **Settings** > **LLM Gateway**.
+The tab appears only when your plan includes the gateway and at least one model is visible and accessible to your
+account. The copied value already has the required format:
 
 <img className="rounded-image" src="/assets/developers/llm_gateway_available_models.webp" alt="Onyx LLM Gateway settings with an expanded provider and model IDs"/>
 
@@ -84,8 +84,15 @@ For example, `12/gpt-5-mini` means:
 - `gpt-5-mini` is the model name configured for that provider.
 
 Use the copied value exactly as the `model` value in your client. Do not replace the provider ID with the provider name.
+Only models that are visible and marked for chat appear. There is no fallback to a default model:
+an unknown ID returns `404`.
 
-Use **Settings** to find a model ID for each client configuration.
+You can also list the same IDs from your application:
+
+```bash
+curl "$ONYX_GATEWAY_URL/models" \
+  -H "Authorization: Bearer $ONYX_GATEWAY_API_KEY"
+```
 
 ## OpenAI Chat Completions
 
@@ -156,7 +163,8 @@ usage attribution, and token limits as other gateway traffic.
 
 ### Claude Code
 
-Set the gateway's parent endpoint as the Anthropic base URL, then use a Claude model ID from **Settings**:
+Set the gateway's parent endpoint as the Anthropic base URL,
+then use a Claude model ID from **Settings** > **LLM Gateway**:
 
 ```bash
 export ANTHROPIC_BASE_URL="https://your-onyx-domain.com/api/gateway"
@@ -192,7 +200,7 @@ export ONYX_GATEWAY_API_KEY="onyx_pat_..."
 codex -p onyx
 ```
 
-The configured model must be an OpenAI-compatible model ID from **Settings**.
+The configured model must be an OpenAI-compatible model ID from **Settings** > **LLM Gateway**.
 
 ### OpenCode
 
@@ -228,7 +236,6 @@ opencode
 ```
 
 The `@ai-sdk/openai-compatible` provider uses the gateway's Chat Completions endpoint.
-Replace the example model with one from your Gateway Settings.
 
 ## Usage and limits
 
@@ -236,16 +243,18 @@ Gateway requests use the calling user's Onyx permissions. If the user loses acce
 the gateway no longer exposes or accepts that model for the user.
 
 Administrators can review token use and estimated model cost in **Admin Panel**
-> **Usage**. They can also apply global, group, or user token limits there.
+> **Usage**. The **Manage spending limits** section on the same page sets global, user, or group token limits.
 Those limits apply before the gateway sends a generation request to a model provider.
+The token-count endpoint does not generate anything, so it is not metered and not limited.
 
 <img className="rounded-image" src="/assets/developers/llm_gateway_spending_limits.webp" alt="Onyx Admin Panel controls for global, user, and group spending limits"/>
 
 ## Native passthrough
 
-Requests that resolve to an Anthropic provider or a true OpenAI model are proxied natively to the provider.
-Hosted and server tools, extended thinking, and fine-grained streaming pass through unchanged.
-Requests for other providers are translated through the OpenAI-compatible path.
+Anthropic Messages requests that resolve to an Anthropic provider,
+and Responses requests that resolve to an OpenAI model, are proxied natively to the provider. Hosted and server tools,
+extended thinking, and fine-grained streaming pass through unchanged. Chat Completions requests,
+and requests for other providers, are translated through the OpenAI-compatible path.
 
 Self-hosted administrators can turn passthrough off with these environment variables on the API server:
 
@@ -258,10 +267,13 @@ Both default to on.
 
 | Error | What to check |
 | --- | --- |
-| `401` or `403` | Use a valid PAT with the LLM Gateway scope. Check that the user still has model access. |
-| Model not found | Copy the model ID again from Gateway Settings. The provider ID is part of the identifier. |
-| Rate limited | Ask an administrator to review the user, group, or workspace token limit. |
-| Model unavailable | Ask an administrator to configure the provider or make the model visible in Language Models. |
+| `401` or `403` | Use a PAT with the **LLM Gateway &mdash; Use** scope. A full-access token, an API key, or a browser session is rejected. Check that the user still has model access. |
+| `402` | The workspace plan does not include the gateway. Upgrade to Business or Enterprise. |
+| `FEATURE_DISABLED` | An administrator turned the gateway off in **Admin Panel** > **LLM Gateway**. |
+| Model not found (`404`) | Copy the model ID again from **Settings** > **LLM Gateway**. The provider ID is part of the identifier. |
+| Rate limited (`429`) | Ask an administrator to review the user, group, or workspace spending limit in **Admin Panel** > **Usage**. |
+| Model unavailable | Ask an administrator to configure the provider or make the model visible in **Language Models**. |
+| Wrong token counts | `count_tokens` falls back to a rough local estimate when the provider cannot be reached. |
 
 ## Next steps
 

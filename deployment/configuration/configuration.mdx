@@ -10,11 +10,6 @@ icon: "sliders"
   To find out more about configuring the Onyx app, checkout our [Admin docs](/admins/overview)!
 </Warning>
 
-## Configuring Onyx Deployments
-
-Onyx offers a wide range of deployment-level configuration options.
-These are controlled via environment variables or through your deployment files.
-
 ## Onyx Lite
 
 Onyx Lite is a minimal deployment of Onyx designed for teams that only need the core LLM chat experience without
@@ -29,7 +24,7 @@ Onyx Lite retains the following capabilities:
 - User file uploads
 - Projects
 - Agent knowledge
-- Assistants (without RAG retrieval)
+- Agents (without RAG retrieval)
 
 ### What's Removed
 
@@ -37,13 +32,9 @@ Onyx Lite disables or does not use:
 - **Vector indexing and RAG search**: `DISABLE_VECTOR_DB=true` prevents use of OpenSearch, even if it is running
 - **Redis**: PostgreSQL handles caching and session management instead
 - **Indexing model server**: no document embeddings; Docker Compose Lite also skips the inference model server
-- **Celery background workers**: the API server handles background work directly
+- **Background workers**: the API server handles background work directly
 - **Object store / S3 file storage**: PostgreSQL handles file storage instead, even if the object store is running
 - **Connectors**: all data source connectors are disabled
-
-Helm's Lite values leave the OpenSearch, object store, MinIO, inference model server, code interpreter,
-and Slack bot workloads enabled by chart defaults.
-The unused OpenSearch and object store workloads do not enable indexing or S3 file storage.
 
 ### How It Works
 
@@ -140,9 +131,8 @@ The key environment variables that drive this are:
 ### Deploying Onyx Lite with Helm
 
     The values-lite.yaml file disables vector database access, Redis, Celery workers, and the indexing model server.
-    Unlike the Docker Compose overlay, it does not disable OpenSearch, the object store, MinIO,
-    the inference model server, or the Slack bot. These workloads still start with the chart defaults.
-    The code interpreter also remains enabled.
+    Unlike the Docker Compose overlay, it does not disable OpenSearch, the object store, the inference model server,
+    or the Slack bot. These workloads still start with the chart defaults. The code interpreter also remains enabled.
 
     For a minimal install that omits those unused workloads, add explicit overrides:
 
@@ -150,8 +140,8 @@ The key environment variables that drive this are:
     helm install onyx ./deployment/helm/charts/onyx \
       -f ./deployment/helm/charts/onyx/values-lite.yaml \
       --set opensearch.enabled=false \
-      --set minio.enabled=false \
       --set objectStore.enabled=false \
+      --set minio.enabled=false \
       --set inferenceCapability.replicaCount=0 \
       --set slackbot.enabled=false
     ```
@@ -163,8 +153,8 @@ The key environment variables that drive this are:
       -f ./deployment/helm/charts/onyx/values-lite.yaml \
       -f my-overrides.yaml \
       --set opensearch.enabled=false \
-      --set minio.enabled=false \
       --set objectStore.enabled=false \
+      --set minio.enabled=false \
       --set inferenceCapability.replicaCount=0 \
       --set slackbot.enabled=false
     ```
@@ -176,10 +166,6 @@ The key environment variables that drive this are:
     </Tip>
   </Accordion>
 </AccordionGroup>
-
-<Tip>
-  Many configuration options are available in the Admin Panel! This page only covers deployment-level configuration.
-</Tip>
 
 ## Commonly Configured Options
 
@@ -220,13 +206,7 @@ certificate and launch Onyx with SSL enabled.
 
 To enable the Web Search Tool, set the `EXA_API_KEY` environment variable.
 
-<Note>
-  Web Search in Onyx is continually developing and these instructions will be updated as we make improvements.
-</Note>
-
 ### Logging
-
-When self-hosting Onyx, you can configure the level of detail in the logs. This is helpful when troubleshooting issues.
 
 If using Docker, set `LOG_LEVEL` to `debug` in each container of your Docker Compose file.
 
@@ -234,7 +214,7 @@ If using Kubernetes, set `LOG_LEVEL` to `debug` in your `values.yaml` file.
 
 ### Observability
 
-You can connect your observability tools to Onyx. We support the following providers:
+We support the following observability providers:
 
 **Braintrust (recommended)**
 
@@ -252,6 +232,17 @@ LANGFUSE_SECRET_KEY="sk-..."
 LANGFUSE_PUBLIC_KEY="pk-..."
 LANGFUSE_BASE_URL="https://cloud.langfuse.com" # Or "https://us.cloud.langfuse.com"
 ```
+
+**Prometheus metrics**
+
+The API server exposes Prometheus metrics at `GET /metrics`. The endpoint requires a bearer token:
+
+```bash
+METRICS_AUTH_TOKEN="<random-secret>"   # scrapers send: Authorization: Bearer <random-secret>
+```
+
+If `METRICS_AUTH_TOKEN` is unset, the endpoint rejects every request.
+Set `DISABLE_METRICS_AUTH=true` only on networks where the API server is not reachable from outside.
 
 ### Craft
 
@@ -273,11 +264,13 @@ Read [Deploying Craft](/deployment/local/craft) before enabling Craft in self-ho
 
     `WEB_DOMAIN`: Set this if you are deploying Onyx on a custom domain.
 
-    `DISABLE_GENERATIVE_AI`: Disable generative AI features.
-
-    `DISABLE_USER_KNOWLEDGE`: Controls whether users can use the My Documents feature with assistants.
+    `DISABLE_USER_KNOWLEDGE`: Controls whether users can use the My Documents feature with Agents.
 
     `ONYX_QUERY_HISTORY_TYPE`: Controls query history reports (show user emails, anonymous, no queries)
+
+    `ONYX_AIRGAPPED`: Set to `true` on deployments with no internet access.
+    Onyx then skips the outbound fetches for the recommended-model catalog, the model price table,
+    and release notes from GitHub.
   </Accordion>
 
   <Accordion title="Craft Configuration">
@@ -286,16 +279,11 @@ Read [Deploying Craft](/deployment/local/craft) before enabling Craft in self-ho
     `SANDBOX_BACKEND`: Craft sandbox backend. Valid values are `docker` and `kubernetes`. Defaults to `kubernetes`.
 
     `ONYX_SERVER_URL`: Full Onyx API base URL reachable from inside Craft sandboxes,
-    including any `/api` path prefix (for example `https://onyx.example.com/api`,
-    or `http://<release>-api-service.<ns>.svc.cluster.local:8080` with no prefix). Required for Helm Craft deployments.
-    Docker Compose defaults it to the private `onyx-craft-api` alias.
-    Replaces `SANDBOX_API_SERVER_URL` (renamed in `v4.5.0`).
+    including any `/api` path prefix (for example `https://onyx.example.com/api`).
+    Docker Compose defaults it to `http://onyx-craft-api:8080` and Helm defaults it to the chart's internal API Service.
+    Set it only when sandboxes must reach Onyx through a public URL.
 
     `SANDBOX_IDLE_TIMEOUT_SECONDS`: Idle timeout before sandbox sleep or cleanup. Defaults to `3600`.
-
-    `SANDBOX_MAX_CONCURRENT_PER_ORG`: Maximum concurrent Craft sandboxes per organization. Defaults to `10`.
-
-    `SANDBOX_TURN_TIMEOUT_SECONDS`: Wall-clock budget for one Craft turn. Defaults to `900`.
 
     `BUILD_MAX_UPLOAD_FILE_SIZE_MB`: Maximum Craft session attachment size. Defaults to `50`.
 
@@ -334,7 +322,9 @@ Read [Deploying Craft](/deployment/local/craft) before enabling Craft in self-ho
 
     `PASSWORD_REQUIRE_SPECIAL_CHAR`: For basic auth. Require special characters in passwords
 
-    `ENCRYPTION_KEY_SECRET`: Enterprise Edition only. Key for encrypting connector credentials, API keys, etc.
+    `ENCRYPTION_KEY_SECRET`: Key that Onyx uses to AES-encrypt connector credentials, API keys,
+    and other secrets at rest. Encryption is on whenever the key is set. Keep it stable:
+    changing it makes stored credentials unreadable.
 
     `MASK_CREDENTIAL_PREFIX`: Mask connector credentials in the admin UI.
     Turn off if admins should see the credentials in the admin panel.
@@ -543,12 +533,6 @@ Read [Deploying Craft](/deployment/local/craft) before enabling Craft in self-ho
     `OPENSEARCH_EXPLAIN_ENABLED`: Return per-hit score breakdowns for relevance debugging (large performance cost)
 
     `ONYX_SEARCH_UI_USES_OPENSEARCH_KEYWORD_SEARCH`: Use OpenSearch keyword search for the Search UI
-
-    `ENABLE_OPENSEARCH_INDEXING_FOR_ONYX`: Index documents into OpenSearch (default `true`)
-
-    `ONYX_DISABLE_VESPA`: Run without the legacy Vespa index (default `true`)
-
-    `DISABLE_OPENSEARCH_MIGRATION_TASK`: Disable the periodic Vespa to OpenSearch migration task
   </Accordion>
 
   <Accordion title="Celery Configuration">
@@ -563,15 +547,6 @@ Read [Deploying Craft](/deployment/local/craft) before enabling Craft in self-ho
     `CELERY_WORKER_DOCPROCESSING_CONCURRENCY`: Document processing worker concurrency
 
     `CELERY_WORKER_DOCFETCHING_CONCURRENCY`: Document fetching worker concurrency
-
-    `CELERY_WORKER_KG_PROCESSING_CONCURRENCY`: Knowledge graph processing worker concurrency
-
-    `CELERY_EXTERNAL_GROUP_SYNC_LOCK_TIMEOUT`: Per-connector external group sync lock TTL in seconds. Defaults to `300`.
-    Raise it if group syncs run long, so periodic re-dispatches do not start duplicate syncs.
-
-    `CELERY_PERMISSIONS_SYNC_LOCK_TIMEOUT`: Per-connector document permission sync lock TTL in seconds.
-    Defaults to `3600`.
-    Raise it if a permission sync on a large tenant fails with "Cannot reacquire a lock that's no longer owned".
 
     `CELERY_DOCUMENT_SYNC_BEAT_LOCK_TIMEOUT`: Document-index sync lock TTL in seconds. Defaults to `120`.
     Raise it if the sync pass aborts with "no longer owned" or "Lock not owned on completion".
@@ -709,16 +684,8 @@ Read [Deploying Craft](/deployment/local/craft) before enabling Craft in self-ho
     `MAX_PRUNING_DOCUMENT_RETRIEVAL_PER_MINUTE`: Maximum document retrieval rate during pruning
   </Accordion>
 
-  <Accordion title="Tool Configuration">
-    `OKTA_PROFILE_TOOL_ENABLED`: Enable Okta profile tool
-
-    `OKTA_API_TOKEN`: Okta API token for SSWS auth
-  </Accordion>
-
   <Accordion title="Logging Configuration">
     `LOG_ONYX_MODEL_INTERACTIONS`: Log Onyx model interactions
-
-    `LOG_VESPA_TIMING_INFORMATION`: Log document index query performance
 
     `LOG_ENDPOINT_LATENCY`: Log endpoint latency
 
@@ -740,14 +707,6 @@ Read [Deploying Craft](/deployment/local/craft) before enabling Craft in self-ho
     `AZURE_IMAGE_API_BASE`: Azure OpenAI endpoint base URL for image generation
 
     `AZURE_IMAGE_DEPLOYMENT_NAME`: Azure OpenAI image deployment namespace
-
-    `AZURE_DALLE_API_VERSION`: Legacy alias for `AZURE_IMAGE_API_VERSION` (kept for backwards compatibility)
-
-    `AZURE_DALLE_API_KEY`: Legacy alias for `AZURE_IMAGE_API_KEY` (kept for backwards compatibility)
-
-    `AZURE_DALLE_API_BASE`: Legacy alias for `AZURE_IMAGE_API_BASE` (kept for backwards compatibility)
-
-    `AZURE_DALLE_DEPLOYMENT_NAME`: Legacy alias for `AZURE_IMAGE_DEPLOYMENT_NAME` (kept for backwards compatibility)
 
     `IMAGE_SUMMARIZATION_SYSTEM_PROMPT`: System prompt for image summarization
 
@@ -780,21 +739,10 @@ Read [Deploying Craft](/deployment/local/craft) before enabling Craft in self-ho
 
     `S3_AWS_SECRET_ACCESS_KEY`: AWS secret access key for S3
 
-    `S3_LEGACY_ENDPOINT_URL`: The bundled MinIO of earlier releases, `http://minio:9000`,
-    during the [move to the object store](/admins/advanced_configs/object_store_migration).
-    Writes reach both stores and reads fall back to it. Leave unset with external storage.
-
-    `S3_LEGACY_AWS_ACCESS_KEY_ID` / `S3_LEGACY_AWS_SECRET_ACCESS_KEY`:
-    Keys for the legacy store when they differ from the `S3_AWS_*` pair.
-
-    `LEGACY_COPY_SETTLE_SECONDS`:
-    The copy finishes once a pass copies nothing and this long has passed since it started. Defaults to `600`.
-
-    `LEGACY_COPY_WORKERS`: Parallel copies. Defaults to `16`.
-
-    `MINIO_REPLICAS`: Docker Compose only. `0` stops the bundled MinIO and `object-store-copy`. Defaults to `1`.
-    An install upgraded from a release before `v5.0.0` needs `1` until you retire MinIO.
-    `env.template` and `env.prod.template` set `0`, since a fresh install never held files in MinIO.
+    `S3_LEGACY_ENDPOINT_URL`, `S3_LEGACY_AWS_ACCESS_KEY_ID`, `S3_LEGACY_AWS_SECRET_ACCESS_KEY`,
+    `LEGACY_COPY_SETTLE_SECONDS`, `LEGACY_COPY_WORKERS`, `MINIO_REPLICAS`:
+    Used only during the one-time [move to the object store](/admins/advanced_configs/object_store_migration)
+    from a release before `v5.0.0`. Leave unset on a fresh install or with external storage.
 
     **Google Cloud Storage** (`FILE_STORE_BACKEND=gcs`)
 
@@ -846,10 +794,6 @@ Read [Deploying Craft](/deployment/local/craft) before enabling Craft in self-ho
     Set this to `/api` if you are running Onyx behind a reverse proxy that doesn't support stripping the `/api` prefix
     from requests to the `API server`.
 
-    `API_KEY_HASH_ROUNDS`: Hash rounds for API keys
-
-    `LLM_MODEL_UPDATE_API_URL`: LLM model update API endpoint
-
     `LITELLM_CUSTOM_ERROR_MESSAGE_MAPPINGS`: Custom error message mappings (JSON)
 
     `GEN_AI_MODEL_FALLBACK_MAX_TOKENS`: Maximum token limit for generative AI model fallback
@@ -872,8 +816,6 @@ Read [Deploying Craft](/deployment/local/craft) before enabling Craft in self-ho
     `DEV_MODE`: Enable development mode
 
     `INTEGRATION_TESTS_MODE`: Enable integration tests mode
-
-    `MOCK_LLM_RESPONSE`: Boolean to create mock LLM responses for testing
   </Accordion>
 
   <Accordion title="Deployment Configuration">
@@ -890,8 +832,6 @@ Read [Deploying Craft](/deployment/local/craft) before enabling Craft in self-ho
 </AccordionGroup>
 
 ## Enterprise Edition Environment Variables
-
-Enterprise Edition adds additional environment variables to Onyx.
 
 <AccordionGroup>
   <Accordion title="ENV_SEED_CONFIGURATION">
@@ -913,7 +853,6 @@ Enterprise Edition adds additional environment variables to Onyx.
     <Info>
 
       Increasing this value enhances security but may impact performance.
-      The default value provides a good balance for most use cases.
     </Info>
   </Accordion>
 </AccordionGroup>

@@ -4,14 +4,15 @@ description: "Inject custom logic into Onyx's pipeline at defined stages without
 icon: "webhook"
 ---
 
-<Note>
-  Hook Extensions are an [Enterprise Edition](/deployment/miscellaneous/enterprise_edition)
-  feature and are only available on **single-tenant** deployments.
-</Note>
+<Info>
+  **Enterprise Plan Feature**
+
+  Hook Extensions require an Enterprise plan and a **self-hosted** deployment. They are not available on Onyx Cloud.
+  [View plans](/admins/billing/overview).
+</Info>
 
 ## Overview
 
-Hook Extensions let you inject custom logic into Onyx's pipeline at defined stages — without modifying Onyx source code.
 You provide an HTTP endpoint; Onyx calls it at the right moment, sends a JSON payload,
 and uses your response to influence what happens next.
 
@@ -28,7 +29,6 @@ A hook point is a defined stage in Onyx's pipeline where custom logic can be inj
 
 Hook points are intentional — once a hook point is added, Onyx commits to maintaining its payload structure,
 response format, and behavior — meaning it won't change in a breaking way without a proper deprecation process.
-Because of this long-term commitment, each proposal is evaluated carefully before being added.
 
 ### Hooks
 
@@ -37,57 +37,28 @@ Onyx POSTs a request to your endpoint and uses your response to continue, modify
 
 Only one hook per hook point is allowed at a time.
 
-## How It Works
-
-<Steps>
-  <Step title="Onyx reaches a hook point in the pipeline">
-    The pipeline triggers at a defined stage.
-  </Step>
-
-  <Step title="Onyx POSTs to your endpoint">
-    If an active hook is configured for that point, Onyx sends a JSON payload to your endpoint URL.
-  </Step>
-
-  <Step title="Your endpoint responds">
-    Your endpoint processes the payload and returns a JSON response.
-  </Step>
-
-  <Step title="Onyx continues">
-    Onyx uses your response to continue, modify, or abort the pipeline.
-  </Step>
-</Steps>
-
 If your endpoint is unreachable, times out, or returns an invalid response,
 Onyx follows the **fail strategy** you configured.
 
 ## Adding a Hook
 
 <Steps>
-  <Step title="Navigate to Hook Extensions">
-    Go to the **Admin Panel** and select **Hook Extensions**.
-  </Step>
-
   <Step title="Connect a hook point">
-    Find the hook point you want to use and click **Connect**.
+    Open **Admin Panel → Integrations → Hook Extensions**, find the hook point you want to use, and click **Connect**.
   </Step>
 
   <Step title="Fill in the hook details">
-    Complete the form:
-
     <img className="rounded-image" src="/assets/admins/advanced_configs/add_hook.webp" alt="Add Hook Form"/>
 
     | Field | Required | Description |
     |---|---|---|
-    | Display Name | Yes | A human-readable label for this hook |
-    | Fail Strategy | No | **Hard** — abort the pipeline. **Soft** — log and continue. Defaults to the hook point's recommended strategy |
-    | Timeout | No | Seconds to wait for your endpoint to respond (1–600). Defaults to the hook point's recommended timeout |
-    | Endpoint URL | Yes | The HTTPS URL Onyx will POST to when the hook point is triggered. Must use HTTPS. |
-    | API Key | No | If provided, Onyx sends this as `Authorization: Bearer <api_key>` on every request |
-  </Step>
+    | Display Name | Yes | A label for this hook |
+    | External API Endpoint URL | Yes | The HTTPS URL Onyx POSTs to when the hook point fires. Only connect to servers you trust. |
+    | API Key | No | If set, Onyx sends it as `Authorization: Bearer <api_key>` on every request |
+    | Fail Strategy | No | **Block Pipeline on Failure** or **Log Error and Continue**. Defaults to the hook point's strategy, marked **(Default)** |
+    | Timeout | No | Seconds to wait for a response, more than 0 and at most 600. Defaults to the hook point's timeout |
 
-  <Step title="Connect">
-    Click **Connect**. Onyx validates your endpoint with a test request before saving. On success,
-    the hook appears in the connected list.
+    Click **Connect**. Onyx validates your endpoint with a test request before saving.
   </Step>
 </Steps>
 
@@ -95,10 +66,8 @@ Onyx follows the **fail strategy** you configured.
 
 Once connected, you can:
 
-- **Activate / Deactivate** — toggle whether the hook runs
-- **Edit** — update the name, endpoint URL, API key, timeout, or fail strategy
-- **Delete** — remove the hook entirely
-- **View Logs** — inspect recent execution failures for debugging
+- **Disconnect Hook** — stop calling the endpoint. Requests in flight finish. Click **Reconnect** to resume
+- **Delete** — remove the hook
 
 ## Hook Health
 
@@ -107,7 +76,7 @@ Onyx monitors your endpoint after the hook is registered and connected, displays
 | Status | Meaning |
 |---|---|
 | <img src="/assets/icons/check_circle.svg" width="16" style={{display:"inline", marginRight:"6px"}} />Connected | Reachable, no failures in the last hour |
-| <img src="/assets/icons/alert_triangle.svg" width="16" style={{display:"inline", marginRight:"6px"}} />Degraded | Reachable, but failures occurred in the last hour |
+| <img src="/assets/icons/alert_triangle.svg" width="16" style={{display:"inline", marginRight:"6px"}} />Errors in the past hour | Reachable, but some calls failed in the last hour. The card shows the error count |
 | <img src="/assets/icons/x_octagon.svg" width="16" style={{display:"inline", marginRight:"6px"}} />Connection Lost | Onyx cannot reach your endpoint |
 
 <img className="rounded-image" src="/assets/admins/advanced_configs/hook_card_connected.webp" alt="Connected Hook Card"/>
@@ -116,7 +85,7 @@ Onyx monitors your endpoint after the hook is registered and connected, displays
 
 <img className="rounded-image" src="/assets/admins/advanced_configs/hook_card_connection_lost.webp" alt="Hook Connection Lost"/>
 
-The 10 most recent failures from the past 30 days are also shown to help with debugging.
+Click the status to open **Most Recent Errors** and the full error log for the past 30 days.
 
 <img className="rounded-image" src="/assets/admins/advanced_configs/hook_thirty_days_errors.webp" alt="Hook Errors in the Last 30 Days"/>
 
@@ -295,7 +264,6 @@ Authorization: Bearer <your-api-key>
 You can use an [AWS Lambda function](https://docs.aws.amazon.com/lambda/latest/dg/getting-started.html)
 as your hook endpoint by exposing it over HTTPS via a [Lambda Function
 URL](https://docs.aws.amazon.com/lambda/latest/dg/lambda-urls.html).
-This is the simplest way to deploy a hook without managing a server.
 
 When Onyx calls your endpoint, the request arrives as an API Gateway-style event.
 Your handler reads the JSON body from `event["body"]`, processes the document,
@@ -411,7 +379,6 @@ Use it to push indexed content to an external destination such as a wiki, data w
 
 Unlike Document Ingestion (which runs before indexing and can modify or drop documents),
 this hook fires **after** the document has been written to the index.
-The response body is not used — any `2xx` response is treated as success.
 
 <Note>
   Document Push only fires for **public connectors** in **single-tenant** deployments,
@@ -540,7 +507,6 @@ Your endpoint receives the raw query and the user's identity, and can rewrite th
 or pass it through unchanged.
 
 It runs immediately after the user submits a message, before anything is saved to the database or sent to the LLM.
-This is the earliest possible point in the pipeline — no side effects have occurred yet.
 
 | Setting | Value |
 |---|---|
@@ -617,7 +583,6 @@ Authorization: Bearer <your-api-key>
 You can use an [AWS Lambda function](https://docs.aws.amazon.com/lambda/latest/dg/getting-started.html)
 as your hook endpoint by exposing it over HTTPS via a [Lambda Function
 URL](https://docs.aws.amazon.com/lambda/latest/dg/lambda-urls.html).
-This is the simplest way to deploy a hook without managing a server.
 
 When Onyx calls your endpoint, the request arrives as an API Gateway-style event.
 Your handler reads the JSON body from `event["body"]`, processes the query,

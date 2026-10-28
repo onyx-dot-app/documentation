@@ -4,8 +4,7 @@ description: "Index mail, attachments and calendar events from Exchange Online m
 ---
 
 The Outlook connector indexes mailboxes in your Microsoft 365 tenant through Microsoft Graph. It reads mail threads,
-the text of file attachments, and calendar events,
-and it can mirror who may read each item with **Auto Sync Permissions**.
+the text of file attachments, and calendar events, and it can mirror who may read each item with **Sync with Outlook**.
 
 The connector signs in as an app registration set up in [Microsoft 365
 Setup](/admins/connectors/official/microsoft-365/setup). It reaches Exchange Online only.
@@ -58,11 +57,8 @@ A client secret or a certificate both work. Outlook reads no SharePoint API, so 
 ## Configure Onyx
 
 <Steps>
-  <Step title="Open the Outlook connector">
-    In Onyx, go to **Admin Panel → Add Connector** and select **Outlook**.
-  </Step>
-
   <Step title="Create a credential">
+    In Onyx, go to **Admin Panel → Connectors** and select **Outlook**.
     Select an existing Outlook credential or create one as described in [Microsoft 365
     Setup](/admins/connectors/official/microsoft-365/setup#enter-the-credential-in-onyx).
 
@@ -74,8 +70,7 @@ A client secret or a certificate both work. Outlook reads no SharePoint API, so 
   </Step>
 
   <Step title="Choose the mailboxes">
-    Give the connector a name. In **Mailboxes**, list the user principal names or primary email addresses to index.
-    In **Mailbox Groups**,
+    In **Mailboxes**, list the user principal names or primary email addresses to index. In **Mailbox Groups**,
     list Microsoft Entra groups by display name or object ID to index the mailbox of every member,
     members of nested groups included. This is the way to limit a large tenant to the people who use Onyx.
     It needs the **GroupMember.Read.All** application permission.
@@ -85,8 +80,8 @@ A client secret or a certificate both work. Outlook reads no SharePoint API, so 
   </Step>
 
   <Step title="Set an indexing start date">
-    Under **Advanced Configuration**, set an **Indexing Start Date** unless you need every message ever received.
-    Without one, the first indexing attempt reads each mailbox from its first message,
+    Under **Schedule**, set **Index Documents After** unless you need every message ever received. Without one,
+    the first indexing attempt reads each mailbox from its first message,
     and a tenant with years of mail in many mailboxes takes days to become searchable. With a start date,
     Onyx indexes the threads that received a message on or after it and skips the rest. The calendar has its own window,
     set by **Calendar Past Days** and **Calendar Future Days** below.
@@ -99,18 +94,15 @@ A client secret or a certificate both work. Outlook reads no SharePoint API, so 
   </Step>
 
   <Step title="Choose the access type">
-    Select the connector access type:
+    Under **Document Access**, select **Everyone in Your Organization**, **Specific Groups**, or **Sync with Outlook**.
+    **Sync with Outlook** mirrors mailbox ownership and meeting attendance and is the default where available.
 
-    - **Public** makes all indexed mail visible to every Onyx user.
-    - **Private** limits the connector to selected Onyx user groups.
-    - **Auto Sync Permissions** mirrors mailbox ownership and meeting attendance.
-
-    **Private** and **Auto Sync Permissions** are paid features: the Business and Enterprise tiers on Onyx Cloud,
-    and the Enterprise Edition when self-hosted.
+    **Specific Groups** and **Sync with Outlook** need the Business or Enterprise tier on Onyx Cloud,
+    or the Enterprise Edition when self-hosted.
   </Step>
 
   <Step title="Connect and verify">
-    Select **Create Connector**. Then open **Admin Panel → Existing Connectors**, select the connector,
+    Select **Create Connector**. Then open **Admin Panel → Indexing Status**, select the connector,
     and confirm its initial indexing attempt completes.
   </Step>
 </Steps>
@@ -135,9 +127,9 @@ A message contributes at most 20 attachments, and a thread stops downloading aft
 failed ones included, or one million characters of attachment text.
 Set `OUTLOOK_CONNECTOR_ATTACHMENT_SIZE_THRESHOLD` (bytes) to change the 20 MB (20 × 1024 × 1024 bytes) size limit.
 
-## Auto Sync Permissions
+## Sync with Outlook
 
-With **Auto Sync Permissions**, Onyx grants access by email address.
+With **Sync with Outlook**, Onyx grants access by email address.
 A mailbox's address must match the user's email in Onyx.
 
 | Outlook item                    | Who can see it in Onyx                                          |
@@ -154,9 +146,9 @@ Set `OUTLOOK_PERMISSION_DOC_SYNC_FREQUENCY` (seconds) to change the interval.
 
 <Warning>
   A shared mailbox has no owner who signs in to Onyx,
-  so its threads stay hidden under **Auto Sync Permissions** unless an Onyx account carries the mailbox's own address.
+  so its threads stay hidden under **Sync with Outlook** unless an Onyx account carries the mailbox's own address.
   Delegate access to a shared mailbox is not synchronized. To make a shared mailbox searchable,
-  index it with a separate connector set to **Private** and assign the user groups who should see it.
+  index it with a separate connector set to **Specific Groups** and assign the user groups who should see it.
 </Warning>
 
 Permission sync uses the same **Mail.Read** and **Calendars.Read** grants as indexing and needs no further Graph

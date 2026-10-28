@@ -5,97 +5,61 @@ description: "Access knowledge from your Drupal Wiki instance"
 
 ## How it works
 
-The Drupal Wiki connector indexes content from your Drupal Wiki instance including spaces, pages,
-and optionally attachments.
-The connector fetches all accessible content upon initial setup and then performs incremental updates to keep your
-knowledge base synchronized.
+The Drupal Wiki connector indexes the pages of your Drupal Wiki instance.
+You can index every space the account can read, or only specific spaces and pages. You can also index page attachments.
 
-The connector respects the permissions of the provided API token, indexing only content that the token has access to,
-whether public or private.
+Onyx converts each page to text and keeps the space and author as document metadata. After the first run,
+Onyx checks Drupal Wiki for new and changed pages every 30 minutes by default.
+You can change **Refresh Every** on the connector. Pruning removes pages that were deleted in Drupal Wiki.
+
+The connector indexes only the content that the API token can read. Permission sync is not available for Drupal Wiki.
+Everyone who can see the connector's documents in Onyx can see every indexed page.
 
 ## Setting up
 
 ### Authorization
 
-You will need an API access token for your Drupal Wiki instance.
-The token must start with `pat:` (Personal Access Token).
+You need a Drupal Wiki personal access token. The token starts with `pat:`.
 
 <Steps>
-  <Step title="Navigate to your Drupal Wiki instance">
-    Navigate to your Drupal Wiki instance
+  <Step title="Check the REST API">
+    Make sure the REST API is enabled in your Drupal Wiki instance.
   </Step>
 
   <Step title="Generate an access token">
-    Follow the documentation to generate an access token:
+    Follow the Drupal Wiki documentation to generate a personal access token:
     [https://help.drupal-wiki.com/node/605#2-Zugriffs-Token-generieren](https://help.drupal-wiki.com/node/605#2-Zugriffs-Token-generieren)
   </Step>
-
-  <Step title="Ensure REST API is available">
-    Ensure the REST API interface is available in your Drupal instance
-  </Step>
-
-  <Step title="Copy the API token">
-    Copy the generated API token (it should start with `pat:`)
-  </Step>
 </Steps>
-
-<Info>
-  The API token determines which content will be accessible to Onyx.
-  Only content that the token user has permission to access will be indexed.
-</Info>
 
 ### Indexing
 
 <Steps>
-  <Step title="Navigate to the Admin Dashboard">
-    Navigate to the Admin Dashboard and select the **Drupal Wiki** connector
+  <Step title="Create the account">
+    In the Onyx admin panel, go to **Connectors** and select **Drupal Wiki**. Under **Authentication Account**,
+    click **Create New**. Enter the **Base URL** of your instance, for example `https://help.drupal-wiki.com`,
+    and the token as the **API Token**.
   </Step>
 
-  <Step title="Provide your Drupal Wiki configuration">
-    In **Step 1**, provide your Drupal Wiki configuration:
-    - **API Token**: The access token you generated (starting with `pat:`)
+  <Step title="Choose the content to index">
+    Under **Drupal Wiki Content to Index**, select a tab:
+    - **Everything**: Onyx indexes all pages in every space that the account can read.
+    - **Specific Spaces/Pages**: Enter **Space IDs** and **Page IDs**. Use numeric IDs only. To find space IDs, see
+    [https://help.drupal-wiki.com/node/606](https://help.drupal-wiki.com/node/606).
   </Step>
 
-  <Step title="Choose your indexing scope">
-    In **Step 2**, choose your indexing scope:
-    - **Base URL**: The base URL of your Drupal Wiki instance (e.g., `https://help.drupal-wiki.com`)
-    - **All Content**: Index all spaces and pages accessible to your API token
-    - **Specific Spaces**: Enter specific Space IDs to index only certain areas
-    - To find Space IDs, refer to: [https://help.drupal-wiki.com/node/606](https://help.drupal-wiki.com/node/606)
-    - **Specific Pages**: Enter specific Page (Node) IDs to index only certain pages
+  <Step title="Set the attachment option">
+    Check **Include Attachments** to also index the files attached to pages.
+    Onyx indexes the supported document types and skips attachments larger than 10 MB.
   </Step>
 
-  <Step title="Configure additional options">
-    Configure additional options:
-    - **Include Attachments**: Check this to also index file attachments (PDF, DOC, DOCX, XLS, XLSX, PPT, PPTX, TXT,
-    HTML, MD, CSV)
-  </Step>
-
-  <Step title="Connect and start indexing">
-    Click the `Connect` button!
-    Your Drupal Wiki content will be indexed and kept up to date with incremental synchronization.
+  <Step title="Choose document access">
+    Under **Document Access**, select who can see the indexed pages.
+    **Specific Groups** is available on the Business and Enterprise plans and on Onyx Cloud.
+    Then click **Create Connector**.
   </Step>
 </Steps>
 
-<img className="rounded-image" src="/assets/admins/connectors/drupal_wiki/OnyxDrupalWikiConfig.webp" alt="Onyx Drupal Wiki configuration"/>
+<img className="rounded-image" src="/assets/admins/connectors/drupal_wiki/OnyxDrupalWikiConfig.webp" alt="Drupal Wiki connector configuration in Onyx"/>
 
-## Supported Content Types
-
-The Drupal Wiki connector indexes the following content:
-
-- **Spaces**: Organizational units within your Drupal Wiki
-- **Pages**: Individual wiki pages with HTML content (converted to plain text)
-- **Attachments** (optional): Various document formats up to 10MB
-
-## Technical Details
-
-- **API Usage**: Uses Drupal Wiki's REST API endpoints
-- **Synchronization**: Supports incremental updates for efficient syncing
-- **Content Limits**: 10MB for attachments, 600,000 characters for text content
-- **Deployment Support**: Works with both self-hosted and cloud-hosted Drupal Wiki instances
-
-## Permission Syncing
-
-The connector automatically respects your Drupal Wiki's permission system.
-Content access is determined by the API token's permissions,
-ensuring that only authorized content is indexed and searchable within Onyx.
+The connector works with self-hosted and cloud-hosted Drupal Wiki instances.

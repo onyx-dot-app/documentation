@@ -1,16 +1,19 @@
 ---
 title: "Document360"
-description: "'Access wiki articles from Document360'"
+description: "Access wiki articles from Document360"
 ---
 
 ## How it works
 
-The Document360 connector will pull in all the articles given the workspace and categories that the user specifies.
-Articles in Document360 can be saved in either HTML or Markdown format.
-Currently the implementation only handles HTML format. If HTML format is desired,
-please submit an issue [here](https://github.com/onyx-dot-app/onyx/issues)
+The Document360 connector indexes the articles of one Document360 workspace. You can limit it to specific categories.
 
-Articles are updated every **10** minutes.
+Document360 saves articles in HTML, Markdown, or block format. The connector indexes HTML articles only.
+
+Onyx checks Document360 for new and changed articles every 30 minutes by default.
+You can change **Refresh Every** on the connector.
+
+Permission sync is not available for Document360.
+Everyone who can see the connector's documents in Onyx can see every indexed article.
 
 ## Setting up
 
@@ -18,12 +21,12 @@ Articles are updated every **10** minutes.
 
 <Steps>
   <Step title="Open API tokens">
-    Go to Settings > Knowledge base portal > API tokens.
+    In Document360, go to **Settings > Knowledge base portal > API tokens**.
   </Step>
 
-  <Step title="Generate token">
-    Click Generate. Enter a token name and select the allowed request methods. Click Generate again.
-    Your portal ID and API key will be displayed.
+  <Step title="Generate a token">
+    Click **Generate**. Enter a token name and select the allowed request methods. Click **Generate** again.
+    Document360 shows your portal ID and API token. Copy both.
   </Step>
 </Steps>
 
@@ -32,23 +35,23 @@ Articles are updated every **10** minutes.
 ### Indexing
 
 <Steps>
-  <Step title="Open Document360 connector">
-    Navigate to the Admin Panel and select the **Document360** Connector
+  <Step title="Create the account">
+    In the Onyx admin panel, go to **Connectors** and select **Document360**. Under **Authentication Account**,
+    click **Create New**. Enter the **Document360 Portal ID** and the **API Token** from above.
+
+    <img className="rounded-image" src="/assets/admins/connectors/document360/Document360Auth.webp" alt="Document360 account form with Portal ID and API Token"/>
   </Step>
 
-  <Step title="Enter Portal ID and API Key">
-    In **Step 1**, provide your **Portal ID** and the **API Key** from above.
-
-    <img className="rounded-image" src="/assets/admins/connectors/document360/Document360Auth.webp" alt="Document360 connector authentication with Portal ID and API Key"/>
+  <Step title="Set the workspace and categories">
+    Enter the **Workspace** name. Add one or more **Categories** to index only those categories.
+    Leave **Categories** empty to index the whole workspace.
   </Step>
 
-  <Step title="Set workspace and categories">
-    Set the **Workspace ID** (see below) and **Categories**. To include all categories, leave the categories empty.
-  </Step>
-
-  <Step title="Start indexing">
-    Click `Connect` to begin indexing
+  <Step title="Choose document access">
+    Under **Document Access**, select who can see the indexed articles.
+    **Specific Groups** is available on the Business and Enterprise plans and on Onyx Cloud.
+    Then click **Create Connector**.
   </Step>
 </Steps>
 
-<img className="rounded-image" src="/assets/admins/connectors/document360/Document360.webp" alt="Document360 connector authentication"/>
+<img className="rounded-image" src="/assets/admins/connectors/document360/Document360.webp" alt="Document360 connector configuration in Onyx"/>

@@ -8,20 +8,19 @@ import CustomDomain from "/snippets/custom-domain.mdx"
 import InstallOnyx from "/snippets/install-onyx.mdx"
 import DeploymentNextSteps from "/snippets/deployment-next-steps.mdx"
 
+A single Droplet is the simplest way to self-host Onyx on DigitalOcean.
+
+## Guide
+
 <Steps>
   <Step title="Create a Droplet">
-    Create a Droplet with the appropriate resources. For this guide,
-    we will use a recommended configuration with Docker pre-installed.
-
-    <Note>
-      Read our [Resourcing guide](/deployment/getting_started/resourcing) for more details.
-    </Note>
+    Create a Droplet with the appropriate resources. This guide uses the Marketplace image with Docker pre-installed.
 
     - Give your Droplet a descriptive name like `onyx-prod`
     - Select a region close to your users
     - Select the `Docker` image from the *Marketplace* tab
     - Choose a Droplet size with at least 4 vCPUs and 16GB RAM
-    - Configure storage following the Resourcing Guide
+    - Configure storage following the [Resourcing guide](/deployment/getting_started/resourcing)
     - Add your SSH key for secure access
   </Step>
 
@@ -29,23 +28,37 @@ import DeploymentNextSteps from "/snippets/deployment-next-steps.mdx"
     Click **Create Droplet** and then view your Droplet details.
 
     <Tip>
-      Save the **Public IP address** of the Droplet!
+      Save the **Public IP address** of the Droplet.
     </Tip>
 
     <img className="rounded-image" src="/assets/deployment/setup_guides/do/InstanceIp.webp" alt="Digital Ocean Public IP Address"/>
   </Step>
 
+  <Step title="Open HTTPS">
+    The Docker image ships with the `ufw` firewall enabled. Allow web traffic:
+
+    ```bash
+    sudo ufw allow 80/tcp
+    sudo ufw allow 443/tcp
+    ```
+  </Step>
+
   <CustomDomain />
 
   <Step title="Install Onyx requirements">
-    Since we selected the Docker Marketplace image, Docker and Docker Compose are already installed.
+    The Docker Marketplace image includes Docker and the `docker compose` plugin.
 
-    We just need to install `git`:
+    Install `git`:
 
-        ```bash
-        sudo apt update
-        sudo apt install -y git
-        ```
+    ```bash
+    sudo apt update
+    sudo apt install -y git
+    ```
+
+    <Tip>
+      Prefer a guided install? The [Onyx CLI](/deployment/local/onyx_cli)
+      writes the configuration and manages upgrades for you. Skip the remaining steps if you use it.
+    </Tip>
   </Step>
 
   <InstallOnyx />

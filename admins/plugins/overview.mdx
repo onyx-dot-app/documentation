@@ -36,17 +36,7 @@ Onyx has three plugin types. Each type connects to a different kind of external 
 | --- | --- | --- | --- |
 | [MCP](/admins/plugins/mcp) | A server that uses the [Model Context Protocol](https://modelcontextprotocol.io/) | Chat, custom agents, and Craft | The vendor publishes an MCP server, or you run your own. |
 | [OpenAPI](/admins/plugins/openapi) | A REST API that you describe with an OpenAPI schema | Chat and custom agents | You have an internal or third-party REST API and no MCP server. |
-| [Craft App](/admins/plugins/craft_apps) | A catalog of API endpoints for one application, such as Slack or Gmail | Craft only | Craft must act as each user in a supported application, with action-level approvals. |
-
-### Choose a plugin type
-
-- Use a **Craft App** for Slack, Google Calendar, Google Drive, Gmail, Linear, GitHub, HubSpot, Notion,
-  or Zendesk work in Craft. Craft Apps call the provider API as the connected user.
-  Each action has its own approval policy.
-- Use an **MCP server** for an application that is not a built-in Craft App, or when you also need the tools in Chat.
-  MCP servers work in Chat, custom agents, and Craft.
-- Use an **OpenAPI plugin** to make an existing REST API available in Chat and custom agents.
-  Onyx turns each operation in the schema into a tool.
+| [Craft App](/admins/plugins/craft_apps) | A catalog of API endpoints for one application, such as Slack or Gmail | Craft only | Craft must act as each user in a supported application, with action-level approvals. Requires Craft, which is available on the **Business** and **Enterprise** plans. |
 
 <Tip>
   You can add the same service more than once. For example,
@@ -63,46 +53,31 @@ Onyx has three plugin types. Each type connects to a different kind of external 
 | Permissions | Onyx applies the permissions it syncs from the source, so each user finds only documents they can access | The external service applies its own permissions to the account that the plugin uses |
 | Actions | Read only | Read and write, if the service and the plugin allow it |
 
-When a user connects a personal account, the plugin can read only what that account can read. For example,
-a Slack Craft App can read a private channel only if the connected user is a member of that channel.
-
 ## Add a plugin
 
-<Steps>
-  <Step title="Open the Plugins page">
-    Click your user profile icon, select **Admin Panel**, then select **Plugins** under **Agents & Actions**.
-  </Step>
+Go to **Admin Panel → Plugins**, click **Add**, then select **MCP**, **OpenAPI**, or **Craft Apps**.
+Follow the guide for the plugin type: [MCP](/admins/plugins/mcp), [OpenAPI](/admins/plugins/openapi),
+or [Craft Apps](/admins/plugins/craft_apps).
 
-  <Step title="Select a plugin type">
-    Click **Add**, then select **MCP**, **OpenAPI**, or **Craft Apps**.
+<img className="rounded-image" src="/assets/admins/plugins/plugins_add_menu.webp" alt="The Add menu with MCP, OpenAPI, and Craft Apps options"/>
 
-    <img className="rounded-image" src="/assets/admins/plugins/plugins_add_menu.webp" alt="The Add menu with MCP, OpenAPI, and Craft Apps options"/>
-  </Step>
-
-  <Step title="Complete the setup">
-    Follow the guide for the plugin type: [MCP](/admins/plugins/mcp), [OpenAPI](/admins/plugins/openapi),
-    or [Craft Apps](/admins/plugins/craft_apps).
-  </Step>
-</Steps>
-
-Only full admins can add Craft Apps.
+Only full admins can add Craft Apps. The **Craft Apps** filter and type show only for full admins,
+and only when Craft is available on your plan.
 Users with the **Manage Actions** permission can add and edit MCP and OpenAPI plugins.
+A Group Manager can restrict an MCP server only to the groups they manage.
 Only full admins can change which plugins are on in default Chat for the workspace.
 
 ## The Plugins page
 
-Each card shows the plugin name, its URL or description, its type, and a status icon.
-
-- Use the **All**, **MCP**, **OpenAPI**, and **Craft Apps** filters, or search by name.
-- Click a card to open its settings.
-- Click the trash icon to delete the plugin.
+Cards sort by status: active plugins first, then plugins with issues, then plugins that are off.
+Onyx-managed Craft Apps on Onyx Cloud cannot be deleted.
 
 Deleting a plugin removes it from the workspace, from every custom agent, and from every user.
 To keep a plugin but stop default Chat or Craft from using it, turn off its availability switch instead.
 
 ## Plugin settings
 
-Plugin settings open in a dialog with tabs. Changes stay as a draft until you click **Save Changes**.
+Changes stay as a draft until you click **Save Changes**.
 
 | Tab | MCP | OpenAPI | Craft App |
 | --- | --- | --- | --- |
@@ -113,11 +88,9 @@ Plugin settings open in a dialog with tabs. Changes stay as a draft until you cl
 
 ## Availability and personal defaults
 
-Onyx keeps four kinds of settings separate. Use the table to find the setting that controls a behavior.
-
 | Setting | Who sets it | Effect |
 | --- | --- | --- |
-| **Access control** (MCP) | Admin | Selects which users and groups can use the plugin at all. |
+| **Access control** (MCP) | Admin | **Public**, or limited to selected **User groups**. Group restrictions require a **Business** or **Enterprise** plan. |
 | **Enable in default Chat** (MCP, OpenAPI) | Admin | Makes the plugin available in chats that do not use a custom agent. |
 | **Enable for Craft** (MCP, Craft App) | Admin | Makes the plugin available in Craft sessions and scheduled tasks. |
 | **Custom agent attachment** | Agent builder | Gives one [custom agent](/admins/agents/overview) the plugin's tools. Default Chat settings do not change it. |
@@ -136,16 +109,14 @@ and its credentials and settings stay the same.
 
 ## Status icons
 
-The status icon on each card shows where the plugin is available. Hover over the icon to see details.
-Each segment of the icon is one surface: **Main Chat**, **Custom agents**, and **Craft**.
+The status icon on each card shows where the plugin is available. Each segment of the icon is one surface:
+**Main Chat**, **Custom agents**, and **Craft**.
 
 | Color | Meaning |
 | --- | --- |
 | Green | On and ready |
 | Orange | Off, or the user must sign in |
 | Gray | The plugin type does not support this surface |
-
-The status icon is read only. Change availability in the plugin's **Configuration** tab.
 
 ## Approvals in Craft
 

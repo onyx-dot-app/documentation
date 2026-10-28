@@ -6,10 +6,15 @@ icon: "link"
 
 <Tip>
   This is an advanced guide for automating connector creation.
-  We highly recommend trying the Admin Panel or File Ingestion API first.
+  Try the Admin Panel or the [Ingestion API](/developers/guides/index_files_ingestion_api) first.
 </Tip>
 
-To see available connectors, see the [Connectors page](/admins/connectors).
+To see available connectors, see the [Connectors page](/admins/connectors/overview).
+
+<Note>
+  Connector management needs a vector database. On deployments running with `DISABLE_VECTOR_DB` set (Onyx Lite),
+  the `/manage/admin/connector` endpoints answer with `501`.
+</Note>
 
 ## Guide
 
@@ -20,6 +25,8 @@ In this example, we'll automate creating Jira Connectors for a selection of proj
 **You will need an API key that can manage connectors.** Its service account must be in the Admin group,
 or in a group granting **Manage Connectors & Document Sets**.
 Every request in this guide is gated on `manage:connectors`.
+A full-access Personal Access Token from a user with that permission also works. A limited-access token does not,
+because no token scope grants `manage:connectors`.
 See [Understanding Permissions](/admins/permissions/understanding_permissions).
 
 <Steps>
@@ -49,19 +56,26 @@ See [Understanding Permissions](/admins/permissions/understanding_permissions).
     find your relevant Connector in
     [`backend/onyx/connectors/`](https://github.com/onyx-dot-app/onyx/tree/main/backend/onyx/connectors).
 
-    For Jira, since we're indexing a selection of projects, rather than all projects,
-    we'll need to specify `jira_base_url`, `project_key`, and optionally `comment_email_blacklist`.
+    For Jira, we index a selection of projects rather than everything, so we set `jira_base_url` and `project_key`.
+    `comment_email_blacklist` is optional.
 
     ```json JSON
     {
       "jira_base_url": "string",
       "project_key": "string | null",
-      "comment_email_blacklist": ["string"] | null
+      "jql_query": "string | null",
+      "comment_email_blacklist": ["string"] | null,
+      "labels_to_skip": ["string"] | null
     }
     ```
 
+    Leave `project_key` and `jql_query` empty to index everything.
+    Set `jql_query` instead of `project_key` to scope the connector with a JQL query.
+    Issues that carry a label in `labels_to_skip` are not indexed.
+
     <Note>
-      The `ConnectorSpecificConfig` are the same fields you fill out in the Admin Panel when creating a Connector.
+      The `ConnectorSpecificConfig` fields are the same fields you fill out in the Admin Panel when you create a
+      Connector.
     </Note>
   </Step>
 
@@ -70,14 +84,24 @@ See [Understanding Permissions](/admins/permissions/understanding_permissions).
     we also need to satisfy the schema for the `ConnectorUpdateRequest` object. See [Core Concepts:
     Connectors](/developers/core_concepts#connectors) for more details.
 
-    In this example, we'll set the `access_type`, `name`, `source`, `input_type`, `refresh_freq`, and `prune_freq`.
+    | Field | Description |
+    |-------|-------------|
+    | `name` | Display name of the Connector. |
+    | `source` | Source type, for example `jira`. |
+    | `input_type` | `poll` for sources Onyx polls on a schedule, `load_state` for one-time loads. |
+    | `access_type` | `public`, `private`, `sync`, or `sync_restricted`. `sync` and `sync_restricted` need a connector with permission sync (Enterprise). |
+    | `groups` | IDs of the user groups that manage the Connector. Omit it for Admin-managed Connectors. |
+    | `refresh_freq` | Seconds between indexing runs. `null` indexes once and never refreshes. |
+    | `prune_freq` | Seconds between pruning runs that remove deleted documents. |
+    | `check_freq` | Seconds between connector health checks. Omit it to run checks only on request. |
+    | `indexing_start` | ISO 8601 timestamp. Only documents updated after this time are indexed. |
     <CodeGroup>
       ```python Python
       connector_payload = {
         "name": f"jira-{project_key}",
         "source": "jira",
         "input_type": "poll",
-        "access_type": "PUBLIC",
+        "access_type": "public",
         "connector_specific_config": {
           "jira_base_url": JIRA_BASE_URL,
           "project_key": project_key,
@@ -93,7 +117,7 @@ See [Understanding Permissions](/admins/permissions/understanding_permissions).
         "name": "jira-TECH",
         "source": "jira",
         "input_type": "poll",
-        "access_type": "PUBLIC",
+        "access_type": "public",
         "connector_specific_config": {
           "jira_base_url": "https://your-company.atlassian.net",
           "project_key": "TECH",
@@ -131,7 +155,7 @@ See [Understanding Permissions](/admins/permissions/understanding_permissions).
           "name": f"jira-{project_key}",
           "source": "jira",
           "input_type": "poll",
-          "access_type": "PUBLIC",
+          "access_type": "public",
           "connector_specific_config": {
             "jira_base_url": JIRA_BASE_URL,
             "project_key": project_key,
@@ -168,7 +192,7 @@ See [Understanding Permissions](/admins/permissions/understanding_permissions).
           "name": "jira-TECH",
           "source": "jira",
           "input_type": "poll",
-          "access_type": "PUBLIC",
+          "access_type": "public",
           "connector_specific_config": {
             "jira_base_url": "https://your-company.atlassian.net",
             "project_key": "TECH",
@@ -186,7 +210,7 @@ See [Understanding Permissions](/admins/permissions/understanding_permissions).
           "name": "jira-SALES",
           "source": "jira",
           "input_type": "poll",
-          "access_type": "PUBLIC",
+          "access_type": "public",
           "connector_specific_config": {
             "jira_base_url": "https://your-company.atlassian.net",
             "project_key": "SALES",
@@ -204,7 +228,7 @@ See [Understanding Permissions](/admins/permissions/understanding_permissions).
           "name": "jira-OPS",
           "source": "jira",
           "input_type": "poll",
-          "access_type": "PUBLIC",
+          "access_type": "public",
           "connector_specific_config": {
             "jira_base_url": "https://your-company.atlassian.net",
             "project_key": "OPS",
@@ -218,14 +242,10 @@ See [Understanding Permissions](/admins/permissions/understanding_permissions).
   </Step>
 
   <Step title="Find your Credentials for the Connector">
-    The easiest way to create a Credential is in the Admin Panel.
-    - Click Add a Connector
-    - Select your relevant Connector
-    - Follow the instructions to create a Credential
+    The easiest way to create a Credential is the **Add Connector** flow in **Admin Panel** > **Connectors**.
+    Credentials created this way are reusable across Connectors of the same source.
 
-    Once your Credential is created, the Credential ID will be displayed to you.
-
-    Certain Connectors may not require a Credential such as the File and Web connectors. `credential_id:
+    Certain Connectors, such as the File and Web connectors, do not need a Credential. `credential_id:
     0` is a default empty Credential you can use for these Connectors.
 
     To list your Credentials, you can use the `GET manage/admin/credential` endpoint.
@@ -254,6 +274,10 @@ See [Understanding Permissions](/admins/permissions/understanding_permissions).
       If you do not do this step, your `Connector` is not fully created and you will not see it in the Admin Panel!
     </Note>
 
+    The request body names the connector-credential pair and sets who can read its documents.
+    `name` and `access_type` are required. Optional fields: `groups` (user group IDs that manage the pair)
+    and `auto_sync_options` (settings for permission sync, when `access_type` is `sync` or `sync_restricted`).
+
     <CodeGroup>
       ```python Python
       for connector_id in connector_ids:
@@ -261,6 +285,10 @@ See [Understanding Permissions](/admins/permissions/understanding_permissions).
           response = requests.put(
             f"{API_BASE_URL}/manage/admin/connector/{connector_id}/credential/{jira_credential_id}",
             headers=headers,
+            json={
+              "name": f"jira-{connector_id}",
+              "access_type": "public",
+            },
           )
 
           if response.status_code == 200:
@@ -276,7 +304,11 @@ See [Understanding Permissions](/admins/permissions/understanding_permissions).
       # Replace CONNECTOR_ID and CREDENTIAL_ID with actual values
       curl -X PUT "${API_BASE_URL}/manage/admin/connector/CONNECTOR_ID/credential/CREDENTIAL_ID" \
         -H "Authorization: Bearer ${API_KEY}" \
-        -H "Content-Type: application/json"
+        -H "Content-Type: application/json" \
+        -d '{
+          "name": "jira-TECH",
+          "access_type": "public"
+        }'
       ```
     </CodeGroup>
   </Step>
@@ -316,7 +348,7 @@ See [Understanding Permissions](/admins/permissions/understanding_permissions).
       "name": f"jira-{project_key}",
       "source": "jira",
       "input_type": "poll",
-      "access_type": "PUBLIC",
+      "access_type": "public",
       "connector_specific_config": {
         "jira_base_url": JIRA_BASE_URL,
         "project_key": project_key,
@@ -373,6 +405,10 @@ See [Understanding Permissions](/admins/permissions/understanding_permissions).
       response = requests.put(
         f"{API_BASE_URL}/manage/admin/connector/{connector_id}/credential/{jira_credential_id}",
         headers=headers,
+        json={
+          "name": f"jira-{connector_id}",
+          "access_type": "public",
+        },
       )
 
       if response.status_code == 200:
@@ -413,7 +449,7 @@ See [Understanding Permissions](/admins/permissions/understanding_permissions).
         \"name\": \"jira-${PROJECT}\",
         \"source\": \"jira\",
         \"input_type\": \"poll\",
-        \"access_type\": \"PUBLIC\",
+        \"access_type\": \"public\",
         \"connector_specific_config\": {
           \"jira_base_url\": \"${JIRA_BASE_URL}\",
           \"project_key\": \"${PROJECT}\",
@@ -470,7 +506,8 @@ See [Understanding Permissions](/admins/permissions/understanding_permissions).
 
     ASSOC_RESPONSE=$(curl -s -w "\n%{http_code}" -X PUT "${API_BASE_URL}/manage/admin/connector/${CONNECTOR_ID}/credential/${JIRA_CREDENTIAL_ID}" \
       -H "Authorization: Bearer ${API_KEY}" \
-      -H "Content-Type: application/json")
+      -H "Content-Type: application/json" \
+      -d "{\"name\": \"jira-${CONNECTOR_ID}\", \"access_type\": \"public\"}")
 
     ASSOC_HTTP_CODE=$(echo "$ASSOC_RESPONSE" | tail -n1)
     ASSOC_BODY=$(echo "$ASSOC_RESPONSE" | head -n -1)

@@ -6,14 +6,8 @@ icon: "database"
 
 ## Overview
 
-**Index Settings** controls how Onyx indexes your documents for search. On this page, you can:
-
-- Choose the [embedding model](#embedding-model) and the [vector quantization](#vector-quantization).
-- Turn on [contextual retrieval](#contextual-retrieval).
-- Configure [image processing](#image-processing).
-- Set a [rate limit](#embedding-rate-limit) on embedding requests.
-
-To open the page, go to the **Admin Panel** and select **Index Settings** under **Documents & Knowledge**.
+**Index Settings** controls how Onyx indexes your documents for search. To open the page,
+go to the **Admin Panel** and select **Index Settings** under **Documents & Knowledge**.
 You must be a member of the **Admin** group.
 
 <Note>
@@ -31,16 +25,13 @@ and the banner at the top of the page tells you what applying the change will do
 The [embedding rate limit](#embedding-rate-limit) is an exception: it saves when you leave the field.
 
 <Steps>
-  <Step title="Change the settings">
-    Change one or more settings on the page.
-  </Step>
-
   <Step title="Choose a re-index option">
-    In the banner, select how Onyx re-indexes your documents. The table below describes the options.
+    After you change one or more settings, select in the banner how Onyx re-indexes your documents.
+    The table below describes the options.
   </Step>
 
   <Step title="Apply the changes">
-    Click **Apply & Re-index**. To discard your changes, click **Revert**.
+    Click **Apply & Re-index**.
   </Step>
 </Steps>
 
@@ -109,8 +100,7 @@ To change the model:
 
 <Steps>
   <Step title="Open the model list">
-    Click **View All Models**. The models are on two tabs, **Cloud-based** and **Self-hosted**. To find a model,
-    type in the search box.
+    Click **View All Models**. The models are on two tabs, **Cloud-based** and **Self-hosted**.
   </Step>
 
   <Step title="Select a model">
@@ -131,17 +121,13 @@ Onyx sends your document text and your search queries to the provider to embed t
 To connect a provider, click **Connect** on one of its models, enter the provider's API key, and click **Connect**.
 Onyx tests the key with an embedding request before it saves the key. Then Onyx selects the model.
 
-The heading of a connected provider has buttons to disconnect the provider and to edit its credentials.
-You cannot disconnect the provider of the current model. If the current model is a cloud model,
-the settings button on its card also opens the provider's credentials.
+You cannot disconnect the provider of the current model.
 
 <img className="rounded-image" src="/assets/admins/advanced_configs/index_settings_cloud_models.webp" alt="Cloud-based tab of the model list with Cohere and OpenAI models and their Connect buttons"/>
 
 #### Google Embeddings
 
-Google embedding models use Vertex AI. In **Index Settings**,
-open **View All Models → Cloud-based** and click **Connect** on a Google model.
-Google supports two authentication methods:
+Google embedding models use Vertex AI. Google supports two authentication methods:
 
 - **Service Account JSON**: upload the service account's JSON key. Existing Google embedding configurations
   continue to use this method.
@@ -164,12 +150,8 @@ The Vertex AI location is independent of the cluster's location.
 
 <img className="rounded-image" src="/assets/admins/advanced_configs/google-gke-configuration.jpg" alt="Google embedding form with Workload Identity (GKE), an example GCP Project ID, and the global region"/>
 
-Click **Connect** to test the configuration with a real embedding request before saving.
 Switching from Service Account JSON to Workload Identity removes the stored JSON key.
-You can later change the authentication method, project, or region using Google's **Edit credentials** button.
 
-After selecting the model, click **Apply & Re-index**.
-Verify that indexing completes and a search retrieves the expected documents.
 A successful connection test verifies the API server's credentials;
 indexing also requires the workers to have Vertex AI access.
 
@@ -306,10 +288,9 @@ This keeps every image within the size limits of model providers. Transparent ar
 and photos keep their orientation. Connectors also skip very large files when they download them,
 so there's no size setting to manage.
 
-Onyx describes images only after you select a **Captioning LLM**. Until then, the card shows **No model selected**.
-To change the settings in this section, you need a vision-capable [language model](/admins/ai_models/overview).
-Until you set one up, you cannot change **Extract & Caption Images**. It is on by default,
-so connectors download images, but Onyx does not describe them.
+Onyx describes images only after you select a **Captioning LLM**. To change the settings in this section,
+you need a vision-capable [language model](/admins/ai_models/overview). Until you set one up,
+you cannot change **Extract & Caption Images**: connectors download images, but Onyx does not describe them.
 
 <Tip>
   Select a **Captioning LLM** before you add connectors. Then Onyx describes the images when it first indexes them.

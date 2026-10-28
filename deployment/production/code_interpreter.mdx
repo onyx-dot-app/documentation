@@ -4,8 +4,9 @@ description: "Run Code Interpreter on restricted clusters and OpenShift, with de
 icon: "code"
 ---
 
-[Code execution](/overview/core_features/code_interpreter) uses the Code Interpreter service. For each run,
-the service creates a short-lived executor pod that runs the user code.
+[Code execution](/overview/core_features/code_interpreter)
+uses the Code Interpreter service ([python-sandbox](https://github.com/onyx-dot-app/python-sandbox) on GitHub).
+For each run, the service creates a short-lived executor pod that runs the user code.
 
 The Onyx Helm chart installs Code Interpreter as a subchart when `codeInterpreter.enabled` is `true`.
 Put subchart settings under the hyphenated `code-interpreter:` key. Helm ignores other keys under `codeInterpreter:`.
@@ -23,8 +24,8 @@ code-interpreter:       # Settings for the subchart
 ## Chart versions
 
 The Onyx chart pins the Code Interpreter chart version.
-Onyx chart **0.8.37** and later pins Code Interpreter chart **0.4.8**. Earlier Onyx charts pin 0.4.7.
-You cannot change a subchart version with values.
+Onyx chart **0.9.2** and later pins Code Interpreter chart **0.4.9**. Onyx charts 0.8.37 to 0.9.1 pin 0.4.8.
+Earlier Onyx charts pin 0.4.7. You cannot change a subchart version with values.
 
 <Note>
   Sections and keys marked **0.4.8** need Code Interpreter chart 0.4.8 or later (Onyx chart 0.8.37 or later).
@@ -41,7 +42,7 @@ You cannot change a subchart version with values.
     helm repo update
     helm upgrade --install code-interpreter code-interpreter/code-interpreter \
       --namespace onyx \
-      --version 0.4.8 \
+      --version 0.4.9 \
       --values code-interpreter-values.yaml
     ```
 
@@ -49,7 +50,7 @@ You cannot change a subchart version with values.
 
     ```yaml code-interpreter-values.yaml
     image:
-      tag: "0.4.8"     # The default is "latest" with pullPolicy Always
+      tag: "0.4.9"     # The default is "latest" with pullPolicy Always
     resources:         # The Onyx chart uses these values. The chart default memory limit is 512Mi.
       requests:
         cpu: 100m
@@ -59,7 +60,7 @@ You cannot change a subchart version with values.
         memory: 2Gi
     codeInterpreter:
       kubernetesExecutor:
-        image: "onyxdotapp/python-executor-sci:0.4.8"
+        image: "onyxdotapp/python-executor-sci:0.4.9"
     ```
   </Step>
 

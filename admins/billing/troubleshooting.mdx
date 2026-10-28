@@ -9,7 +9,7 @@ icon: "wrench"
 If users see an **Access Restricted** page, the workspace is locked.
 This happens when a subscription expires or when the seat limit is exceeded.
 
-Only **admins** can resolve this. Non-admin users will see a message asking them to contact their administrator.
+Only **admins** can resolve this.
 
 Even when locked out, admins can still access:
 
@@ -46,21 +46,31 @@ Your workspace has more active users than your plan allows. **All users** are bl
 To fix this, either increase your seat count from **Plans & Billing**,
 or remove users from **Admin Panel > Users** until usage is within the limit. Access is restored immediately.
 
-## Enterprise Features Unavailable
+## Paid Features Unavailable
 
-If you see an error when trying to access features like analytics, user groups, or query history,
-your workspace does not have an active paid plan.
+If a page in the Admin Panel shows a lock, or a feature returns an error,
+your workspace does not have the plan that the feature needs.
 
-These features require a Business or Enterprise subscription:
+These features require a **Business** plan or higher:
 
-- User Groups and access controls
-- Analytics and usage dashboards
-- Query History
-- Usage Reports
-- Standard Answers
-- Token Rate Limits
+- User Groups and permission sync
+- Usage and Analytics dashboards, Query History, and usage reports
+- Service accounts, SSO, theming, and the LLM Gateway
+
+These features require an **Enterprise** plan:
+
+- SCIM, custom roles and permissions, and hook extensions
+- Token rate limits per user and per group
+- Custom analytics and full white-labeling
 
 Navigate to **Admin Panel > Plans & Billing** to [subscribe](/admins/billing/subscribing).
+
+## Usage Limit Reached (Cloud Trial)
+
+Cloud trial workspaces have weekly limits on LLM spend, indexed documents, and API calls. When a limit is reached,
+chat shows a message that asks you to upgrade or wait for the next period.
+API access and the chat widget are not available on trial accounts.
+Upgrade from **Admin Panel > Plans & Billing** to remove these limits.
 
 ## Cannot Invite or Add Users
 

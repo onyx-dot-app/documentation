@@ -5,9 +5,8 @@ icon: "server"
 ---
 
 The Onyx MCP server makes your indexed knowledge available to external AI clients over Streamable HTTP.
-Users can connect with their Onyx account through OAuth or use a personal access token.
-This guide covers deployment and administration. For client setup, tools, and example prompts,
-see [Onyx MCP server](/overview/onyx_anywhere/mcp_server).
+Users can connect with their Onyx account through OAuth or use a personal access token. For client setup, tools,
+and example prompts, see [Onyx MCP server](/overview/onyx_anywhere/mcp_server).
 
 <Note>
   This is the server that lets other apps search Onyx. To let Onyx call tools on an external MCP server,
@@ -37,28 +36,25 @@ The MCP endpoint, OAuth endpoints, discovery metadata,
 and browser authorization pages must be reachable at the public address in `WEB_DOMAIN`.
 An API reachable only on another hostname is insufficient:
 the OAuth API routes must also be served on the `WEB_DOMAIN` host.
-Keep the public address consistent across affected services.
 
 ## Enable the service
 
 ### Docker Compose
 
-In the deployment's `.env`, set:
+The bundled Compose files (`docker-compose.yml` and `docker-compose.prod.yml`) include the `mcp_server` service.
+It starts by default. In the deployment's `.env`, set your public address and keep the service enabled:
 
 ```bash
 WEB_DOMAIN=https://onyx.example.com
 MCP_SERVER_ENABLED=true
 ```
 
-In `deployment/docker_compose/docker-compose.prod.yml`,
-uncomment the supplied `mcp_server` service block and the `mcp_server_logs` volume declaration near the end of the file.
-Setting the environment variable alone does not create the commented-out service.
+Set `MCP_SERVER_ENABLED=false` to turn the service off. The container then idles and nginx does not load the MCP routes.
 
-From the Docker Compose deployment directory, start the service and recreate nginx so it loads the MCP routes:
+After you change these values, recreate the MCP service and nginx from the Docker Compose deployment directory:
 
 ```bash
-docker compose -f docker-compose.prod.yml up -d mcp_server
-docker compose -f docker-compose.prod.yml up -d --force-recreate nginx
+docker compose -f docker-compose.prod.yml up -d --force-recreate mcp_server nginx
 ```
 
 If you changed `WEB_DOMAIN`, recreate the affected API, web,
@@ -67,7 +63,8 @@ The included nginx startup configuration loads the MCP routing rules when `MCP_S
 
 ### Kubernetes with Helm
 
-Add the following to your Helm values:
+The chart enables the MCP service by default (`mcpServer.enabled: true`).
+Set it to `false` to remove the deployment and its routes. To set it explicitly, add the following to your Helm values:
 
 ```yaml
 mcpServer:
@@ -77,7 +74,6 @@ configMap:
   WEB_DOMAIN: "https://onyx.example.com"
 ```
 
-Apply the values with your normal Helm upgrade command.
 The chart creates the MCP deployment and service and sets `MCP_SERVER_ENABLED=true` in the MCP container.
 Setting a ConfigMap flag without `mcpServer.enabled=true` does not create the service.
 
@@ -91,6 +87,8 @@ If you use a custom ingress or proxy, provide equivalent routing as described be
 Deploy matching Onyx versions for the API, web, MCP, and background services.
 Apply the normal database migrations for the release and restart the affected services.
 OAuth grants and tokens use database records introduced by the feature; updating only the MCP container is insufficient.
+Self-hosted installations with a custom `POSTGRES_DEFAULT_SCHEMA` store OAuth client registrations in that schema.
+The release migration moves earlier registrations out of `public` and keeps their client IDs.
 
 Keep the background workers and scheduled tasks running for expired-grant cleanup.
 Expired credentials stop working at their expiration time even if cleanup has not yet removed their database records.
@@ -102,9 +100,10 @@ Use this table when checking a custom reverse proxy:
 
 | Public path | Destination |
 | --- | --- |
-| `/mcp/` | MCP service, with the `/mcp` prefix removed |
+| `/mcp` and `/mcp/` | MCP service, with the `/mcp` prefix removed |
 | `/.well-known/oauth-protected-resource/mcp/` | MCP service, preserving the discovery path |
 | `/.well-known/oauth-authorization-server/api/oauth-provider` | API's `/oauth-provider/metadata` route |
+| `/.well-known/oauth-authorization-server` and `/.well-known/oauth-authorization-server/mcp` | The same metadata route. Aliases for clients that do not use the issuer-specific discovery path. |
 | `/api/oauth-provider/*` | API's `/oauth-provider/*` routes |
 | `/mcp/oauth/callback` | Onyx web application |
 
@@ -166,7 +165,6 @@ curl --include --request POST \
 
 Without credentials,
 expect `401 Unauthorized` and a `WWW-Authenticate` challenge pointing to the protected resource metadata.
-This is the expected sign-in discovery behavior.
 Complete an authenticated connection using the [client setup
 guide](/overview/onyx_anywhere/mcp_server#connect-your-ai-tools)
 to verify that a user can search their indexed documents.
@@ -183,8 +181,6 @@ For clients that accept bearer tokens instead of OAuth,
 use a [personal access token](/developers/overview#personal-access-tokens)
 or an [API key](/admins/user_management/api_keys).
 A personal token is appropriate when access should follow an individual user.
-Review an API key's permissions before distributing it. Keep tokens out of shared configuration files, source control,
-and example prompts.
 
 ### OAuth client requirements
 
@@ -193,7 +189,13 @@ Onyx supports:
 
 - **Public clients:** use `token_endpoint_auth_method=none`. A client secret is not required.
 - **Dynamic client registration:** register client metadata at the advertised registration endpoint.
-- **Client ID Metadata Documents:** supported clients can use an HTTPS metadata-document URL as their client identifier.
+  Onyx removes registrations that have been idle for 90 days.
+- **Client ID Metadata Documents (CIMD):** a client can use the HTTPS URL of its metadata document as its `client_id`.
+  Onyx fetches the document during authorization. The document's `client_id` must equal that URL,
+  and the URL must be publicly reachable: private or blocked destinations are rejected as an invalid client.
+  A fetch failure returns `503`; an invalid document returns an invalid-client error.
+- **Public client metadata:** one to ten redirect URIs, `authorization_code` grant, and `code` response type,
+  for both registration methods.
 - **Authorization code flow with PKCE:** use `code_challenge_method=S256` and supply the matching verifier when exchanging the code.
 - **Resource binding:** use the canonical MCP resource, `https://onyx.example.com/mcp/`, in authorization and token requests.
 - **Registered redirect URIs:** the callback must match the client's registration. Wildcards are unsupported.
@@ -214,6 +216,7 @@ Refresh tokens rotate: save each newly returned refresh token and discard the pr
 Reusing a consumed refresh token revokes the grant, so concurrent refresh attempts can require the user to reconnect.
 Serialize refresh operations for a connection.
 
+Onyx deletes expired grants and their tokens daily.
 Clients can revoke tokens through the advertised revocation endpoint.
 Users can review and revoke OAuth connections in Onyx. A revoked grant stops authorizing requests;
 the client must obtain a new user authorization to reconnect.
@@ -222,11 +225,12 @@ the client must obtain a new user authorization to reconnect.
 
 | Variable | Default | Purpose |
 | --- | --- | --- |
-| `MCP_SERVER_ENABLED` | `false` | Enable the MCP service and bundled Docker nginx routes. |
+| `MCP_SERVER_ENABLED` | `true` in the bundled Compose files and Helm chart (`false` when unset) | Enable the MCP service and bundled Docker nginx routes. |
 | `WEB_DOMAIN` | Deployment-specific | Public web address used to derive OAuth issuer and MCP resource URLs. |
 | `MCP_SERVER_HOST` | `0.0.0.0` | MCP service bind address. |
 | `MCP_SERVER_PORT` | `8090` | MCP service listening port. |
 | `MCP_SERVER_CORS_ORIGINS` | Empty | Comma-separated additional allowed browser origins. |
+| `MCP_SERVER_API_REQUEST_TIMEOUT_SECONDS` | `300` | Read timeout for MCP requests to the API service. |
 | `API_SERVER_PROTOCOL` | `http` | Protocol used by MCP to reach the API service. |
 | `API_SERVER_HOST` | `127.0.0.1` | API service hostname; bundled deployments supply the service address. |
 | `API_SERVER_URL_OVERRIDE_FOR_HTTP_REQUESTS` | Unset | Override the API service URL for deployments with custom internal networking. |
@@ -238,7 +242,7 @@ it does not change the public OAuth issuer or MCP resource.
 
 | Symptom | Check |
 | --- | --- |
-| MCP URL returns `404` | Enable the service and public proxy routes. In Docker, uncomment the service block and recreate nginx. |
+| MCP URL returns `404` | Enable the service and public proxy routes. In Docker, set `MCP_SERVER_ENABLED=true` and recreate the `mcp_server` and `nginx` services. |
 | OAuth metadata returns `404` | Confirm `WEB_DOMAIN` is HTTPS, or HTTP on a loopback development host, and check discovery routing. |
 | Discovery returns HTML or a login redirect | Allow unauthenticated access to metadata and check the reverse proxy destination. |
 | Browser authorization opens the wrong host | Check `WEB_DOMAIN` on the API and MCP services, then restart them after correcting it. |
@@ -246,7 +250,7 @@ it does not change the public OAuth issuer or MCP resource.
 | `401 Unauthorized` after previously working | Reconnect if credentials expired or were revoked; check that the client saved the latest rotated refresh token. |
 | `402 Payment Required` | Check the deployment's billing or license restrictions. Repeated sign-in does not remove these restrictions. |
 | `403 Forbidden` | Check user permissions and the requested scope; OAuth supports `read:search`. |
-| `503 Service Unavailable` | Check API availability and the MCP service's API connection. |
+| `503 Service Unavailable` | Check API availability and the MCP service's API connection. During sign-in, a `503` can also mean Onyx could not fetch the client's Client ID Metadata Document. |
 | Search succeeds but expected documents are absent | Check indexing status and that the connected user has permission to those documents. |
 
 <Note>

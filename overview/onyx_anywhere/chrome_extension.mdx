@@ -4,81 +4,69 @@ description: "Accessing Onyx via a Chrome Extension"
 icon: "puzzle-piece"
 ---
 
-Use the Onyx extension to ask questions from anywhere. You can also replace your new-tab page with a custom Onyx page:
+Use the Onyx Chrome extension to ask Onyx from any web page. You can also replace your new-tab page with Onyx.
 
 Features include:
 
-- Onyx Search on new tabs
-- Onyx as a sidebar to any page in Chrome
-- Contextual search on selected text
+- Onyx on every new tab
+- Onyx as a side panel on any page
+- Search or ask about selected text
+- Ask about the page you are reading
+- Search from the address bar
 
 <img
 
 className="rounded-image" src="/assets/overview/onyx_anywhere/onyx_chrome_extension.webp" alt="Onyx Chrome extension
-new-tab search and sidebar" />
+new-tab search and side panel" />
 
 <Note>
-  In the future,
-  the Onyx Chrome Extension will allow you to ask questions about the full page you are currently on and optionally
-  index the recent pages into the Onyx knowledge base.
+  The extension works with Onyx Cloud and with self-hosted Onyx on all editions. It uses your normal Onyx sign-in.
+  It does not store a separate credential.
 </Note>
 
 ## Getting Started
 
-Once your administrator has set up the Chrome extension for your organization, you can start using it immediately.
+**For Onyx Cloud users**: Install the extension from the Chrome Web Store.
 
-**For Onyx Cloud users**: Install directly from the Chrome Web Store
-
-**For self-hosted users**: Your administrator will provide installation instructions
+**For self-hosted users**: Your administrator provides the extension and the URL of your Onyx server. On first launch,
+the extension opens a welcome page. Enter your Onyx URL if your administrator has not pre-set it.
 
 ## Using the Extension
 
-### **New Tab Experience**
+### **Side Panel**
 
-- Replace your default new tab with Onyx search
-- Quick search across your organization's knowledge
-
-### **Sidebar Mode**
-
-- Open Onyx as a sidebar on any webpage
-- Ask questions about your current work without leaving the page
-- Perfect for research and context-sensitive queries
+- Select **Read this tab** to let Onyx open the current page and use it as context for your question
 
 ### **Selection Search**
 
-- Highlight any text on a webpage
-- Click the Onyx icon that appears
-- Instantly search or ask questions about the selected text in the sidebar
+- Highlight text on a web page
+- Click the Onyx icon that appears, or right-click and choose the Onyx menu item
+- Onyx opens with the selected text as your prompt
+
+### **Address Bar**
+
+- Type `onyx`, press `Tab`, then type your question
+- Press `Enter` to open the answer in Onyx chat
 
 ### **Shortcuts**
 
-- **Mac**: `Cmd+Shift+O` to toggle New Tab, `Ctrl+O` to open Sidebar
-- **Windows/Linux**: `Ctrl+Shift+O` to toggle New Tab, `Alt+O` to open Sidebar
-- **Omnibox**: Type `onyx` then `Tab` in the address bar to search directly
+- **Mac**: `Cmd+Shift+O` to toggle the new-tab page, `Ctrl+O` to open the side panel
+- **Windows**: `Ctrl+Shift+O` to toggle the new-tab page, `Alt+O` to open the side panel
+- **Linux**: `Ctrl+Shift+O` to toggle the new-tab page, `Ctrl+O` to open the side panel
+
+You can change these shortcuts at `chrome://extensions/shortcuts`.
 
 ## Settings and Options
 
-To customize your extension experience:
+Click the Onyx icon in the Chrome toolbar and select **Extension Settings** (or right-click the icon and select
+**Options**). Set the **Root Domain** of your Onyx server.
+Turn **Use Onyx as new tab page** and **Use Onyx in Address Bar** on or off.
 
-<Steps>
-  <Step title="Open extension menu">
-    Click the three dots (...) next to the Onyx extension
-  </Step>
-
-  <Step title="Open Options">
-    Select **Options**
-  </Step>
-
-  <Step title="Configure preferences">
-    Configure your preferences for search and new tab behavior
-  </Step>
-</Steps>
+<Info>
+  If your administrator manages the extension with a browser policy, the Onyx URL and the new-tab setting can be locked.
+</Info>
 
 ## Deployment
 
-For detailed deployment instructions, including self-hosted installation and enterprise deployment,
+For deployment instructions, including self-hosted installation and managed browser policies,
 see the [Chrome Extension Deployment Guide](/deployment/configuration/chrome_extension).
-
-<Info>
-  **Need help with setup?** Contact your Onyx administrator for installation assistance or configuration questions.
-</Info>

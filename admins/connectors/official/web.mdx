@@ -17,7 +17,7 @@ The connector signs in to nothing. It reads only what a signed-out visitor can r
 | Links      | In **recursive** mode, Onyx follows the links it finds in each page it renders, and keeps following them until it runs out of pages that are in scope.                         |
 | Scope      | Only pages on the same site and under the same path as the base URL. See [Crawl scope](#crawl-scope).                                                                          |
 | Duplicates | Pages that produce the same title and text as a page already indexed this run are skipped. A URL that redirects is stored under the address it ends at.                        |
-| Permissions | **Auto Sync Permissions** is not available for this connector. A crawled page carries no per-user access list, so the [access type](/admins/connectors/overview#document-access-controls) can only be **Public** or **Private**. |
+| Permissions | **Sync with Web** is not available. A crawled page carries no per-user access list, so [Document Access](/admins/connectors/overview#document-access-controls) can only be **Everyone in Your Organization** or **Specific Groups**. |
 
 Every refresh re-crawls the whole site; there is no incremental mode.
 Onyx deliberately ignores the `Last-Modified` header,
@@ -33,21 +33,11 @@ You need:
 - Pages that do not require signing in
 - An Onyx administrator account
 
-<Note>
-  The connector cannot sign in, send a cookie, or answer a login form.
-  If the content you want sits behind authentication,
-  index the system that holds it with its own connector instead of crawling its web front end.
-</Note>
-
 ## Configure Onyx
 
 <Steps>
-  <Step title="Open the Web connector">
-    In Onyx, go to **Admin Panel → Add Connector** and select **Web**.
-  </Step>
-
-  <Step title="Name the connector and enter the base URL">
-    Give the connector a descriptive **Connector Name**. In **Base URL**, enter the address to start from,
+  <Step title="Enter the base URL">
+    In the Admin Panel, go to **Connectors** and select **Web**. In **Base URL**, enter the address to start from,
     for example `https://docs.onyx.app/`. If you leave off the scheme, Onyx adds `https://`.
   </Step>
 
@@ -62,17 +52,16 @@ You need:
     <img className="rounded-image" src="/assets/admins/connectors/web/WebConnectorForm.webp" alt="Onyx Web connector form with a base URL and the recursive scrape method"/>
   </Step>
 
-  <Step title="Choose the access type">
-    **Public** makes the indexed pages visible to every Onyx user.
-    **Private** limits the connector to selected Onyx user groups, and is a paid feature:
+  <Step title="Choose the document access">
+    Under **Connector Settings**, set **Document Access**. **Specific Groups** is a paid feature:
     the Business and Enterprise tiers on Onyx Cloud, and the Enterprise Edition when self-hosted.
 
     See [Document Access Controls](/admins/connectors/overview#document-access-controls)
-    for what each access type means and which connectors support permission syncing.
+    for what each option means and which connectors support permission syncing.
   </Step>
 
   <Step title="Connect and verify">
-    Select **Create Connector**. Then open **Admin Panel → Existing Connectors**, select the connector,
+    Select **Create Connector**. Then open **Indexing Status** in the Admin Panel, select the connector,
     and confirm its first indexing attempt completes with the page count you expect.
   </Step>
 </Steps>
@@ -88,12 +77,12 @@ You need:
 
 | Setting               | Default | Purpose                                                                                                                                                                                              |
 | --------------------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Scroll before scraping | off     | Scroll to the bottom of each page before reading it, up to 20 times, stopping when the page stops growing. Turn this on for pages that load their content as you scroll.                              |
+| Scroll Before Scraping | off     | Scroll to the bottom of each page before reading it, up to 20 times, stopping when the page stops growing. Turn this on for pages that load their content as you scroll.                              |
 | URL Rewrites          | empty   | Replace the start of each document's address before storing it. See [URL rewrites](#url-rewrites).                                                                                                    |
 
 Select **Advanced Options** on the connector form to reach both:
 
-<img className="rounded-image" src="/assets/admins/connectors/web/WebConnectorAdvanced.webp" alt="Web connector advanced options with Scroll before scraping and URL Rewrites"/>
+<img className="rounded-image" src="/assets/admins/connectors/web/WebConnectorAdvanced.webp" alt="Web connector advanced options with Scroll Before Scraping and URL Rewrites"/>
 
 ## Crawl scope
 

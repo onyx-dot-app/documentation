@@ -3,8 +3,7 @@ title: "Braintrust"
 description: "Index prompts, datasets and experiments from Braintrust"
 ---
 
-The Braintrust connector indexes the prompts, datasets and experiments of your Braintrust organization,
-so an evaluation result can be found from Onyx search.
+The Braintrust connector indexes the prompts, datasets and experiments of your Braintrust organization.
 
 ## How it works
 
@@ -13,13 +12,10 @@ so an evaluation result can be found from Onyx search.
 | Prompts     | One document per prompt, named `Prompt: <name>`.                                                                                                |
 | Datasets    | One document per dataset, named `Dataset: <name>`, holding its rows as a table.                                                                  |
 | Experiments | One document per experiment, named `Experiment: <name>`. The summary is always indexed; the per-row results depend on the lookback below.        |
-| Permissions | Not available. **Auto Sync Permissions** is not offered for Braintrust, so the access type can only be **Public** or **Private**.               |
+| Permissions | Not available. **Sync with Braintrust** is not offered, so the access type can only be **Everyone in Your Organization** or **Specific Groups**. |
 
 Onyx indexes prompts first, then datasets, then experiments,
 and keeps its place between runs so a large organization is indexed across several attempts.
-
-A dataset or experiment table is truncated to its **10,000 most recent rows**. When that happens,
-Onyx adds a line to the document saying the table was truncated, so the limit is visible in search rather than silent.
 
 ## Before you begin
 
@@ -36,43 +32,40 @@ You need:
 ## Configure Onyx
 
 <Steps>
-  <Step title="Open the Braintrust connector">
-    In Onyx, go to **Admin Panel → Add Connector** and select **Braintrust**.
-  </Step>
+  <Step title="Connect a Braintrust account">
+    In Onyx, go to **Admin Panel → Connectors** and select **Braintrust**. Under **Authentication Account**,
+    select **New Braintrust Account** and paste the key into **API Token**.
 
-  <Step title="Create a credential">
-    Paste the key into **Braintrust API Key**.
-
-    <img className="rounded-image" src="/assets/admins/connectors/braintrust/BraintrustCredential.webp" alt="Create a Braintrust credential with a name and the Braintrust API key"/>
+    <img className="rounded-image" src="/assets/admins/connectors/braintrust/BraintrustCredential.webp" alt="Create a Braintrust account with a display name and the Braintrust API key"/>
   </Step>
 
   <Step title="Choose the scope">
-    Give the connector a name. In **Project Name**, enter a single Braintrust project to index only its prompts,
-    datasets and experiments. Leave it empty to index the whole organization.
+    In **Project Name**, enter a single Braintrust project to index only its prompts, datasets and experiments.
+    Leave it empty to index the whole organization.
 
-    Onyx checks the name when you save the connector and refuses a project it cannot find.
+    Onyx checks the name when you create the connector and refuses a project it cannot find.
   </Step>
 
-  <Step title="Choose the access type">
-    **Public** makes all indexed Braintrust content visible to every Onyx user.
-    **Private** limits the connector to selected Onyx user groups, and is a paid feature:
-    the Business and Enterprise tiers on Onyx Cloud, and the Enterprise Edition when self-hosted.
+  <Step title="Choose who can see the content">
+    Under **Document Access**, select **Everyone in Your Organization** or **Specific Groups**.
+    **Specific Groups** is available on Onyx Cloud and Enterprise Edition.
   </Step>
 
-  <Step title="Connect and verify">
-    Select **Create Connector**. Then open **Admin Panel → Existing Connectors**, select the connector,
+  <Step title="Create and verify">
+    Select **Create Connector**. Then open **Admin Panel → Indexing Status**, select the connector,
     and confirm its first indexing attempt completes.
   </Step>
 </Steps>
 
 ### Advanced settings
 
+These settings are under **Advanced** in the connector form.
+
 | Setting                        | Default | Purpose                                                                                                                       |
 | ------------------------------ | ------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| Experiment Row Lookback (days) | 30      | Index the per-row results only of experiments created within this many days. Experiment summaries are always indexed. Set it to `0` to index the rows of every experiment. |
+| Experiment Row Lookback (Days) | 30      | Index the per-row results only of experiments created within this many days. Experiment summaries are always indexed. Set it to `0` to index the rows of every experiment. |
 
-Raise the lookback, or set it to `0`, when you need to search the rows of older experiments.
-Both make each indexing run read more from Braintrust.
+A longer lookback makes each indexing run read more from Braintrust.
 
 ## Limits
 

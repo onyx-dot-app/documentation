@@ -427,7 +427,7 @@ The `l7_*` outputs are `null` when `enable_l7_ingress = false`.
     ```yaml values.yaml
     # Pin the Onyx version. The chart default is "latest".
     global:
-      version: "<Onyx version, for example v4.8.1>"
+      version: "<Onyx version, for example v5.0.0>"
 
     # Run all Onyx pods as the service account that has the bucket grant.
     serviceAccount:
@@ -863,34 +863,22 @@ The default GPU pool has one node with one GPU, so give the GPU to one model ser
 
 - **State storage.** For shared or production use, store Terraform state in a
   [`gcs` backend](https://developer.hashicorp.com/terraform/language/backend/gcs).
-- **Workspaces.** Resource names include the active Terraform workspace. A `name = "onyx"` module in workspace
-  `prod` creates `onyx-prod` resources.
 - **Existing network.** With `create_network = false`, the network must already have a Private Service Access
   connection. If not, Cloud SQL and Memorystore fail to create.
-- **Database name.** If you do not set `POSTGRES_DB`, Onyx uses the `postgres` database that Cloud SQL creates,
-  and the `onyx` database stays empty.
 - **Database connections.** `postgres_max_connections` defaults to `500`. Make it larger if you add many API or
   worker replicas. A change restarts the instance.
-- **Destroy.** Set `deletion_protection = false` and apply before you run `terraform destroy`.
 
 ## Compute Engine VM
 
-**Make sure that your Google Cloud account can create a VM instance.**
-
 <Steps>
   <Step title="Create a VM instance">
-    Create a VM instance with the appropriate resources. For this guide,
-    we will use the recommended `e2-standard-4` instance.
-
-    <Note>
-      Read our [Resourcing guide](/deployment/getting_started/resourcing) for more details.
-    </Note>
+    Create a VM instance with the appropriate resources. This guide uses the recommended `e2-standard-4` machine type.
 
     - Give your instance a descriptive name like `onyx-prod`
     - Select the `Debian GNU/Linux 12` boot disk
     - Select the `e2-standard-4` machine type
     - Select `Allow HTTPS traffic` in the **Firewall** section
-    - Configure storage following the Resourcing Guide
+    - Configure storage following the [Resourcing guide](/deployment/getting_started/resourcing)
 
     <img className="rounded-image" src="/assets/deployment/setup_guides/gcp/CreateVmInstance.webp" alt="Create VM Instance"/>
 
@@ -903,14 +891,14 @@ The default GPU pool has one node with one GPU, so give the GPU to one model ser
     Click **Create** and then view your instance details.
 
     <Tip>
-      Save the **External IP** of the instance!
+      Save the **External IP** of the instance.
     </Tip>
   </Step>
 
   <CustomDomain />
 
   <Step title="Install Onyx requirements">
-    Onyx requires `git`, `docker`, and `docker compose`.
+    Onyx requires `git`, `docker`, and the `docker compose` plugin.
 
     To install these on Debian GNU/Linux 12, run the following:
 
@@ -942,6 +930,11 @@ The default GPU pool has one node with one GPU, so give the GPU to one model ser
         ```bash
         sudo usermod -aG docker $USER
         ```
+
+    <Tip>
+      Prefer a guided install? The [Onyx CLI](/deployment/local/onyx_cli) installs Docker Compose,
+      writes the configuration, and manages upgrades for you. Skip the remaining steps if you use it.
+    </Tip>
   </Step>
 
   <InstallOnyx />

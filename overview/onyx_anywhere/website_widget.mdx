@@ -6,11 +6,10 @@ icon: "window"
 
 ## Overview
 
-Bring Onyx's AI capabilities directly to your website with an embeddable chat widget. Built with [Lit](https://lit.dev/)
-web components for maximum compatibility and minimal bundle size.
+Bring Onyx to your website with an embeddable chat widget. The widget is a standard web component,
+so it works with any website or framework.
 
-The widget integrates seamlessly with any website,
-providing your visitors instant access to AI-powered conversations without leaving your page.
+Your visitors can chat with an Onyx Agent without leaving your page.
 
 ## Features
 
@@ -22,6 +21,7 @@ providing your visitors instant access to AI-powered conversations without leavi
 - **Session Persistence** - Conversations survive page reloads
 - **Two Display Modes** - Floating launcher or inline embed
 - **Source Citations** - Optional citation badges linking to source documents
+- **Two Authentication Modes** - A shared API key, or each visitor's own identity token
 
 ## Quick Start
 
@@ -40,12 +40,15 @@ Add these few lines to your website:
 </onyx-chat-widget>
 ```
 
-That's it! The widget will appear as a floating button in the bottom-right corner of your page.
-
 <Warning>
   **Always use a limited-scope API key for the widget.** The API key is visible in client-side code,
   so it should have restricted permissions and rate limits. Never use admin or full-access keys.
 </Warning>
+
+<Info>
+  The widget is available on all editions.
+  Create the API key in **Admin Panel > Service Accounts** (`/admin/service-accounts`).
+</Info>
 
 ## Display Modes
 
@@ -53,10 +56,10 @@ That's it! The widget will appear as a floating button in the bottom-right corne
 
 <video src="/assets/overview/onyx_anywhere/widget_popup.mov" alt="Onyx Widget Chat Popup" autoPlay />
 
-A floating button appears in the bottom-right corner. Clicking it opens a chat popup.
+A floating button appears in the bottom-right corner.
 
 - **Desktop**: 400x600px popup above the button
-- **Mobile**: Full-screen overlay for optimal mobile experience
+- **Mobile**: Full-screen overlay
 
 ```html
 <onyx-chat-widget mode="launcher"></onyx-chat-widget>
@@ -66,7 +69,7 @@ A floating button appears in the bottom-right corner. Clicking it opens a chat p
 
 <video src="/assets/overview/onyx_anywhere/widget_inline.mov" alt="Onyx Widget Inline Mode" autoPlay />
 
-The widget embeds directly in your page layout. Perfect for dedicated support pages or knowledge bases.
+The widget embeds directly in your page layout.
 
 ```html
 <div style="width: 400px; height: 600px;">
@@ -75,8 +78,18 @@ The widget embeds directly in your page layout. Perfect for dedicated support pa
 ```
 
 <Tip>
-  The widget will fill its container's dimensions in inline mode. Set the container size to control the widget size.
+  The widget fills its container in inline mode. Give the container an explicit height;
+  otherwise the panel grows with the conversation.
 </Tip>
+
+Before the first message, inline mode shows a compact input bar.
+Add `start-expanded` to show the full chat panel from the start:
+
+```html
+<div style="height: 600px;">
+  <onyx-chat-widget mode="inline" start-expanded></onyx-chat-widget>
+</div>
+```
 
 ## Configuration Options
 
@@ -84,8 +97,8 @@ The widget embeds directly in your page layout. Perfect for dedicated support pa
 
 | Attribute     | Type   | Description                          |
 | ------------- | ------ | ------------------------------------ |
-| `backend-url` | string | Your Onyx backend API URL            |
-| `api-key`     | string | API key for authentication           |
+| `backend-url` | string | Your Onyx API URL, such as `https://onyx.example.com/api` |
+| `api-key`     | string | API key for authentication. Omit it when you use a `tokenProvider` (see [Authentication](#authentication)) |
 
 ### Optional Attributes
 
@@ -99,6 +112,12 @@ The widget embeds directly in your page layout. Perfect for dedicated support pa
 | `text-color`       | string | `#000000bf`   | Text color (75% opacity black)           |
 | `mode`             | string | `"launcher"`  | Display mode: `"launcher"` or `"inline"` |
 | `include-citations`| boolean| `false`       | Show citation badges linking to source documents |
+| `start-expanded`   | boolean| `false`       | Inline mode: show the full chat panel before the first message |
+
+<Note>
+  `include-citations` and `start-expanded` are boolean flags. Their presence alone means `true`.
+  `include-citations="false"` still turns citations **on**. Omit the attribute to turn it off.
+</Note>
 
 <Warning>
   **Citations and private documents:** When `include-citations` is enabled,
@@ -132,7 +151,7 @@ The widget embeds directly in your page layout. Perfect for dedicated support pa
   background-color="#FFFFFF"
   text-color="#1A1A1A"
   mode="launcher"
-  include-citations="true"
+  include-citations
 >
 </onyx-chat-widget>
 ```
@@ -142,7 +161,6 @@ The widget embeds directly in your page layout. Perfect for dedicated support pa
 ### Styling
 
 The widget uses CSS custom properties for theming.
-All styles are scoped within Shadow DOM to prevent conflicts with your site's CSS.
 
 **Default Colors:**
 
@@ -166,20 +184,48 @@ All styles are scoped within Shadow DOM to prevent conflicts with your site's CS
 </onyx-chat-widget>
 ```
 
-## Architecture
+## Authentication
 
-The widget communicates directly with your Onyx backend using Server-Sent Events (SSE)
-for real-time streaming responses:
+The widget sends a credential with every request. It gets that credential in one of two ways.
 
-**Widget loads** - Lightweight JavaScript bundle initializes the web component
+### API key
 
-**Session created** - Widget creates a chat session via the Onyx API
+Set the `api-key` attribute. Every visitor uses the same key, so all conversations run as one Onyx service account.
 
-**User sends message** - Request is sent to your Onyx backend
+### Visitor identity token (JWT passthrough)
 
-**Streaming response** - AI response streams back in real-time via SSE
+Assign a `tokenProvider` function and leave `api-key` off. The widget calls it before every request,
+so your page controls expiry and refresh. Each visitor acts as their own Onyx user,
+and their document permissions apply.
+Use this when your page already signs the visitor in with the same identity provider as Onyx.
 
-**Markdown rendered** - Responses are formatted with full markdown support
+```html
+<onyx-chat-widget id="onyx-widget" backend-url="https://onyx.example.com/api">
+</onyx-chat-widget>
+
+<script type="module">
+  const widget = document.getElementById("onyx-widget");
+  widget.tokenProvider = async () => {
+    const result = await msalInstance.acquireTokenSilent({
+      scopes: ["api://onyx/.default"],
+    });
+    return result.accessToken;
+  };
+</script>
+```
+
+`tokenProvider` is a JavaScript property, not an HTML attribute. When both are present, `tokenProvider` wins.
+
+<Note>
+  JWT passthrough is for self-hosted, single-tenant deployments only.
+  Your administrator must configure Onyx to accept the tokens.
+  See the [Website Widget Deployment Guide](/deployment/configuration/website_widget).
+</Note>
+
+## How it works
+
+The widget talks directly to your Onyx server. It creates a chat session, sends each message,
+and streams the answer back in real time. Answers render with full Markdown support.
 
 ## Browser Support
 
@@ -193,7 +239,3 @@ for real-time streaming responses:
 
 For detailed deployment instructions, including self-hosted setup and API key security best practices,
 see the [Website Widget Deployment Guide](/deployment/configuration/website_widget).
-
-<Info>
-  **Need help with setup?** Contact your Onyx administrator for API key configuration or deployment assistance.
-</Info>

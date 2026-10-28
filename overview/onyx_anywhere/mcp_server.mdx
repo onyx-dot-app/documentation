@@ -8,7 +8,6 @@ Connect your AI client to Onyx to search documents you can access, search the we
 Your client uses Onyx's search results to answer your question in the conversation where you are already working.
 
 OAuth lets you connect by signing in to Onyx and approving the app.
-You do not need to copy a personal access token into your client configuration.
 Personal access tokens and API keys remain available for bearer authentication.
 
 <Note>
@@ -19,19 +18,17 @@ Personal access tokens and API keys remain available for bearer authentication.
 ## Before you connect
 
 - Ask your administrator for your Onyx MCP URL, such as `https://onyx.example.com/mcp/`.
+  Onyx accepts the URL with or without the trailing slash.
 - Sign in with your own Onyx account in the workspace whose documents you want to search.
 - Your account needs **Search** (`read:search`) and **Create User Access Token** (`create:user_api_keys`) permissions to approve an app.
-- Your administrator must enable the MCP server. Self-hosted instances need HTTPS for OAuth,
-  with loopback HTTP supported for local development.
+- The MCP server is on by default in the bundled Docker Compose files and Helm chart.
+  Your administrator can turn it off. Self-hosted instances need HTTPS for OAuth,
+  with loopback HTTP supported for local development. The MCP server is available on all editions.
 - Use a client that supports remote Streamable HTTP MCP servers and OAuth.
 
 The examples use `onyx.example.com` as a placeholder. Replace it with your Onyx web domain.
-Use the same URL consistently in your client configuration.
 
 ## Connect your AI tools
-
-Use your Onyx MCP URL in the setup for your client. Complete [Onyx sign-in and approval](#sign-in-and-approve-access)
-when prompted.
 
 ### Codex
 
@@ -87,7 +84,6 @@ Current releases also support authentication directly from the terminal:
 claude mcp login onyx
 ```
 
-Use `claude mcp list` to inspect configured servers.
 See [Claude Code's MCP documentation](https://code.claude.com/docs/en/mcp) for authentication and configuration scopes.
 
 #### Share the configuration with a project
@@ -117,7 +113,8 @@ Use a remote custom connector:
 2. Select **+ Add > Add custom connector**.
 3. Name it **Onyx** and enter `https://onyx.example.com/mcp/` with your domain.
 4. Continue through authentication settings.
-   Choose sign-in and either Claude's published OAuth identity or automatic registration. Onyx supports both.
+   Choose sign-in. Claude can identify itself with its published Client ID Metadata Document or register dynamically.
+   Onyx supports both.
 5. Add the connector and complete Onyx sign-in when prompted.
 6. Enable Onyx through the conversation's **+ > Connectors** menu and send the [test prompt](#test-the-connection).
 
@@ -156,10 +153,15 @@ for the web connection model and your workspace's plugin availability.
 
 ## Sign in and approve access
 
+Onyx is the OAuth authorization server for its MCP endpoint. Your client discovers it from the MCP URL,
+identifies itself through dynamic client registration or a Client ID Metadata Document (CIMD),
+and uses the authorization code flow with PKCE. You approve access once in your browser.
+The client then refreshes its access token without asking you again.
+
 <Steps>
   <Step title="Add your Onyx MCP URL">
     Configure the URL in your client using the [client setup instructions](#connect-your-ai-tools).
-    Choose OAuth or the client's authenticate action. Leave bearer-token headers out of an OAuth configuration.
+    Leave bearer-token headers out of an OAuth configuration.
   </Step>
 
   <Step title="Sign in to Onyx">
@@ -170,19 +172,10 @@ for the web connection model and your workspace's plugin availability.
   <Step title="Review the connection">
     Onyx shows **Connect to Onyx** and asks whether to allow the app to search Onyx. Check the app name,
     signed-in account, workspace, and app address before choosing **Allow access**.
-    Choose **Deny** to return to your client without granting access.
-  </Step>
-
-  <Step title="Return to your client">
-    The client completes sign-in and stores its credentials. Confirm that the Onyx tools appear, then try a search.
-    A configured server alone does not prove that authentication and search work.
   </Step>
 </Steps>
 
 <img src="/assets/overview/onyx_anywhere/mcp/oauth_consent.webp" alt="Onyx OAuth consent page showing the app name, requested search access, Allow access, and Deny. Account details are hidden." width="320" />
-
-The consent screen identifies the app and the account granting access. Account, workspace,
-and callback details are hidden in this screenshot.
 
 ### Test the connection
 
@@ -209,8 +202,7 @@ Connecting an app does not give it access to documents you cannot read. Workspac
 billing restrictions, and usage limits can affect requests after connection.
 
 Your external AI client receives the retrieved content so it can use it in its response.
-Choose a client and account that your organization permits to receive that information. Onyx retrieves content;
-the external client writes the final answer.
+Choose a client and account that your organization permits to receive that information.
 
 ## Connection expiry
 
@@ -229,24 +221,8 @@ If a client registers without refresh support, its authorization lasts only for 
 
 <img src="/assets/overview/onyx_anywhere/mcp/connected_apps.webp" alt="Connected apps in Onyx settings with app names, expiry dates, and Disconnect controls." width="640" />
 
-<Steps>
-  <Step title="Open connected apps">
-    Open **Settings > Accounts & Access > Connected apps** in Onyx. Find the app you want to disconnect.
-    The list shows the app name and authorization expiry.
-  </Step>
-
-  <Step title="Disconnect the app">
-    Select **Disconnect** and confirm. Onyx revokes that connection's access and refresh tokens.
-    The app can no longer use that authorization to access Onyx.
-  </Step>
-
-  <Step title="Remove the client configuration if needed">
-    Remove the server or connector from your AI client if you no longer want it configured.
-    Removing a local configuration and revoking an Onyx authorization are separate actions.
-  </Step>
-</Steps>
-
-<img src="/assets/overview/onyx_anywhere/mcp/disconnect_confirmation.webp" alt="Onyx confirmation dialog explaining that disconnecting Claude Code removes its access, with Cancel and Disconnect buttons." width="400" />
+Open **Settings > Accounts & Access > Connected apps** (`/app/settings/accounts-access`) in Onyx,
+select **Disconnect** next to the app, and confirm. Onyx revokes that connection's access and refresh tokens.
 
 Signing out of Onyx does not disconnect connected apps. Use **Connected apps** to revoke an OAuth authorization.
 For a personal access token or API key connection, revoke the token or key instead.
@@ -254,7 +230,9 @@ For a personal access token or API key connection, revoke the token or key inste
 ## Use a personal access token instead
 
 OAuth is the usual setup for interactive clients. If your environment requires a bearer token,
-create a [personal access token](/developers/overview#personal-access-tokens) with `read:search` access.
+create a [personal access token](/developers/overview#personal-access-tokens)
+with `read:search` access under **Settings > Accounts & Access > Access Tokens**. On Onyx Cloud,
+access tokens require an active paid subscription.
 
 Keep the token in a local environment variable. For Bash,
 this reads it without echoing it or putting the value in the command history:
@@ -265,8 +243,7 @@ printf '\n'
 export ONYX_TOKEN
 ```
 
-Run the client from that shell. The variable lasts for the shell session. For a persistent setup,
-use your organization's approved local secret management method.
+Run the client from that shell. The variable lasts for the shell session.
 
 ### Codex token configuration
 
@@ -325,11 +302,9 @@ claude mcp remove onyx --scope user
 ```
 
 If you used a project configuration, remove the Onyx entry from `.mcp.json` instead.
-Desktop connector settings also provide disconnect or removal controls.
 
 Removing a client configuration and revoking an Onyx authorization are separate operations.
-Use [Onyx's connected app controls](#manage-connected-apps) to revoke the grant.
-Revoke a personal access token in Onyx if you used token authentication. To change accounts,
+Use [Onyx's connected app controls](#manage-connected-apps) to revoke the grant. To change accounts,
 clear the client's saved authentication and reconnect with the intended Onyx account.
 
 ## Prompts you can use
@@ -477,9 +452,8 @@ named filters are resolved on the search call and return an error when they cann
 | Access is denied or returns `403` | Check current permissions, workspace membership, and `read:search` scope. Signing in again cannot restore a permission your account no longer has. |
 | A request returns `402` | Ask your administrator to check billing or license restrictions. |
 | A request returns `503` | A required service is unavailable. Retry later and ask your administrator to check service health if it persists. |
+| Sign-in returns `503` | Onyx could not fetch the client's Client ID Metadata Document, or an authorization dependency was unavailable. Retry. If it persists, ask your administrator to check that the client's metadata URL is public. |
 | An expected document is missing | Confirm that you can find it in Onyx, that it is indexed, and that your filters match its source, document set, and update time. |
 | A named filter fails | Use the suggested or available names. Keep the filter if the search must stay within that scope. |
 | The desktop connector cannot reach a self-hosted instance | Hosted connectors may connect from cloud infrastructure. A URL reachable only on your laptop is insufficient for those clients. |
 | Connected apps is missing | Ask your administrator to confirm that your deployment includes OAuth support and has a supported web domain. PAT connections are managed as tokens, not OAuth connected apps. |
-
-For connection commands, see [Connect your AI tools](#connect-your-ai-tools).

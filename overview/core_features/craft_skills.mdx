@@ -25,17 +25,12 @@ You can also select one explicitly when you want Craft to follow a particular wo
 <Steps>
   <Step title="Choose a skill">
     In a Craft session, select **+**, then **Skills**, and choose a skill.
-    You can also type **/** followed by the skill name. The selected skill appears as a chip above the input.
+    You can also type **/** followed by the skill name.
   </Step>
 
   <Step title="Describe the result">
     Tell Craft what to produce and provide the audience, source material, and requirements that matter.
     Selecting a skill does not replace a clear prompt.
-  </Step>
-
-  <Step title="Review and refine">
-    Craft reads the skill instructions before doing covered work. Review the result,
-    then ask for changes in plain language.
   </Step>
 </Steps>
 
@@ -59,7 +54,8 @@ Select a skill card to preview its instructions before using it.
 | **Personal**    | Created and owned by you. It starts private, but you can share it if your permissions allow. |
 | **Unavailable** | Visible for reference, but Craft cannot use it until its dependency is configured.           |
 
-Built-in skills currently cover presentations, company search, image generation, and website navigation.
+Built-in skills cover presentations (`pptx`), company search, image generation, website navigation (Browser),
+and Craft documentation. Each connected [App](/overview/core_features/craft_apps) also brings its own Skill.
 The exact list you see depends on what your organization has enabled.
 
 <Tip>
@@ -76,6 +72,7 @@ Open **Skills**, select **Create skill**, then choose how you want to begin:
 | --- | --- | --- |
 | You want to write the Skill in Onyx | **Start from scratch** | The Skill editor opens so you can write the details and instructions, then add supporting files. |
 | You already have a Skill | **Upload a skill** | Upload `SKILL.md`, a ZIP, or a Skill folder. Onyx reads the instructions and creates the Skill for you. |
+| The Skill lives in a GitHub repository | **Import from GitHub** | Enter the repository. Onyx lists the importable Skills it finds, and you choose which ones to import. |
 
 Every new Skill is personal and private. After creating it, you can share it from the Skill editor.
 
@@ -89,7 +86,6 @@ Every new Skill is personal and private. After creating it, you can share it fro
 
   <Step title="Write the instructions">
     Describe the workflow Craft should follow, including important constraints, expected outputs, and checks.
-    Switch between the Markdown editor and preview to review the finished instructions.
   </Step>
 
   <Step title="Add supporting files">
@@ -98,8 +94,7 @@ Every new Skill is personal and private. After creating it, you can share it fro
   </Step>
 
   <Step title="Create the Skill">
-    Select **Create**. Onyx saves the instructions as `SKILL.md` and opens the Skill editor, where you can manage files,
-    sharing, and availability.
+    Select **Create**. Onyx saves the instructions as `SKILL.md` and opens the Skill editor.
   </Step>
 </Steps>
 
@@ -149,15 +144,18 @@ description: Create a concise weekly customer update from meeting notes and acco
 
   <Step title="Upload the Skill">
     Open **Skills**, select **Create skill** > **Upload a skill**, and select `SKILL.md` or a ZIP.
-    You can also drag `SKILL.md`, a ZIP, or a Skill folder into the upload area. Upload one Skill at a time,
-    then select **Create**.
-  </Step>
-
-  <Step title="Review the Skill">
-    Onyx opens the Skill editor after creating it. Review the name, description, instructions,
-    and file tree before using or sharing the Skill.
+    Upload one Skill at a time, then select **Create**.
   </Step>
 </Steps>
+
+### Import from GitHub
+
+Select **Create skill** > **Import from GitHub** and enter the repository, such as `owner/repo`.
+Onyx scans the repository for folders that contain a `SKILL.md` and lists the importable Skills.
+Select the Skills you want, then select **Done**. Onyx shows which Skills it imported and which it could not.
+
+Public repositories work without setup. To import from a private repository, use **Connect GitHub** in the
+import dialog. If GitHub is not set up for your workspace, ask an admin.
 
 ### Update a Skill
 
@@ -172,6 +170,18 @@ Open a personal Skill to edit its name, description, or instructions. Under **Su
 Changes are synchronized to people who can use the Skill. You can also disable the Skill without deleting it,
 change its sharing, transfer ownership, or delete it.
 
+### Share a Skill
+
+Open the Skill and select **Share**.
+Choose who can use it and give each person or group **Can use** or **Can edit** access. Under **Installation**,
+choose how the Skill is installed for people with access:
+
+| Option | Effect |
+| --- | --- |
+| **Available to install** | People can install or uninstall the Skill at any time. |
+| **Installed by default** | Onyx installs the Skill automatically. People can disable or uninstall it. |
+| **Required** | Onyx installs the Skill automatically. People cannot disable or uninstall it. |
+
 <Warning>
   Never put passwords, API keys, tokens, or production credentials in a skill bundle.
   Use [Apps](/overview/core_features/craft_apps) for authenticated access to external services.
@@ -185,11 +195,6 @@ change its sharing, transfer ownership, or delete it.
     Confirm the skill is enabled and shared with you. Unavailable built-in skills do not appear in the session picker.
     If the skill depends on a model or deployment feature, ask an admin to configure that dependency.
   </Accordion>
-
-<Accordion title="Craft did not use the skill I expected">
-  Select the skill from **+** > **Skills** or type **/** and choose it before sending your prompt.
-  Also name the desired output and important constraints; a skill supplies a method, not the goal itself.
-</Accordion>
 
   <Accordion title="My Skill will not upload">
     Upload one Skill at a time. Put `SKILL.md` at the top level of the folder. In a ZIP,

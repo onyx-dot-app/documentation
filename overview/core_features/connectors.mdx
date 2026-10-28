@@ -3,50 +3,43 @@ title: "Connectors"
 description: "Ingest knowledge from connected applications"
 icon: "plug"
 ---
-<Tip>
-  [Click here to see a full list of all supported connectors.](/admins/connectors/overview#supported-connectors)
-</Tip>
-
-<a href="/admins/connectors/overview#supported-connectors">
-
-  <img src="/assets/overview/core_features/connectors.webp" alt="Connectors" noZoom/>
-
-</a>
+import ConnectorGrid from "/snippets/connector-grid.mdx";
 
 ## What are Connectors?
 
-Onyx uses Connectors to build an understanding of your documents, team,
-and higher level concepts so that answers are grounded and specific to your organization's knowledge.
+Connectors bring documents from your team's applications into Onyx.
+Onyx indexes them so answers are grounded in your organization's knowledge.
 
 Connectors:
-- Keep all updates synced between external systems and Onyx.
-- Pull in metadata and additional signals to ensure answer relevance.
-- Respect all user permissions (Enterprise Edition only).
+- Keep documents in Onyx in sync with the source application.
+- Pull in metadata, such as owners and update times, to improve answer relevance.
+- Sync document permissions from the source, so users see only what they can access. Permission sync requires the
+  Enterprise Edition.
+
+Admins add and manage connectors at **Admin Panel → Connectors**,
+and can watch sync progress at **Admin Panel → Indexing Status**.
+Document Sets group documents from one or more connectors for use in [Agents](/overview/core_features/agents)
+and search filters.
+
+## Supported Connectors
+
+<ConnectorGrid />
+
+You can also push documents into Onyx with the [Ingestion API](/developers/guides/index_files_ingestion_api),
+or upload files in a chat or [Project](/overview/core_features/chat#projects).
 
 ## Common Connector Questions
 
-<Card title="What are the supported connectors?" icon="list" href="/admins/connectors/overview#supported-connectors">
-  Click this card to see the full list of supported connectors.
-
-  You can also push documents directly into Onyx via [API](/developers/guides/index_files_ingestion_api)
-  or via File Upload.
-</Card>
-
 <Card title="How do I ensure my data is secure?" icon="lock" href="/admins/connectors/overview#security">
-  All processing and storage of documents and metadata happen within Onyx.
+  Onyx processes and stores documents and metadata inside your deployment.
 
-  There are options to use LLMs or third party providers during the indexing flow but by default everything is
-  processing entirely locally.
-
-  Click this card to see more about security.
+  By default, Onyx embeds documents with a local model.
+  Admins can choose to use an external embedding provider or an LLM during indexing instead.
 </Card>
 
 <Card title="Why are connectors/indexing important?" icon="circle-nodes" href="/overview/core_features/internal_search">
-  In the same way LLMs are pre-trained on massive amounts of internet data,
-  Onyx builds an understanding of all of the documents, concepts, and people within your organization.
+  Onyx builds a searchable index of the documents, concepts, and people in your organization.
 
-  This allows Onyx to provide more accurate answer to questions that relate to internal knowledge compared to using the
-  applications' provided search APIs at query time.
-
-  Click this card to learn more about Internal Search in Onyx.
+  This gives more accurate answers to questions about internal knowledge than calling each application's own search API
+  at query time.
 </Card>

@@ -12,7 +12,7 @@ import StandardAiModelConfigs from "/snippets/standard-ai-model-configs.mdx";
 Configure Onyx to use models exposed by your LiteLLM Proxy server.
 
 <Note>
-  Onyx reads the available models from the LiteLLM Proxy `/v1/models` endpoint.
+  Onyx reads the model list from your LiteLLM Proxy.
   This is a good option when you want one gateway in front of multiple providers or self-hosted backends.
 </Note>
 
@@ -20,28 +20,27 @@ Configure Onyx to use models exposed by your LiteLLM Proxy server.
   <Step title="Set Up LiteLLM Proxy">
     Deploy LiteLLM Proxy and make sure it is reachable from the Onyx server.
 
-    You will need the LiteLLM Proxy **API Base URL** and **API Key**.
+    You need the LiteLLM Proxy **API Base URL** and an **API Key** (a LiteLLM virtual key or the master key).
 
     The local default is commonly `http://localhost:4000`.
   </Step>
 
   <NavigateToAiModels />
 
-  <Step title="Configure LiteLLM Proxy">
-    Select **LiteLLM Proxy** from the available providers.
+  <Step title="Connect LiteLLM Proxy">
+    Under **Gateways & Routers**, click **Connect** on the **LiteLLM Proxy** card.
 
-    Give your provider a **Display Name**.
-
-    Enter the proxy **API Base URL** and **API Key**.
-
-    Click **Fetch Available Models** to load the models currently exposed by your LiteLLM Proxy instance.
+    Enter the proxy **API Base URL** and paste your **API Key**.
   </Step>
 
-  <Step title="Review the Imported Models">
-    Onyx stores the model IDs returned by LiteLLM Proxy and makes those models available to your users.
-
-    This is useful when LiteLLM is routing requests to multiple providers through a single gateway.
+  <Step title="Load Your Models">
+    In the **Models** section, click **Refresh models**. Onyx lists the models that your LiteLLM Proxy currently routes,
+    including their context size when the proxy reports it.
   </Step>
 
   <StandardAiModelConfigs />
+
+  <Step title="Connect">
+    Click **Connect**. Onyx tests the proxy with one of the selected models before it saves the provider.
+  </Step>
 </Steps>

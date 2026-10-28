@@ -9,8 +9,7 @@ icon: "key"
   see [Service Accounts](/admins/user_management/api_keys).
 </Info>
 
-API Keys provide programmatic access to Onyx APIs, enabling you to build custom applications,
-integrate with external systems, and automate workflows.
+API Keys provide programmatic access to Onyx APIs.
 
 <Note>
   API Keys exist as distinct users in Onyx, allowing you to trace activity and manage permissions at the key level.
@@ -24,34 +23,17 @@ Each key is created with a role, and that role decides what the key can reach:
   <Accordion title="Admin API Keys" icon="shield-check">
     Can access all endpoints, including those pre-fixed with `admin/`.
 
-    **Use cases:**
-    - Full system administration
-    - User management operations
-    - Data management and analytics
-    - Complete access to all Onyx features
-
     **⚠️ Use with caution:** Admin keys have unrestricted access to your Onyx instance.
   </Accordion>
 
   <Accordion title="Basic API Keys" icon="key">
     Can access the non-admin endpoints like Search, Chat, Agents, and Actions.
 
-    **Use cases:**
-    - Building chat applications
-    - Implementing search functionality
-    - Creating and managing agents
-    - Running actions and workflows
-
     **✅ Recommended:** Most users should use Basic API Keys for application development.
   </Accordion>
 
   <Accordion title="Limited API Keys" icon="lock">
     Read-only Agent access. Can post messages to Chat endpoints, but cannot read chat history.
-
-    **Use cases:**
-    - Highly restricted environments
-    - Specific use cases requiring minimal permissions
-    - Testing with limited scope
   </Accordion>
 </AccordionGroup>
 
@@ -66,12 +48,9 @@ Each key is created with a role, and that role decides what the key can reach:
 Only Admins can create and manage API keys.
 
 <Steps>
-  <Step title="Navigate to Service Accounts">
-    In the Admin Panel, go to **Service Accounts**.
-  </Step>
-
   <Step title="Create New API Key">
-    Click **New Service Account**, give the key a name, and select the role for your use case.
+    Go to **Admin Panel → Service Accounts**, click **New Service Account**, give the key a name,
+    and select the role for your use case.
 
     <img className="rounded-image" src="/assets/admins/user_management/legacy/create_api_key.webp" alt="Create API Key interface with the Limited, Basic, and Admin role options"/>
   </Step>
@@ -81,9 +60,7 @@ Only Admins can create and manage API keys.
   </Step>
 </Steps>
 
-You will see your new API key along with all of your existing keys on the Service Accounts page.
-
-From this page, you can regenerate, rename, or delete your API keys.
+From the Service Accounts page, you can regenerate, rename, or delete your API keys.
 
 <Warning>
   Regenerating a key revokes the old one. Any application still using it stops working until you give it the new key.

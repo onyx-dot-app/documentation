@@ -14,7 +14,7 @@ with its steps and expected results as text and a link back to the case in TestR
 | Steps      | Separated steps and their expected results are indexed. When a case has no separated steps, Onyx falls back to its plain steps and expected-result fields. |
 | Fields     | Custom field values are resolved to their labels, so a drop-down reads as its text rather than its stored number.                |
 | Suites     | Onyx reads every suite in a project. A project in single-suite mode is read directly.                                            |
-| Permissions | Not available. **Auto Sync Permissions** is not offered for TestRail, so the access type can only be **Public** or **Private**. |
+| Permissions | Not available. **Sync with TestRail** is not offered, so **Document Access** can only be **Everyone in Your Organization** or **Specific Groups**. |
 
 ## Before you begin
 
@@ -37,30 +37,27 @@ for enabling the API and generating a key.
 ## Configure Onyx
 
 <Steps>
-  <Step title="Open the TestRail connector">
-    In Onyx, go to **Admin Panel → Add Connector** and select **TestRail**.
-  </Step>
-
   <Step title="Create a credential">
-    Enter the site URL in **TestRail Base URL**, the user's login in **TestRail Username**,
-    and the API key in **TestRail API Key**.
+    In the Admin Panel, go to **Connectors** and select **TestRail**. Under **Authentication Account**,
+    select **New TestRail Account**. Enter the site URL in **TestRail Base URL**,
+    the user's login in **TestRail Account Email**, and the API key in **API Token**.
 
     <img className="rounded-image" src="/assets/admins/connectors/testrail/TestRailCredential.webp" alt="Create a TestRail credential with a base URL, username and API key"/>
   </Step>
 
   <Step title="Choose the projects">
-    Give the connector a name. In **Project IDs**, enter a comma-separated list of TestRail project IDs,
-    for example `1,2,3`. Leave it empty to index every project the user can read.
+    Enter the site URL again in **TestRail Base URL**. In **Project IDs**,
+    enter a comma-separated list of TestRail project IDs, for example `1,2,3`.
+    Leave it empty to index every project the user can read.
   </Step>
 
-  <Step title="Choose the access type">
-    **Public** makes all indexed cases visible to every Onyx user.
-    **Private** limits the connector to selected Onyx user groups, and is a paid feature:
+  <Step title="Choose the document access">
+    Under **Connector Settings**, set **Document Access**. **Specific Groups** is a paid feature:
     the Business and Enterprise tiers on Onyx Cloud, and the Enterprise Edition when self-hosted.
   </Step>
 
   <Step title="Connect and verify">
-    Select **Create Connector**. Then open **Admin Panel → Existing Connectors**, select the connector,
+    Select **Create Connector**. Then open **Indexing Status** in the Admin Panel, select the connector,
     and confirm its first indexing attempt completes.
   </Step>
 </Steps>
@@ -78,9 +75,6 @@ for enabling the API and generating a key.
 | Limit                | Value  | Notes                                                                             |
 | -------------------- | ------ | ----------------------------------------------------------------------------------- |
 | TestRail API call    | 60s    | Set `REQUEST_TIMEOUT_SECONDS` to change it. This is a global setting.              |
-| Cases per page       | 250    | **Cases Page Size** above.                                                          |
-| Pages per project    | 10000  | **Max Pages** above.                                                                |
-| Case text            | 200000 characters | **Skip Document Character Limit** above. A longer case is skipped.        |
 
 The connector indexes no attachments, so it has no file-size cap.
 

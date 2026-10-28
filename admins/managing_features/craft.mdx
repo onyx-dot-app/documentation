@@ -9,13 +9,15 @@ The Admin Panel has a dedicated **Craft** section for the settings that apply ac
 | Setting | Where to find it |
 | --- | --- |
 | User access | **Admin Panel → Craft → Access** |
-| Apps and action policies | **Admin Panel → Plugins** |
-| Workspace-wide instructions | **Admin Panel → Craft → Instructions** |
-| Models available to Craft | **Admin Panel → Language Models** |
+| Apps, MCP servers, and action policies | **Admin Panel → Plugins** |
+| Default model and workspace instructions | **Admin Panel → Craft → Preferences** |
+| Models and provider visibility | **Admin Panel → Language Models** |
 | Custom Skill sharing and management | **Craft → Skills** |
 
+Craft needs a Business or Enterprise plan, or Onyx Cloud.
+On the Community Edition the Craft section shows an upgrade page.
+
 If you self-host Onyx, first configure the runtime described in [Deploying Craft](/deployment/local/craft).
-The deployment guide covers sandboxes, the proxy, workers, networking, storage, resources, and environment variables.
 
 ## Control access
 
@@ -32,14 +34,26 @@ Per-user exceptions remain in place if you later change the workspace default.
 <Info>
   Removing access prevents the user from starting new Craft work and skips future Scheduled Task runs they own.
   It does not stop a turn already in progress or delete their sessions, files, Skills, Apps, or Scheduled Tasks.
+  Anonymous users never get Craft.
 </Info>
+
+## Set the default model
+
+Open **Admin Panel → Craft → Preferences** and pick a **Default model**.
+Craft uses this model for new sessions and Scheduled Tasks. When unset,
+Craft uses the workspace default chat model and the picker shows **Workspace default**.
+
+Craft can use any provider you configure under **Language Models**.
+Users also need access to the provider and at least one visible model.
+Give users provider access publicly or through a group. Agent whitelists apply to Onyx Agents, not Craft.
+See [Language Model Access Controls](/admins/advanced_configs/llm_access_controls) for provider visibility settings.
 
 ## Add workspace instructions
 
-Open **Admin Panel → Craft → Instructions** to add guidance that every Craft agent in your workspace should follow.
+On the same **Preferences** page, add **Workspace instructions** that every Craft agent in your workspace follows.
 Onyx appends these instructions to Craft's built-in instructions as an **Organization instructions** section.
 
-Good workspace instructions describe stable expectations that should apply to all Craft work:
+Good workspace instructions describe stable expectations that apply to all Craft work:
 
 | Use workspace instructions for | Keep elsewhere |
 | --- | --- |
@@ -57,9 +71,7 @@ For client-facing deliverables:
 - Add "Confidential" to draft materials unless the user requests otherwise.
 ```
 
-The editor accepts up to 4,000 characters.
-Select **View base instructions** to see the built-in prompt your text is added to,
-or **Reset to default** to remove the workspace instructions.
+The editor accepts up to 4,000 characters. **Reset to default** removes the workspace instructions for everyone.
 
 <Warning>
   Workspace instructions supplement Craft's built-in behavior. They cannot override its hard rules, App policies,
@@ -67,29 +79,6 @@ or **Reset to default** to remove the workspace instructions.
 </Warning>
 
 Changes apply when a Craft session starts or is restored. They do not alter a session while it is actively running.
-Use **Try in Craft** to test the saved instructions in a new session.
-
-## Configure models
-
-Craft supports Anthropic, OpenAI, and OpenRouter providers.
-
-Users also need access to the provider and at least one visible model.
-Give users provider access publicly or through a group. Agent whitelists apply to Onyx Agents, not Craft.
-See [Language Model Access Controls](/admins/advanced_configs/llm_access_controls) for provider visibility settings.
-
-<CardGroup cols={3}>
-  <Card title="Anthropic" icon="brain" href="/admins/ai_models/anthropic">
-    Configure an Anthropic provider and choose visible models.
-  </Card>
-
-  <Card title="OpenAI" icon="bolt" href="/admins/ai_models/openai">
-    Configure an OpenAI provider and choose visible models.
-  </Card>
-
-  <Card title="OpenRouter" icon="robot" href="/admins/ai_models/openrouter">
-    Configure OpenRouter and select the models available through it.
-  </Card>
-</CardGroup>
 
 ## Configure Apps and Skills
 
@@ -112,7 +101,7 @@ See [Language Model Access Controls](/admins/advanced_configs/llm_access_control
   </Accordion>
 
   <Accordion title="A user has access but cannot start a session">
-    Confirm the user can access an Anthropic, OpenAI, or OpenRouter provider with at least one visible model.
+    Confirm the user can access a provider with at least one visible model.
     A provider limited only to an Agent whitelist is not available in Craft.
   </Accordion>
 
@@ -121,16 +110,10 @@ See [Language Model Access Controls](/admins/advanced_configs/llm_access_control
     A per-user exception takes precedence over the workspace default until you change it.
   </Accordion>
 
-  <Accordion title="Every Craft message fails with “Payment Required”">
-    Craft requires a Business or Enterprise license,
-    so deployments without one see `FEATURE_NOT_AVAILABLE` on every message.
-    Older self-hosted releases still showed Craft on the Community Edition;
-    the latest patch release for your Onyx version shows an upgrade page instead.
-  </Accordion>
-
-  <Accordion title="Saved workspace instructions are not affecting a session">
-    Start a new session to test the saved instructions. They do not update an actively running session.
-    Also confirm the guidance does not conflict with Craft's built-in hard rules or an enforced App policy.
+  <Accordion title="Craft shows an upgrade page or every message fails with “Payment Required”">
+    Craft needs a Business or Enterprise plan. Deployments without one see an upgrade page,
+    and older releases return `FEATURE_NOT_AVAILABLE` on every message.
+    Add a license or upgrade to the latest patch release for your Onyx version.
   </Accordion>
 </AccordionGroup>
 

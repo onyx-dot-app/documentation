@@ -22,9 +22,6 @@ The following legacy roles and settings are removed:
 - **Global Curator role**
 - **`CURATORS_CANNOT_VIEW_OR_EDIT_NON_OWNED_ASSISTANTS`** environment variable
 
-The Curator roles are removed,
-but the scoped management capability they provided is preserved through **Group Managers**.
-
 ## What Replaces Curators
 
 The new system uses two mechanisms:
@@ -57,7 +54,7 @@ The only default groups are **Basic** and **Admin**.
 Custom groups can be created when you need additional permission sets.
 
 <Info>
-  Custom groups and configurable group permissions are an Enterprise Edition feature.
+  Custom groups and configurable group permissions require a **Business** or **Enterprise** plan, or Onyx Cloud.
 </Info>
 
 ## What Happens During Upgrade
@@ -83,8 +80,7 @@ The migration handles the core role conversion automatically:
   </Step>
 
   <Step title="Document access is unchanged">
-    Search visibility continues to follow connector access settings: **Private**, **Public**,
-    and **Auto Sync Permissions**.
+    Search visibility continues to follow connector access settings: **Private**, **Public**, and **Auto-sync**.
   </Step>
 </Steps>
 
@@ -95,7 +91,9 @@ The migration handles the core role conversion automatically:
 
 ## What You Need to Check
 
-After upgrading, review the following:
+After upgrading,
+the **Users** and **Groups** pages show a **Permissions have changed** notice with a link to this guide.
+Review the following:
 
 - Former Curators and Global Curators are Group Managers of the expected groups.
 - Users who need full administration are in **Admin**.
@@ -109,22 +107,6 @@ After upgrading, review the following:
   <Accordion title="What if we were not using Curators?">
     If you only used Admin and Basic roles, there is little to review. Admin users move to **Admin**,
     and Basic users move to **Basic**.
-  </Accordion>
-
-  <Accordion title="Do existing groups and resources change?">
-    Existing groups, memberships, connectors, document sets, and agents are preserved.
-    The migration changes how management permissions are represented, not the resources themselves.
-  </Accordion>
-
-  <Accordion title="Can we recreate Curator-like behavior?">
-    Yes. Make the user a **Group Manager** of the relevant group.
-    This gives scoped management over that group's members and resources.
-  </Accordion>
-
-  <Accordion title="When should we use group permissions instead?">
-    Use group permissions when the access should be organization-wide. For example,
-    grant **Manage Connectors & Document Sets** to an IT group only if that group should manage connectors and document
-    sets across the workspace.
   </Accordion>
 
   <Accordion title="What happens to API keys and service accounts?">

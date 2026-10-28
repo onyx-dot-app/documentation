@@ -12,7 +12,6 @@ icon: "hammer"
 A Craft App is a catalog of API endpoints for one application, such as Slack or Gmail.
 Each user connects their own account. Craft then calls the application's API as that user.
 
-This lets Craft read private Slack channels, reply in a thread, send an email, or update a Notion page.
 Craft can only reach content that the connected account can access in the application.
 
 Admins add Craft Apps in **Admin Panel → Plugins**. Users connect their accounts in **Plugins** in Craft or Chat.
@@ -53,9 +52,9 @@ A [custom App](#custom-apps) gives Craft credentials and network access for any 
 
 ## Requirements
 
-- Craft must be available. Craft is available on the Business and Enterprise plans.
+- Craft must be available. Craft is available on the **Business** and **Enterprise** plans.
   If you self-host Onyx, first follow [Deploying Craft](/deployment/local/craft).
-- Only full admins can add, edit, or delete Craft Apps.
+- Only full admins can add, edit, or delete Craft Apps. The **Manage Actions** permission is not enough.
 
 ## Add a built-in App
 
@@ -73,11 +72,8 @@ A [custom App](#custom-apps) gives Craft credentials and network access for any 
     See [Provider setup](#provider-setup) for each provider.
   </Step>
 
-  <Step title="Open the Craft Apps catalog">
-    Go to **Admin Panel → Plugins**, click **Add**, then select **Craft Apps**. Select the provider.
-  </Step>
-
   <Step title="Set the configuration">
+    Go to **Admin Panel → Plugins**, click **Add**, select **Craft Apps**, then select the provider.
     On the **Configuration** tab, set:
 
     | Setting | Effect |
@@ -100,13 +96,13 @@ A [custom App](#custom-apps) gives Craft credentials and network access for any 
   </Step>
 
   <Step title="Add the App">
-    Click **Add**. Onyx then asks you to add skills to the App. Select existing skills, or click **Skip for now**.
+    Click **Add**. Onyx then asks you to add skills to the App. You can skip this step.
     See [Skills for Apps](#skills-for-apps).
   </Step>
 
   <Step title="Test as a user">
     Connect a test account from the [Plugins page](/overview/core_features/craft_apps#connect-an-app).
-    Test one read and one write. Make sure the approval card is clear, and check the result in the application.
+    Test one read and one write.
   </Step>
 </Steps>
 
@@ -212,9 +208,6 @@ Each action in a built-in App has one workspace policy:
 | **Disabled** | The proxy blocks the action. Users and scheduled tasks cannot override it. | Destructive or prohibited actions |
 
 Built-in Apps start with defaults: most reads are **Auto-approve**, and most changes are **Ask**.
-Review the defaults for your organization before users connect.
-
-Use **Set permissions** to set every action at once, or set each action in the list.
 
 <Info>
   If one request matches more than one action, the strictest policy applies: **Disabled**, then **Ask**,
@@ -255,11 +248,8 @@ A custom App gives Craft credentials and network access for the API. It does not
 <img className="rounded-image" src="/assets/admins/plugins/craft_custom_app.webp" alt="The Create custom app form with Name, Upstream URL patterns, Enable for Craft, and Let users manage approval settings"/>
 
 <Steps>
-  <Step title="Open the form">
-    Go to **Admin Panel → Plugins**, click **Add**, select **Craft Apps**, then select **Custom app**.
-  </Step>
-
   <Step title="Set the configuration">
+    Go to **Admin Panel → Plugins**, click **Add**, select **Craft Apps**, then select **Custom app**.
     Enter a **Name** and one or more **Upstream URL patterns**. Type each pattern and press Enter.
     The proxy injects credentials only into requests that match these patterns.
   </Step>
@@ -269,9 +259,7 @@ A custom App gives Craft credentials and network access for the API. It does not
     Optionally, add **Organization credentials** for values that every user shares.
 
     <img className="rounded-image" src="/assets/admins/plugins/craft_custom_app_authentication.webp" alt="The custom app Authentication tab with header patterns and Organization credentials"/>
-  </Step>
 
-  <Step title="Create the App">
     Click **Create**. Then add skills that explain how to call the API.
   </Step>
 </Steps>
@@ -340,7 +328,6 @@ the sandbox proxy injects the rendered headers on the way out.
 
 | Action | Effect |
 | --- | --- |
-| **Edit** | Click the App on the Plugins page. Change its configuration, credentials, action policies, or skills. |
 | **Turn off Enable for Craft** | Hides the App from users and stops credential injection. Onyx keeps the configuration and user connections. |
 | **Delete** | Click the trash icon. Onyx removes the App, its policies, user credentials, and its Scheduled Task settings. |
 
@@ -356,23 +343,13 @@ Onyx-managed Apps on Onyx Cloud cannot be deleted. Turn off **Enable for Craft**
   </Accordion>
 
   <Accordion title="An enabled app does not appear to users">
-    Confirm that **Enable for Craft** is on and that the user has Craft access. Refresh the Plugins page.
+    Confirm that **Enable for Craft** is on and that the user has Craft access.
   </Accordion>
 
   <Accordion title="A user connected successfully but an action is blocked">
     Check the action's admin policy and the scopes or capabilities granted by the external account.
     A **Disabled** policy cannot be overridden.
     An Ask request can also fail if the user rejects it or the approval expires.
-  </Accordion>
-
-  <Accordion title="A custom app prompts for every request">
-    This is expected. A custom app has no action catalog,
-    so every request that matches its URL patterns requires approval.
-  </Accordion>
-
-  <Accordion title="A custom app calls the wrong service or uses the wrong credential">
-    Check for overlapping URL patterns. Make every host and path as specific as possible.
-    The lowest-ID app wins when multiple apps match the same URL, including when that first app is disabled.
   </Accordion>
 
   <Accordion title="A Scheduled Task is awaiting approval">

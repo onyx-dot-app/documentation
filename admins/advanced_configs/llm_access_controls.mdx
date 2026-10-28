@@ -1,126 +1,77 @@
 ---
 title: "Language Model Access Controls"
-description: "Configure access controls for language model providers"
+description: "Control which users and agents can use a language model provider"
 icon: "lock"
 ---
 
 ## Overview
 
-Onyx provides fine-grained access control for language model providers,
-allowing administrators to control **who** can use specific models and **which agents** can use them.
-This enables better cost control, governance, and enforcement of model usage policies.
+Each language model provider has a **Models Access** setting.
+It controls **who** can use the provider's models and **which agents** can use them.
+Use it to keep expensive or specialized models for the teams and agents that need them.
 
-<img className="rounded-image" src="/assets/admins/advanced_configs/llm_access_controls.webp" alt="Language model access controls"/>
+<img className="rounded-image" src="/assets/admins/advanced_configs/llm_access_controls.webp" alt="Models Access in the provider form"/>
 
-### Access Control Types
+<Info>
+  **Business Plan Feature**
+
+  Group restrictions require a Business plan or higher. Agent restrictions are available on every plan.
+  Onyx Cloud includes both. [View plans](/admins/billing/overview).
+</Info>
+
+## Access Levels
 
 <AccordionGroup>
-  <Accordion title="Public vs Private Providers" icon="lock">
-    **Public Providers**
-    - Accessible to all users and agents
-    - No restrictions applied
-    - Useful for default, unrestricted models
+  <Accordion title="All Users & Agents" icon="lock-open">
+    Every user and every agent can use the provider. This is the default.
 
-    **Private Providers**
-    - Subject to user group and/or agent restrictions
-    - Enables fine-grained access control
-    - Recommended for expensive or specialized models
+    You can still add agents. When you do, all users keep access, but only the listed agents can use the provider.
   </Accordion>
 
-  <Accordion title="User Group Restrictions" icon="users">
-    Control **who** can use specific language model providers by restricting access to specific user groups.
+  <Accordion title="Named Groups & Agents" icon="users">
+    Only the groups and agents you add can use the provider.
 
-    **How it works:**
-    - Assign one or more user groups to a provider
-    - Only users in those groups can use the provider
-    - Admins bypass group restrictions (but not agent restrictions)
-    - Leave empty for no group restrictions
-
-    **Use cases:**
-    - Restrict expensive models to specific teams
-    - Provide specialized models to certain departments
-    - Implement cost controls by team
-  </Accordion>
-
-  <Accordion title="Agent Restrictions" icon="robot">
-    Control **which agents** can use specific language model providers.
-
-    **How it works:**
-    - Assign one or more agents to a provider via the "Agent Whitelist"
-    - The provider will only appear as an option when using those agents
-    - Applies to **all users**, including admins
-    - Leave empty for no agent restrictions
-
-    **Use cases:**
-    - Reserve GPT-4 for "Code Review Agent" only
-    - Use Claude Opus exclusively with "Legal Document Analyzer"
-    - Prevent users from selecting inappropriate models for specific use cases
-    - Enforce model policies per agent type
-  </Accordion>
-
-  <Accordion title="Combined Restrictions" icon="layer-group">
-    You can combine both user group and agent restrictions for maximum control.
-
-    **Access Rules (AND logic):**
-    - User must be in an allowed group **AND** using an allowed agent
-    - Both conditions must be satisfied for access
-    - Admins bypass group restrictions but still require allowed agents
-
-    **Example:**
-    - Provider: GPT-4
-    - User Groups: "Engineering Team"
-    - Agent Whitelist: "Code Review Agent", "Architecture Advisor"
-    - **Result:** Only Engineering Team members can use GPT-4, and only with those two agents
+    - **Groups** restrict **who** can use the provider. Users outside the groups do not see its models.
+    Admins, and anyone with the manage-models permission, keep access.
+    - **Agents** restrict **where** the provider can be used. The models appear only in those agents.
+    This applies to admins too.
+    - With both groups and agents, a user must be in a group **and** use a listed agent.
+    - With neither, only admins can use the provider.
   </Accordion>
 </AccordionGroup>
 
-### Configuring Access Controls
-
-To configure access controls for a language model provider:
+## Configure Access
 
 <Steps>
-  <Step title="Navigate to Language Models">
-    Navigate to **Admin Panel → Configuration → Language Models**
+  <Step title="Open the provider">
+    Open **Admin Panel → Language Models** and open an existing provider, or add a new one.
   </Step>
 
-  <Step title="Select Provider">
-    Click on an existing provider or create a new one
+  <Step title="Set Models Access">
+    Under **Models Access**, select **All Users & Agents** or **Named Groups & Agents**.
+    Use **Add groups and agents** to pick the groups and agents. The **Admin** row is always shared.
   </Step>
 
-  <Step title="Configure Access Controls">
-    In the **Access Controls** section nested under Advanced options:
-    - Toggle **Make Public** off to enable restrictions
-    - Select user groups in **User Group Access** (optional)
-    - Select agents in **Agent Whitelist** (optional)
-  </Step>
-
-  <Step title="Save Changes">
-    Save your changes
+  <Step title="Save">
+    Save the provider. The change applies to new chats at once.
   </Step>
 </Steps>
 
-<Note>
-  When a provider is set to public, the access control selectors are automatically disabled.
-</Note>
+## Access Rules
 
-### Access Decision Logic
+| Access level | Groups added | Agents added | Who can use the provider |
+|---|---|---|---|
+| All Users & Agents | — | No | Everyone |
+| All Users & Agents | — | Yes | Everyone, only in the listed agents |
+| Named Groups & Agents | Yes | No | Group members and admins |
+| Named Groups & Agents | No | Yes | Everyone, only in the listed agents |
+| Named Groups & Agents | Yes | Yes | Group members and admins, only in the listed agents |
+| Named Groups & Agents | No | No | Admins only |
 
-The system determines access based on the following logic:
+## What Users See
 
-| is_public | Groups Set | Agents Set | Access Rule |
-|-----------|------------|------------|-------------|
-| `true` | Any | Any | Everyone has access |
-| `false` | Yes | Yes | Must be in group **AND** using allowed agent |
-| `false` | Yes | No | Must be in group (admins bypass) |
-| `false` | No | Yes | Must use allowed agent (applies to admins) |
-| `false` | No | No | Admin-only access |
+Users see only the providers they can use:
 
-### Provider Visibility
-
-Users will only see the language model providers they have access to:
-- In the agent creation/editing interface
-- In the chat UI model selector
-- When using the API to list available providers
-
-Restricted providers are completely hidden from users who don't have access,
-preventing confusion and unauthorized usage attempts.
+- In the model picker in chat
+- When they create or edit an agent
+- When they list providers through the API

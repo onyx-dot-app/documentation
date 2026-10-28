@@ -5,8 +5,12 @@ description: "Access sites and pages from Google Sites"
 
 ## How it works
 
-Export your Google Site using [Google Takeout](https://takeout.google.com/), and then upload the zip to Onyx.
-We'll then index all your pages, and allow you to ask questions based on the site's content!
+Export your Google Site with [Google Takeout](https://takeout.google.com/) and upload the ZIP file to Onyx.
+Onyx indexes every HTML page in the export. Each page links back to the live site, based on the base URL you enter.
+
+The upload is a one-time import. Onyx does not poll Google Sites for changes. To index new or changed pages,
+export the site again and create a new connector with the new ZIP file.
+The Google Sites connector does not support **Sync with Google Sites** (permission sync).
 
 ## Setting up
 
@@ -15,27 +19,30 @@ We'll then index all your pages, and allow you to ask questions based on the sit
 <Steps>
   <Step title="Export with Takeout">
     Follow the guide [here](https://www.steegle.com/google-sites/how-to/export-with-takeout) to export your Google Site.
-    Be sure to include ONLY the Google Site in the folder.
+    Include ONLY the Google Site in the export.
   </Step>
 </Steps>
 
 ### Indexing
 
 <Steps>
-  <Step title="Open Google Sites connector">
-    Navigate to the Admin Panel and select the **Google Sites** Connector.
+  <Step title="Enter the base URL">
+    Go to **Admin Panel → Connectors** and select **Google Sites**. This connector does not need a credential.
+    In **Base URL**, enter the URL of the root page of your Google Site,
+    for example `https://sites.google.com/view/my-site`. Onyx uses it to build the link of each indexed page.
   </Step>
 
-  <Step title="Enter base URL">
-    Find and enter the base URL of your Google Site. This is the URL used to access the root page of the site.
+  <Step title="Upload the export">
+    In **Site Export**, upload the `.zip` file from the export step.
   </Step>
 
-  <Step title="Upload export ZIP">
-    Upload the Zip file downloaded in the export step.
+  <Step title="Choose document access">
+    Under **Document Access**, select **Everyone in Your Organization** or **Specific Groups**.
+    **Specific Groups** needs the Business or Enterprise tier on Onyx Cloud, or the Enterprise Edition when self-hosted.
   </Step>
 
   <Step title="Start indexing">
-    Click the **Upload** button. Your site will be indexed and searchable upon completion.
+    Select **Create Connector**.
   </Step>
 </Steps>
 

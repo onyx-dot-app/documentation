@@ -4,136 +4,83 @@ description: "SAML authentication setup"
 icon: "sitemap"
 ---
 
-Configure Onyx with SAML authentication.
+Let users sign in to Onyx with a SAML 2.0 identity provider, such as Okta, Microsoft Entra ID, or OneLogin.
+You create a SAML application in the identity provider and add it as an SSO provider in the Onyx admin panel.
+No restart is needed.
 
-SAML providers are managed at **Admin Panel** → **Organization** → [SSO
-Providers](/deployment/authentication/sso_providers). No configuration files or restarts are needed,
-and you can configure multiple providers (enabling more than one at the same time requires the Business plan,
-see [Plan Availability](/deployment/authentication/sso_providers#plan-availability)).
-SAML works on the standard Onyx images.
+This guide uses Okta as the example. The steps are similar for other providers.
 
-This guide walks through the setup for Okta. Other identity providers follow a similar process.
-Please contact us if you need help with a different identity provider.
+<Note>
+  SAML is available on self-hosted Onyx in all editions. One enabled SSO provider is free.
+  Two or more enabled providers at the same time need the Business or Enterprise plan.
+  SAML is not available on Onyx Cloud. Use [OIDC](/deployment/authentication/oidc) there.
+</Note>
 
 ## Guide
 
-<Steps>
-  <Step title="Create Okta Application">
-    Navigate to the Okta **Admin Console** → **Applications** → **Create App Integration**.
+### Step 1: Create a SAML Application in Your Identity Provider
 
-    <img className="rounded-image" src="/assets/deployment/oidc_create_integration.webp" alt="Okta Create Integration Page"/>
-  </Step>
+1. In the Okta admin console, go to **Applications → Applications** and click **Create App Integration**.
+2. Select **SAML 2.0**.
 
-  <Step title="Configure Okta Application">
-    Select **SAML 2.0**.
+![Create an Okta app integration](/assets/deployment/oidc_create_integration.webp)
 
-    **Name** your application `Onyx` and upload the Onyx logo.
+3. Enter a name for the application.
+4. In **SAML Settings**, set:
 
-    <Tip>
-      If you are white-labeling Onyx, you can freely name your application and upload your own logo.
-    </Tip>
+| Okta field                       | Value                                                                  |
+| -------------------------------- | ---------------------------------------------------------------------- |
+| **Single sign-on URL**           | `https://<your-onyx-domain>/auth/saml/callback`                        |
+| **Audience URI (SP Entity ID)**  | An identifier for your Onyx instance, for example `onyx`.              |
+| **Name ID format**               | `EmailAddress`                                                         |
+| **Application username**         | `Email`                                                                |
 
-    Add a **Single sign-on URL** (the ACS URL, shared by every SAML provider on the instance):
+The single sign-on URL is also called the ACS or Reply URL. Every SAML provider on one Onyx instance shares this URL.
+Onyx matches the sign-in to the right provider by the issuer in the SAML response.
 
-      ```
-      https://YOUR_ONYX_DOMAIN.com/auth/saml/callback
-      ```
+![Okta SAML settings](/assets/deployment/saml_config.webp)
 
-    Add an **Audience URI (SP Entity ID)**. Any stable identifier works,
-    as long as it matches the SP entity ID you enter in Onyx:
+5. Under **Attribute Statements**, add an attribute named `email` with value `user.email`.
+6. Finish the wizard and assign the application to your users.
 
-      ```
-      https://YOUR_ONYX_DOMAIN.com/metadata
-      ```
+### Step 2: Collect the Identity Provider Details
 
-    Add an **Attribute Statement** where **Name** is `email` and **Value** is `user.email`.
+On the application's **Sign On** tab, open the SAML setup instructions or metadata and copy:
 
-    <img className="rounded-image" src="/assets/deployment/saml_config.webp" alt="Okta Configure SAML Application Page"/>
-  </Step>
+- **Identity Provider Issuer** (IdP Entity ID)
+- **Identity Provider Single Sign-On URL** (IdP SSO URL)
+- **X.509 Certificate**
 
-  <Step title="Assign Users to Application">
-    Create the application and navigate to the **Assignments** tab to assign users.
-  </Step>
+### Step 3: Add the Provider in Onyx
 
-  <Step title="Collect the IdP Values">
-    Onyx needs three values from Okta:
+1. In Onyx, go to **Admin Panel → Organization → SSO Providers**.
+2. Click **Add Provider** and set **Provider Type** to **SAML**.
+3. Fill in the form:
 
-    <AccordionGroup>
-      <Accordion title="IdP Entity ID">
-        Go to the **Sign On** tab of your application in Okta, copy the **Metadata URL**,
-        and paste it into your browser. You should see XML like:
+| Field                        | Value                                                                                                   |
+| ---------------------------- | ------------------------------------------------------------------------------------------------------- |
+| **Name**                     | A lowercase slug such as `okta-saml`. It cannot change.                                                 |
+| **Display Name**             | The label on the sign-in button, for example `Okta`.                                                    |
+| **Allowed Email Domains**    | Domains that can sign in with this provider. Recommended.                                               |
+| **IdP Entity ID**            | The issuer from Step 2.                                                                                 |
+| **IdP SSO URL**              | The single sign-on URL from Step 2.                                                                     |
+| **IdP X.509 Certificate**    | The signing certificate from Step 2.                                                                    |
+| **SP Entity ID**             | The same value you entered as **Audience URI** in Step 1.                                               |
+| **SP X.509 Certificate**     | Optional. Only if Onyx signs requests or decrypts assertions.                                           |
+| **SP Private Key**           | Optional. The private key for the SP certificate. Onyx stores it encrypted.                             |
+| **Email Attribute**          | Optional. The SAML attribute that holds the email. Leave empty to use common names such as `email`.    |
 
-        ```XML
-        <md:EntityDescriptor
-            xmlns:md="urn:oasis:names:tc:SAML:2.0:metadata"
-            entityID="http://www.okta.com/exkngircrvOYQyNg35d7">
-        ...
-        </md:EntityDescriptor>
-        ```
+4. The modal shows the **ACS (Reply) URL**. Make sure it matches the single sign-on URL in your identity provider.
 
-        Copy the `entityID` value.
-      </Accordion>
+Users now see a **Sign in with &lt;Display Name&gt;** button on the login page.
+Onyx also accepts IdP-initiated sign-in from the identity provider's app dashboard.
 
-      <Accordion title="IdP x509 Certificate">
-        In the XML from the previous step, find the `ds:X509Certificate` element.
+## Upgrading from an Older Version
 
-        ```XML
-        <md:KeyDescriptor use="signing">
-            <ds:KeyInfo xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
-                <ds:X509Data>
-                    <ds:X509Certificate>
-                        [Some certificate value here]
-                    </ds:X509Certificate>
-                </ds:X509Data>
-            </ds:KeyInfo>
-        </md:KeyDescriptor>
-        ```
+Before v4.4, SAML was set with `AUTH_TYPE=saml` and a `settings.json` file in `SAML_CONF_DIR`. When you upgrade,
+Onyx reads that file once and creates an SSO provider named `saml` from it. Existing users keep their accounts.
 
-        Copy the certificate value.
-      </Accordion>
+After the upgrade:
 
-      <Accordion title="IdP SSO URL">
-        Go to the **General** tab of your application in Okta and copy the **Embed Link**.
-      </Accordion>
-    </AccordionGroup>
-  </Step>
-
-  <Step title="Add the Provider in Onyx">
-    Navigate to **Admin Panel** → **Organization** → [SSO Providers](/deployment/authentication/sso_providers)
-    and click **Add Provider**.
-
-    Select the **SAML** provider type, give the provider a **Name** (a lowercase slug, e.g. `okta`),
-    and paste the **IdP entity ID**, **IdP SSO URL**, **IdP x509 certificate**,
-    and the **SP entity ID** from the Okta application.
-
-    <Accordion title="Optional: SP certificate and private key">
-      If your IdP requires signed requests,
-      generate a self-signed certificate and enter both values in the provider form:
-
-      ```bash
-      openssl genrsa -out sp-private-key.pem 2048
-      openssl req -new -x509 -key sp-private-key.pem -out sp-cert.pem -days 730 -subj "/CN=<YOUR_DOMAIN e.g. saml.onyx.dev>"
-      ```
-    </Accordion>
-
-    After creating the provider, its row shows the exact **ACS URL**.
-    Confirm it matches the single sign-on URL you registered in Okta,
-    then sign in through the new option on the login page.
-  </Step>
-</Steps>
-
-## Upgrading from v4.3 or Earlier
-
-Versions before `v4.4.0` configured a single SAML provider through a `settings.json` file placed in the SAML config
-directory (`SAML_CONF_DIR`, default `/app/onyx/configs/saml_config`), with `AUTH_TYPE=saml` set.
-That flow uses the same ACS URL as above. On `v4.4.0` and later this configuration no longer enables SAML login,
-and `AUTH_TYPE` is planned for full removal in `v4.5`. New installs must use the admin panel flow above.
-
-<Note>
-  When you upgrade an existing deployment,
-  its `settings.json` is imported as an SSO provider entry automatically when the upgraded api server starts,
-  and existing logins keep working.
-  Keep the settings file mounted and `AUTH_TYPE=saml` set through the upgrade (the import reads both).
-  The migrated provider keeps using the ACS URL already registered with your IdP, so nothing changes on the IdP side.
-  Remove both after the provider appears in the admin panel.
-</Note>
+1. Go to **Admin Panel → Organization → SSO Providers** and check the `saml` provider.
+2. Remove `AUTH_TYPE` and the mounted SAML config directory from your deployment. Onyx logs a warning while `AUTH_TYPE` is still set.

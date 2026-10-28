@@ -5,7 +5,7 @@ description: "Index files from users' OneDrive accounts and mirror their Microso
 
 The OneDrive connector indexes files from users' OneDrive for Business accounts in your Microsoft 365 tenant.
 It preserves the folder hierarchy, reads changes after the first run,
-and can mirror each file's access with **Auto Sync Permissions**.
+and can mirror each file's access with **Sync with OneDrive**.
 
 The connector signs in as an app registration set up in [Microsoft 365
 Setup](/admins/connectors/official/microsoft-365/setup).
@@ -34,39 +34,32 @@ Both client secret and certificate credentials support indexing and permission s
 ## Configure Onyx
 
 <Steps>
-  <Step title="Open the OneDrive connector">
-    In Onyx, go to **Admin Panel → Add Connector** and select **OneDrive**.
-  </Step>
-
   <Step title="Select or create a credential">
+    In Onyx, go to **Admin Panel → Connectors** and select **OneDrive**.
     Select an existing OneDrive credential or create one as described in [Microsoft 365
     Setup](/admins/connectors/official/microsoft-365/setup#enter-the-credential-in-onyx).
   </Step>
 
   <Step title="Choose the users">
-    Give the connector a descriptive name.
-
     Select **General** to index every enabled, non-guest user with a user principal name.
     Select **Specific** to list user principal names or primary email addresses.
   </Step>
 
   <Step title="Adjust the advanced settings">
-    Under **Advanced Options**, add glob patterns to **Excluded Paths** if needed. For example,
-    `*.tmp` skips that file type at every depth, and `Archive/*` skips files under that path.
-
-    Change **Authority Host** and **Graph API Host** only for a [national
-    cloud](/admins/connectors/official/microsoft-365/setup#national-clouds).
+    Add glob patterns to **Excluded Paths** if needed. For example, `*.tmp` skips that file type at every depth,
+    and `Archive/*` skips files under that path.
   </Step>
 
   <Step title="Choose the access type">
-    **Public** shows every indexed file to all Onyx users. **Private** limits the connector to selected Onyx groups.
+    Under **Document Access**, select **Everyone in Your Organization**, **Specific Groups**, or **Sync with OneDrive**.
+    **Sync with OneDrive** mirrors OneDrive access and is the default where available.
 
-    **Auto Sync Permissions** mirrors OneDrive access.
-    It is available on the Business and Enterprise tiers on Onyx Cloud, and in the Enterprise Edition when self-hosted.
+    **Specific Groups** and **Sync with OneDrive** need the Business or Enterprise tier on Onyx Cloud,
+    or the Enterprise Edition when self-hosted.
   </Step>
 
   <Step title="Set an indexing start date">
-    Under **Advanced Configuration**, set an **Indexing Start Date** unless you need every file.
+    Under **Schedule**, set **Index Documents After** unless you need every file.
     Onyx indexes files created or changed on or after that date.
     See [Advanced Configuration](/admins/connectors/overview#advanced-configuration).
   </Step>
@@ -75,7 +68,7 @@ Both client secret and certificate credentials support indexing and permission s
     Select **Create Connector**. Onyx checks sign-in, user listing, drive access, and change access.
     With permission sync, it also checks file permissions and Entra group membership.
 
-    Open **Admin Panel → Existing Connectors**, select the connector,
+    Open **Admin Panel → Indexing Status**, select the connector,
     and confirm the first indexing attempt finishes with the expected document count.
   </Step>
 </Steps>
@@ -87,20 +80,20 @@ Both client secret and certificate credentials support indexing and permission s
 | Indexing scope | General | **General** covers every eligible user. **Specific** covers only the listed users. |
 | Users | empty | User principal names or primary email addresses used by **Specific** scope. |
 | Excluded Paths | empty | Glob patterns matched against the relative path and filename. |
-| Treat organization links as public | off | With permission sync, makes files shared to the organization visible to every Onyx user. Anonymous links are always public. |
+| Treat Organization Links as Public | off | With permission sync, makes files shared to the organization visible to every Onyx user. Anonymous links are always public. |
 | Authority Host | `https://login.microsoftonline.com` | Microsoft identity endpoint. See [National clouds](/admins/connectors/official/microsoft-365/setup#national-clouds). |
 | Graph API Host | `https://graph.microsoft.com` | Microsoft Graph endpoint. See [National clouds](/admins/connectors/official/microsoft-365/setup#national-clouds). |
 
-## Auto Sync Permissions
+## Sync with OneDrive
 
-With **Auto Sync Permissions**, Onyx grants file access to:
+With **Sync with OneDrive**, Onyx grants file access to:
 
 - The OneDrive owner
 - Users with direct access
 - Members of Entra groups with access
 - Every Onyx user when the file has an anonymous sharing link
 - Every Onyx user when the file has an organization-wide link and
-  **Treat organization links as public** is on
+  **Treat Organization Links as Public** is on
 
 A Microsoft 365 email address or user principal name must match the user's email in Onyx.
 Onyx expands nested Entra groups. Grant **Member.Read.Hidden** if your tenant uses groups with hidden membership.

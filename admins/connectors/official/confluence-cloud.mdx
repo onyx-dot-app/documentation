@@ -20,16 +20,17 @@ and [page restriction guide](https://support.atlassian.com/confluence-cloud/docs
 
 ### Onyx Cloud OAuth
 
-If the credential screen shows **Authorize with Confluence**, select it. Approve the Atlassian consent screen,
-then choose the Confluence site. Onyx stores a refresh token and renews short-lived access tokens automatically.
+On Onyx Cloud, the **Authentication Account** section offers an **OAuth** tab with **Authorize with Confluence**.
+Select it, approve the Atlassian consent screen, then choose the Confluence site.
+Onyx stores a refresh token and renews short-lived access tokens automatically.
+An OAuth account works with Confluence Cloud only.
 
-OAuth is the simplest option on Onyx Cloud. It is not the standard credential path for self-hosted Onyx.
-Use an API token for self-hosted Onyx or when the authorize button is not available.
+Self-hosted Onyx does not offer OAuth. Use an API token for self-hosted Onyx or when the **OAuth** tab is not shown.
 
 ### Atlassian API token
 
 You can create an unscoped token or a scoped token. Atlassian recommends scoped tokens. Onyx supports both,
-but the Onyx checkbox must match the token type.
+but the **Scoped API Token** setting in Onyx must match the token type.
 
 <Steps>
   <Step title="Open Atlassian account security">
@@ -82,40 +83,39 @@ but the Onyx checkbox must match the token type.
 
   <Step title="Copy the token">
     Create and copy the token. Atlassian shows the token value once.
-    Store it in your secrets manager until you add it to Onyx.
   </Step>
 </Steps>
 
-## Add the Cloud credential to Onyx
+## Configure the Cloud connector
 
-Open **Admin Panel > Connectors > Confluence**, select **Create New**, and enter:
+Open **Admin Panel → Connectors** and select **Confluence**. Under **Index Configurations**:
 
-- **Name**: A clear name, such as `Confluence Cloud - docs account`.
-- **Confluence Username**: The connector account's Atlassian email address.
-- **Confluence Access Token**: The API token.
+- Select **Confluence Cloud**.
+- Set **Site URL** to `https://your-domain.atlassian.net/wiki`. Keep `/wiki` in the URL.
+- Enable **Scoped API Token** only when you created the token with scopes.
+- Choose the indexing scope and attachment setting described in the [Confluence overview](./confluence).
 
-![The Onyx Confluence credential dialog](/assets/admins/connectors/confluence/credential-form.jpg)
+![A Confluence Cloud connector configured in Onyx with an unscoped
+token](/assets/admins/connectors/confluence/connector-form-cloud.webp)
+
+## Add the Cloud account to Onyx
+
+Under **Authentication Account**, select **New Confluence Account** and enter:
+
+- **Confluence Account Email**: The connector account's Atlassian email address.
+- **API Token**: The API token.
+
+![The Onyx Confluence account form](/assets/admins/connectors/confluence/credential-form.webp)
 
 For both token types, Onyx uses the account email and token as HTTP Basic authentication. With a scoped token,
 Onyx directs Confluence API requests through Atlassian's API gateway.
 
-## Configure the Cloud connector
-
-Select the credential, select **Continue**, and configure these fields:
-
-- Enable **Is Cloud**.
-- Set **Wiki Base URL** to `https://your-domain.atlassian.net/wiki`. Keep `/wiki` in the URL.
-- Enable **Using scoped token** only when you created the token with scopes.
-- Choose the indexing scope and attachment setting described in the [Confluence overview](./confluence).
-
-![A Confluence Cloud connector configured in Onyx with an unscoped
-token](/assets/admins/connectors/confluence/connector-form-cloud.jpg)
-
-This example uses an unscoped token. Enable **Using scoped token** if you created a scoped token.
+Under **Share This Account**, choose whether other admins, named groups,
+or only you can reuse the account for other connectors.
 
 ## Configure Cloud permission sync
 
-Permission sync requires Onyx Enterprise Edition or Onyx Cloud. It reads space permissions, page restrictions,
+**Sync with Confluence** requires Onyx Enterprise Edition or Onyx Cloud. It reads space permissions, page restrictions,
 inherited ancestor restrictions, users, groups, and group membership.
 
 Before you enable it:
@@ -136,5 +136,6 @@ Before you enable it:
 
 ## Rotate a Cloud token
 
-Create a replacement token before the old token expires. In Onyx, edit or replace the credential used by the connector,
-then run a new indexing attempt. Revoke the old token only after the new credential succeeds.
+Create a replacement token before the old token expires. In Onyx,
+open the connector under **Admin Panel → Indexing Status**, edit or replace its authentication account,
+then run a new indexing attempt. Revoke the old token only after the new account succeeds.

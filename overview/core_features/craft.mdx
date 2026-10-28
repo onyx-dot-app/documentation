@@ -28,13 +28,15 @@ See [Craft Architecture](/security/architecture/craft) for the full trust and ne
 ## Start a Craft session
 
 Each new session gets a separate workspace where Craft can create files, run code, and preview web apps.
-It can also use company knowledge, User Library files, available Skills, and connected Apps to complete your request.
+It can also use company knowledge, Library files, available Skills, connected Apps,
+and MCP plugins enabled for Craft to complete your request.
 
 <img className="rounded-image" src="/assets/overview/core_features/craft_workspace_clean.webp" alt="A Craft session with the agent loop on the left and a live dashboard preview on the right"/>
 
 <Note>
-  If you don't see Craft in your Onyx sidebar, it hasn't been enabled for your workspace.
-  Ask an admin to turn on Craft and confirm that a supported model provider is available.
+  Craft is available in all editions. If you don't see **Craft** in your Onyx sidebar, it is not enabled for you.
+  Ask an admin to turn on Craft at **Admin Panel → Craft → Access** and confirm that a supported model provider is
+  available.
 </Note>
 
 ### Write a strong first prompt
@@ -81,7 +83,6 @@ The chat panel streams Craft's progress while it works:
 | **Subagents** | Focused agents working in parallel on parts of a larger job, such as individual slides or report sections. |
 
 Open a subagent from the header menu to read its transcript. Your messages still go to the main session.
-A status in the header shows when the sandbox is initializing, running, or restoring.
 
 You can guide the run at any time:
 
@@ -95,7 +96,6 @@ You can guide the run at any time:
 
 Craft can start with only a prompt,
 but concrete references help it find the right information and match the result you have in mind.
-Use **+** in the input bar to attach files or select a Skill or App. You can also drag files into the chat.
 
 | Source                  | Best for                                                                 |
 | ----------------------- | ------------------------------------------------------------------------ |
@@ -105,8 +105,6 @@ Use **+** in the input bar to attach files or select a Skill or App. You can als
 | **User Library**        | Reusable files you want available across sessions, such as templates.    |
 | **Skills**              | Reusable instructions, examples, and files that teach Craft a method.    |
 | **Apps**                | Live information and approved actions in connected external services.    |
-
-Session attachments stay with one session. User Library files remain available for reuse across sessions.
 
 When the Browser Skill is available, Craft can open public websites, follow links, interact with pages,
 and take screenshots. It uses its own browser in the sandbox, not your browser session or saved logins.
@@ -142,15 +140,15 @@ and take screenshots. It uses its own browser in the sandbox, not your browser s
 
 ## Review the result
 
-Open **Output** from the upper-right corner of the session to inspect what Craft created.
+Open the Output panel to inspect what Craft created.
 
 | Tab           | What it shows                                                                     |
 | ------------- | --------------------------------------------------------------------------------- |
-| **Preview**   | A live web app that updates as Craft changes its files.                           |
-| **Files**     | The full session workspace, including source code, data, and intermediate work.   |
-| **Artifacts** | Finished outputs intended for download or sharing, usually written to `outputs/`. |
+| **Outputs**   | Finished outputs intended for download or sharing, usually written to `outputs/`. |
+| **All Files** | The full session workspace, including source code, data, and intermediate work.   |
+| **Apps**      | A live web app that updates as Craft changes its files.                           |
 
-<img className="rounded-image" src="/assets/overview/core_features/craft_files.webp" alt="The Output panel showing the Preview, Files, and Artifacts tabs with the session workspace files"/>
+<img className="rounded-image" src="/assets/overview/core_features/craft_files.webp" alt="The Output panel showing the Outputs, All Files, and Apps tabs with the session workspace files"/>
 
 You can download individual files, download a folder or web app as a ZIP file,
 export Markdown as a .docx file, and preview images, PDFs, presentations, and text files.
@@ -158,7 +156,7 @@ export Markdown as a .docx file, and preview images, PDFs, presentations, and te
 ### Share a web app
 
 Web apps run in the sandbox and are shared through Onyx rather than exposed directly.
-Select **Share** in the Preview tab, then choose who can open the app:
+Select **Share** in the **Apps** tab, then choose who can open the app:
 
 | Scope            | Access                                     |
 | ---------------- | ------------------------------------------ |
@@ -167,14 +165,6 @@ Select **Share** in the Preview tab, then choose who can open the app:
 
 Sharing includes the generated web app only. It does not share the conversation or other session files.
 
-### Refine the result
-
-Continue in the same session to request changes in plain language:
-
-- **Update the layout:** “Add a filter for the last 30 days and move the summary cards to the top.”
-- **Change the writing:** “Rewrite the executive summary for a non-technical audience and cut it to three sentences.”
-- **Prepare the final file:** “Add a one-paragraph summary to the report and save the final version to `outputs/`.”
-
 ## Go further with Craft
 
 <CardGroup cols={2}>
@@ -182,7 +172,7 @@ Continue in the same session to request changes in plain language:
     Give Craft reusable instructions, examples, templates, and helper files.
   </Card>
 
-  <Card title="Apps" icon="plug" href="/overview/core_features/craft_apps">
+  <Card title="Apps and Plugins" icon="plug" href="/overview/core_features/craft_apps">
     Connect external services for live information and approved actions.
   </Card>
 

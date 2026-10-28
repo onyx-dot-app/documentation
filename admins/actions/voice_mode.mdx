@@ -1,171 +1,106 @@
 ---
-title: "Voice Mode"
-description: "Set up voice providers to enable Voice Mode for your Onyx instance"
+title: "Voice"
+description: "Set up speech-to-text and text-to-speech providers for voice input and spoken responses"
 icon: "microphone"
 ---
 
-The Voice Mode action allows your users to have spoken conversations with Onyx using speech-to-text and text-to-speech
-providers.
+Voice lets your users speak to Onyx and hear its replies. A speech-to-text (STT)
+provider turns the user's speech into a chat message. A text-to-speech (TTS) provider reads the Agent's reply aloud.
 
-## Setting up Voice Mode
+Both directions are off until an admin connects a provider and sets it as the default. Until then,
+the microphone button and read-aloud controls are hidden in chat.
+
+## Set up Voice
 
 <Steps>
-  <Step title="Navigate to the Voice Mode Dashboard">
-    Click your user profile icon and select Admin Panel, then select the Voice Mode tab in the sidebar.
+  <Step title="Set up a Speech to Text provider">
+    Open **Admin Panel → Voice**. In **Speech to Text**,
+    click **Connect** on a model and enter the provider credentials.
 
-    <img className="rounded-image" src="/assets/admins/actions/voice-mode/voice_mode_dashboard.webp" alt="Voice Mode dashboard in Onyx Admin Panel"/>
-  </Step>
+    <img className="rounded-image" src="/assets/admins/actions/voice-mode/voice_mode_dashboard.webp" alt="Voice page in the Onyx Admin Panel"/>
 
-  <Step title="Set up Speech-to-Text (STT) provider">
-    Configure a provider to transcribe user speech into text.
+    <img className="rounded-image" src="/assets/admins/actions/voice-mode/stt.webp" alt="Speech to Text models"/>
 
-    <img className="rounded-image" src="/assets/admins/actions/voice-mode/stt.webp" alt="Speech-to-Text Providers"/>
-
-    <Tabs tabs={["OpenAI Whisper", "Azure STT", "ElevenLabs"]}>
-      <Tab title="OpenAI Whisper">
-        <div style={{ marginTop: '-2rem' }}>
-
-        <Steps>
-          <Step title="Get an OpenAI API key">
-            Navigate to the [OpenAI dashboard](https://platform.openai.com/api-keys) and create a new API key,
-            or reuse an existing OpenAI API key already configured for your LLM provider.
-          </Step>
-
-          <Step title="Enter the API key">
-            Click **Connect** and enter the API key.
-          </Step>
-        </Steps>
-
-        </div>
+    <Tabs tabs={["Whisper", "Azure Speech", "ElevenAPI", "Zoom Scribe"]}>
+      <Tab title="Whisper">
+        Create an API key in the [OpenAI dashboard](https://platform.openai.com/api-keys),
+        or reuse an OpenAI key you already use for a chat model. Enter it in the **API Key** field.
       </Tab>
 
-      <Tab title="Azure STT">
-        <div style={{ marginTop: '-2rem' }}>
+      <Tab title="Azure Speech">
+        Speech to text in Azure Speech Services (Microsoft Foundry Tools).
 
-        <Steps>
-          <Step title="Get Azure Speech credentials">
-            Navigate to the [Azure Portal](https://portal.azure.com) and create a Speech resource.
-            Copy the API key and region.
-          </Step>
-
-          <Step title="Enter the credentials">
-            Click **Connect** and enter the API key, region, and target URI.
-          </Step>
-        </Steps>
-
-        </div>
+        1. In the [Azure Portal](https://portal.azure.com), create a Speech resource.
+        2. Copy the key and the endpoint from **Keys and Endpoint**.
+        3. In Onyx, paste the key in **API Key** and the endpoint in **Target URI**. Onyx reads the region from the
+        endpoint URL.
+        4. In **Spoken Languages**, enter the locales your users speak, for example `en-US, fr-FR`. With more than
+        one locale, live transcription detects the spoken language.
       </Tab>
 
-      <Tab title="ElevenLabs">
-        <div style={{ marginTop: '-2rem' }}>
+      <Tab title="ElevenAPI">
+        Create an API key in the [ElevenLabs dashboard](https://elevenlabs.io/app/settings/api-keys)
+        and enter it in the **API Key** field.
+      </Tab>
 
-        <Steps>
-          <Step title="Get an ElevenLabs API key">
-            Navigate to the [ElevenLabs dashboard](https://elevenlabs.io/app/settings/api-keys)
-            and create a new API key.
-          </Step>
+      <Tab title="Zoom Scribe">
+        Zoom Scribe real-time speech-to-text from Zoom AI Services. Zoom supports speech to text only.
 
-          <Step title="Enter the API key">
-            Click **Connect** and enter the API key.
-          </Step>
-        </Steps>
+        1. Create credentials in [Zoom AI Services](https://developers.zoom.us/docs/ai-services/).
+        2. In Onyx, enter the **API Key** and **API Secret**.
+        3. Select the **Spoken Language** that Zoom Scribe should transcribe.
 
-        </div>
+        The Zoom connection is shared with **Decision Models** in the Admin Panel. Both pages use the same credentials.
+        Setting up Zoom here does not select a decision model.
       </Tab>
     </Tabs>
   </Step>
 
-  <Step title="Set up Text-to-Speech (TTS) provider">
-    Configure a provider to convert AI responses into spoken audio.
+  <Step title="Set up a Text to Speech provider">
+    In **Text to Speech**, click **Connect** on a model and enter the provider credentials.
 
-    <img className="rounded-image" src="/assets/admins/actions/voice-mode/tts.webp" alt="Text-to-Speech Providers"/>
+    <img className="rounded-image" src="/assets/admins/actions/voice-mode/tts.webp" alt="Text to Speech models"/>
 
-    <Tabs tabs={["OpenAI TTS-1", "OpenAI TTS-1 HD", "Azure TTS", "ElevenLabs"]}>
-      <Tab title="OpenAI TTS-1">
-        <div style={{ marginTop: '-2rem' }}>
+    <Tabs tabs={["OpenAI TTS-1 and TTS-1 HD", "Azure Speech", "ElevenAPI"]}>
+      <Tab title="OpenAI TTS-1 and TTS-1 HD">
+        Create an API key in the [OpenAI dashboard](https://platform.openai.com/api-keys),
+        or reuse the key from Whisper. Enter it in the **API Key** field.
 
-        <Steps>
-          <Step title="Get an OpenAI API key">
-            Navigate to the [OpenAI dashboard](https://platform.openai.com/api-keys)
-            and create a new API key (or reuse the one from Whisper).
-          </Step>
-
-          <Step title="Enter the API key">
-            Click **Connect** and enter the API key.
-          </Step>
-        </Steps>
-
-        </div>
+        In **Default Model**, choose **TTS-1** (optimized for speed) or **TTS-1 HD** (optimized for quality).
       </Tab>
 
-      <Tab title="OpenAI TTS-1 HD">
-        <div style={{ marginTop: '-2rem' }}>
-
-        <Steps>
-          <Step title="Get an OpenAI API key">
-            Navigate to the [OpenAI dashboard](https://platform.openai.com/api-keys)
-            and create a new API key (or reuse the one from Whisper).
-          </Step>
-
-          <Step title="Enter the API key">
-            Click **Connect** and enter the API key.
-          </Step>
-        </Steps>
-
-        <Note>
-          TTS-1 HD provides higher quality audio than TTS-1 but may have slightly higher latency and cost.
-        </Note>
-        </div>
+      <Tab title="Azure Speech">
+        Use the same Speech resource as for speech to text.
+        Paste the key in **API Key** and the endpoint in **Target URI**.
       </Tab>
 
-      <Tab title="Azure TTS">
-        <div style={{ marginTop: '-2rem' }}>
-
-        <Steps>
-          <Step title="Get Azure Speech credentials">
-            Navigate to the [Azure Portal](https://portal.azure.com) and create a Speech resource.
-            Copy the API key and region.
-          </Step>
-
-          <Step title="Enter the credentials">
-            Click **Connect** and enter the API key, region, and target URI.
-          </Step>
-        </Steps>
-
-        </div>
-      </Tab>
-
-      <Tab title="ElevenLabs">
-        <div style={{ marginTop: '-2rem' }}>
-
-        <Steps>
-          <Step title="Get an ElevenLabs API key">
-            Navigate to the [ElevenLabs dashboard](https://elevenlabs.io/app/settings/api-keys)
-            and create a new API key.
-          </Step>
-
-          <Step title="Enter the API key">
-            Click **Connect** and enter the API key.
-          </Step>
-        </Steps>
-
-        </div>
+      <Tab title="ElevenAPI">
+        Create an API key in the [ElevenLabs dashboard](https://elevenlabs.io/app/settings/api-keys)
+        and enter it in the **API Key** field.
       </Tab>
     </Tabs>
 
-    Once your TTS provider is configured, select a voice from the dropdown or input a voice ID directly.
+    In the **Voice** field, select a voice from the list or enter a voice ID. Onyx uses this voice for spoken responses.
 
-    <img className="rounded-image" src="/assets/admins/actions/voice-mode/voice_selection.webp" alt="Voice Selection"/>
+    <img className="rounded-image" src="/assets/admins/actions/voice-mode/voice_selection.webp" alt="Voice selection in the provider setup dialog"/>
   </Step>
 
-  <Step title="Set Default Provider">
-    If you have multiple providers configured,
-    make sure to **Set as Default** for both your preferred STT and TTS provider.
+  <Step title="Set the default providers">
+    Click **Set as Default** on the STT model and on the TTS model you want to use.
+    You can use one provider for speech to text and a different provider for text to speech.
 
-    <img className="rounded-image" src="/assets/admins/actions/voice-mode/set_default.webp" alt="Set Default Provider"/>
+    <img className="rounded-image" src="/assets/admins/actions/voice-mode/set_default.webp" alt="Set as Default on a Speech to Text model"/>
+
+    Disconnecting a provider removes its stored credentials.
   </Step>
 </Steps>
 
+## Using Voice in chat
+
+Each user can turn on **Auto-Send on Pause** and **Auto-Playback** and set the **Playback Speed** under **Settings >
+Voice**.
+
 <Note>
-  Make sure your users have microphone access enabled in their browser to use Voice Mode.
+  Onyx does not store audio. Recorded speech goes to the STT provider and only the transcript is kept,
+  as a normal chat message. Synthesized audio streams to the browser and is not saved.
 </Note>

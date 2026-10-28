@@ -12,7 +12,6 @@ The connector signs in as an app registration set up in [Microsoft 365
 Setup](/admins/connectors/official/microsoft-365/setup).
 Each option beyond channel conversations needs its own grants on the Microsoft side,
 and meeting transcripts also need two Teams settings that only a Teams administrator can change.
-This page lists them by option.
 
 ## How it works
 
@@ -106,18 +105,15 @@ with either setting below missing, Microsoft refuses the transcripts even though
 ## Configure Onyx
 
 <Steps>
-  <Step title="Open the Teams connector">
-    In Onyx, go to **Admin Panel → Add Connector** and select **Teams**.
-  </Step>
-
-  <Step title="Create a credential">
-    Select an existing Teams credential or create one as described in [Microsoft 365
+  <Step title="Select or create an authentication account">
+    In Onyx, go to **Admin Panel → Connectors** and select **Teams**. Under **Authentication Account**,
+    select a saved account or create one as described in [Microsoft 365
     Setup](/admins/connectors/official/microsoft-365/setup#enter-the-credential-in-onyx).
     **Include Attachments** needs **Certificate Authentication**.
   </Step>
 
   <Step title="Choose the teams">
-    Give the connector a name. In **Teams**, list the display names of the teams to index,
+    Give the connector a **Display Name**. In **Teams**, list the display names of the teams to index,
     or leave the list empty to index every team in the tenant.
   </Step>
 
@@ -130,20 +126,20 @@ with either setting below missing, Microsoft refuses the transcripts even though
     the application access policy must cover all of those users.
   </Step>
 
-  <Step title="Choose the access type">
-    Select the connector access type:
+  <Step title="Choose the document access">
+    Under **Document Access**, select one option:
 
-    - **Public** makes all indexed content visible to every Onyx user.
-    - **Private** limits the connector to selected Onyx user groups.
-    - **Auto Sync Permissions** mirrors who can read each item in Teams.
+    - **Everyone in Your Organization** makes all indexed content visible to every Onyx user.
+    - **Specific Groups** limits the connector to selected Onyx user groups.
+    - **Sync with Teams** mirrors who can read each item in Teams. See [Auto Sync Permissions](#auto-sync-permissions).
 
-    **Private** and **Auto Sync Permissions** are paid features: the Business and Enterprise tiers on Onyx Cloud,
+    **Specific Groups** and **Sync with Teams** are paid features: the Business and Enterprise tiers on Onyx Cloud,
     and the Enterprise Edition when self-hosted.
   </Step>
 
   <Step title="Set an indexing start date">
-    Under **Advanced Configuration**, set an **Indexing Start Date** unless you need every thread ever posted.
-    Without one, the first indexing attempt reads every channel from the team's creation,
+    Under **Schedule**, set **Index Documents After** unless you need every thread ever posted. Without one,
+    the first indexing attempt reads every channel from the team's creation,
     and a tenant with years of channel history takes days to become searchable. With a start date,
     Onyx indexes the threads last changed after it, so an old thread that gains a reply is indexed whole.
     Meeting transcripts and chats reach back at most six months, or only to the start date when that is later.
@@ -153,9 +149,8 @@ with either setting below missing, Microsoft refuses the transcripts even though
   <Step title="Connect and verify">
     Select **Create Connector**. Onyx checks each option you turned on against Microsoft before it starts indexing,
     and names the missing grant or setting when a check fails.
-    The grants for **Auto Sync Permissions** are not part of this check.
-    Then open **Admin Panel → Existing Connectors**, select the connector,
-    and confirm its initial indexing attempt completes.
+    The grants for **Auto Sync Permissions** are not part of this check. Then open **Admin Panel → Indexing Status**,
+    select the connector, and confirm its initial indexing attempt completes.
   </Step>
 </Steps>
 
@@ -179,7 +174,7 @@ with the readers SharePoint grants it. A channel's files live in a SharePoint do
 which is why this option needs a certificate and the SharePoint permission. A file is often shared with a group,
 and Onyx lists the group's members, which is what **GroupMember.Read.All** is for.
 Onyx reads each file's readers while it indexes, whatever the access type,
-so the permissions for this option are needed even on a **Public** connector.
+so the permissions for this option are needed even when **Document Access** is **Everyone in Your Organization**.
 With **Sites.Selected** in place of **Sites.Read.All**, grant the app full control on each channel's site.
 See [Limiting the app to specific
 sites](/admins/connectors/official/microsoft-365/setup#limiting-the-app-to-specific-sites).

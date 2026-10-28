@@ -4,42 +4,39 @@ description: "Overview of Onyx's primary user interface"
 icon: "comment"
 ---
 
-<Tip>
-  On the top left of the page (just right of the sidebar), you can select the mode of the UI.
-  Replace "Auto" with "Chat" to always go into this Chat UI.
-</Tip>
-
 <img className="rounded-image" src="/assets/overview/core_features/chat_ui.webp" alt="Onyx Chat Interface"/>
-
-Onyx provides a natural language chat interface as the main way of interacting with the features.
-The page below contains an overview of the main components and features.
 
 ## Input Bar
 
-### Chat with Files / URLs
+### Attach Files
 
 <img className="rounded-image" src="/assets/overview/core_features/files.webp" alt="Files Input"/>
 
-The leftmost button of the input bar lets users add context into the Chat session.
-Users can choose between uploading files or selecting URLs as well as reusing previous files or URLs.
+Click **Attach Files** to add files to the chat. You can also drag files into the chat or paste an image.
+Onyx processes each file before you can send the message.
+Attached files appear under **User Files** in the sources sidebar.
+
 <Note>
-  URLs behind Logins, Captcha, or Paywalls that are not scrapeable are not accessible.
-  Consider using a [Connector](/overview/core_features/connectors) instead.
+  To use a web page, paste its link in your message. The **Open URL** action reads it. Pages behind logins, captchas,
+  or paywalls are not accessible. Use a [Connector](/overview/core_features/connectors) instead.
 </Note>
 
-### Actions Selector
+### Actions
 
 <img className="rounded-image" src="/assets/overview/core_features/actions.webp" alt="Actions Input"/>
 
-The second button lets users disable or force the use of Actions. There are 4 built-in Actions:
+The actions button opens a menu where you force or block actions for the current chat. The built-in actions are:
 - **[Internal Search](/overview/core_features/internal_search)**:
-  Enables the LLM to search the indexed knowledge from [Connectors](/overview/core_features/connectors).
-- **[Web Search](/overview/core_features/web_search)**: Enables the LLM to search the internet.
-  Requires an admin to set up an API key for a search provider.
-- **[Code Execution](/overview/core_features/code_interpreter)**:
-  Enables the LLM to use a sandboxed Python runtime to execute code and run data analysis.
-- **[Image Generation](/overview/core_features/image_generation)**: Allows the LLM to generate images.
-  Requires setting up an image generation API.
+  Searches the knowledge indexed from [Connectors](/overview/core_features/connectors).
+  Expand it to limit the search to selected sources.
+- **[Web Search](/overview/core_features/web_search)**: Searches the internet.
+  Appears after an admin connects a search engine.
+- **[Code Interpreter](/overview/core_features/code_interpreter)**:
+  Runs Python in a sandbox for calculations and data analysis.
+- **[Coding Agent](/overview/core_features/coding_agent)**: Investigates a GitHub repository and answers questions
+  about its code. Appears after an admin turns it on.
+- **[Image Generation](/overview/core_features/image_generation)**: Creates images.
+  Appears after an admin connects an image provider.
 
 Select **Plugins** in the same menu to turn MCP and OpenAPI plugins on or off for the chat.
 See [Plugins](/overview/core_features/plugins).
@@ -48,54 +45,60 @@ See [Plugins](/overview/core_features/plugins).
 
 <img className="rounded-image" src="/assets/overview/core_features/deep_research.webp" alt="Deep Research"/>
 
-Toggle **Deep Research** using the hourglass icon. When turned on, the LLM will be able to run many cycles of thinking,
-research, and actions to give the best possible result for the user.
-This mode is intended for complicated questions that may need to pull together many sources together or requires
-significant reasoning.
+Click **Deep Research** to turn it on for the next message. The LLM then runs many cycles of thinking, research,
+and actions to give the best answer. Use it for complex questions that need many sources or significant reasoning.
 
 <Note>
-  Deep Research may take up to several minutes and could cost many times (>10x) the token cost of a normal inference.
+  Deep Research can take several minutes and can cost more than 10x the tokens of a normal answer.
+  An admin can turn it off at **Admin Panel → Chat Preferences**. It is not available in multi-model mode.
 </Note>
 
 ### Model Selector
 
 <img className="rounded-image" src="/assets/overview/core_features/model_selector.webp" alt="Model Selector"/>
 
-Onyx supports all major LLM providers as well as self-hosting options like Ollama, VLLM, etc. For select models,
-users can also configure the creativity and reasoning level.
+Onyx supports all major LLM providers and self-hosted options such as Ollama and vLLM. The model selector offers:
+- **Auto** (optional): Onyx picks a model for each message through a router model. It appears only after an admin
+  turns on **Auto Mode** and selects a **Router Model** from a gateway provider that offers one, such as OpenRouter.
+  See [Auto Mode](/admins/ai_models/overview#workspace-model-settings).
+- **Reasoning Level** and **Temperature** for models that support them. Admins can hide these controls.
+- **Add Model**: Generate answers from several models side by side. An admin turns **Multi-Model Generation**
+  on at **Admin Panel → Chat Preferences**.
 
-## Sidebar Contents
+Set your default model, reasoning level, and temperature under **Settings → Chats**.
 
-The left sidebar contains:
-- `New Session` button to clear the history and start a new Chat or [Search](/overview/core_features/internal_search) session.
-- `Projects` to help users organize chats and reuse different sets of documents. See section below for more info.
-- `Agents` section to start a new session with yours or your team's custom [Agents](/overview/core_features/agents).
-- `Sessions` section containing a list of the most recent conversations.
+## Sources Panel
 
-The right sidebar contains sources and citations that were used in generating the answer.
-These can come from either `Internal Search` or `Web Search` or both.
-Documents in the right sidebar can also be selected to be included in full for the next message in the Chat session.
+<img className="rounded-image" src="/assets/overview/core_features/sources_sidebar.webp" alt="Sources panel with Cited Sources and More"/>
 
-<Tip>
-  It's often useful to ask a question to find a document, then select it to do a deep dive on it.
-</Tip>
+When an answer used **Internal Search** or **Web Search**, a **Sources** button appears under it.
+Select it to open the sources panel on the right. Answers that ran no search have no **Sources** button.
+
+The panel lists the documents from that search:
+- **Cited Sources**: documents the answer cites, in citation order.
+- **Found Sources** (or **More** when there are also cited documents): the other documents the search returned.
+
+Select a document in the panel to include its full content in your next message.
 
 ## Projects
 
 <img className="rounded-image" src="/assets/overview/core_features/projects.webp" alt="Projects"/>
 
-**Projects** are a collection of instructions (prompts) and files as well as a grouping for chats.
-Use projects to organize ongoing work,
-or as a handy way to reuse instructions and files without going through the Agent creation flow.
+A **Project** groups chats with a shared set of **Files** and **Instructions**. Use Projects to organize ongoing work,
+or to reuse files and instructions without creating an Agent.
 
-## Miscellaneous Chat Features
+Chats started in the Project use its files and instructions.
+Use **Move to Project** in the chat header menu to move an existing chat.
 
-**Chat Sharing** - share chats with other team members by using the share-chat button in the top right (left of the
-Sources sidebar).
+When the Project files do not fit in the model's context window, Onyx searches them and uses the relevant parts.
 
-**Feedback** - give feedback viewable to the admins using the thumbs-up/thumbs-down buttons when hovering an LLM
-response
+## Incognito Chat
 
-**Regenerate** - modify your inputs by clicking the user messages or regenerate the LLM response with another model.
+Start an **Incognito Chat** from the chat header before you send the first message.
+An incognito chat is not saved in your history and is not used to update your memories.
+Your admin's data policy still applies. An admin can turn Incognito Chats off at **Admin Panel → Security**.
 
-**Copying** - copy the LLM output or markdown/code blocks by clicking on the copy button which shows on hover.
+## Memory
+
+Onyx can store facts from your chats and use them in later answers. Manage this under **Settings → Memory**:
+turn **Reference Stored Memories** and **Update Memories** on or off, and use **View/Add** to edit the stored lines.
