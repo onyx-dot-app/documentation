@@ -293,13 +293,18 @@ Image processing extracts the images in your documents during indexing.
 A vision-capable language model writes a description of each image,
 and Onyx indexes the descriptions so that search can find them.
 
-<img className="rounded-image" src="/assets/admins/advanced_configs/index_settings_image_processing.webp" alt="Image Processing section with Extract & Caption Images turned on, a Captioning LLM, and the maximum image size"/>
+<img className="rounded-image" src="/assets/admins/advanced_configs/index_settings_image_processing.webp" alt="Image Processing section with Extract & Caption Images turned on and a Captioning LLM"/>
 
 | Setting | Description |
 | --- | --- |
 | **Extract & Caption Images** | Turns image processing on or off. It is on by default. When it is off, connectors skip images. |
 | **Captioning LLM** | The vision-capable language model that describes the images. |
-| **Max Image Size for Analysis (MB)** | Onyx does not use this value in the current release. Before the **Captioning LLM** describes an image that is larger than 20 MB, Onyx makes the image smaller. |
+
+If an image is larger than 3 MB,
+Onyx shrinks it to at most 1024 pixels on each side before the **Captioning LLM** describes it.
+This keeps every image within the size limits of model providers. Transparent areas become white,
+and photos keep their orientation. Connectors also skip very large files when they download them,
+so there's no size setting to manage.
 
 Onyx describes images only after you select a **Captioning LLM**. Until then, the card shows **No model selected**.
 To change the settings in this section, you need a vision-capable [language model](/admins/ai_models/overview).
