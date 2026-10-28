@@ -4,8 +4,9 @@ description: "Run Code Interpreter on restricted clusters and OpenShift, with de
 icon: "code"
 ---
 
-[Code execution](/overview/core_features/code_interpreter) uses the Code Interpreter service. For each run,
-the service creates a short-lived executor pod that runs the user code.
+[Code execution](/overview/core_features/code_interpreter)
+uses the Code Interpreter service ([python-sandbox](https://github.com/onyx-dot-app/python-sandbox) on GitHub).
+For each run, the service creates a short-lived executor pod that runs the user code.
 
 The Onyx Helm chart installs Code Interpreter as a subchart when `codeInterpreter.enabled` is `true`.
 Put subchart settings under the hyphenated `code-interpreter:` key. Helm ignores other keys under `codeInterpreter:`.
