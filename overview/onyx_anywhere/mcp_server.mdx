@@ -18,6 +18,7 @@ Personal access tokens and API keys remain available for bearer authentication.
 ## Before you connect
 
 - Ask your administrator for your Onyx MCP URL, such as `https://onyx.example.com/mcp/`.
+  Onyx accepts the URL with or without the trailing slash.
 - Sign in with your own Onyx account in the workspace whose documents you want to search.
 - Your account needs **Search** (`read:search`) and **Create User Access Token** (`create:user_api_keys`) permissions to approve an app.
 - The MCP server is on by default in the bundled Docker Compose files and Helm chart.
@@ -112,7 +113,8 @@ Use a remote custom connector:
 2. Select **+ Add > Add custom connector**.
 3. Name it **Onyx** and enter `https://onyx.example.com/mcp/` with your domain.
 4. Continue through authentication settings.
-   Choose sign-in and either Claude's published OAuth identity or automatic registration. Onyx supports both.
+   Choose sign-in. Claude can identify itself with its published Client ID Metadata Document or register dynamically.
+   Onyx supports both.
 5. Add the connector and complete Onyx sign-in when prompted.
 6. Enable Onyx through the conversation's **+ > Connectors** menu and send the [test prompt](#test-the-connection).
 
@@ -150,6 +152,11 @@ Consult [OpenAI's MCP guide](https://learn.chatgpt.com/docs/extend/mcp)
 for the web connection model and your workspace's plugin availability.
 
 ## Sign in and approve access
+
+Onyx is the OAuth authorization server for its MCP endpoint. Your client discovers it from the MCP URL,
+identifies itself through dynamic client registration or a Client ID Metadata Document (CIMD),
+and uses the authorization code flow with PKCE. You approve access once in your browser.
+The client then refreshes its access token without asking you again.
 
 <Steps>
   <Step title="Add your Onyx MCP URL">
@@ -445,6 +452,7 @@ named filters are resolved on the search call and return an error when they cann
 | Access is denied or returns `403` | Check current permissions, workspace membership, and `read:search` scope. Signing in again cannot restore a permission your account no longer has. |
 | A request returns `402` | Ask your administrator to check billing or license restrictions. |
 | A request returns `503` | A required service is unavailable. Retry later and ask your administrator to check service health if it persists. |
+| Sign-in returns `503` | Onyx could not fetch the client's Client ID Metadata Document, or an authorization dependency was unavailable. Retry. If it persists, ask your administrator to check that the client's metadata URL is public. |
 | An expected document is missing | Confirm that you can find it in Onyx, that it is indexed, and that your filters match its source, document set, and update time. |
 | A named filter fails | Use the suggested or available names. Keep the filter if the search must stay within that scope. |
 | The desktop connector cannot reach a self-hosted instance | Hosted connectors may connect from cloud infrastructure. A URL reachable only on your laptop is insufficient for those clients. |
